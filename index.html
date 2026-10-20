@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game Space</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;
+    font-family:ui-monospace,Menlo,Consolas,monospace;color:#8fffd0;user-select:none}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block;
+    image-rendering:crisp-edges;image-rendering:pixelated}
+  #hud{position:fixed;left:14px;top:12px;font-size:13px;line-height:1.5;text-shadow:0 0 4px #000;white-space:pre}
+  .bar{width:180px;height:8px;border:1px solid #8fffd0;margin:2px 0 6px;position:relative}
+  .bar>i{position:absolute;left:0;top:0;bottom:0;background:#8fffd0}
+  #hullbar>i{background:#ff6a5a}
+  #shieldbar>i{background:#5ac8ff}
+  #radar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:160px;height:160px;
+    opacity:.9}
+  #cross{position:fixed;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;pointer-events:none}
+  #cross:before,#cross:after{content:"";position:absolute;background:#8fffd0;opacity:.8}
+  #cross:before{left:10px;top:0;width:2px;height:22px}
+  #cross:after{top:10px;left:0;height:2px;width:22px}
+  #cross{--gap:1}
+  #bracket{position:fixed;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid #ff5a5a;
+    pointer-events:none;display:none;font-size:11px;color:#ff8a8a}
+  #bracket span{position:absolute;left:0;top:48px;white-space:nowrap}
+  #msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:20px;text-align:center;background:rgba(0,0,0,.35);white-space:pre-line}
+  #help{position:fixed;right:14px;top:12px;font-size:11px;line-height:1.5;opacity:.7;text-align:right;white-space:pre}
+  html,body{touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none}
+  /* touch controls (only shown on touch devices) */
+  #touch{display:none}
+  body.touch #touch{display:block}
+  body.touch #help{display:none}
+  body.touch #radar{width:110px;height:110px;bottom:8px}
+  #stickzone{position:fixed;left:0;top:0;width:55%;height:100%;z-index:5}
+  #stickbase,#stickknob{position:fixed;border-radius:50%;pointer-events:none;display:none;z-index:6}
+  #stickbase{width:120px;height:120px;margin:-60px 0 0 -60px;border:2px solid rgba(143,255,208,.5)}
+  #stickknob{width:50px;height:50px;margin:-25px 0 0 -25px;background:rgba(143,255,208,.45)}
+  .tbtn{position:fixed;z-index:7;border:2px solid rgba(143,255,208,.7);border-radius:50%;
+    background:rgba(10,30,24,.45);color:#8fffd0;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:bold}
+  .tbtn.on{background:rgba(143,255,208,.45)}
+  #bfire{right:78px;bottom:30px;width:96px;height:96px;font-size:16px;border-color:#ff8a5a;color:#ff8a5a}
+  #bboost{right:182px;bottom:20px;width:64px;height:64px}
+  #brl{left:14px;bottom:10px;width:54px;height:54px}
+  #brr{left:76px;bottom:10px;width:54px;height:54px}
+  #bview{right:14px;top:92px;width:52px;height:52px;font-size:11px}
+  #thr{position:fixed;right:14px;bottom:30px;width:44px;height:200px;z-index:7;
+    border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
+  #thr>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
+  #thrlbl{position:fixed;right:14px;bottom:236px;font-size:11px;z-index:7;width:48px;text-align:center}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="cross"></div>
+<div id="bracket"><span id="brtxt"></span></div>
+<div id="hud">
+  <div id="hudtxt"></div>
+  <div>SHIELD</div><div class="bar" id="shieldbar"><i></i></div>
+  <div>HULL</div><div class="bar" id="hullbar"><i></i></div>
+</div>
+<canvas id="radar" width="160" height="160"></canvas>
+<div id="help">MOUSE  stick (click to capture)   C  centre stick
+W/S  throttle   SHIFT  afterburner   Q/E  roll
+SPACE / LMB  fire   V  view   F  flight model
+X  brake (newtonian)   - / =  voxel detail   [ / ]  pixel size
+R  restart</div>
+<div id="touch">
+  <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
+  <div class="tbtn" id="bfire">FIRE</div>
+  <div class="tbtn" id="bboost">BOOST</div>
+  <div class="tbtn" id="brl">&#8630;</div>
+  <div class="tbtn" id="brr">&#8631;</div>
+  <div class="tbtn" id="bview">VIEW</div>
+  <div id="thrlbl">THR</div>
+  <div id="thr"><i></i></div>
+</div>
+<div id="msg">GAME SPACE
+click to take controls</div>
+
+<script type="module">
+import * as THREE from 'three';
+
+// ======================================================================
+//  CONFIG
+// ======================================================================
+const PIXEL_STEPS = [1, 2, 3, 4];
+const DETAIL_STEPS = [20, 32, 48, 72, 112];   // voxels along ship length
+let pixelIdx = 2;
+let detailIdx = 2;
+
+// ======================================================================
+//  SHIP DEFINITIONS  (data, not code)
+//  Ships are described by solid primitives in ship space (forward = -Z)
+//  and voxelised at any resolution -> detail scales by changing one number.
+//  Later primitives overwrite earlier ones.
+// ======================================================================
+const SHIPS = {
+  kestrel: {
+    id: 'kestrel', name: 'Kestrel', length: 11, half: [4.8, 1.6, 5.8], mirror: true,
+    prims: [
+      { t: 'ell', c: [0, 0, 0],       r: [1.1, 0.8, 5.2], col: 0x8f9aa8 },
+      { t: 'ell', c: [0, -0.1, -3.7], r: [0.55, 0.45, 1.6], col: 0xb7c0cc },
+      { t: 'ell', c: [0, 0.6, -1.2],  r: [0.7, 0.6, 1.4],  col: 0x4fd0ff },
+      { t: 'box', c: [2.4, 0, 1.9],   h: [1.8, 0.15, 1.4], col: 0x5c6b80 },
+      { t: 'box', c: [3.9, 0, 2.5],   h: [0.8, 0.15, 0.9], col: 0x4a586c },
+      { t: 'box', c: [3.9, 0.75, 3.0], h: [0.12, 0.7, 0.6], col: 0xd94a3a },
+      { t: 'box', c: [2.6, -0.1, -0.5], h: [0.12, 0.12, 1.2], col: 0x30343c },
+      { t: 'ell', c: [0.9, 0, 4.5],   r: [0.55, 0.55, 1.0], col: 0x30343c },
+      { t: 'ell', c: [0.9, 0, 5.3],   r: [0.35, 0.35, 0.35], col: 0xffa040 },
+    ],
+    guns: [[2.6, -0.1, -1.7], [-2.6, -0.1, -1.7]],
+    engines: [[0.9, 0, 5.8], [-0.9, 0, 5.8]],
+    maxSpeed: 140, accel: 70, hull: 100, shield: 60, radius: 4.6,
+    fireRate: 0.11, damage: 8, boltSpeed: 450, boltColor: 0x66ffcc,
+  },
+  hopper: {   // FROGG light fighter
+    id: 'hopper', name: 'Frogg Hopper', length: 11, half: [5.4, 3.3, 5.8], mirror: true,
+    prims: [
+      { t: 'ell', c: [0, 0, 0],       r: [2.4, 1.6, 3.9], col: 0x4caf3c },
+      { t: 'ell', c: [0, -0.7, 0.3],  r: [2.0, 1.0, 3.2], col: 0xc9e08a },
+      { t: 'ell', c: [1.3, 1.5, -2.2], r: [0.85, 0.85, 0.85], col: 0xffe14a },
+      { t: 'ell', c: [1.3, 1.7, -2.95], r: [0.35, 0.35, 0.3], col: 0x111111 },
+      { t: 'box', c: [3.1, -0.4, 1.8], h: [1.2, 0.35, 1.6], col: 0x3a8f2f },
+      { t: 'box', c: [4.3, -0.9, 2.9], h: [0.9, 0.25, 0.9], col: 0x2f7326 },
+      { t: 'box', c: [0, -0.2, -3.8], h: [1.2, 0.2, 0.2],   col: 0x2a4a22 },
+      { t: 'ell', c: [0, -0.4, 3.9],  r: [0.9, 0.7, 0.6],   col: 0xff7a30 },
+    ],
+    guns: [[0, -0.6, -4.2]],
+    engines: [[0, -0.4, 4.6]],
+    maxSpeed: 95, aiSpeed: 72, turn: 1.25, hull: 40, shield: 0, radius: 5.0,
+    fireRate: 0.55, damage: 9, boltSpeed: 300, boltColor: 0xff55ff,
+  },
+};
+
+// ======================================================================
+//  VOXELISER
+// ======================================================================
+function primInside(p, x, y, z) {
+  const c = p.c;
+  if (p.t === 'box') {
+    return Math.abs(x - c[0]) <= p.h[0] && Math.abs(y - c[1]) <= p.h[1] && Math.abs(z - c[2]) <= p.h[2];
+  }
+  const dx = (x - c[0]) / p.r[0], dy = (y - c[1]) / p.r[1], dz = (z - c[2]) / p.r[2];
+  return dx * dx + dy * dy + dz * dz <= 1;
+}
+
+const voxCache = new Map();
+function voxelize(def, res) {
+  const key = def.id + ':' + res;
+  if (voxCache.has(key)) return voxCache.get(key);
+  const vs = def.length / res;
+  const [hx, hy, hz] = def.half;
+  const nx = Math.ceil(2 * hx / vs), ny = Math.ceil(2 * hy / vs), nz = Math.ceil(2 * hz / vs);
+  const grid = new Int32Array(nx * ny * nz).fill(-1);
+  const idx = (i, j, k) => (i * ny + j) * nz + k;
+  for (let i = 0; i < nx; i++) {
+    const x = -hx + (i + 0.5) * vs, ax = def.mirror ? Math.abs(x) : x;
+    for (let j = 0; j < ny; j++) {
+      const y = -hy + (j + 0.5) * vs;
+      for (let k = 0; k < nz; k++) {
+        const z = -hz + (k + 0.5) * vs;
+        let col = -1;
+        for (const p of def.prims) if (primInside(p, ax, y, z)) col = p.col;
+        grid[idx(i, j, k)] = col;
+      }
+    }
+  }
+  const filled = (i, j, k) => i >= 0 && j >= 0 && k >= 0 && i < nx && j < ny && k < nz && grid[idx(i, j, k)] >= 0;
+  const voxels = [];
+  for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) for (let k = 0; k < nz; k++) {
+    const c = grid[idx(i, j, k)];
+    if (c < 0) continue;
+    // keep surface voxels only: any empty 6-neighbour
+    if (filled(i + 1, j, k) && filled(i - 1, j, k) && filled(i, j + 1, k) &&
+        filled(i, j - 1, k) && filled(i, j, k + 1) && filled(i, j, k - 1)) continue;
+    voxels.push({ x: -hx + (i + 0.5) * vs, y: -hy + (j + 0.5) * vs, z: -hz + (k + 0.5) * vs, c });
+  }
+  const out = { vs, voxels };
+  voxCache.set(key, out);
+  return out;
+}
+
+const boxGeoCache = new Map();
+const boxGeo = s => {
+  const k = s.toFixed(5);
+  if (!boxGeoCache.has(k)) boxGeoCache.set(k, new THREE.BoxGeometry(s, s, s));
+  return boxGeoCache.get(k);
+};
+const voxMat = new THREE.MeshLambertMaterial();
+const _m = new THREE.Matrix4();
+const _col = new THREE.Color();
+
+function buildVoxelMesh(def, res) {
+  const { vs, voxels } = voxelize(def, res);
+  const mesh = new THREE.InstancedMesh(boxGeo(vs), voxMat, voxels.length);
+  for (let n = 0; n < voxels.length; n++) {
+    const v = voxels[n];
+    _m.makeTranslation(v.x, v.y, v.z);
+    mesh.setMatrixAt(n, _m);
+    mesh.setColorAt(n, _col.setHex(v.c));
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+  if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  mesh.frustumCulled = false;
+  return mesh;
+}
+
+// ======================================================================
+//  RENDERER / SCENE
+// ======================================================================
+const canvas = document.getElementById('c');
+const renderer = globalThis.__mockRenderer ?? new THREE.WebGLRenderer({ canvas, antialias: false });
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x03040a);
+const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 6000);
+scene.add(new THREE.DirectionalLight(0xfff2d0, 2.4).translateX(1).translateY(0.6).translateZ(0.4));
+scene.add(new THREE.AmbientLight(0x6070a0, 1.7));
+
+function resize() {
+  const px = PIXEL_STEPS[pixelIdx];
+  renderer.setSize(Math.max(1, Math.floor(innerWidth / px)), Math.max(1, Math.floor(innerHeight / px)), false);
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+}
+addEventListener('resize', resize);
+resize();
+
+// stars + dust (dust gives the sense of speed)
+const starGeo = new THREE.BufferGeometry();
+{
+  const a = new Float32Array(900 * 3);
+  for (let i = 0; i < 900; i++) {
+    const v = new THREE.Vector3().randomDirection().multiplyScalar(2500);
+    a.set([v.x, v.y, v.z], i * 3);
+  }
+  starGeo.setAttribute('position', new THREE.BufferAttribute(a, 3));
+}
+const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xb4bed2, size: 1, sizeAttenuation: false, depthWrite: false }));
+stars.frustumCulled = false;
+scene.add(stars);
+
+const DUST_N = 300, DUST_R = 220;
+const dustGeo = new THREE.BufferGeometry();
+const dustPos = new Float32Array(DUST_N * 3);
+for (let i = 0; i < dustPos.length; i++) dustPos[i] = (Math.random() * 2 - 1) * DUST_R;
+dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ color: 0x6f819e, size: 1, sizeAttenuation: false }));
+dust.frustumCulled = false;
+scene.add(dust);
+
+// ======================================================================
+//  FLIGHT MODELS  (swap point: integrate(ship, cmd, dt) -> updates ship.vel)
+//  Rotation is applied separately so a realistic I-War style model can
+//  replace both later (torque-based rotation, thruster limits, etc.).
+// ======================================================================
+const _fwd = new THREE.Vector3();
+const flightModels = {
+  arcade(s, cmd, dt) {
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const target = s.def.maxSpeed * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const desired = _fwd.multiplyScalar(target);
+    s.vel.lerp(desired, 1 - Math.exp(-3 * dt));
+  },
+  newton(s, cmd, dt) {
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const a = s.def.accel * (cmd.ab ? 2.2 : 1);
+    s.vel.addScaledVector(_fwd, cmd.thrust * a * dt);
+    if (cmd.brake) s.vel.multiplyScalar(Math.exp(-1.8 * dt));
+    const cap = s.def.maxSpeed * 2.2;
+    if (s.vel.length() > cap) s.vel.setLength(cap);
+  },
+};
+let flightMode = 'arcade';
+
+// ======================================================================
+//  WORLD STATE
+// ======================================================================
+let ships = [], bolts = [], debris = [];
+let player = null;
+let wave = 0, kills = 0, state = 'play';
+let view = 'cockpit';
+
+const boltGeo = new THREE.BoxGeometry(0.28, 0.28, 4.2);
+const boltMats = {};
+const boltMat = c => boltMats[c] ??= new THREE.MeshBasicMaterial({ color: c });
+const flameMat = new THREE.MeshBasicMaterial({ color: 0xffb050 });
+const flameGeo = new THREE.BoxGeometry(0.5, 0.5, 1);
+
+function attachBody(s) {
+  if (s.body) { s.group.remove(s.body); s.body.dispose(); }
+  s.body = buildVoxelMesh(s.def, DETAIL_STEPS[detailIdx]);
+  s.group.add(s.body);
+  s.body.visible = !(s === player && view === 'cockpit');
+}
+
+function makeShip(defId, team, pos, quat) {
+  const def = SHIPS[defId];
+  const s = {
+    def, team, group: new THREE.Group(), vel: new THREE.Vector3(),
+    throttle: 0.5, hull: def.hull, shield: def.shield, lastHit: -99, cool: 0, alive: true,
+    body: null, flames: [], ai: { mode: 'attack', t: 0, aim: new THREE.Vector3() },
+  };
+  if (pos) s.group.position.copy(pos);
+  if (quat) s.group.quaternion.copy(quat);
+  for (const e of def.engines) {
+    const f = new THREE.Mesh(flameGeo, flameMat);
+    f.position.set(e[0], e[1], e[2] + 0.5);
+    s.group.add(f);
+    s.flames.push(f);
+  }
+  scene.add(s.group);
+  ships.push(s);
+  if (team === 0) player = s;
+  attachBody(s);
+  return s;
+}
+
+function disposeShip(s) {
+  scene.remove(s.group);
+  if (s.body) s.body.dispose();
+}
+
+function spawnWave() {
+  wave++;
+  const n = Math.min(wave + 1, 6);
+  const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
+  for (let i = 0; i < n; i++) {
+    const dir = new THREE.Vector3().randomDirection();
+    if (wave === 1) dir.multiplyScalar(0.5).addScaledVector(pf, 0.8);   // first wave ahead of you
+    dir.normalize();
+    const pos = player.group.position.clone().addScaledVector(dir, 450 + Math.random() * 250);
+    const e = makeShip('hopper', 1, pos, new THREE.Quaternion());
+    e.group.lookAt(player.group.position);            // +Z toward player ...
+    e.group.rotateY(Math.PI);                          // ... flip so -Z (nose) faces player
+    e.vel.set(0, 0, -1).applyQuaternion(e.group.quaternion).multiplyScalar(e.def.aiSpeed);
+  }
+}
+
+function resetGame() {
+  for (const s of ships) disposeShip(s);
+  for (const b of bolts) scene.remove(b.mesh);
+  for (const d of debris) { scene.remove(d.mesh); d.mesh.dispose(); if (d.flash) scene.remove(d.flash); }
+  ships = []; bolts = []; debris = [];
+  wave = 0; kills = 0; state = 'play';
+  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion());
+  stick.x = stick.y = 0;
+  spawnWave();
+}
+
+// ======================================================================
+//  COMBAT
+// ======================================================================
+const _v = new THREE.Vector3();
+function fire(s) {
+  const q = s.group.quaternion;
+  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
+  s.group.updateMatrixWorld(true);
+  for (const g of s.def.guns) {
+    const pos = s.group.localToWorld(_v.set(g[0], g[1], g[2]).clone());
+    const mesh = new THREE.Mesh(boltGeo, boltMat(s.def.boltColor));
+    mesh.position.copy(pos);
+    mesh.quaternion.copy(q);
+    scene.add(mesh);
+    bolts.push({
+      mesh, team: s.team, dmg: s.def.damage, life: 2.2,
+      pos, prev: pos.clone(),
+      vel: dir.clone().multiplyScalar(s.def.boltSpeed).add(s.vel),
+    });
+  }
+  s.cool = s.def.fireRate;
+}
+
+function damage(s, d, t) {
+  s.lastHit = t;
+  if (s.shield > 0) {
+    const a = Math.min(s.shield, d);
+    s.shield -= a; d -= a;
+  }
+  s.hull -= d;
+  if (s.hull <= 0 && s.alive) destroy(s);
+}
+
+function destroy(s) {
+  s.alive = false;
+  explode(s);
+  scene.remove(s.group);
+  if (s.team === 1) kills++;
+  if (s === player) state = 'dead';
+}
+
+function explode(s) {
+  const { vs, voxels } = voxelize(s.def, DETAIL_STEPS[detailIdx]);
+  const count = Math.min(voxels.length, 160);
+  const mesh = new THREE.InstancedMesh(boxGeo(vs * 2.4), voxMat, count);
+  mesh.frustumCulled = false;
+  s.group.updateMatrixWorld(true);
+  const flash = new THREE.Mesh(new THREE.SphereGeometry(1, 10, 8),
+    new THREE.MeshBasicMaterial({ color: 0xffc060, transparent: true, depthWrite: false }));
+  flash.position.copy(s.group.position);
+  scene.add(flash);
+  const center = s.group.position;
+  const pos = [], vel = [];
+  for (let n = 0; n < count; n++) {
+    const v = voxels[Math.floor(Math.random() * voxels.length)];
+    const p = s.group.localToWorld(new THREE.Vector3(v.x, v.y, v.z));
+    pos.push(p);
+    vel.push(p.clone().sub(center).normalize().multiplyScalar(8 + Math.random() * 26).addScaledVector(s.vel, 0.6));
+    mesh.setColorAt(n, _col.setHex(v.c));
+  }
+  scene.add(mesh);
+  debris.push({ mesh, flash, pos, vel, life: 0, vs });
+}
+
+function segDist(a, b, c) {
+  const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
+  const l2 = dx * dx + dy * dy + dz * dz || 1e-9;
+  let t = ((c.x - a.x) * dx + (c.y - a.y) * dy + (c.z - a.z) * dz) / l2;
+  t = Math.max(0, Math.min(1, t));
+  const px = a.x + dx * t - c.x, py = a.y + dy * t - c.y, pz = a.z + dz * t - c.z;
+  return Math.sqrt(px * px + py * py + pz * pz);
+}
+
+// ======================================================================
+//  AI  (FROGG hopper: attack run -> break off -> repeat)
+// ======================================================================
+const _m4 = new THREE.Matrix4();
+const _tq = new THREE.Quaternion();
+const _up = new THREE.Vector3(0, 1, 0);
+function aiUpdate(e, dt) {
+  const pp = player.group.position, ep = e.group.position;
+  const dist = ep.distanceTo(pp);
+  const ai = e.ai;
+  ai.t -= dt;
+  let aim = _v.copy(pp).addScaledVector(player.vel, dist / e.def.boltSpeed);   // lead the target
+  if (ai.mode === 'attack' && dist < 50) {
+    ai.mode = 'break'; ai.t = 2 + Math.random() * 1.5;
+    ai.aim.copy(ep).sub(pp).normalize().multiplyScalar(300)
+      .add(new THREE.Vector3().randomDirection().multiplyScalar(120)).add(ep);
+  }
+  if (ai.mode === 'break') {
+    aim = ai.aim;
+    if (ai.t <= 0) ai.mode = 'attack';
+  }
+  if (aim.distanceToSquared(ep) > 1e-4) {
+    _m4.lookAt(ep, aim, _up);
+    _tq.setFromRotationMatrix(_m4);
+    e.group.quaternion.rotateTowards(_tq, e.def.turn * dt);
+  }
+  flightModels.arcade(e, { throttle: e.def.aiSpeed / e.def.maxSpeed, ab: false }, dt);
+  if (ai.mode === 'attack' && e.cool <= 0 && dist < 320) {
+    const f = new THREE.Vector3(0, 0, -1).applyQuaternion(e.group.quaternion);
+    const toP = pp.clone().sub(ep).normalize();
+    if (f.angleTo(toP) < 0.1) fire(e);
+  }
+}
+
+// ======================================================================
+//  INPUT
+// ======================================================================
+const keys = new Set();
+const stick = { x: 0, y: 0 };
+let mouseFire = false;
+const msg = document.getElementById('msg');
+
+addEventListener('keydown', e => {
+  if (e.repeat) return;
+  keys.add(e.code);
+  switch (e.code) {
+    case 'KeyV': view = view === 'cockpit' ? 'chase' : 'cockpit'; if (player) player.body.visible = view === 'chase'; break;
+    case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
+    case 'KeyC': stick.x = stick.y = 0; break;
+    case 'KeyR': resetGame(); break;
+    case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
+    case 'BracketRight': pixelIdx = Math.min(PIXEL_STEPS.length - 1, pixelIdx + 1); resize(); break;
+    case 'Minus': changeDetail(-1); break;
+    case 'Equal': changeDetail(1); break;
+  }
+});
+addEventListener('keyup', e => keys.delete(e.code));
+msg.addEventListener('pointerdown', () => { if (state === 'dead') resetGame(); });
+addEventListener('mousedown', e => {
+  if (document.pointerLockElement !== canvas) { canvas.requestPointerLock?.(); return; }
+  if (e.button === 0) mouseFire = true;
+});
+addEventListener('mouseup', e => { if (e.button === 0) mouseFire = false; });
+addEventListener('mousemove', e => {
+  if (document.pointerLockElement !== canvas) return;
+  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
+  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
+});
+
+// ---- touch controls (phones/tablets) ----
+const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || /[?&]touch\b/.test(location.search);
+let touchStarted = false;
+if (isTouch) {
+  document.body.classList.add('touch');
+  const $ = id => document.getElementById(id);
+  const zone = $('stickzone'), base = $('stickbase'), knob = $('stickknob');
+  let sid = null, ox = 0, oy = 0;
+  const R = 60;
+  zone.addEventListener('pointerdown', e => {
+    if (sid !== null) return;
+    sid = e.pointerId; ox = e.clientX; oy = e.clientY; touchStarted = true;
+    zone.setPointerCapture(sid);
+    base.style.display = knob.style.display = 'block';
+    base.style.left = knob.style.left = ox + 'px'; base.style.top = knob.style.top = oy + 'px';
+  });
+  zone.addEventListener('pointermove', e => {
+    if (e.pointerId !== sid) return;
+    let dx = e.clientX - ox, dy = e.clientY - oy;
+    const l = Math.hypot(dx, dy);
+    if (l > R) { dx *= R / l; dy *= R / l; }
+    stick.x = dx / R; stick.y = dy / R;
+    knob.style.left = (ox + dx) + 'px'; knob.style.top = (oy + dy) + 'px';
+  });
+  const endStick = e => {
+    if (e.pointerId !== sid) return;
+    sid = null; stick.x = stick.y = 0; base.style.display = knob.style.display = 'none';
+  };
+  zone.addEventListener('pointerup', endStick);
+  zone.addEventListener('pointercancel', endStick);
+
+  const hold = (id, on, off) => {
+    const el = $(id);
+    el.addEventListener('pointerdown', e => { touchStarted = true; el.setPointerCapture(e.pointerId); el.classList.add('on'); on(); });
+    const up = () => { el.classList.remove('on'); off(); };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+  };
+  hold('bfire', () => { mouseFire = true; }, () => { mouseFire = false; });
+  hold('bboost', () => keys.add('ShiftLeft'), () => keys.delete('ShiftLeft'));
+  hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
+  hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
+  hold('bview', () => { view = view === 'cockpit' ? 'chase' : 'cockpit'; if (player) player.body.visible = view === 'chase'; }, () => {});
+
+  const thr = $('thr'), thrFill = thr.firstElementChild;
+  const setThr = e => {
+    const r = thr.getBoundingClientRect();
+    const v = clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
+    if (player) player.throttle = v;
+  };
+  thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); setThr(e); });
+  thr.addEventListener('pointermove', e => { if (e.buttons || e.pressure > 0) setThr(e); });
+  globalThis.__thrFill = thrFill;
+  // tap anywhere to dismiss the start message
+  addEventListener('pointerdown', () => { touchStarted = true; });
+}
+
+function changeDetail(d) {
+  const n = Math.max(0, Math.min(DETAIL_STEPS.length - 1, detailIdx + d));
+  if (n === detailIdx) return;
+  detailIdx = n;
+  for (const s of ships) if (s.alive) attachBody(s);
+}
+
+// ======================================================================
+//  UPDATE
+// ======================================================================
+const _dq = new THREE.Quaternion();
+const _eu = new THREE.Euler();
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+let time = 0;
+
+function updatePlayer(dt) {
+  const s = player;
+  const kb = (a, b) => (keys.has(a) ? 1 : 0) - (keys.has(b) ? 1 : 0);
+  const pitch = clamp(-stick.y + kb('ArrowUp', 'ArrowDown'), -1, 1);
+  const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
+  const roll = kb('KeyQ', 'KeyE');
+  _eu.set(pitch * 1.6 * dt, yaw * 1.1 * dt, roll * 2.2 * dt, 'XYZ');
+  s.group.quaternion.multiply(_dq.setFromEuler(_eu)).normalize();
+
+  s.throttle = clamp(s.throttle + kb('KeyW', 'KeyS') * 0.6 * dt, 0, 1);
+  const ab = keys.has('ShiftLeft') || keys.has('ShiftRight');
+  flightModels[flightMode](s, {
+    throttle: s.throttle, thrust: kb('KeyW', 'KeyS'), ab, brake: keys.has('KeyX'),
+  }, dt);
+
+  if ((keys.has('Space') || mouseFire) && s.cool <= 0) fire(s);
+  if (time - s.lastHit > 3 && s.shield < s.def.shield) s.shield = Math.min(s.def.shield, s.shield + 6 * dt);
+}
+
+function update(dt) {
+  time += dt;
+  if (state === 'play' || state === 'dead') {
+    for (const s of ships) {
+      if (!s.alive) continue;
+      s.cool -= dt;
+      if (s === player) { if (state === 'play') updatePlayer(dt); }
+      else if (state === 'play') aiUpdate(s, dt);
+      s.group.position.addScaledVector(s.vel, dt);
+      s.group.updateMatrixWorld(true);
+      const spd = s.vel.length();
+      const fl = clamp(spd / s.def.maxSpeed, 0.2, 2) * (s === player && (keys.has('ShiftLeft')) ? 1.6 : 1);
+      for (const f of s.flames) { f.scale.z = fl * 1.4; f.position.z = s.def.engines[0][2] + 0.5 * f.scale.z; }
+    }
+    ships = ships.filter(s => s.alive || (disposeShip(s), false));
+
+    for (const b of bolts) {
+      b.prev.copy(b.pos);
+      b.pos.addScaledVector(b.vel, dt);
+      b.mesh.position.copy(b.pos);
+      b.life -= dt;
+      for (const s of ships) {
+        if (!s.alive || s.team === b.team) continue;
+        if (segDist(b.prev, b.pos, s.group.position) < s.def.radius) {
+          damage(s, b.dmg, time); b.life = 0; break;
+        }
+      }
+    }
+    bolts = bolts.filter(b => b.life > 0 || (scene.remove(b.mesh), false));
+
+    if (state === 'play' && !ships.some(s => s.team === 1)) spawnWave();
+  }
+
+  for (const d of debris) {
+    d.life += dt;
+    const k = Math.max(0, 1 - d.life / 2.4);
+    for (let n = 0; n < d.pos.length; n++) {
+      d.pos[n].addScaledVector(d.vel[n], dt);
+      _m.makeScale(k, k, k).setPosition(d.pos[n]);
+      d.mesh.setMatrixAt(n, _m);
+    }
+    d.mesh.instanceMatrix.needsUpdate = true;
+    if (d.flash) {
+      const f = d.life / 0.5;
+      if (f >= 1) { scene.remove(d.flash); d.flash.geometry.dispose(); d.flash.material.dispose(); d.flash = null; }
+      else { d.flash.scale.setScalar(2 + f * 9); d.flash.material.opacity = 1 - f; }
+    }
+  }
+  debris = debris.filter(d => d.life < 2.4 || (scene.remove(d.mesh), d.mesh.dispose(),
+    d.flash && (scene.remove(d.flash)), false));
+
+  updateCamera(dt);
+  // environment follows the camera
+  stars.position.copy(camera.position);
+  const dp = dustGeo.attributes.position.array, c = camera.position;
+  for (let i = 0; i < DUST_N; i++) {
+    for (let a = 0; a < 3; a++) {
+      const cc = a === 0 ? c.x : a === 1 ? c.y : c.z;
+      const v = dp[i * 3 + a];
+      dp[i * 3 + a] = ((v - cc + DUST_R) % (2 * DUST_R) + 2 * DUST_R) % (2 * DUST_R) - DUST_R + cc;
+    }
+  }
+  dustGeo.attributes.position.needsUpdate = true;
+}
+
+function updateCamera(dt) {
+  if (!player || !player.alive) return;
+  const g = player.group;
+  if (view === 'cockpit') {
+    camera.position.copy(g.localToWorld(new THREE.Vector3(0, 0.7, -1.2)));
+    camera.quaternion.copy(g.quaternion);
+  } else {
+    const t = g.localToWorld(new THREE.Vector3(0, 2.8, 12));
+    camera.position.lerp(t, 1 - Math.exp(-9 * dt));
+    camera.quaternion.slerp(g.quaternion, 1 - Math.exp(-12 * dt));
+  }
+  camera.updateMatrixWorld(true);
+}
+
+// ======================================================================
+//  HUD
+// ======================================================================
+const hudTxt = document.getElementById('hudtxt');
+const shieldBar = document.querySelector('#shieldbar>i');
+const hullBar = document.querySelector('#hullbar>i');
+const bracket = document.getElementById('bracket');
+const brTxt = document.getElementById('brtxt');
+const radar = document.getElementById('radar');
+const rctx = radar.getContext('2d');
+const _inv = new THREE.Quaternion();
+const _rel = new THREE.Vector3();
+
+function updateHud() {
+  const p = player;
+  const alive = p && p.alive;
+  const enemies = ships.filter(s => s.team === 1 && s.alive);
+  hudTxt.textContent =
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0} m/s   THR ${alive ? Math.round(p.throttle * 100) : 0}%\n` +
+    `FLIGHT ${flightMode.toUpperCase()}   VIEW ${view.toUpperCase()}\n` +
+    `VOXELS ${DETAIL_STEPS[detailIdx]}   PIXEL ${PIXEL_STEPS[pixelIdx]}x\n` +
+    `WAVE ${wave}   KILLS ${kills}   FROGGS ${enemies.length}`;
+  shieldBar.style.width = alive ? (100 * p.shield / p.def.shield) + '%' : '0%';
+  hullBar.style.width = alive ? (100 * Math.max(0, p.hull) / p.def.hull) + '%' : '0%';
+
+  const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
+  msg.style.display = state === 'dead' ? 'flex' : (engaged ? 'none' : 'flex');
+  if (state === 'dead') msg.textContent = isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch';
+  else msg.textContent = isTouch ? 'GAME SPACE\ntouch to take controls' : 'GAME SPACE\nclick to take controls';
+  if (isTouch && globalThis.__thrFill && alive) globalThis.__thrFill.style.height = (p.throttle * 100) + '%';
+
+  // radar (forward = up)
+  rctx.clearRect(0, 0, 160, 160);
+  rctx.strokeStyle = '#8fffd0'; rctx.globalAlpha = 0.5;
+  rctx.beginPath(); rctx.arc(80, 80, 78, 0, Math.PI * 2); rctx.stroke();
+  rctx.beginPath(); rctx.arc(80, 80, 39, 0, Math.PI * 2); rctx.stroke();
+  rctx.globalAlpha = 1;
+  let nearest = null, nd = Infinity;
+  if (alive) {
+    _inv.copy(p.group.quaternion).invert();
+    for (const e of enemies) {
+      _rel.copy(e.group.position).sub(p.group.position);
+      const d = _rel.length();
+      if (d < nd) { nd = d; nearest = e; }
+      _rel.applyQuaternion(_inv);
+      const R = 800, sx = 80 + clamp(_rel.x / R, -1, 1) * 76, sy = 80 + clamp(_rel.z / R, -1, 1) * 76;
+      const sy2 = sy - clamp(_rel.y / R, -1, 1) * 24;
+      rctx.strokeStyle = 'rgba(255,90,90,.5)';
+      rctx.beginPath(); rctx.moveTo(sx, sy); rctx.lineTo(sx, sy2); rctx.stroke();
+      rctx.fillStyle = '#ff5a5a'; rctx.fillRect(sx - 2, sy2 - 2, 4, 4);
+    }
+  }
+  rctx.fillStyle = '#8fffd0'; rctx.fillRect(78, 78, 4, 4);
+
+  // target bracket on nearest FROGG
+  bracket.style.display = 'none';
+  if (nearest) {
+    const v = nearest.group.position.clone().project(camera);
+    if (v.z < 1 && Math.abs(v.x) < 1 && Math.abs(v.y) < 1) {
+      bracket.style.display = 'block';
+      bracket.style.left = ((v.x + 1) / 2 * innerWidth) + 'px';
+      bracket.style.top = ((1 - v.y) / 2 * innerHeight) + 'px';
+      brTxt.textContent = `${nearest.def.name} ${nd.toFixed(0)}m`;
+    }
+  }
+}
+
+// ======================================================================
+//  MAIN LOOP
+// ======================================================================
+resetGame();
+let last = performance.now();
+function frame(t) {
+  const dt = Math.min(0.05, (t - last) / 1000);
+  last = t;
+  if (!globalThis.__paused) update(dt);
+  updateHud();
+  renderer.render(scene, camera);
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+// test / debug seam
+globalThis.__game = {
+  THREE, update, updateHud, resetGame, SHIPS, voxelize, keys, stick,
+  get state() { return state; }, get ships() { return ships; }, get bolts() { return bolts; },
+  get player() { return player; }, get debris() { return debris; }, get kills() { return kills; },
+  get wave() { return wave; }, changeDetail, DETAIL_STEPS,
+};
+</script>
+</body>
+</html>
