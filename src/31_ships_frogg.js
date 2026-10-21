@@ -46,10 +46,7 @@ const fHorn = (pts, rs, col = F.plate2) => chain(pts, rs, col);
 const N = { dk: 0x23292d, dk2: 0x2f373c, mt: 0x59636a, ru: 0x3b454b, ru2: 0x7a8890, ed: 0x66747c, pr: 0x35e8ff, bl: 0x0d1012, hot: 0x3ff0ff, ven: 0x9dff3a, tooth: 0x6f7a80, cy: 0x25d8ff };   // graphite carapace, pale-steel edges, CYAN light (reference art); venom green stays for acid weapons
 const nSt = (per, sl = 0.2) => ({ rust: N.ru, edge: N.ed, strata: [per, sl], streak: 1 });
 // sensor cluster (flush dark plate with a few small pale lights); replaces the earlier large 'eye' discs
-const nEye = (x, y, z, s = 1) => [
-  ell([x, y, z + 0.1 * s], [0.34 * s, 0.26 * s, 0.14 * s], N.mt, { rust: N.ru, streak: 1 }),
-  ell([x, y, z - 0.02 * s], [0.12 * s, 0.1 * s, 0.07 * s], N.pr, { glow: true, glowF: 0.7 }),
-];
+const nEye = () => [];   // owner 2026-10-21: frontal sensor blobs read as eyes; removed (the radar component stays as a data hit zone)
 // swept flat blade
 const nBlade = (a, b, r = 0.2, col = N.bl) => seg(a, b, r, 0.015, col, { fy: 0.38, rust: N.ru, streak: 1 });
 // spike (round)
