@@ -89,8 +89,8 @@ function updateWarnings(dt) {
 
 function briefCamera(dt) {
   const a = game.anchor ? game.anchor.group.position : new THREE.Vector3();
-  const t = time * 0.12;
-  camera.position.set(a.x + Math.cos(t) * 110, a.y + 28 + Math.sin(t * 0.7) * 12, a.z + 30 + Math.sin(t) * 110);
+  const t = time * 0.12, k = game.anchor ? game.anchor.def.radius / 38 : 1;
+  camera.position.set(a.x + Math.cos(t) * 110 * k, a.y + (28 + Math.sin(t * 0.7) * 12) * k, a.z + (30 + Math.sin(t) * 110) * k);
   camera.lookAt(a.x + 10, a.y + 6, a.z - 2);
   camera.updateMatrixWorld(true);
 }

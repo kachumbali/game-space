@@ -82,6 +82,7 @@
   #bview{right:14px;top:92px;width:50px;height:50px;font-size:10px}
   #btgt{right:14px;top:30px;width:50px;height:50px;font-size:10px}
   #bytgt{right:14px;top:148px;width:50px;height:50px;font-size:10px}
+  #bsub{right:70px;top:30px;width:44px;height:44px;font-size:10px;transform-origin:100% 0}
   #thr{position:fixed;right:14px;bottom:30px;width:44px;height:160px;z-index:7;
     border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
   #thr>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
@@ -112,6 +113,7 @@ W/S  throttle   SHIFT  afterburner   Q/E  roll   X  brake (newtonian)
 SPACE / LMB  guns        1 cannons   2 lasers   3 linked
 RMB / ENTER  launch missile       G  next missile type
 Z  flares + chaff        T  next target   Y  target nearest crosshair
+N  cycle subsystem on target (aims gun pipper at it)
 K  radar range           V  view   F  flight model
 B  bloom   M  mute   -/=  voxel detail   [ / ]  pixel size   R  free flight   H  this help
 Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff.</div>
@@ -126,6 +128,7 @@ Lock: keep the target inside the pipper ring until the tone goes solid. IR seeke
   <div class="tbtn" id="bview">VIEW</div>
   <div class="tbtn" id="btgt">TGT</div>
   <div class="tbtn" id="bytgt">AIM-T</div>
+  <div class="tbtn" id="bsub">SUB</div>
   <div class="tbtn" id="bsel">WPN</div>
   <div id="thrlbl">THR</div>
   <div id="thr"><i></i></div>

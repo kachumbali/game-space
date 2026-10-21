@@ -12,6 +12,23 @@ function hostileList() {
   return ships.filter(s => s.team === 1 && s.alive && !s.dying)
     .sort((a, b) => a.group.position.distanceTo(player.group.position) - b.group.position.distanceTo(player.group.position));
 }
+// subsystem targeting: N cycles through the live subsystems of the current target (aim point for the gun pipper)
+let subSel = null, subFor = null, subHit = null;
+function liveSubs(t) { return t ? t.comps.filter(c => c.hp > 0 && c.role !== 'power') : []; }
+function cycleSub() {
+  if (!target || !target.alive) return;
+  const l = liveSubs(target);
+  if (!l.length) return;
+  const i = l.findIndex(c => c.id === subSel);
+  subSel = i + 1 < l.length ? l[i + 1].id : (i < 0 ? l[0].id : null);
+  subFor = target; sfx('click');
+}
+function subComp(t) {
+  if (!t || subFor !== t) { subSel = null; subFor = t; return null; }
+  const c = subSel && t.comps.find(c => c.id === subSel && c.hp > 0);
+  if (!c) subSel = null;
+  return c || null;
+}
 function cycleTarget() {
   const list = hostileList();
   if (!list.length) return;
@@ -48,6 +65,7 @@ addEventListener('keydown', e => {
     case 'KeyR': if (!e.ctrlKey && !e.metaKey) resetGame(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;
     case 'KeyY': targetCrosshair(); break;
+    case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
@@ -124,6 +142,7 @@ if (isTouch) {
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});
   hold('btgt', () => { if (player && player.alive) cycleTarget(); }, () => {});
   hold('bytgt', () => targetCrosshair(), () => {});
+  hold('bsub', () => cycleSub(), () => {});
   hold('bsel', () => { if (player && player.alive) cycleMissile(player); }, () => {});
   const thr = $('thr');
   const setThr = e => {

@@ -76,7 +76,8 @@ function updateTargetPanel(nd, closure) {
     const t = target, d = t.def;
     const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
     const pc = (cur, max) => max ? Math.round(100 * sum(cur) / sum(max)) : 0;
-    const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${shortName(c)}</span>`).join(' ');
+    const sel = subComp(t);
+    const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
     const radarOk = !player || compFactor(player, 'radar') > 0.01;
     html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${pc(t.armor, d.armor)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
@@ -166,6 +167,7 @@ function interceptPoint(sp, sv, tp, tv, v) {
   return tp.clone().addScaledVector(tv, t).addScaledVector(sv, -0.9 * t);
 }
 
+const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3();
 function drawOverlay(alive) {
   octx.setTransform(ovDpr, 0, 0, ovDpr, 0, 0);
   octx.clearRect(0, 0, ovW, ovH);
@@ -227,9 +229,30 @@ function drawOverlay(alive) {
         c.moveTo(pr.x, pr.y - size * 0.55); c.lineTo(pr.x + size * 0.55, pr.y); c.lineTo(pr.x, pr.y + size * 0.55); c.lineTo(pr.x - size * 0.55, pr.y); c.closePath(); c.stroke();
         if (blink) c.fillText('LOCK', pr.x, pr.y - size - 8);
       }
+      // subsystem hit zones (large targets, or whenever one is selected)
+      if (size > 34 && d < 2500) {
+        t.group.updateMatrixWorld();
+        const selc = subComp(t);
+        for (const cp of t.comps) {
+          if (cp.role === 'power' && cp !== selc) continue;
+          _sp2.set(cp.pos[0], cp.pos[1], cp.pos[2]); t.group.localToWorld(_sp2);
+          const q = project(_sp2); if (!q.front) continue;
+          const rr = clamp(cp.r * 2 / (_sp2.distanceTo(camera.position) * TAN_HALF * 2) * ovH * 0.5, 3, 40);
+          const dead = cp.hp <= 0, f = Math.max(0, cp.hp) / cp.max;
+          const cc = dead ? 'rgba(120,120,120,.5)' : f > 0.5 ? '#6fff8a' : f > 0.25 ? '#ffd24a' : '#ff5a4a';
+          const sel = selc === cp, flash = subHit && subHit.id === cp.id && time - subHit.t < 0.35;
+          c.strokeStyle = cc; c.lineWidth = sel ? 2 : 1; c.globalAlpha = sel ? 1 : 0.55;
+          c.beginPath(); c.arc(q.x, q.y, rr, 0, 7); c.stroke();
+          if (flash) { c.fillStyle = '#fff'; c.globalAlpha = 0.8; c.beginPath(); c.arc(q.x, q.y, rr, 0, 7); c.fill(); }
+          if (sel) { c.globalAlpha = 1; c.fillStyle = cc; c.font = '10px monospace'; c.textAlign = 'left'; c.fillText(`${cp.name} ${Math.round(f * 100)}%`, q.x + rr + 4, q.y + 3); }
+          c.globalAlpha = 1;
+        }
+      }
       // gun lead pipper (primary cannon speed)
       const gv = WEAPONS.cannon.v;
-      const ip = interceptPoint(p.group.position, p.vel, tpos, t.vel, gv);
+      const sc = subComp(t);
+      if (sc) { t.group.updateMatrixWorld(); _sp.set(sc.pos[0], sc.pos[1], sc.pos[2]); t.group.localToWorld(_sp); }
+      const ip = interceptPoint(p.group.position, p.vel, sc ? _sp : tpos, t.vel, gv);
       if (ip && d < gv * WEAPONS.cannon.life * 0.8) {
         const lp = project(ip);
         if (lp.front) {

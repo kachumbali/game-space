@@ -1,0 +1,23 @@
+// ======================================================================
+//  SHIP SCALING  (uniform: prims, hit zones, engines, mounts, turrets, extents)
+//  Ship defs are authored at any size; this rescales them to the target length.
+// ======================================================================
+function scaleShip(def, newLength) {
+  const k = newLength / def.length;
+  const v = a => a.map(x => x * k);
+  def.length = newLength; def.radius *= k; def.half = v(def.half);
+  if (def.launch) def.launch = v(def.launch);
+  for (const p of def.prims) {
+    for (const f of ['c', 'a', 'b', 'h0', 'h1']) if (p[f]) p[f] = v(p[f]);
+    if (p.t === 'ell') p.r = v(p.r);
+    for (const f of ['hz', 'ra', 'rb']) if (typeof p[f] === 'number') p[f] *= k;
+    if (p.rib) p.rib = [p.rib[0] * k, p.rib[1]];
+    p._ = null;
+  }
+  for (const e of def.engines || []) { e.pos = v(e.pos); e.r *= k; }
+  for (const m of def.mounts || []) m.pos = v(m.pos);
+  for (const t of def.turrets || []) t.pos = v(t.pos);
+  for (const c of def.comps || []) { c.pos = v(c.pos); c.r *= k; }
+}
+scaleShip(SHIPS.halberd, 128);
+scaleShip(SHIPS.gulper, 146);

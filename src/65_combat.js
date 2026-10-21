@@ -13,6 +13,10 @@ function shieldFlash(s, lp, facing) {
 }
 function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 : r <= 0.5 ? 1 : 0; }
 
+// reach multiplier of a subsystem's radius within which a hull impact damages it directly
+const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2 };
+function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
+
 function applyHit(s, lp, dmg, wp, dtype = 'kin') {
   if (!s.alive || s.dying) return;
   s.lastHit = time;
@@ -29,6 +33,26 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin') {
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
     if (d <= 0.01) return;
+  }
+  // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
+  if (d > 0.01) {
+    let ex = null, ed = 1e9;
+    for (const c of s.comps) {
+      if (c.hp <= 0 || !EXPOSED[c.role]) continue;
+      const dist = _cp.set(c.pos[0], c.pos[1], c.pos[2]).distanceTo(lp);
+      const reach = c.r * EXPOSED[c.role];
+      if (dist < reach && dist < ed) { ed = dist; ex = c; }
+    }
+    if (ex) {
+      const before = compState(ex), dc = d * 0.55 * X[2];
+      ex.hp -= dc; d -= d * 0.55;
+      s.structure -= dc * 0.1;
+      sparksAt(wp, 5, 14); fireAt(wp, 1, 3);
+      const after = compState(ex);
+      if (after > before) compEvent(s, ex, after);
+      if (s === player || s === target) hitMark(s, ex);
+      if (d <= 0.01) return;
+    }
   }
   if (s.armor[side] > 0) {
     const raw = d * X[1], a = Math.min(s.armor[side], raw);
