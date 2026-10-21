@@ -162,6 +162,7 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function startMission(M) {
+  plogReset(M.title);
   clearWorld();
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;

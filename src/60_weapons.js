@@ -35,11 +35,12 @@ const ARMOR_THRESH_CLS = { fighter: 0.25, corvette: 1, frigate: 1.5, capital: 2 
 const WEAPONS = {
   // ---- human ----
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
-  pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 650, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
+  pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 1000, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
+  laser: { kind: 'beam', name: 'LS-2 PULSE LASER', cd: 0.3, dmg: 6, dt: 'en', range: 1200, energy: 14, color: 0xff5040, sfx: 'pulse' },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 560, dmg: 3.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 3.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
   lash: { kind: 'proj', name: 'LASH CANNON', cd: 2.0, v: 540, dmg: 34, dt: 'en', life: 3.2, spread: 0.002, color: 0xaaff40, len: 7, sz: 0.9, sfx: 'lash', glob: true, big: true },
@@ -123,6 +124,26 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
     vel: _w2.clone().multiplyScalar(w.v).addScaledVector(s.vel, 0.9),
   });
 }
+// instant-hit beam: first ship along the ray takes the damage this frame (no travel time, so no lead needed)
+function fireBeam(s, w, wp, dirW) {
+  const end = wp.clone().addScaledVector(dirW, w.range);
+  let bestS = null, bestHit = null, bestD = 1e9;
+  for (const o of ships) {
+    if (!o.alive || o === s || o.dying) continue;
+    if (!segSphere(wp, end, o.group.position, o.def.radius)) continue;
+    const hit = traceShip(o, wp, end); if (!hit) continue;
+    const d = o.group.localToWorld(hit.clone()).distanceTo(wp);
+    if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
+  }
+  const len = bestS ? bestD : w.range;
+  for (let d = 0; d < len; d += 6) sparks.emit(wp.clone().addScaledVector(dirW, d), new THREE.Vector3(), 0.09, [3, 0.5, 0.3, 1], [1, 0, 0, 0]);
+  if (!bestS) return;
+  const fr = bestS.team === s.team, wpH = bestS.group.localToWorld(bestHit.clone());
+  if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
+  else if (bestS === player || s === player) friendlyNote(s, bestS);
+  applyHit(bestS, bestHit, w.dmg * (fr ? FF.bolt : 1), wpH, w.dt, 0);
+  sparksAt(wpH, 4, 10, [3, 0.8, 0.4, 1]);
+}
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
   if (comp && comp.hp <= 0) return false;
@@ -135,9 +156,10 @@ function fireMount(s, m) {
   const fixedConv = s.def.cls === 'fighter';
   const dl = _w2.set(0, 0, fixedConv ? -CONVERGE : -1000).sub(_w1.set(m.pos[0], m.pos[1], m.pos[2])).normalize();
   const dirW = dl.clone().applyQuaternion(s.group.quaternion);
-  spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
+  if (w.kind === 'beam') fireBeam(s, w, wp, dirW); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
+  plogShot(s);
   if (w.energy) s.energy -= w.energy;
   m.cool = w.cd / (0.6 + 0.4 * powerMul(s));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
@@ -147,7 +169,8 @@ function fireMount(s, m) {
 }
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
 function fireGuns(s, mask) {
-  if (s !== player && friendlyInLine(s)) return false;
+  if (s !== player) plogTry(s);
+  if (s !== player && friendlyInLine(s)) { plogHold(s); return false; }
   let n = 0, any = false;
   for (const m of s.mounts) {
     if (m.store) continue;
@@ -488,6 +511,7 @@ function updateBolts(dt) {
       const wp = s.group.localToWorld(hit.clone());
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
+      plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
       applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
       sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);

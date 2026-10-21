@@ -120,7 +120,7 @@ function update(dt) {
   collideShips(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
+  plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
   if (game.mode === 'free' && state === 'play' && !ships.some(s => s.team === 1 && s.alive)) spawnWave();

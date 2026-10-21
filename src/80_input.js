@@ -62,6 +62,7 @@ addEventListener('keydown', e => {
     case 'KeyV': setView(view === 'cockpit' ? 'chase' : 'cockpit'); break;
     case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
     case 'KeyC': stick.x = stick.y = 0; break;
+    case 'KeyL': plogDownload(); break;
     case 'KeyR': if (!e.ctrlKey && !e.metaKey) resetGame(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;
     case 'KeyY': targetCrosshair(); break;
