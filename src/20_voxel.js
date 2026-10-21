@@ -652,7 +652,7 @@ function voxelize(def, res) {
       if (p.rib) { const ph = ((z / p.rib[0]) % 1 + 1) % 1; rib = ph < 0.34 ? 1 - p.rib[1] : 1 + p.rib[1] * 0.3; }
       f = ao * (0.94 + 0.12 * h) * seam * rib * stf;
       if (tn) f *= tn[cell] / 128;
-      if (p.dots && hash3(i * 7, j * 3, k * 5) < p.dots.p) {
+      if (p.dots && (tier ? (i % 3 === 0 && k % 4 === 0 && hash3(i * 7, j * 3, k * 5) < Math.min(1, p.dots.p * 6)) : hash3(i * 7, j * 3, k * 5) < p.dots.p)) {
         _col.setHex(p.dots.col); f = p.dots.f || 2.2;
         const vi = voxels.length;
         cellToVox[cell] = vi;

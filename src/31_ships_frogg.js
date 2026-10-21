@@ -68,6 +68,57 @@ const nNoz = (x, y, z0, z1, r) => [
   seg([x + r * 0.9, y, z1 - r * 1.6], [x + r * 1.5, y, z1 + r * 0.8], r * 0.12, 0.012, N.bl),
 ];
 
+// ---- FROGG surface-detail kit (lod prims: built from detail index 6 / 7). Everything is generated from the main body ellipsoid
+//   o.E = [cx,cy,cz,rx,ry,rz]: dorsal armour plates, flank gill vents with glowing slits, armour collars, ventral ribs, flank spikes;
+//   o.noz [[x,y,z0,z1,r]] nacelle fins + bell lip + ember ring; o.blades [[a,b,r]] serrated trailing edges; o.guns [[x,y,z0,z1,r]] barrel shrouds
+const nRust = { rust: N.ru, edge: N.ed, streak: 1 };
+const fDetail = o => {
+  const [cx, cy, cz, rx, ry, rz] = o.E, P = [];
+  const sf = z => Math.sqrt(Math.max(0, 1 - ((z - cz) / rz) ** 2));
+  const ep = (z, th, out = 1) => { const f = sf(z) * out; return [cx + rx * Math.sin(th) * f, cy + ry * Math.cos(th) * f, z]; };
+  const n = o.plates ?? 6;
+  for (let i = 0; i < n; i++) {                                           // overlapping dorsal armour plates, stepping down towards the tail
+    const t = i / Math.max(1, n - 1), z = cz - rz * 0.52 + rz * 0.9 * t, p = ep(z, 0, 1.0), w = rx * (0.7 - 0.3 * t), th = ry * 0.12;
+    P.push(tap([0, p[1] + th * 0.4, z], rz * 0.9 / n * 0.62, [w, th], [w * 0.8, th * 0.7], i % 2 ? N.dk2 : N.dk, { sh: 'h', rot: [-0.1, 0, 0], ...nRust, lod: 2 }));
+  }
+  for (const side of [1]) {                                               // flank gill vents: dark frame + glowing slit (mirrored by the voxeliser)
+    const ng = o.gills ?? 4;
+    for (let i = 0; i < ng; i++) {
+      const z = cz - rz * 0.18 + i * rz * (0.5 / Math.max(1, ng - 1)), p = ep(z, 1.2, 1.0), gs = ry * 0.34 * (1 - 0.25 * i / ng);
+      const gc = (i + (o.gc || 0)) % 3 === 1 ? N.ven : N.hot;
+      P.push(ell([p[0], p[1], z], [gs * 0.4, gs * 1.0, gs * 0.34], N.bl, { lod: 2 }));
+      P.push(ell([p[0] * 1.02, p[1], z], [gs * 0.34, gs * 0.8, gs * 0.12], gc, { glow: true, glowF: 1.15, lod: 2 }));
+    }
+  }
+  const nc = o.collars ?? 4;
+  for (let i = 0; i < nc; i++) {                                          // armour collars: raised bands around the hull
+    const z = cz - rz * 0.35 + i * rz * (0.8 / Math.max(1, nc - 1)), f = sf(z);
+    P.push(tap([cx, cy, z], rz * 0.022, [rx * f * 1.05, ry * f * 1.05], [rx * f * 1.05, ry * f * 1.05], i % 2 ? N.dk2 : N.dk, { sh: 'e', ...nRust, lod: 2 }));
+  }
+  for (let i = 0; i < (o.ribs ?? 5); i++) {                               // ventral ribs
+    const z = cz - rz * 0.3 + i * rz * 0.14, p = ep(z, Math.PI, 1.0);
+    P.push(tap([0, p[1] - ry * 0.03, z], rz * 0.02, [rx * 0.42, ry * 0.1], [rx * 0.42, ry * 0.1], N.bl, { sh: 'h', lod: 2 }));
+  }
+  for (let i = 0; i < (o.spikes ?? 4); i++) {                             // small flank spikes
+    const z = cz - rz * 0.3 + i * rz * 0.2, th = 0.62, p = ep(z, th, 0.98), L = ry * 0.9 * (1 - 0.1 * i);
+    P.push(seg(p, [p[0] + Math.sin(th) * L * 0.7, p[1] + Math.cos(th) * L * 0.8, z + L * 0.9], ry * 0.12, 0.012, N.dk2, { ...nRust, lod: 2 }));
+  }
+  for (const [a, b, r] of o.blades || []) {                               // serrated trailing edges
+    const L = Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2]);
+    for (let i = 1; i <= 6; i++) {
+      const t = 0.22 + 0.13 * i, q = [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t + r * 0.3];
+      P.push(seg(q, [q[0] + (b[0] - a[0]) * 0.03, q[1], q[2] + L * 0.1], r * 0.5, 0.01, N.bl, { lod: 2 }));
+    }
+  }
+  for (const [x, y, z0, z1, r] of o.noz || []) {
+    P.push(...ringSegs(x, y, z0 + (z1 - z0) * 0.3, z1, r * 0.96, 10, r * 0.07, N.bl, { lod: 2 }));
+    P.push(tap([x, y, z1 - r * 0.1], r * 0.1, [r * 1.18, r * 1.08], [r * 1.18, r * 1.08], N.dk2, { sh: 'e', lod: 2 }));
+    P.push(...ringSegs(x, y, z1 + r * 0.02, z1 + r * 0.3, r * 0.74, 10, r * 0.05, N.hot, { glow: true, glowF: 1.2, lod: 3 }));
+  }
+  for (const [x, y, z0, z1, r] of o.guns || []) P.push(...ringSegs(x, y, z0, z1, r * 1.8, 6, r * 0.3, N.bl, { lod: 2 }));
+  return P;
+};
+
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
   id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
@@ -84,6 +135,7 @@ SHIPS.darter = {
     nBlade([0.55, 0.05, 0.8], [3.9, -0.05, 5.0], 0.22), nBlade([0.5, -0.2, 1.6], [2.6, -0.35, 5.2], 0.16),
     ...nNoz(1.0, -0.15, 3.4, 4.9, 0.3),
     seg([0.4, -0.3, -3.5], [0.4, -0.3, -4.9], 0.09, 0.06, N.bl),                           // mouth guns
+    ...fDetail({ E: [0, 0, 0.5, 0.9, 0.58, 3.9], plates: 5, gills: 3, collars: 3, ribs: 3, spikes: 3, noz: [[1.0, -0.15, 3.4, 4.9, 0.3]], blades: [[[0.55, 0.05, 0.8], [3.9, -0.05, 5.0], 0.22]], guns: [[0.4, -0.3, -3.6, -4.8, 0.09]] }),
   ],
   engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
   mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
@@ -119,6 +171,7 @@ SHIPS.leaper = {
     nSpike([1.3, 0.55, -1.0], [3.2, 0.9, 1.8], 0.12),
     ...nNoz(2.2, -0.2, 4.6, 6.8, 0.5),
     seg([0.65, -0.42, -5.6], [0.65, -0.42, -6.6], 0.13, 0.09, N.bl),
+    ...fDetail({ E: [0, 0, 0.6, 1.35, 0.82, 5.2], plates: 6, gills: 4, collars: 4, noz: [[2.2, -0.2, 4.6, 6.8, 0.5]], blades: [[[1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3]], guns: [[0.65, -0.42, -5.6, -6.5, 0.13]] }),
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
   mounts: [{ w: 'spit', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'spit', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }],
@@ -155,6 +208,7 @@ SHIPS.spitter = {
     nBlade([1.9, 0.2, -0.2], [7.4, -0.1, 7.4], 0.38), nBlade([1.8, -0.4, 1.4], [5.2, -0.6, 8.6], 0.28),
     ...nNoz(2.8, -0.3, 6.2, 8.4, 0.72),
     seg([1.6, -0.5, -7.2], [1.6, -0.5, -8.0], 0.16, 0.1, N.bl),
+    ...fDetail({ E: [0, 0, 0.8, 1.9, 1.05, 6.6], plates: 6, gills: 4, collars: 5, gc: 1, noz: [[2.8, -0.3, 6.2, 8.4, 0.72]], blades: [[[1.9, 0.2, -0.2], [7.4, -0.1, 7.4], 0.38]], guns: [[1.6, -0.5, -7.2, -7.9, 0.16]] }),
   ],
   engines: [{ pos: [2.8, -0.3, 8.4], comp: 'engR', r: 0.72 }, { pos: [-2.8, -0.3, 8.4], comp: 'engL', r: 0.72 }],
   mounts: [
@@ -197,6 +251,7 @@ SHIPS.toad = {
     nBlade([2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45), nBlade([2.4, -0.6, 2.4], [6.2, -0.8, 9.6], 0.32),
     ...nNoz(3.6, -0.3, 7.4, 9.4, 0.85),
     seg([1.0, 0.1, -8.4], [1.0, 0.1, -7.6], 0.18, 0.12, N.bl),
+    ...fDetail({ E: [0, 0, 0.6, 2.6, 1.55, 7.6], plates: 7, gills: 5, collars: 5, noz: [[3.6, -0.3, 7.4, 9.4, 0.85]], blades: [[[2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45]], guns: [[1.0, 0.1, -8.4, -7.6, 0.18]] }),
   ],
   engines: [{ pos: [3.6, -0.3, 9.4], comp: 'engR', r: 0.85 }, { pos: [-3.6, -0.3, 9.4], comp: 'engL', r: 0.85 }],
   mounts: [
@@ -238,6 +293,7 @@ SHIPS.reaver = {
     nBlade([2.2, 0.6, 1.0], [7.4, 0.9, 8.2], 0.3),
     ...nNoz(3.2, -0.3, 7.4, 9.8, 0.8), ...nNoz(1.3, -0.5, 8.0, 9.9, 0.5),
     seg([1.2, -0.55, -8.0], [1.2, -0.55, -8.8], 0.18, 0.12, N.bl),
+    ...fDetail({ E: [0, 0, 0.8, 2.7, 1.5, 8.0], plates: 7, gills: 5, collars: 5, gc: 2, noz: [[3.2, -0.3, 7.4, 9.8, 0.8], [1.3, -0.5, 8.0, 9.9, 0.5]], blades: [[[2.7, 0.15, 0.4], [9.2, -0.15, 9.2], 0.45], [[2.2, 0.6, 1.0], [7.4, 0.9, 8.2], 0.3]], guns: [[1.2, -0.55, -8.0, -8.8, 0.18]] }),
   ],
   engines: [
     { pos: [3.2, -0.3, 9.8], comp: 'engR', r: 0.8 }, { pos: [-3.2, -0.3, 9.8], comp: 'engL', r: 0.8 },
@@ -289,6 +345,7 @@ SHIPS.gulper = {
     // engine nacelles
     ...nNoz(9.5, -1.0, 24, 35.4, 2.7), ...nNoz(3.8, -2.2, 31, 36.0, 1.5),
     seg([5.5, -2.4, -30], [5.5, -2.4, -35.3], 1.3, 0.8, N.bl),
+    ...fDetail({ E: [0, 0, 2, 9.6, 6.4, 29], plates: 9, gills: 6, collars: 7, ribs: 7, spikes: 6, noz: [[9.5, -1.0, 24, 35.4, 2.7], [3.8, -2.2, 31, 36.0, 1.5]], blades: [[[8, 0.5, 6], [16.5, 0.2, 34], 0.9], [[7, -3, 12], [14, -3.8, 36], 0.7]], guns: [[5.5, -2.4, -30, -35.3, 1.0]] }),
   ],
   engines: [
     { pos: [9.5, -1.0, 35.4], comp: 'engR', r: 2.7 }, { pos: [-9.5, -1.0, 35.4], comp: 'engL', r: 2.7 },
@@ -349,6 +406,7 @@ SHIPS.hivecarrier = {
     nBlade([120, 20, 150], [265, 10, 440], 16), nBlade([100, -30, 200], [230, -40, 445], 12), nBlade([90, 60, 100], [200, 80, 420], 10),
     // engine vents (ribbed, red-orange)
     ...nNoz(60, 0, 330, 440, 40), ...nNoz(150, -10, 320, 430, 32), ...nNoz(200, 10, 300, 410, 24),
+    ...fDetail({ E: [0, 0, 40, 150, 70, 330], plates: 12, gills: 8, collars: 9, ribs: 8, spikes: 8, noz: [[60, 0, 330, 440, 40], [150, -10, 320, 430, 32], [200, 10, 300, 410, 24]], blades: [[[120, 20, 150], [265, 10, 440], 16]] }),
   ],
   engines: [{ pos: [60, 0, 440], comp: 'engR', r: 40 }, { pos: [-60, 0, 440], comp: 'engL', r: 40 }],
   mounts: [], turrets: [],

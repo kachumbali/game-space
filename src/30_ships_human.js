@@ -268,6 +268,49 @@ const eTur = (x, y, z, dy = 1) => [
   seg([x - 1.8, y + 2.6 * dy, z + 1], [x - 1.8, y + 3.2 * dy, z - 10], 0.9, 0.7, E.dark),
   seg([x + 1.8, y + 2.6 * dy, z + 1], [x + 1.8, y + 3.2 * dy, z - 10], 0.9, 0.7, E.dark),
 ];
+// ---- Exeter surface-detail prims (metres; voxel size at high detail is about 1 m) --------------------------------------
+const eTurD = (x, y, z, dy = 1) => [
+  tap([x, y - 1.2 * dy, z], 7, [8, 1.6], [8, 1.6], E.panel, { sh: 'e', lod: 2 }),
+  ell([x, y + 1.0 * dy, z + 1], [3.2, 1.5, 3.2], E.grey2, { lod: 2 }),
+  ...ringSegs(x, y + 0.2 * dy, z - 4, z + 5, 5.2, 8, 0.35, E.dark, { lod: 3 }),
+];
+const exeterDetail = [
+  ...eTurD(0, 22, -110), ...eTurD(24, 21, -40), ...eTurD(-24, 21, -40), ...eTurD(20, 26, 110), ...eTurD(-20, 26, 110), ...eTurD(0, -20, -80, -1), ...eTurD(0, -21, 60, -1),
+  // dorsal slab: VLS lattices, long trench with ribs, comm farm
+  ...paintGrid(-14, 17, -12, 5, 10, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
+  ...paintGrid(-14, 17, 100, 5, 9, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
+  ...rungs(0, 18.3, -150, 60, 22, 2.8, 0.7, 0.5, E.dark, { lod: 2 }),
+  tap([0, 17.2, -30], 180, [2.2, 1.2], [2.2, 1.2], E.dark, { sh: 'r', lod: 2 }),
+  // bridge tower: lit windows, sensor spines, dishes
+  ell([14, 49, 74], [9, 1.1, 9], E.white, { rot: [0.5, 0, 0.3], lod: 2 }), ell([-12, 46, 84], [7, 1, 7], E.white, { rot: [-0.4, 0, -0.3], lod: 2 }),
+  ...[-6, 0, 6].map(x => seg([x, 44, 70], [x, 52, 68], 0.5, 0.2, E.dark, { lod: 2 })),
+  tap([0, 31, 78], 6, [14, 2], [14, 2], E.panel, { sh: 'h', lod: 2 }),
+  // hangar maw: frame, hazard lights, interior glow
+  ...Array.from({ length: 9 }, (_, i) => ell([-16 + i * 4, -1.5, -204], [0.8, 0.6, 0.8], E.amber, { glow: true, glowF: 1.6, lod: 2 })),
+  ...Array.from({ length: 9 }, (_, i) => ell([-16 + i * 4, -12.5, -204], [0.8, 0.6, 0.8], E.amber, { glow: true, glowF: 1.6, lod: 2 })),
+  tap([0, -7, -199], 3, [17, 8.5], [17, 8.5], E.dark, { sh: 'h', lod: 2 }),
+  ...[-12, -4, 4, 12].map(x => tap([x, -7, -192], 12, [0.8, 6.5], [0.8, 6.5], E.panel, { lod: 2 })),
+  // corvette cradles: clamp arms, guide lights
+  ...[-14, 0, 14, 28].map(z => seg([36, -12, 40 + z], [30, -7, 40 + z], 1.4, 1.0, E.panel, { lod: 2 })),
+  ...[-14, 0, 14, 28].map(z => ell([28, -9, 40 + z], [0.9, 0.9, 0.9], E.amber, { glow: true, glowF: 1.6, lod: 2 })),
+  // radiator manifolds and ribs
+  ...Array.from({ length: 8 }, (_, i) => seg([44, 12.4, 108 + i * 6], [96, 12.4, 112 + i * 6], 0.7, 0.7, i % 2 ? E.dark : E.orange, { lod: 2 })),
+  ...Array.from({ length: 8 }, (_, i) => seg([44, -12.4, 108 + i * 6], [96, -12.4, 112 + i * 6], 0.7, 0.7, i % 2 ? E.dark : E.orange, { lod: 2 })),
+  // engine pods: intake ring, band plates, nozzle petals
+  tap([80, -3, 104], 1.5, [16, 14], [16, 14], E.panel, { sh: 'h', lod: 2 }),
+  ...[120, 140, 160, 180, 200].map(z => tap([80, -3, z], 0.8, [20.5, 18], [20.5, 18], E.grey2, { sh: 'h', lod: 2 })),
+  ...ringSegs(80, -3, 221, 228, 14, 18, 0.7, E.noz, { lod: 2 }),
+  ...ringSegs(0, 0, 204, 214, 26, 22, 1.0, 0x3e454e, { lod: 2 }),
+  ...[208, 211].map(z => tap([0, 0, z], 0.8, [29, 18], [29, 18], E.grey2, { sh: 'h', lod: 2 })),
+  // markings
+  { t: 'paint', box: [-46, -10, -130, 46, 24, -124], col: E.orange, mix: 0.9 },
+  { t: 'paint', box: [-46, -10, -112, 46, 24, -109], col: 0x2f4a7a, mix: 0.9 },
+  { t: 'paint', box: [-26, 12, -190, 26, 30, -160], col: E.panel, side: 'top', mix: 0.7 },
+  { t: 'text', c: [30, 3, -62], face: '+x', text: 'EXETER', px: 3.2, col: E.dark },
+  { t: 'text', c: [36, 5, 40], face: '+x', text: 'F-03', px: 4, col: E.white },
+  { t: 'text', c: [0, 18.4, -100], face: '+y', text: 'CDF', px: 3.5, col: 0x2f4a7a, mir: false },
+];
+
 SHIPS.exeter = {
   id: 'exeter', name: 'EXETER', cls: 'frigate', fac: 'human', role: 'JUMP FRIGATE',
   length: 450, half: [108, 48, 230], mirror: true, radius: 235, seam: [9, 7], resMul: 0.6,
@@ -279,7 +322,7 @@ SHIPS.exeter = {
     tap([0, -2, -200], 28, [9, 6], [22, 12], E.grey2, { sh: 'd' }),                                          // bow wedge
     tap([0, -7, -186], 14, [13, 4.5], [14, 5], E.dark, { dots: { col: E.amber, p: 0.05 } }),                 // hangar maw
     seg([14, 4, -195], [16, 5, -226], 1.3, 0.8, E.dark), seg([20, 10, -170], [22, 11, -207], 1.1, 0.7, E.dark), // bow prongs
-    tap([0, 26, 70], 28, [16, 10], [22, 12], E.white, { sh: 'h' }),                                          // bridge tower
+    tap([0, 26, 70], 28, [16, 10], [22, 12], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),                                          // bridge tower
     tap([0, 38, 76], 10, [10, 6], [12, 6], E.grey2, { sh: 'h' }),
     seg([0, 44, 80], [0, 68, 80], 1.5, 0.5, E.grey2), ell([0, 68, 80], [8, 1.2, 8], E.grey),
     seg([8, 40, 84], [20, 62, 92], 0.7, 0.3, E.grey2),
@@ -305,6 +348,7 @@ SHIPS.exeter = {
     ell([0, 0, 214.5], [20, 12, 2.5], E.glow, { glow: true }),
     ...eTur(0, 22, -110), ...eTur(24, 21, -40), ...eTur(-24, 21, -40), ...eTur(20, 26, 110), ...eTur(-20, 26, 110),
     ...eTur(0, -20, -80, -1), ...eTur(0, -21, 60, -1),
+    ...exeterDetail,
   ],
   engines: [{ pos: [80, -3, 229], comp: 'engR', r: 11 }, { pos: [-80, -3, 229], comp: 'engL', r: 11 }, { pos: [0, 0, 216], comp: 'engC', r: 18 }],
   mounts: [
