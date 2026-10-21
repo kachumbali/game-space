@@ -8,7 +8,8 @@ let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   last = t;
-  if (!globalThis.__paused && !rdlgOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
+  musicTick(dt);
+  if (!globalThis.__paused && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
   renderBolts();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
@@ -18,7 +19,7 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
-  nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
+  nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
   launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },

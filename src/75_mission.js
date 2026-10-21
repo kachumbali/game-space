@@ -284,7 +284,15 @@ function onShipDestroyed(s) {
     if (S && s.def.cls === 'corvette') comm('CONTROL', 'Corvette is breaking up! Good kill!');
   } else if (s.pilot && s !== player) {
     comm('CONTROL', `${s.callsign} is down.`, '#ff8a6a');
-    if (CREW[s.pilot]) { CREW[s.pilot].status = Math.random() < 0.7 ? 'recovering' : 'KIA'; CREW[s.pilot].notes.push(CREW[s.pilot].status === 'KIA' ? 'lost in action' : 'ejected, recovered'); saveCrew(); }
+    if (CREW[s.pilot]) {                    // death is decided by how the ship died, not a flat roll (owner 2026-10-21)
+      const dc = s.deathCause || { dtype: 'kin', overkill: 0.3, reactor: false };
+      let p = 0.75 - dc.overkill * 1.2 - (dc.reactor ? 0.25 : 0) - (dc.dtype === 'nuke' ? 0.3 : 0) + 0.05 * ((PILOT_DEFS[s.pilot]?.skill || 3) - 3);
+      p = clamp(p, 0.05, 0.9);
+      const out = Math.random() < p;
+      CREW[s.pilot].status = out ? 'recovering' : 'KIA';
+      CREW[s.pilot].notes.push(out ? `ejected, recovered (${Math.round(p * 100)}% chance)` : `lost in action (${dc.reactor ? 'reactor breach' : 'cockpit destroyed'}, ${Math.round(p * 100)}% eject chance)`);
+      saveCrew();
+    }
   }
 }
 function onTorpLaunch(s) { if (game.mission && s.team === 1) comm('CONTROL', 'Torpedo launch! Point defence, take them down!', '#ff8a6a'); }

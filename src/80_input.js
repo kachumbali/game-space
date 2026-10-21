@@ -55,7 +55,7 @@ function playerFireMissile() {
 }
 
 addEventListener('keydown', e => {
-  if (rdlgOpen) return;
+  if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
   keys.add(e.code);
   if (!player) return;
@@ -72,7 +72,7 @@ addEventListener('keydown', e => {
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
-    case 'KeyM': AUDIO.muted = !AUDIO.muted; if (AUDIO.master) AUDIO.master.gain.value = AUDIO.muted ? 0 : 0.55; break;
+    case 'KeyM': AUDIO.muted = !AUDIO.muted; if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); break;
     case 'Enter': case 'NumpadEnter': playerFireMissile(); break;
     case 'Digit1': player.fireMask = 1; break;
     case 'Digit2': player.fireMask = 2; break;

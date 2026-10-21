@@ -8,7 +8,7 @@ function audioInit() {
   try {
     const C = new (globalThis.AudioContext || globalThis.webkitAudioContext)();
     const comp = C.createDynamicsCompressor();
-    AUDIO.master = C.createGain(); AUDIO.master.gain.value = 0.55;
+    AUDIO.master = C.createGain(); AUDIO.master.gain.value = typeof sfxGain === 'function' ? sfxGain() : 0.55;
     AUDIO.master.connect(comp); comp.connect(C.destination);
     const b = C.createBuffer(1, C.sampleRate, C.sampleRate), d = b.getChannelData(0);
     for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
@@ -16,9 +16,10 @@ function audioInit() {
     AUDIO.lockOsc = C.createOscillator(); AUDIO.lockGain = C.createGain(); AUDIO.lockGain.gain.value = 0;
     AUDIO.lockOsc.type = 'sine'; AUDIO.lockOsc.frequency.value = 1150;
     AUDIO.lockOsc.connect(AUDIO.lockGain); AUDIO.lockGain.connect(AUDIO.master); AUDIO.lockOsc.start();
+    if (typeof samplesLoad === 'function') samplesLoad();
   } catch (e) { AUDIO.muted = true; }
 }
-['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, audioInit));
+['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; }));
 function tone(f0, f1, dur, type = 'sine', vol = 0.2, delay = 0) {
   const C = AUDIO.ctx; if (!C) return;
   const o = C.createOscillator(), g = C.createGain(), t = C.currentTime + delay;
@@ -60,4 +61,5 @@ function sfx(name, dist = 0, vol = 1) {
   const a = 1 / (1 + dist / 220);
   if (a * vol < 0.04) return;
   SV = Math.min(1, a * vol); SFX[name]?.(); SV = 1;
+  if (SAMPLE_MAP[name] && a * vol > 0.15) SAMPLE_MAP[name](vol);
 }

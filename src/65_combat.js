@@ -96,7 +96,10 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
     if (after > before) compEvent(s, best, after);
   } else s.structure -= d;
   const pw = compOf(s, 'power');
-  if (s.structure <= 0 || (pw && pw.hp <= 0)) killShip(s);
+  if (s.structure <= 0 || (pw && pw.hp <= 0)) {
+    if (!s.deathCause) s.deathCause = { dtype, overkill: Math.max(0, -s.structure) / s.def.structure, reactor: !!(pw && pw.hp <= 0) };   // decides whether the pilot got out
+    killShip(s);
+  }
 }
 
 function compEvent(s, c, st) {
