@@ -1,6 +1,6 @@
 # Milestone 1: laptop test guide (2026-10-21)
 
-Tag: `milestone-1`. The playable build is the single file `index.html` (Three.js loads from a CDN, so the laptop needs internet).
+Reference: commit e19dc94 on main (a local tag `milestone-1` exists, but pushing tags was rejected by the remote connection). The playable build is the single file `index.html` (Three.js loads from a CDN, so the laptop needs internet).
 
 ## Run
 Open `index.html` in Chrome, Edge or Firefox (double-click is enough), or run `python3 -m http.server` in the folder and open http://localhost:8000/.
