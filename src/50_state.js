@@ -3,6 +3,7 @@
 // ======================================================================
 const compOf = (s, id) => s.comps.find(c => c.id === id);
 function compFactor(s, role) {
+  if (s.blindUntil > time && (role === 'radar' || role === 'turret')) return 0;     // nuclear flash: sensors and PD optics blind for a while
   const cs = s.comps.filter(c => c.role === role);
   if (!cs.length) return 1;
   let t = 0; for (const c of cs) t += Math.max(0, c.hp) / c.max;
@@ -13,12 +14,23 @@ const turnMul = s => 0.45 + 0.55 * compFactor(s, 'engine');
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 const _fwd = new THREE.Vector3();
+const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     s.ab = !!cmd.ab;
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
+  },
+  newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
+    s.ab = !!cmd.ab;
+    s.vel.addScaledVector(_fwd, thrust * a * dt);
+    const cap = s.def.maxSpeed * 2.2;
+    if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);

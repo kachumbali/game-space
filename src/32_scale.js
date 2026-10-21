@@ -25,3 +25,5 @@ scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder
 
 // human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;
+// FROGG pilots are neuro-slaved with very high G tolerance (owner 2026-10-21): their fighters turn and accelerate harder, so they re-engage fast
+for (const id in SHIPS) if (SHIPS[id].cls === 'fighter' && SHIPS[id].fac === 'frogg') { SHIPS[id].turn *= 1.5; SHIPS[id].accel *= 1.3; }

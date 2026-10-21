@@ -81,7 +81,7 @@ function updateTargetPanel(nd, closure) {
     const sel = subComp(t);
     const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
     const radarOk = !player || compFactor(player, 'radar') > 0.01;
-    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
+    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span> <span style="opacity:.6">SKL ${t.skill | 0}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
   if (html !== lastTgtHtml) { tgtEl.innerHTML = html; lastTgtHtml = html; }
 }

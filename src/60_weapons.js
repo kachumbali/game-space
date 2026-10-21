@@ -2,7 +2,7 @@
 //  WEAPONS — ballistic + energy guns, guided missiles, torpedoes, countermeasures, turrets
 //  Damage types: kin (kinetic) / en (energy, plasma, acid) / exp (blast). Each hits shield / armour / structure differently.
 // ======================================================================
-const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1] };   // [shield, (armour column retired: see ARMOR), structure]
+const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1], nuke: [1.0, 1.0, 1.0] };   // [shield, (armour column retired: see ARMOR), structure]
 
 // ---- ARMOUR (FS2-style damage transform, never depletes) ----
 // A ship carries { type, rating }: rating = average fraction of damage stopped; the type's profile redistributes it by damage type.
@@ -12,9 +12,9 @@ const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1] 
 //   spall   share of the blocked damage that reaches a nearby internal component when the armour is breached
 // Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
 const ARMOR = {
-  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00 }, thresh: 0, rate: 0.60, spall: 0.04 },
-  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00 }, thresh: 6, rate: 0,    spall: 0.30 },
-  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
+  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00, nuke: 1.60 }, thresh: 0, rate: 0.60, spall: 0.04 },
+  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00, nuke: 0.60 }, thresh: 6, rate: 0,    spall: 0.30 },
+  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00, nuke: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
 };
 // ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
 const FF = { bolt: 0.5, blast: 0.5 };
@@ -49,10 +49,11 @@ const WEAPONS = {
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
   tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 380, acc: 260, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
   tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 240, acc: 75, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
-const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad'];
+const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
 
 // ---- shared scratch + rendering of projectiles (one InstancedMesh per weapon type) -----------------
 const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _wq = new THREE.Quaternion();
@@ -268,10 +269,44 @@ function blastAt(pos, w, team, owner, direct) {
     }
   }
 }
+// ---- nuclear burst (first cut, placeholder numbers; docs/CAPITAL_COMBAT.md) ------------------------------------
+// X-ray fluence F = 0.8 * yield / (4 pi r^2) in J/cm2 (1 kT = 4.18e12 J): hull damage as a fraction of the class kill fluence (hardening is a guess);
+// crew dose from neutrons/gamma (80 Gy at 900 m for 1 kT, 1/r^2), reduced by shields up to NUKE.shieldCut; flash blinds radar and PD optics for a while.
+const NUKE = { kill: { fighter: 1500, corvette: 2500, frigate: 4000, capital: 8000 }, crewDead: 30, shieldCut: 0.5, blindF: 0.04 };
+function nukeAt(pos, kt, owner) {
+  flashAt(pos, 90, 1.6); sparksAt(pos, 120, 80); fireAt(pos, 30, 30); sfx('boom', pos.distanceTo(camera.position), 3);
+  const rep = [];
+  for (const s of ships) {
+    if (!s.alive || s.dying) continue;
+    s.group.updateMatrixWorld(true);
+    const dc = s.group.position.distanceTo(pos);
+    const r = Math.max(3, dc - s.def.radius * 0.62);
+    const F = 0.8 * kt * 4.18e12 / (4 * Math.PI * r * r * 1e4);                  // J/cm2
+    const lp = s.group.worldToLocal(pos.clone());
+    const hit = traceShipLocal(s, lp, lp.clone().negate().normalize(), Math.min(dc, 400));
+    if (hit) lp.copy(hit); else lp.multiplyScalar(Math.min(1, s.def.radius * 0.6 / Math.max(1, lp.length())));
+    const Fk = NUKE.kill[s.def.cls] || 1500;
+    const hp = s.def.structure + (s.def.shield.fore + s.def.shield.aft) / 2;
+    s.lastAttacker = owner;
+    const before = s.structure;
+    applyHit(s, lp, hp * F / Fk, s.group.localToWorld(lp.clone()), 'nuke');
+    // flash blind
+    if (F > NUKE.blindF) s.blindUntil = Math.max(s.blindUntil || 0, time + Math.min(12, 2 + 3 * Math.log10(F / NUKE.blindF)));
+    // crew dose
+    let dose = 80 * kt * (900 / r) * (900 / r);
+    const sh = (s.def.shield.fore + s.def.shield.aft) ? (s.shield.fore + s.shield.aft) / (s.def.shield.fore + s.def.shield.aft) : 0;
+    dose *= 1 - NUKE.shieldCut * sh;
+    if (s.alive && !s.dying && !s.def.drone && dose >= NUKE.crewDead) { s.crewLost = true; log(`${s.callsign || s.def.name}: CREW INCAPACITATED (${Math.round(dose)} Gy)`, s === player ? '#ff5a4a' : '#ffb080'); killShip(s); }
+    rep.push({ id: s.def.id, team: s.team, r: Math.round(r), F: +F.toFixed(1), dose: Math.round(dose), dead: !s.alive || !!s.dying, str: Math.round(100 * Math.max(0, s.structure) / s.def.structure) });
+  }
+  nukeLog.push({ t: time, kt, rep });
+}
+const nukeLog = [];
 function killMissile(m, blast) {
   if (m.dead) return;
   m.dead = true;
-  if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
+  if (blast && m.w.nuclear) nukeAt(m.pos, m.w.yield, m.owner);
+  else if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
 }
 function updateMissiles(dt) {
@@ -295,7 +330,7 @@ function updateMissiles(dt) {
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true); blastDirect(m, s); break; }
-      if (dc < s.def.radius * 0.55 + m.w.fuze) { killMissile(m, true); break; }       // proximity fuze
+      if (dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }

@@ -82,7 +82,7 @@ SHIPS.kestrel = {
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
   ],
   shield: { fore: 40, aft: 40 }, armor: { type: 'composite', rating: 0.44 }, structure: 50,
-  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 3, sig: 1,
+  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 1, sig: 1,
   flameColor: 0x66c8ff,
 };
 

@@ -545,7 +545,7 @@ SHIPS.kestrel = {
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
   ],
   shield: { fore: 40, aft: 40 }, armor: { type: 'composite', rating: 0.44 }, structure: 50,
-  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 3, sig: 1,
+  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 1, sig: 1,
   flameColor: 0x66c8ff,
 };
 
@@ -1100,6 +1100,8 @@ scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder
 
 // human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;
+// FROGG pilots are neuro-slaved with very high G tolerance (owner 2026-10-21): their fighters turn and accelerate harder, so they re-engage fast
+for (const id in SHIPS) if (SHIPS[id].cls === 'fighter' && SHIPS[id].fac === 'frogg') { SHIPS[id].turn *= 1.5; SHIPS[id].accel *= 1.3; }
 // ======================================================================
 //  RENDERER / SCENE
 // ======================================================================
@@ -1632,6 +1634,7 @@ function smokeAt(p, n, speed) {
 // ======================================================================
 const compOf = (s, id) => s.comps.find(c => c.id === id);
 function compFactor(s, role) {
+  if (s.blindUntil > time && (role === 'radar' || role === 'turret')) return 0;     // nuclear flash: sensors and PD optics blind for a while
   const cs = s.comps.filter(c => c.role === role);
   if (!cs.length) return 1;
   let t = 0; for (const c of cs) t += Math.max(0, c.hp) / c.max;
@@ -1642,12 +1645,23 @@ const turnMul = s => 0.45 + 0.55 * compFactor(s, 'engine');
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 const _fwd = new THREE.Vector3();
+const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     s.ab = !!cmd.ab;
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
+  },
+  newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
+    s.ab = !!cmd.ab;
+    s.vel.addScaledVector(_fwd, thrust * a * dt);
+    const cap = s.def.maxSpeed * 2.2;
+    if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
@@ -1805,7 +1819,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
-    energy: 100,
+    fm: opts.fm || 'arcade', blindUntil: 0, energy: 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -1891,7 +1905,7 @@ function resetGame() {
 //  WEAPONS — ballistic + energy guns, guided missiles, torpedoes, countermeasures, turrets
 //  Damage types: kin (kinetic) / en (energy, plasma, acid) / exp (blast). Each hits shield / armour / structure differently.
 // ======================================================================
-const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1] };   // [shield, (armour column retired: see ARMOR), structure]
+const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1], nuke: [1.0, 1.0, 1.0] };   // [shield, (armour column retired: see ARMOR), structure]
 
 // ---- ARMOUR (FS2-style damage transform, never depletes) ----
 // A ship carries { type, rating }: rating = average fraction of damage stopped; the type's profile redistributes it by damage type.
@@ -1901,9 +1915,9 @@ const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1] 
 //   spall   share of the blocked damage that reaches a nearby internal component when the armour is breached
 // Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
 const ARMOR = {
-  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00 }, thresh: 0, rate: 0.60, spall: 0.04 },
-  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00 }, thresh: 6, rate: 0,    spall: 0.30 },
-  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
+  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00, nuke: 1.60 }, thresh: 0, rate: 0.60, spall: 0.04 },
+  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00, nuke: 0.60 }, thresh: 6, rate: 0,    spall: 0.30 },
+  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00, nuke: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
 };
 // ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
 const FF = { bolt: 0.5, blast: 0.5 };
@@ -1938,10 +1952,11 @@ const WEAPONS = {
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
   tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 380, acc: 260, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
   tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 240, acc: 75, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
-const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad'];
+const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
 
 // ---- shared scratch + rendering of projectiles (one InstancedMesh per weapon type) -----------------
 const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _wq = new THREE.Quaternion();
@@ -2157,10 +2172,44 @@ function blastAt(pos, w, team, owner, direct) {
     }
   }
 }
+// ---- nuclear burst (first cut, placeholder numbers; docs/CAPITAL_COMBAT.md) ------------------------------------
+// X-ray fluence F = 0.8 * yield / (4 pi r^2) in J/cm2 (1 kT = 4.18e12 J): hull damage as a fraction of the class kill fluence (hardening is a guess);
+// crew dose from neutrons/gamma (80 Gy at 900 m for 1 kT, 1/r^2), reduced by shields up to NUKE.shieldCut; flash blinds radar and PD optics for a while.
+const NUKE = { kill: { fighter: 1500, corvette: 2500, frigate: 4000, capital: 8000 }, crewDead: 30, shieldCut: 0.5, blindF: 0.04 };
+function nukeAt(pos, kt, owner) {
+  flashAt(pos, 90, 1.6); sparksAt(pos, 120, 80); fireAt(pos, 30, 30); sfx('boom', pos.distanceTo(camera.position), 3);
+  const rep = [];
+  for (const s of ships) {
+    if (!s.alive || s.dying) continue;
+    s.group.updateMatrixWorld(true);
+    const dc = s.group.position.distanceTo(pos);
+    const r = Math.max(3, dc - s.def.radius * 0.62);
+    const F = 0.8 * kt * 4.18e12 / (4 * Math.PI * r * r * 1e4);                  // J/cm2
+    const lp = s.group.worldToLocal(pos.clone());
+    const hit = traceShipLocal(s, lp, lp.clone().negate().normalize(), Math.min(dc, 400));
+    if (hit) lp.copy(hit); else lp.multiplyScalar(Math.min(1, s.def.radius * 0.6 / Math.max(1, lp.length())));
+    const Fk = NUKE.kill[s.def.cls] || 1500;
+    const hp = s.def.structure + (s.def.shield.fore + s.def.shield.aft) / 2;
+    s.lastAttacker = owner;
+    const before = s.structure;
+    applyHit(s, lp, hp * F / Fk, s.group.localToWorld(lp.clone()), 'nuke');
+    // flash blind
+    if (F > NUKE.blindF) s.blindUntil = Math.max(s.blindUntil || 0, time + Math.min(12, 2 + 3 * Math.log10(F / NUKE.blindF)));
+    // crew dose
+    let dose = 80 * kt * (900 / r) * (900 / r);
+    const sh = (s.def.shield.fore + s.def.shield.aft) ? (s.shield.fore + s.shield.aft) / (s.def.shield.fore + s.def.shield.aft) : 0;
+    dose *= 1 - NUKE.shieldCut * sh;
+    if (s.alive && !s.dying && !s.def.drone && dose >= NUKE.crewDead) { s.crewLost = true; log(`${s.callsign || s.def.name}: CREW INCAPACITATED (${Math.round(dose)} Gy)`, s === player ? '#ff5a4a' : '#ffb080'); killShip(s); }
+    rep.push({ id: s.def.id, team: s.team, r: Math.round(r), F: +F.toFixed(1), dose: Math.round(dose), dead: !s.alive || !!s.dying, str: Math.round(100 * Math.max(0, s.structure) / s.def.structure) });
+  }
+  nukeLog.push({ t: time, kt, rep });
+}
+const nukeLog = [];
 function killMissile(m, blast) {
   if (m.dead) return;
   m.dead = true;
-  if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
+  if (blast && m.w.nuclear) nukeAt(m.pos, m.w.yield, m.owner);
+  else if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
 }
 function updateMissiles(dt) {
@@ -2184,7 +2233,7 @@ function updateMissiles(dt) {
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true); blastDirect(m, s); break; }
-      if (dc < s.def.radius * 0.55 + m.w.fuze) { killMissile(m, true); break; }       // proximity fuze
+      if (dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
@@ -2709,12 +2758,22 @@ function aiUpdate(s, dt) {
   return fighterAI(s, dt);
 }
 
+// ---- pilot skill 1..5 (5 = elite): aim wobble (rad), turn-rate factor, missile-lock speed, missile-warning range ----
+const SKILL = { noise: [0.05, 0.032, 0.018, 0.009, 0.003], turn: [0.8, 0.9, 1, 1.08, 1.16], react: [0.35, 0.45, 0.55, 0.7, 0.9], evade: [300, 420, 560, 650, 720] };
+const skillV = (s, k) => SKILL[k][clamp(Math.round(s.skill || 3), 1, 5) - 1];
+const _an = new THREE.Vector3();
+function aimNoise(s, dist) {          // slowly wandering aim offset: low-skill pilots lead badly and wander off the target
+  const ai = s.ai;
+  if (!ai.nV) { ai.nV = new THREE.Vector3(); ai.nT = 0; }
+  if (time > ai.nT) { ai.nT = time + 0.4 + Math.random() * 0.3; ai.nV.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(skillV(s, 'noise')); }
+  return _an.copy(ai.nV).multiplyScalar(dist);
+}
 function missileLogic(s, dt, wantIds) {
   const ai = s.ai;
   const ids = missileIds(s).filter(id => wantIds.includes(id) && s.stores[id] > 0);
   if (!ids.length || !s.target) return;
   s.sel = missileIds(s).indexOf(ids[0]);
-  lockUpdate(s, dt * 0.55);          // AI pilots are slower to get a tone than a human
+  lockUpdate(s, dt * skillV(s, 'react'));          // AI pilots are slower to get a tone than a human
   const d = s.lock.d;
   if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && Math.random() < dt * 0.8) {
     launchMissile(s, ids[0]);
@@ -2731,16 +2790,17 @@ function fighterAI(s, dt) {
   if (!gun || (hurt && ai.aggr < 0.7)) ai.mode = 'flee';
   else if (ai.mode === 'flee') ai.mode = 'attack';
   // missile defence
-  if (ai.inc && ai.incD < 600 && ai.mode !== 'flee') { if (ai.mode !== 'evade') { ai.mode = 'evade'; ai.evadeT = 2.2 + Math.random(); ai.dir = Math.random() < 0.5 ? 1 : -1; } }
+  if (ai.inc && ai.incD < skillV(s, 'evade') && ai.mode !== 'flee') { if (ai.mode !== 'evade') { ai.mode = 'evade'; ai.evadeT = 2.2 + Math.random(); ai.dir = Math.random() < 0.5 ? 1 : -1; } }
   if (ai.mode === 'evade' && ai.evadeT <= 0 && !ai.inc) ai.mode = 'attack';
   if (ai.inc && ai.incD < 520 && ai.incD > 70 && ai.cmT <= 0 && s.stores.flare > 0) { deployCM(s); ai.cmT = 0.9 + Math.random(); }
 
   if (!t) {                       // nothing to fight: loiter around the anchor / player
     const c = (s.team === 0 && player && player.alive) ? player.group.position : (game.anchor ? game.anchor.group.position : ep);
     aim.copy(c).add(_ad.set(Math.sin(time * 0.1 + ep.x) * 180, 25, Math.cos(time * 0.1 + ep.z) * 180));
-    turnToward(s, aim, dt, 0.7); flightModels.arcade(s, { throttle: 0.5 }, dt); return;
+    turnToward(s, aim, dt, 0.7); aiFly(s, { throttle: 0.5 }, dt); return;
   }
   const dist = ep.distanceTo(t.group.position);
+  const lead = leadPoint(s, t, primarySpeed(s)).clone().add(aimNoise(s, dist));
   // last-minute swerve: if a collision is imminent, break sideways instead of ramming
   if (ai.mode === 'attack' && dist < 450) {
     _ad.copy(t.group.position).sub(ep);
@@ -2756,7 +2816,7 @@ function fighterAI(s, dt) {
     }
   }
   if (ai.mode === 'attack') {
-    aim.copy(leadPoint(s, t, primarySpeed(s)));
+    aim.copy(lead);
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
@@ -2768,11 +2828,11 @@ function fighterAI(s, dt) {
   }
   if (ai.mode === 'flee') { aim.copy(ep).sub(t.group.position).normalize().multiplyScalar(600).add(ep); thr = 1; ab = ai.aggr > 0.5; }
   const av = avoidance(s, aim);
-  const ang = turnToward(s, aim, dt, ai.mode === 'evade' ? 1.15 : 1);
-  flightModels.arcade(s, { throttle: thr, ab }, dt);
+  const ang = turnToward(s, aim, dt, (ai.mode === 'evade' ? 1.15 : 1) * skillV(s, 'turn'));
+  aiFly(s, { throttle: thr, ab }, dt);
   // fire
   if (ai.mode === 'attack' && !av && gun) {
-    const err = aimError(s, leadPoint(s, t, primarySpeed(s)));
+    const err = aimError(s, lead);
     const rng = primaryRange(s);
     const tol = (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
     if (err < tol && dist < rng) fireGuns(s, 0b11);
@@ -2804,7 +2864,7 @@ function bomberAI(s, dt) {
   const av = avoidance(s, aim);
   if (av) thr = 1;
   turnToward(s, aim, dt, 1);
-  flightModels.arcade(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
+  aiFly(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
   // defend with guns if a fighter is on the nose
   const p = hostilesOf(s).find(e => !isCapital(e) && e.group.position.distanceTo(ep) < 450 && aimError(s, e.group.position) < 0.07);
   if (p) fireGuns(s, 0b11);
@@ -2812,7 +2872,7 @@ function bomberAI(s, dt) {
 
 function capitalAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
-  if (!t) { flightModels.arcade(s, { throttle: 0.1 }, dt); return; }
+  if (!t) { aiFly(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
@@ -2820,7 +2880,7 @@ function capitalAI(s, dt) {
   const lp = leadPoint(s, t, primarySpeed(s));
   turnToward(s, lp, dt, 1);
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
-  flightModels.arcade(s, { throttle: thr }, dt);
+  aiFly(s, { throttle: thr }, dt);
   const err = aimError(s, lp);
   if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);
   // torpedoes at capital targets
@@ -2839,9 +2899,9 @@ const $id = id => document.getElementById(id);
 
 // ---- persistent crew ----------------------------------------------------------------------------------
 const PILOT_DEFS = {
-  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight' },
-  hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons' },
-  sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous' },
+  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight', skill: 3 },
+  hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons', skill: 4 },
+  sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous', skill: 2 },
 };
 function freshCrew() {
   const c = {};
@@ -3008,7 +3068,7 @@ function startMission(M) {
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
   for (const w of su.wingmen) {
     if (CREW[w.pilot].status !== 'active') continue;
-    const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter' });
+    const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
   }
   state = 'brief';
@@ -3736,7 +3796,7 @@ function updateTargetPanel(nd, closure) {
     const sel = subComp(t);
     const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
     const radarOk = !player || compFactor(player, 'radar') > 0.01;
-    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
+    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span> <span style="opacity:.6">SKL ${t.skill | 0}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
   if (html !== lastTgtHtml) { tgtEl.innerHTML = html; lastTgtHtml = html; }
 }
@@ -4078,6 +4138,7 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
+  nukeAt, nukeLog, flightModels, NUKE,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
   launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },

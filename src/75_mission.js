@@ -8,9 +8,9 @@ const $id = id => document.getElementById(id);
 
 // ---- persistent crew ----------------------------------------------------------------------------------
 const PILOT_DEFS = {
-  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight' },
-  hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons' },
-  sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous' },
+  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight', skill: 3 },
+  hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons', skill: 4 },
+  sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous', skill: 2 },
 };
 function freshCrew() {
   const c = {};
@@ -177,7 +177,7 @@ function startMission(M) {
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
   for (const w of su.wingmen) {
     if (CREW[w.pilot].status !== 'active') continue;
-    const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter' });
+    const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
   }
   state = 'brief';

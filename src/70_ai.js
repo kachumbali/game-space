@@ -102,12 +102,22 @@ function aiUpdate(s, dt) {
   return fighterAI(s, dt);
 }
 
+// ---- pilot skill 1..5 (5 = elite): aim wobble (rad), turn-rate factor, missile-lock speed, missile-warning range ----
+const SKILL = { noise: [0.05, 0.032, 0.018, 0.009, 0.003], turn: [0.8, 0.9, 1, 1.08, 1.16], react: [0.35, 0.45, 0.55, 0.7, 0.9], evade: [300, 420, 560, 650, 720] };
+const skillV = (s, k) => SKILL[k][clamp(Math.round(s.skill || 3), 1, 5) - 1];
+const _an = new THREE.Vector3();
+function aimNoise(s, dist) {          // slowly wandering aim offset: low-skill pilots lead badly and wander off the target
+  const ai = s.ai;
+  if (!ai.nV) { ai.nV = new THREE.Vector3(); ai.nT = 0; }
+  if (time > ai.nT) { ai.nT = time + 0.4 + Math.random() * 0.3; ai.nV.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(skillV(s, 'noise')); }
+  return _an.copy(ai.nV).multiplyScalar(dist);
+}
 function missileLogic(s, dt, wantIds) {
   const ai = s.ai;
   const ids = missileIds(s).filter(id => wantIds.includes(id) && s.stores[id] > 0);
   if (!ids.length || !s.target) return;
   s.sel = missileIds(s).indexOf(ids[0]);
-  lockUpdate(s, dt * 0.55);          // AI pilots are slower to get a tone than a human
+  lockUpdate(s, dt * skillV(s, 'react'));          // AI pilots are slower to get a tone than a human
   const d = s.lock.d;
   if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && Math.random() < dt * 0.8) {
     launchMissile(s, ids[0]);
@@ -124,16 +134,17 @@ function fighterAI(s, dt) {
   if (!gun || (hurt && ai.aggr < 0.7)) ai.mode = 'flee';
   else if (ai.mode === 'flee') ai.mode = 'attack';
   // missile defence
-  if (ai.inc && ai.incD < 600 && ai.mode !== 'flee') { if (ai.mode !== 'evade') { ai.mode = 'evade'; ai.evadeT = 2.2 + Math.random(); ai.dir = Math.random() < 0.5 ? 1 : -1; } }
+  if (ai.inc && ai.incD < skillV(s, 'evade') && ai.mode !== 'flee') { if (ai.mode !== 'evade') { ai.mode = 'evade'; ai.evadeT = 2.2 + Math.random(); ai.dir = Math.random() < 0.5 ? 1 : -1; } }
   if (ai.mode === 'evade' && ai.evadeT <= 0 && !ai.inc) ai.mode = 'attack';
   if (ai.inc && ai.incD < 520 && ai.incD > 70 && ai.cmT <= 0 && s.stores.flare > 0) { deployCM(s); ai.cmT = 0.9 + Math.random(); }
 
   if (!t) {                       // nothing to fight: loiter around the anchor / player
     const c = (s.team === 0 && player && player.alive) ? player.group.position : (game.anchor ? game.anchor.group.position : ep);
     aim.copy(c).add(_ad.set(Math.sin(time * 0.1 + ep.x) * 180, 25, Math.cos(time * 0.1 + ep.z) * 180));
-    turnToward(s, aim, dt, 0.7); flightModels.arcade(s, { throttle: 0.5 }, dt); return;
+    turnToward(s, aim, dt, 0.7); aiFly(s, { throttle: 0.5 }, dt); return;
   }
   const dist = ep.distanceTo(t.group.position);
+  const lead = leadPoint(s, t, primarySpeed(s)).clone().add(aimNoise(s, dist));
   // last-minute swerve: if a collision is imminent, break sideways instead of ramming
   if (ai.mode === 'attack' && dist < 450) {
     _ad.copy(t.group.position).sub(ep);
@@ -149,7 +160,7 @@ function fighterAI(s, dt) {
     }
   }
   if (ai.mode === 'attack') {
-    aim.copy(leadPoint(s, t, primarySpeed(s)));
+    aim.copy(lead);
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
@@ -161,11 +172,11 @@ function fighterAI(s, dt) {
   }
   if (ai.mode === 'flee') { aim.copy(ep).sub(t.group.position).normalize().multiplyScalar(600).add(ep); thr = 1; ab = ai.aggr > 0.5; }
   const av = avoidance(s, aim);
-  const ang = turnToward(s, aim, dt, ai.mode === 'evade' ? 1.15 : 1);
-  flightModels.arcade(s, { throttle: thr, ab }, dt);
+  const ang = turnToward(s, aim, dt, (ai.mode === 'evade' ? 1.15 : 1) * skillV(s, 'turn'));
+  aiFly(s, { throttle: thr, ab }, dt);
   // fire
   if (ai.mode === 'attack' && !av && gun) {
-    const err = aimError(s, leadPoint(s, t, primarySpeed(s)));
+    const err = aimError(s, lead);
     const rng = primaryRange(s);
     const tol = (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
     if (err < tol && dist < rng) fireGuns(s, 0b11);
@@ -197,7 +208,7 @@ function bomberAI(s, dt) {
   const av = avoidance(s, aim);
   if (av) thr = 1;
   turnToward(s, aim, dt, 1);
-  flightModels.arcade(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
+  aiFly(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
   // defend with guns if a fighter is on the nose
   const p = hostilesOf(s).find(e => !isCapital(e) && e.group.position.distanceTo(ep) < 450 && aimError(s, e.group.position) < 0.07);
   if (p) fireGuns(s, 0b11);
@@ -205,7 +216,7 @@ function bomberAI(s, dt) {
 
 function capitalAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
-  if (!t) { flightModels.arcade(s, { throttle: 0.1 }, dt); return; }
+  if (!t) { aiFly(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
@@ -213,7 +224,7 @@ function capitalAI(s, dt) {
   const lp = leadPoint(s, t, primarySpeed(s));
   turnToward(s, lp, dt, 1);
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
-  flightModels.arcade(s, { throttle: thr }, dt);
+  aiFly(s, { throttle: thr }, dt);
   const err = aimError(s, lp);
   if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);
   // torpedoes at capital targets
