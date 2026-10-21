@@ -21,3 +21,6 @@ function scaleShip(def, newLength) {
 }
 scaleShip(SHIPS.halberd, 128);
 scaleShip(SHIPS.gulper, 146);
+
+// human-testing tweak: fighters turn 50% faster (applies to player and AI alike)
+for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 1.5;

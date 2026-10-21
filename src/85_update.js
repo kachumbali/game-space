@@ -12,7 +12,7 @@ function updatePlayer(dt) {
   const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
   const roll = kb('KeyQ', 'KeyE');
   const tm = turnMul(s);
-  _eu.set(pitch * 1.6 * tm * dt, yaw * 1.1 * tm * dt, roll * 2.2 * tm * dt, 'XYZ');
+  _eu.set(pitch * 1.6 * 1.5 * tm * dt, yaw * 1.1 * 1.5 * tm * dt, roll * 2.2 * 1.5 * tm * dt, 'XYZ');
   s.group.quaternion.multiply(_dq.setFromEuler(_eu)).normalize();
   s.throttle = clamp(s.throttle + kb('KeyW', 'KeyS') * 0.6 * dt, 0, 1);
   const ab = keys.has('ShiftLeft') || keys.has('ShiftRight');
