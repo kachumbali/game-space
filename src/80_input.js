@@ -160,3 +160,12 @@ function changeDetail(d) {
   detailIdx = n;
   for (const s of ships) if (s.alive) buildVox(s);
 }
+
+// phones: smaller HUD fonts and controls
+function setPhone() {
+  const ph = isTouch && Math.min(innerWidth, innerHeight) < 520;
+  document.body.classList.toggle('phone', ph);
+  FS = ph ? 0.78 : 1;
+}
+addEventListener('resize', setPhone); addEventListener('orientationchange', setPhone);
+setPhone();

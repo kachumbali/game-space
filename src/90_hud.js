@@ -161,7 +161,7 @@ function edgeArrow(c, x, y, front, col, label) {
   c.save(); c.translate(px, py); c.rotate(a);
   c.fillStyle = col; c.beginPath(); c.moveTo(14, 0); c.lineTo(-8, -9); c.lineTo(-3, 0); c.lineTo(-8, 9); c.closePath(); c.fill();
   c.restore();
-  if (label) { c.fillStyle = col; c.font = '11px monospace'; c.textAlign = 'center'; c.fillText(label, px - Math.cos(a) * 26, py - Math.sin(a) * 26 + 4); }
+  if (label) { c.fillStyle = col; c.font = `${Math.round(11 * FS)}px monospace`; c.textAlign = 'center'; c.fillText(label, px - Math.cos(a) * 26, py - Math.sin(a) * 26 + 4); }
 }
 // time for a projectile of speed v (fired from shooter, inheriting 0.9 of its velocity) to reach a moving target
 function interceptPoint(sp, sv, tp, tv, v) {
@@ -179,6 +179,7 @@ function interceptPoint(sp, sv, tp, tv, v) {
   if (!(t > 0) || t > 6) return null;
   return tp.clone().addScaledVector(tv, t).addScaledVector(sv, -0.9 * t);
 }
+
 
 const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3();
 function drawOverlay(alive) {
@@ -216,10 +217,10 @@ function drawOverlay(alive) {
       if (hostile) {
         c.strokeStyle = 'rgba(255,90,90,.75)'; c.lineWidth = 1.5; c.beginPath();
         c.moveTo(pr.x, pr.y - size); c.lineTo(pr.x + size, pr.y); c.lineTo(pr.x, pr.y + size); c.lineTo(pr.x - size, pr.y); c.closePath(); c.stroke();
-        if (size > 14 || d < 1500) { c.fillStyle = 'rgba(255,140,140,.85)'; c.font = '10px monospace'; c.textAlign = 'left'; c.fillText(`${s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
+        if (size > 14 || d < 1500) { c.fillStyle = 'rgba(255,140,140,.85)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
       } else {
         bracketBox(c, pr.x, pr.y, Math.max(8, size), 'rgba(106,200,255,.7)', 1.5);
-        c.fillStyle = 'rgba(140,215,255,.9)'; c.font = '10px monospace'; c.textAlign = 'left';
+        c.fillStyle = 'rgba(140,215,255,.9)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left';
         c.fillText(`${s.callsign || s.def.name} ${d.toFixed(0)}`, pr.x + Math.max(8, size) + 4, pr.y + 3);
       }
     }
@@ -233,7 +234,7 @@ function drawOverlay(alive) {
     const col = locked ? '#ff3a2a' : locking ? '#ffd24a' : '#ff8a6a';
     if (pr.front && pr.x > 0 && pr.x < ovW && pr.y > 0 && pr.y < ovH) {
       bracketBox(c, pr.x, pr.y, size, col, 2.5);
-      c.fillStyle = col; c.font = '11px monospace'; c.textAlign = 'center';
+      c.fillStyle = col; c.font = `${Math.round(11 * FS)}px monospace`; c.textAlign = 'center';
       c.fillText(`${t.def.name} ${radarOk ? d.toFixed(0) + 'm' : ''}`, pr.x, pr.y + size + 15);
       if (locking) { const rr = size * (1.9 - 0.9 * L.p); c.strokeStyle = col; c.lineWidth = 2; c.beginPath(); c.arc(pr.x, pr.y, rr, 0, 7); c.stroke(); }
       if (locked) {
@@ -257,7 +258,7 @@ function drawOverlay(alive) {
           c.strokeStyle = cc; c.lineWidth = sel ? 2 : 1; c.globalAlpha = sel ? 1 : 0.55;
           c.beginPath(); c.arc(q.x, q.y, rr, 0, 7); c.stroke();
           if (flash) { c.fillStyle = '#fff'; c.globalAlpha = 0.8; c.beginPath(); c.arc(q.x, q.y, rr, 0, 7); c.fill(); }
-          if (sel) { c.globalAlpha = 1; c.fillStyle = cc; c.font = '10px monospace'; c.textAlign = 'left'; c.fillText(`${cp.name} ${Math.round(f * 100)}%`, q.x + rr + 4, q.y + 3); }
+          if (sel) { c.globalAlpha = 1; c.fillStyle = cc; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${cp.name} ${Math.round(f * 100)}%`, q.x + rr + 4, q.y + 3); }
           c.globalAlpha = 1;
         }
       }
@@ -283,7 +284,7 @@ function drawOverlay(alive) {
     const blink = Math.floor(time * 8) % 2 ? '#ff3a2a' : '#ffb0a0';
     if (pr.front && pr.x > 0 && pr.x < ovW && pr.y > 0 && pr.y < ovH) {
       c.strokeStyle = blink; c.lineWidth = 2; c.strokeRect(pr.x - 11, pr.y - 11, 22, 22);
-      c.fillStyle = blink; c.font = '11px monospace'; c.textAlign = 'center'; c.fillText(`MSL ${d.toFixed(0)}`, pr.x, pr.y - 16);
+      c.fillStyle = blink; c.font = `${Math.round(11 * FS)}px monospace`; c.textAlign = 'center'; c.fillText(`MSL ${d.toFixed(0)}`, pr.x, pr.y - 16);
     } else edgeArrow(c, pr.x, pr.y, pr.front, blink, `MSL ${d.toFixed(0)}`);
   }
   // own missiles in flight (small ticks) to follow them
@@ -314,13 +315,13 @@ function drawRadar(alive) {
   const sw = (time * 1.6) % (Math.PI * 2);
   const sg = c.createConicGradient ? c.createConicGradient(sw - Math.PI / 2, cx, cy) : null;
   if (sg) { sg.addColorStop(0, 'rgba(143,255,208,0)'); sg.addColorStop(0.9, 'rgba(143,255,208,0)'); sg.addColorStop(1, 'rgba(143,255,208,.16)'); c.fillStyle = sg; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.fill(); }
-  c.fillStyle = 'rgba(143,255,208,.8)'; c.font = '16px monospace'; c.textAlign = 'center';
+  c.fillStyle = 'rgba(143,255,208,.8)'; c.font = `${Math.round(16 * FS)}px monospace`; c.textAlign = 'center';
   c.fillText('FWD', cx, cy - R + 20); c.fillText(`${range / 1000}km`, cx, cy + R - 8);
   const p = player;
   if (alive) {
     const rf = compFactor(p, 'radar');
     if (rf <= 0) {
-      c.fillStyle = '#ff5a4a'; c.font = '20px monospace'; c.fillText('RADAR OFFLINE', cx, cy + 6);
+      c.fillStyle = '#ff5a4a'; c.font = `${Math.round(20 * FS)}px monospace`; c.fillText('RADAR OFFLINE', cx, cy + 6);
       for (let i = 0; i < 60; i++) { c.fillStyle = 'rgba(143,255,208,.25)'; c.fillRect(cx + (Math.random() - 0.5) * 2 * R * 0.9, cy + (Math.random() - 0.5) * 2 * R * 0.9, 3, 3); }
     } else {
       _inv.copy(p.group.quaternion).invert();
