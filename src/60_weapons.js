@@ -2,7 +2,35 @@
 //  WEAPONS — ballistic + energy guns, guided missiles, torpedoes, countermeasures, turrets
 //  Damage types: kin (kinetic) / en (energy, plasma, acid) / exp (blast). Each hits shield / armour / structure differently.
 // ======================================================================
-const DMGX = { kin: [0.7, 1.15, 1.0], en: [1.25, 0.8, 1.0], exp: [1.0, 1.0, 1.1] };   // [shield, armour, structure]
+const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1] };   // [shield, (armour column retired: see ARMOR), structure]
+
+// ---- ARMOUR (FS2-style damage transform, never depletes) ----
+// A ship carries { type, rating }: rating = average fraction of damage stopped; the type's profile redistributes it by damage type.
+//   prof    multiplier on rating per damage type (kin / en / exp)
+//   thresh  hits smaller than thresh x class scale are mostly stopped (soft quadratic cut-off): hard armour shrugs off PD and light guns
+//   rate    ablative only: max damage absorbed per second as a fraction of structure (burst capacity 1.5 s); beyond it hits pass through
+//   spall   share of the blocked damage that reaches a nearby internal component when the armour is breached
+// Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
+const ARMOR = {
+  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00 }, thresh: 0, rate: 0.60, spall: 0.04 },
+  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00 }, thresh: 6, rate: 0,    spall: 0.30 },
+  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
+};
+// ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
+const FF = { bolt: 0.5, blast: 0.5 };
+const _ff = new THREE.Vector3(), _fw = new THREE.Vector3();
+function friendlyInLine(s, maxD = 700) {           // AI holds fire when a friendly ship sits in its gun line
+  _fw.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+  for (const f of ships) {
+    if (f === s || !f.alive || f.dying || f.team !== s.team) continue;
+    _ff.copy(f.group.position).sub(s.group.position);
+    const along = _ff.dot(_fw);
+    if (along < 0 || along > maxD) continue;
+    if (_ff.addScaledVector(_fw, -along).length() < f.def.radius * 0.9 + 3) return true;
+  }
+  return false;
+}
+const ARMOR_THRESH_CLS = { fighter: 0.25, corvette: 1, frigate: 1.5, capital: 2 };
 
 const WEAPONS = {
   // ---- human ----
@@ -118,6 +146,7 @@ function fireMount(s, m) {
 }
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
 function fireGuns(s, mask) {
+  if (s !== player && friendlyInLine(s)) return false;
   let n = 0, any = false;
   for (const m of s.mounts) {
     if (m.store) continue;
@@ -206,17 +235,23 @@ function steerMissile(m, dt) {
   const v = burning ? Math.min(w.vmax, sp + w.acc * dt) : sp;      // vacuum: no drag after burnout
   m.vel.copy(m.dir).multiplyScalar(v);
 }
+let _ffLog = -99;
+function friendlyNote(by, victim) {
+  if (by) by.ffHits = (by.ffHits || 0) + 1;
+  if (time - _ffLog > 1.5) { _ffLog = time; log(by === player ? `FRIENDLY FIRE: ${victim.callsign || victim.def.name}` : `HIT BY FRIENDLY FIRE (${by?.callsign || by?.def.name || '?'})`, '#ffb040'); }
+}
 function blastAt(pos, w, team, owner, direct) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
   sfx('boom', pos.distanceTo(camera.position), w.torp ? 1.6 : 1);
   for (const s of ships) {
-    if (!s.alive || s.team === team || s.dying) continue;
+    if (!s.alive || s.dying) continue;
+    const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
     const surf = Math.max(0, dc - s.def.radius * 0.62);
     if (surf > w.blast) continue;
-    const f = direct === s ? 1 : Math.max(0.2, 1 - surf / w.blast);
+    const f = (direct === s ? 1 : Math.max(0.2, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
     // pull the contact point onto the hull
     const dir = lp.clone().negate().normalize();
@@ -225,7 +260,8 @@ function blastAt(pos, w, team, owner, direct) {
     else {
       lp.x = clamp(lp.x, -s.def.half[0] * 0.8, s.def.half[0] * 0.8); lp.y = clamp(lp.y, -s.def.half[1] * 0.8, s.def.half[1] * 0.8); lp.z = clamp(lp.z, -s.def.half[2] * 0.8, s.def.half[2] * 0.8);
     }
-    s.lastAttacker = owner;
+    if (!fr) s.lastAttacker = owner;
+    else if (s === player || owner === player) friendlyNote(owner, s);
     applyHit(s, lp, w.dmg * f, s.group.localToWorld(lp.clone()), 'exp');
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
@@ -409,14 +445,15 @@ function updateBolts(dt) {
     }
     if (b.life <= 0) continue;
     for (const s of ships) {
-      if (!s.alive || s.team === b.team || s.dying) continue;
+      if (!s.alive || s === b.owner || s.dying) continue;
+      const fr = s.team === b.team;
       if (!segSphere(b.prev, b.pos, s.group.position, s.def.radius)) continue;
       const hit = traceShip(s, b.prev, b.pos);
       if (!hit) continue;
       const wp = s.group.localToWorld(hit.clone());
-      s.lastAttacker = b.owner;
-      if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1;
-      applyHit(s, hit, b.dmg, wp, b.dt, b.w.pierce || 0);
+      if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
+      else if (s === player || b.owner === player) friendlyNote(b.owner, s);
+      applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
       sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);
       b.life = 0; break;

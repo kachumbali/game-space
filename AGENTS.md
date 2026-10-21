@@ -17,7 +17,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Ships are data (`SHIPS`, schema in README/docs/SHIPS.md). Forward is -Z; models mirror about X. Change sizes
   with `scaleShip`. Fighter turn is multiplied in 32_scale (x2.85) and in the player controls (85_update).
 - `SIM_SPEED` 0.375 scales the whole sim (not cine). Retune anything time-based against it.
-- Damage: shield -> armour -> structure, typed multipliers, `EXPOSED` subsystems take direct hits, `pierce`.
+- Damage: shield -> armour transform (`ARMOR`, never depletes; docs/ARMOR.md) -> structure, typed multipliers, `EXPOSED` subsystems take direct hits, `pierce`.
 - Missions: `MISSIONS[]` in 75_mission; stages may carry `{transit:{to,dur,area,lines}}` handled by 77_cine
   (state `'cine'`, body class `cine`). Looks/backgrounds: `LOOKS` in 41_sky, via `M.look`/`area.look`.
 - Phones: `body.phone` (set by `setPhone()` in 80_input); canvas HUD fonts use `FS`. iPad layout must not change.

@@ -55,10 +55,25 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
       if (d <= 0.01) return;
     }
   }
-  if (s.armor[side] > 0) {
-    const raw = d * X[1], a = Math.min(s.armor[side], raw);
-    s.armor[side] -= a; d *= 1 - a / raw;
-    chip(s, lp, 0, 0.9 + 0.05 * a, false);
+  // armour: type profile x ship rating, soft size threshold, ablative rate cap; spall goes to a nearby component on breach
+  const AR = ARMOR[def.armor.type];
+  let spall = 0;
+  if (AR && d > 0.01) {
+    const din = d;
+    let stop = Math.min(0.92, def.armor.rating * AR.prof[dtype]);
+    const th = AR.thresh * (ARMOR_THRESH_CLS[def.cls] || 1);
+    if (th > 0 && din < th) stop += (1 - stop) * (1 - (din / th) * (din / th));
+    let absorbed = din * stop;
+    if (AR.rate) {
+      const R = AR.rate * def.structure, bk = (s.abl ||= {})[side] ||= { v: 0, t: time };
+      bk.v = Math.max(0, bk.v - R * (time - bk.t)); bk.t = time;
+      bk.v += absorbed;
+      const cap = R * 1.5;
+      if (bk.v > cap) { absorbed -= bk.v - cap; bk.v = cap; }
+    }
+    d = din - absorbed;
+    spall = absorbed * AR.spall;
+    chip(s, lp, 0, 0.9 + 0.05 * Math.min(absorbed, 20), false);
     sparksAt(wp, 4, 11);
     if (d + pdmg <= 0.01) return;
   }
@@ -74,7 +89,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
   }
   if (best) {
     const before = compState(best);
-    best.hp -= d * 0.7; s.structure -= d * 0.3;
+    best.hp -= d * 0.7 + spall; s.structure -= d * 0.3;
     const after = compState(best);
     if (after > before) compEvent(s, best, after);
   } else s.structure -= d;
@@ -202,29 +217,37 @@ function solidAtWorld(s, wp) {
   return V.solid[(ci * D.ny + cj) * D.nz + ck] === 1;
 }
 
-// ---- ship / ship collisions: ramming a hull hurts ---------------------------------------------------
+// ---- ship / ship collisions: crash damage for every class, friend or foe -------------------------------
+// Mass classes are placeholders. Damage to each body = base(speed) x size factor x its share of the impact (the lighter ship takes more).
+const MASS = { fighter: 1, corvette: 25, frigate: 150, capital: 2000 };
 function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
     if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
-    if (a.def.cls !== 'fighter') continue;                 // a = the small body, b = what it hits
+    const ma = MASS[a.def.cls] || 1, mb = MASS[b.def.cls] || 1;
+    if (ma > mb) continue;                                  // a = the lighter body (equal masses are handled from both sides)
     if (a.hitCool > 0) continue;
     const d = a.group.position.distanceTo(b.group.position);
-    if (d > b.def.radius + 3 || (b.def.cls === 'fighter' && d > (a.def.radius + b.def.radius) * 0.6)) continue;
+    if (d > b.def.radius + 3 || (mb === ma && d > (a.def.radius + b.def.radius) * 0.6)) continue;
     if (!solidAtWorld(b, a.group.position)) continue;
     const rel = a.vel.clone().sub(b.vel);
     const sp = rel.length();
     a.hitCool = 0.6;
     const n = a.group.position.clone().sub(b.group.position); if (n.lengthSq() < 1e-6) n.set(0, 1, 0); n.normalize();
-    const lpA = new THREE.Vector3(0, 0, -a.def.half[2] * 0.5);
+    const mu = ma * mb / (ma + mb);
+    const base = (2 + sp * 0.22) * (1 + 0.35 * Math.sqrt(mu));
+    const cap = 60 * (1 + 0.6 * Math.sqrt(mu));
+    const dmgA = Math.min(cap, base * 2 * mb / (ma + mb)), dmgB = Math.min(cap, base * 2 * ma / (ma + mb));
     const wpA = a.group.position.clone();
-    const dmg = Math.min(60, 2 + sp * 0.22);
-    a.lastAttacker = b;
-    applyHit(a, lpA, dmg, wpA, 'kin');
-    if (b.def.cls !== 'fighter') { /* corvette shrugs it off */ } else { b.hitCool = 0.6; applyHit(b, b.group.worldToLocal(wpA.clone()), dmg, wpA, 'kin'); }
+    const lpA = new THREE.Vector3(0, 0, -a.def.half[2] * 0.5);
+    a.lastAttacker = b; b.lastAttacker = a;
+    applyHit(a, lpA, dmgA, wpA, 'kin');
+    if (mb === ma) b.hitCool = 0.6;
+    if (dmgB >= 1) applyHit(b, b.group.worldToLocal(wpA.clone()), dmgB, wpA, 'kin');
+    if (a.team === b.team && (a === player || b === player)) log(`COLLISION WITH ${(a === player ? b : a).callsign || (a === player ? b : a).def.name}`, '#ffb040');
     a.vel.reflect(n).multiplyScalar(0.6);
     a.group.position.addScaledVector(n, 3);
     sparksAt(wpA, 30, 25); sfx('hit', a === player ? 0 : wpA.distanceTo(camera.position));
-    if (a === player) { shake = 1; }
+    if (a === player || b === player) { shake = 1; }
   }
 }

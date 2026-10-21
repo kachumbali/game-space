@@ -81,7 +81,7 @@ SHIPS.kestrel = {
     { id: 'radar', name: 'RADAR', role: 'radar', pos: [0, -0.1, -3.9], r: 0.8, hp: 12 },
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
   ],
-  shield: { fore: 40, aft: 40 }, armor: { fore: 40, aft: 30, left: 35, right: 35 }, structure: 50,
+  shield: { fore: 40, aft: 40 }, armor: { type: 'composite', rating: 0.44 }, structure: 50,
   maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 3, sig: 1,
   flameColor: 0x66c8ff,
 };
@@ -156,7 +156,7 @@ SHIPS.halberd = {
     { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 5.3, 10], r: 3.0, hp: 90 },
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 20], r: 3.6, hp: 200 },
   ],
-  shield: { fore: 220, aft: 220 }, armor: { fore: 160, aft: 140, left: 150, right: 150 }, structure: 420,
+  shield: { fore: 220, aft: 220 }, armor: { type: 'hard', rating: 0.28 }, structure: 420,
   maxSpeed: 28, accel: 6, turn: 0.22, shieldRegen: 6, sig: 4, flameColor: 0x66c8ff,
 };
 
@@ -240,7 +240,7 @@ SHIPS.exeter = {
     { id: 'cradleL', name: 'CRADLE L (corvette)', role: 'dock', pos: [-34, -7, 40], r: 14, hp: 300 },
     { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
   ],
-  shield: { fore: 900, aft: 800 }, armor: { fore: 600, aft: 500, left: 550, right: 550 }, structure: 1600,
+  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600,
   maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff,
   ai: { role: 'capital' },
 };

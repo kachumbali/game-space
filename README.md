@@ -51,7 +51,7 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
   Flares fool IR missiles, chaff fools radar missiles. Lead pipper for guns.
 - **Weapons**: cannons (ammo), plasma bolters (energy capacitor), railgun, point-defence; FROGG fang/spit/lash/sting.
   Missiles are guided, burn out, proximity-fuzed; PD turrets shoot missiles down.
-- **Damage**: fore/aft shields → 4-sided armour → structure, typed damage (kinetic/energy/explosive), components
+- **Damage**: fore/aft shields → armour type (ablative/hard/composite, see docs/ARMOR.md) → structure, typed damage (kinetic/energy/explosive), components
   (engines, guns, shield, radar, power), voxel chipping and scorching. Corvettes die in stages.
 - **AI roles**: fighter, gunship, bomber, corvette/capital.
 

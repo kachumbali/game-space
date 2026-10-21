@@ -53,7 +53,9 @@ function drawDamage() {
     dctx.beginPath(); dctx.arc(cx, cy, 78, a0, a1); dctx.stroke();
   }
   const bar = (pct, x, y, w, h) => { dctx.fillStyle = hpCol(pct <= 0.01 ? 0 : pct < 0.4 ? 0.4 : 1); dctx.fillRect(x, y, Math.max(0, w), Math.max(0, h)); };
-  const ap = k => p.armor[k] / p.def.armor[k];
+  // armour does not deplete (FS2 style); only ablative shows its rate-cap headroom per facing
+  const AR = ARMOR[p.def.armor.type], Rc = AR && AR.rate ? AR.rate * p.def.structure : 0;
+  const ap = k => { const bk = p.abl[k]; return Rc && bk ? Math.max(0, 1 - Math.max(0, bk.v - Rc * (time - bk.t)) / (Rc * 1.5)) : 1; };
   bar(ap('fore'), cx - 35 * ap('fore'), cy - hz - 9, 70 * ap('fore'), 3);
   bar(ap('aft'), cx - 35 * ap('aft'), cy + hz + 6, 70 * ap('aft'), 3);
   bar(ap('left'), cx - hx - 9, cy - 35 * ap('left'), 3, 70 * ap('left'));
@@ -79,7 +81,7 @@ function updateTargetPanel(nd, closure) {
     const sel = subComp(t);
     const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
     const radarOk = !player || compFactor(player, 'radar') > 0.01;
-    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${pc(t.armor, d.armor)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
+    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
   if (html !== lastTgtHtml) { tgtEl.innerHTML = html; lastTgtHtml = html; }
 }
@@ -367,7 +369,7 @@ function updateHud() {
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
   hudTxt.textContent =
-    (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${Math.round(100 * (p.armor.fore + p.armor.aft + p.armor.left + p.armor.right) / (p.def.armor.fore + p.def.armor.aft + p.def.armor.left + p.def.armor.right))}%  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
+    (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);

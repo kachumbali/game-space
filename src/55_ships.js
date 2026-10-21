@@ -4,7 +4,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
   const s = {
     def, team, group: new THREE.Group(), vel: new THREE.Vector3(), throttle: 0.5,
     id: opts.id || null, callsign: opts.callsign || null, grp: opts.grp || null, pilot: opts.pilot || null, vital: !!opts.vital, hold: !!opts.hold,
-    shield: { ...def.shield }, armor: { ...def.armor }, structure: def.structure,
+    shield: { ...def.shield }, abl: {}, structure: def.structure,
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,

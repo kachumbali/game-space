@@ -96,7 +96,7 @@ SHIPS.darter = {
     { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.1, 0.8], r: 0.8, hp: 8 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 1.8], r: 0.9, hp: 12 },
   ],
-  shield: { fore: 10, aft: 8 }, armor: { fore: 12, aft: 10, left: 9, right: 9 }, structure: 14,
+  shield: { fore: 10, aft: 8 }, armor: { type: 'composite', rating: 0.46 }, structure: 14,
   maxSpeed: 165, aiSpeed: 120, accel: 90, turn: 2.6, sig: 0.8, flameColor: 0xffa030,
   ai: { role: 'fighter', aggr: 1.0 },
 };
@@ -131,7 +131,7 @@ SHIPS.leaper = {
     { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.2, 1.2], r: 1.1, hp: 12 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 2.8], r: 1.2, hp: 18 },
   ],
-  shield: { fore: 16, aft: 14 }, armor: { fore: 25, aft: 20, left: 18, right: 18 }, structure: 25,
+  shield: { fore: 16, aft: 14 }, armor: { type: 'composite', rating: 0.5 }, structure: 25,
   maxSpeed: 120, aiSpeed: 85, accel: 65, turn: 1.7, sig: 1, flameColor: 0xffa030,
   ai: { role: 'fighter', aggr: 0.8 },
 };
@@ -171,7 +171,7 @@ SHIPS.spitter = {
     { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.6], r: 1.4, hp: 16 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.2], r: 1.6, hp: 26 },
   ],
-  shield: { fore: 30, aft: 24 }, armor: { fore: 38, aft: 30, left: 30, right: 30 }, structure: 38,
+  shield: { fore: 30, aft: 24 }, armor: { type: 'ablative', rating: 0.5 }, structure: 38,
   maxSpeed: 90, aiSpeed: 66, accel: 50, turn: 1.1, sig: 1.3, flameColor: 0xffa030,
   ai: { role: 'gunship', aggr: 0.6 },
 };
@@ -213,7 +213,7 @@ SHIPS.toad = {
     { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.6, 0.5], r: 1.6, hp: 16 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0.2, 3.0], r: 2.0, hp: 34 },
   ],
-  shield: { fore: 26, aft: 22 }, armor: { fore: 45, aft: 38, left: 38, right: 38 }, structure: 55,
+  shield: { fore: 26, aft: 22 }, armor: { type: 'composite', rating: 0.45 }, structure: 55,
   maxSpeed: 78, aiSpeed: 58, accel: 40, turn: 0.9, sig: 1.4, flameColor: 0xffa030,
   ai: { role: 'bomber', aggr: 0.3 },
 };
@@ -256,7 +256,7 @@ SHIPS.reaver = {
     { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.8], r: 1.6, hp: 20 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.6], r: 1.9, hp: 30 },
   ],
-  shield: { fore: 40, aft: 40 }, armor: { fore: 45, aft: 40, left: 38, right: 38 }, structure: 60,
+  shield: { fore: 40, aft: 40 }, armor: { type: 'hard', rating: 0.43 }, structure: 60,
   maxSpeed: 95, aiSpeed: 66, accel: 50, turn: 1.15, sig: 1.3, flameColor: 0xffa030,
   ai: { role: 'fighter', aggr: 0.9 },
 };
@@ -315,7 +315,7 @@ SHIPS.gulper = {
     { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 4.2, -17], r: 7.0, hp: 90 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },
   ],
-  shield: { fore: 200, aft: 160 }, armor: { fore: 170, aft: 130, left: 140, right: 140 }, structure: 380,
+  shield: { fore: 200, aft: 160 }, armor: { type: 'composite', rating: 0.31 }, structure: 380,
   maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
   ai: { role: 'corvette' },
 };
@@ -360,7 +360,7 @@ SHIPS.hivecarrier = {
     { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 20, -400], r: 60, hp: 800 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 120], r: 80, hp: 2400 },
   ],
-  shield: { fore: 4000, aft: 3200 }, armor: { fore: 1600, aft: 1200, left: 1400, right: 1400 }, structure: 6000,
+  shield: { fore: 4000, aft: 3200 }, armor: { type: 'composite', rating: 0.21 }, structure: 6000,
   maxSpeed: 12, aiSpeed: 8, accel: 0.5, turn: 0.03, sig: 20, flameColor: 0xff6a2a,
   ai: { role: 'capital' },
 };
