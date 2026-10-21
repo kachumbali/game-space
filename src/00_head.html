@@ -25,15 +25,15 @@
   #radar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:224px;height:224px;z-index:5}
   #tgt{position:fixed;left:50%;top:10px;transform:translateX(-50%);font-size:11px;line-height:1.45;
     text-align:center;white-space:pre;color:#ffb0a0;text-shadow:0 0 4px #000;z-index:4;min-width:240px}
-  #log{position:fixed;left:50%;top:92px;transform:translateX(-50%);font-size:12px;line-height:1.5;
-    text-align:center;white-space:pre;text-shadow:0 0 4px #000;z-index:4;pointer-events:none}
+  #log{position:fixed;right:14px;top:84px;font-size:11px;line-height:1.5;max-width:300px;
+    text-align:right;white-space:pre;text-shadow:0 0 4px #000;z-index:4;pointer-events:none}
   #objs{position:fixed;right:14px;top:10px;font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;z-index:4;max-width:300px}
   #objs .done{color:#6fff8a;text-decoration:line-through;opacity:.7}#objs .failed{color:#ff5a4a}#objs .open{color:#ffd080}
   #comm{position:fixed;left:16px;bottom:26px;width:330px;font-size:12px;line-height:1.4;text-shadow:0 0 4px #000;z-index:6;pointer-events:none}
   #comm div{margin-top:3px}#comm b{margin-right:6px}
   #wpn{position:fixed;right:14px;bottom:20px;font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;z-index:6;white-space:pre}
   #wpn .sel{color:#ffd24a}#wpn .dim{opacity:.55}
-  #warn{position:fixed;left:50%;top:168px;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#ff4a3a;
+  #warn{position:fixed;left:50%;top:72px;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#ff4a3a;
     text-shadow:0 0 8px #000;z-index:6;pointer-events:none;letter-spacing:2px;text-align:center}
   #msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9;
     font-size:20px;text-align:center;background:rgba(0,0,0,.4);white-space:pre-line}
@@ -55,11 +55,11 @@
   body.touch #touch{display:block}
   body.touch #radar{width:132px;height:132px;bottom:6px}
   body.touch #hud{font-size:10px}
-  body.touch #objs{font-size:10px;max-width:200px;top:150px;left:12px;right:auto;text-align:left}
+  body.touch #objs{font-size:10px;max-width:200px;top:162px;left:12px;right:auto;text-align:left}
   body.touch #comm{font-size:11px;left:170px;bottom:10px;width:22vw;z-index:3}
-  body.touch #wpn{font-size:9px;left:12px;right:auto;bottom:auto;top:200px;text-align:left;line-height:1.35}
+  body.touch #wpn{font-size:9px;left:12px;right:auto;bottom:auto;top:212px;text-align:left;line-height:1.35}
   body.touch #tgt{font-size:10px;top:6px}
-  body.touch #log{top:70px}
+  body.touch #log{top:8px;right:100px;max-width:34vw;font-size:10px}
   body.touch #dmg{width:100px;height:113px}
   #stickzone{position:fixed;left:0;top:0;width:55%;height:100%;z-index:5}
   #stickbase,#stickknob{position:fixed;border-radius:50%;pointer-events:none;display:none;z-index:6}
@@ -68,6 +68,9 @@
   .tbtn{position:fixed;z-index:7;border:2px solid rgba(143,255,208,.7);border-radius:50%;
     background:rgba(10,30,24,.45);color:#8fffd0;display:flex;align-items:center;justify-content:center;
     font-size:12px;font-weight:bold}
+  .tbtn,#thr,#thrlbl,#bfire{transform:scale(.8);transform-origin:100% 100%}
+  #brl,#brr{transform-origin:0 100%}
+  #bview,#btgt,#bytgt,#bsel{transform-origin:100% 0}
   .tbtn.on{background:rgba(143,255,208,.45)}
   #bfire{right:78px;bottom:30px;width:96px;height:96px;font-size:16px;border-color:#ff8a5a;color:#ff8a5a}
   #bboost{right:182px;bottom:20px;width:60px;height:60px}
