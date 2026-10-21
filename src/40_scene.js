@@ -36,6 +36,7 @@ function resize() {
   if (composer) composer.setSize(w, h);
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
+  if (globalThis.__hudReady) sizeOverlay();
 }
 addEventListener('resize', resize);
 resize();

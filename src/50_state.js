@@ -17,7 +17,7 @@ const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
-    s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-3 * dt));
+    s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
@@ -33,15 +33,13 @@ let flightMode = 'arcade';
 // ======================================================================
 //  WORLD STATE
 // ======================================================================
-let ships = [], bolts = [], debris = [];
+let ships = [], bolts = [], debris = [], missiles = [], decoys = [], flashes = [];
+const killLog = {};
 let player = null, target = null, manualTarget = false;
 let wave = 0, kills = 0, state = 'play', view = 'cockpit';
 let time = 0, shake = 0, hitFlash = 0;
 const logs = [];
 
-const boltGeo = new THREE.BoxGeometry(0.3, 0.3, 4.6);
-const boltMats = {};
-const boltMat = c => boltMats[c] ??= new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(2.2) });
 const flameGeo = new THREE.ConeGeometry(0.42, 1, 7).rotateX(Math.PI / 2);   // apex trails toward +Z
 const flameMats = {};
 const flameMat = c => flameMats[c] ??= new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(1.7) });

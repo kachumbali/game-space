@@ -1,12 +1,15 @@
 // ---- ships ------------------------------------------------------------
-function makeShip(defId, team, pos, quat) {
+function makeShip(defId, team, pos, quat, opts = {}) {
   const def = SHIPS[defId];
   const s = {
     def, team, group: new THREE.Group(), vel: new THREE.Vector3(), throttle: 0.5,
+    id: opts.id || null, callsign: opts.callsign || null, grp: opts.grp || null, pilot: opts.pilot || null, vital: !!opts.vital,
     shield: { ...def.shield }, armor: { ...def.armor }, structure: def.structure,
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
-    lastHit: -99, cool: 0, alive: true, vox: null, flames: [], shieldFx: null,
-    ai: { mode: 'attack', t: 0, aim: new THREE.Vector3() },
+    lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
+    target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
+    energy: 100,
+    ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 3 + Math.random() * 4, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
   if (quat) s.group.quaternion.copy(quat);
@@ -25,8 +28,9 @@ function makeShip(defId, team, pos, quat) {
   }
   scene.add(s.group);
   ships.push(s);
-  if (team === 0) player = s;
+  if (opts.player) player = s;
   buildVox(s);
+  initArmament(s);
   s.group.visible = !(s === player && view === 'cockpit');
   return s;
 }
@@ -36,31 +40,53 @@ function disposeShip(s) {
   if (s.shieldFx) { s.shieldFx.geometry !== shieldGeo && s.shieldFx.geometry.dispose(); s.shieldFx.material.dispose(); }
 }
 
+// place a ship at pos heading for `toward` (point) at its cruise speed
+function spawnShip(defId, team, pos, toward, opts = {}) {
+  const q = new THREE.Quaternion();
+  const s = makeShip(defId, team, pos, q, opts);
+  if (toward) { s.group.lookAt(toward); s.group.rotateY(Math.PI); }
+  s.vel.set(0, 0, -1).applyQuaternion(s.group.quaternion).multiplyScalar(s.def.aiSpeed || s.def.maxSpeed * 0.4);
+  s.throttle = (s.def.aiSpeed || s.def.maxSpeed * 0.4) / s.def.maxSpeed;
+  return s;
+}
+
+// ---- endless free-flight waves (testing / practice) ----
 function spawnWave() {
   wave++;
-  const nRaid = Math.min(wave + 1, 5), nReav = Math.max(0, Math.min(Math.floor(wave / 3), 2));
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
-  const kinds = [...Array(nRaid).fill('leaper'), ...Array(nReav).fill('reaver')];
+  const kinds = [];
+  const n = Math.min(wave + 1, 5);
+  for (let i = 0; i < n; i++) kinds.push(i % 3 === 2 ? 'darter' : 'leaper');
+  if (wave >= 2) kinds.push('spitter');
+  if (wave >= 3) kinds.push('toad');
+  if (wave >= 4) kinds.push('reaver');
+  if (wave % 5 === 0) kinds.push('gulper');
   for (const kind of kinds) {
     const dir = new THREE.Vector3().randomDirection();
     if (wave === 1) dir.multiplyScalar(0.5).addScaledVector(pf, 0.8);
     dir.normalize();
-    const pos = player.group.position.clone().addScaledVector(dir, 450 + Math.random() * 250);
-    const e = makeShip(kind, 1, pos, new THREE.Quaternion());
-    e.group.lookAt(player.group.position);
-    e.group.rotateY(Math.PI);
-    e.vel.set(0, 0, -1).applyQuaternion(e.group.quaternion).multiplyScalar(e.def.aiSpeed);
+    const dist = (kind === 'gulper' ? 1500 : 650) + Math.random() * 250;
+    const pos = player.group.position.clone().addScaledVector(dir, dist);
+    spawnShip(kind, 1, pos, player.group.position, { grp: 'W' });
   }
   log(`WAVE ${wave}: ${kinds.length} FROGG CONTACTS`, '#ffd080');
 }
 
-function resetGame() {
+function clearWorld() {
   for (const s of ships) disposeShip(s);
-  for (const b of bolts) scene.remove(b.mesh);
+  for (const m of missiles) { scene.remove(m.mesh); }
+  for (const f of flashes) scene.remove(f.m);
   for (const d of debris) { scene.remove(d.mesh); d.mesh.dispose(); if (d.flash) scene.remove(d.flash); }
-  ships = []; bolts = []; debris = []; target = null; manualTarget = false;
-  wave = 0; kills = 0; state = 'play'; shake = 0; hitFlash = 0; logs.length = 0;
-  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion());
+  ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
+  for (const k in killLog) delete killLog[k];
+  shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;
   stick.x = stick.y = 0;
+}
+
+// free flight
+function resetGame() {
+  clearWorld();
+  game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
+  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
   spawnWave();
 }

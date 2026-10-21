@@ -3,27 +3,60 @@
 // ======================================================================
 const keys = new Set();
 const stick = { x: 0, y: 0 };
-let mouseFire = false, touchStarted = false;
+let mouseFire = false, touchStarted = false, radarIdx = 1;
+const RADAR_RANGES = [1500, 3000, 6000];
 const msg = document.getElementById('msg');
 
 function setView(v) { view = v; document.body.classList.toggle('chase', v === 'chase'); if (player) player.group.visible = v === 'chase'; }
-function cycleTarget() {
-  const list = ships.filter(s => s.team === 1 && s.alive)
+function hostileList() {
+  return ships.filter(s => s.team === 1 && s.alive && !s.dying)
     .sort((a, b) => a.group.position.distanceTo(player.group.position) - b.group.position.distanceTo(player.group.position));
+}
+function cycleTarget() {
+  const list = hostileList();
   if (!list.length) return;
   const i = list.indexOf(target);
-  target = list[(i + 1) % list.length]; manualTarget = true;
+  target = list[(i + 1) % list.length]; manualTarget = true; sfx('click');
+}
+function targetCrosshair() {
+  if (!player || !player.alive) return;
+  const f = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
+  let best = null, ba = 0.6;
+  for (const s of hostileList()) {
+    const a = f.angleTo(s.group.position.clone().sub(player.group.position).normalize());
+    if (a < ba) { ba = a; best = s; }
+  }
+  if (best) { target = best; manualTarget = true; sfx('click'); }
+}
+function playerFireMissile() {
+  if (!player || !player.alive || state !== 'play') return;
+  const wid = selectedMissile(player);
+  if (!wid) return;
+  if (player.stores[wid] <= 0) { log('RACK EMPTY', '#ff5a4a'); return; }
+  if (player.lock.p < 1 && !WEAPONS[wid].torp) { log('NO LOCK: DUMB-FIRED', '#ffd24a'); }
+  launchMissile(player, wid);
 }
 
 addEventListener('keydown', e => {
   if (e.repeat) return;
   keys.add(e.code);
+  if (!player) return;
   switch (e.code) {
     case 'KeyV': setView(view === 'cockpit' ? 'chase' : 'cockpit'); break;
     case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
     case 'KeyC': stick.x = stick.y = 0; break;
-    case 'KeyR': resetGame(); break;
-    case 'KeyT': if (player && player.alive) cycleTarget(); break;
+    case 'KeyR': if (!e.ctrlKey && !e.metaKey) resetGame(); break;
+    case 'KeyT': if (player.alive) cycleTarget(); break;
+    case 'KeyY': targetCrosshair(); break;
+    case 'KeyG': if (player.alive) cycleMissile(player); break;
+    case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
+    case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
+    case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
+    case 'KeyM': AUDIO.muted = !AUDIO.muted; if (AUDIO.master) AUDIO.master.gain.value = AUDIO.muted ? 0 : 0.55; break;
+    case 'Enter': case 'NumpadEnter': playerFireMissile(); break;
+    case 'Digit1': player.fireMask = 1; break;
+    case 'Digit2': player.fireMask = 2; break;
+    case 'Digit3': player.fireMask = 3; break;
     case 'KeyB': if (composer) bloomOn = !bloomOn; break;
     case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
     case 'BracketRight': pixelIdx = Math.min(PIXEL_STEPS.length - 1, pixelIdx + 1); resize(); break;
@@ -32,11 +65,14 @@ addEventListener('keydown', e => {
   }
 });
 addEventListener('keyup', e => keys.delete(e.code));
-msg.addEventListener('pointerdown', () => { if (state === 'dead') resetGame(); });
+addEventListener('contextmenu', e => e.preventDefault());
+msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode === 'free') resetGame(); });
 addEventListener('mousedown', e => {
   if (isTouch) return;
+  if (state === 'brief' || $id('brief').style.display === 'flex') return;
   if (document.pointerLockElement !== canvas) { canvas.requestPointerLock?.(); return; }
   if (e.button === 0) mouseFire = true;
+  if (e.button === 2) playerFireMissile();
 });
 addEventListener('mouseup', e => { if (e.button === 0) mouseFire = false; });
 addEventListener('mousemove', e => {
@@ -44,8 +80,6 @@ addEventListener('mousemove', e => {
   stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
   stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
 });
-
-const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 
 // ---- touch controls (phones/tablets) ----
 if (isTouch) {
@@ -82,11 +116,15 @@ if (isTouch) {
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
   };
   hold('bfire', () => { mouseFire = true; }, () => { mouseFire = false; });
+  hold('bmsl', () => playerFireMissile(), () => {});
+  hold('bflr', () => { if (player && player.alive) deployCM(player); }, () => {});
   hold('bboost', () => keys.add('ShiftLeft'), () => keys.delete('ShiftLeft'));
   hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});
   hold('btgt', () => { if (player && player.alive) cycleTarget(); }, () => {});
+  hold('bytgt', () => targetCrosshair(), () => {});
+  hold('bsel', () => { if (player && player.alive) cycleMissile(player); }, () => {});
   const thr = $('thr');
   const setThr = e => {
     const r = thr.getBoundingClientRect();

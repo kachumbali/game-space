@@ -1,26 +1,38 @@
 // ======================================================================
-//  HUD
+//  HUD — overlay canvas (reticle, brackets, lock, lead pipper, warnings), 3D radar, weapon + target panels
 // ======================================================================
 const hudTxt = document.getElementById('hudtxt');
-const bracket = document.getElementById('bracket');
-const brTxt = document.getElementById('brtxt');
 const radar = document.getElementById('radar');
 const rctx = radar.getContext('2d');
+const ov = document.getElementById('ov');
+const octx = ov.getContext('2d');
 const dmgCv = document.getElementById('dmg');
 const dctx = dmgCv.getContext('2d');
 const tgtEl = document.getElementById('tgt');
 const logEl = document.getElementById('log');
 const hitEl = document.getElementById('hit');
+const objEl = document.getElementById('objs');
+const commEl = document.getElementById('comm');
+const wpnEl = document.getElementById('wpn');
+const warnEl = document.getElementById('warn');
 const _inv = new THREE.Quaternion();
 const _rel = new THREE.Vector3();
+const _hp = new THREE.Vector3(), _hf = new THREE.Vector3(), _hv = new THREE.Vector3();
 const sil = {};
 const hpCol = r => (r <= 0 ? '#ff4a3a' : r <= 0.5 ? '#ffd24a' : '#6fff8a');
+let ovW = 1, ovH = 1, ovDpr = 1;
+function sizeOverlay() {
+  ovDpr = Math.min(2, globalThis.devicePixelRatio || 1);
+  ovW = innerWidth; ovH = innerHeight;
+  ov.width = Math.round(ovW * ovDpr); ov.height = Math.round(ovH * ovDpr);
+}
+sizeOverlay(); globalThis.__hudReady = true;
 
 function silhouette(def) {
   if (sil[def.id]) return sil[def.id];
   const cv = document.createElement('canvas'); cv.width = 150; cv.height = 170;
   const c = cv.getContext('2d');
-  const D = voxelize(def, 28);
+  const D = voxelize(def, def.cls === 'fighter' ? 28 : 40);
   const sc = Math.min(58 / def.half[0], 64 / def.half[2]);
   c.fillStyle = '#3d5058';
   for (const v of D.voxels) c.fillRect(75 + v.x * sc - D.vs * sc * 0.5, 88 + v.z * sc - D.vs * sc * 0.5, D.vs * sc + 0.6, D.vs * sc + 0.6);
@@ -35,7 +47,6 @@ function drawDamage() {
   const { cv, sc } = silhouette(p.def);
   dctx.drawImage(cv, 0, 0);
   const cx = 75, cy = 88, hx = p.def.half[0] * sc, hz = p.def.half[2] * sc;
-  // shields (arcs) + armour (bars)
   for (const [f, a0, a1] of [['fore', -2.6, -0.54], ['aft', 0.54, 2.6]]) {
     const pct = p.def.shield[f] ? p.shield[f] / p.def.shield[f] : 0;
     dctx.strokeStyle = `rgba(90,200,255,${0.15 + 0.85 * pct})`; dctx.lineWidth = 4;
@@ -57,15 +68,17 @@ function drawDamage() {
   }
 }
 
+const shortName = c => c.name.replace('ENGINE', 'ENG').replace('SHIELD', 'SHD').replace('REACTOR', 'RCT').replace('CANNON', 'CAN').replace('LASER', 'LAS').replace('TORP RACK', 'TORP').replace(' GLAND', '').replace('ACID ', '').slice(0, 7);
 let lastTgtHtml = '';
-function updateTargetPanel(nd) {
+function updateTargetPanel(nd, closure) {
   let html = '';
   if (target && target.alive) {
     const t = target, d = t.def;
     const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
     const pc = (cur, max) => max ? Math.round(100 * sum(cur) / sum(max)) : 0;
-    const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${c.id.replace(/^(eng|gun)([LR])$/, (m, a, b) => a.toUpperCase().slice(0, 3) + b).slice(0, 5).toUpperCase()}</span>`).join(' ');
-    html = `<b>${d.name}</b>  ${nd.toFixed(0)} m\nSHD ${pc(t.shield, d.shield)}%  ARM ${pc(t.armor, d.armor)}%  STR ${Math.round(100 * t.structure / d.structure)}%\n${sys}`;
+    const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${shortName(c)}</span>`).join(' ');
+    const radarOk = !player || compFactor(player, 'radar') > 0.01;
+    html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${pc(t.armor, d.armor)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
   if (html !== lastTgtHtml) { tgtEl.innerHTML = html; lastTgtHtml = html; }
 }
@@ -76,63 +89,277 @@ function updateLog() {
   const h = live.map(l => `<div style="color:${l.color};opacity:${clamp(5 - (time - l.t), 0, 1)}">${l.text}</div>`).join('');
   if (h !== lastLog) { logEl.innerHTML = h; lastLog = h; }
 }
+let lastObj = '', lastComm = '';
+function updateObjComm() {
+  const h = objectives.length ? '<div style="opacity:.6;letter-spacing:2px">OBJECTIVES</div>' + objectives.map(o => `<div class="${o.state}">${o.state === 'done' ? '✔' : o.state === 'failed' ? '✘' : '▸'} ${o.text}</div>`).join('') : '';
+  if (h !== lastObj) { objEl.innerHTML = h; lastObj = h; }
+  const live = comms.filter(c => time - c.t < 9);
+  const hc = live.map(c => `<div style="opacity:${clamp(9 - (time - c.t), 0, 1)}"><b style="color:${c.color}">${c.from}:</b>${c.text}</div>`).join('');
+  if (hc !== lastComm) { commEl.innerHTML = hc; lastComm = hc; }
+}
 
-function updateHud() {
-  const p = player, alive = p && p.alive;
-  const enemies = ships.filter(s => s.team === 1 && s.alive);
-  hudTxt.textContent =
-    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
-    `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
-    `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`;
-  drawDamage();
-  hitEl.style.opacity = hitFlash;
+// ---- weapon panel --------------------------------------------------------------------------------------
+let lastWpn = '';
+function updateWeaponPanel() {
+  const p = player;
+  if (!p || !p.alive) { wpnEl.innerHTML = ''; return; }
+  const m = k => p.fireMask & k;
+  const cn = p.ammo.cannon | 0, en = Math.round(p.energy);
+  const bar = (f, n = 10) => '█'.repeat(Math.round(f * n)) + '░'.repeat(n - Math.round(f * n));
+  const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
+  const ids = missileIds(p), cur = selectedMissile(p);
+  let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 LASER ${bar(p.energy / 100, 8)} ${en}%</div>`;
+  for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
+  h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
+  const L = p.lock;
+  const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :
+    L.state === 'range' ? 'OUT OF RANGE' : L.state === 'seek' ? 'SEEKING' : 'NO TARGET';
+  h += `<div>${lt}</div>`;
+  if (h !== lastWpn) { wpnEl.innerHTML = h; lastWpn = h; }
+}
 
-  const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
-  msg.style.display = state === 'dead' ? 'flex' : (engaged ? 'none' : 'flex');
-  if (state === 'dead') msg.textContent = isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch';
-  else msg.textContent = isTouch ? 'GAME SPACE\ntouch to take controls' : 'GAME SPACE\nclick to take controls';
-  if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+// ---- overlay helpers ------------------------------------------------------------------------------------
+const TAN_HALF = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+function project(wp) {   // -> {x,y,front} in CSS px
+  _hp.copy(wp);
+  _hf.set(0, 0, -1).applyQuaternion(camera.quaternion);
+  const behind = _hv.copy(wp).sub(camera.position).dot(_hf) <= 0;
+  _hp.project(camera);
+  return { x: (_hp.x + 1) / 2 * ovW, y: (1 - _hp.y) / 2 * ovH, front: !behind };
+}
+function pxPerRad() { return ovH / 2 / TAN_HALF; }
+function bracketBox(c, x, y, s, col, lw = 2) {
+  const k = s * 0.35;
+  c.strokeStyle = col; c.lineWidth = lw; c.beginPath();
+  for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+    c.moveTo(x + sx * s, y + sy * (s - k)); c.lineTo(x + sx * s, y + sy * s); c.lineTo(x + sx * (s - k), y + sy * s);
+  }
+  c.stroke();
+}
+function edgeArrow(c, x, y, front, col, label) {
+  // clamp a screen point (possibly behind the camera) to the screen edge with an arrow
+  const cx = ovW / 2, cy = ovH / 2;
+  let dx = x - cx, dy = y - cy;
+  if (!front) { dx = -dx; dy = -dy; if (Math.abs(dx) + Math.abs(dy) < 1) dy = 1; }
+  const m = 38, k = Math.min((cx - m) / Math.max(1e-3, Math.abs(dx)), (cy - m) / Math.max(1e-3, Math.abs(dy)));
+  const px = cx + dx * k, py = cy + dy * k, a = Math.atan2(dy, dx);
+  c.save(); c.translate(px, py); c.rotate(a);
+  c.fillStyle = col; c.beginPath(); c.moveTo(14, 0); c.lineTo(-8, -9); c.lineTo(-3, 0); c.lineTo(-8, 9); c.closePath(); c.fill();
+  c.restore();
+  if (label) { c.fillStyle = col; c.font = '11px monospace'; c.textAlign = 'center'; c.fillText(label, px - Math.cos(a) * 26, py - Math.sin(a) * 26 + 4); }
+}
+// time for a projectile of speed v (fired from shooter, inheriting 0.9 of its velocity) to reach a moving target
+function interceptPoint(sp, sv, tp, tv, v) {
+  const r = _hv.copy(tp).sub(sp);
+  const rv = _hf.copy(tv).addScaledVector(sv, -0.9);
+  const a = rv.dot(rv) - v * v, b = 2 * r.dot(rv), cc = r.dot(r);
+  let t;
+  if (Math.abs(a) < 1e-4) t = -cc / b;
+  else {
+    const disc = b * b - 4 * a * cc;
+    if (disc < 0) return null;
+    const t1 = (-b + Math.sqrt(disc)) / (2 * a), t2 = (-b - Math.sqrt(disc)) / (2 * a);
+    t = Math.min(t1 > 0 ? t1 : 1e9, t2 > 0 ? t2 : 1e9);
+  }
+  if (!(t > 0) || t > 6) return null;
+  return tp.clone().addScaledVector(tv, t).addScaledVector(sv, -0.9 * t);
+}
 
-  // radar (forward = up); degraded with radar damage
-  const rf = alive ? compFactor(p, 'radar') : 1;
-  rctx.clearRect(0, 0, 160, 160);
-  rctx.strokeStyle = '#8fffd0'; rctx.globalAlpha = 0.5;
-  rctx.beginPath(); rctx.arc(80, 80, 78, 0, Math.PI * 2); rctx.stroke();
-  rctx.beginPath(); rctx.arc(80, 80, 39, 0, Math.PI * 2); rctx.stroke();
-  rctx.globalAlpha = 1;
-  let nd = 0;
-  if (alive) {
-    _inv.copy(p.group.quaternion).invert();
-    if (rf <= 0) {
-      rctx.fillStyle = '#ff5a4a'; rctx.font = '12px monospace'; rctx.fillText('RADAR OFFLINE', 36, 84);
-      for (let i = 0; i < 40; i++) { rctx.fillStyle = 'rgba(143,255,208,.25)'; rctx.fillRect(Math.random() * 160, Math.random() * 160, 2, 2); }
-    } else {
-      for (const e of enemies) {
-        _rel.copy(e.group.position).sub(p.group.position).applyQuaternion(_inv);
-        const R = 800, jit = rf <= 0.5 ? 18 : 0;
-        const sx = 80 + clamp(_rel.x / R, -1, 1) * 76 + (Math.random() - 0.5) * jit;
-        const sy = 80 + clamp(_rel.z / R, -1, 1) * 76 + (Math.random() - 0.5) * jit;
-        const sy2 = sy - clamp(_rel.y / R, -1, 1) * 24;
-        if (rf <= 0.5 && Math.random() < 0.4) continue;
-        rctx.strokeStyle = 'rgba(255,90,90,.5)';
-        rctx.beginPath(); rctx.moveTo(sx, sy); rctx.lineTo(sx, sy2); rctx.stroke();
-        rctx.fillStyle = e === target ? '#ffd24a' : '#ff5a5a'; rctx.fillRect(sx - 2, sy2 - 2, 4, 4);
+function drawOverlay(alive) {
+  octx.setTransform(ovDpr, 0, 0, ovDpr, 0, 0);
+  octx.clearRect(0, 0, ovW, ovH);
+  if (!alive || state === 'brief') return;
+  const c = octx, p = player, cx = ovW / 2, cy = ovH / 2;
+  const f = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
+  // reticle
+  c.strokeStyle = 'rgba(143,255,208,.85)'; c.lineWidth = 2;
+  c.beginPath(); c.arc(cx, cy, 13, 0, 7);
+  c.moveTo(cx - 24, cy); c.lineTo(cx - 17, cy); c.moveTo(cx + 17, cy); c.lineTo(cx + 24, cy);
+  c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
+  c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
+  // seeker cone of the selected missile
+  const wid = selectedMissile(p), L = p.lock;
+  if (wid) {
+    const w = WEAPONS[wid], r = Math.tan(w.lockCone) * pxPerRad() / 1;
+    c.setLineDash([6, 8]); c.strokeStyle = L.state === 'locked' ? 'rgba(255,90,70,.8)' : 'rgba(255,210,74,.45)'; c.lineWidth = 1.5;
+    c.beginPath(); c.arc(cx, cy, r, 0, 7); c.stroke(); c.setLineDash([]);
+  }
+  const radarOk = compFactor(p, 'radar') > 0.01;
+  const cls = { fighter: 0, gunship: 0, bomber: 0 };
+  // contacts
+  for (const s of ships) {
+    if (!s.alive || s === p) continue;
+    const d = s.group.position.distanceTo(p.group.position);
+    const hostile = s.team !== p.team;
+    if (!radarOk && d > 1200) continue;
+    const pr = project(s.group.position);
+    const col = hostile ? '#ff5a5a' : '#6ac8ff';
+    const size = clamp(s.def.radius * 2 / (d * TAN_HALF * 2) * ovH * 0.55, 7, 160);
+    if (s === target) continue;
+    if (pr.front && pr.x > -50 && pr.x < ovW + 50 && pr.y > -50 && pr.y < ovH + 50) {
+      if (hostile) {
+        c.strokeStyle = 'rgba(255,90,90,.75)'; c.lineWidth = 1.5; c.beginPath();
+        c.moveTo(pr.x, pr.y - size); c.lineTo(pr.x + size, pr.y); c.lineTo(pr.x, pr.y + size); c.lineTo(pr.x - size, pr.y); c.closePath(); c.stroke();
+        if (size > 14 || d < 1500) { c.fillStyle = 'rgba(255,140,140,.85)'; c.font = '10px monospace'; c.textAlign = 'left'; c.fillText(`${s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
+      } else {
+        bracketBox(c, pr.x, pr.y, Math.max(8, size), 'rgba(106,200,255,.7)', 1.5);
+        c.fillStyle = 'rgba(140,215,255,.9)'; c.font = '10px monospace'; c.textAlign = 'left';
+        c.fillText(`${s.callsign || s.def.name} ${d.toFixed(0)}`, pr.x + Math.max(8, size) + 4, pr.y + 3);
       }
     }
   }
-  rctx.fillStyle = '#8fffd0'; rctx.fillRect(78, 78, 4, 4);
+  // current target: brackets, lock ring, lead pipper, edge arrow
+  if (target && target.alive) {
+    const t = target, tpos = t.group.position, d = tpos.distanceTo(p.group.position);
+    const pr = project(tpos);
+    const size = clamp(t.def.radius * 2 / (d * TAN_HALF * 2) * ovH * 0.6, 16, ovH * 0.45);
+    const locked = L.tgt === t && L.state === 'locked', locking = L.tgt === t && L.state === 'locking';
+    const col = locked ? '#ff3a2a' : locking ? '#ffd24a' : '#ff8a6a';
+    if (pr.front && pr.x > 0 && pr.x < ovW && pr.y > 0 && pr.y < ovH) {
+      bracketBox(c, pr.x, pr.y, size, col, 2.5);
+      c.fillStyle = col; c.font = '11px monospace'; c.textAlign = 'center';
+      c.fillText(`${t.def.name} ${radarOk ? d.toFixed(0) + 'm' : ''}`, pr.x, pr.y + size + 15);
+      if (locking) { const rr = size * (1.9 - 0.9 * L.p); c.strokeStyle = col; c.lineWidth = 2; c.beginPath(); c.arc(pr.x, pr.y, rr, 0, 7); c.stroke(); }
+      if (locked) {
+        const blink = Math.floor(time * 6) % 2;
+        c.strokeStyle = col; c.lineWidth = 3; c.beginPath();
+        c.moveTo(pr.x, pr.y - size * 0.55); c.lineTo(pr.x + size * 0.55, pr.y); c.lineTo(pr.x, pr.y + size * 0.55); c.lineTo(pr.x - size * 0.55, pr.y); c.closePath(); c.stroke();
+        if (blink) c.fillText('LOCK', pr.x, pr.y - size - 8);
+      }
+      // gun lead pipper (primary cannon speed)
+      const gv = WEAPONS.cannon.v;
+      const ip = interceptPoint(p.group.position, p.vel, tpos, t.vel, gv);
+      if (ip && d < gv * WEAPONS.cannon.life * 0.8) {
+        const lp = project(ip);
+        if (lp.front) {
+          c.strokeStyle = '#7dffb0'; c.lineWidth = 1.5;
+          c.beginPath(); c.arc(lp.x, lp.y, 9, 0, 7); c.moveTo(lp.x - 14, lp.y); c.lineTo(lp.x - 9, lp.y); c.moveTo(lp.x + 9, lp.y); c.lineTo(lp.x + 14, lp.y);
+          c.moveTo(lp.x, lp.y - 14); c.lineTo(lp.x, lp.y - 9); c.moveTo(lp.x, lp.y + 9); c.lineTo(lp.x, lp.y + 14); c.stroke();
+          c.strokeStyle = 'rgba(125,255,176,.25)'; c.beginPath(); c.moveTo(pr.x, pr.y); c.lineTo(lp.x, lp.y); c.stroke();
+        }
+      }
+    } else edgeArrow(c, pr.x, pr.y, pr.front, col, `${t.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`);
+  }
+  // incoming missiles: red edge arrows / boxes
+  for (const m of warnState.incoming) {
+    const pr = project(m.pos), d = m.pos.distanceTo(p.group.position);
+    const blink = Math.floor(time * 8) % 2 ? '#ff3a2a' : '#ffb0a0';
+    if (pr.front && pr.x > 0 && pr.x < ovW && pr.y > 0 && pr.y < ovH) {
+      c.strokeStyle = blink; c.lineWidth = 2; c.strokeRect(pr.x - 11, pr.y - 11, 22, 22);
+      c.fillStyle = blink; c.font = '11px monospace'; c.textAlign = 'center'; c.fillText(`MSL ${d.toFixed(0)}`, pr.x, pr.y - 16);
+    } else edgeArrow(c, pr.x, pr.y, pr.front, blink, `MSL ${d.toFixed(0)}`);
+  }
+  // own missiles in flight (small ticks) to follow them
+  for (const m of missiles) {
+    if (m.dead || m.team !== p.team) continue;
+    const pr = project(m.pos);
+    if (pr.front) { c.strokeStyle = 'rgba(255,210,74,.8)'; c.lineWidth = 1; c.strokeRect(pr.x - 4, pr.y - 4, 8, 8); }
+  }
+}
 
-  bracket.style.display = 'none';
-  if (alive && target && target.alive) {
-    nd = target.group.position.distanceTo(p.group.position);
-    const v = target.group.position.clone().project(camera);
-    if (v.z < 1 && Math.abs(v.x) < 1 && Math.abs(v.y) < 1) {
-      bracket.style.display = 'block';
-      bracket.style.left = ((v.x + 1) / 2 * innerWidth) + 'px';
-      bracket.style.top = ((1 - v.y) / 2 * innerHeight) + 'px';
-      brTxt.textContent = `${target.def.name} ${nd.toFixed(0)}m`;
+// ---- radar: forward-up, elevation stalks, range rings, hemisphere (hollow = behind) ----------------------
+function drawRadar(alive) {
+  const c = rctx, S = 448, cx = S / 2, cy = S / 2, R = 196;
+  c.clearRect(0, 0, S, S);
+  const range = RADAR_RANGES[radarIdx];
+  // bezel + backing
+  const g = c.createRadialGradient(cx, cy, R * 0.2, cx, cy, R + 14);
+  g.addColorStop(0, 'rgba(4,26,22,.82)'); g.addColorStop(0.9, 'rgba(6,36,30,.78)'); g.addColorStop(1, 'rgba(2,12,10,.9)');
+  c.fillStyle = g; c.beginPath(); c.arc(cx, cy, R + 12, 0, 7); c.fill();
+  c.strokeStyle = 'rgba(143,255,208,.75)'; c.lineWidth = 3; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.stroke();
+  c.lineWidth = 1.5; c.strokeStyle = 'rgba(143,255,208,.32)';
+  for (const k of [1 / 3, 2 / 3]) { c.beginPath(); c.arc(cx, cy, R * k, 0, 7); c.stroke(); }
+  c.beginPath(); c.moveTo(cx, cy - R); c.lineTo(cx, cy + R); c.moveTo(cx - R, cy); c.lineTo(cx + R, cy); c.stroke();
+  // forward cone (±45°)
+  c.strokeStyle = 'rgba(143,255,208,.22)'; c.beginPath();
+  c.moveTo(cx, cy); c.lineTo(cx + Math.sin(0.78) * R, cy - Math.cos(0.78) * R); c.moveTo(cx, cy); c.lineTo(cx - Math.sin(0.78) * R, cy - Math.cos(0.78) * R); c.stroke();
+  // sweep
+  const sw = (time * 1.6) % (Math.PI * 2);
+  const sg = c.createConicGradient ? c.createConicGradient(sw - Math.PI / 2, cx, cy) : null;
+  if (sg) { sg.addColorStop(0, 'rgba(143,255,208,0)'); sg.addColorStop(0.9, 'rgba(143,255,208,0)'); sg.addColorStop(1, 'rgba(143,255,208,.16)'); c.fillStyle = sg; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.fill(); }
+  c.fillStyle = 'rgba(143,255,208,.8)'; c.font = '16px monospace'; c.textAlign = 'center';
+  c.fillText('FWD', cx, cy - R + 20); c.fillText(`${range / 1000}km`, cx, cy + R - 8);
+  const p = player;
+  if (alive) {
+    const rf = compFactor(p, 'radar');
+    if (rf <= 0) {
+      c.fillStyle = '#ff5a4a'; c.font = '20px monospace'; c.fillText('RADAR OFFLINE', cx, cy + 6);
+      for (let i = 0; i < 60; i++) { c.fillStyle = 'rgba(143,255,208,.25)'; c.fillRect(cx + (Math.random() - 0.5) * 2 * R * 0.9, cy + (Math.random() - 0.5) * 2 * R * 0.9, 3, 3); }
+    } else {
+      _inv.copy(p.group.quaternion).invert();
+      const draw = (wp, kind, hostile, isT, label) => {
+        _rel.copy(wp).sub(p.group.position).applyQuaternion(_inv);
+        const dxz = Math.hypot(_rel.x, _rel.z), dist = _rel.length();
+        const off = dist > range;
+        const k = Math.min(1, dxz / range);
+        let jit = rf <= 0.5 ? 16 : 0;
+        const ang = Math.atan2(_rel.x, -_rel.z);
+        const rr = off ? R - 5 : k * R;
+        const sx = cx + Math.sin(ang) * rr + (Math.random() - 0.5) * jit;
+        const syBase = cy - Math.cos(ang) * rr;
+        const sy = syBase - clamp(_rel.y / range, -1, 1) * R * 0.38;
+        if (rf <= 0.5 && Math.random() < 0.3) return;
+        const behind = _rel.z > 0;
+        const col = kind === 'msl' ? (hostile ? '#ff3a2a' : '#ffd24a') : hostile ? '#ff5a5a' : '#6ac8ff';
+        c.globalAlpha = off ? 0.55 : 1;
+        if (!off) { c.strokeStyle = hostile ? 'rgba(255,90,90,.45)' : 'rgba(106,200,255,.45)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(sx, syBase); c.lineTo(sx, sy); c.stroke(); }
+        c.fillStyle = col; c.strokeStyle = col; c.lineWidth = 2.5;
+        if (kind === 'msl') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy + 5); c.lineTo(sx - 5, sy + 5); c.closePath(); c.fill(); }
+        else if (kind === 'cap') { const z = 8; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
+        else { const z = kind === 'big' ? 6 : 5; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
+        if (isT) {
+          c.globalAlpha = 1; c.strokeStyle = '#ffd24a'; c.lineWidth = 2.5; c.strokeRect(sx - 12, sy - 12, 24, 24);
+          if (p.lock.tgt === target && p.lock.state === 'locked') { c.strokeStyle = '#ff3a2a'; c.beginPath(); c.arc(sx, sy, 17, 0, 7); c.stroke(); }
+        }
+        c.globalAlpha = 1;
+      };
+      for (const s of ships) {
+        if (!s.alive || s === p) continue;
+        const hostile = s.team !== p.team;
+        draw(s.group.position, s.def.cls !== 'fighter' ? 'cap' : (s.def.ai?.role === 'bomber' || s.def.id === 'reaver' || s.def.id === 'spitter') ? 'big' : 'fgt', hostile, s === target);
+      }
+      for (const m of missiles) if (!m.dead) draw(m.pos, 'msl', m.team !== p.team && m.target === p);
     }
   }
-  updateTargetPanel(nd);
-  updateLog();
+  c.fillStyle = '#8fffd0'; c.beginPath(); c.moveTo(cx, cy - 9); c.lineTo(cx + 7, cy + 7); c.lineTo(cx - 7, cy + 7); c.closePath(); c.fill();
+}
+
+function updateHud() {
+  const p = player, alive = !!(p && p.alive);
+  const enemies = ships.filter(s => s.team === 1 && s.alive);
+  const S = game.mstate;
+  hudTxt.textContent =
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
+    `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
+    (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
+  drawDamage();
+  hitEl.style.opacity = hitFlash;
+
+  const briefing = $id('brief').style.display === 'flex';
+  const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
+  const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none');
+  msg.style.display = showMsg ? 'flex' : 'none';
+  if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
+  else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
+  if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+
+  drawRadar(alive);
+  drawOverlay(alive);
+
+  let nd = 0, closure = 0;
+  if (alive && target && target.alive) {
+    nd = target.group.position.distanceTo(p.group.position);
+    closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
+  }
+  updateTargetPanel(nd, closure);
+  updateLog(); updateObjComm(); updateWeaponPanel();
+  // warnings
+  let w = '';
+  if (alive) {
+    if (warnState.incoming.length) { const d = Math.min(...warnState.incoming.map(m => m.pos.distanceTo(p.group.position))); w = Math.floor(time * 6) % 2 ? `MISSILE INBOUND  ${d.toFixed(0)}m` : ''; }
+    else if (warnState.lockedBy) w = Math.floor(time * 4) % 2 ? 'MISSILE LOCK' : '';
+    else if (p.shield.fore + p.shield.aft < 4 && time - p.lastHit < 3) w = 'SHIELDS DOWN';
+  }
+  if (w !== warnEl.textContent) warnEl.textContent = w;
 }

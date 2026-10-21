@@ -1,66 +1,51 @@
 // ======================================================================
-//  COMBAT & DAMAGE
+//  COMBAT & DAMAGE — shields -> armour -> structure (typed damage), components, voxel chipping, death
 // ======================================================================
 const _v = new THREE.Vector3();
-function fire_(s) {
-  const q = s.group.quaternion;
-  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
-  s.group.updateMatrixWorld(true);
-  let shots = 0;
-  for (const g of s.def.guns) {
-    if (compOf(s, g.comp).hp <= 0) continue;
-    const pos = s.group.localToWorld(_v.set(g.pos[0], g.pos[1], g.pos[2]).clone());
-    const mesh = new THREE.Mesh(boltGeo, boltMat(s.def.boltColor));
-    mesh.position.copy(pos); mesh.quaternion.copy(q);
-    scene.add(mesh);
-    bolts.push({ mesh, team: s.team, dmg: s.def.damage, life: 2.2, pos, prev: pos.clone(),
-      vel: dir.clone().multiplyScalar(s.def.boltSpeed).add(s.vel) });
-    shots++;
-  }
-  s.cool = s.def.fireRate / powerMul(s);
-  return shots;
-}
+const _cp = new THREE.Vector3();
+const warnState = { launchT: -99, lockT: -99, incoming: [], lockedBy: 0 };
 
 function shieldFlash(s, lp, facing) {
   if (!s.shieldFx) return;
-  const pct = s.shield[facing] / s.def.shield[facing];
+  const pct = s.def.shield[facing] ? s.shield[facing] / s.def.shield[facing] : 0;
   s.shieldFx.material.color.setRGB(0.25 + 0.75 * (1 - pct), 0.6 - 0.3 * (1 - pct), 0.9 - 0.7 * (1 - pct));
   s.shieldFx.material.opacity = 0.2;
 }
-
 function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 : r <= 0.5 ? 1 : 0; }
-const _cp = new THREE.Vector3();
 
-function applyHit(s, lp, dmg, wp) {
+function applyHit(s, lp, dmg, wp, dtype = 'kin') {
+  if (!s.alive || s.dying) return;
   s.lastHit = time;
-  const def = s.def;
-  if (s === player) { shake = Math.min(1, shake + 0.12 + dmg * 0.02); hitFlash = Math.min(1, hitFlash + 0.35); }
+  s.hitsTaken = (s.hitsTaken || 0) + 1;
+  const def = s.def, X = DMGX[dtype] || DMGX.kin;
+  if (s === player) { shake = Math.min(1, shake + 0.1 + dmg * 0.012); hitFlash = Math.min(1, hitFlash + 0.18 + dmg * 0.01); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
   const nz = lp.z / def.half[2], nx = lp.x / def.half[0];
   const facing = nz < 0 ? 'fore' : 'aft';
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
   let d = dmg;
   if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0) {
-    const a = Math.min(s.shield[facing], d);
-    s.shield[facing] -= a; d -= a;
+    const raw = d * X[0], a = Math.min(s.shield[facing], raw);
+    s.shield[facing] -= a; d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
-    if (d <= 0) return;
+    if (d <= 0.01) return;
   }
   if (s.armor[side] > 0) {
-    const a = Math.min(s.armor[side], d);
-    s.armor[side] -= a; d -= a;
+    const raw = d * X[1], a = Math.min(s.armor[side], raw);
+    s.armor[side] -= a; d *= 1 - a / raw;
     chip(s, lp, 0, 0.9 + 0.05 * a, false);
     sparksAt(wp, 4, 11);
-    if (d <= 0) return;
+    if (d <= 0.01) return;
   }
+  d *= X[2];
   // armour breached: hull damage + internal hit
-  chip(s, lp, 0.45 + 0.1 * d, 1.3 + 0.12 * d, false);
+  chip(s, lp, 0.35 + 0.08 * d, 1.1 + 0.1 * d, false);
   sparksAt(wp, 8, 18); fireAt(wp, 2, 5); smokeAt(wp, 2, 3);
   let best = null, bd = 1e9;
   for (const c of s.comps) {
     if (c.hp <= 0) continue;
     const dist = _cp.set(c.pos[0], c.pos[1], c.pos[2]).distanceTo(lp);
-    if (dist < c.r * 2.4 + 0.8 && dist < bd) { bd = dist; best = c; }
+    if (dist < c.r * 2.2 + 0.8 && dist < bd) { bd = dist; best = c; }
   }
   if (best) {
     const before = compState(best);
@@ -68,7 +53,8 @@ function applyHit(s, lp, dmg, wp) {
     const after = compState(best);
     if (after > before) compEvent(s, best, after);
   } else s.structure -= d;
-  if (s.structure <= 0 || compOf(s, 'power') && compOf(s, 'power').hp <= 0) destroy(s);
+  const pw = compOf(s, 'power');
+  if (s.structure <= 0 || (pw && pw.hp <= 0)) killShip(s);
 }
 
 function compEvent(s, c, st) {
@@ -76,29 +62,57 @@ function compEvent(s, c, st) {
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
     log(`${who}${c.name} ${st === 2 ? 'DESTROYED' : 'DAMAGED'}`, mine ? (st === 2 ? '#ff5a4a' : '#ffd24a') : '#ffb080');
+    if (mine && st === 2) sfx('alarm');
   }
   if (st === 2 && s.vox) {
     chip(s, _cp.set(c.pos[0], c.pos[1], c.pos[2]).clone(), c.r * 0.85, c.r * 1.7, false);
     s.group.updateMatrixWorld(true);
     const wp = s.group.localToWorld(_cp.set(c.pos[0], c.pos[1], c.pos[2]).clone());
+    const k = Math.max(1, c.r / 1.2);
     sparksAt(wp, 30, 24); fireAt(wp, 8, 8); smokeAt(wp, 6, 5);
-    if (c.role === 'power') destroy(s);
+    flashAt(wp, c.r * 1.2, 0.3); sfx('boom', mine ? 0 : wp.distanceTo(camera.position), 0.5 * Math.min(2, k));
+    if (c.role === 'power') killShip(s);
   }
+  if (typeof onCompDestroyed === 'function' && st === 2) onCompDestroyed(s, c);
+}
+
+function killShip(s) {
+  if (!s.alive || s.dying) return;
+  if (s.def.cls !== 'fighter') { s.dying = 3.2 + Math.random(); s.dyT = 0; log(`${s.def.name} IS BREAKING UP`, s.team === 1 ? '#9dff7a' : '#ff5a4a'); return; }
+  destroy(s);
+}
+function updateDying(s, dt) {
+  s.dying -= dt; s.dyT -= dt;
+  if (s.dyT <= 0 && s.vox) {
+    s.dyT = 0.18 + Math.random() * 0.25;
+    const D = s.vox.data, v = D.voxels[Math.floor(Math.random() * D.voxels.length)];
+    const lp = new THREE.Vector3(v.x, v.y, v.z);
+    chip(s, lp, 1.0 + Math.random() * 1.6, 3 + Math.random() * 2.5, false);
+    s.group.updateMatrixWorld(true);
+    const wp = s.group.localToWorld(lp.clone());
+    flashAt(wp, 4 + Math.random() * 4, 0.4); sparksAt(wp, 30, 26); fireAt(wp, 10, 10); smokeAt(wp, 6, 6);
+    sfx('boom', wp.distanceTo(camera.position), 0.7);
+    shake = Math.max(shake, Math.min(0.6, 80 / (wp.distanceTo(camera.position) + 60)));
+  }
+  if (s.dying <= 0) destroy(s);
 }
 
 function destroy(s) {
   if (!s.alive) return;
-  s.alive = false;
+  s.alive = false; s.dying = 0;
   explode(s);
   scene.remove(s.group);
-  if (s.team === 1) { kills++; log(`${s.def.name} DESTROYED`, '#9dff7a'); }
+  sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
+  if (s.team === 1) { kills++; killLog[s.def.id] = (killLog[s.def.id] || 0) + 1; log(`${s.def.name} DESTROYED`, '#9dff7a'); }
   if (s === player) { state = 'dead'; log('HULL BREACH', '#ff4a3a'); }
+  if (typeof onShipDestroyed === 'function') onShipDestroyed(s);
 }
 
 function explode(s) {
   const D = s.vox.data, vs = D.vs;
-  const count = Math.min(D.voxels.length, 180);
-  const mesh = new THREE.InstancedMesh(boxGeo(vs * 2.4), voxMat, count);
+  const big = s.def.cls !== 'fighter';
+  const count = Math.min(D.voxels.length, big ? 900 : 180);
+  const mesh = new THREE.InstancedMesh(boxGeo(vs * (big ? 2.0 : 2.4)), voxMat, count);
   mesh.frustumCulled = false;
   s.group.updateMatrixWorld(true);
   const center = s.group.position.clone();
@@ -107,7 +121,7 @@ function explode(s) {
     const v = D.voxels[Math.floor(Math.random() * D.voxels.length)];
     const p = s.group.localToWorld(new THREE.Vector3(v.x, v.y, v.z));
     pos.push(p);
-    vel.push(p.clone().sub(center).normalize().multiplyScalar(8 + Math.random() * 28).addScaledVector(s.vel, 0.6));
+    vel.push(p.clone().sub(center).normalize().multiplyScalar((big ? 6 : 8) + Math.random() * (big ? 22 : 28)).addScaledVector(s.vel, 0.6));
     mesh.setColorAt(n, _col.setRGB(v.cr * (v.g ? 0.5 : 1), v.cg * (v.g ? 0.5 : 1), v.cb * (v.g ? 0.5 : 1)));
   }
   scene.add(mesh);
@@ -115,8 +129,9 @@ function explode(s) {
     new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffb050).multiplyScalar(3), transparent: true, depthWrite: false }));
   flash.position.copy(center);
   scene.add(flash);
-  debris.push({ mesh, flash, pos, vel, life: 0, size: s.def.radius });
-  sparksAt(center, 120, 50); fireAt(center, 50, 22); smokeAt(center, 30, 10);
+  debris.push({ mesh, flash, pos, vel, life: 0, size: s.def.radius * (big ? 0.8 : 1), dur: big ? 3.4 : 2.4 });
+  const k = big ? 4 : 1;
+  sparksAt(center, 120 * Math.min(k, 3), 50); fireAt(center, 50 * Math.min(k, 3), big ? 30 : 22); smokeAt(center, 30 * Math.min(k, 3), 10);
 }
 
 function segSphere(a, b, c, r) {   // does segment a->b hit sphere (c,r)?
@@ -128,21 +143,63 @@ function segSphere(a, b, c, r) {   // does segment a->b hit sphere (c,r)?
   return px * px + py * py + pz * pz < r * r;
 }
 
-// march the bolt's path through the ship's voxel grid; returns local hit point or null
+// march a path through the ship's voxel grid; returns local hit point or null
 const _a = new THREE.Vector3(), _b = new THREE.Vector3();
 function traceShip(s, p0, p1) {
-  const V = s.vox, D = V.data;
   s.group.updateMatrixWorld(true);
   _a.copy(p0); s.group.worldToLocal(_a);
   _b.copy(p1); s.group.worldToLocal(_b);
-  const dx = _b.x - _a.x, dy = _b.y - _a.y, dz = _b.z - _a.z;
+  return traceLocal(s, _a.x, _a.y, _a.z, _b.x, _b.y, _b.z);
+}
+function traceLocal(s, ax, ay, az, bx, by, bz) {
+  const V = s.vox, D = V.data;
+  const dx = bx - ax, dy = by - ay, dz = bz - az;
   const len = Math.sqrt(dx * dx + dy * dy + dz * dz);
   const n = Math.max(1, Math.ceil(len / (D.vs * 0.8)));
   for (let i = 0; i <= n; i++) {
-    const t = i / n, x = _a.x + dx * t, y = _a.y + dy * t, z = _a.z + dz * t;
+    const t = i / n, x = ax + dx * t, y = ay + dy * t, z = az + dz * t;
     const ci = Math.floor((x + D.hx) / D.vs), cj = Math.floor((y + D.hy) / D.vs), ck = Math.floor((z + D.hz) / D.vs);
     if (ci < 0 || cj < 0 || ck < 0 || ci >= D.nx || cj >= D.ny || ck >= D.nz) continue;
     if (V.solid[(ci * D.ny + cj) * D.nz + ck]) return new THREE.Vector3(x, y, z);
   }
   return null;
+}
+function traceShipLocal(s, p, dir, maxD) {
+  return traceLocal(s, p.x, p.y, p.z, p.x + dir.x * maxD, p.y + dir.y * maxD, p.z + dir.z * maxD);
+}
+function solidAtWorld(s, wp) {
+  const V = s.vox; if (!V) return false;
+  const D = V.data;
+  s.group.updateMatrixWorld(true);
+  _a.copy(wp); s.group.worldToLocal(_a);
+  const ci = Math.floor((_a.x + D.hx) / D.vs), cj = Math.floor((_a.y + D.hy) / D.vs), ck = Math.floor((_a.z + D.hz) / D.vs);
+  if (ci < 0 || cj < 0 || ck < 0 || ci >= D.nx || cj >= D.ny || ck >= D.nz) return false;
+  return V.solid[(ci * D.ny + cj) * D.nz + ck] === 1;
+}
+
+// ---- ship / ship collisions: ramming a hull hurts ---------------------------------------------------
+function collideShips(dt) {
+  for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
+    const a = ships[i], b = ships[j];
+    if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
+    if (a.def.cls !== 'fighter') continue;                 // a = the small body, b = what it hits
+    if (a.hitCool > 0) continue;
+    const d = a.group.position.distanceTo(b.group.position);
+    if (d > b.def.radius + 3 || (b.def.cls === 'fighter' && d > (a.def.radius + b.def.radius) * 0.6)) continue;
+    if (!solidAtWorld(b, a.group.position)) continue;
+    const rel = a.vel.clone().sub(b.vel);
+    const sp = rel.length();
+    a.hitCool = 0.6;
+    const n = a.group.position.clone().sub(b.group.position).normalize();
+    const lpA = new THREE.Vector3(0, 0, -a.def.half[2] * 0.5);
+    const wpA = a.group.position.clone();
+    const dmg = Math.min(60, 2 + sp * 0.22);
+    a.lastAttacker = b;
+    applyHit(a, lpA, dmg, wpA, 'kin');
+    if (b.def.cls !== 'fighter') { /* corvette shrugs it off */ } else { b.hitCool = 0.6; applyHit(b, b.group.worldToLocal(wpA.clone()), dmg, wpA, 'kin'); }
+    a.vel.reflect(n).multiplyScalar(0.6);
+    a.group.position.addScaledVector(n, 3);
+    sparksAt(wpA, 30, 25); sfx('hit', a === player ? 0 : wpA.distanceTo(camera.position));
+    if (a === player) { shake = 1; }
+  }
 }

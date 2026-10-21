@@ -10,9 +10,10 @@
     touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none}
   #c{position:fixed;inset:0;width:100%;height:100%;display:block;
     image-rendering:crisp-edges;image-rendering:pixelated}
+  #ov{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:3}
   #canopy{position:fixed;inset:0;pointer-events:none;z-index:1}
-  #canopy:before{content:"";position:absolute;left:0;right:0;bottom:0;height:17%;
-    background:linear-gradient(to top,#07090d 60%,rgba(7,9,13,0));border-top:1px solid rgba(143,255,208,.12)}
+  #canopy:before{content:"";position:absolute;left:0;right:0;bottom:0;height:19%;
+    background:linear-gradient(to top,#07090d 62%,rgba(7,9,13,0));border-top:1px solid rgba(143,255,208,.12)}
   #canopy i{position:absolute;top:0;bottom:0;width:15%;background:#0a0d12;opacity:.96}
   #canopy i.l{left:0;clip-path:polygon(0 0,38% 0,0 100%)}
   #canopy i.r{right:0;clip-path:polygon(62% 0,100% 0,100% 100%)}
@@ -21,40 +22,62 @@
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
   #dmg{display:block;margin-top:4px;opacity:.95}
-  #radar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:160px;height:160px;opacity:.92;z-index:4}
-  #cross{position:fixed;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;pointer-events:none;z-index:4}
-  #cross:before,#cross:after{content:"";position:absolute;background:#8fffd0;opacity:.8}
-  #cross:before{left:10px;top:0;width:2px;height:22px}
-  #cross:after{top:10px;left:0;height:2px;width:22px}
-  #bracket{position:fixed;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid #ff5a5a;
-    pointer-events:none;display:none;font-size:11px;color:#ff8a8a;z-index:4}
-  #bracket span{position:absolute;left:0;top:48px;white-space:nowrap}
+  #radar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:224px;height:224px;z-index:5}
   #tgt{position:fixed;left:50%;top:10px;transform:translateX(-50%);font-size:11px;line-height:1.45;
-    text-align:center;white-space:pre;color:#ffb0a0;text-shadow:0 0 4px #000;z-index:4;min-width:220px}
-  #log{position:fixed;left:50%;top:104px;transform:translateX(-50%);font-size:12px;line-height:1.5;
+    text-align:center;white-space:pre;color:#ffb0a0;text-shadow:0 0 4px #000;z-index:4;min-width:240px}
+  #log{position:fixed;left:50%;top:92px;transform:translateX(-50%);font-size:12px;line-height:1.5;
     text-align:center;white-space:pre;text-shadow:0 0 4px #000;z-index:4;pointer-events:none}
-  #msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9;
+  #objs{position:fixed;right:14px;top:10px;font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;z-index:4;max-width:300px}
+  #objs .done{color:#6fff8a;text-decoration:line-through;opacity:.7}#objs .failed{color:#ff5a4a}#objs .open{color:#ffd080}
+  #comm{position:fixed;left:16px;bottom:26px;width:330px;font-size:12px;line-height:1.4;text-shadow:0 0 4px #000;z-index:6;pointer-events:none}
+  #comm div{margin-top:3px}#comm b{margin-right:6px}
+  #wpn{position:fixed;right:14px;bottom:20px;font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;z-index:6;white-space:pre}
+  #wpn .sel{color:#ffd24a}#wpn .dim{opacity:.55}
+  #warn{position:fixed;left:50%;top:168px;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#ff4a3a;
+    text-shadow:0 0 8px #000;z-index:6;pointer-events:none;letter-spacing:2px;text-align:center}
+  #msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9;
     font-size:20px;text-align:center;background:rgba(0,0,0,.4);white-space:pre-line}
-  #help{position:fixed;right:14px;top:10px;font-size:11px;line-height:1.5;opacity:.7;text-align:right;white-space:pre;z-index:4}
+  #help{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;line-height:1.6;background:rgba(5,12,10,.88);
+    border:1px solid #3a6a58;padding:16px 22px;z-index:8;white-space:pre;display:none}
+  #brief{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;background:rgba(2,6,8,.62)}
+  #brief .panel{width:min(760px,94vw);max-height:92vh;overflow:auto;background:rgba(6,16,14,.94);border:1px solid #3a6a58;padding:18px 24px;line-height:1.5;font-size:13px}
+  #brief h1{margin:2px 0 0;font-size:24px;letter-spacing:3px;color:#d8fff0}#brief h2{margin:0 0 10px;font-size:13px;color:#ffd080;font-weight:normal}
+  #brief p{margin:8px 0;color:#b8ead8}#brief .sub{font-size:10px;letter-spacing:2px;color:#5ea58a;margin-bottom:3px}
+  #brief .cols{display:flex;gap:26px;flex-wrap:wrap;margin:12px 0}#brief .cols>div{flex:1;min-width:190px}
+  #brief .dim{opacity:.55}#brief .ok{color:#6fff8a}#brief .bad{color:#ff5a4a}#brief .keys{font-size:10px;margin-top:10px}
+  #brief .grade{font-size:44px;font-weight:bold;color:#ffd24a;margin-top:6px}
+  #brief .btns{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  #brief button{font:inherit;font-size:14px;letter-spacing:2px;padding:10px 22px;background:#0f3a2c;color:#c8fff0;border:1px solid #4aa888;cursor:pointer}
+  #brief button.alt{background:#10201c;border-color:#3a6a58;color:#8fcdb8;font-size:12px}
+  #brief button:hover{background:#17614a}
   #touch{display:none}
   body.touch #touch{display:block}
-  body.touch #help{display:none}
-  body.touch #radar{width:110px;height:110px;bottom:8px}
-  body.touch #hud{font-size:11px}
+  body.touch #radar{width:132px;height:132px;bottom:6px}
+  body.touch #hud{font-size:10px}
+  body.touch #objs{font-size:10px;max-width:190px;top:150px}
+  body.touch #comm{font-size:11px;left:12px;bottom:78px;width:42vw}
+  body.touch #wpn{font-size:10px;right:80px;bottom:150px}
+  body.touch #tgt{font-size:10px;top:6px}
+  body.touch #log{top:70px}
+  body.touch #dmg{width:100px;height:113px}
   #stickzone{position:fixed;left:0;top:0;width:55%;height:100%;z-index:5}
   #stickbase,#stickknob{position:fixed;border-radius:50%;pointer-events:none;display:none;z-index:6}
   #stickbase{width:120px;height:120px;margin:-60px 0 0 -60px;border:2px solid rgba(143,255,208,.5)}
   #stickknob{width:50px;height:50px;margin:-25px 0 0 -25px;background:rgba(143,255,208,.45)}
   .tbtn{position:fixed;z-index:7;border:2px solid rgba(143,255,208,.7);border-radius:50%;
     background:rgba(10,30,24,.45);color:#8fffd0;display:flex;align-items:center;justify-content:center;
-    font-size:13px;font-weight:bold}
+    font-size:12px;font-weight:bold}
   .tbtn.on{background:rgba(143,255,208,.45)}
   #bfire{right:78px;bottom:30px;width:96px;height:96px;font-size:16px;border-color:#ff8a5a;color:#ff8a5a}
-  #bboost{right:182px;bottom:20px;width:64px;height:64px}
+  #bboost{right:182px;bottom:20px;width:60px;height:60px}
+  #bmsl{right:90px;bottom:136px;width:62px;height:62px;border-color:#ffd24a;color:#ffd24a}
+  #bflr{right:166px;bottom:92px;width:54px;height:54px;border-color:#7fe0ff;color:#7fe0ff}
+  #bsel{right:14px;top:206px;width:50px;height:50px;font-size:10px}
   #brl{left:14px;bottom:10px;width:54px;height:54px}
   #brr{left:76px;bottom:10px;width:54px;height:54px}
-  #bview{right:14px;top:92px;width:52px;height:52px;font-size:11px}
-  #btgt{right:14px;top:30px;width:52px;height:52px;font-size:11px}
+  #bview{right:14px;top:92px;width:50px;height:50px;font-size:10px}
+  #btgt{right:14px;top:30px;width:50px;height:50px;font-size:10px}
+  #bytgt{right:14px;top:148px;width:50px;height:50px;font-size:10px}
   #thr{position:fixed;right:14px;bottom:30px;width:44px;height:160px;z-index:7;
     border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
   #thr>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
@@ -71,29 +94,39 @@
 <canvas id="c"></canvas>
 <div id="canopy"><i class="l"></i><i class="r"></i></div>
 <div id="hit"></div>
-<div id="cross"></div>
-<div id="bracket"><span id="brtxt"></span></div>
+<canvas id="ov"></canvas>
 <div id="hud"><div id="hudtxt"></div><canvas id="dmg" width="150" height="170"></canvas></div>
 <div id="tgt"></div>
 <div id="log"></div>
-<canvas id="radar" width="160" height="160"></canvas>
+<div id="warn"></div>
+<div id="objs"></div>
+<div id="comm"></div>
+<div id="wpn"></div>
+<canvas id="radar" width="448" height="448"></canvas>
 <div id="help">MOUSE  stick (click to capture)   C  centre stick
-W/S  throttle   SHIFT  afterburner   Q/E  roll
-SPACE / LMB  fire   T  cycle target   V  view
-F  flight model   X  brake (newtonian)   B  bloom
--/=  voxel detail   [ / ]  pixel size   R  restart</div>
+W/S  throttle   SHIFT  afterburner   Q/E  roll   X  brake (newtonian)
+SPACE / LMB  guns        1 cannons   2 lasers   3 linked
+RMB / ENTER  launch missile       G  next missile type
+Z  flares + chaff        T  next target   Y  target nearest crosshair
+K  radar range           V  view   F  flight model
+B  bloom   M  mute   -/=  voxel detail   [ / ]  pixel size   R  free flight   H  this help
+Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff.</div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
+  <div class="tbtn" id="bmsl">MSL</div>
+  <div class="tbtn" id="bflr">FLARE</div>
   <div class="tbtn" id="bboost">BOOST</div>
   <div class="tbtn" id="brl">&#8630;</div>
   <div class="tbtn" id="brr">&#8631;</div>
   <div class="tbtn" id="bview">VIEW</div>
   <div class="tbtn" id="btgt">TGT</div>
+  <div class="tbtn" id="bytgt">AIM-T</div>
+  <div class="tbtn" id="bsel">WPN</div>
   <div id="thrlbl">THR</div>
   <div id="thr"><i></i></div>
 </div>
-<div id="msg">GAME SPACE
-click to take controls</div>
+<div id="msg"></div>
+<div id="brief"></div>
 
 <script type="module">
