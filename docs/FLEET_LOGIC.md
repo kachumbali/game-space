@@ -200,3 +200,8 @@ type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "w
 - **Jamming:** deferred; to be defined later (affects control link, order availability, fallback behaviour).
 - **Consequences to design:** logistics transport ship class (resupply drones/missiles); drone count as a strategic stock;
   an order UI that targets "my drones"; per-controller drone assignment saved in the roster.
+- **Heavy fighter crew (owner 2026-10-21):** heavy fighters carry a crew of 2, a **pilot and a weapons specialist**. Consequences:
+  two persistent roster characters per sortie (casualty and ejection apply to both; one can survive without the other);
+  the weapons specialist can be the drone controller (2 drones per heavy fighter), keeping the pilot on flying; the player
+  chooses which seat to take, or flies the pilot seat with the specialist as an AI-driven crew member. Open: whether the specialist
+  seat is playable and how ejection of a two-person crew is resolved (both pods, or one shared pod).
