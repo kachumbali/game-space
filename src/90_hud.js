@@ -100,6 +100,19 @@ function updateObjComm() {
 }
 
 // ---- weapon panel --------------------------------------------------------------------------------------
+const rglEl = document.getElementById('rgl'), rgrEl = document.getElementById('rgr');
+let lastRg = '';
+function updateRadarSide() {
+  const p = player;
+  if (!p || !p.alive) { rglEl.innerHTML = rgrEl.innerHTML = ''; lastRg = ''; return; }
+  const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
+  const cur = selectedMissile(p), ids = missileIds(p);
+  const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div><span class="vb"><i style="height:${Math.round(en * 100)}%;background:${ec}"></i></span>`;
+  const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
+  const h = l + '|' + r;
+  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
+}
 let lastWpn = '';
 function updateWeaponPanel() {
   const p = player;
@@ -377,7 +390,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide();
   // warnings
   let w = '';
   if (alive) {

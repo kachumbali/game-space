@@ -25,6 +25,7 @@
   body.cine #bars{display:block}
   body.cine #hud,body.cine #tgt,body.cine #radar,body.cine #wpn,body.cine #objs,body.cine #log,body.cine #dmg,body.cine #ov,body.cine #canopy,body.cine #warn,body.cine #thr,body.cine #thrlbl,body.cine .tbtn,body.cine #msg{display:none!important}
   body.cine #comm{bottom:13vh}
+  #brief .bm.cur{border-color:#ffd24a;color:#ffd24a}
   #hit{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:0;
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
@@ -38,6 +39,16 @@
   #objs .done{color:#6fff8a;text-decoration:line-through;opacity:.7}#objs .failed{color:#ff5a4a}#objs .open{color:#ffd080}
   #comm{position:fixed;left:16px;bottom:26px;width:330px;font-size:12px;line-height:1.4;text-shadow:0 0 4px #000;z-index:6;pointer-events:none}
   #comm div{margin-top:3px}#comm b{margin-right:6px}
+  .rgs{position:fixed;bottom:14px;z-index:5;font-size:11px;line-height:1.4;text-shadow:0 0 4px #000;pointer-events:none}
+  #rgl{left:calc(50% - 112px - 92px);text-align:right}#rgr{left:calc(50% + 112px + 12px)}
+  .rgs .chip{display:inline-block;min-width:44px;margin:1px 0;padding:0 5px;border:1px solid rgba(143,255,208,.45);border-radius:3px;background:rgba(10,30,24,.45);color:#8fffd0}
+  .rgs .chip.sel{border-color:#ffd24a;color:#ffd24a;background:rgba(60,48,10,.55)}
+  .rgs .chip.zero{opacity:.4}
+  .rgs .vb{display:inline-block;width:10px;height:64px;border:1px solid rgba(143,255,208,.6);border-radius:2px;position:relative;vertical-align:bottom;margin-left:6px;background:rgba(10,30,24,.45)}
+  .rgs .vb i{position:absolute;left:0;right:0;bottom:0;background:#7dffb0}
+  body.touch #rgl{left:calc(50% - 66px - 84px)}body.touch #rgr{left:calc(50% + 66px + 8px)}
+  body.touch .rgs{font-size:10px;bottom:8px}body.touch .rgs .vb{height:46px}
+  body.cine .rgs{display:none!important}
   #wpn{position:fixed;right:14px;bottom:20px;font-size:11px;line-height:1.5;text-align:right;text-shadow:0 0 4px #000;z-index:6;white-space:pre}
   #wpn .sel{color:#ffd24a}#wpn .dim{opacity:.55}
   #warn{position:fixed;left:50%;top:72px;transform:translateX(-50%);font-size:20px;font-weight:bold;color:#ff4a3a;
@@ -63,8 +74,8 @@
   body.touch #radar{width:132px;height:132px;bottom:6px}
   body.touch #hud{font-size:10px}
   body.touch #objs{font-size:10px;max-width:200px;top:162px;left:12px;right:auto;text-align:left}
-  body.touch #comm{font-size:11px;left:170px;bottom:10px;width:22vw;z-index:3}
-  body.touch #wpn{font-size:9px;left:12px;right:auto;bottom:auto;top:212px;text-align:left;line-height:1.35}
+  body.touch #comm{font-size:11px;left:12px;bottom:76px;width:38vw;z-index:3}
+  body.touch #wpn{display:none!important;font-size:9px;left:12px;right:auto;bottom:auto;top:212px;text-align:left;line-height:1.35}
   body.touch #tgt{font-size:10px;top:6px}
   body.touch #log{top:8px;right:100px;max-width:34vw;font-size:10px}
   body.touch #dmg{width:100px;height:113px}
@@ -116,6 +127,7 @@
 <div id="comm"></div>
 <div id="wpn"></div>
 <canvas id="radar" width="448" height="448"></canvas>
+<div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
 <div id="help">MOUSE  stick (click to capture)   C  centre stick
 W/S  throttle   SHIFT  afterburner   Q/E  roll   X  brake (newtonian)
 SPACE / LMB  guns        1 cannons   2 plasma   3 linked
@@ -2564,7 +2576,7 @@ function showBriefing(M) {
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
-    <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm" data-i="${i}">${i + 1}. ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
+    <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
@@ -3192,6 +3204,19 @@ function updateObjComm() {
 }
 
 // ---- weapon panel --------------------------------------------------------------------------------------
+const rglEl = document.getElementById('rgl'), rgrEl = document.getElementById('rgr');
+let lastRg = '';
+function updateRadarSide() {
+  const p = player;
+  if (!p || !p.alive) { rglEl.innerHTML = rgrEl.innerHTML = ''; lastRg = ''; return; }
+  const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
+  const cur = selectedMissile(p), ids = missileIds(p);
+  const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div><span class="vb"><i style="height:${Math.round(en * 100)}%;background:${ec}"></i></span>`;
+  const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
+  const h = l + '|' + r;
+  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
+}
 let lastWpn = '';
 function updateWeaponPanel() {
   const p = player;
@@ -3469,7 +3494,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide();
   // warnings
   let w = '';
   if (alive) {
@@ -3482,7 +3507,7 @@ function updateHud() {
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
-startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || 1) - 1))]);
+startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
 if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
 let last = performance.now();

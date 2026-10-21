@@ -1,7 +1,7 @@
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
-startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || 1) - 1))]);
+startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
 if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
 let last = performance.now();
