@@ -11,11 +11,23 @@ const params = new URLSearchParams(location.search);
 // global sim speed (human-testing build: 37.5%). Override with ?speed=1
 const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.375));
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || params.has('touch');
-const PIXEL_STEPS = [1, 2, 3, 4];
-const DETAIL_STEPS = [24, 40, 64, 88, 112, 160, 224];   // voxels along a 12 m ship (larger ships scale ~ length^0.4)
-let pixelIdx = 1;
-let detailIdx = isTouch ? 2 : 4;
-let bloomOn = !params.has('nobloom');
+const PIXEL_STEPS = [0.5, 1, 2, 3, 4];                  // render-pixel size; 0.5 = 2x supersampling (HUD label SS)
+const DETAIL_STEPS = [24, 40, 64, 88, 112, 160, 224, 288];   // voxels along a 12 m ship (larger ships scale ~ length^0.4)
+const RES_CAP = parseInt(params.get('rescap')) || 420;       // upper limit on voxels along any ship (build time and memory grow with the cube)
+// graphics presets: ?q=low|mid|high|ultra, key P cycles them. px = PIXEL_STEPS value, det = DETAIL_STEPS index, aa = MSAA samples (needs bloom/composer), sky = cubemap size
+const QUALITY = {
+  low:   { px: 3,   det: 2, aa: 0, sky: 512,  bloom: false },
+  mid:   { px: 2,   det: 4, aa: 0, sky: 1024, bloom: true },
+  high:  { px: 1,   det: 6, aa: 4, sky: 1536, bloom: true },
+  ultra: { px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true },
+};
+const QORDER = ['low', 'mid', 'high', 'ultra'];
+const Q0 = QUALITY[params.get('q')] || null;
+let pixelIdx = Q0 ? PIXEL_STEPS.indexOf(Q0.px) : 2;
+let detailIdx = Q0 ? Q0.det : (isTouch ? 2 : 4);
+let qualityName = Q0 ? params.get('q') : 'mid';
+const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : (Q0 ? Q0.aa : 0);
+let bloomOn = !params.has('nobloom') && !(Q0 && !Q0.bloom);
 const SUN = new THREE.Vector3(0.6, 0.4, 0.55).normalize();
 
 // ======================================================================

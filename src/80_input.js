@@ -76,6 +76,7 @@ addEventListener('keydown', e => {
     case 'Digit2': player.fireMask = 2; break;
     case 'Digit3': player.fireMask = 3; break;
     case 'KeyB': if (composer) bloomOn = !bloomOn; break;
+    case 'KeyP': setQuality(QORDER[(QORDER.indexOf(qualityName) + 1) % QORDER.length]); break;
     case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
     case 'BracketRight': pixelIdx = Math.min(PIXEL_STEPS.length - 1, pixelIdx + 1); resize(); break;
     case 'Minus': changeDetail(-1); break;
@@ -159,6 +160,16 @@ function changeDetail(d) {
   if (n === detailIdx) return;
   detailIdx = n;
   for (const s of ships) if (s.alive) buildVox(s);
+}
+
+// graphics preset at run time (sky size and antialiasing need a reload with ?q=)
+function setQuality(name) {
+  const Q = QUALITY[name]; if (!Q) return;
+  qualityName = name;
+  pixelIdx = PIXEL_STEPS.indexOf(Q.px); resize();
+  changeDetail(Q.det - detailIdx);
+  if (composer) bloomOn = Q.bloom;
+  log(`GRAPHICS ${name.toUpperCase()}: voxels ${DETAIL_STEPS[detailIdx]}, pixels ${Q.px < 1 ? '2x supersampled' : Q.px + 'x'}` + ((Q.aa || Q.sky > 1024) ? ' (reload with ?q=' + name + ' for MSAA and sky size)' : ''), '#9adcff');
 }
 
 // phones: smaller HUD fonts and controls

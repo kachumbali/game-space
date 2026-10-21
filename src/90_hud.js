@@ -371,7 +371,7 @@ function updateHud() {
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
-    `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
+    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
@@ -383,6 +383,15 @@ function updateHud() {
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
   if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+  if (!isTouch) {                                   // desktop throttle gauge (right of the radar)
+    const sp = alive ? p.vel.length() : 0, mx = p.def.maxSpeed;
+    const nw = flightMode === 'newton';
+    $id('tgt1').textContent = nw ? 'NEWT' : Math.round(p.throttle * 100) + '';
+    $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
+    $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
+    $id('tgab').classList.toggle('on', !!(alive && p.ab));
+    $id('tgv').textContent = Math.round(sp);
+  }
 
   drawRadar(alive);
   drawOverlay(alive);

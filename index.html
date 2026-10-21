@@ -117,6 +117,33 @@
     border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
   #thr>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
   #thrlbl{position:fixed;right:14px;bottom:196px;font-size:11px;z-index:7;width:48px;text-align:center}
+  /* desktop throttle gauge, right of the radar */
+  #tg{position:fixed;left:calc(50% + 124px);bottom:10px;width:64px;height:224px;z-index:5;font-size:11px;pointer-events:none}
+  #tg .bar{position:absolute;left:0;top:18px;bottom:30px;width:26px;border:2px solid rgba(143,255,208,.7);border-radius:6px;background:rgba(10,30,24,.45);overflow:hidden}
+  #tg .bar>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.55)}
+  #tg .bar>b{position:absolute;left:-2px;right:-2px;height:2px;background:#ffd24a}
+  #tg .bar>u{position:absolute;left:0;right:0;height:1px;background:rgba(143,255,208,.4)}
+  #tg .ab{position:absolute;left:32px;top:18px;color:#ff8a5a;opacity:.25}
+  #tg .ab.on{opacity:1;text-shadow:0 0 6px #ff6a2a}
+  #tg .t{position:absolute;left:0;top:0;white-space:nowrap}
+  #tg .v{position:absolute;left:0;bottom:0;white-space:nowrap}
+  #tg .l{position:absolute;left:32px;color:#8fd8c0;white-space:nowrap}
+  body:not(.touch) #rgr{left:calc(50% + 196px)}
+  body.touch #tg,body.cine #tg{display:none}
+  body.phone #tg{left:calc(50% + 66px);height:108px}
+  #help{white-space:normal;max-width:min(880px,94vw);text-align:left}
+  #help h3{margin:0 0 8px;font-size:13px;letter-spacing:2px;color:#d8fff0;font-weight:normal}
+  #help .kb{margin:6px 0 10px}#help .r{display:flex;gap:4px;margin-bottom:4px}
+  #help .k{flex:1 1 0;min-width:0;border:1px solid #2b4a40;border-radius:4px;padding:3px 2px 2px;text-align:center;min-height:38px;background:rgba(10,30,24,.5);color:#6f9488}
+  #help .k b{display:block;font-size:13px;color:#8fb0a4}
+  #help .k span{display:block;font-size:8.5px;line-height:1.15;letter-spacing:0;overflow-wrap:anywhere}
+  #help .k.f{border-color:#3a8a6c;color:#9dffd0}#help .k.f b{color:#d8fff0}
+  #help .k.w{border-color:#9a6a2c;color:#ffd08a}#help .k.w b{color:#ffe6b8}
+  #help .k.t{border-color:#2c7a9a;color:#9adcff}#help .k.t b{color:#d6f0ff}
+  #help .k.s{border-color:#5a5a7a;color:#c0c0e0}#help .k.s b{color:#e6e6ff}
+  #help .sp{flex:4}#help .w2{flex:2}#help .w3{flex:3}
+  #help .legend{font-size:10px;margin-top:4px;color:#7fa89a}
+  #help .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 4px 0 10px;vertical-align:-1px}
 </style>
 <script type="importmap">
 {"imports":{
@@ -139,16 +166,9 @@
 <div id="comm"></div>
 <div id="wpn"></div>
 <canvas id="radar" width="448" height="448"></canvas>
+<div id="tg"><div class="t">THR <span id="tgt1">0</span>%</div><div class="bar"><i id="tgf"></i><b id="tgs"></b><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="ab" id="tgab">AB</div><div class="l" style="top:calc(18px + (100% - 48px) * 0.5 - 6px)">SPD</div><div class="v"><span id="tgv">0</span> m/s</div></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="help">MOUSE  stick (click to capture)   C  centre stick
-W/S  throttle   SHIFT  afterburner   Q/E  roll   X  brake (newtonian)
-SPACE / LMB  guns        1 cannons   2 plasma   3 linked
-RMB / ENTER  launch missile       G  next missile type
-Z  flares + chaff        T  next target   Y  target nearest crosshair
-N  cycle subsystem on target (aims gun pipper at it)
-K  radar range           V  view   F  flight model
-B  bloom   M  mute   -/=  voxel detail   [ / ]  pixel size   R  free flight   H  this help
-Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff.</div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Graphics: P cycles low / mid / high / ultra; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -182,11 +202,23 @@ const params = new URLSearchParams(location.search);
 // global sim speed (human-testing build: 37.5%). Override with ?speed=1
 const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.375));
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || params.has('touch');
-const PIXEL_STEPS = [1, 2, 3, 4];
-const DETAIL_STEPS = [24, 40, 64, 88, 112, 160, 224];   // voxels along a 12 m ship (larger ships scale ~ length^0.4)
-let pixelIdx = 1;
-let detailIdx = isTouch ? 2 : 4;
-let bloomOn = !params.has('nobloom');
+const PIXEL_STEPS = [0.5, 1, 2, 3, 4];                  // render-pixel size; 0.5 = 2x supersampling (HUD label SS)
+const DETAIL_STEPS = [24, 40, 64, 88, 112, 160, 224, 288];   // voxels along a 12 m ship (larger ships scale ~ length^0.4)
+const RES_CAP = parseInt(params.get('rescap')) || 420;       // upper limit on voxels along any ship (build time and memory grow with the cube)
+// graphics presets: ?q=low|mid|high|ultra, key P cycles them. px = PIXEL_STEPS value, det = DETAIL_STEPS index, aa = MSAA samples (needs bloom/composer), sky = cubemap size
+const QUALITY = {
+  low:   { px: 3,   det: 2, aa: 0, sky: 512,  bloom: false },
+  mid:   { px: 2,   det: 4, aa: 0, sky: 1024, bloom: true },
+  high:  { px: 1,   det: 6, aa: 4, sky: 1536, bloom: true },
+  ultra: { px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true },
+};
+const QORDER = ['low', 'mid', 'high', 'ultra'];
+const Q0 = QUALITY[params.get('q')] || null;
+let pixelIdx = Q0 ? PIXEL_STEPS.indexOf(Q0.px) : 2;
+let detailIdx = Q0 ? Q0.det : (isTouch ? 2 : 4);
+let qualityName = Q0 ? params.get('q') : 'mid';
+const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : (Q0 ? Q0.aa : 0);
+let bloomOn = !params.has('nobloom') && !(Q0 && !Q0.bloom);
 const SUN = new THREE.Vector3(0.6, 0.4, 0.55).normalize();
 
 // ======================================================================
@@ -352,7 +384,7 @@ function primInside(p, x, y, z) {
 
 const _col = new THREE.Color(), _col2 = new THREE.Color();
 const voxCache = new Map();
-const resFor = (def, idx) => Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1));
+const resFor = (def, idx) => Math.min(RES_CAP, Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1)));
 
 function voxelize(def, res) {
   const key = def.id + ':' + res;
@@ -1106,7 +1138,7 @@ for (const id in SHIPS) if (SHIPS[id].cls === 'fighter' && SHIPS[id].fac === 'fr
 //  RENDERER / SCENE
 // ======================================================================
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: AA_SAMPLES > 0 });
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.5;
 const scene = new THREE.Scene();
@@ -1125,7 +1157,9 @@ scene.add(hemiLight);
 let composer = null, bloomPass = null;
 function setupComposer() {
   try {
-    composer = new EffectComposer(renderer);
+    composer = AA_SAMPLES > 0
+      ? new EffectComposer(renderer, new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: AA_SAMPLES }))
+      : new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
     bloomPass = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.6, 0.4, 1.0);
     composer.addPass(bloomPass);
@@ -1155,7 +1189,7 @@ resize();
 //    the same SUN vector as the directional light
 //  ?skyres=N overrides the cubemap size (testing).
 // ======================================================================
-const SKY_RES = parseInt(params.get('skyres')) || (isTouch ? 512 : 1024);
+const SKY_RES = parseInt(params.get('skyres')) || (isTouch ? 512 : (Q0 ? Q0.sky : 1024));
 const OCT = isTouch ? 4 : 6;                // fbm octaves in the planet shaders
 const PLANET_DIR = new THREE.Vector3(-0.55, -0.22, -0.8).normalize();
 let PLANET_DIST = 3300;
@@ -3447,6 +3481,7 @@ addEventListener('keydown', e => {
     case 'Digit2': player.fireMask = 2; break;
     case 'Digit3': player.fireMask = 3; break;
     case 'KeyB': if (composer) bloomOn = !bloomOn; break;
+    case 'KeyP': setQuality(QORDER[(QORDER.indexOf(qualityName) + 1) % QORDER.length]); break;
     case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
     case 'BracketRight': pixelIdx = Math.min(PIXEL_STEPS.length - 1, pixelIdx + 1); resize(); break;
     case 'Minus': changeDetail(-1); break;
@@ -3530,6 +3565,16 @@ function changeDetail(d) {
   if (n === detailIdx) return;
   detailIdx = n;
   for (const s of ships) if (s.alive) buildVox(s);
+}
+
+// graphics preset at run time (sky size and antialiasing need a reload with ?q=)
+function setQuality(name) {
+  const Q = QUALITY[name]; if (!Q) return;
+  qualityName = name;
+  pixelIdx = PIXEL_STEPS.indexOf(Q.px); resize();
+  changeDetail(Q.det - detailIdx);
+  if (composer) bloomOn = Q.bloom;
+  log(`GRAPHICS ${name.toUpperCase()}: voxels ${DETAIL_STEPS[detailIdx]}, pixels ${Q.px < 1 ? '2x supersampled' : Q.px + 'x'}` + ((Q.aa || Q.sky > 1024) ? ' (reload with ?q=' + name + ' for MSAA and sky size)' : ''), '#9adcff');
 }
 
 // phones: smaller HUD fonts and controls
@@ -4113,7 +4158,7 @@ function updateHud() {
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
-    `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
+    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
@@ -4125,6 +4170,15 @@ function updateHud() {
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
   if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+  if (!isTouch) {                                   // desktop throttle gauge (right of the radar)
+    const sp = alive ? p.vel.length() : 0, mx = p.def.maxSpeed;
+    const nw = flightMode === 'newton';
+    $id('tgt1').textContent = nw ? 'NEWT' : Math.round(p.throttle * 100) + '';
+    $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
+    $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
+    $id('tgab').classList.toggle('on', !!(alive && p.ab));
+    $id('tgv').textContent = Math.round(sp);
+  }
 
   drawRadar(alive);
   drawOverlay(alive);

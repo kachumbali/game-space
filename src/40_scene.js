@@ -2,7 +2,7 @@
 //  RENDERER / SCENE
 // ======================================================================
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: AA_SAMPLES > 0 });
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.5;
 const scene = new THREE.Scene();
@@ -21,7 +21,9 @@ scene.add(hemiLight);
 let composer = null, bloomPass = null;
 function setupComposer() {
   try {
-    composer = new EffectComposer(renderer);
+    composer = AA_SAMPLES > 0
+      ? new EffectComposer(renderer, new THREE.WebGLRenderTarget(innerWidth, innerHeight, { type: THREE.HalfFloatType, samples: AA_SAMPLES }))
+      : new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
     bloomPass = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.6, 0.4, 1.0);
     composer.addPass(bloomPass);
