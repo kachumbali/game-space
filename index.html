@@ -308,6 +308,21 @@ function sfx(name, dist = 0, vol = 1) {
 //               ell  ellipsoid            seg  tapered capsule between two points (horns, legs, barrels, spines)
 //  common opts: rot[rx,ry,rz]  col2+mot (mottled skin)  rib[period,depth]  seam[sx,sz]  dots{col,p}  glow  noMirror
 // ======================================================================
+// ---- detail-prim kit (shared by 30/31 ship files). Pass {lod:2} (or 3) in opts so the prim is only built at high detail.
+//   ringSegs: n thin rods around a circle (nozzle petals, barrel shrouds, heat fins) along Z
+//   rungs:    n thin boxes across (x0..x1) at evenly spaced z (ladders, vent slats, radiator ribs, armour plates)
+//   paintGrid: lattice of painted squares (VLS cells, hatch arrays); paint prims are resolution-gated (need >= 1 voxel)
+const ringSegs = (x, y, z0, z1, r, n, th, col, o = {}) => Array.from({ length: n }, (_, i) => {
+  const a = i / n * Math.PI * 2, px = x + Math.cos(a) * r, py = y + Math.sin(a) * r;
+  return seg([px, py, z0], [px, py, z1], th, th, col, o);
+});
+const rungs = (x, y, z0, z1, n, hx, hy, hzr, col, o = {}) => Array.from({ length: n }, (_, i) => tap([x, y, z0 + (z1 - z0) * (n > 1 ? i / (n - 1) : 0)], hzr, [hx, hy], [hx, hy], col, o));
+const paintGrid = (x0, y, z0, nx, nz, dx, dz, sx, sz, col, o = {}) => {
+  const out = [];
+  for (let a = 0; a < nx; a++) for (let b = 0; b < nz; b++) out.push({ t: 'paint', box: [x0 + a * dx, y - 0.6, z0 + b * dz, x0 + a * dx + sx, y + 0.6, z0 + b * dz + sz], col, side: 'top', ...o });
+  return out;
+};
+
 const hash3 = (i, j, k) => (((i * 73856093) ^ (j * 19349663) ^ (k * 83492791)) >>> 0) % 1000 / 1000;
 function vnoise(x, y, z) {
   const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
@@ -344,6 +359,19 @@ function prepPrim(p) {
     }
   }
   P.R2 = P.R * P.R;
+  // tight axis-aligned bounds (relative to the prim centre) so long thin prims do not scan a cube of side 2R
+  let bx = P.R, by = P.R, bz = P.R;
+  if (p.t === 'seg') {
+    const rm = Math.max(p.ra, p.rb) + 0.01;
+    bx = Math.abs(p.b[0] - p.a[0]) / 2 + rm; by = Math.abs(p.b[1] - p.a[1]) / 2 + rm * Math.max(1, p.fy); bz = Math.abs(p.b[2] - p.a[2]) / 2 + rm;
+  } else if (!P.rm) {
+    if (p.t === 'ell') { bx = p.r[0] + 0.01; by = p.r[1] + 0.01; bz = p.r[2] + 0.01; }
+    else {
+      const w1 = Math.max(p.h0[0], p.h1[0]) + Math.abs(p.sweep || 0) * p.hz + 0.01, w2 = Math.max(p.h0[1], p.h1[1]) + Math.abs(p.sweepY || 0) * p.hz + 0.01, al = p.hz + 0.01;
+      if (p.ax === 'x') { bx = al; bz = w1; by = w2; } else if (p.ax === 'y') { by = al; bz = w1; bx = w2; } else { bz = al; bx = w1; by = w2; }
+    }
+  }
+  P.bx = Math.min(bx, P.R); P.by = Math.min(by, P.R); P.bz = Math.min(bz, P.R);
   p._ = P;
   return P;
 }
@@ -413,8 +441,8 @@ const cmix = (a, b, t) => {
   return (((r + (((b >> 16) & 255) - r) * t) | 0) << 16) | (((g + (((b >> 8) & 255) - g) * t) | 0) << 8) | ((bl + ((b & 255) - bl) * t) | 0);
 };
 const DSTYLE = {
-  human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.2, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
-  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x6b4a30, 0x35524b], glass: 0x7fd6c4, lamp: 0xff7a2a, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.36, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
+  human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.3, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
+  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x6b4a30, 0x35524b], glass: 0x7fd6c4, lamp: 0xff7a2a, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
 };
 const FONT = {
   '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001', '5': '111100111001111',
@@ -527,7 +555,7 @@ function surfaceDetail(def, tier, G) {
     let col = grid[cell], t = 128;
     const pt = ihash(a * 2 + sg, cu, row, S + 2);
     t *= 0.9 + 0.2 * pt;
-    if (pt > 0.94) col = cmix(col, st.accent[0], 0.55); else if (pt > 0.875) col = cmix(col, st.accent[1], 0.5);
+    if (pt > 0.965) col = cmix(col, st.accent[0], 0.5); else if (pt > 0.93) col = cmix(col, st.accent[1], 0.45);
     t *= 0.9 + 0.2 * vnoise(i * 0.07, j * 0.07, k * 0.07);                // slow dirt/shade variation
     const n26 = nn[cell];
     if (isSeam) t *= 0.6;
@@ -647,7 +675,7 @@ function surfaceDetail(def, tier, G) {
   // ---- pass 2 (tier >= 2): greebles, grooves, conduits, veins
   if (tier >= 2) {
     const g3 = tier >= 3 ? 1.6 : 1;
-    const pBase = (st.human ? 0.0042 : 0.0036) * (st.greeb || 1) * g3;
+    const pBase = (st.human ? 0.007 : 0.006) * (st.greeb || 1) * g3;
     const pPath = 0.0006 * g3 * (st.greeb || 1);
     const PB = Math.max(8, Math.round(16 * U0));
     const sz = (lo, hi, h) => Math.max(1, Math.round((lo + (hi - lo) * h) * Math.min(U0, 2)));
@@ -829,14 +857,15 @@ function voxelize(def, res) {
   const pgrid = new Int16Array(N).fill(-1);      // owning prim index
   const mir = !!def.mirror;
   const prims = def.prims;
+  const _t0 = performance.now();
   for (let pi = 0; pi < prims.length; pi++) {
     const p = prims[pi];
     if (p.t === 'paint' || p.t === 'text' || p.lod > tier) continue;
     const P = prepPrim(p);
-    const spans = [[P.cx - P.R, P.cx + P.R]];
-    if (mir && !p.noMirror) spans.push([-P.cx - P.R, -P.cx + P.R]);
-    const j0 = Math.max(0, Math.floor((P.cy - P.R + hy) / vs)), j1 = Math.min(ny - 1, Math.ceil((P.cy + P.R + hy) / vs));
-    const k0 = Math.max(0, Math.floor((P.cz - P.R + hz) / vs)), k1 = Math.min(nz - 1, Math.ceil((P.cz + P.R + hz) / vs));
+    const spans = [[P.cx - P.bx, P.cx + P.bx]];
+    if (mir && !p.noMirror) spans.push([-P.cx - P.bx, -P.cx + P.bx]);
+    const j0 = Math.max(0, Math.floor((P.cy - P.by + hy) / vs)), j1 = Math.min(ny - 1, Math.ceil((P.cy + P.by + hy) / vs));
+    const k0 = Math.max(0, Math.floor((P.cz - P.bz + hz) / vs)), k1 = Math.min(nz - 1, Math.ceil((P.cz + P.bz + hz) / vs));
     const done = new Set();
     for (const [xa, xb] of spans) {
       const i0 = Math.max(0, Math.floor((xa + hx) / vs)), i1 = Math.min(nx - 1, Math.ceil((xb + hx) / vs));
@@ -853,7 +882,9 @@ function voxelize(def, res) {
       }
     }
   }
+  const _t1 = performance.now();
   const X = tier ? surfaceDetail(def, tier, { grid, pgrid, nx, ny, nz, vs, hx, hy, hz, prims, res, mir }) : null;
+  const _t2 = performance.now();
   const xg = X && X.xg, tn = X && X.tn;
   const DPRIM = { col: 0 };
   const si = ny * nz, sj = nz;
@@ -896,7 +927,7 @@ function voxelize(def, res) {
       // streak: rust runs along the hull (noise stretched along z); strata: stacked-plate banding (y + slope*z)
       if (p.streak && p.rust !== undefined) {
         const n = vnoise(ax * mf * 2.2, y * mf * 2.2, z * mf * 0.28 * p.streak);
-        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3));
+        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3) * (def.rustK ?? 1));
       }
       if (p.strata && p.rust !== undefined) {
         const ph = (((y + z * (p.strata[1] || 0)) / p.strata[0]) % 1 + 1) % 1;
@@ -937,6 +968,7 @@ function voxelize(def, res) {
     voxels.push({ x, y, z, g: glow, cr: _col.r * f, cg: _col.g * f, cb: _col.b * f, cell });
   }
   const out = { vs, voxels, nx, ny, nz, hx, hy, hz, grid, cellToVox, tier };
+  (globalThis.__vt ??= []).push([key, Math.round(_t1 - _t0), Math.round(_t2 - _t1), Math.round(performance.now() - _t2)]);
   voxCache.set(key, out);
   return out;
 }
@@ -963,6 +995,58 @@ const H = { // palette
   hull: 0x9aa3ad, hull2: 0x838d99, dark: 0x3a4049, panel: 0x5b6572, red: 0xc8402f, canopy: 0x3aa8dc,
   nozzle: 0x2a2d33, white: 0xc9ccd0, navy: 0x2f4a7a, orange: 0xd9772b, glow: 0x7fd0ff, amber: 0xffc060,
 };
+
+// ---- Kestrel surface-detail prims: lod 2 = built from detail index 6, lod 3 = index 7; paint/text from index 5 -------------
+const kNoz = (x, y, z, r) => [                                  // nozzle petals + heat bands around a pod
+  ...ringSegs(x, y, z - 0.05, z + 0.42, r * 0.98, 12, 0.04, H.nozzle, { lod: 2 }),
+  ...ringSegs(x, y, z + 0.05, z + 0.36, r * 0.72, 8, 0.03, 0x5a6068, { lod: 3 }),
+];
+const kestrelDetail = [
+  // canopy frame ribs and spine
+  tap([0, 0.34, -3.35], 0.035, [0.4, 0.3], [0.4, 0.3], K.dark, { sh: 'e', lod: 2 }),
+  tap([0, 0.34, -2.55], 0.035, [0.45, 0.33], [0.45, 0.33], K.dark, { sh: 'e', lod: 2 }),
+  tap([0, 0.34, -1.85], 0.035, [0.4, 0.3], [0.4, 0.3], K.dark, { sh: 'e', lod: 2 }),
+  seg([0, 0.655, -3.3], [0, 0.63, -1.75], 0.028, 0.028, K.dark, { lod: 2 }),
+  tap([0, 0.2, -3.3], 1.25, [0.22, 0.04], [0.5, 0.05], K.white, { sh: 'r', lod: 2 }),                 // chin spine panel
+  // dorsal avionics: heat-sink fins, dish and blade antennae
+  ...rungs(0, 0.82, -0.1, 1.2, 6, 0.2, 0.09, 0.03, K.hull3, { lod: 2 }),
+  ell([0, 0.72, 1.85], [0.28, 0.12, 0.34], K.white, { lod: 2 }),
+  seg([0, 0.78, 1.85], [0, 0.98, 1.85], 0.02, 0.02, K.dark, { lod: 2 }),
+  tap([0.9, 0.6, 2.4], 0.5, [0.04, 0.22], [0.04, 0.12], K.dark, { ax: 'y', sweep: 0.5, lod: 3 }),
+  // engine pods: intake lips, heat bands, nozzle petals
+  tap([3.35, 0.5, 1.82], 0.06, [0.84, 0.58], [0.84, 0.58], K.dark, { sh: 'h', lod: 2 }),
+  tap([3.9, -0.6, 2.67], 0.06, [0.72, 0.5], [0.72, 0.5], K.dark, { sh: 'h', lod: 2 }),
+  tap([3.35, 0.5, 4.3], 0.07, [0.82, 0.56], [0.82, 0.56], K.hull2, { sh: 'h', lod: 2 }),
+  tap([3.35, 0.5, 5.1], 0.07, [0.8, 0.55], [0.8, 0.55], K.hull2, { sh: 'h', lod: 2 }),
+  tap([3.9, -0.6, 4.9], 0.07, [0.72, 0.49], [0.72, 0.49], K.hull3, { sh: 'h', lod: 2 }),
+  tap([3.9, -0.6, 5.7], 0.07, [0.7, 0.48], [0.7, 0.48], K.hull3, { sh: 'h', lod: 2 }),
+  ...kNoz(3.35, 0.5, 5.95, 0.5), ...kNoz(3.9, -0.6, 6.3, 0.46),
+  // wing hardpoints with slim IR missiles on pylons, leading-edge sensor blisters
+  tap([2.25, -0.17, 1.9], 0.55, [0.04, 0.18], [0.04, 0.16], K.dark, { ax: 'y', lod: 2 }),
+  seg([2.25, -0.4, 0.9], [2.25, -0.4, 2.8], 0.09, 0.09, K.white, { lod: 2 }), seg([2.25, -0.4, 0.55], [2.25, -0.4, 0.9], 0.09, 0.02, 0xc33a2a, { lod: 2 }),
+  tap([1.75, -0.17, 2.2], 0.45, [0.04, 0.16], [0.04, 0.14], K.dark, { ax: 'y', lod: 3 }),
+  seg([1.75, -0.36, 1.35], [1.75, -0.36, 2.9], 0.07, 0.07, K.white, { lod: 3 }),
+  ell([4.1, 0.05, 1.25], [0.1, 0.07, 0.17], K.canopy, { lod: 2 }),
+  ell([3.1, 0.04, 1.3], [0.1, 0.07, 0.17], K.canopy, { lod: 3 }),
+  // wing flap hinge lines (thin dark strips) and tip lights
+  tap([3.6, 0.07, 3.25], 0.025, [1.3, 0.04], [0.8, 0.04], K.dark, { ax: 'x', sweep: 0.3, lod: 2 }),
+  // gun boom: shroud rings, muzzle brake, feed lines; missile pylon rail
+  ...[-1.6, -2.8, -3.8, -4.8].map(z => tap([-0.62, -0.46, z], 0.07, [0.17, 0.16], [0.17, 0.16], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
+  tap([-0.62, -0.48, -6.3], 0.16, [0.13, 0.13], [0.13, 0.13], H.nozzle, { sh: 'e', noMirror: true, lod: 2 }),
+  seg([-0.45, -0.3, -1.4], [-0.45, -0.38, -2.6], 0.03, 0.03, K.amber, { noMirror: true, lod: 3 }),
+  ...[-1.8, -2.6, -3.4].map(z => tap([0.6, -0.43, z], 0.05, [0.12, 0.11], [0.12, 0.11], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
+  // wing-tip pod details
+  tap([4.95, -0.04, 1.2], 0.06, [0.15, 0.13], [0.15, 0.13], K.hull3, { sh: 'e', lod: 2 }),
+  // nose: pitot probe and sensor ring
+  seg([0, -0.18, -4.7], [0, -0.17, -5.9], 0.03, 0.01, K.dark, { lod: 2 }),
+  // markings (tier 1+): ochre wing stripes, white nose flash, hull numbers on the fins and wings
+  { t: 'paint', box: [2.0, -0.2, 3.1, 4.6, 0.2, 3.45], col: K.amber, side: 'top', mix: 0.85 },
+  { t: 'paint', box: [-0.25, 0.1, -4.2, 0.25, 0.5, -3.5], col: K.white, side: 'top', mix: 0.9 },
+  { t: 'paint', box: [0.8, 0.0, 1.8, 1.7, 0.7, 2.6], col: K.white, side: 'side', mix: 0.7 },
+  { t: 'text', c: [1.16, 1.1, 3.25], face: '+x', text: 'CDF', px: 0.075, col: K.white },
+  { t: 'text', c: [3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: K.dark, mir: false },
+  { t: 'text', c: [-3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: K.dark, mir: false },
+];
 
 SHIPS.kestrel = {
   id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'MULTIROLE FIGHTER',
@@ -1013,6 +1097,7 @@ SHIPS.kestrel = {
     seg([0, -0.4, 1.4], [0, -0.9, 1.5], 0.05, 0.04, K.dark), seg([0.2, -0.4, 1.6], [0.25, -0.85, 1.7], 0.04, 0.03, K.dark),
     ell([-5.1, 0, 3.0], [0.09, 0.06, 0.09], 0xff3030, { glow: true, noMirror: true }),
     ell([5.1, 0, 3.0], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
+    ...kestrelDetail,
   ],
   engines: [
     { pos: [3.35, 0.5, 6.4], comp: 'engR', r: 0.46 }, { pos: [-3.35, 0.5, 6.4], comp: 'engL', r: 0.46 },
@@ -1040,6 +1125,51 @@ SHIPS.kestrel = {
 };
 
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
+// ---- Halberd surface-detail prims (authored at 64 m, scaled with the ship) ---------------------------------------------
+const hTur = (x, y, z, dy = 1) => [                              // armoured turret seat + ammo drum for each PD turret
+  tap([x, y - 0.25 * dy, z], 0.55, [1.5, 0.5], [1.5, 0.5], H.panel, { sh: 'e', lod: 2 }),
+  tap([x, y - 0.05 * dy, z], 0.45, [1.1, 0.35], [1.1, 0.35], H.dark, { sh: 'e', lod: 2 }),
+  ...ringSegs(x, y - 0.1 * dy, z - 0.5, z + 0.5, 1.3, 8, 0.07, 0x7a838d, { lod: 3 }),
+];
+const halberdDetail = [
+  ...hTur(3.4, 3.0, -12), ...hTur(-3.4, 3.0, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -3.2, -6, -1), ...hTur(0, -3.3, 14, -1),
+  // railgun: coil rings, capacitor blocks, muzzle shroud
+  ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 3.9, z], 0.12, [1.65, 0.78], [1.65, 0.78], H.panel, { sh: 'e', lod: 2 })),
+  ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 3.9, z - 0.3], 0.05, [1.7, 0.85], [1.7, 0.85], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
+  tap([0, 3.9, -30.2], 0.7, [1.8, 0.85], [1.8, 0.85], H.dark, { sh: 'h', lod: 2 }),
+  tap([0, 3.7, -4], 2.0, [1.6, 0.5], [1.9, 0.6], 0x6e7782, { sh: 'h', lod: 2 }),
+  // VLS lattice (tier 1 paint), dorsal armour seams and a ventral sensor strake
+  ...paintGrid(-1.2, 3.0, 12.6, 5, 9, 0.5, 0.55, 0.36, 0.38, 0x16191d, { mix: 0.9 }),
+  // bridge tower: lit windows, comms dishes and antennae
+  ell([2.6, 8.5, 9.4], [1.3, 0.16, 1.3], 0xdfe2e6, { rot: [0.5, 0, 0.35], lod: 2 }),
+  seg([2.6, 8.5, 9.4], [2.9, 9.4, 8.7], 0.06, 0.06, H.dark, { lod: 2 }),
+  ell([-2.2, 8.0, 12], [0.9, 0.12, 0.9], 0xdfe2e6, { rot: [-0.4, 0, -0.3], lod: 2 }),
+  tap([0, 8.0, 11.5], 1.1, [1.4, 0.5], [1.4, 0.5], H.panel, { sh: 'h', lod: 2 }),
+  ...rungs(0, 8.65, 10.4, 12.6, 4, 1.1, 0.12, 0.08, 0x8e969f, { lod: 2 }),
+  seg([0, 11, 11], [0, 12.6, 11], 0.08, 0.04, H.dark, { lod: 2 }), seg([-1.5, 10, 11], [1.5, 10, 11], 0.05, 0.05, H.dark, { lod: 2 }),
+  ell([0, 12.7, 11], [0.14, 0.14, 0.14], 0xff3030, { glow: true, lod: 2 }),
+  // hangar door frame with amber guide lights, boarding hatch rows
+  tap([4.05, -0.2, -2], 0.15, [0.5, 1.5], [0.5, 1.5], H.dark, { lod: 2 }),
+  ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, 1.25, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
+  ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, -1.65, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
+  // radiator wings: heat-pipe manifolds and rib strips
+  ...Array.from({ length: 9 }, (_, i) => seg([4.8, 0.5, 8.6 + i * 1.05], [13.4, 0.52, 9.9 + i * 1.05], 0.1, 0.1, i % 3 === 0 ? H.orange : 0x7a838d, { lod: 2 })),
+  seg([4.6, 0.55, 8.2], [4.6, 0.55, 18.5], 0.28, 0.28, H.dark, { lod: 2 }),
+  tap([13.6, 0.4, 14], 5.2, [0.2, 0.32], [0.2, 0.28], H.dark, { ax: 'x', sweep: 0.3, lod: 2 }),
+  // engine block: cooling cowl ribs, nozzle petals and bell rings
+  ...ringSegs(0, 0, 21, 29.5, 4.95, 18, 0.2, 0x3e454e, { lod: 2 }),
+  ...[22, 24, 26, 28].map(z => tap([0, 0, z], 0.15, [5.2, 3.7], [5.2, 3.7], 0x5b636d, { sh: 'h', lod: 2 })),
+  ...ringSegs(0, 0, 30.1, 31.5, 2.5, 12, 0.12, H.nozzle, { lod: 2 }), ...ringSegs(3.9, 0, 30.2, 31.3, 1.7, 10, 0.1, H.nozzle, { lod: 2 }),
+  tap([0, 0, 30.9], 0.12, [2.7, 2.35], [2.7, 2.35], 0x6a7078, { sh: 'e', lod: 2 }),
+  // hull belts, hull number and name (tier 1 paint/text)
+  { t: 'paint', box: [-5.5, -3.5, -26.5, 5.5, 4.5, -25.6], col: H.orange, mix: 0.9 },
+  { t: 'paint', box: [-5.5, -3.5, -22.4, 5.5, 4.5, -22.0], col: H.white, mix: 0.9 },
+  { t: 'paint', box: [-1.5, 3.1, -27, 1.5, 4.6, -24.5], col: H.orange, side: 'top', mix: 0.85 },
+  { t: 'text', c: [3.5, 0.2, -13], face: '+x', text: 'CSS HALBERD', px: 0.34, col: H.dark },
+  { t: 'text', c: [3.5, -1.4, 6], face: '+x', text: 'F-71', px: 0.5, col: H.white },
+  { t: 'text', c: [0, 3.2, 0], face: '+y', text: 'CDF', px: 0.7, col: H.navy, mir: false },
+];
+
 SHIPS.halberd = {
   id: 'halberd', name: 'HALBERD', cls: 'corvette', fac: 'human', role: 'ESCORT CORVETTE',
   length: 64, half: [15, 11, 33], mirror: true, radius: 38, seam: [3.2, 2.4],
@@ -1057,7 +1187,7 @@ SHIPS.halberd = {
     tap([0, 3.9, -16], 0.3, [1.5, 0.75], [1.5, 0.75], H.panel, { sh: 'e' }),
     tap([0, 3.9, -24], 0.3, [1.4, 0.7], [1.4, 0.7], H.panel, { sh: 'e' }),
     // bridge tower + mast
-    tap([0, 5.3, 10], 3.4, [1.6, 2.2], [2.5, 2.4], 0xa9afb7, { sh: 'h' }),
+    tap([0, 5.3, 10], 3.4, [1.6, 2.2], [2.5, 2.4], 0xa9afb7, { sh: 'h', win: { col: 0xffc060, p: 0.75, f: 1.6, o: 2, pu: 4, wu: 2, pv: 4 } }),
     tap([0, 6.0, 6.55], 0.2, [1.5, 0.32], [1.5, 0.32], H.amber, { glow: true, glowF: 1.3 }),
     seg([0, 7.4, 11], [0, 11, 11], 0.32, 0.16, 0x7a838d),
     ell([0, 11.1, 11], [2.0, 0.25, 2.0], 0x9aa1aa),
@@ -1082,6 +1212,7 @@ SHIPS.halberd = {
     tap([0, -2.9, 4], 5, [1.4, 0.4], [1.6, 0.4], H.panel, { sh: 'h' }),
     ell([-3.6, 2.6, 0], [0.25, 0.2, 0.25], 0xff3030, { glow: true, noMirror: true }),
     ell([3.6, 2.6, 0], [0.25, 0.2, 0.25], 0x30ff60, { glow: true, noMirror: true }),
+    ...halberdDetail,
   ],
   engines: [{ pos: [0, 0, 31.8], comp: 'engC', r: 1.9 }, { pos: [3.9, 0, 31.6], comp: 'engR', r: 1.25 }, { pos: [-3.9, 0, 31.6], comp: 'engL', r: 1.25 }],
   mounts: [
@@ -1241,8 +1372,8 @@ const fHorn = (pts, rs, col = F.plate2) => chain(pts, rs, col);
 
 
 // ---- v2 look (2026-10-21): dark lamellar plating, rust streaks, blunt pearl-eyed prows, trailing blades ----
-const N = { dk: 0x2c2d33, dk2: 0x3a3b43, mt: 0x5a5c64, ru: 0x6e4a2e, ru2: 0xb7803f, pr: 0x7fd6c4, bl: 0x14110f, hot: 0xff6a2a, ven: 0x9dff3a };
-const nSt = (per, sl = 0.2) => ({ rust: N.ru, strata: [per, sl], streak: 1 });
+const N = { dk: 0x242c2e, dk2: 0x313c3d, mt: 0x56625f, ru: 0x6a4a34, ru2: 0xb7803f, ed: 0x465652, pr: 0x7fd6c4, bl: 0x0f1314, hot: 0xff6a2a, ven: 0x9dff3a };   // cool dark grey-green carapace, rust only as accent
+const nSt = (per, sl = 0.2) => ({ rust: N.ru, edge: N.ed, strata: [per, sl], streak: 1 });
 // sensor cluster (flush dark plate with a few small pale lights); replaces the earlier large 'eye' discs
 const nEye = (x, y, z, s = 1) => [
   ell([x, y, z + 0.1 * s], [0.34 * s, 0.26 * s, 0.14 * s], N.mt, { rust: N.ru, streak: 1 }),
@@ -1270,7 +1401,7 @@ const nNoz = (x, y, z0, z1, r) => [
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
   id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
-  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, radius: 5.4,
+  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, rustK: 0.55, radius: 5.4,
   prims: [
     ell([0, -0.05, 0.9], [2.3, 0.2, 2.4], N.dk, nSt(0.14)), ell([0, 0.18, 0.5], [1.5, 0.16, 2.8], N.dk2, nSt(0.14)),
     ...nMand(0.45, -0.1, -3.7, 1.5, 0.16), nKeel(-0.4, -0.8, 1.6, 0.9, 0.16),
@@ -1303,7 +1434,7 @@ SHIPS.darter = {
 // ---- LEAPER: line fighter (13 m) --------------------------------------------
 SHIPS.leaper = {
   id: 'leaper', name: 'FROGG LEAPER', cls: 'fighter', fac: 'frogg', role: 'FIGHTER',
-  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, radius: 8,
+  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, rustK: 0.55, radius: 8,
   prims: [
     ell([0, -0.1, 1.2], [3.6, 0.26, 3.4], N.dk, nSt(0.2)), ell([0, 0.3, 0.8], [2.4, 0.2, 3.8], N.dk2, nSt(0.2)),
     ...nMand(0.7, -0.15, -5.0, 2.2, 0.24), nKeel(-0.6, -1.4, 2.4, 1.2, 0.22),
@@ -1338,7 +1469,7 @@ SHIPS.leaper = {
 // ---- SPITTER: gunship (16 m) — dorsal acid cannon ---------------------------
 SHIPS.spitter = {
   id: 'spitter', name: 'FROGG SPITTER', cls: 'fighter', fac: 'frogg', role: 'GUNSHIP',
-  length: 16, half: [7.6, 3.2, 9.0], mirror: true, radius: 9.5,
+  length: 16, half: [7.6, 3.2, 9.0], mirror: true, rustK: 0.55, radius: 9.5,
   prims: [
     ell([0, -0.2, 1.4], [4.6, 0.34, 4.4], N.dk, nSt(0.24)), ell([0, 0.5, 1.0], [3.2, 0.26, 4.8], N.dk2, nSt(0.24)),
     ...nMand(1.1, -0.25, -6.6, 2.8, 0.3), nKeel(-1.0, 0.0, 4.4, 1.5, 0.3),
@@ -1380,7 +1511,7 @@ const toadWarts = [[1.9, 0.9, -0.3, 0.33], [-1.7, 1.0, 0.8, 0.3], [0.8, 1.35, 1.
   [1.3, 1.15, 3.4, 0.28], [2.7, 0.2, 0.6, 0.27], [1.0, 1.4, 0.2, 0.3], [2.0, 0.95, 4.2, 0.25]];
 SHIPS.toad = {
   id: 'toad', name: 'FROGG TOAD', cls: 'fighter', fac: 'frogg', role: 'TORPEDO BOMBER',
-  length: 19, half: [8.8, 3.6, 10.4], mirror: true, radius: 11,
+  length: 19, half: [8.8, 3.6, 10.4], mirror: true, rustK: 0.55, radius: 11,
   prims: [
     ell([0, -0.1, 1.6], [5.8, 0.42, 5.2], N.dk, nSt(0.28)), ell([0, 0.8, 1.2], [4.0, 0.3, 5.6], N.dk2, nSt(0.28)),
     ...nMand(1.5, -0.2, -7.6, 3.2, 0.36), nKeel(-1.4, 1.0, 5.0, 1.8, 0.35), ...nComb(0.6, -1.3, 4.4, 4, 3.2, 0.5),
@@ -1420,7 +1551,7 @@ SHIPS.toad = {
 // ---- REAVER: heavy assault fighter (19 m) -----------------------------------
 SHIPS.reaver = {
   id: 'reaver', name: 'FROGG REAVER', cls: 'fighter', fac: 'frogg', role: 'HEAVY FIGHTER',
-  length: 19, half: [9.6, 3.6, 10.8], mirror: true, radius: 11.5,
+  length: 19, half: [9.6, 3.6, 10.8], mirror: true, rustK: 0.55, radius: 11.5,
   prims: [
     ell([0, -0.1, 1.2], [6.2, 0.44, 5.6], N.dk, nSt(0.28)), ell([0, 0.9, 0.8], [4.4, 0.32, 6.0], N.dk2, nSt(0.28)),
     ...nMand(1.6, -0.2, -8.6, 3.6, 0.4), ...nMand(0.9, -0.5, -8.4, 2.2, 0.28), nKeel(-1.2, 0.0, 5.0, 1.9, 0.38),
@@ -1463,7 +1594,7 @@ SHIPS.reaver = {
 // ---- GULPER: escort corvette (66 m) -----------------------------------------
 SHIPS.gulper = {
   id: 'gulper', name: 'FROGG GULPER', cls: 'corvette', fac: 'frogg', role: 'ESCORT CORVETTE',
-  length: 66, half: [17, 13, 38], mirror: true, radius: 40,
+  length: 66, half: [17, 13, 38], mirror: true, rustK: 0.55, radius: 40,
   prims: [
     ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
     ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
@@ -1523,7 +1654,7 @@ SHIPS.gulper = {
 // Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
 SHIPS.hivecarrier = {
   id: 'hivecarrier', name: 'FROGG HIVE CARRIER', cls: 'capital', fac: 'frogg', role: 'SUPER CARRIER',
-  length: 900, half: [270, 120, 450], mirror: true, radius: 470, resMul: 0.25,
+  length: 900, half: [270, 120, 450], mirror: true, rustK: 0.55, radius: 470, resMul: 0.25,
   jump: true, dock: { fighters: 60, corvettes: 6 },
   prims: [
     // carapace: stacked overlapping shell plates
@@ -1573,9 +1704,9 @@ function scaleShip(def, newLength) {
   def.length = newLength; def.radius *= k; def.half = v(def.half);
   if (def.launch) def.launch = v(def.launch);
   for (const p of def.prims) {
-    for (const f of ['c', 'a', 'b', 'h0', 'h1']) if (p[f]) p[f] = v(p[f]);
+    for (const f of ['c', 'a', 'b', 'h0', 'h1', 'box']) if (p[f]) p[f] = v(p[f]);
     if (p.t === 'ell') p.r = v(p.r);
-    for (const f of ['hz', 'ra', 'rb']) if (typeof p[f] === 'number') p[f] *= k;
+    for (const f of ['hz', 'ra', 'rb', 'px']) if (typeof p[f] === 'number') p[f] *= k;
     if (p.rib) p.rib = [p.rib[0] * k, p.rib[1]];
     p._ = null;
   }
@@ -3249,8 +3380,38 @@ const _af = new THREE.Vector3(), _ad = new THREE.Vector3(), _ap = new THREE.Vect
 const hostilesOf = s => ships.filter(e => e.alive && !e.dying && e.team !== s.team);
 const isCapital = e => e.def.cls !== 'fighter';
 
+// ---- squad tactics: a squad (same team + group; the player's wing is one squad) agrees on one focus target and
+// holds the call for ~8 s; a pilot that is being shot to pieces breaks off and answers its attacker first ----
+const SQUAD = {};
+function squadFocus(s) {
+  const k = s.team + ':' + (s.grp || '-'), q = SQUAD[k] || (SQUAD[k] = { t: -99, tgt: null });
+  if (q.t > time) q.t = -99;                                      // clock was reset (restart)
+  if (q.tgt && q.tgt.alive && !q.tgt.dying && time - q.t < 8) return q.tgt;
+  const mates = ships.filter(m => m.alive && !m.dying && m.team === s.team && (m.grp || '-') === (s.grp || '-') && !isCapital(m) && m.ai?.role !== 'bomber');
+  if (!mates.length) return null;
+  const c = new THREE.Vector3(); for (const m of mates) c.add(m.group.position); c.multiplyScalar(1 / mates.length);
+  const pp = player && player.alive ? player.group.position : null;
+  let best = null, bs = 1e12;
+  for (const e of hostilesOf(s)) {
+    if (isCapital(e)) continue;
+    let sc = e.group.position.distanceTo(c);
+    sc *= 0.55 + 0.45 * (e.structure / e.def.structure);                 // finish the wounded
+    if (e.def.ai?.role === 'bomber') sc *= 0.6;                         // bombers first: they kill capitals
+    if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.5;  // wing protects the player
+    if (sc < bs) { bs = sc; best = e; }
+  }
+  q.tgt = best; q.t = time;
+  return best;
+}
 function pickTarget(s) {
   const role = s.ai.role;
+  if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
+    const la = s.lastAttacker, hp = s.structure / s.def.structure;
+    const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);
+    if (pounded) return la;                                              // break off the squad target and defend
+    const f = squadFocus(s);
+    if (f && f.alive && f.group.position.distanceTo(s.group.position) < 3500) return f;
+  }
   let best = null, bs = 1e12;
   const pp = player && player.alive ? player.group.position : null;
   for (const e of hostilesOf(s)) {
@@ -3263,7 +3424,6 @@ function pickTarget(s) {
       // no player preference: enemies pick the closest target
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
-      if (s.team === 1 && e === player) sc *= 0.55;     // the hive hunts the human it can see: player draws real fire
     }
     if (e.lock && 0) sc *= 1;
     if (sc < bs) { bs = sc; best = e; }
@@ -3329,6 +3489,7 @@ function avoidance(s, aim) {
 function aiUpdate(s, dt) {
   const ai = s.ai;
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
+  if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
   if (ai.tgtT <= 0 || !s.target || !s.target.alive || s.target.dying) { s.target = pickTarget(s); ai.tgtT = 3 + Math.random() * 3; }
   sense(s);
   // crippled ships that run far enough away break contact and are removed (so waves can end)

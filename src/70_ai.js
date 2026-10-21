@@ -11,8 +11,38 @@ const _af = new THREE.Vector3(), _ad = new THREE.Vector3(), _ap = new THREE.Vect
 const hostilesOf = s => ships.filter(e => e.alive && !e.dying && e.team !== s.team);
 const isCapital = e => e.def.cls !== 'fighter';
 
+// ---- squad tactics: a squad (same team + group; the player's wing is one squad) agrees on one focus target and
+// holds the call for ~8 s; a pilot that is being shot to pieces breaks off and answers its attacker first ----
+const SQUAD = {};
+function squadFocus(s) {
+  const k = s.team + ':' + (s.grp || '-'), q = SQUAD[k] || (SQUAD[k] = { t: -99, tgt: null });
+  if (q.t > time) q.t = -99;                                      // clock was reset (restart)
+  if (q.tgt && q.tgt.alive && !q.tgt.dying && time - q.t < 8) return q.tgt;
+  const mates = ships.filter(m => m.alive && !m.dying && m.team === s.team && (m.grp || '-') === (s.grp || '-') && !isCapital(m) && m.ai?.role !== 'bomber');
+  if (!mates.length) return null;
+  const c = new THREE.Vector3(); for (const m of mates) c.add(m.group.position); c.multiplyScalar(1 / mates.length);
+  const pp = player && player.alive ? player.group.position : null;
+  let best = null, bs = 1e12;
+  for (const e of hostilesOf(s)) {
+    if (isCapital(e)) continue;
+    let sc = e.group.position.distanceTo(c);
+    sc *= 0.55 + 0.45 * (e.structure / e.def.structure);                 // finish the wounded
+    if (e.def.ai?.role === 'bomber') sc *= 0.6;                         // bombers first: they kill capitals
+    if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.5;  // wing protects the player
+    if (sc < bs) { bs = sc; best = e; }
+  }
+  q.tgt = best; q.t = time;
+  return best;
+}
 function pickTarget(s) {
   const role = s.ai.role;
+  if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
+    const la = s.lastAttacker, hp = s.structure / s.def.structure;
+    const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);
+    if (pounded) return la;                                              // break off the squad target and defend
+    const f = squadFocus(s);
+    if (f && f.alive && f.group.position.distanceTo(s.group.position) < 3500) return f;
+  }
   let best = null, bs = 1e12;
   const pp = player && player.alive ? player.group.position : null;
   for (const e of hostilesOf(s)) {
@@ -25,7 +55,6 @@ function pickTarget(s) {
       // no player preference: enemies pick the closest target
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
-      if (s.team === 1 && e === player) sc *= 0.55;     // the hive hunts the human it can see: player draws real fire
     }
     if (e.lock && 0) sc *= 1;
     if (sc < bs) { bs = sc; best = e; }
@@ -91,6 +120,7 @@ function avoidance(s, aim) {
 function aiUpdate(s, dt) {
   const ai = s.ai;
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
+  if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
   if (ai.tgtT <= 0 || !s.target || !s.target.alive || s.target.dying) { s.target = pickTarget(s); ai.tgtT = 3 + Math.random() * 3; }
   sense(s);
   // crippled ships that run far enough away break contact and are removed (so waves can end)

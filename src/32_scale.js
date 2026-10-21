@@ -8,9 +8,9 @@ function scaleShip(def, newLength) {
   def.length = newLength; def.radius *= k; def.half = v(def.half);
   if (def.launch) def.launch = v(def.launch);
   for (const p of def.prims) {
-    for (const f of ['c', 'a', 'b', 'h0', 'h1']) if (p[f]) p[f] = v(p[f]);
+    for (const f of ['c', 'a', 'b', 'h0', 'h1', 'box']) if (p[f]) p[f] = v(p[f]);
     if (p.t === 'ell') p.r = v(p.r);
-    for (const f of ['hz', 'ra', 'rb']) if (typeof p[f] === 'number') p[f] *= k;
+    for (const f of ['hz', 'ra', 'rb', 'px']) if (typeof p[f] === 'number') p[f] *= k;
     if (p.rib) p.rib = [p.rib[0] * k, p.rib[1]];
     p._ = null;
   }

@@ -42,8 +42,8 @@ const fHorn = (pts, rs, col = F.plate2) => chain(pts, rs, col);
 
 
 // ---- v2 look (2026-10-21): dark lamellar plating, rust streaks, blunt pearl-eyed prows, trailing blades ----
-const N = { dk: 0x2c2d33, dk2: 0x3a3b43, mt: 0x5a5c64, ru: 0x6e4a2e, ru2: 0xb7803f, pr: 0x7fd6c4, bl: 0x14110f, hot: 0xff6a2a, ven: 0x9dff3a };
-const nSt = (per, sl = 0.2) => ({ rust: N.ru, strata: [per, sl], streak: 1 });
+const N = { dk: 0x242c2e, dk2: 0x313c3d, mt: 0x56625f, ru: 0x6a4a34, ru2: 0xb7803f, ed: 0x465652, pr: 0x7fd6c4, bl: 0x0f1314, hot: 0xff6a2a, ven: 0x9dff3a };   // cool dark grey-green carapace, rust only as accent
+const nSt = (per, sl = 0.2) => ({ rust: N.ru, edge: N.ed, strata: [per, sl], streak: 1 });
 // sensor cluster (flush dark plate with a few small pale lights); replaces the earlier large 'eye' discs
 const nEye = (x, y, z, s = 1) => [
   ell([x, y, z + 0.1 * s], [0.34 * s, 0.26 * s, 0.14 * s], N.mt, { rust: N.ru, streak: 1 }),
@@ -71,7 +71,7 @@ const nNoz = (x, y, z0, z1, r) => [
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
   id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
-  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, radius: 5.4,
+  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, rustK: 0.55, radius: 5.4,
   prims: [
     ell([0, -0.05, 0.9], [2.3, 0.2, 2.4], N.dk, nSt(0.14)), ell([0, 0.18, 0.5], [1.5, 0.16, 2.8], N.dk2, nSt(0.14)),
     ...nMand(0.45, -0.1, -3.7, 1.5, 0.16), nKeel(-0.4, -0.8, 1.6, 0.9, 0.16),
@@ -104,7 +104,7 @@ SHIPS.darter = {
 // ---- LEAPER: line fighter (13 m) --------------------------------------------
 SHIPS.leaper = {
   id: 'leaper', name: 'FROGG LEAPER', cls: 'fighter', fac: 'frogg', role: 'FIGHTER',
-  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, radius: 8,
+  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, rustK: 0.55, radius: 8,
   prims: [
     ell([0, -0.1, 1.2], [3.6, 0.26, 3.4], N.dk, nSt(0.2)), ell([0, 0.3, 0.8], [2.4, 0.2, 3.8], N.dk2, nSt(0.2)),
     ...nMand(0.7, -0.15, -5.0, 2.2, 0.24), nKeel(-0.6, -1.4, 2.4, 1.2, 0.22),
@@ -139,7 +139,7 @@ SHIPS.leaper = {
 // ---- SPITTER: gunship (16 m) — dorsal acid cannon ---------------------------
 SHIPS.spitter = {
   id: 'spitter', name: 'FROGG SPITTER', cls: 'fighter', fac: 'frogg', role: 'GUNSHIP',
-  length: 16, half: [7.6, 3.2, 9.0], mirror: true, radius: 9.5,
+  length: 16, half: [7.6, 3.2, 9.0], mirror: true, rustK: 0.55, radius: 9.5,
   prims: [
     ell([0, -0.2, 1.4], [4.6, 0.34, 4.4], N.dk, nSt(0.24)), ell([0, 0.5, 1.0], [3.2, 0.26, 4.8], N.dk2, nSt(0.24)),
     ...nMand(1.1, -0.25, -6.6, 2.8, 0.3), nKeel(-1.0, 0.0, 4.4, 1.5, 0.3),
@@ -181,7 +181,7 @@ const toadWarts = [[1.9, 0.9, -0.3, 0.33], [-1.7, 1.0, 0.8, 0.3], [0.8, 1.35, 1.
   [1.3, 1.15, 3.4, 0.28], [2.7, 0.2, 0.6, 0.27], [1.0, 1.4, 0.2, 0.3], [2.0, 0.95, 4.2, 0.25]];
 SHIPS.toad = {
   id: 'toad', name: 'FROGG TOAD', cls: 'fighter', fac: 'frogg', role: 'TORPEDO BOMBER',
-  length: 19, half: [8.8, 3.6, 10.4], mirror: true, radius: 11,
+  length: 19, half: [8.8, 3.6, 10.4], mirror: true, rustK: 0.55, radius: 11,
   prims: [
     ell([0, -0.1, 1.6], [5.8, 0.42, 5.2], N.dk, nSt(0.28)), ell([0, 0.8, 1.2], [4.0, 0.3, 5.6], N.dk2, nSt(0.28)),
     ...nMand(1.5, -0.2, -7.6, 3.2, 0.36), nKeel(-1.4, 1.0, 5.0, 1.8, 0.35), ...nComb(0.6, -1.3, 4.4, 4, 3.2, 0.5),
@@ -221,7 +221,7 @@ SHIPS.toad = {
 // ---- REAVER: heavy assault fighter (19 m) -----------------------------------
 SHIPS.reaver = {
   id: 'reaver', name: 'FROGG REAVER', cls: 'fighter', fac: 'frogg', role: 'HEAVY FIGHTER',
-  length: 19, half: [9.6, 3.6, 10.8], mirror: true, radius: 11.5,
+  length: 19, half: [9.6, 3.6, 10.8], mirror: true, rustK: 0.55, radius: 11.5,
   prims: [
     ell([0, -0.1, 1.2], [6.2, 0.44, 5.6], N.dk, nSt(0.28)), ell([0, 0.9, 0.8], [4.4, 0.32, 6.0], N.dk2, nSt(0.28)),
     ...nMand(1.6, -0.2, -8.6, 3.6, 0.4), ...nMand(0.9, -0.5, -8.4, 2.2, 0.28), nKeel(-1.2, 0.0, 5.0, 1.9, 0.38),
@@ -264,7 +264,7 @@ SHIPS.reaver = {
 // ---- GULPER: escort corvette (66 m) -----------------------------------------
 SHIPS.gulper = {
   id: 'gulper', name: 'FROGG GULPER', cls: 'corvette', fac: 'frogg', role: 'ESCORT CORVETTE',
-  length: 66, half: [17, 13, 38], mirror: true, radius: 40,
+  length: 66, half: [17, 13, 38], mirror: true, rustK: 0.55, radius: 40,
   prims: [
     ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
     ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
@@ -324,7 +324,7 @@ SHIPS.gulper = {
 // Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
 SHIPS.hivecarrier = {
   id: 'hivecarrier', name: 'FROGG HIVE CARRIER', cls: 'capital', fac: 'frogg', role: 'SUPER CARRIER',
-  length: 900, half: [270, 120, 450], mirror: true, radius: 470, resMul: 0.25,
+  length: 900, half: [270, 120, 450], mirror: true, rustK: 0.55, radius: 470, resMul: 0.25,
   jump: true, dock: { fighters: 60, corvettes: 6 },
   prims: [
     // carapace: stacked overlapping shell plates

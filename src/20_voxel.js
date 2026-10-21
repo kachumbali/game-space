@@ -4,6 +4,21 @@
 //               ell  ellipsoid            seg  tapered capsule between two points (horns, legs, barrels, spines)
 //  common opts: rot[rx,ry,rz]  col2+mot (mottled skin)  rib[period,depth]  seam[sx,sz]  dots{col,p}  glow  noMirror
 // ======================================================================
+// ---- detail-prim kit (shared by 30/31 ship files). Pass {lod:2} (or 3) in opts so the prim is only built at high detail.
+//   ringSegs: n thin rods around a circle (nozzle petals, barrel shrouds, heat fins) along Z
+//   rungs:    n thin boxes across (x0..x1) at evenly spaced z (ladders, vent slats, radiator ribs, armour plates)
+//   paintGrid: lattice of painted squares (VLS cells, hatch arrays); paint prims are resolution-gated (need >= 1 voxel)
+const ringSegs = (x, y, z0, z1, r, n, th, col, o = {}) => Array.from({ length: n }, (_, i) => {
+  const a = i / n * Math.PI * 2, px = x + Math.cos(a) * r, py = y + Math.sin(a) * r;
+  return seg([px, py, z0], [px, py, z1], th, th, col, o);
+});
+const rungs = (x, y, z0, z1, n, hx, hy, hzr, col, o = {}) => Array.from({ length: n }, (_, i) => tap([x, y, z0 + (z1 - z0) * (n > 1 ? i / (n - 1) : 0)], hzr, [hx, hy], [hx, hy], col, o));
+const paintGrid = (x0, y, z0, nx, nz, dx, dz, sx, sz, col, o = {}) => {
+  const out = [];
+  for (let a = 0; a < nx; a++) for (let b = 0; b < nz; b++) out.push({ t: 'paint', box: [x0 + a * dx, y - 0.6, z0 + b * dz, x0 + a * dx + sx, y + 0.6, z0 + b * dz + sz], col, side: 'top', ...o });
+  return out;
+};
+
 const hash3 = (i, j, k) => (((i * 73856093) ^ (j * 19349663) ^ (k * 83492791)) >>> 0) % 1000 / 1000;
 function vnoise(x, y, z) {
   const xi = Math.floor(x), yi = Math.floor(y), zi = Math.floor(z);
@@ -40,6 +55,19 @@ function prepPrim(p) {
     }
   }
   P.R2 = P.R * P.R;
+  // tight axis-aligned bounds (relative to the prim centre) so long thin prims do not scan a cube of side 2R
+  let bx = P.R, by = P.R, bz = P.R;
+  if (p.t === 'seg') {
+    const rm = Math.max(p.ra, p.rb) + 0.01;
+    bx = Math.abs(p.b[0] - p.a[0]) / 2 + rm; by = Math.abs(p.b[1] - p.a[1]) / 2 + rm * Math.max(1, p.fy); bz = Math.abs(p.b[2] - p.a[2]) / 2 + rm;
+  } else if (!P.rm) {
+    if (p.t === 'ell') { bx = p.r[0] + 0.01; by = p.r[1] + 0.01; bz = p.r[2] + 0.01; }
+    else {
+      const w1 = Math.max(p.h0[0], p.h1[0]) + Math.abs(p.sweep || 0) * p.hz + 0.01, w2 = Math.max(p.h0[1], p.h1[1]) + Math.abs(p.sweepY || 0) * p.hz + 0.01, al = p.hz + 0.01;
+      if (p.ax === 'x') { bx = al; bz = w1; by = w2; } else if (p.ax === 'y') { by = al; bz = w1; bx = w2; } else { bz = al; bx = w1; by = w2; }
+    }
+  }
+  P.bx = Math.min(bx, P.R); P.by = Math.min(by, P.R); P.bz = Math.min(bz, P.R);
   p._ = P;
   return P;
 }
@@ -109,8 +137,8 @@ const cmix = (a, b, t) => {
   return (((r + (((b >> 16) & 255) - r) * t) | 0) << 16) | (((g + (((b >> 8) & 255) - g) * t) | 0) << 8) | ((bl + ((b & 255) - bl) * t) | 0);
 };
 const DSTYLE = {
-  human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.2, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
-  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x6b4a30, 0x35524b], glass: 0x7fd6c4, lamp: 0xff7a2a, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.36, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
+  human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.3, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
+  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x6b4a30, 0x35524b], glass: 0x7fd6c4, lamp: 0xff7a2a, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
 };
 const FONT = {
   '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001', '5': '111100111001111',
@@ -223,7 +251,7 @@ function surfaceDetail(def, tier, G) {
     let col = grid[cell], t = 128;
     const pt = ihash(a * 2 + sg, cu, row, S + 2);
     t *= 0.9 + 0.2 * pt;
-    if (pt > 0.94) col = cmix(col, st.accent[0], 0.55); else if (pt > 0.875) col = cmix(col, st.accent[1], 0.5);
+    if (pt > 0.965) col = cmix(col, st.accent[0], 0.5); else if (pt > 0.93) col = cmix(col, st.accent[1], 0.45);
     t *= 0.9 + 0.2 * vnoise(i * 0.07, j * 0.07, k * 0.07);                // slow dirt/shade variation
     const n26 = nn[cell];
     if (isSeam) t *= 0.6;
@@ -343,7 +371,7 @@ function surfaceDetail(def, tier, G) {
   // ---- pass 2 (tier >= 2): greebles, grooves, conduits, veins
   if (tier >= 2) {
     const g3 = tier >= 3 ? 1.6 : 1;
-    const pBase = (st.human ? 0.0042 : 0.0036) * (st.greeb || 1) * g3;
+    const pBase = (st.human ? 0.007 : 0.006) * (st.greeb || 1) * g3;
     const pPath = 0.0006 * g3 * (st.greeb || 1);
     const PB = Math.max(8, Math.round(16 * U0));
     const sz = (lo, hi, h) => Math.max(1, Math.round((lo + (hi - lo) * h) * Math.min(U0, 2)));
@@ -525,14 +553,15 @@ function voxelize(def, res) {
   const pgrid = new Int16Array(N).fill(-1);      // owning prim index
   const mir = !!def.mirror;
   const prims = def.prims;
+  const _t0 = performance.now();
   for (let pi = 0; pi < prims.length; pi++) {
     const p = prims[pi];
     if (p.t === 'paint' || p.t === 'text' || p.lod > tier) continue;
     const P = prepPrim(p);
-    const spans = [[P.cx - P.R, P.cx + P.R]];
-    if (mir && !p.noMirror) spans.push([-P.cx - P.R, -P.cx + P.R]);
-    const j0 = Math.max(0, Math.floor((P.cy - P.R + hy) / vs)), j1 = Math.min(ny - 1, Math.ceil((P.cy + P.R + hy) / vs));
-    const k0 = Math.max(0, Math.floor((P.cz - P.R + hz) / vs)), k1 = Math.min(nz - 1, Math.ceil((P.cz + P.R + hz) / vs));
+    const spans = [[P.cx - P.bx, P.cx + P.bx]];
+    if (mir && !p.noMirror) spans.push([-P.cx - P.bx, -P.cx + P.bx]);
+    const j0 = Math.max(0, Math.floor((P.cy - P.by + hy) / vs)), j1 = Math.min(ny - 1, Math.ceil((P.cy + P.by + hy) / vs));
+    const k0 = Math.max(0, Math.floor((P.cz - P.bz + hz) / vs)), k1 = Math.min(nz - 1, Math.ceil((P.cz + P.bz + hz) / vs));
     const done = new Set();
     for (const [xa, xb] of spans) {
       const i0 = Math.max(0, Math.floor((xa + hx) / vs)), i1 = Math.min(nx - 1, Math.ceil((xb + hx) / vs));
@@ -549,7 +578,9 @@ function voxelize(def, res) {
       }
     }
   }
+  const _t1 = performance.now();
   const X = tier ? surfaceDetail(def, tier, { grid, pgrid, nx, ny, nz, vs, hx, hy, hz, prims, res, mir }) : null;
+  const _t2 = performance.now();
   const xg = X && X.xg, tn = X && X.tn;
   const DPRIM = { col: 0 };
   const si = ny * nz, sj = nz;
@@ -592,7 +623,7 @@ function voxelize(def, res) {
       // streak: rust runs along the hull (noise stretched along z); strata: stacked-plate banding (y + slope*z)
       if (p.streak && p.rust !== undefined) {
         const n = vnoise(ax * mf * 2.2, y * mf * 2.2, z * mf * 0.28 * p.streak);
-        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3));
+        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3) * (def.rustK ?? 1));
       }
       if (p.strata && p.rust !== undefined) {
         const ph = (((y + z * (p.strata[1] || 0)) / p.strata[0]) % 1 + 1) % 1;
@@ -633,6 +664,7 @@ function voxelize(def, res) {
     voxels.push({ x, y, z, g: glow, cr: _col.r * f, cg: _col.g * f, cb: _col.b * f, cell });
   }
   const out = { vs, voxels, nx, ny, nz, hx, hy, hz, grid, cellToVox, tier };
+  (globalThis.__vt ??= []).push([key, Math.round(_t1 - _t0), Math.round(_t2 - _t1), Math.round(performance.now() - _t2)]);
   voxCache.set(key, out);
   return out;
 }
