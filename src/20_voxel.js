@@ -138,7 +138,7 @@ const cmix = (a, b, t) => {
 };
 const DSTYLE = {
   human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.3, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
-  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x6b4a30, 0x35524b], glass: 0x7fd6c4, lamp: 0xff7a2a, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
+  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x3a4a52, 0x1d5a66], glass: 0x35e8ff, lamp: 0x35e8ff, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
 };
 const FONT = {
   '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001', '5': '111100111001111',

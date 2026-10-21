@@ -42,3 +42,10 @@ Consequences and open points (analysis, not owner statements):
 - Drones: 6 m, 48 per frigate, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette; kills count as drone kills for the controller; jamming rules later.
 - Heavy fighters carry a crew of 2: pilot and weapons specialist (the specialist can run the 2 slaved drones).
 - Specialist seat is AI for now: manages munitions, drones and ECM while the player flies and shoots; two-person crews eject in one pod; two-crew heavy fighters are human only.
+
+## FROGG ship look (owner reference art, 2026-10-21)
+Reference: `docs/img/frogg_reference_art.jpg`. Graphite and gunmetal carapace in layered plates, **open toothed maw** at the bow (jaws
+with teeth, glowing throat), **rib arches** over the hull with **cyan light seams** between them, rows of dorsal spikes, blocky
+cylindrical drive clusters aft with **cyan plumes**. Acid weapons stay venom green so they read against the cyan hull light.
+Implementation: `fRef` and the palette `N` in `src/31_ships_frogg.js`; detail layer palette in `src/20_voxel.js` (frogg).
+Not yet matched: the long leaf-shaped flank plates of the carrier and the dreadnought's full jaw; cruiser/dreadnought classes do not exist yet.
