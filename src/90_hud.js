@@ -330,6 +330,7 @@ function updateHud() {
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
   hudTxt.textContent =
+    (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${Math.round(100 * (p.armor.fore + p.armor.aft + p.armor.left + p.armor.right) / (p.def.armor.fore + p.def.armor.aft + p.def.armor.left + p.def.armor.right))}%  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  PX ${PIXEL_STEPS[pixelIdx]}x  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);

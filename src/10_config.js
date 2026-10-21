@@ -8,8 +8,8 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 //  CONFIG
 // ======================================================================
 const params = new URLSearchParams(location.search);
-// global sim speed (human-testing build: 50%). Override with ?speed=1
-const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.5));
+// global sim speed (human-testing build: 37.5%). Override with ?speed=1
+const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.375));
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || params.has('touch');
 const PIXEL_STEPS = [1, 2, 3, 4];
 const DETAIL_STEPS = [24, 40, 64, 88, 112, 160, 224];   // voxels along a 12 m ship (larger ships scale ~ length^0.4)
