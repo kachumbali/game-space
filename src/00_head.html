@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Game Space</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden;
+    font-family:ui-monospace,Menlo,Consolas,monospace;color:#8fffd0;user-select:none;
+    touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none}
+  #c{position:fixed;inset:0;width:100%;height:100%;display:block;
+    image-rendering:crisp-edges;image-rendering:pixelated}
+  #canopy{position:fixed;inset:0;pointer-events:none;z-index:1}
+  #canopy:before{content:"";position:absolute;left:0;right:0;bottom:0;height:17%;
+    background:linear-gradient(to top,#07090d 60%,rgba(7,9,13,0));border-top:1px solid rgba(143,255,208,.12)}
+  #canopy i{position:absolute;top:0;bottom:0;width:15%;background:#0a0d12;opacity:.96}
+  #canopy i.l{left:0;clip-path:polygon(0 0,38% 0,0 100%)}
+  #canopy i.r{right:0;clip-path:polygon(62% 0,100% 0,100% 100%)}
+  body.chase #canopy,body.touch #canopy{display:none}
+  #hit{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:0;
+    background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
+  #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
+  #dmg{display:block;margin-top:4px;opacity:.95}
+  #radar{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:160px;height:160px;opacity:.92;z-index:4}
+  #cross{position:fixed;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;pointer-events:none;z-index:4}
+  #cross:before,#cross:after{content:"";position:absolute;background:#8fffd0;opacity:.8}
+  #cross:before{left:10px;top:0;width:2px;height:22px}
+  #cross:after{top:10px;left:0;height:2px;width:22px}
+  #bracket{position:fixed;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid #ff5a5a;
+    pointer-events:none;display:none;font-size:11px;color:#ff8a8a;z-index:4}
+  #bracket span{position:absolute;left:0;top:48px;white-space:nowrap}
+  #tgt{position:fixed;left:50%;top:10px;transform:translateX(-50%);font-size:11px;line-height:1.45;
+    text-align:center;white-space:pre;color:#ffb0a0;text-shadow:0 0 4px #000;z-index:4;min-width:220px}
+  #log{position:fixed;left:50%;top:104px;transform:translateX(-50%);font-size:12px;line-height:1.5;
+    text-align:center;white-space:pre;text-shadow:0 0 4px #000;z-index:4;pointer-events:none}
+  #msg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:9;
+    font-size:20px;text-align:center;background:rgba(0,0,0,.4);white-space:pre-line}
+  #help{position:fixed;right:14px;top:10px;font-size:11px;line-height:1.5;opacity:.7;text-align:right;white-space:pre;z-index:4}
+  #touch{display:none}
+  body.touch #touch{display:block}
+  body.touch #help{display:none}
+  body.touch #radar{width:110px;height:110px;bottom:8px}
+  body.touch #hud{font-size:11px}
+  #stickzone{position:fixed;left:0;top:0;width:55%;height:100%;z-index:5}
+  #stickbase,#stickknob{position:fixed;border-radius:50%;pointer-events:none;display:none;z-index:6}
+  #stickbase{width:120px;height:120px;margin:-60px 0 0 -60px;border:2px solid rgba(143,255,208,.5)}
+  #stickknob{width:50px;height:50px;margin:-25px 0 0 -25px;background:rgba(143,255,208,.45)}
+  .tbtn{position:fixed;z-index:7;border:2px solid rgba(143,255,208,.7);border-radius:50%;
+    background:rgba(10,30,24,.45);color:#8fffd0;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:bold}
+  .tbtn.on{background:rgba(143,255,208,.45)}
+  #bfire{right:78px;bottom:30px;width:96px;height:96px;font-size:16px;border-color:#ff8a5a;color:#ff8a5a}
+  #bboost{right:182px;bottom:20px;width:64px;height:64px}
+  #brl{left:14px;bottom:10px;width:54px;height:54px}
+  #brr{left:76px;bottom:10px;width:54px;height:54px}
+  #bview{right:14px;top:92px;width:52px;height:52px;font-size:11px}
+  #btgt{right:14px;top:30px;width:52px;height:52px;font-size:11px}
+  #thr{position:fixed;right:14px;bottom:30px;width:44px;height:160px;z-index:7;
+    border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
+  #thr>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
+  #thrlbl{position:fixed;right:14px;bottom:196px;font-size:11px;z-index:7;width:48px;text-align:center}
+</style>
+<script type="importmap">
+{"imports":{
+  "three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="canopy"><i class="l"></i><i class="r"></i></div>
+<div id="hit"></div>
+<div id="cross"></div>
+<div id="bracket"><span id="brtxt"></span></div>
+<div id="hud"><div id="hudtxt"></div><canvas id="dmg" width="150" height="170"></canvas></div>
+<div id="tgt"></div>
+<div id="log"></div>
+<canvas id="radar" width="160" height="160"></canvas>
+<div id="help">MOUSE  stick (click to capture)   C  centre stick
+W/S  throttle   SHIFT  afterburner   Q/E  roll
+SPACE / LMB  fire   T  cycle target   V  view
+F  flight model   X  brake (newtonian)   B  bloom
+-/=  voxel detail   [ / ]  pixel size   R  restart</div>
+<div id="touch">
+  <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
+  <div class="tbtn" id="bfire">FIRE</div>
+  <div class="tbtn" id="bboost">BOOST</div>
+  <div class="tbtn" id="brl">&#8630;</div>
+  <div class="tbtn" id="brr">&#8631;</div>
+  <div class="tbtn" id="bview">VIEW</div>
+  <div class="tbtn" id="btgt">TGT</div>
+  <div id="thrlbl">THR</div>
+  <div id="thr"><i></i></div>
+</div>
+<div id="msg">GAME SPACE
+click to take controls</div>
+
+<script type="module">
