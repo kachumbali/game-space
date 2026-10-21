@@ -69,7 +69,7 @@ function disposeVox(s) {
 function buildVox(s) {
   disposeVox(s);
   const D = voxelize(s.def, resFor(s.def, detailIdx));
-  const cap = s.def.cls === 'fighter' ? 5000 : 30000;
+  const cap = s.def.cls === 'fighter' ? (detailIdx >= 6 ? 20000 : 5000) : (detailIdx >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
   D.voxels.forEach((v, i) => (v.g ? glowV : bodyV).push(i));
   const body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));

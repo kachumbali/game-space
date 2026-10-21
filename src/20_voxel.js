@@ -371,7 +371,7 @@ function surfaceDetail(def, tier, G) {
   // ---- pass 2 (tier >= 2): greebles, grooves, conduits, veins
   if (tier >= 2) {
     const g3 = tier >= 3 ? 1.6 : 1;
-    const pBase = (st.human ? 0.007 : 0.006) * (st.greeb || 1) * g3;
+    const pBase = (st.human ? 0.01 : 0.009) * (st.greeb || 1) * g3;
     const pPath = 0.0006 * g3 * (st.greeb || 1);
     const PB = Math.max(8, Math.round(16 * U0));
     const sz = (lo, hi, h) => Math.max(1, Math.round((lo + (hi - lo) * h) * Math.min(U0, 2)));
@@ -450,7 +450,7 @@ function surfaceDetail(def, tier, G) {
           }
         } else {
           // FROGG: armour scales, spikes, gill vents with glowing slits, knobs, glow veins
-          if (r < 0.3) {                                                     // overlapping armour scale
+          if (r < 0.38) {                                                    // overlapping armour scale
             const w = sz(4, 9, r2), d = sz(3, 6, r3), h = sz(1, 2, ihash(i, k, j, S + 14)), a0 = -(w >> 1), b0 = -(d >> 1);
             if (flat(a0, b0, w, d, h)) {
               const cc = cmix(bc, st.light, 0.28 + 0.3 * r2);
@@ -459,7 +459,8 @@ function surfaceDetail(def, tier, G) {
                 put(q(aa, bb, t), lead ? cmul(cc, 0.6) : cc, lead ? 105 : 140);
               }
             }
-          } else if (r < 0.46) {                                             // spike
+          } else if (r < 0.43) {                                             // spike (only on dorsal / ventral faces: keeps silhouettes clean)
+            if (a !== 1) continue;
             const L = sz(4, 9, r2), r0 = sz(1, 2, r3);
             if (flat(-r0, -r0, 2 * r0 + 1, 2 * r0 + 1, 1)) {
               for (let t = 1; t <= L; t++) {
@@ -468,7 +469,7 @@ function surfaceDetail(def, tier, G) {
                 for (let aa = -ri; aa <= ri; aa++) for (let bb = -ri; bb <= ri; bb++) if (aa * aa + bb * bb <= rr * rr + 0.6) put(q(aa, bb, t), cmul(cmix(bc, st.light, 0.2), 1 - 0.3 * t / L), 120);
               }
             }
-          } else if (r < 0.62) {                                             // gill vent with glowing slits
+          } else if (r < 0.6) {                                              // gill vent with glowing slits
             const w = sz(5, 8, r2), d = sz(4, 6, r3), a0 = -(w >> 1), b0 = -(d >> 1);
             if (flat(a0, b0, w, d, 0)) {
               const gc = r3 > 0.45 ? st.lamp : st.lamp2;
@@ -478,7 +479,7 @@ function surfaceDetail(def, tier, G) {
                 if ((bb - b0) % 2 === 0) { grid[c0] = -1; pgrid[c0] = -1; grid[c1] = gc; xg[c1] = 70; } else { grid[c0] = st.dark; tn[c0] = 90; }
               }
             }
-          } else if (r < 0.72) {                                             // knob cluster
+          } else if (r < 0.7) {                                              // knob cluster
             const rr = sz(1, 2, r2);
             if (flat(-rr, -rr, 2 * rr + 1, 2 * rr + 1, rr + 1)) {
               for (let aa = -rr; aa <= rr; aa++) for (let bb = -rr; bb <= rr; bb++) {
@@ -553,7 +554,6 @@ function voxelize(def, res) {
   const pgrid = new Int16Array(N).fill(-1);      // owning prim index
   const mir = !!def.mirror;
   const prims = def.prims;
-  const _t0 = performance.now();
   for (let pi = 0; pi < prims.length; pi++) {
     const p = prims[pi];
     if (p.t === 'paint' || p.t === 'text' || p.lod > tier) continue;
@@ -578,9 +578,7 @@ function voxelize(def, res) {
       }
     }
   }
-  const _t1 = performance.now();
   const X = tier ? surfaceDetail(def, tier, { grid, pgrid, nx, ny, nz, vs, hx, hy, hz, prims, res, mir }) : null;
-  const _t2 = performance.now();
   const xg = X && X.xg, tn = X && X.tn;
   const DPRIM = { col: 0 };
   const si = ny * nz, sj = nz;
@@ -653,7 +651,7 @@ function voxelize(def, res) {
       if (tier) stf = 1 + (stf - 1) * 0.5;                                      // plating supplies the structure at high detail
       f = ao * (0.94 + 0.12 * h) * seam * rib * stf;
       if (tn) f *= tn[cell] / 128;
-      if (p.dots && (tier ? (i % 3 === 0 && k % 4 === 0 && hash3(i * 7, j * 3, k * 5) < Math.min(1, p.dots.p * 6)) : hash3(i * 7, j * 3, k * 5) < p.dots.p)) {
+      if (p.dots && (tier ? (i % 3 === 0 && k % 4 === 0 && hash3(i * 7, j * 3, k * 5) < Math.min(1, p.dots.p * 4)) : hash3(i * 7, j * 3, k * 5) < p.dots.p)) {
         _col.setHex(p.dots.col); f = p.dots.f || 2.2;
         const vi = voxels.length;
         cellToVox[cell] = vi;
@@ -665,7 +663,6 @@ function voxelize(def, res) {
     voxels.push({ x, y, z, g: glow, cr: _col.r * f, cg: _col.g * f, cb: _col.b * f, cell });
   }
   const out = { vs, voxels, nx, ny, nz, hx, hy, hz, grid, cellToVox, tier };
-  (globalThis.__vt ??= []).push([key, Math.round(_t1 - _t0), Math.round(_t2 - _t1), Math.round(performance.now() - _t2)]);
   voxCache.set(key, out);
   return out;
 }

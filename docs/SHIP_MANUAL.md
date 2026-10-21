@@ -57,7 +57,7 @@ streaks, swept trailing blades, ribbed red-orange engine vents, layered carapace
 Feedback applied: the first pass looked insectoid because of large pearl "eye" discs and curved mandibles; both were
 removed. Current elements: stacked armour plates, flush sensor clusters, short prow blades, dorsal spikes, ventral keel,
 nacelles with orange vents, small pale lights on pods. Weapons stay venom-green so enemy fire remains readable.
-Open points: hull still reads warm-brown under the current sun; hangar maws, radiator-like structures and hardpoints
+Palette changed 2026-10-21 to cool dark grey-green with rust only as accent (the scene hemisphere light has a brown ground colour that still warms downward faces); open: hangar maws, radiator-like structures and hardpoints
 need work on the capital models.
 
 ## 5. Blueprint plates (with subsystem markers)
@@ -91,3 +91,22 @@ missiles. Behaviours: fly ahead as scouts, escort, attack on orders, and **ram s
 Owner update 2026-10-21: 6 m long, small shield only, 48 per frigate, lost until replenished, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette (docs/FLEET_LOGIC.md 9a). Model targets (placeholders, to tune): length 6 m, turn rate above Kestrel, low shield, very low hull. Needs: subsystem
 set (engine, cannon, missile rail, sensor, core), marker rendering like all models, ram-damage rule (see docs/FLEET_LOGIC.md
 section 9). Open: jamming rules (later).
+
+## 9. Surface detail (high detail only; added 2026-10-21)
+Owner feedback: models read as simple shapes stacked. The voxeliser (`src/20_voxel.js`, `surfaceDetail()`) now adds a
+deterministic procedural layer (hash-based, no `Math.random`) that only exists above the default detail.
+| Tier | Detail index (voxels / 12 m) | Adds |
+|---|---|---|
+| 0 | 0-4 (24-112, default mid) | nothing; models identical to before, no extra cost (only the FROGG palette was changed) |
+| 1 | 5 (160) | panel plating (seams, per-panel tint, accent panels), convex-edge wear, engine soot, scratches, lit windows (`win`), `paint` and `text` decals, structured light lattices instead of random dots |
+| 2 | 6 (224) | relief plating (raised panels), recessed seams, greebles (blocks, slatted vents, hatches, domes, tanks, masts, light rows; FROGG: armour scales, spikes, gill vents with glowing slits, knobs, ridges), grooves/conduits/glow veins, contact shading, prims with `lod: 2` |
+| 3 | 7 (288) | ~1.6x greeble density, 15% smaller panels, wider trenches, prims with `lod: 3` |
+Resolutions below 120 voxels (HUD icons) never get detail. Ships capped by `RES_CAP` (corvettes/frigates) have the same voxel size at 6 and 7; only the tier-3 extras differ.
+
+**Adding detail to a ship** (all in the ship's `prims` array; coordinates are authored size and scale with `scaleShip`):
+- `lod: 2` or `lod: 3` in any prim's options: built only at that tier or above (use for pylons, ribs, radiators, nozzle petals, canopy frames). Helpers: `ringSegs`, `rungs`, `paintGrid` (20_voxel.js), `fDetail` (FROGG kit, 31_ships_frogg.js).
+- `win: {col, p, f, pu, pv, wu, o}` on a prim: lit windows on its side faces.
+- `{t:'paint', box:[x0,y0,z0,x1,y1,z1], col, side:'top'|'bottom'|'side'|'+x'.., mix}`: stripes, hatches (surface cells only, mirrored).
+- `{t:'text', c, face:'+x'|'-x'|'+y'|'-y', text, px, col}`: 3x5 pixel text (`px` = metres per pixel; skipped if under 0.9 voxel).
+- `noDetail: true` on a prim (no relief/greebles), `def.noDetail`, `def.noDetailZones:[{c,r}]`, `def.detail = {style, raise, greeb, accent...}`, `def.rustK` (FROGG rust strength). Engines and mounts are excluded from greebles automatically.
+Cost (headless CPU, ms; instances): Kestrel 12.3k at mid, 61k / 107k at detail 6 / 7 (was 55k / 94k); Gulper 191k / 195k (was 168k); build time per ship is under 2.1 s even for the Gulper (rasterisation was also made faster with tight prim bounds; the old Gulper took 2.7 s). Screenshots: `img/detail/sheet_d4.png`, `sheet_d7_before.png`, `sheet_d7_after.png`, `cmp_<ship>.png` (before | after).

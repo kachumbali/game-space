@@ -42,7 +42,7 @@ const fHorn = (pts, rs, col = F.plate2) => chain(pts, rs, col);
 
 
 // ---- v2 look (2026-10-21): dark lamellar plating, rust streaks, blunt pearl-eyed prows, trailing blades ----
-const N = { dk: 0x233239, dk2: 0x2f4046, mt: 0x506a6c, ru: 0x634a38, ru2: 0xb7803f, ed: 0x465652, pr: 0x7fd6c4, bl: 0x0f1314, hot: 0xff6a2a, ven: 0x9dff3a };   // cool dark grey-green carapace, rust only as accent
+const N = { dk: 0x1f3238, dk2: 0x2a4046, mt: 0x4a686c, ru: 0x634a38, ru2: 0xb7803f, ed: 0x465652, pr: 0x7fd6c4, bl: 0x0f1314, hot: 0xff6a2a, ven: 0x9dff3a };   // cool dark grey-green carapace, rust only as accent
 const nSt = (per, sl = 0.2) => ({ rust: N.ru, edge: N.ed, strata: [per, sl], streak: 1 });
 // sensor cluster (flush dark plate with a few small pale lights); replaces the earlier large 'eye' discs
 const nEye = (x, y, z, s = 1) => [
@@ -342,7 +342,7 @@ SHIPS.gulper = {
     ...nEye(3.0, 0.8, -34.0, 2.6), ...nEye(6.2, -0.6, -31.8, 1.4),
     nPod([5.2, 1.0, -22], [2.2, 1.6, 3.6], N.dk2, 0.22), nPod([7.4, -1.6, -14], [2.0, 1.4, 3.0], N.dk2, 0.22),
     // ventral drum (supply/launch bay)
-    seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),
+    seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, edge: N.ed, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),
     ell([0, -6.4, 21], [3.6, 3.4, 2.0], N.dk2, nSt(0.7, 0)),
     // dorsal crest of spikes
     ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
