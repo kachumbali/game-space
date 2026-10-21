@@ -22,7 +22,7 @@ function pickTarget(s) {
     else if (role === 'corvette' || role === 'capital') sc *= isCapital(e) ? 0.6 : 1;
     else {
       sc *= isCapital(e) ? 3 : 1;
-      if (e === player) sc *= 0.55;
+      // no player preference: enemies pick the closest target
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
     }
