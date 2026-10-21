@@ -17,6 +17,23 @@ Everything here is the owner's stated direction; nothing is verified or final.
   is developed. Placeholder: current Kestrel/Halberd belong to one faction.
 - Large ships (corvette and bigger) carry point defence (CRAM-style guns and PD lasers); heat forces radiators
   (docs/CAPITAL_COMBAT.md).
+## Weapon doctrine (owner statement 2026-10-21)
+- **FROGGs:** lasers, and better missiles than the humans (longer reach, better seekers/manoeuvre, harder to decoy; to be tuned).
+- **Humans:** better in railguns, miniguns (rapid-fire kinetic) and point defence, plus some lasers.
+- Intended feel: the FROGGs win by numbers and energy/missile pressure, the humans by kinetic firepower and layered PD.
+
+Consequences and open points (analysis, not owner statements):
+- **Armour interplay** (docs/ARMOR.md): lasers favour hard/composite hulls over ablative ones for the target, and ablative armour is the natural
+  answer to FROGG lasers; human kinetics favour hard-armoured targets being hard to hurt below the size threshold, so railguns and large rounds
+  matter against FROGG corvettes while miniguns and PD matter against missiles and fighters.
+- **PD and missiles:** better FROGG missiles raise the value of human PD (magazine reload windows; docs/CAPITAL_COMBAT.md). A FROGG laser fleet meets
+  the heat/capacitor rules too: lasers add waste heat, so FROGG vents or heat-sink tissue (lore: biology undecided) set the sustained rate.
+- **Current implementation does not match this yet:** FROGG weapons are the Fang (kinetic) and Acid spitters, Acid cannon and Lash (energy);
+  there is no FROGG laser and no FROGG missile that outperforms the human ones (Tick, Tadpole torpedo versus Swift, Lance, Hammer).
+  Humans have Cannon, Plasma bolter, Railgun and PD-30; no laser. Retuning needs the owner's call on laser mechanics (instant beam vs pulse, dwell time,
+  heat per second) and on how much better the FROGG missiles should be.
+- **Nuclear warheads:** not assigned to either side yet.
+
 ## Rules already set
 - Only capital ships jump; fighters and corvettes dock first (docs/FLEET_LOGIC.md section 8).
 - Pilots can eject; SAR assets can recover them (FROGG pilots cannot).
