@@ -36,7 +36,7 @@ The frigate (7 PD turrets, 2 rails, 900 / 800 shield) dominates this force; FROG
 ## Nuclear scenario (frigate launches one 0.1 kT warhead at the FROGG group; Kestrels about 400-600 m away)
 | Burst range | FROGG (9) before -> after | Friendly crews |
 |---|---|---|
-| 6 m (impact) | no detonation observed in 500 steps (not investigated) | |
+| 6 m (impact) | no detonation: the warhead expired without hitting a manoeuvring fighter (also in a longer 1,600-step run); an impact test against a corvette or frigate is still to do | |
 | 60 m | 9 -> 3 | Kestrels at 400-650 m took 8-23 Gy (placeholder crew-loss threshold 30 Gy) |
 | 150 m | 9 -> 5 | 4-6 Gy |
 | 300 m | 9 -> 8 | 10-25 Gy |
