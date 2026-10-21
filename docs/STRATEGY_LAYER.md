@@ -79,3 +79,6 @@ from memory and unverified.
 ## Update 2026-10-21: owner's answers
 1. Player chooses a pilot from a finite persistent roster (state and memories). 2. Turn-based; a dogfight mission is
 one battle. 3. Pilots can eject and be rescued by SAR assets. Details: `docs/FLEET_LOGIC.md`.
+4. (Rule added) Only capital ships can jump; fighters and corvettes must dock to change system or cover long in-system
+distances. See `docs/FLEET_LOGIC.md` section 8. It makes capital ships and docking capacity the central strategic
+constraint, and needs a decision on how missions 1-2 corvette transits are explained.

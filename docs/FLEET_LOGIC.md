@@ -120,3 +120,51 @@ type `rescue`; wounded states with recovery turns; a roster UI showing who is ad
 - **Scope**: the carrier, frigate, capital, tender and SAR ships do not exist as models yet; each costs voxel budget
   (corvettes already take seconds to build headless), so LOD or caching comes before a large fleet.
 - **LLM memory** must remain advisory; the state engine decides survival, capture and rank.
+
+## 8. Jump capability and docking (owner rule, 2026-10-21)
+**Rule:** only capital-class ships have jump drives (huge, energy-hungry). Fighters, bombers and corvettes cannot jump.
+To change system, or to cover a "long" distance inside a system, they must be **docked** with a jump-capable ship.
+This is a design rule of ours; FS2 Open has no equivalent (its jump/warp is available to ships generally, with
+type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "warp pushes" in FS2 is only a collision effect.
+
+**Definitions to settle (placeholders):**
+- *Jump-capable:* Capital, Carrier, Super Cap, jump tender. Docking capacity (hangar/dock slots) is a ship stat.
+- *Short transit* (sublight, undocked): within a system between points under a threshold distance D1, e.g. station to
+  a nearby nav area. *Long transit* (above D1, including system-to-system): requires being docked/embarked.
+- *Docked* means inside bays (fighters, bombers) or on external clamps/cradles (corvettes). Corvette cradles need
+  a capital with heavy-lift capacity; this makes corvettes strategically dependent on capitals.
+
+**Consequences for fleet logic**
+- A task force moves at the pace of its capitals. Non-jumpers at a node without a capital are **stranded**: they can
+  defend that node, move short distances, or wait for pickup.
+- **Capacity is the strategic constraint:** a carrier carries N fighters and M corvettes; the rest stay behind or need a
+  second hull. Loading and unloading take time (a turn, or part of one).
+- **Capitals become high-value targets** whose loss strands or destroys everything docked inside. Hence escort,
+  decoys, and "kill the carrier" missions get strategic weight; protect-the-jump-ship is a natural mission type.
+- **Docked ships in combat:** if a capital is attacked, docked fighters can launch (bay throughput limit and bay door
+  state as in FS2); docked corvettes need launch time. If the capital is destroyed during launch, ships inside are
+  lost or ejected as pods by a tunable rule.
+- **SAR and pods:** pods cannot jump either; recovery needs a SAR-capable hull that is then jump-capable only if it is a
+  capital, or an in-system pickup followed by transfer to a jumper (section 5).
+- **Enemy logic:** FROGGs get the same restriction or an explicit exception (their own lore: e.g. spawn-ships or fixed
+  gates). Decide early so AI planning stays symmetrical or deliberately asymmetric.
+
+**Impact on the current build (to decide):**
+- Missions 1-2 move the corvettes HALBERD and TALON between areas of operation with an autopilot transit
+  (`src/77_cine.js`). That is a **short, undocked** in-system move today. Under the new rule the in-mission transit
+  between areas must be either (a) below D1, (b) done docked to an off-screen capital, or (c) re-skinned as the
+  capital's jump with the corvettes in cradles. The least costly change is (a)/(c): a story and caption change,
+  plus naming a capital that carries them. No code change is required until the strategic layer needs the rule.
+- A capital model does not yet exist; the Halberd's role as "mothership" in mission 1 needs a lore line (it is the escort
+  of a carrier out of frame, or a "carrier-capable corvette" exception). Record the decision in docs/SHIPS.md.
+
+**Data additions** (`SHIPS` rows): `jump: bool`, `dock: {fighters:n, corvettes:n}`, `cradle: bool` (can be carried),
+`jumpEnergy` (strategic cost, a number tied to Fuel), `dockTime`. Strategic movement checks `jump` for the whole TF.
+
+**Open questions**
+1. Distance D1 for undocked moves, and is it measured in game units per turn or per node?
+2. Can a corvette ever jump by sacrificing something (emergency jump with huge fuel cost and damage)? An exception
+   adds drama but weakens the rule.
+3. Are FROGG ships bound by it?
+4. Does a flown mission always start at a capital (docked/launched) or can a mission start mid-transit?
+5. How do we show loadouts on the strategic map without UI bloat on phones?
