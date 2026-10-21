@@ -211,7 +211,7 @@ function showBriefing(M) {
   el.innerHTML = `<div class="panel"><div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
-    <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 pulse laser</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
+    <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
     <div class="btns"><button id="bgo">LAUNCH</button><button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';

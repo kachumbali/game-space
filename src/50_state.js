@@ -16,6 +16,7 @@ const _fwd = new THREE.Vector3();
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    s.ab = !!cmd.ab;
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },

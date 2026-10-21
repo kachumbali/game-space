@@ -92,6 +92,11 @@ function aiUpdate(s, dt) {
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
   if (ai.tgtT <= 0 || !s.target || !s.target.alive || s.target.dying) { s.target = pickTarget(s); ai.tgtT = 3 + Math.random() * 3; }
   sense(s);
+  // crippled ships that run far enough away break contact and are removed (so waves can end)
+  if (ai.mode === 'flee' && s.team === 1 && game.anchor && s.group.position.distanceTo(game.anchor.group.position) > 2600) {
+    ai.fleeT = (ai.fleeT || 0) + dt;
+    if (ai.fleeT > 5) { s.alive = false; if (game.mission) comm('CONTROL', 'Damaged FROGG broke contact.', '#aab8c0'); return; }
+  }
   if (isCapital(s)) return capitalAI(s, dt);
   if (ai.role === 'bomber') return bomberAI(s, dt);
   return fighterAI(s, dt);

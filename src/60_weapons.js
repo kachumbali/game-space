@@ -7,8 +7,8 @@ const DMGX = { kin: [0.7, 1.15, 1.0], en: [1.25, 0.8, 1.0], exp: [1.0, 1.0, 1.1]
 const WEAPONS = {
   // ---- human ----
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
-  pulse: { kind: 'proj', name: 'PL-4 PULSE LASER', cd: 0.22, v: 650, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
-  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true },
+  pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 650, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
+  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 560, dmg: 2.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
@@ -17,11 +17,11 @@ const WEAPONS = {
   lash: { kind: 'proj', name: 'LASH CANNON', cd: 2.0, v: 540, dmg: 34, dt: 'en', life: 3.2, spread: 0.002, color: 0xaaff40, len: 7, sz: 0.9, sfx: 'lash', glob: true, big: true },
   sting: { kind: 'proj', name: 'STING', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true },
   // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
-  ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 340, acc: 260, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
-  rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 300, acc: 200, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
-  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 175, acc: 55, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 300, acc: 220, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 160, acc: 50, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
+  rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
+  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
+  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 380, acc: 260, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 240, acc: 75, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad'];
@@ -203,7 +203,7 @@ function steerMissile(m, dt) {
     }
   }
   const burning = m.age < w.burn;
-  const v = burning ? Math.min(w.vmax, sp + w.acc * dt) : Math.max(w.v0 * 0.9, sp * (1 - 0.06 * dt));
+  const v = burning ? Math.min(w.vmax, sp + w.acc * dt) : sp;      // vacuum: no drag after burnout
   m.vel.copy(m.dir).multiplyScalar(v);
 }
 function blastAt(pos, w, team, owner, direct) {
@@ -274,7 +274,7 @@ function deployCM(s) {
   s.group.updateMatrixWorld(true);
   for (let i = 0; i < 3; i++) {
     const p = s.group.localToWorld(new THREE.Vector3((i - 1) * 0.6, -0.5, s.def.half[2] * 0.6));
-    const v = s.vel.clone().multiplyScalar(0.6).add(new THREE.Vector3().randomDirection().multiplyScalar(25 + Math.random() * 15));
+    const v = s.vel.clone().add(new THREE.Vector3().randomDirection().multiplyScalar(12 + Math.random() * 10));      // co-moving, drifts off slowly
     decoys.push({ pos: p, vel: v, life: 4.5, kind: i === 1 ? 'chaff' : 'flare', team: s.team, alive: true, owner: s });
   }
   sfx('flare', s === player ? 0 : s.group.position.distanceTo(camera.position), 0.8);
@@ -284,14 +284,15 @@ function deployCM(s) {
     const d = m.pos.distanceTo(s.group.position);
     const base = Math.max(m.w.flareS, 0) * 1 + 0;      // flares
     const chaff = m.w.chaffS;
-    const p = (1 - Math.min(0.6, 60 / (d + 60))) * (m.w.seeker === 'ir' ? base : chaff) * (0.55 + 0.45 * compFactor(s, 'engine'));
+    const plume = s.ab ? 0.4 : 1.15 - 0.4 * (s.throttle ?? 0.5);      // a burning drive outshines the flare
+    const p = (1 - Math.min(0.6, 60 / (d + 60))) * (m.w.seeker === 'ir' ? base * plume : chaff) * (0.55 + 0.45 * compFactor(s, 'engine'));
     if (Math.random() < p) { m.target = decoys[decoys.length - (m.w.seeker === 'ir' ? 3 : 2)]; m.lostT = 0; }
   }
   return true;
 }
 function updateDecoys(dt) {
   for (const d of decoys) {
-    d.life -= dt; d.vel.multiplyScalar(Math.exp(-0.5 * dt));
+    d.life -= dt;      // vacuum: decoys keep their ejection velocity, no drag
     d.pos.addScaledVector(d.vel, dt);
     if (d.kind === 'flare') { sparks.emit(d.pos, rv(2), 0.18, [3.5, 2.4, 1.0, 1], [1, 0.3, 0, 0]); if (Math.random() < 0.6) fire.emit(d.pos, rv(1), 0.4, [2.4, 1.4, 0.6, 0.8], [0.4, 0.1, 0, 0]); }
     else if (Math.random() < 0.5) smoke.emit(d.pos, rv(5), 1.2, [0.7, 0.7, 0.8, 0.25], [0.5, 0.5, 0.6, 0]);
@@ -415,7 +416,7 @@ function updateBolts(dt) {
       const wp = s.group.localToWorld(hit.clone());
       s.lastAttacker = b.owner;
       if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1;
-      applyHit(s, hit, b.dmg, wp, b.dt);
+      applyHit(s, hit, b.dmg, wp, b.dt, b.w.pierce || 0);
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
       sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);
       b.life = 0; break;

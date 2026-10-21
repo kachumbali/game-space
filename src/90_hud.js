@@ -68,7 +68,7 @@ function drawDamage() {
   }
 }
 
-const shortName = c => c.name.replace('ENGINE', 'ENG').replace('SHIELD', 'SHD').replace('REACTOR', 'RCT').replace('CANNON', 'CAN').replace('LASER', 'LAS').replace('TORP RACK', 'TORP').replace(' GLAND', '').replace('ACID ', '').slice(0, 7);
+const shortName = c => c.name.replace('ENGINE', 'ENG').replace('SHIELD', 'SHD').replace('REACTOR', 'RCT').replace('CANNON', 'CAN').replace('LASER', 'LAS').replace('PLASMA', 'PLS').replace('TORP RACK', 'TORP').replace(' GLAND', '').replace('ACID ', '').slice(0, 7);
 let lastTgtHtml = '';
 function updateTargetPanel(nd, closure) {
   let html = '';
@@ -110,7 +110,7 @@ function updateWeaponPanel() {
   const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
   const ids = missileIds(p), cur = selectedMissile(p);
   let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
-  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 LASER ${bar(p.energy / 100, 8)} ${en}%</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 PLASMA ${bar(p.energy / 100, 8)} ${en}%</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   const L = p.lock;

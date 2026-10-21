@@ -17,7 +17,7 @@ function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 :
 const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
-function applyHit(s, lp, dmg, wp, dtype = 'kin') {
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
   if (!s.alive || s.dying) return;
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
@@ -27,12 +27,13 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin') {
   const facing = nz < 0 ? 'fore' : 'aft';
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
   let d = dmg;
+  const pdmg = dmg * pierce; d -= pdmg;      // piercing share ignores shields and armour
   if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0) {
     const raw = d * X[0], a = Math.min(s.shield[facing], raw);
     s.shield[facing] -= a; d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
-    if (d <= 0.01) return;
+    if (d + pdmg <= 0.01) return;
   }
   // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
   if (d > 0.01) {
@@ -59,9 +60,9 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin') {
     s.armor[side] -= a; d *= 1 - a / raw;
     chip(s, lp, 0, 0.9 + 0.05 * a, false);
     sparksAt(wp, 4, 11);
-    if (d <= 0.01) return;
+    if (d + pdmg <= 0.01) return;
   }
-  d *= X[2];
+  d = (d + pdmg) * X[2];
   // armour breached: hull damage + internal hit
   chip(s, lp, 0.35 + 0.08 * d, 1.1 + 0.1 * d, false);
   sparksAt(wp, 8, 18); fireAt(wp, 2, 5); smokeAt(wp, 2, 3);

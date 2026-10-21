@@ -32,7 +32,7 @@ SHIPS.kestrel = {
     tap([0.62, 0, 4.9], 1.5, [0.55, 0.42], [0.5, 0.4], 0x6b7480, { sh: 'h' }),
     tap([0.62, 0, 6.05], 0.45, [0.46, 0.36], [0.4, 0.32], H.nozzle, { sh: 'e' }),
     ell([0.62, 0, 6.5], [0.34, 0.28, 0.1], H.glow, { glow: true }),
-    // guns: nose cannons + wing-tip pulse lasers
+    // guns: nose cannons + wing-tip plasma bolters
     seg([0.95, -0.12, -2.3], [0.95, -0.12, -3.4], 0.07, 0.06, H.dark),
     seg([4.7, -0.08, 2.9], [4.7, -0.08, 1.7], 0.13, 0.1, H.dark),
     ell([4.7, -0.08, 1.65], [0.1, 0.1, 0.08], 0x66ffcc, { glow: true }),
