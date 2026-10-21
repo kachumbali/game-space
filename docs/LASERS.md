@@ -85,10 +85,10 @@ energy, and the local burn-through physics only matters once the shield segment 
 dwell-time mechanic on armour and exposed parts, where the sources apply. It is a design choice, not a sourced physical fact.
 
 ## 5. Open decisions
-1. Continuous beam with dwell accumulation, or discrete pulses with a capacitor burst count? (Proposal above is dwell-based with a capacitor.)
-2. Pointing error and slew rate per turret size class (PD, S, M, L, XL); these set how lethal lasers are to fighters.
-3. Whether shields absorb laser energy in kJ/cm^2 terms or at a flat multiplier as now.
-4. Whether ship roll should be a deliberate defence (needs a roll-rate input for capitals) or an automatic bonus.
+1. Turret slew rates per size class and the pulse length of the fighter laser (assumed 0.1 s); both change lethality as much as the pointing error.
+2. Number and layout of shield segments per class, and the roll command for AI capitals.
+3. Whether the XL keel laser and keel cannon share the keel line (whole-ship aiming) and the same capacitor/heat budget.
+4. Confirm the shield-as-energy-pool recommendation in section 4.
 
 ## Sources (accessed 2026-10-21)
 - [OTA, Directed Energy Missile Defense in Space (1984)](https://www.princeton.edu/~ota/disk3/1984/8410/841005.PDF). The text itself says no significance should be attached to the precise numbers.
