@@ -18,6 +18,13 @@
   #canopy i.l{left:0;clip-path:polygon(0 0,38% 0,0 100%)}
   #canopy i.r{right:0;clip-path:polygon(62% 0,100% 0,100% 100%)}
   body.chase #canopy,body.touch #canopy{display:none}
+  #fade{position:fixed;inset:0;background:#e8fff8;opacity:0;pointer-events:none;z-index:12}
+  #bars{position:fixed;inset:0;pointer-events:none;z-index:8;display:none;border-top:11vh solid #000;border-bottom:11vh solid #000}
+  #cap{position:fixed;left:0;right:0;bottom:3vh;text-align:center;z-index:9;color:#8fffd0;letter-spacing:3px;font-size:13px;text-shadow:0 0 6px #000;pointer-events:none}
+  #cap span{display:block;font-size:10px;opacity:.7;letter-spacing:2px;margin-top:3px}
+  body.cine #bars{display:block}
+  body.cine #hud,body.cine #tgt,body.cine #radar,body.cine #wpn,body.cine #objs,body.cine #log,body.cine #dmg,body.cine #ov,body.cine #canopy,body.cine #warn,body.cine #thr,body.cine #thrlbl,body.cine .tbtn,body.cine #msg{display:none!important}
+  body.cine #comm{bottom:13vh}
   #hit{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:0;
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
@@ -99,6 +106,7 @@
 <canvas id="c"></canvas>
 <div id="canopy"><i class="l"></i><i class="r"></i></div>
 <div id="hit"></div>
+<div id="fade"></div><div id="bars"></div><div id="cap"></div>
 <canvas id="ov"></canvas>
 <div id="hud"><div id="hudtxt"></div><canvas id="dmg" width="150" height="170"></canvas></div>
 <div id="tgt"></div>
@@ -1276,7 +1284,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
   const def = SHIPS[defId];
   const s = {
     def, team, group: new THREE.Group(), vel: new THREE.Vector3(), throttle: 0.5,
-    id: opts.id || null, callsign: opts.callsign || null, grp: opts.grp || null, pilot: opts.pilot || null, vital: !!opts.vital,
+    id: opts.id || null, callsign: opts.callsign || null, grp: opts.grp || null, pilot: opts.pilot || null, vital: !!opts.vital, hold: !!opts.hold,
     shield: { ...def.shield }, armor: { ...def.armor }, structure: def.structure,
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
@@ -2214,7 +2222,7 @@ function capitalAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
   if (!t) { flightModels.arcade(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);
-  const hold = game.mission && s.vital;           // friendly flagship holds station
+  const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
   const rng = primaryRange(s);
   const lp = leadPoint(s, t, primarySpeed(s));
@@ -2318,12 +2326,85 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
   ],
 }];
 
+MISSIONS.push({
+  id: 'm02', title: 'OPERATION REEDBED', subtitle: 'Fleet sweep: Bog Relay and the FROGG outpost',
+  grades: [3300, 2900, 2500, 2000],
+  briefing:
+`Task Group Eagle (CSS HALBERD and CSS TALON, with your flight) sorties through two areas of operation. The autopilot flies the fleet between them; you take the stick again on arrival.
+
+NAV 2, BOG RELAY: FROGG pickets are screening a relay we need. Expect fighters first, then torpedo bombers going for the escorts.
+
+NAV 3, THE OUTPOST: a FROGG corvette, GULPER, covers the outpost with an escort of Reavers and Spitters. Break the screen, then kill the corvette: engines and lash cannons first. Subsystems can be targeted with N.
+
+ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is lost.`,
+  areas: {
+    ao2: { name: 'BOG RELAY', planet: null, arrive: 'Drives down. Bog Relay, deep space, no planet cover. Contacts on the scope soon.' },
+    ao3: { name: 'FROGG OUTPOST', planet: [0.7, 0.25, -0.65], arrive: 'Drives down at the outpost. Gas giant on the starboard side. Expect heavy resistance.' },
+  },
+  setup: {
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    fleet: [{ ship: 'halberd', id: 'talon', callsign: 'CSS TALON', pos: [-420, -30, 180] }],
+    player: { pos: [140, 20, 260], speed: 60 },
+    wingmen: [
+      { pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [190, 26, 290] },
+      { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [100, 10, 300] },
+    ],
+  },
+  stages: [
+    { when: { t: 3 }, do: [
+      { comm: ['CONTROL', 'Task Group Eagle, Halberd CIC. All ships formed. Autopilot to NAV 2, Bog Relay. Sit back, Eagle flight.'] },
+      { obj: ['o0', 'Autopilot to NAV 2: Bog Relay', 'open'] },
+      { transit: { to: 'NAV 2 · BOG RELAY', dur: 28, area: 'ao2', lines: [
+        [3, 'HAWK', 'Eagle two. Nice to see the fleet from outside for once, Echo.'],
+        [10, 'SPARROW', 'Is it true the relay was dark for a week before anyone noticed?'],
+        [16, 'HAWK', 'Eyes open, Sparrow. Dark does not mean empty.'],
+        [23, 'CONTROL', 'Dropping out of cruise in five. Arm up, all fighters.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o0', null, 'done'] },
+      { obj: ['o1', 'Destroy the FROGG pickets', 'open'] },
+      { comm: ['CONTROL', 'Contacts! FROGG pickets, bearing zero-one-five. They have seen us.'] },
+      { spawn: { grp: 'A', ships: [['leaper', 3], ['darter', 2]], bearing: [0.15, 0.05, -1], dist: 2300, spread: 240 } },
+    ] },
+    { when: { dead: 'A', delay: 4 }, do: [
+      { obj: ['o1', null, 'done'] },
+      { comm: ['CONTROL', 'Pickets down. More contacts, port side, heavy: torpedo bombers with a gunship. They want the Talon.'] },
+      { obj: ['o2', 'Stop the torpedo bombers', 'open'] },
+      { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 1], ['leaper', 2]], bearing: [-1, 0.05, -0.2], dist: 2800, spread: 260 } },
+    ] },
+    { when: { dead: 'B', delay: 4 }, do: [
+      { obj: ['o2', null, 'done'] },
+      { comm: ['CONTROL', 'Relay secure. Autopilot to NAV 3, the FROGG outpost. Rearm and rest while you can.'] },
+      { obj: ['o3', 'Autopilot to NAV 3: Outpost', 'open'] },
+      { transit: { to: 'NAV 3 · FROGG OUTPOST', dur: 30, area: 'ao3', lines: [
+        [3, 'CONTROL', 'Intel expects a corvette-class vessel at the outpost, plus escorts. This is the big one.'],
+        [11, 'SPARROW', 'Echo, if I do not make it, tell my mother I was a good pilot.'],
+        [15, 'HAWK', 'You will tell her yourself, Sparrow. Stay on my wing.'],
+        [25, 'CONTROL', 'Drop-out in five. Weapons free on arrival.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o3', null, 'done'] },
+      { obj: ['o4', 'Destroy the FROGG corvette GULPER', 'open'] },
+      { comm: ['CONTROL', 'There it is. GULPER, with a heavy screen. Burn through, then engines and lash cannons. Use N to select subsystems.'] },
+      { spawn: { grp: 'C', ships: [['gulper', 1], ['reaver', 2], ['spitter', 2], ['darter', 2]], bearing: [0.2, 0.05, -1], dist: 2600, spread: 200 } },
+    ] },
+    { when: { dead: 'C', delay: 4 }, do: [
+      { obj: ['o4', null, 'done'] },
+      { comm: ['CONTROL', 'Outpost silenced. Outstanding work, Eagle flight. Bring the fleet home.'] },
+      { end: 'win' },
+    ] },
+  ],
+});
+
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function startMission(M) {
   clearWorld();
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
+  PLANET_DIR.set(-0.55, -0.22, -0.8).normalize(); planet.visible = true; cine = null; document.body.classList.remove('cine');
   game.mstate = { t: 0, stage: 0, stageT: 0, spawned: {}, ended: false, endT: 0, result: null, jumpDone: false, stats: {} };
   const su = M.setup;
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
@@ -2332,6 +2413,7 @@ function startMission(M) {
   const p = makeShip('kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
+  for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
   for (const w of su.wingmen) {
     if (CREW[w.pilot].status !== 'active') continue;
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter' });
@@ -2354,6 +2436,7 @@ function runActions(list) {
     if (a.comm) comm(a.comm[0], a.comm[1]);
     if (a.obj) objective(a.obj[0], a.obj[1], a.obj[2]);
     if (a.jumpIn) { sfx('jump'); }
+    if (a.transit) startTransit(a.transit);
     if (a.spawn) spawnGroup(a.spawn);
     if (a.end) endMission(a.end);
   }
@@ -2376,6 +2459,7 @@ function spawnGroup(sp) {
 function missionUpdate(dt) {
   const M = game.mission, S = game.mstate;
   if (!M || !S) return;
+  if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
   const st = M.stages[S.stage];
@@ -2433,7 +2517,8 @@ function missionStats() {
   const S = game.mstate;
   const win = S && S.result === 'win';
   const total = Math.round(score + (win ? 300 + halPct * 3 + (player && player.alive ? 200 : 0) : 0));
-  const grade = !win ? 'F' : total > 2100 ? 'S' : total > 1800 ? 'A' : total > 1500 ? 'B' : total > 1200 ? 'C' : 'D';
+  const G = (game.mission && game.mission.grades) || [2100, 1800, 1500, 1200];
+  const grade = !win ? 'F' : total > G[0] ? 'S' : total > G[1] ? 'A' : total > G[2] ? 'B' : total > G[3] ? 'C' : 'D';
   return { score, n, halPct, acc, total, grade };
 }
 function showBriefing(M) {
@@ -2443,11 +2528,12 @@ function showBriefing(M) {
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
-    <div class="btns"><button id="bgo">LAUNCH</button><button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
+    <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm" data-i="${i}">${i + 1}. ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); };
+  el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
 }
 function showDebrief() {
@@ -2460,12 +2546,151 @@ function showDebrief() {
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>Halberd hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}</div></div>
-    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button><button id="bfree" class="alt">FREE FLIGHT</button></div></div>`;
+    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
+  if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); };
 }
+// ======================================================================
+//  TRANSITS — autopilot legs between areas of operation, with Wing-Commander-style cinematic cameras.
+//  Mission scripts trigger one with {transit:{to, dur, area, lines:[[t, from, text],...]}}.
+//  While a transit runs the sim is real-time (not slowed), hostiles are cleared, the fleet flies in formation
+//  along the flagship's heading, and the camera cuts between flyby / orbit / chase / bow / arrival shots.
+// ======================================================================
+const CINE_SPEED = 95;
+let cine = null;
+const _ca = new THREE.Vector3(), _cb = new THREE.Vector3(), _cs = new THREE.Vector3(), _cu = new THREE.Vector3(0, 1, 0), _cq = new THREE.Quaternion();
+const fadeEl = document.getElementById('fade'), capEl = document.getElementById('cap');
+
+function startTransit(tr) {
+  const A = game.anchor;
+  if (!A || !A.alive) return;
+  for (const s of ships) if (s.team === 1) s.alive = false;
+  for (const m of missiles) m.dead = true;
+  bolts.length = 0; decoys.length = 0;
+  const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(A.group.quaternion).normalize();
+  const side = new THREE.Vector3().crossVectors(fwd, _cu).normalize();
+  const dur = tr.dur || 26;
+  // navigation beacon ahead of the fleet
+  const beacon = new THREE.Group();
+  for (let i = 0; i < 3; i++) {
+    const r = new THREE.Mesh(new THREE.TorusGeometry(60 + i * 38, 1.6, 6, 48), new THREE.MeshBasicMaterial({ color: 0x66ffcc, transparent: true, opacity: 0.8 - i * 0.2, blending: THREE.AdditiveBlending, depthWrite: false }));
+    beacon.add(r);
+  }
+  beacon.add(new THREE.Mesh(new THREE.SphereGeometry(7, 12, 8), new THREE.MeshBasicMaterial({ color: 0xbfffee })));
+  beacon.position.copy(A.group.position).addScaledVector(fwd, CINE_SPEED * dur + 120);
+  beacon.lookAt(A.group.position);
+  scene.add(beacon);
+  for (const s of ships) if (s.alive && s.team === 0) { s.group.quaternion.copy(A.group.quaternion); s.group.visible = true; }
+  cine = { t: 0, dur, tr, li: 0, fwd, side, beacon, fov: camera.fov, shot: -1, prevView: view };
+  // shot list as fractions of the leg
+  cine.shots = [['flyby', 0.26], ['orbit', 0.22], ['chase', 0.2], ['bow', 0.16], ['arrive', 0.16]];
+  state = 'cine';
+  document.body.classList.add('cine');
+  if (capEl) capEl.textContent = '';
+  sfx('jump');
+}
+
+function cineDrive(s, dt) {
+  const c = cine; if (!c) return;
+  const cap = s.def.cls !== 'fighter';
+  s.vel.copy(c.fwd).multiplyScalar(CINE_SPEED);
+  if (!cap) {                                   // fighters weave a little in formation
+    const k = time * 0.9 + (s.spawnT || 0) * 3.1 + (s.def.length || 1);
+    s.vel.addScaledVector(c.side, Math.sin(k) * 12); s.vel.y += Math.cos(k * 0.7) * 5;
+    _cq.copy(game.anchor.group.quaternion);
+    s.group.quaternion.copy(_cq); s.group.rotateZ(Math.sin(k) * 0.4);
+  }
+  s.throttle = 0.6;
+}
+
+function cineShot(name, k, c) {
+  const A = game.anchor, ap = A.group.position, R = A.def.radius, P = player ? player.group.position : ap;
+  const f = c.fwd, sd = c.side;
+  switch (name) {
+    case 'flyby':      // static telephoto camera ahead of and beside the fleet; it sweeps past
+      if (!c.fixed) c.fixed = ap.clone().addScaledVector(f, R * 5.2).addScaledVector(sd, R * 1.5).addScaledVector(_cu, R * 0.35);
+      camera.position.copy(c.fixed); camera.fov = 38;
+      _ca.copy(ap).addScaledVector(f, -R * 0.2); camera.lookAt(_ca); break;
+    case 'orbit': {
+      const a = 0.4 + k * 1.5;
+      _ca.copy(ap).addScaledVector(sd, Math.cos(a) * R * 2.6).addScaledVector(f, Math.sin(a) * R * 2.6).addScaledVector(_cu, R * (0.5 + 0.3 * k));
+      camera.position.copy(_ca); camera.fov = 52; camera.lookAt(_cb.copy(ap).addScaledVector(f, R * 0.1)); break;
+    }
+    case 'chase':
+      camera.position.copy(P).addScaledVector(f, -30).addScaledVector(_cu, 7).addScaledVector(sd, 16 - 12 * k); camera.fov = 68;
+      camera.lookAt(_ca.copy(P).addScaledVector(f, 80)); break;
+    case 'bow':        // ahead of the flagship, looking back along the fleet
+      camera.position.copy(ap).addScaledVector(f, R * 1.9).addScaledVector(sd, R * (0.7 - 0.4 * k)).addScaledVector(_cu, R * 0.25); camera.fov = 48;
+      camera.lookAt(_ca.copy(ap).addScaledVector(f, R * 0.2)); break;
+    case 'arrive':     // behind the wing, beacon dead ahead; FOV widens as the drives spool down
+      camera.position.copy(P).addScaledVector(f, -22).addScaledVector(_cu, 5); camera.fov = 60 + 40 * k * k;
+      camera.lookAt(_ca.copy(P).addScaledVector(f, 400)); break;
+  }
+  camera.updateProjectionMatrix(); camera.updateMatrixWorld(true);
+}
+
+function cineCamera(dt) {
+  const c = cine; if (!c) return;
+  let acc = 0, idx = c.shots.length - 1, k = 1;
+  for (let i = 0; i < c.shots.length; i++) {
+    const d = c.shots[i][1] * c.dur;
+    if (c.t < acc + d) { idx = i; k = (c.t - acc) / d; break; }
+    acc += d;
+  }
+  if (idx !== c.shot) { c.shot = idx; c.fixed = null; }
+  cineShot(c.shots[idx][0], clamp(k, 0, 1), c);
+}
+
+function cineUpdate(dt) {
+  const c = cine; if (!c) return;
+  c.t += dt;
+  const lines = c.tr.lines || [];
+  while (c.li < lines.length && c.t >= lines[c.li][0]) { comm(lines[c.li][1], lines[c.li][2]); c.li++; }
+  c.beacon.rotation.z += dt * 0.6;
+  if (capEl) {
+    const left = Math.max(0, Math.ceil(c.dur - c.t));
+    capEl.innerHTML = `AUTOPILOT · ${c.tr.to}<span>ETA 0:${String(left).padStart(2, '0')} · ${isTouch ? 'TAP' : 'SPACE'} TO SKIP</span>`;
+  }
+  if (c.t >= c.dur) endTransit();
+}
+
+function endTransit() {
+  const c = cine; if (!c) return;
+  scene.remove(c.beacon);
+  c.beacon.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); });
+  camera.fov = c.fov; camera.updateProjectionMatrix();
+  document.body.classList.remove('cine');
+  if (capEl) capEl.textContent = '';
+  // relocate the "area": scenery changes, drives drop back to patrol speed
+  const area = game.mission.areas && game.mission.areas[c.tr.area];
+  if (area) applyArea(area);
+  for (const s of ships) {
+    if (!s.alive || s.team !== 0) continue;
+    s.vel.copy(c.fwd).multiplyScalar(s.def.cls === 'fighter' ? 60 : 4);
+    s.group.quaternion.copy(game.anchor.group.quaternion);
+    s.group.visible = !(s === player && view === 'cockpit');
+  }
+  if (player) { player.throttle = 0.4; player.group.quaternion.copy(game.anchor.group.quaternion); }
+  game.mstate.area = c.tr.area;
+  cine = null;
+  state = 'play';
+  if (fadeEl) { fadeEl.style.transition = 'none'; fadeEl.style.opacity = '1'; requestAnimationFrame(() => { fadeEl.style.transition = 'opacity 1.1s'; fadeEl.style.opacity = '0'; }); }
+  if (area) comm('CONTROL', area.arrive || `Arrived at ${area.name}.`);
+  sfx('jump');
+}
+function skipTransit() { if (state === 'cine' && cine && cine.t > 1.2) cine.t = cine.dur; }
+
+// per-area scenery: planet direction/visibility
+function applyArea(a) {
+  if (a.planet) { PLANET_DIR.set(a.planet[0], a.planet[1], a.planet[2]).normalize(); planet.visible = true; }
+  else if (a.planet === null) planet.visible = false;
+  game.mstate.areaName = a.name;
+}
+addEventListener('pointerdown', () => skipTransit());
+addEventListener('keydown', e => { if (state === 'cine' && (e.code === 'Space' || e.code === 'Enter' || e.code === 'Escape')) { skipTransit(); e.preventDefault(); } });
 // ======================================================================
 //  INPUT
 // ======================================================================
@@ -2739,7 +2964,8 @@ function update(dt) {
       if (!s.alive) continue;
       s.vel.multiplyScalar(Math.exp(-0.2 * dt));
       s.group.rotateZ(0.06 * dt); s.group.rotateX(0.03 * dt);
-    } else if (s === player) { if (state === 'play') updatePlayer(dt); }
+    } else if (state === 'cine') cineDrive(s, dt);
+    else if (s === player) { if (state === 'play') updatePlayer(dt); }
     else if (state !== 'brief') aiUpdate(s, dt);
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
@@ -2790,7 +3016,7 @@ function update(dt) {
   debris = debris.filter(d => d.life < (d.dur || 2.4) || (scene.remove(d.mesh), d.mesh.dispose(), d.flash && scene.remove(d.flash), false));
 
   sparks.update(dt); fire.update(dt); smoke.update(dt); frag.update(dt);
-  updateCamera(dt);
+  if (state === 'cine') cineCamera(dt); else updateCamera(dt);
   updateEnv();
 }
 
@@ -3219,14 +3445,14 @@ function updateHud() {
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
-startMission(MISSIONS[0]);
+startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || 1) - 1))]);
 if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
 let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   last = t;
-  if (!globalThis.__paused) update(dt * SIM_SPEED);
+  if (!globalThis.__paused) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
   renderBolts();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);

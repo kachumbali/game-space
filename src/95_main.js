@@ -1,14 +1,14 @@
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
-startMission(MISSIONS[0]);
+startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || 1) - 1))]);
 if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
 let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   last = t;
-  if (!globalThis.__paused) update(dt * SIM_SPEED);
+  if (!globalThis.__paused) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
   renderBolts();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);

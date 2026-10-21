@@ -1,5 +1,7 @@
 # Next round plan (after human test of current build)
 
+Status 2026-10-21: A1-A4 done (vacuum decoys/missiles, plasma bolter rename, faster missiles, piercing railgun, fleeing ships break contact). Multi-area missions + transit cutscenes done (mission 2). Remaining: resolution/LOD, afterburner fuel (A5), fighter subsystems.
+
 ## A. Cheap realism fixes (from docs/REALISM.md)
 1. **Vacuum decoys and missiles** (src/60_weapons.js)
    - Remove coast drag on missiles (`sp*(1-0.06dt)`); keep speed after burnout.

@@ -109,7 +109,8 @@ function update(dt) {
       if (!s.alive) continue;
       s.vel.multiplyScalar(Math.exp(-0.2 * dt));
       s.group.rotateZ(0.06 * dt); s.group.rotateX(0.03 * dt);
-    } else if (s === player) { if (state === 'play') updatePlayer(dt); }
+    } else if (state === 'cine') cineDrive(s, dt);
+    else if (s === player) { if (state === 'play') updatePlayer(dt); }
     else if (state !== 'brief') aiUpdate(s, dt);
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
@@ -160,7 +161,7 @@ function update(dt) {
   debris = debris.filter(d => d.life < (d.dur || 2.4) || (scene.remove(d.mesh), d.mesh.dispose(), d.flash && scene.remove(d.flash), false));
 
   sparks.update(dt); fire.update(dt); smoke.update(dt); frag.update(dt);
-  updateCamera(dt);
+  if (state === 'cine') cineCamera(dt); else updateCamera(dt);
   updateEnv();
 }
 

@@ -87,12 +87,85 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
   ],
 }];
 
+MISSIONS.push({
+  id: 'm02', title: 'OPERATION REEDBED', subtitle: 'Fleet sweep: Bog Relay and the FROGG outpost',
+  grades: [3300, 2900, 2500, 2000],
+  briefing:
+`Task Group Eagle (CSS HALBERD and CSS TALON, with your flight) sorties through two areas of operation. The autopilot flies the fleet between them; you take the stick again on arrival.
+
+NAV 2, BOG RELAY: FROGG pickets are screening a relay we need. Expect fighters first, then torpedo bombers going for the escorts.
+
+NAV 3, THE OUTPOST: a FROGG corvette, GULPER, covers the outpost with an escort of Reavers and Spitters. Break the screen, then kill the corvette: engines and lash cannons first. Subsystems can be targeted with N.
+
+ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is lost.`,
+  areas: {
+    ao2: { name: 'BOG RELAY', planet: null, arrive: 'Drives down. Bog Relay, deep space, no planet cover. Contacts on the scope soon.' },
+    ao3: { name: 'FROGG OUTPOST', planet: [0.7, 0.25, -0.65], arrive: 'Drives down at the outpost. Gas giant on the starboard side. Expect heavy resistance.' },
+  },
+  setup: {
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    fleet: [{ ship: 'halberd', id: 'talon', callsign: 'CSS TALON', pos: [-420, -30, 180] }],
+    player: { pos: [140, 20, 260], speed: 60 },
+    wingmen: [
+      { pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [190, 26, 290] },
+      { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [100, 10, 300] },
+    ],
+  },
+  stages: [
+    { when: { t: 3 }, do: [
+      { comm: ['CONTROL', 'Task Group Eagle, Halberd CIC. All ships formed. Autopilot to NAV 2, Bog Relay. Sit back, Eagle flight.'] },
+      { obj: ['o0', 'Autopilot to NAV 2: Bog Relay', 'open'] },
+      { transit: { to: 'NAV 2 · BOG RELAY', dur: 28, area: 'ao2', lines: [
+        [3, 'HAWK', 'Eagle two. Nice to see the fleet from outside for once, Echo.'],
+        [10, 'SPARROW', 'Is it true the relay was dark for a week before anyone noticed?'],
+        [16, 'HAWK', 'Eyes open, Sparrow. Dark does not mean empty.'],
+        [23, 'CONTROL', 'Dropping out of cruise in five. Arm up, all fighters.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o0', null, 'done'] },
+      { obj: ['o1', 'Destroy the FROGG pickets', 'open'] },
+      { comm: ['CONTROL', 'Contacts! FROGG pickets, bearing zero-one-five. They have seen us.'] },
+      { spawn: { grp: 'A', ships: [['leaper', 3], ['darter', 2]], bearing: [0.15, 0.05, -1], dist: 2300, spread: 240 } },
+    ] },
+    { when: { dead: 'A', delay: 4 }, do: [
+      { obj: ['o1', null, 'done'] },
+      { comm: ['CONTROL', 'Pickets down. More contacts, port side, heavy: torpedo bombers with a gunship. They want the Talon.'] },
+      { obj: ['o2', 'Stop the torpedo bombers', 'open'] },
+      { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 1], ['leaper', 2]], bearing: [-1, 0.05, -0.2], dist: 2800, spread: 260 } },
+    ] },
+    { when: { dead: 'B', delay: 4 }, do: [
+      { obj: ['o2', null, 'done'] },
+      { comm: ['CONTROL', 'Relay secure. Autopilot to NAV 3, the FROGG outpost. Rearm and rest while you can.'] },
+      { obj: ['o3', 'Autopilot to NAV 3: Outpost', 'open'] },
+      { transit: { to: 'NAV 3 · FROGG OUTPOST', dur: 30, area: 'ao3', lines: [
+        [3, 'CONTROL', 'Intel expects a corvette-class vessel at the outpost, plus escorts. This is the big one.'],
+        [11, 'SPARROW', 'Echo, if I do not make it, tell my mother I was a good pilot.'],
+        [15, 'HAWK', 'You will tell her yourself, Sparrow. Stay on my wing.'],
+        [25, 'CONTROL', 'Drop-out in five. Weapons free on arrival.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o3', null, 'done'] },
+      { obj: ['o4', 'Destroy the FROGG corvette GULPER', 'open'] },
+      { comm: ['CONTROL', 'There it is. GULPER, with a heavy screen. Burn through, then engines and lash cannons. Use N to select subsystems.'] },
+      { spawn: { grp: 'C', ships: [['gulper', 1], ['reaver', 2], ['spitter', 2], ['darter', 2]], bearing: [0.2, 0.05, -1], dist: 2600, spread: 200 } },
+    ] },
+    { when: { dead: 'C', delay: 4 }, do: [
+      { obj: ['o4', null, 'done'] },
+      { comm: ['CONTROL', 'Outpost silenced. Outstanding work, Eagle flight. Bring the fleet home.'] },
+      { end: 'win' },
+    ] },
+  ],
+});
+
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function startMission(M) {
   clearWorld();
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
+  PLANET_DIR.set(-0.55, -0.22, -0.8).normalize(); planet.visible = true; cine = null; document.body.classList.remove('cine');
   game.mstate = { t: 0, stage: 0, stageT: 0, spawned: {}, ended: false, endT: 0, result: null, jumpDone: false, stats: {} };
   const su = M.setup;
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
@@ -101,6 +174,7 @@ function startMission(M) {
   const p = makeShip('kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
+  for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
   for (const w of su.wingmen) {
     if (CREW[w.pilot].status !== 'active') continue;
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter' });
@@ -123,6 +197,7 @@ function runActions(list) {
     if (a.comm) comm(a.comm[0], a.comm[1]);
     if (a.obj) objective(a.obj[0], a.obj[1], a.obj[2]);
     if (a.jumpIn) { sfx('jump'); }
+    if (a.transit) startTransit(a.transit);
     if (a.spawn) spawnGroup(a.spawn);
     if (a.end) endMission(a.end);
   }
@@ -145,6 +220,7 @@ function spawnGroup(sp) {
 function missionUpdate(dt) {
   const M = game.mission, S = game.mstate;
   if (!M || !S) return;
+  if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
   const st = M.stages[S.stage];
@@ -202,7 +278,8 @@ function missionStats() {
   const S = game.mstate;
   const win = S && S.result === 'win';
   const total = Math.round(score + (win ? 300 + halPct * 3 + (player && player.alive ? 200 : 0) : 0));
-  const grade = !win ? 'F' : total > 2100 ? 'S' : total > 1800 ? 'A' : total > 1500 ? 'B' : total > 1200 ? 'C' : 'D';
+  const G = (game.mission && game.mission.grades) || [2100, 1800, 1500, 1200];
+  const grade = !win ? 'F' : total > G[0] ? 'S' : total > G[1] ? 'A' : total > G[2] ? 'B' : total > G[3] ? 'C' : 'D';
   return { score, n, halPct, acc, total, grade };
 }
 function showBriefing(M) {
@@ -212,11 +289,12 @@ function showBriefing(M) {
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
-    <div class="btns"><button id="bgo">LAUNCH</button><button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
+    <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm" data-i="${i}">${i + 1}. ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); };
+  el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
 }
 function showDebrief() {
@@ -229,9 +307,10 @@ function showDebrief() {
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>Halberd hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}</div></div>
-    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button><button id="bfree" class="alt">FREE FLIGHT</button></div></div>`;
+    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
+  if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); };
 }

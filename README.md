@@ -17,6 +17,12 @@ You fly Eagle Lead (Kestrel) from the corvette HSS Halberd with wingmen HAWK and
 3. Destroy the FROGG Gulper corvette (and its Reaver escort). Debrief shows kills, accuracy, grade; crew
 kills/sorties persist in localStorage (`gs_crew`, see docs/VISION.md).
 
+## Mission 2: Operation Reedbed (multi-area)
+Two corvettes (HALBERD 128 m, TALON 128 m) and Eagle flight sortie through areas of operation. The autopilot flies the fleet
+between them with cinematic cameras (flyby, orbit, chase, bow, arrival); SPACE / ENTER / tap skips. NAV 2 Bog Relay: fighters,
+then torpedo bombers. NAV 3 FROGG outpost: Gulper (146 m) with Reaver/Spitter/Darter screen. Pick missions on the briefing
+screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
+
 ## Controls (desktop)
 | Input | Action |
 |---|---|
@@ -27,6 +33,7 @@ kills/sorties persist in localStorage (`gs_crew`, see docs/VISION.md).
 | RMB / Enter, G | Fire missile, cycle missile type |
 | Z | Flares/chaff |
 | T / Y | Next target / target nearest crosshair |
+| N | Cycle subsystem on target (pipper aims at it); touch: SUB |
 | K | Radar range 1.5 / 3 / 6 km |
 | V, F, H, M | View, flight model, help, mute |
 | `-` `=` `[` `]`, B | Voxel detail, pixel size, bloom |
@@ -37,7 +44,7 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
 - **Radar**: 3D forward-up scope with range rings, elevation stalks, missile triangles, target highlight.
 - **Lock-on**: seek → range → locking → locked; IR (heat), RF (radar, needs working radar), torpedoes, FROGG tick/tadpole.
   Flares fool IR missiles, chaff fools radar missiles. Lead pipper for guns.
-- **Weapons**: cannons (ammo), pulse lasers (energy capacitor), railgun, point-defence; FROGG fang/spit/lash/sting.
+- **Weapons**: cannons (ammo), plasma bolters (energy capacitor), railgun, point-defence; FROGG fang/spit/lash/sting.
   Missiles are guided, burn out, proximity-fuzed; PD turrets shoot missiles down.
 - **Damage**: fore/aft shields → 4-sided armour → structure, typed damage (kinetic/energy/explosive), components
   (engines, guns, shield, radar, power), voxel chipping and scorching. Corvettes die in stages.

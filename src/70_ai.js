@@ -193,7 +193,7 @@ function capitalAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
   if (!t) { flightModels.arcade(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);
-  const hold = game.mission && s.vital;           // friendly flagship holds station
+  const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
   const rng = primaryRange(s);
   const lp = leadPoint(s, t, primarySpeed(s));

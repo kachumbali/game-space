@@ -18,6 +18,13 @@
   #canopy i.l{left:0;clip-path:polygon(0 0,38% 0,0 100%)}
   #canopy i.r{right:0;clip-path:polygon(62% 0,100% 0,100% 100%)}
   body.chase #canopy,body.touch #canopy{display:none}
+  #fade{position:fixed;inset:0;background:#e8fff8;opacity:0;pointer-events:none;z-index:12}
+  #bars{position:fixed;inset:0;pointer-events:none;z-index:8;display:none;border-top:11vh solid #000;border-bottom:11vh solid #000}
+  #cap{position:fixed;left:0;right:0;bottom:3vh;text-align:center;z-index:9;color:#8fffd0;letter-spacing:3px;font-size:13px;text-shadow:0 0 6px #000;pointer-events:none}
+  #cap span{display:block;font-size:10px;opacity:.7;letter-spacing:2px;margin-top:3px}
+  body.cine #bars{display:block}
+  body.cine #hud,body.cine #tgt,body.cine #radar,body.cine #wpn,body.cine #objs,body.cine #log,body.cine #dmg,body.cine #ov,body.cine #canopy,body.cine #warn,body.cine #thr,body.cine #thrlbl,body.cine .tbtn,body.cine #msg{display:none!important}
+  body.cine #comm{bottom:13vh}
   #hit{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:0;
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
@@ -99,6 +106,7 @@
 <canvas id="c"></canvas>
 <div id="canopy"><i class="l"></i><i class="r"></i></div>
 <div id="hit"></div>
+<div id="fade"></div><div id="bars"></div><div id="cap"></div>
 <canvas id="ov"></canvas>
 <div id="hud"><div id="hudtxt"></div><canvas id="dmg" width="150" height="170"></canvas></div>
 <div id="tgt"></div>
