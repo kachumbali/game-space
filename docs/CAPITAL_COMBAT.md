@@ -1,6 +1,6 @@
 # Capital-scale combat: nukes, point defence, heat, and the km scale (for discussion)
 
-Status: **discussion paper, nothing implemented.** Physical statements are general knowledge, marked [M] (unverified in
+Status: **discussion paper, nothing implemented. Update: ships are capped at 500 m for now (frigate = largest), so section 1 (km scale) is deferred; nukes, PD and heat apply to corvettes and frigates first.** Physical statements are general knowledge, marked [M] (unverified in
 this session). Numbers are placeholders for tuning, not derived from sources.
 
 ## 1. Consequences of the km scale (needs decisions before any capital is flown)

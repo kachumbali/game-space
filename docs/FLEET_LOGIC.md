@@ -122,13 +122,20 @@ type `rescue`; wounded states with recovery turns; a roster UI showing who is ad
 - **LLM memory** must remain advisory; the state engine decides survival, capture and rank.
 
 ## 8. Jump capability and docking (owner rule, 2026-10-21)
+**Update (later 2026-10-21): ships stay under 500 m for now.** The largest ship in scope is the **frigate** (up to
+~500 m). The frigate is the jump-capable class and can **dock, but not repair,** 2 corvettes and 12 fighters / large
+fighter drones. Where this section says "capital", read "frigate (and anything larger, later)". Carriers, dreadnoughts,
+super capitals and hive motherships (1.5-10 km) are deferred. Repair and rearm are separate: they need a tender,
+a base or a drydock (docking alone does not repair). Docking capacity is therefore 2 + 12 per frigate (a flight of
+12 fighters or drones plus two corvettes), which sets the size of a task force: one frigate = one strategic mobility unit.
+
 **Rule:** only capital-class ships have jump drives (huge, energy-hungry). Fighters, bombers and corvettes cannot jump.
 To change system, or to cover a "long" distance inside a system, they must be **docked** with a jump-capable ship.
 This is a design rule of ours; FS2 Open has no equivalent (its jump/warp is available to ships generally, with
 type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "warp pushes" in FS2 is only a collision effect.
 
 **Definitions to settle (placeholders):**
-- *Jump-capable:* Capital, Carrier, Super Cap, jump tender. Docking capacity (hangar/dock slots) is a ship stat.
+- *Jump-capable:* frigate (current top class); larger classes later. Docking capacity (hangar/dock slots) is a ship stat: frigate = 12 fighters/drones + 2 corvettes, no repair.
 - *Short transit* (sublight, undocked): within a system between points under a threshold distance D1, e.g. station to
   a nearby nav area. *Long transit* (above D1, including system-to-system): requires being docked/embarked.
 - *Docked* means inside bays (fighters, bombers) or on external clamps/cradles (corvettes). Corvette cradles need

@@ -6,17 +6,19 @@ the models, they are not independent design drawings. Re-generate after model ch
 scratchpad, not yet in the repo).
 
 ## 1. Scale ladder (owner decision 2026-10-21)
+**Current scope: ships under 500 m.** The frigate (up to ~500 m) is the largest class for now, can jump, and can dock (not
+repair) 2 corvettes and 12 fighters / large fighter drones. Everything above 500 m in the table is deferred.
 | Class | Length | Status |
 |---|---|---|
 | Fighter / interceptor | 10-20 m | built (Kestrel, Darter, Leaper) |
 | Gunship / bomber / heavy fighter | 16-20 m | built (Spitter, Toad, Reaver) |
 | Corvette | 100-150 m | built (Halberd 128 m, Gulper 146 m) |
-| Frigate / cruiser | not yet fixed | planned (gap between 150 m and 1.5 km) |
-| Human carrier / dreadnought | ~1.5 km | planned |
-| Hive carrier | 2-3 km | model built at 2.5 km, catalogue only |
-| Super capital (human) | ~5 km | planned |
-| Hive mothership | ~10 km | planned |
-Only capital-class ships have jump drives (docs/FLEET_LOGIC.md section 8). Implications of the km scale are in
+| Frigate (jump-capable, in scope) | 300-500 m | planned: first to build (human and FROGG) |
+| Human carrier / dreadnought | ~1.5 km | deferred (beyond current 500 m cap) |
+| Hive carrier | 2-3 km | deferred; catalogue model exists at 2.5 km |
+| Super capital (human) | ~5 km | deferred |
+| Hive mothership | ~10 km | deferred |
+Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). Implications of the km scale are in
 `docs/CAPITAL_COMBAT.md` (ranges, speeds, sim, voxel budget).
 
 ## 2. Ship list
