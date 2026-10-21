@@ -161,7 +161,7 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
-function startMission(M) {
+function startMission(M, seg) {
   plogReset(M.title);
   clearWorld();
   comms.length = 0; objectives.length = 0;
@@ -180,6 +180,19 @@ function startMission(M) {
     if (CREW[w.pilot].status !== 'active') continue;
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
+  }
+  game.seg = null;
+  if (seg) {                       // resume at a checkpoint: the start of the current segment (after the last transit)
+    const S = game.mstate;
+    S.stage = seg.stage; S.area = seg.area; S.t = seg.t || 0;
+    const area = M.areas && M.areas[seg.area]; if (area) applyArea(area);
+    const prev = M.stages[seg.stage - 1];
+    if (prev) runActions(prev.do.filter(a => !a.transit));
+    game.seg = seg;
+    $id('brief').style.display = 'none'; state = 'play'; touchStarted = true;
+    if (!isTouch) canvas.requestPointerLock?.();
+    comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
+    return;
   }
   state = 'brief';
   showBriefing(M);
@@ -225,7 +238,12 @@ function missionUpdate(dt) {
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
   const st = M.stages[S.stage];
-  if (st && condMet(st.when, S)) { S.stage++; S.stageT = 0; runActions(st.do); }
+  if (st && condMet(st.when, S)) {
+    S.stage++; S.stageT = 0;
+    const tr = st.do.find(a => a.transit);
+    if (tr) game.seg = { stage: S.stage, area: tr.transit.area, t: S.t };     // checkpoint: arrival in the new area
+    runActions(st.do);
+  }
   if (game.anchor && !game.anchor.alive) { comm('CONTROL', 'Halberd is lost. All ships, abort. Abort.'); objective('o1', null, 'failed'); endMission('lose', 'THE HALBERD WAS DESTROYED'); }
   if (state === 'dead') endMission('lose', 'ECHO DOWN');
   // optional chatter: missile warnings

@@ -25,6 +25,7 @@ function pickTarget(s) {
       // no player preference: enemies pick the closest target
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
+      if (s.team === 1 && e === player) sc *= 0.55;     // the hive hunts the human it can see: player draws real fire
     }
     if (e.lock && 0) sc *= 1;
     if (sc < bs) { bs = sc; best = e; }
@@ -161,7 +162,7 @@ function fighterAI(s, dt) {
   }
   if (ai.mode === 'attack') {
     aim.copy(lead);
-    if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
+    if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
   if (ai.mode === 'evade') {                 // break perpendicular to the incoming missile and corkscrew

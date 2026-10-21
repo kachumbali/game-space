@@ -8,7 +8,7 @@ let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   last = t;
-  if (!globalThis.__paused) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
+  if (!globalThis.__paused && !rdlgOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
   renderBolts();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);

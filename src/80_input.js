@@ -63,7 +63,7 @@ addEventListener('keydown', e => {
     case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
     case 'KeyC': stick.x = stick.y = 0; break;
     case 'KeyL': plogDownload(); break;
-    case 'KeyR': if (!e.ctrlKey && !e.metaKey) resetGame(); break;
+    case 'KeyR': if (!e.ctrlKey && !e.metaKey) askRestart(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;
     case 'KeyY': targetCrosshair(); break;
     case 'KeyN': cycleSub(); break;
@@ -181,3 +181,26 @@ function setPhone() {
 }
 addEventListener('resize', setPhone); addEventListener('orientationchange', setPhone);
 setPhone();
+
+// ---- R: confirm before restarting (restart mission / restart segment / cancel) ---------------------------
+let rdlgOpen = false;
+function askRestart() {
+  if (rdlgOpen) return;
+  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M;
+  rdlgOpen = true; document.exitPointerLock?.();
+  const seg = mission && game.seg;
+  el.innerHTML = `<div class="panel"><h2>RESTART?</h2>` + (mission
+    ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
+    : `<button id="rd1">RESTART FREE FLIGHT <small>[M]</small></button>`) + `<button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
+  el.style.display = 'flex';
+  const close = () => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (!isTouch && state === 'play') canvas.requestPointerLock?.(); };
+  $id('rd0').onclick = close;
+  $id('rd1').onclick = () => { close(); if (mission) startMission(M); else resetGame(); };
+  const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(); startMission(M, seg); };
+  el._keys = ev => {
+    if (ev.code === 'KeyM') $id('rd1').onclick(); else if (ev.code === 'KeyS' && r2) r2.onclick();
+    else if (ev.code === 'Escape' || ev.code === 'KeyC' || ev.code === 'KeyN') close(); else return;
+    ev.preventDefault(); ev.stopPropagation(); window.removeEventListener('keydown', el._keys, true);
+  };
+  window.addEventListener('keydown', el._keys, true);
+}

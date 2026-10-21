@@ -144,6 +144,10 @@
   #help .sp{flex:4}#help .w2{flex:2}#help .w3{flex:3}
   #help .legend{font-size:10px;margin-top:4px;color:#7fa89a}
   #help .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 4px 0 10px;vertical-align:-1px}
+#rdlg{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,10,.72);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
+#rdlg .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;max-width:420px;text-align:center}
+#rdlg h2{margin:0 0 14px;font-size:16px;letter-spacing:2px}#rdlg button{display:block;width:100%;margin:8px 0;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
+#rdlg button.alt{background:#10151c;border-color:#456}#rdlg button:hover{background:#164a38}
 </style>
 <script type="importmap">
 {"imports":{
@@ -168,7 +172,7 @@
 <canvas id="radar" width="448" height="448"></canvas>
 <div id="tg"><div class="t">THR <span id="tgt1">0</span>%</div><div class="bar"><i id="tgf"></i><b id="tgs"></b><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="ab" id="tgab">AB</div><div class="l" style="top:calc(18px + (100% - 48px) * 0.5 - 6px)">SPD</div><div class="v"><span id="tgv">0</span> m/s</div></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Graphics: P cycles low / mid / high / ultra; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Graphics: P cycles low / mid / high / ultra; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -187,6 +191,7 @@
 </div>
 <div id="msg"></div>
 <div id="brief"></div>
+<div id="rdlg"></div>
 
 <script type="module">
 import * as THREE from 'three';
@@ -2041,7 +2046,7 @@ const WEAPONS = {
   laser: { kind: 'beam', name: 'LS-2 PULSE LASER', cd: 0.3, dmg: 6, dt: 'en', range: 1200, energy: 14, color: 0xff5040, sfx: 'pulse' },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 3.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
   lash: { kind: 'proj', name: 'LASH CANNON', cd: 2.0, v: 540, dmg: 34, dt: 'en', life: 3.2, spread: 0.002, color: 0xaaff40, len: 7, sz: 0.9, sfx: 'lash', glob: true, big: true },
@@ -2803,6 +2808,7 @@ function pickTarget(s) {
       // no player preference: enemies pick the closest target
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
+      if (s.team === 1 && e === player) sc *= 0.55;     // the hive hunts the human it can see: player draws real fire
     }
     if (e.lock && 0) sc *= 1;
     if (sc < bs) { bs = sc; best = e; }
@@ -2939,7 +2945,7 @@ function fighterAI(s, dt) {
   }
   if (ai.mode === 'attack') {
     aim.copy(lead);
-    if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
+    if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
   if (ai.mode === 'evade') {                 // break perpendicular to the incoming missile and corkscrew
@@ -3174,7 +3180,7 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
-function startMission(M) {
+function startMission(M, seg) {
   plogReset(M.title);
   clearWorld();
   comms.length = 0; objectives.length = 0;
@@ -3193,6 +3199,19 @@ function startMission(M) {
     if (CREW[w.pilot].status !== 'active') continue;
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
+  }
+  game.seg = null;
+  if (seg) {                       // resume at a checkpoint: the start of the current segment (after the last transit)
+    const S = game.mstate;
+    S.stage = seg.stage; S.area = seg.area; S.t = seg.t || 0;
+    const area = M.areas && M.areas[seg.area]; if (area) applyArea(area);
+    const prev = M.stages[seg.stage - 1];
+    if (prev) runActions(prev.do.filter(a => !a.transit));
+    game.seg = seg;
+    $id('brief').style.display = 'none'; state = 'play'; touchStarted = true;
+    if (!isTouch) canvas.requestPointerLock?.();
+    comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
+    return;
   }
   state = 'brief';
   showBriefing(M);
@@ -3238,7 +3257,12 @@ function missionUpdate(dt) {
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
   const st = M.stages[S.stage];
-  if (st && condMet(st.when, S)) { S.stage++; S.stageT = 0; runActions(st.do); }
+  if (st && condMet(st.when, S)) {
+    S.stage++; S.stageT = 0;
+    const tr = st.do.find(a => a.transit);
+    if (tr) game.seg = { stage: S.stage, area: tr.transit.area, t: S.t };     // checkpoint: arrival in the new area
+    runActions(st.do);
+  }
   if (game.anchor && !game.anchor.alive) { comm('CONTROL', 'Halberd is lost. All ships, abort. Abort.'); objective('o1', null, 'failed'); endMission('lose', 'THE HALBERD WAS DESTROYED'); }
   if (state === 'dead') endMission('lose', 'ECHO DOWN');
   // optional chatter: missile warnings
@@ -3530,7 +3554,7 @@ addEventListener('keydown', e => {
     case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
     case 'KeyC': stick.x = stick.y = 0; break;
     case 'KeyL': plogDownload(); break;
-    case 'KeyR': if (!e.ctrlKey && !e.metaKey) resetGame(); break;
+    case 'KeyR': if (!e.ctrlKey && !e.metaKey) askRestart(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;
     case 'KeyY': targetCrosshair(); break;
     case 'KeyN': cycleSub(); break;
@@ -3648,6 +3672,29 @@ function setPhone() {
 }
 addEventListener('resize', setPhone); addEventListener('orientationchange', setPhone);
 setPhone();
+
+// ---- R: confirm before restarting (restart mission / restart segment / cancel) ---------------------------
+let rdlgOpen = false;
+function askRestart() {
+  if (rdlgOpen) return;
+  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M;
+  rdlgOpen = true; document.exitPointerLock?.();
+  const seg = mission && game.seg;
+  el.innerHTML = `<div class="panel"><h2>RESTART?</h2>` + (mission
+    ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
+    : `<button id="rd1">RESTART FREE FLIGHT <small>[M]</small></button>`) + `<button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
+  el.style.display = 'flex';
+  const close = () => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (!isTouch && state === 'play') canvas.requestPointerLock?.(); };
+  $id('rd0').onclick = close;
+  $id('rd1').onclick = () => { close(); if (mission) startMission(M); else resetGame(); };
+  const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(); startMission(M, seg); };
+  el._keys = ev => {
+    if (ev.code === 'KeyM') $id('rd1').onclick(); else if (ev.code === 'KeyS' && r2) r2.onclick();
+    else if (ev.code === 'Escape' || ev.code === 'KeyC' || ev.code === 'KeyN') close(); else return;
+    ev.preventDefault(); ev.stopPropagation(); window.removeEventListener('keydown', el._keys, true);
+  };
+  window.addEventListener('keydown', el._keys, true);
+}
 // ======================================================================
 //  UPDATE
 // ======================================================================
@@ -4272,7 +4319,7 @@ let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   last = t;
-  if (!globalThis.__paused) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
+  if (!globalThis.__paused && !rdlgOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
   renderBolts();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
