@@ -9,7 +9,8 @@ Open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.se
 appear automatically. The game boots into the briefing for **Operation Lilypad** (about 2–4 minutes).
 
 URL flags: `?go` skip briefing · `?free` free flight · `?newcrew` reset crew record · `?touch` force touch UI ·
-`?nobloom` · `?mute`.
+`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size.
+The game boots into the latest mission (Reedbed). Phones (touch, short side < 520 px) get a compact HUD (`body.phone`).
 
 ## Mission 1: Operation Lilypad
 You fly Eagle Lead (Kestrel) from the corvette HSS Halberd with wingmen HAWK and SPARROW.
@@ -41,6 +42,10 @@ screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW, TGT, AIM-T, WPN.
 
 ## Systems
+- **Sky and backgrounds** (`src/41_sky.js`): procedural HDR cubemap (stars, Milky Way, nebulae, sun) baked once per
+  *look* (1024 px/face desktop, 512 touch); shader planets (terran with clouds/cities/atmosphere, ringed gas giant),
+  moons, sun glare. Looks (`LOOKS`: lilypad, reed, ao2, ao3) are chosen by `M.look` / `area.look`; the sun direction and
+  scene lighting follow the look. Bake takes seconds in software rendering; GPU/iPad timing unverified.
 - **Radar**: 3D forward-up scope with range rings, elevation stalks, missile triangles, target highlight.
 - **Lock-on**: seek → range → locking → locked; IR (heat), RF (radar, needs working radar), torpedoes, FROGG tick/tadpole.
   Flares fool IR missiles, chaff fools radar missiles. Lead pipper for guns.
@@ -56,8 +61,9 @@ Human: Kestrel (fighter), Halberd (corvette). FROGG: Darter (interceptor), Leape
 number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout
-`00_head.html` shell/CSS · `10_config` · `12_audio` · `20_voxel` voxelizer · `30/31_ships_*` · `40_scene` · `50_state` ·
-`55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `80_input` · `85_update` · `90_hud` · `95_main`.
+`00_head.html` shell/CSS · `10_config` · `12_audio` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
+`55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
 
 ## Roadmap
-See `docs/VISION.md`.
+See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` (UX gap analysis,
+prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. Agents: read `AGENTS.md` first.
