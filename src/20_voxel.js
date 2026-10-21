@@ -485,9 +485,9 @@ function surfaceDetail(def, tier, G) {
                 const hgt = Math.floor(Math.sqrt(Math.max(0, rr * rr + 0.8 - aa * aa - bb * bb)));
                 for (let t = 1; t <= hgt; t++) put(q(aa, bb, t), cmix(bc, st.light, 0.2), 130);
               }
-              if (r3 > 0.7) put(q(0, 0, rr + 1), st.glass, 120, 70);
+              if (r3 > 0.9) put(q(0, 0, rr + 1), st.glass, 120, 60);
             }
-          } else if (r < 0.8) {                                              // raised ridge crest
+          } else if (r < 0.93) {                                             // raised ridge crest
             const L = sz(8, 22, r2);
             const dirU = r3 < 0.5;
             frame(i, j, k, code);
@@ -497,8 +497,8 @@ function surfaceDetail(def, tier, G) {
               put(c1, cmul(cmix(bc, st.light, 0.25), s % 4 === 0 ? 0.7 : 1), 135);
               if (s % 5 === 2) put(dirU ? q(s, 0, 2) : q(0, s, 2), cmix(bc, st.light, 0.35), 150);
             }
-          } else {                                                           // small sensor pearl
-            if (flat(0, 0, 1, 1, 1)) { put(q(0, 0, 1), st.glass, 120, 80); }
+          } else {                                                           // small sensor pearl (rare)
+            if (r2 > 0.6 && flat(0, 0, 1, 1, 1)) { put(q(0, 0, 1), st.glass, 120, 70); }
           }
         }
       }
@@ -650,6 +650,7 @@ function voxelize(def, res) {
       }
       let rib = 1;
       if (p.rib) { const ph = ((z / p.rib[0]) % 1 + 1) % 1; rib = ph < 0.34 ? 1 - p.rib[1] : 1 + p.rib[1] * 0.3; }
+      if (tier) stf = 1 + (stf - 1) * 0.5;                                      // plating supplies the structure at high detail
       f = ao * (0.94 + 0.12 * h) * seam * rib * stf;
       if (tn) f *= tn[cell] / 128;
       if (p.dots && (tier ? (i % 3 === 0 && k % 4 === 0 && hash3(i * 7, j * 3, k * 5) < Math.min(1, p.dots.p * 6)) : hash3(i * 7, j * 3, k * 5) < p.dots.p)) {
