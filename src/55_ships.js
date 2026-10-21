@@ -55,19 +55,24 @@ function spawnWave() {
   wave++;
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
   const kinds = [];
-  const n = Math.min(wave + 1, 5);
-  for (let i = 0; i < n; i++) kinds.push(i % 3 === 2 ? 'darter' : 'leaper');
-  if (wave >= 2) kinds.push('spitter');
-  if (wave >= 3) kinds.push('toad');
-  if (wave >= 4) kinds.push('reaver');
-  if (wave % 5 === 0) kinds.push('gulper');
+  if (params.has('n')) {
+    const F = ['darter', 'leaper', 'darter', 'spitter', 'leaper', 'darter', 'leaper', 'darter'];
+    for (let i = 0; i < +params.get('n'); i++) kinds.push(F[i % F.length]);
+  } else {
+    const n = Math.min(wave + 1, 5);
+    for (let i = 0; i < n; i++) kinds.push(i % 3 === 2 ? 'darter' : 'leaper');
+    if (wave >= 2) kinds.push('spitter');
+    if (wave >= 3) kinds.push('toad');
+    if (wave >= 4) kinds.push('reaver');
+    if (wave % 5 === 0) kinds.push('gulper');
+  }
   for (const kind of kinds) {
     const dir = new THREE.Vector3().randomDirection();
     if (wave === 1) dir.multiplyScalar(0.5).addScaledVector(pf, 0.8);
     dir.normalize();
     const dist = (kind === 'gulper' ? 1500 : 650) + Math.random() * 250;
     const pos = player.group.position.clone().addScaledVector(dir, dist);
-    spawnShip(kind, 1, pos, player.group.position, { grp: 'W' });
+    spawnShip(kind, 1, pos, player.group.position, { grp: 'W', skill: +(params.get('fskill') || 3), fm: params.get('aifm') || 'arcade' });
   }
   log(`WAVE ${wave}: ${kinds.length} FROGG CONTACTS`, '#ffd080');
 }
@@ -88,5 +93,27 @@ function resetGame() {
   clearWorld();
   game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
   makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  benchSetup();
   spawnWave();
+}
+
+// ---- test-bench flags for free flight (laptop testing) -------------------------------------------------------
+//   ?free&n=10        FROGG fighters per wave (default: the built-in wave table)
+//   ?free&wing=4      N AI Kestrel wingmen;  &wskill=1..5 their pilot skill (default 3);  &fskill=1..5 FROGG skill
+//   ?free&frigate     the Exeter (jump frigate) joins the human side, 700 m astern
+//   ?free&nuke=2      the player carries N 0.1 kT warheads (cycle missiles with G; proximity burst 120 m)
+//   ?free&aifm=newton AI ships fly under Newtonian rules
+function benchSetup() {
+  const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
+  const nW = +(params.get('wing') || 0), ws = +(params.get('wskill') || 3);
+  for (let i = 0; i < nW; i++) {
+    const p = player.group.position.clone().addScaledVector(pf, -80).add(new THREE.Vector3((i - (nW - 1) / 2) * 60, (i % 2) * 25, 0));
+    const w = makeShip('kestrel', 0, p, new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: ws, fm: params.get('aifm') || 'arcade' });
+    w.vel.copy(player.vel);
+  }
+  if (params.has('frigate')) {
+    const f = makeShip('exeter', 0, player.group.position.clone().addScaledVector(pf, -700), new THREE.Quaternion(), { callsign: 'EXETER', id: 'exeter', ai: 'capital', hold: true });
+    f.vel.set(0, 0, -4);
+  }
+  if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
 }

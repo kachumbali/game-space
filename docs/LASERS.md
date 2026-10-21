@@ -51,7 +51,40 @@ Reading:
 - Nuclear X-ray hull kill is an impulse effect; OTA's scale (10-20 kJ/cm^2) puts the 0.1 kT hull-kill radius at about 12-16 m, so the placeholder 1.5 kJ/cm^2
   now in `NUKE.kill` (42 m radius) is probably optimistic; crew dose, not hull damage, remains the main nuclear effect at 100-500 m.
 
-## 4. Open decisions
+## 4. Owner decisions and my best guesses (2026-10-21)
+**Owner:** (1) large lasers consume a lot of energy and are continuous; fighters use pulses from capacitors, e.g. 10 x 50 kW pulses.
+(3) Ships roll to expose different shield parts. (2) accuracy: my best guess below. (4) shield treatment: my recommendation below.
+
+**Weapon classes [P]**
+| Class | Mode | Power | Pointing error (microradian) | Note |
+|---|---|---|---|---|
+| Fighter laser | 10 pulses x 50 kW, assumed 0.1 s each (5 kJ per pulse, 50 kJ per burst), then recharge | 50 kW | 40 | recharge from the fighter's energy pool, about 8 s |
+| PD laser | short bursts from a capacitor | 100-200 kW | 25 | short range, tight tracking |
+| Turret S/M | pulse or short beam | 0.1-0.5 MW | 30 | |
+| Corvette laser (L) | continuous | 1 MW | 20 | draws about 2.9 MW from the reactor at 35% efficiency (waste heat about 1.9 MW) |
+| Frigate laser (XL, keel-aligned) | continuous | 5 MW | 15 (10 when the ship is aimed on the keel) | about 14 MW input, waste heat about 9.3 MW; radiator limited |
+The pointing errors are guesses with no source; they set how lethal lasers are and should be playtested.
+
+**Consequence for the fighter pulse laser [C]** (spot radius = error x range; hull fluence needed to kill a fighter 10 kJ/cm^2):
+| Range | Spot radius | Fluence per 10-pulse burst | Bursts to kill a fighter | Optics (4 kW/cm^2) |
+|---|---|---|---|---|
+| 250 m | 1.0 cm | 15.9 kJ/cm^2 | 0.6 | damaged |
+| 500 m | 2.0 cm | 4.0 kJ/cm^2 | 2.5 | borderline (4.0 kW/cm^2) |
+| 750 m | 3.0 cm | 1.8 kJ/cm^2 | 5.7 | not damaged |
+| 1,000 m | 4.0 cm | 1.0 kJ/cm^2 | 10 | not damaged |
+So a fighter laser is a close-in weapon: lethal inside about 300 m, a sensor-killer at 500 m, nearly useless at 1 km. Large continuous lasers (1 MW at 1 km: corvette hull in
+about 4 s, frigate in 13 s; 5 MW at 2 km: corvette 1.7 s, frigate 5.7 s) are the capital-ship threat, limited by heat and slew rate.
+
+**Shields: roll to present a fresh segment (owner).** Shields are segmented. Proposal: fighters keep fore/aft; corvettes and frigates get 6 segments (fore, aft, and four
+around the long axis); rolling the ship rotates the four side segments, so a ship can swap a battered segment for a fresh one toward the enemy. Needs a roll command
+for AI capitals and a HUD segment display. Rolling also spreads a laser's dwell (OTA: a spinning target is harder by about x3), a separate, smaller bonus.
+
+**Recommendation on shield versus laser (owner asked):** treat each shield segment as an energy pool in common units (megajoules), and let a laser drain it at beam
+power x time x a laser multiplier (the current 1.25 for energy weapons is a reasonable start). Do not model spot size on shields: a field spreads and dissipates the
+energy, and the local burn-through physics only matters once the shield segment is empty and the beam is on the armour. This keeps shields simple and puts the
+dwell-time mechanic on armour and exposed parts, where the sources apply. It is a design choice, not a sourced physical fact.
+
+## 5. Open decisions
 1. Continuous beam with dwell accumulation, or discrete pulses with a capacitor burst count? (Proposal above is dwell-based with a capacitor.)
 2. Pointing error and slew rate per turret size class (PD, S, M, L, XL); these set how lethal lasers are to fighters.
 3. Whether shields absorb laser energy in kJ/cm^2 terms or at a flat multiplier as now.

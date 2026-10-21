@@ -9,7 +9,7 @@ Open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.se
 appear automatically. The game boots into the briefing for **Operation Lilypad** (about 2–4 minutes).
 
 URL flags: `?go` skip briefing · `?free` free flight · `?newcrew` reset crew record · `?touch` force touch UI ·
-`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size.
+`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md.
 The game boots into the latest mission (Reedbed). Phones (touch, short side < 520 px) get a compact HUD (`body.phone`).
 
 ## Mission 1: Operation Lilypad
