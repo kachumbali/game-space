@@ -352,7 +352,7 @@ function primInside(p, x, y, z) {
 
 const _col = new THREE.Color(), _col2 = new THREE.Color();
 const voxCache = new Map();
-const resFor = (def, idx) => Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4));
+const resFor = (def, idx) => Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1));
 
 function voxelize(def, res) {
   const key = def.id + ':' + res;
@@ -405,12 +405,22 @@ function voxelize(def, res) {
     const ax = mir ? Math.abs(x) : x;
     const glow = !!p.glow;
     _col.setHex(c);
-    let f = 1;
+    let f = 1, stf = 1;
     if (!glow) {
       if (p.col2 !== undefined) {
         const n = vnoise(ax * mf * (p.mot || 1), y * mf * (p.mot || 1), z * mf * (p.mot || 1)) * 0.65 +
                   vnoise(ax * mf * 3.1, y * mf * 3.1, z * mf * 3.1) * 0.35;
         if (n > 0.52) _col.lerp(_col2.setHex(p.col2), Math.min(1, (n - 0.52) * 7));
+      }
+      // streak: rust runs along the hull (noise stretched along z); strata: stacked-plate banding (y + slope*z)
+      if (p.streak && p.rust !== undefined) {
+        const n = vnoise(ax * mf * 2.2, y * mf * 2.2, z * mf * 0.28 * p.streak);
+        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3));
+      }
+      if (p.strata && p.rust !== undefined) {
+        const ph = (((y + z * (p.strata[1] || 0)) / p.strata[0]) % 1 + 1) % 1;
+        if (ph < 0.22) { _col.lerp(_col2.setHex(p.rust ?? c), 0.28); stf = 1.12; }
+        else if (ph < 0.34) stf = 0.62;
       }
       const ao = Math.max(0.42, Math.min(1.15, 1.25 - (n26 - 8) * 0.035));
       const h = hash3(i, j, k);
@@ -424,7 +434,7 @@ function voxelize(def, res) {
       }
       let rib = 1;
       if (p.rib) { const ph = ((z / p.rib[0]) % 1 + 1) % 1; rib = ph < 0.34 ? 1 - p.rib[1] : 1 + p.rib[1] * 0.3; }
-      f = ao * (0.94 + 0.12 * h) * seam * rib;
+      f = ao * (0.94 + 0.12 * h) * seam * rib * stf;
       if (p.dots && hash3(i * 7, j * 3, k * 5) < p.dots.p) {
         _col.setHex(p.dots.col); f = p.dots.f || 2.2;
         const vi = voxels.length;
@@ -654,23 +664,50 @@ const fLeg = (hip, knee, ankle, r0, r1, rn, col = F.skin) => [
 ];
 const fHorn = (pts, rs, col = F.plate2) => chain(pts, rs, col);
 
+
+// ---- v2 look (2026-10-21): dark lamellar plating, rust streaks, blunt pearl-eyed prows, trailing blades ----
+const N = { dk: 0x2c2d33, dk2: 0x3a3b43, mt: 0x5a5c64, ru: 0x6e4a2e, ru2: 0xb7803f, pr: 0x7fd6c4, bl: 0x14110f, hot: 0xff6a2a, ven: 0x9dff3a };
+const nSt = (per, sl = 0.2) => ({ rust: N.ru, strata: [per, sl], streak: 1 });
+// sensor cluster (flush dark plate with a few small pale lights); replaces the earlier large 'eye' discs
+const nEye = (x, y, z, s = 1) => [
+  ell([x, y, z + 0.1 * s], [0.34 * s, 0.26 * s, 0.14 * s], N.mt, { rust: N.ru, streak: 1 }),
+  ell([x, y, z - 0.02 * s], [0.12 * s, 0.1 * s, 0.07 * s], N.pr, { glow: true, glowF: 0.7 }),
+];
+// swept flat blade
+const nBlade = (a, b, r = 0.2, col = N.bl) => seg(a, b, r, 0.015, col, { fy: 0.38, rust: N.ru, streak: 1 });
+// spike (round)
+const nSpike = (a, b, r = 0.15, col = N.dk2) => seg(a, b, r, 0.012, col, { rust: N.ru, streak: 1 });
+// pod with pearl lights
+const nPod = (c, r, col = N.dk2, p = 0.2) => ell(c, r, col, { rust: N.ru, streak: 1, dots: { col: N.pr, p: p * 0.25, f: 1.0 } });
+// prow lance: short armoured ram blade, +x side (mirrored), swept slightly outward then forward
+const nMand = (x, y, z, L, r = 0.2) => chain([[x, y, z], [x + 0.1 * L, y - 0.02 * L, z - 0.3 * L], [x + 0.08 * L, y - 0.04 * L, z - 0.6 * L]], [r * 0.8, r * 0.5, 0.015], N.bl, { rust: N.ru, streak: 1 });
+// ventral keel spike
+const nKeel = (y, z0, z1, drop, r = 0.25) => seg([0, y, z0], [0, y - drop, z1], r, 0.015, N.bl, { rust: N.ru, streak: 1 });
+// comb of fan blades (aft/ventral), +x side
+const nComb = (x, y, z, n, L, spread) => Array.from({ length: n }, (_, i) => nBlade([x + i * 0.12 * L / n, y, z], [x + spread * (i + 1) / n * L, y - 0.35 * L, z + L * (0.5 + 0.1 * i)], 0.1 * L / 3));
+// engine nacelle + glowing nozzle (x,y at nozzle; z0 = front of nacelle, z1 = nozzle plane)
+const nNoz = (x, y, z0, z1, r) => [
+  tap([x, y, (z0 + z1) / 2], (z1 - z0) / 2, [r * 0.8, r * 0.7], [r * 1.1, r * 1.0], N.dk, { sh: 'e', ...nSt(r * 0.5, 0) }),
+  ell([x, y, z1 + r * 0.1], [r * 0.55, r * 0.5, r * 0.15], N.hot, { glow: true, glowF: 0.95 }),
+  seg([x + r * 0.9, y, z1 - r * 1.6], [x + r * 1.5, y, z1 + r * 0.8], r * 0.12, 0.012, N.bl),
+];
+
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
   id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
   length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, radius: 5.4,
   prims: [
-    tap([0, 0.03, -2.6], 2.3, [0.15, 0.1], [1.7, 0.42], F.olive, { sh: 'd', ...skinO }),         // needle skull
-    tap([0, -0.4, -2.9], 1.8, [0.08, 0.08], [0.9, 0.22], F.plate, { sh: 'd' }),               // lower jaw
-    tap([0, 0, 1.3], 2.7, [0.95, 0.48], [0.8, 0.4], F.skin, { sh: 'e', ...skinO }),           // body
-    ell([0, -0.45, 0.6], [0.7, 0.35, 1.5], F.belly, { col2: F.belly2, mot: 1.5 }),             // belly
-    ...fEye(1.25, 0.36, -1.7, 0.95),
-    seg([0.25, 0.5, -1.3], [1.2, 0.58, -2.7], 0.09, 0.04, F.plate2),
-    ...fFangs(-4.0, 0.7, 3, 0.55, 0.06, -0.27),
-    seg([0.4, -0.3, -3.2], [0.4, -0.3, -4.9], 0.08, 0.06, F.dark),                             // mouth guns
-    ...fSpines(-0.5, 2.8, 5, 0.38, 0.55),
-    ...fWing(0.8, 4.2, 1.4, 1.5, 0.35, 0.09, 0.62, -0.05),
-    ...fLeg([0.7, -0.1, 2.4], [1.5, -0.3, 3.6], [1.0, -0.15, 4.4], 0.3, 0.26, 0.3),
-    ...fHorn([[0.3, 0.1, 3.6], [0.1, 0.0, 4.4], [0.0, 0.2, 5.1]], [0.16, 0.1, 0.02]),
+    ell([0, -0.05, 0.9], [2.3, 0.2, 2.4], N.dk, nSt(0.14)), ell([0, 0.18, 0.5], [1.5, 0.16, 2.8], N.dk2, nSt(0.14)),
+    ...nMand(0.45, -0.1, -3.7, 1.5, 0.16), nKeel(-0.4, -0.8, 1.6, 0.9, 0.16),
+    ell([0, 0, 0.5], [0.9, 0.58, 3.9], N.dk, nSt(0.2)),                                   // layered body
+    ell([0, 0.34, 0.2], [0.62, 0.3, 2.6], N.dk2, nSt(0.16)),                               // upper plate
+    ell([0, -0.05, -3.2], [0.78, 0.55, 1.05], N.dk, nSt(0.2)),                             // blunt prow
+    ...nEye(0.46, 0.12, -3.95, 0.95),
+    nPod([0.62, -0.32, -1.1], [0.32, 0.26, 0.65]),
+    nSpike([0, 0.5, -0.6], [0, 1.1, 1.6], 0.14), nSpike([0, 0.45, 0.8], [0, 0.95, 3.0], 0.11),
+    nBlade([0.55, 0.05, 0.8], [3.9, -0.05, 5.0], 0.22), nBlade([0.5, -0.2, 1.6], [2.6, -0.35, 5.2], 0.16),
+    ...nNoz(1.0, -0.15, 3.4, 4.9, 0.3),
+    seg([0.4, -0.3, -3.5], [0.4, -0.3, -4.9], 0.09, 0.06, N.bl),                           // mouth guns
   ],
   engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
   mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
@@ -693,20 +730,19 @@ SHIPS.leaper = {
   id: 'leaper', name: 'FROGG LEAPER', cls: 'fighter', fac: 'frogg', role: 'FIGHTER',
   length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, radius: 8,
   prims: [
-    tap([0, 0.05, -3.3], 2.9, [0.25, 0.15], [2.5, 0.55], F.olive, { sh: 'd', ...skinO }),      // wide flat skull
-    tap([0, -0.5, -3.5], 2.5, [0.12, 0.1], [1.9, 0.3], F.plate, { sh: 'd' }),                  // jaw
-    tap([0, 0, 2.0], 3.7, [1.25, 0.7], [1.15, 0.66], F.skin, { sh: 'e', ...skinO }),           // torso
-    ell([0, -0.62, 0.7], [0.95, 0.5, 2.0], F.belly, { col2: F.belly2, mot: 1.5 }),             // throat sac
-    ell([1.0, 0.45, 1.4], [0.5, 0.42, 0.8], F.sac, { col2: F.sac2, mot: 2, dots: { col: F.venom, p: 0.05 } }),
-    ...fEye(1.75, 0.5, -2.2),
-    seg([0.4, 0.62, -1.7], [2.3, 0.7, -3.6], 0.13, 0.04, F.plate2),                            // brow
-    ...fFangs(-6.0, 1.6, 5, 0.8, 0.08, -0.28),
-    seg([0.65, -0.42, -4.4], [0.65, -0.42, -6.5], 0.12, 0.09, F.dark),                         // mouth guns
-    tap([0, 0.75, 1.6], 3.0, [0.08, 0.15], [0.08, 0.5], F.plate, { sh: 'd' }),                  // dorsal ridge
-    ...fSpines(-1.2, 3.8, 6, 0.8, 0.8),
-    ...fWing(1.0, 5.7, 2.8, 2.4, 0.5, 0.12, 0.8, -0.1),
-    ...fLeg([1.3, -0.1, 3.0], [3.0, -0.35, 4.6], [2.2, -0.2, 6.0], 0.5, 0.42, 0.5),
-    ...fHorn([[0.4, 0.1, 5.0], [0.2, 0.0, 6.2], [0.0, 0.3, 7.3]], [0.3, 0.16, 0.02]),
+    ell([0, -0.1, 1.2], [3.6, 0.26, 3.4], N.dk, nSt(0.2)), ell([0, 0.3, 0.8], [2.4, 0.2, 3.8], N.dk2, nSt(0.2)),
+    ...nMand(0.7, -0.15, -5.0, 2.2, 0.24), nKeel(-0.6, -1.4, 2.4, 1.2, 0.22),
+    ell([0, 0, 0.6], [1.35, 0.82, 5.2], N.dk, nSt(0.26)),
+    ell([0, 0.5, 0.2], [0.95, 0.42, 3.6], N.dk2, nSt(0.22)),
+    ell([0, 0.78, -0.2], [0.55, 0.22, 2.2], N.dk, nSt(0.18)),
+    ell([0, -0.05, -4.3], [1.1, 0.72, 1.6], N.dk, nSt(0.24)),
+    ...nEye(0.62, 0.16, -5.5, 1.3),
+    nPod([0.9, -0.5, -1.8], [0.5, 0.4, 1.0]),
+    nSpike([0, 0.8, -1.8], [0, 1.7, 1.2], 0.2), nSpike([0, 0.7, 0.2], [0, 1.45, 3.4], 0.16),
+    nBlade([1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3), nBlade([1.0, -0.25, 1.2], [4.2, -0.4, 6.6], 0.22),
+    nSpike([1.3, 0.55, -1.0], [3.2, 0.9, 1.8], 0.12),
+    ...nNoz(2.2, -0.2, 4.6, 6.8, 0.5),
+    seg([0.65, -0.42, -5.6], [0.65, -0.42, -6.6], 0.13, 0.09, N.bl),
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
   mounts: [{ w: 'spit', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'spit', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }],
@@ -729,25 +765,20 @@ SHIPS.spitter = {
   id: 'spitter', name: 'FROGG SPITTER', cls: 'fighter', fac: 'frogg', role: 'GUNSHIP',
   length: 16, half: [7.6, 3.2, 9.0], mirror: true, radius: 9.5,
   prims: [
-    tap([0, 0, -3.7], 3.3, [0.3, 0.25], [2.4, 0.95], F.skin, { sh: 'd', ...skinO }),
-    tap([0, -0.8, -3.6], 2.9, [0.2, 0.15], [1.9, 0.45], F.plate, { sh: 'd' }),
-    tap([0, 0, 2.3], 3.8, [2.4, 0.95], [2.1, 0.95], F.skin, { sh: 'e', ...skinO }),
-    ell([0, -0.95, 0.3], [1.5, 0.85, 2.7], F.belly, { col2: F.belly2, mot: 1.4 }),
-    ell([0, -0.3, -2.0], [1.1, 0.8, 1.6], F.sac, { col2: F.sac2, mot: 2, dots: { col: F.venom, p: 0.06 } }),   // inflated throat sac
-    ...fEye(1.5, 0.75, -3.0, 1.15),
-    seg([0.5, 1.05, -2.4], [2.3, 1.1, -4.3], 0.15, 0.05, F.plate2),
-    ...fFangs(-7.0, 1.9, 5, 0.9, 0.09, -0.45),
-    // dorsal acid cannon: long barrel on a saddle
-    tap([0, 1.1, -0.5], 2.3, [0.8, 0.45], [0.9, 0.55], F.plate, { sh: 'h' }),
-    seg([0, 1.35, -2.0], [0, 1.35, -8.6], 0.42, 0.3, F.dark),
-    seg([0, 1.35, -5.2], [0, 1.35, -5.5], 0.6, 0.6, F.plate2),
-    ell([0, 1.35, -8.7], [0.34, 0.34, 0.14], F.venom, { glow: true }),
-    seg([1.6, -0.5, -5.2], [1.6, -0.5, -8.0], 0.14, 0.1, F.dark),
-    tap([0, 1.0, 3.0], 3.2, [0.1, 0.2], [0.1, 0.7], F.plate, { sh: 'd' }),
-    ...fSpines(0.5, 5.5, 6, 1.0, 1.0, 0.13),
-    ...fWing(1.8, 6.8, 3.8, 2.6, 0.9, 0.16, 0.6, -0.15),
-    ...fLeg([1.9, -0.3, 3.8], [4.0, -0.7, 5.8], [2.8, -0.3, 7.2], 0.75, 0.6, 0.72),
-    ...fHorn([[0.5, 0.2, 6.0], [0.3, 0.0, 7.4], [0.0, 0.4, 8.6]], [0.4, 0.22, 0.02]),
+    ell([0, -0.2, 1.4], [4.6, 0.34, 4.4], N.dk, nSt(0.24)), ell([0, 0.5, 1.0], [3.2, 0.26, 4.8], N.dk2, nSt(0.24)),
+    ...nMand(1.1, -0.25, -6.6, 2.8, 0.3), nKeel(-1.0, 0.0, 4.4, 1.5, 0.3),
+    ell([0, 0, 0.8], [1.9, 1.05, 6.6], N.dk, nSt(0.3)),
+    ell([0, 0.7, 0.4], [1.3, 0.6, 4.6], N.dk2, nSt(0.26)),
+    ell([0, 0.05, -5.0], [1.6, 1.0, 2.2], N.dk, nSt(0.3)),
+    ...nEye(0.95, 0.3, -7.0, 1.45),
+    nPod([0, -1.5, -1.0], [1.9, 1.25, 2.6], N.dk2, 0.28),                                  // acid sac cluster
+    nPod([1.9, -1.1, 1.2], [1.0, 0.8, 1.7], N.dk2, 0.24),
+    seg([0, 1.35, -3.0], [0, 1.35, -8.8], 0.95, 0.55, N.dk, { rust: N.ru, streak: 1 }),       // dorsal acid cannon
+    ell([0, 1.35, -8.9], [0.5, 0.5, 0.25], N.ven, { glow: true, glowF: 1.7 }),
+    nSpike([0, 1.5, 0.0], [0, 2.8, 3.4], 0.25), nSpike([0, 1.2, 2.2], [0, 2.3, 5.6], 0.2),
+    nBlade([1.9, 0.2, -0.2], [7.4, -0.1, 7.4], 0.38), nBlade([1.8, -0.4, 1.4], [5.2, -0.6, 8.6], 0.28),
+    ...nNoz(2.8, -0.3, 6.2, 8.4, 0.72),
+    seg([1.6, -0.5, -7.2], [1.6, -0.5, -8.0], 0.16, 0.1, N.bl),
   ],
   engines: [{ pos: [2.8, -0.3, 8.4], comp: 'engR', r: 0.72 }, { pos: [-2.8, -0.3, 8.4], comp: 'engL', r: 0.72 }],
   mounts: [
@@ -776,28 +807,20 @@ SHIPS.toad = {
   id: 'toad', name: 'FROGG TOAD', cls: 'fighter', fac: 'frogg', role: 'TORPEDO BOMBER',
   length: 19, half: [8.8, 3.6, 10.4], mirror: true, radius: 11,
   prims: [
-    tap([0, 0, -4.4], 3.0, [0.4, 0.3], [2.9, 1.5], F.skin, { sh: 'd', ...skinO }),
-    tap([0, -1.1, -4.3], 2.7, [0.3, 0.2], [2.2, 0.55], F.plate, { sh: 'd' }),
-    ell([0, 0.1, 1.8], [3.3, 1.9, 5.3], F.skin, { col2: F.skin2, mot: 1.2 }),                  // bloated body
-    ell([0, -0.6, 2.4], [2.5, 1.5, 4.2], F.belly, { col2: F.belly2, mot: 1.3 }),
-    ...toadWarts.map(([x, y, z, r]) => ell([x, y, z], [r, r * 0.9, r], F.olive2, { col2: F.sac })),
-    ...fEye(1.9, 1.15, -3.5, 1.2),
-    seg([0.6, 1.5, -2.8], [2.8, 1.55, -4.5], 0.18, 0.05, F.plate2),
-    ...fFangs(-7.4, 2.2, 5, 1.0, 0.11, -0.7),
-    // armour carapace plates
-    tap([0, 1.9, 2.0], 4.0, [1.8, 0.35], [2.2, 0.4], F.plate, { sh: 'h', col2: F.plate2, mot: 2 }),
-    tap([0, 2.0, 2.0], 0.15, [2.25, 0.4], [2.25, 0.4], F.plate2, { sh: 'h' }),
-    tap([0, 2.0, 4.0], 0.15, [2.2, 0.4], [2.2, 0.4], F.plate2, { sh: 'h' }),
-    ...fSpines(-1.0, 6.0, 5, 2.2, 1.1, 0.16),
-    // slung torpedo ("tadpole"): cradle, body, tail
-    seg([0, -2.2, -1.5], [0, -2.2, 5.5], 0.52, 0.42, F.sac, { col2: F.sac2, mot: 2 }),
-    seg([0, -2.2, -2.8], [0, -2.2, -1.5], 0.08, 0.52, F.bone),
-    ...chain([[0, -2.2, 5.5], [0, -2.1, 6.8], [0, -1.8, 8.2]], [0.4, 0.22, 0.04], F.sac2),
-    ell([0, -2.2, -2.7], [0.22, 0.22, 0.2], F.venom, { glow: true }),
-    seg([0.9, -1.6, -0.5], [0.4, -2.1, -0.5], 0.14, 0.1, F.plate), seg([0.9, -1.6, 4.0], [0.4, -2.1, 4.0], 0.14, 0.1, F.plate),
-    ...fWing(2.6, 8.0, 4.4, 2.6, 0.9, 0.2, 0.55, 0.1),
-    ...fLeg([2.5, -0.2, 4.6], [5.2, -0.6, 6.6], [3.6, -0.3, 8.0], 0.95, 0.75, 0.85),
-    seg([1.0, 0.1, -4.8], [1.0, 0.1, -7.6], 0.13, 0.09, F.dark),
+    ell([0, -0.1, 1.6], [5.8, 0.42, 5.2], N.dk, nSt(0.28)), ell([0, 0.8, 1.2], [4.0, 0.3, 5.6], N.dk2, nSt(0.28)),
+    ...nMand(1.5, -0.2, -7.6, 3.2, 0.36), nKeel(-1.4, 1.0, 5.0, 1.8, 0.35), ...nComb(0.6, -1.3, 4.4, 4, 3.2, 0.5),
+    ell([0, 0, 0.6], [2.6, 1.55, 7.6], N.dk, nSt(0.34)),
+    ell([0, 0.95, 0.2], [1.9, 0.8, 5.4], N.dk2, nSt(0.3)),
+    ell([0, 1.5, 0.6], [1.0, 0.4, 3.2], N.dk, nSt(0.24)),
+    ell([0, 0.0, -6.2], [2.3, 1.4, 2.5], N.dk, nSt(0.32)),
+    ...nEye(1.35, 0.4, -8.4, 1.7),
+    nPod([0, -1.9, 0.8], [2.2, 1.2, 4.2], N.dk2, 0.3),                                     // torpedo pod cluster
+    nPod([2.6, -1.4, 2.6], [1.3, 0.9, 2.4], N.dk2, 0.26),
+    nPod([2.3, -0.9, -2.4], [0.9, 0.7, 1.4], N.dk2, 0.26),
+    nSpike([0, 1.8, -1.2], [0, 3.1, 2.4], 0.3), nSpike([0, 1.6, 1.8], [0, 2.7, 5.6], 0.24),
+    nBlade([2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45), nBlade([2.4, -0.6, 2.4], [6.2, -0.8, 9.6], 0.32),
+    ...nNoz(3.6, -0.3, 7.4, 9.4, 0.85),
+    seg([1.0, 0.1, -8.4], [1.0, 0.1, -7.6], 0.18, 0.12, N.bl),
   ],
   engines: [{ pos: [3.6, -0.3, 9.4], comp: 'engR', r: 0.85 }, { pos: [-3.6, -0.3, 9.4], comp: 'engL', r: 0.85 }],
   mounts: [
@@ -824,28 +847,21 @@ SHIPS.reaver = {
   id: 'reaver', name: 'FROGG REAVER', cls: 'fighter', fac: 'frogg', role: 'HEAVY FIGHTER',
   length: 19, half: [9.6, 3.6, 10.8], mirror: true, radius: 11.5,
   prims: [
-    tap([0, 0, -4.4], 3.8, [0.3, 0.25], [2.5, 1.0], F.skin2, { sh: 'd', col2: F.plate2, mot: 1.3 }),
-    tap([0, -0.9, -4.5], 3.2, [0.2, 0.15], [2.0, 0.45], F.plate, { sh: 'd' }),
-    tap([0, 0, 3.0], 4.2, [2.5, 1.0], [2.9, 1.2], F.skin, { sh: 'e', ...skinO }),
-    ell([0, -1.0, 1.4], [1.6, 0.8, 3.0], F.belly, { col2: F.belly2, mot: 1.4 }),
-    // flank armour plates + shoulder missile pods
-    tap([2.4, 0.3, 1.5], 3.0, [0.2, 0.85], [0.2, 0.9], F.plate, { sh: 'h' }),
-    tap([2.7, 0.55, 3.5], 1.0, [0.55, 0.55], [0.6, 0.6], F.sac, { sh: 'e', col2: F.sac2, mot: 2 }),
-    ell([2.7, 0.55, 2.4], [0.32, 0.3, 0.14], F.venom, { glow: true }),
-    ...fEye(1.6, 0.8, -3.4, 1.15),
-    seg([0.5, 1.1, -2.7], [2.2, 1.2, -4.6], 0.16, 0.05, F.plate2),
-    // crest horns
-    ...fHorn([[1.0, 0.9, -1.5], [1.9, 1.7, -0.2], [2.4, 2.8, 1.4], [2.3, 3.4, 3.2]], [0.38, 0.3, 0.2, 0.02]),
-    ...fHorn([[0.5, 0.95, 0.5], [0.8, 1.9, 1.8], [0.7, 2.7, 3.4]], [0.3, 0.2, 0.02]),
-    ...fFangs(-7.9, 2.0, 5, 1.1, 0.11, -0.6),
-    seg([1.2, -0.55, -5.0], [1.2, -0.55, -8.8], 0.16, 0.12, F.dark),
-    seg([2.4, -0.4, -2.4], [2.4, -0.4, -6.2], 0.15, 0.11, F.dark),
-    tap([0, 1.0, 3.0], 3.6, [0.1, 0.2], [0.1, 0.8], F.plate, { sh: 'd' }),
-    ...fSpines(0.0, 6.8, 7, 1.15, 1.1, 0.15),
-    ...fWing(2.8, 8.4, 4.2, 2.9, 0.8, 0.2, 0.7, -0.2),
-    ...fLeg([2.2, -0.2, 4.4], [4.6, -0.6, 6.8], [3.2, -0.3, 8.3], 0.9, 0.72, 0.8),
-    ...fLeg([1.0, -0.5, 5.0], [1.8, -1.0, 6.9], [1.3, -0.5, 8.6], 0.55, 0.45, 0.5),
-    ...fHorn([[0.5, 0.2, 7.0], [0.3, 0.0, 8.6], [0.0, 0.4, 10.0]], [0.4, 0.2, 0.02]),
+    ell([0, -0.1, 1.2], [6.2, 0.44, 5.6], N.dk, nSt(0.28)), ell([0, 0.9, 0.8], [4.4, 0.32, 6.0], N.dk2, nSt(0.28)),
+    ...nMand(1.6, -0.2, -8.6, 3.6, 0.4), ...nMand(0.9, -0.5, -8.4, 2.2, 0.28), nKeel(-1.2, 0.0, 5.0, 1.9, 0.38),
+    ell([0, 0, 0.8], [2.7, 1.5, 8.0], N.dk, nSt(0.34)),
+    ell([0, 0.9, 0.2], [2.1, 0.8, 5.8], N.dk2, nSt(0.3)),
+    ell([0, 1.55, -0.2], [1.2, 0.45, 3.6], N.dk, nSt(0.24)),
+    ell([0, -0.05, -6.2], [2.6, 1.4, 2.7], N.dk2, nSt(0.3)),                               // armoured prow
+    ell([0, 0.6, -7.8], [1.7, 0.8, 1.4], N.dk, nSt(0.26)),
+    ...nEye(1.5, 0.35, -9.0, 1.6),
+    nPod([2.5, -0.7, -3.6], [0.9, 0.7, 1.7]),
+    nSpike([0, 1.8, -2.4], [0, 3.4, 1.6], 0.3), nSpike([0, 1.7, 0.4], [0, 3.1, 4.8], 0.26),
+    nSpike([1.4, 1.2, -5.0], [3.2, 2.8, -1.8], 0.2), nSpike([1.5, 1.0, -2.0], [4.2, 2.6, 2.0], 0.2),
+    nBlade([2.7, 0.15, 0.4], [9.2, -0.15, 9.2], 0.45), nBlade([2.5, -0.6, 2.0], [6.8, -0.8, 10.0], 0.34),
+    nBlade([2.2, 0.6, 1.0], [7.4, 0.9, 8.2], 0.3),
+    ...nNoz(3.2, -0.3, 7.4, 9.8, 0.8), ...nNoz(1.3, -0.5, 8.0, 9.9, 0.5),
+    seg([1.2, -0.55, -8.0], [1.2, -0.55, -8.8], 0.18, 0.12, N.bl),
   ],
   engines: [
     { pos: [3.2, -0.3, 9.8], comp: 'engR', r: 0.8 }, { pos: [-3.2, -0.3, 9.8], comp: 'engL', r: 0.8 },
@@ -874,35 +890,29 @@ SHIPS.gulper = {
   id: 'gulper', name: 'FROGG GULPER', cls: 'corvette', fac: 'frogg', role: 'ESCORT CORVETTE',
   length: 66, half: [17, 13, 38], mirror: true, radius: 40,
   prims: [
-    // body: long toad torso, flattened
-    ell([0, 0, 6], [9.5, 5.2, 24], F.skin, { col2: F.skin2, mot: 0.8 }),
-    ell([0, -2.2, 6], [8.2, 3.8, 21], F.belly, { col2: F.belly2, mot: 0.8 }),
-    // head: broad diamond-section skull, huge maw
-    tap([0, 0.6, -21], 11, [1.0, 0.8], [10.0, 4.4], F.olive, { sh: 'd', ...skinO }),
-    tap([0, -2.6, -21], 10, [0.6, 0.4], [8.2, 1.6], F.plate, { sh: 'd' }),
-    tap([0, -1.2, -28], 4.5, [0.4, 0.4], [6.0, 1.0], 0x120c07, { sh: 'd' }),                    // dark maw / hangar throat
-    ...fFangs(-31, 7.0, 9, 3.0, 0.4, -1.0),
-    ...fFangs(-30.2, 6.2, 8, 2.2, 0.3, -3.0).map(p => ({ ...p, a: [p.a[0], -3.2, p.a[2]], b: [p.b[0], -1.6, p.b[2] - 0.6] })),
-    // eyes = bridge
-    ell([5.6, 4.2, -17], [2.8, 2.4, 3.2], F.eye, { col2: F.skin, mot: 1.5 }),
-    ell([5.9, 5.0, -19.6], [1.7, 0.45, 1.2], F.eyeGlow, { glow: true, rot: [0, 0.3, 0.4] }),
-    seg([2.0, 5.6, -13], [9.5, 6.4, -21], 0.7, 0.2, F.plate2),
-    // throat sac / reactor bulb (rust, glowing flecks)
-    ell([0, -4.6, -8], [5.0, 3.2, 9.0], F.sac, { col2: F.sac2, mot: 1.2, dots: { col: F.venom, p: 0.025 } }),
-    // dorsal ridge and turret spines
-    tap([0, 5.1, 6], 16, [0.35, 0.5], [0.35, 1.8], F.plate, { sh: 'd' }),
-    ...fSpines(-6, 24, 12, 5.2, 3.6, 0.45),
-    ...[[3.6, 4.4, -2], [-3.6, 4.4, -2], [3.4, 4.5, 14], [-3.4, 4.5, 14]].map(p => ell(p, [1.1, 0.8, 1.1], F.plate, { noMirror: true })),
-    // lash cannons at the jaw corners
-    seg([5.5, -2.4, -22], [5.5, -2.4, -35], 0.7, 0.55, F.dark),
-    seg([5.5, -2.4, -27], [5.5, -2.4, -28], 1.0, 1.0, F.plate2),
-    ell([5.5, -2.4, -35.1], [0.55, 0.55, 0.25], F.venom, { glow: true }),
-    // folded hind legs = engines
-    ...fLeg([7.5, -1.0, 16], [13.5, -2.4, 22], [9.5, -1.0, 30], 3.0, 2.4, 2.7),
-    ...fLeg([3.2, -2.5, 20], [5.2, -3.8, 26], [3.8, -2.2, 33], 1.7, 1.4, 1.5),
-    // webbed fins
-    ...fWing(8.6, 16.5, 8, 7, 2, 0.5, 0.35, 1.2),
-    ...fHorn([[0.5, 0.5, 28], [0.3, -0.5, 33], [0, 0.5, 36.5]], [1.5, 0.8, 0.05]),
+    ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
+    ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
+    // lamellar barrel hull
+    ell([0, 0, 2], [9.6, 6.4, 29], N.dk, nSt(0.85, 0.12)),
+    ell([0, 4.0, 0], [7.8, 2.8, 22], N.dk2, nSt(0.75, 0.12)),
+    ell([0, 6.0, -2], [5.4, 1.9, 15], N.dk, nSt(0.7, 0.12)),
+    ell([0, 7.5, -4], [3.2, 1.2, 9], N.dk2, nSt(0.6, 0.12)),
+    ell([0, -0.4, -28], [7.4, 5.2, 7.4], N.dk, nSt(0.8, 0.1)),                              // blunt prow
+    ell([0, 3.4, -26], [4.8, 2.4, 6], N.dk2, nSt(0.7, 0.1)),
+    ...nEye(3.0, 0.8, -34.0, 2.6), ...nEye(6.2, -0.6, -31.8, 1.4),
+    nPod([5.2, 1.0, -22], [2.2, 1.6, 3.6], N.dk2, 0.22), nPod([7.4, -1.6, -14], [2.0, 1.4, 3.0], N.dk2, 0.22),
+    // ventral drum (supply/launch bay)
+    seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),
+    ell([0, -6.4, 21], [3.6, 3.4, 2.0], N.dk2, nSt(0.7, 0)),
+    // dorsal crest of spikes
+    ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
+    // sting turret bases
+    ell([3.6, 4.7, -2], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 4.8, 14], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }),
+    // trailing blades
+    nBlade([8, 0.5, 6], [16.5, 0.2, 34], 0.9), nBlade([7, -3, 12], [14, -3.8, 36], 0.7), nBlade([6, 3.5, 4], [12, 5.6, 30], 0.6),
+    // engine nacelles
+    ...nNoz(9.5, -1.0, 24, 35.4, 2.7), ...nNoz(3.8, -2.2, 31, 36.0, 1.5),
+    seg([5.5, -2.4, -30], [5.5, -2.4, -35.3], 1.3, 0.8, N.bl),
   ],
   engines: [
     { pos: [9.5, -1.0, 35.4], comp: 'engR', r: 2.7 }, { pos: [-9.5, -1.0, 35.4], comp: 'engL', r: 2.7 },
@@ -933,6 +943,51 @@ SHIPS.gulper = {
   maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
   ai: { role: 'corvette' },
 };
+
+// ---- HIVE CARRIER: migratory brood-ark, jump-capable super carrier (900 m) ---------------------------
+// Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
+SHIPS.hivecarrier = {
+  id: 'hivecarrier', name: 'FROGG HIVE CARRIER', cls: 'capital', fac: 'frogg', role: 'SUPER CARRIER',
+  length: 900, half: [270, 120, 450], mirror: true, radius: 470, resMul: 0.25,
+  jump: true, dock: { fighters: 60, corvettes: 6 },
+  prims: [
+    // carapace: stacked overlapping shell plates
+    ell([0, 0, 40], [150, 70, 330], N.dk, nSt(14, 0.1)),
+    ell([0, 55, 0], [190, 24, 330], N.dk2, nSt(12, 0.1)),
+    ell([0, -10, 60], [250, 18, 300], N.dk, nSt(12, 0.1)),
+    ell([0, 78, -40], [110, 22, 230], N.dk2, nSt(10, 0.1)),
+    ell([0, 95, -90], [60, 14, 140], N.dk, nSt(8, 0.1)),
+    ell([0, -6, -300], [110, 62, 120], N.dk, nSt(12, 0.1)),                                 // blunt prow
+    // crescent mandibles
+    ...nMand(90, 10, -330, 260, 20), ...nMand(55, -40, -340, 160, 15),
+    ...nEye(60, 20, -418, 24), ...nEye(100, -10, -392, 14),
+    // ventral keel, hangar maws with pearl lights
+    nKeel(-60, -200, 330, 180, 22),
+    ell([0, -62, -40], [60, 20, 150], N.bl, { dots: { col: N.pr, p: 0.02, f: 1.0 } }),
+    ell([90, -48, 120], [34, 14, 90], N.bl, { dots: { col: N.pr, p: 0.02, f: 1.0 } }),
+    ...nComb(30, -60, 120, 7, 200, 0.5),
+    // dorsal spike rows
+    ...[-240, -170, -100, -30, 40, 110, 180, 250].map((z, i) => nSpike([0, 100 - i * 4, z], [0, 170 - i * 8, z + 70], 12 - i * 0.8)),
+    ...[-200, -120, -40, 40, 120, 200].map((z, i) => nSpike([70, 70, z], [110, 130 - i * 5, z + 60], 8)),
+    // trailing blades
+    nBlade([120, 20, 150], [265, 10, 440], 16), nBlade([100, -30, 200], [230, -40, 445], 12), nBlade([90, 60, 100], [200, 80, 420], 10),
+    // engine vents (ribbed, red-orange)
+    ...nNoz(60, 0, 330, 440, 40), ...nNoz(150, -10, 320, 430, 32), ...nNoz(200, 10, 300, 410, 24),
+  ],
+  engines: [{ pos: [60, 0, 440], comp: 'engR', r: 40 }, { pos: [-60, 0, 440], comp: 'engL', r: 40 }],
+  mounts: [], turrets: [],
+  stores: { flare: 0 },
+  comps: [
+    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-60, 0, 380], r: 60, hp: 900 },
+    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [60, 0, 380], r: 60, hp: 900 },
+    { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 30, 0], r: 70, hp: 1200 },
+    { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 20, -400], r: 60, hp: 800 },
+    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 120], r: 80, hp: 2400 },
+  ],
+  shield: { fore: 4000, aft: 3200 }, armor: { fore: 1600, aft: 1200, left: 1400, right: 1400 }, structure: 6000,
+  maxSpeed: 12, aiSpeed: 8, accel: 0.5, turn: 0.03, sig: 20, flameColor: 0xff6a2a,
+  ai: { role: 'capital' },
+};
 // ======================================================================
 //  SHIP SCALING  (uniform: prims, hit zones, engines, mounts, turrets, extents)
 //  Ship defs are authored at any size; this rescales them to the target length.
@@ -956,6 +1011,7 @@ function scaleShip(def, newLength) {
 }
 scaleShip(SHIPS.halberd, 128);
 scaleShip(SHIPS.gulper, 146);
+scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder: carriers 2-3 km)
 
 // human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;

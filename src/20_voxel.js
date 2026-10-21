@@ -85,7 +85,7 @@ function primInside(p, x, y, z) {
 
 const _col = new THREE.Color(), _col2 = new THREE.Color();
 const voxCache = new Map();
-const resFor = (def, idx) => Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4));
+const resFor = (def, idx) => Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1));
 
 function voxelize(def, res) {
   const key = def.id + ':' + res;
@@ -138,12 +138,22 @@ function voxelize(def, res) {
     const ax = mir ? Math.abs(x) : x;
     const glow = !!p.glow;
     _col.setHex(c);
-    let f = 1;
+    let f = 1, stf = 1;
     if (!glow) {
       if (p.col2 !== undefined) {
         const n = vnoise(ax * mf * (p.mot || 1), y * mf * (p.mot || 1), z * mf * (p.mot || 1)) * 0.65 +
                   vnoise(ax * mf * 3.1, y * mf * 3.1, z * mf * 3.1) * 0.35;
         if (n > 0.52) _col.lerp(_col2.setHex(p.col2), Math.min(1, (n - 0.52) * 7));
+      }
+      // streak: rust runs along the hull (noise stretched along z); strata: stacked-plate banding (y + slope*z)
+      if (p.streak && p.rust !== undefined) {
+        const n = vnoise(ax * mf * 2.2, y * mf * 2.2, z * mf * 0.28 * p.streak);
+        if (n > 0.6) _col.lerp(_col2.setHex(p.rust), Math.min(0.6, (n - 0.6) * 3));
+      }
+      if (p.strata && p.rust !== undefined) {
+        const ph = (((y + z * (p.strata[1] || 0)) / p.strata[0]) % 1 + 1) % 1;
+        if (ph < 0.22) { _col.lerp(_col2.setHex(p.rust ?? c), 0.28); stf = 1.12; }
+        else if (ph < 0.34) stf = 0.62;
       }
       const ao = Math.max(0.42, Math.min(1.15, 1.25 - (n26 - 8) * 0.035));
       const h = hash3(i, j, k);
@@ -157,7 +167,7 @@ function voxelize(def, res) {
       }
       let rib = 1;
       if (p.rib) { const ph = ((z / p.rib[0]) % 1 + 1) % 1; rib = ph < 0.34 ? 1 - p.rib[1] : 1 + p.rib[1] * 0.3; }
-      f = ao * (0.94 + 0.12 * h) * seam * rib;
+      f = ao * (0.94 + 0.12 * h) * seam * rib * stf;
       if (p.dots && hash3(i * 7, j * 3, k * 5) < p.dots.p) {
         _col.setHex(p.dots.col); f = p.dots.f || 2.2;
         const vi = voxels.length;

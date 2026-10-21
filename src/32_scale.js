@@ -21,6 +21,7 @@ function scaleShip(def, newLength) {
 }
 scaleShip(SHIPS.halberd, 128);
 scaleShip(SHIPS.gulper, 146);
+scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder: carriers 2-3 km)
 
 // human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;

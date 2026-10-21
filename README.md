@@ -66,4 +66,4 @@ number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
-prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs/FS2OPEN_STUDY.md` (FS2 Open source study), `docs/STRATEGY_LAYER.md` (campaign/strategy proposal), `docs/FLEET_LOGIC.md` (ship roles, fleets, pilots, SAR). Agents: read `AGENTS.md` first.
+prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs/FS2OPEN_STUDY.md` (FS2 Open source study), `docs/STRATEGY_LAYER.md` (campaign/strategy proposal), `docs/FLEET_LOGIC.md` (ship roles, fleets, pilots, SAR). `docs/SHIP_MANUAL.md` (ship list, scale ladder, blueprints), `docs/LORE.md`, `docs/CAPITAL_COMBAT.md` (discussion). Agents: read `AGENTS.md` first.
