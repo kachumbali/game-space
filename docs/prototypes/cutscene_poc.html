@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:,"><title>Cut scene PoC: lounge</title>
+<style>
+:root{--ink:#d8fff0;--dim:#6fae98;--amber:#ffd080;--panel:rgba(6,16,14,.92);--line:#3a6a58}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#02060a;color:var(--ink);font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;overflow:hidden}
+#stage{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#room{position:relative;width:min(100vw,calc(100vh*16/10));aspect-ratio:16/10;max-height:100vh;overflow:hidden;
+  background:linear-gradient(#10202a 0 62%,#1b1410 62% 100%);border:1px solid #1d3a30;image-rendering:pixelated}
+/* set dressing: window with starfield + planet, wall ribs, bar counter, lamp */
+#win{position:absolute;left:30%;width:40%;top:8%;height:36%;border:6px solid #2b3d44;background:#02040a;overflow:hidden;
+  box-shadow:inset 0 0 30px #000}
+#win i{position:absolute;width:2px;height:2px;background:#cfe;opacity:.8}
+#planet{position:absolute;right:-8%;bottom:-40%;width:55%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#8fd0c0,#2f6f66 55%,#0b2220 80%);box-shadow:0 0 30px #3aa}
+.rib{position:absolute;top:0;height:62%;width:1.2%;background:#1a2a31;border-left:1px solid #2c444d}
+#bar{position:absolute;left:0;right:0;top:62%;height:7%;background:linear-gradient(#5a3b24,#3a2415);border-top:3px solid #8a5d38}
+#bottles{position:absolute;left:4%;top:50%;height:12%;width:20%;display:flex;gap:6%;align-items:flex-end}
+#bottles b{flex:1;background:#3f8f6a;opacity:.8}
+#lamp{position:absolute;left:46%;top:0;width:8%;height:10%;background:radial-gradient(#fff3c0,transparent 70%);opacity:.7}
+.nm{position:absolute;bottom:34%;font-size:clamp(9px,1.4vw,13px);letter-spacing:2px;color:var(--amber);text-shadow:0 0 4px #000}
+canvas.pt{position:absolute;bottom:27%;width:30%;aspect-ratio:1;image-rendering:pixelated}
+#cL{left:8%}#cR{right:8%}
+#box{position:absolute;left:3%;right:3%;bottom:3%;min-height:20%;background:var(--panel);border:1px solid var(--line);padding:10px 16px}
+#who{font-size:11px;letter-spacing:2px;color:var(--amber)}
+#txt{min-height:3em;color:#c8f5e2;font-size:clamp(12px,1.9vw,16px)}
+#ch{display:none;margin-top:6px}
+#ch button{display:block;width:100%;text-align:left;font:inherit;padding:6px 10px;margin:3px 0;background:#10201c;color:#c8fff0;border:1px solid var(--line);cursor:pointer;min-height:36px}
+#ch button:hover,#ch button:focus{background:#17614a;outline:2px solid var(--amber)}
+#hint{position:absolute;right:10px;top:6px;font-size:10px;color:var(--dim);letter-spacing:1px}
+#adv{position:absolute;right:14px;bottom:8px;color:var(--amber);animation:bl 1s steps(2) infinite}
+@keyframes bl{50%{opacity:0}}
+#end{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,8,.8);text-align:center}
+@media (prefers-reduced-motion:reduce){#adv{animation:none}}
+</style></head><body>
+<div id="stage"><div id="room" role="region" aria-label="Lounge cut scene">
+ <div id="win"><div id="planet"></div></div><div id="lamp"></div>
+ <div class="rib" style="left:6%"></div><div class="rib" style="left:22%"></div><div class="rib" style="left:78%"></div><div class="rib" style="left:94%"></div>
+ <div id="bottles"></div><div id="bar"></div>
+ <canvas class="pt" id="cL" width="160" height="160" aria-hidden="true"></canvas><canvas class="pt" id="cR" width="160" height="160" aria-hidden="true"></canvas>
+ <div class="nm" id="nL" style="left:12%"></div><div class="nm" id="nR" style="right:12%"></div>
+ <div id="hint">SPACE/click: next · 1-9: choose · S/ESC: skip scene</div>
+ <div id="box" aria-live="polite"><div id="who"></div><div id="txt"></div><div id="ch"></div><span id="adv" hidden>&#9660;</span></div>
+ <div id="end"><div><div style="color:var(--amber);letter-spacing:3px">SCENE END</div><p id="endinfo"></p><button id="again" style="font:inherit;padding:8px 18px;background:#0f3a2c;color:#c8fff0;border:1px solid #4aa888;cursor:pointer">PLAY AGAIN</button></div></div>
+</div></div>
+<script>
+'use strict';
+// ---------- scene data (hand-authorable; mirrors the proposal in docs/CUTSCENES.md) ----------
+const PILOTS={
+  hawk:{name:'HAWK',skin:[150,98,68],hair:[28,22,20],hairStyle:'short',suit:[58,88,120],side:'L'},
+  sparrow:{name:'SPARROW',skin:[226,176,140],hair:[70,48,30],hairStyle:'long',suit:[58,88,120],side:'R'}};
+const CREW={hawk:{status:'active',kills:7},sparrow:{status:'active',kills:1}};   // stand-in for game CREW
+const q=new URLSearchParams(location.search);
+if(q.get('crew')==='sparrow-kia')CREW.sparrow.status='KIA';
+const SCENE={id:'lounge_m2',set:'lounge',music:'cue:lounge_low',lines:[
+ {id:'a',who:'hawk',say:'You flew the Reedbed run like someone who wants to be flown back in one piece. Good.'},
+ {id:'b',who:'sparrow',say:'Is it true the relay was dark for a week before anyone noticed?',if:{status:{sparrow:'active'}}},
+ {id:'c',who:'hawk',say:'Dark does not mean empty, Sparrow. Eyes open.',goto:'ask'},
+ {id:'ask',who:'sparrow',say:'Echo, what do you think waits at the outpost?',choices:[
+   {t:'A corvette and a screen. Nothing we cannot kill.',goto:'brave',set:{note:'confident'}},
+   {t:'More than Intel admits.',goto:'doubt',set:{note:'cautious'}},
+   {t:'Ask me after we are back.',goto:'deflect'}]},
+ {id:'brave',who:'hawk',say:'Confidence is cheap until the lash cannons start. Keep it for the cockpit.',goto:'out'},
+ {id:'doubt',who:'hawk',say:'Then we plan for more. Meet me on the flight deck at 0500.',goto:'out'},
+ {id:'deflect',who:'sparrow',say:'...right. After. I will hold you to that.',goto:'out'},
+ {id:'out',who:'hawk',say:'Drinks are on the Halberd tonight. Tomorrow we earn them.',end:true}]};
+// ---------- voxel bust ----------
+function buildHead(p){const W=17,H=21,D=15,v=[];const cx=8,cy=9.5,cz=7;
+ const inH=(x,y,z)=>((x-cx)/6.6)**2+((y-cy)/8.6)**2+((z-cz)/6.6)**2<=1;
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++)for(let z=0;z<D;z++){
+  if(inH(x,y,z)){let c=p.skin,k='s';
+   const hairTop=y<4||(y<7&&z<5)||(p.hairStyle==='long'&&z<9&&y<15&&(x<3||x>13));
+   if(hairTop||(y<6&&Math.abs(x-cx)>5.2)){c=p.hair;k='h';}
+   if(p.hairStyle==='short'&&y>=4&&y<6&&z>=10)c=p.skin;
+   v.push({x,y,z,c,k});}}
+ // neck + shoulders
+ for(let y=17;y<21;y++)for(let x=5;x<12;x++)for(let z=4;z<11;z++)if(y<19||true)v.push({x,y,z,c:p.skin,k:'s'});
+ for(let y=19;y<24;y++)for(let x=-2;x<19;x++)for(let z=3;z<12;z++)v.push({x,y,z,c:p.suit,k:'u'});
+ return v;}
+function voxelAt(vs){const m=new Map();vs.forEach(a=>m.set(a.x+','+a.y+','+a.z,a));return m;}
+const SHADE=(c,f)=>`rgb(${c[0]*f|0},${c[1]*f|0},${c[2]*f|0})`;
+function drawBust(cv,P,pose){const g=cv.getContext('2d'),S=5,yaw=P.side==='L'?-0.42:0.42;g.clearRect(0,0,cv.width,cv.height);
+ const cs=Math.cos(yaw),sn=Math.sin(yaw),ox=cv.width/2,oy=14;let list=P._vox;
+ const out=[];
+ for(const a of list){let c=a.c;
+  // face features at the front (z max of the head); eyes y=8, mouth y=13
+  if(a.k==='s'&&a.y===8&&(Math.abs(a.x-5)<=1||Math.abs(a.x-11)<=1)&&a.z>=P._front(a.x,a.y)-0&&!(Math.abs(a.x-5)>1&&Math.abs(a.x-11)>1)){c=pose.blink?P.skin:[245,245,245];
+    if(!pose.blink&&(a.x===5||a.x===11))c=[20,28,40];}
+  if(a.k==='s'&&a.y===7&&(Math.abs(a.x-5)<=1||Math.abs(a.x-11)<=1)&&a.z>=P._front(a.x,a.y))c=P.hair;           // brows
+  if(a.k==='s'&&a.y>=13&&a.y<=14&&a.x>=6&&a.x<=10&&a.z>=P._front(a.x,a.y)){ if(a.y===13||pose.open===1&&a.y===14||pose.open===2)c=[70,22,22]; }
+  if(a.k==='s'&&a.y===12&&a.x===8&&a.z>=P._front(a.x,a.y))c=SHADE(P.skin,.8).match(/\d+/g).map(Number);
+  const X=(a.x-8)*cs+(a.z-7)*sn,Z=-(a.x-8)*sn+(a.z-7)*cs;
+  out.push([X,a.y-9,Z,c]);}
+ out.sort((a,b)=>a[2]-b[2]);
+ for(const [X,Y,Z,c] of out){const sx=ox+X*S,sy=oy+(Y+9)*S*0.95+0;
+  g.fillStyle=SHADE(c,1);g.fillRect(sx|0,sy|0,S,S);
+  g.fillStyle='rgba(0,0,0,.18)';g.fillRect(sx|0,(sy+S-2)|0,S,2);g.fillStyle='rgba(255,255,255,.10)';g.fillRect(sx|0,sy|0,S,1);}}
+for(const k in PILOTS){const P=PILOTS[k];P._vox=buildHead(P);const front=new Map();
+ for(const a of P._vox)if(a.k!=='u'){const key=a.x+','+a.y;front.set(key,Math.max(front.get(key)??-1,a.z));}
+ P._front=(x,y)=>front.get(x+','+y)??99;}
+// ---------- room dressing ----------
+(function(){const w=document.getElementById('win');let s=1234;const r=()=>(s=(s*16807)%2147483647)/2147483647;
+ for(let i=0;i<40;i++){const e=document.createElement('i');e.style.left=r()*100+'%';e.style.top=r()*100+'%';w.appendChild(e);}
+ const b=document.getElementById('bottles');for(let i=0;i<6;i++){const e=document.createElement('b');e.style.height=(40+r()*60)+'%';b.appendChild(e);}})();
+// ---------- player ----------
+const $=id=>document.getElementById(id);
+const st={cur:null,full:'',n:0,talking:false,who:null,timer:0,skipping:false,history:[],flags:{}};
+const poses={L:{open:0,blink:false},R:{open:0,blink:false}};
+function visible(l){const c=l.if;if(!c)return true;if(c.status)for(const k in c.status)if(CREW[k].status!==c.status[k])return false;return true;}
+function lineIdx(id){return SCENE.lines.findIndex(l=>l.id===id);}
+function nextVisible(i){while(i<SCENE.lines.length&&!visible(SCENE.lines[i]))i++;return i;}
+function show(i){i=nextVisible(i);if(i>=SCENE.lines.length)return finish();
+ const l=SCENE.lines[i];st.cur=l;st.idx=i;st.full=l.say;st.n=0;st.who=l.who;st.history.push(l.id);
+ $('who').textContent=PILOTS[l.who].name;$('txt').textContent='';$('ch').style.display='none';$('adv').hidden=true;st.talking=true;
+ $('nL').textContent=PILOTS.hawk.name;$('nR').textContent=PILOTS.sparrow.name;
+ if(!(l.who in CREW)||CREW[l.who].status==='KIA'){}
+}
+function done(){st.talking=false;poses.L.open=poses.R.open=0;
+ const l=st.cur;$('txt').textContent=st.full;
+ if(l.choices){const c=$('ch');c.innerHTML='';l.choices.forEach((o,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+o.t;b.onclick=()=>pick(i);c.appendChild(b);});c.style.display='block';c.firstChild.focus();}
+ else $('adv').hidden=false;}
+function pick(i){const o=st.cur.choices[i];if(!o)return;Object.assign(st.flags,o.set||{});go(o.goto);}
+function go(id){if(id==null||id==='')return show(st.idx+1);show(lineIdx(id));}
+function advance(){if(!st.cur)return;if(st.talking){st.n=st.full.length;done();return;}
+ if(st.cur.choices)return;if(st.cur.end)return finish();go(st.cur.goto);}
+function finish(){st.cur=null;$('end').style.display='flex';$('endinfo').textContent='path: '+st.history.join(' > ')+'  flags: '+JSON.stringify(st.flags);window.__sceneDone=true;}
+function restart(){$('end').style.display='none';st.history=[];st.flags={};window.__sceneDone=false;show(0);}
+$('again').onclick=restart;
+addEventListener('keydown',e=>{if(e.repeat)return;
+ if(e.key==='s'||e.key==='S'||e.key==='Escape'){if(st.cur)finish();}
+ else if(e.key===' '||e.key==='Enter'){e.preventDefault();advance();}
+ else if(/^[1-9]$/.test(e.key)&&st.cur&&st.cur.choices&&!st.talking)pick(+e.key-1);});
+$('box').addEventListener('click',e=>{if(e.target.closest('#ch button'))return;advance();});
+// ---------- audio: optional blip (WebAudio, only after a gesture; failure is harmless) ----------
+let AC=null,GESTURE=false;['keydown','pointerdown'].forEach(ev=>addEventListener(ev,()=>{GESTURE=true;}));
+function blip(f){try{if(!GESTURE)return;if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();
+ o.type='square';o.frequency.value=f;g.gain.value=.015;g.gain.exponentialRampToValueAtTime(.0005,AC.currentTime+.05);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.05);}catch(e){}}
+// ---------- loop ----------
+let last=performance.now(),acc=0,mt=0,bt=2.5;
+function frame(now){const dt=Math.min(.1,(now-last)/1000);last=now;
+ if(st.talking){acc+=dt*(window.__fast?400:42);while(acc>=1&&st.n<st.full.length){acc--;st.n++;const ch=st.full[st.n-1];
+   if(ch!==' '&&st.n%2===0)blip(st.who==='hawk'?310:470);}
+  $('txt').textContent=st.full.slice(0,st.n);if(st.n>=st.full.length)done();}
+ mt+=dt;bt-=dt;const side=st.cur?PILOTS[st.who].side:null;
+ for(const s of ['L','R']){const talk=st.talking&&side===s;poses[s].open=talk?(Math.floor(mt*9)%3):0;}
+ if(bt<0){poses.L.blink=poses.R.blink=true;setTimeout(()=>poses.L.blink=poses.R.blink=false,120);bt=2+Math.random()*3;}
+ const hk=PILOTS.hawk,sp=PILOTS.sparrow;
+ drawBust($('cL'),hk,poses.L);
+ if(CREW.sparrow.status==='active'){drawBust($('cR'),sp,poses.R);}else{const g=$('cR').getContext('2d');g.clearRect(0,0,160,160);}
+ requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+if(q.has('fast'))window.__fast=true;
+show(0);
+</script></body></html>
