@@ -81,9 +81,10 @@ function leadPoint(s, t, speed) {
   const tt = d / Math.max(50, speed);
   return _ao.copy(t.group.position).addScaledVector(rel, tt).addScaledVector(s.vel, 0);
 }
+const AI_TUNE = { tolMul: 1, rngMul: 0.55 };
 function primaryRange(s) {
   let r = 0;
-  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (!m.store) r = Math.max(r, w.kind === 'beam' ? w.range * 0.8 : w.v * w.life * 0.55); }
+  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (!m.store) r = Math.max(r, w.kind === 'beam' ? w.range * 0.8 : w.v * w.life * AI_TUNE.rngMul); }
   return r || 400;
 }
 function primarySpeed(s) {
@@ -209,7 +210,7 @@ function fighterAI(s, dt) {
   if (ai.mode === 'attack' && !av && gun) {
     const err = aimError(s, lead);
     const rng = primaryRange(s);
-    const tol = (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
+    const tol = AI_TUNE.tolMul * (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
     if (err < tol && dist < rng) fireGuns(s, 0b11);
     else if (err < tol * 1.6 && dist < rng * 0.8) fireGuns(s, 0b10);
   }
