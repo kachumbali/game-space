@@ -55,6 +55,7 @@ function playerFireMissile() {
 }
 
 addEventListener('keydown', e => {
+  if (rdlgOpen) return;
   if (e.repeat) return;
   keys.add(e.code);
   if (!player) return;
@@ -88,14 +89,15 @@ addEventListener('keyup', e => keys.delete(e.code));
 addEventListener('contextmenu', e => e.preventDefault());
 msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode === 'free') resetGame(); });
 addEventListener('mousedown', e => {
-  if (isTouch) return;
+  if (isTouch || rdlgOpen) return;
   if (state === 'brief' || $id('brief').style.display === 'flex') return;
   if (document.pointerLockElement !== canvas) { canvas.requestPointerLock?.(); return; }
   if (e.button === 0) mouseFire = true;
   if (e.button === 2) playerFireMissile();
 });
-addEventListener('mouseup', e => { if (e.button === 0) mouseFire = false; });
+addEventListener('mouseup', e => { mouseFire = mouseFire && !rdlgOpen; if (e.button === 0) mouseFire = false; });
 addEventListener('mousemove', e => {
+  if (rdlgOpen) return;
   if (document.pointerLockElement !== canvas) return;
   stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
   stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
@@ -193,10 +195,10 @@ function askRestart() {
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
     : `<button id="rd1">RESTART FREE FLIGHT <small>[M]</small></button>`) + `<button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
-  const close = () => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (!isTouch && state === 'play') canvas.requestPointerLock?.(); };
+  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') canvas.requestPointerLock?.(); };
   $id('rd0').onclick = close;
-  $id('rd1').onclick = () => { close(); if (mission) startMission(M); else resetGame(); };
-  const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(); startMission(M, seg); };
+  $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else resetGame(); };
+  const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(true); keys.clear(); restoreCrew(); startMission(M, seg); };
   el._keys = ev => {
     if (ev.code === 'KeyM') $id('rd1').onclick(); else if (ev.code === 'KeyS' && r2) r2.onclick();
     else if (ev.code === 'Escape' || ev.code === 'KeyC' || ev.code === 'KeyN') close(); else return;

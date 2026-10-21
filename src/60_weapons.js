@@ -57,7 +57,7 @@ const WEAPONS = {
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
 
 // ---- shared scratch + rendering of projectiles (one InstancedMesh per weapon type) -----------------
-const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _wq = new THREE.Quaternion();
+const _w1 = new THREE.Vector3(), _w2 = new THREE.Vector3(), _w3 = new THREE.Vector3(), _w4 = new THREE.Vector3(), _wq = new THREE.Quaternion();
 const NEGZ = new THREE.Vector3(0, 0, -1), ONE3 = new THREE.Vector3(1, 1, 1);
 const boltViz = {};
 function boltVizFor(wid) {
@@ -136,12 +136,14 @@ function fireBeam(s, w, wp, dirW) {
     if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
   }
   const len = bestS ? bestD : w.range;
-  for (let d = 0; d < len; d += 6) sparks.emit(wp.clone().addScaledVector(dirW, d), new THREE.Vector3(), 0.09, [3, 0.5, 0.3, 1], [1, 0, 0, 0]);
+  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, [3, 0.5, 0.3, 1], [1, 0, 0, 0]);
   if (!bestS) return;
   const fr = bestS.team === s.team, wpH = bestS.group.localToWorld(bestHit.clone());
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
+  plogBoltHit({ owner: s, team: s.team }, bestS, w.dmg * (fr ? FF.bolt : 1), fr);
   applyHit(bestS, bestHit, w.dmg * (fr ? FF.bolt : 1), wpH, w.dt, 0);
+  sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   sparksAt(wpH, 4, 10, [3, 0.8, 0.4, 1]);
 }
 function fireMount(s, m) {
@@ -170,7 +172,7 @@ function fireMount(s, m) {
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
 function fireGuns(s, mask) {
   if (s !== player) plogTry(s);
-  if (s !== player && friendlyInLine(s)) { plogHold(s); return false; }
+  if (s !== player && friendlyInLine(s, Math.max(700, ...s.mounts.map(m => WEAPONS[m.w].range || 0)))) { plogHold(s); return false; }
   let n = 0, any = false;
   for (const m of s.mounts) {
     if (m.store) continue;

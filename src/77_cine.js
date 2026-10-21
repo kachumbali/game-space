@@ -102,6 +102,15 @@ function cineUpdate(dt) {
   if (c.t >= c.dur) endTransit();
 }
 
+function cancelTransit() {           // abort an autopilot transit without arriving (restart during transit)
+  const c = cine; if (!c) return;
+  scene.remove(c.beacon);
+  c.beacon.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); });
+  camera.fov = c.fov; camera.updateProjectionMatrix();
+  document.body.classList.remove('cine');
+  if (capEl) capEl.textContent = '';
+  cine = null;
+}
 function endTransit() {
   const c = cine; if (!c) return;
   scene.remove(c.beacon);

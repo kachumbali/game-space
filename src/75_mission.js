@@ -161,7 +161,10 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
+function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } }
 function startMission(M, seg) {
+  if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
+  if (cine) cancelTransit();
   plogReset(M.title);
   clearWorld();
   comms.length = 0; objectives.length = 0;
@@ -187,7 +190,7 @@ function startMission(M, seg) {
     S.stage = seg.stage; S.area = seg.area; S.t = seg.t || 0;
     const area = M.areas && M.areas[seg.area]; if (area) applyArea(area);
     const prev = M.stages[seg.stage - 1];
-    if (prev) runActions(prev.do.filter(a => !a.transit));
+    if (prev) runActions(prev.do.filter(a => !a.transit && !a.comm));
     game.seg = seg;
     $id('brief').style.display = 'none'; state = 'play'; touchStarted = true;
     if (!isTouch) canvas.requestPointerLock?.();
@@ -209,7 +212,7 @@ function runActions(list) {
   const S = game.mstate;
   for (const a of list) {
     if (a.comm) comm(a.comm[0], a.comm[1]);
-    if (a.obj) objective(a.obj[0], a.obj[1], a.obj[2]);
+    if (a.obj && (a.obj[1] || objectives.some(o => o.id === a.obj[0]))) objective(a.obj[0], a.obj[1], a.obj[2]);
     if (a.jumpIn) { sfx('jump'); }
     if (a.transit) startTransit(a.transit);
     if (a.spawn) spawnGroup(a.spawn);

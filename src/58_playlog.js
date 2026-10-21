@@ -10,7 +10,7 @@ function plogBoltHit(b, s, dmg, fr) {
   const tg = s === player ? 'player' : s.team === 0 ? 'ally' : 'enemy';
   plogN(`hit.${o}>${tg}`); plogN(`dmg.${o}>${tg}`, dmg);
 }
-function plogReset(label) { PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); PLOG.acc = 0; }
+function plogReset(label) { if (Object.keys(PLOG.cnt).length) PLOG.prev = plogSummary(); PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); _plogAcc = 0; }
 function plogEvent(e) { if (PLOG.events.length < 400) PLOG.events.push({ t: +(time || 0).toFixed(1), e }); }
 let _plogAcc = 0;
 function plogTick(dt) {
@@ -30,7 +30,7 @@ function plogSummary() { return { mission: PLOG.mission, mins: +((Date.now() - P
 function plogSave() { try { localStorage.setItem('gs_plog', JSON.stringify(plogSummary())); } catch (e) {} }
 function plogDownload() {
   plogSave();
-  const blob = new Blob([JSON.stringify({ summary: plogSummary(), samples: PLOG.samples, events: PLOG.events }, null, 1)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'game-space-playlog.json'; a.click();
+  const blob = new Blob([JSON.stringify({ summary: plogSummary(), previousRun: PLOG.prev || null, samples: PLOG.samples, events: PLOG.events }, null, 1)], { type: 'application/json' });
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'game-space-playlog.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 setInterval(plogSave, 15000);
