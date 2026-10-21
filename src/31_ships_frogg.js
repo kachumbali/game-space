@@ -60,7 +60,7 @@ SHIPS.darter = {
   ],
   engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
   mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
-  stores: { tick: 2, flare: 8 },
+  stores: { tick: 1, flare: 8 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-1.0, -0.15, 3.8], r: 0.8, hp: 7 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [1.0, -0.15, 3.8], r: 0.8, hp: 7 },
@@ -96,7 +96,7 @@ SHIPS.leaper = {
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
   mounts: [{ w: 'spit', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'spit', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }],
-  stores: { tick: 2, flare: 10 },
+  stores: { tick: 1, flare: 10 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.2, -0.25, 5.2], r: 1.1, hp: 10 },

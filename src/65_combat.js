@@ -190,7 +190,7 @@ function collideShips(dt) {
     const rel = a.vel.clone().sub(b.vel);
     const sp = rel.length();
     a.hitCool = 0.6;
-    const n = a.group.position.clone().sub(b.group.position).normalize();
+    const n = a.group.position.clone().sub(b.group.position); if (n.lengthSq() < 1e-6) n.set(0, 1, 0); n.normalize();
     const lpA = new THREE.Vector3(0, 0, -a.def.half[2] * 0.5);
     const wpA = a.group.position.clone();
     const dmg = Math.min(60, 2 + sp * 0.22);

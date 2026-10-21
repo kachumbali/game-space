@@ -19,9 +19,9 @@ const WEAPONS = {
   // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 340, acc: 260, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 300, acc: 200, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
-  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 175, acc: 55, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2800, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
+  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 175, acc: 55, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
   tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 300, acc: 220, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 160, acc: 50, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2600, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 160, acc: 50, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad'];

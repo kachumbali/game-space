@@ -102,10 +102,11 @@ function missileLogic(s, dt, wantIds) {
   const ids = missileIds(s).filter(id => wantIds.includes(id) && s.stores[id] > 0);
   if (!ids.length || !s.target) return;
   s.sel = missileIds(s).indexOf(ids[0]);
-  lockUpdate(s, dt);
-  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target) {
+  lockUpdate(s, dt * 0.55);          // AI pilots are slower to get a tone than a human
+  const d = s.lock.d;
+  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && Math.random() < dt * 0.8) {
     launchMissile(s, ids[0]);
-    ai.mslT = (WEAPONS[ids[0]].torp ? 5 : 7) + Math.random() * 4;
+    ai.mslT = (WEAPONS[ids[0]].torp ? 6 : 12) + Math.random() * 8;
   }
 }
 
@@ -113,7 +114,7 @@ function fighterAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
   const gun = gunsAlive(s);
   const minD = ai.role === 'gunship' ? 230 : 70;
-  let aim = _pt, thr = s.def.aiSpeed / s.def.maxSpeed, ab = false, aimed = false;
+  let aim = _pt, thr = (s.def.aiSpeed || s.def.maxSpeed * 0.8) / s.def.maxSpeed, ab = false, aimed = false;
   const hurt = s.structure / s.def.structure < 0.25;
   if (!gun || (hurt && ai.aggr < 0.7)) ai.mode = 'flee';
   else if (ai.mode === 'flee') ai.mode = 'attack';
