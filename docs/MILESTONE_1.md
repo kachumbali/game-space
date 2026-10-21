@@ -5,6 +5,7 @@ Reference: commit e19dc94 on main (a local tag `milestone-1` exists, but pushing
 ## Run
 Open `index.html` in Chrome, Edge or Firefox (double-click is enough), or run `python3 -m http.server` in the folder and open http://localhost:8000/.
 Click the canvas to capture the mouse. Press H in game for the key list (full table in README.md).
+Graphics for a strong laptop: `?q=high` (1x pixels, voxel detail 224, 4x MSAA, 1536 px sky) or `?q=ultra` (2x supersampling, detail 288, 2048 px sky, about 200 MB of GPU memory for the sky); P cycles presets in game (sky size and MSAA need the URL). Switching detail rebuilds every ship and takes seconds. `?rescap=N` limits voxels along very large ships (default 420).
 If it is slow: `?nobloom`, press `-` / `[` to lower voxel detail and `=` / `]` for larger pixels, `?skyres=512` for a smaller sky bake.
 
 ## Flags (add to the URL, e.g. `index.html?free&wing=3&frigate`)
