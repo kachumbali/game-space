@@ -185,7 +185,8 @@ function updateCamera(dt) {
   if (!player || !player.alive) return;
   const g = player.group;
   if (view === 'cockpit') {
-    camera.position.copy(g.localToWorld(_cv.set(0, 0.7, -1.2)));
+    const eye = player.def.eye || [0, 0.7, -1.2];
+    camera.position.copy(g.localToWorld(_cv.set(eye[0], eye[1], eye[2])));
     camera.quaternion.copy(g.quaternion);
   } else {
     const t = g.localToWorld(_cv.set(0, 2.8, 12.5));
