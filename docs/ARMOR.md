@@ -36,6 +36,12 @@ armour_fore / (armour_fore + structure)); the type's profile redistributes it by
   completed, no JS errors). Not verified: feel in play, balance against the old pools (ratings were matched, shapes differ).
 - Known loss of detail: the old model had different armour values per facing (fore/aft/left/right); one rating per ship now.
 
+### Exposed parts (owner rule 2026-10-21)
+Antennae and sensors (`radar`), shield projectors (`shield`), radiators and weapons or engines that stick out of the hull can still
+be damaged however thick the armour is. A hit near one of these parts sends 55% of its damage to the part before the armour
+transform (`EXPOSED` reach factors and `SOFT` damage multipliers in `src/65_combat.js`), so even PD fire can blind a sensor or
+cripple a projector on a heavily armoured hull. Losing them has the usual effects (radar, shield, radiator roles).
+
 ## 3. Whipple (spaced) plating: later
 A thin sacrificial plate set off the main hull (CoaDE: gap of at least 25 cm, plate 1-5 mm of a dense soft metal, optionally
 filled with graphite aerogel) that turns kinetic projectiles into plasma before they reach the bulk armour. Proposed game rule:
