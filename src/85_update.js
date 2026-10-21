@@ -167,8 +167,7 @@ function update(dt) {
 
 function updateEnv() {
   const c = camera.position;
-  stars.position.copy(c); sky.position.copy(c);
-  planet.position.copy(c).addScaledVector(PLANET_DIR, 3200);
+  updateSky(c);
   const dp = dustGeo.attributes.position.array;
   for (let i = 0; i < DUST_N; i++) {
     for (let a = 0; a < 3; a++) {

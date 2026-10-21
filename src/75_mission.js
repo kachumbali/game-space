@@ -40,7 +40,7 @@ function objective(id, text, st = 'open') {
 
 // ---- mission 1 ----------------------------------------------------------------------------------------
 const MISSIONS = [{
-  id: 'm01', title: 'OPERATION LILYPAD', subtitle: 'Cover the CSS HALBERD',
+  id: 'm01', look: 'lilypad', title: 'OPERATION LILYPAD', subtitle: 'Cover the CSS HALBERD',
   briefing:
 `The escort corvette CSS HALBERD is holding station at the Lily relay while the convoy spools its jump drives. Eight minutes of exposure.
 
@@ -88,7 +88,7 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
 }];
 
 MISSIONS.push({
-  id: 'm02', title: 'OPERATION REEDBED', subtitle: 'Fleet sweep: Bog Relay and the FROGG outpost',
+  id: 'm02', look: 'reed', title: 'OPERATION REEDBED', subtitle: 'Fleet sweep: Bog Relay and the FROGG outpost',
   grades: [3300, 2900, 2500, 2000],
   briefing:
 `Task Group Eagle (CSS HALBERD and CSS TALON, with your flight) sorties through two areas of operation. The autopilot flies the fleet between them; you take the stick again on arrival.
@@ -99,8 +99,8 @@ NAV 3, THE OUTPOST: a FROGG corvette, GULPER, covers the outpost with an escort 
 
 ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is lost.`,
   areas: {
-    ao2: { name: 'BOG RELAY', planet: null, arrive: 'Drives down. Bog Relay, deep space, no planet cover. Contacts on the scope soon.' },
-    ao3: { name: 'FROGG OUTPOST', planet: [0.7, 0.25, -0.65], arrive: 'Drives down at the outpost. Gas giant on the starboard side. Expect heavy resistance.' },
+    ao2: { name: 'BOG RELAY', look: 'ao2', arrive: 'Drives down. Bog Relay, deep space, no planet cover. Contacts on the scope soon.' },
+    ao3: { name: 'FROGG OUTPOST', look: 'ao3', arrive: 'Drives down at the outpost. Gas giant on the starboard side. Expect heavy resistance.' },
   },
   setup: {
     anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
@@ -165,7 +165,7 @@ function startMission(M) {
   clearWorld();
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
-  PLANET_DIR.set(-0.55, -0.22, -0.8).normalize(); planet.visible = true; cine = null; document.body.classList.remove('cine');
+  applyLook(M.look || 'lilypad'); cine = null; document.body.classList.remove('cine');
   game.mstate = { t: 0, stage: 0, stageT: 0, spawned: {}, ended: false, endT: 0, result: null, jumpDone: false, stats: {} };
   const su = M.setup;
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });

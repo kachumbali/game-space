@@ -128,10 +128,9 @@ function endTransit() {
 }
 function skipTransit() { if (state === 'cine' && cine && cine.t > 1.2) cine.t = cine.dur; }
 
-// per-area scenery: planet direction/visibility
+// per-area scenery: sky / planet / sun look (see LOOKS in 41_sky.js)
 function applyArea(a) {
-  if (a.planet) { PLANET_DIR.set(a.planet[0], a.planet[1], a.planet[2]).normalize(); planet.visible = true; }
-  else if (a.planet === null) planet.visible = false;
+  if (a.look) applyLook(a.look);
   game.mstate.areaName = a.name;
 }
 addEventListener('pointerdown', () => skipTransit());
