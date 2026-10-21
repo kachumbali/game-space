@@ -65,5 +65,5 @@ number (`DETAIL_STEPS`), so detail scales up later.
 `55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
 
 ## Roadmap
-See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` (UX gap analysis,
+See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
 prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. Agents: read `AGENTS.md` first.
