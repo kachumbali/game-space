@@ -13,7 +13,7 @@ repair) 2 corvettes and 12 fighters / large fighter drones. Everything above 500
 | Fighter / interceptor | 10-20 m | built (Kestrel, Darter, Leaper) |
 | Gunship / bomber / heavy fighter | 16-20 m | built (Spitter, Toad, Reaver) |
 | Corvette | 100-150 m | built (Halberd 128 m, Gulper 146 m) |
-| Frigate (jump-capable, in scope) | 300-500 m | planned: first to build (human and FROGG) |
+| Frigate (jump-capable, in scope) | 300-500 m | human Exeter class built (450 m); FROGG frigate planned |
 | Human carrier / dreadnought | ~1.5 km | deferred (beyond current 500 m cap) |
 | Hive carrier | 2-3 km | deferred; catalogue model exists at 2.5 km |
 | Super capital (human) | ~5 km | deferred |
@@ -33,14 +33,20 @@ Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). 
 | Toad | FROGG | fighter (bomber role) | torpedo bomber | 19 m | 78 m/s |
 | Reaver | FROGG | fighter (heavy role) | heavy fighter | 19 m | 95 m/s |
 | Gulper | FROGG | corvette | escort corvette | 146 m | 34 m/s |
-| Hive Carrier | FROGG | capital | super carrier | 2,500 m | 12 m/s (placeholder) |
+| Exeter class | human | frigate | jump frigate, docks 2 corvettes + 12 fighters/drones (no repair) | 450 m | 30 m/s |
+| Hive Carrier | FROGG | capital | super carrier (deferred, over 500 m cap) | 2,500 m | 12 m/s (placeholder) |
 Note: the Spitter/Toad/Reaver have `cls: 'fighter'` in data; a separate role field is needed once class masks exist.
 ### Planned (no models yet)
-Human drone wingman, human frigate, human carrier (~1.5 km), human dreadnought (~1.5 km), human super capital (~5 km),
+Human drone wingman (large fighter drone), FROGG frigate, human carrier (~1.5 km, deferred), human dreadnought (~1.5 km, deferred), human super capital (~5 km, deferred),
 tender / SAR ship, freighter/tanker, station/drydock; FROGG frigate, FROGG mothership (~10 km), brood-spawn drones.
 Human factions with distinct ships: deferred until the back story exists (docs/LORE.md).
 
 ## 3. Voxel overview and scale
+**Subsystem positions (rule, owner 2026-10-21): every model view and blueprint shows its subsystems.** Marker key:
+engine = orange ring, main gun = green square, PD turret = yellow triangle, shield generator = cyan diamond,
+sensors/bridge = magenta ring, reactor = red cross, radiator = white panel, fighter bay / corvette cradle = purple box,
+weapon muzzle = green plus; faint rings show hit-zone radius (blueprint elevations only).
+![voxel models with subsystem positions](img/ship_classes_subsystems.png)
 ![voxel models](img/ship_classes_grid.png)
 ![true scale, fighters and corvettes](img/ship_classes_scale.png)
 Earlier FROGG look (insect/frog) for comparison: `img/ship_classes_grid_before_frogg_v2.png`.
@@ -54,7 +60,7 @@ nacelles with orange vents, small pale lights on pods. Weapons stay venom-green 
 Open points: hull still reads warm-brown under the current sun; hangar maws, radiator-like structures and hardpoints
 need work on the capital models.
 
-## 5. Blueprint plates
+## 5. Blueprint plates (with subsystem markers)
 Each plate: side elevation, front elevation, plan, 3/4 view, overall measured dimensions, stats.
 ![Kestrel](img/blueprints/bp_kestrel.png)
 ![Halberd](img/blueprints/bp_halberd.png)
@@ -63,6 +69,7 @@ Each plate: side elevation, front elevation, plan, 3/4 view, overall measured di
 ![Spitter](img/blueprints/bp_spitter.png)
 ![Toad](img/blueprints/bp_toad.png)
 ![Reaver](img/blueprints/bp_reaver.png)
+![Exeter](img/blueprints/bp_exeter.png)
 ![Gulper](img/blueprints/bp_gulper.png)
 ![Hive Carrier](img/blueprints/bp_hivecarrier.png)
 
@@ -71,3 +78,16 @@ Each plate: side elevation, front elevation, plan, 3/4 view, overall measured di
 - The 3/4 view is a flat-shaded silhouette plus edge shading, not a rendered art plate.
 - Hive Carrier voxels are coarse (about 12 m per voxel); fine at catalogue distance, not for close flybys.
 - No performance test of the 2.5 km model in the sim yet.
+
+## 7. Exeter class (human frigate, 450 m)
+Inspiration: owner-supplied angular grey/white frigate image (style only). Features: wedge hull, dorsal slab, bridge tower and mast,
+bow hangar maw (12 fighters/drones), two side corvette cradles (2 corvettes), folded radiator panels (heat management for
+PD lasers, docs/CAPITAL_COMBAT.md), outboard engine pods on pylons plus a central engine, 7 PD turret clusters, two
+forward rails. Docking carries but does not repair or rearm. Hit points and PD weapon values are placeholders. Not yet used in missions.
+
+## 8. Fighter drone (human, planned; owner brief 2026-10-21)
+Auto wingman, smaller and more agile than the Kestrel (no pilot G-limit). Armament: one central (spinal) mag cannon and two
+missiles. Behaviours: fly ahead as scouts, escort, attack on orders, and **ram ships to self-destruct** for damage.
+Model targets (placeholders, to tune): length ~7-8 m, turn rate above Kestrel, low shield, very low hull. Needs: subsystem
+set (engine, cannon, missile rail, sensor, core), marker rendering like all models, ram-damage rule (see docs/FLEET_LOGIC.md
+section 9). Open: how many dock slots a drone takes (the frigate carries 12 fighters/large drones).

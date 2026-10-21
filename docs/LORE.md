@@ -21,3 +21,4 @@ Everything here is the owner's stated direction; nothing is verified or final.
 - Only capital ships jump; fighters and corvettes dock first (docs/FLEET_LOGIC.md section 8).
 - Pilots can eject; SAR assets can recover them (FROGG pilots cannot).
 - Ship size cap for now: 500 m (frigate). Carriers, dreadnoughts, super capitals and hive motherships are later.
+- Human **fighter drones**: small, agile, one central mag cannon + 2 missiles, scout ahead or ram to self-destruct (docs/FLEET_LOGIC.md section 9).

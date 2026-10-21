@@ -175,3 +175,17 @@ type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "w
 3. Are FROGG ships bound by it?
 4. Does a flown mission always start at a capital (docked/launched) or can a mission start mid-transit?
 5. How do we show loadouts on the strategic map without UI bloat on phones?
+
+## 9. Fighter drones (owner brief 2026-10-21)
+- **Role:** auto wingmen; smaller and more agile than crewed fighters; one central mag cannon + 2 missiles; can fly
+  ahead as scouts or ram targets and self-destruct for damage. Take the same orders as wingmen (attack, cover me, engage all,
+  depart) plus drone-only orders: **scout ahead** and **ram target**.
+- **Autonomy and control:** default to AI wingman behaviour tied to the leader; comm degradation (FS2 thresholds) reduces
+  order availability; a destroyed carrier/tender or jamming could drop them to a fallback state (hold, return).
+- **Ram rule (proposal):** collision damage = k x mass x closing speed^2, delivered as kinetic+explosive to the hit
+  subsystem under the contact point, bypassing PD only if the drone survives to contact. Existing code has a fighter-vs-big-ship
+  collision branch (`65_combat.js` collisions, "corvette shrugs it off"), which must change for drones.
+- **Economy:** expendable, replaced from materiel; stock held aboard frigates (docking takes slots, no repair).
+- **Counter-play:** PD kills drones; drones saturate PD ahead of heavy missiles/nukes (docs/CAPITAL_COMBAT.md); FROGGs use
+  neuro-slaved pilots rather than drones, so no FROGG equivalent unless story requires it.
+- **Open:** dock slots per drone (1 or 0.5), whether drones count as "kills" for pilot records, hacking/jamming by FROGGs.

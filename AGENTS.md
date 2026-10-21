@@ -38,6 +38,13 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
   `Claude-Session: https://claude.ai/code/session_01TRehonFDPmfuVq2JLTyzaF`
 - Do not enable GitHub Pages without approval.
 
+## Ship model rules
+- **Every ship model view and blueprint must show subsystem positions** (engines, guns, PD turrets, shields, sensors,
+  reactor, radiators, bays, cradles, muzzles). Use the `comps`, `mounts`, `turrets`, `engines` data as the single source.
+- Blueprint/plate generator scripts currently live in the session scratchpad (`bp.py`, `marks.py`, `subgrid.py`); move them
+  into the repo (`tools/`) before relying on them.
+- Size cap for now: ships under 500 m (frigate). Only frigates jump; docking does not repair.
+
 ## Delivery
 After a change the owner expects the rebuilt `index.html` plus screenshots. Update README and docs when
 behaviour changes.
