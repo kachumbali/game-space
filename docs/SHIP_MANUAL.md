@@ -88,6 +88,6 @@ forward rails. Docking carries but does not repair or rearm. Hit points and PD w
 ## 8. Fighter drone (human, planned; owner brief 2026-10-21)
 Auto wingman, smaller and more agile than the Kestrel (no pilot G-limit). Armament: one central (spinal) mag cannon and two
 missiles. Behaviours: fly ahead as scouts, escort, attack on orders, and **ram ships to self-destruct** for damage.
-Model targets (placeholders, to tune): length ~7-8 m, turn rate above Kestrel, low shield, very low hull. Needs: subsystem
+Owner update 2026-10-21: 6 m long, small shield only, 48 per frigate, lost until replenished, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette (docs/FLEET_LOGIC.md 9a). Model targets (placeholders, to tune): length 6 m, turn rate above Kestrel, low shield, very low hull. Needs: subsystem
 set (engine, cannon, missile rail, sensor, core), marker rendering like all models, ram-damage rule (see docs/FLEET_LOGIC.md
-section 9). Open: how many dock slots a drone takes (the frigate carries 12 fighters/large drones).
+section 9). Open: jamming rules (later).

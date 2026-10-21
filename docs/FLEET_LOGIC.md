@@ -189,3 +189,14 @@ type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "w
 - **Counter-play:** PD kills drones; drones saturate PD ahead of heavy missiles/nukes (docs/CAPITAL_COMBAT.md); FROGGs use
   neuro-slaved pilots rather than drones, so no FROGG equivalent unless story requires it.
 - **Open:** dock slots per drone (1 or 0.5), whether drones count as "kills" for pilot records, hacking/jamming by FROGGs.
+
+### 9a. Drone rules set by owner (2026-10-21, supersedes open items above)
+- **Size and capacity:** drones are 6 m long; a frigate stores **48 drones** (in addition to its 12 fighters and 2 corvettes,
+  as stated: capacity is about mass, not class). Small shield only; more manoeuvrable than any crewed fighter.
+- **Attrition:** a lost drone stays lost until replenished at a base or by a logistics transport ship. No repair by docking.
+- **Control limits (drones slaved per controller):** fighter 1, heavy fighter 2, corvette 6. A controller issues orders to its
+  slaved drones only; drones are not shared between controllers.
+- **Kills:** a drone's kills count for its controlling pilot as **drone kills** (tracked separately from personal kills).
+- **Jamming:** deferred; to be defined later (affects control link, order availability, fallback behaviour).
+- **Consequences to design:** logistics transport ship class (resupply drones/missiles); drone count as a strategic stock;
+  an order UI that targets "my drones"; per-controller drone assignment saved in the roster.

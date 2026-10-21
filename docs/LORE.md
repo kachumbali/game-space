@@ -22,3 +22,4 @@ Everything here is the owner's stated direction; nothing is verified or final.
 - Pilots can eject; SAR assets can recover them (FROGG pilots cannot).
 - Ship size cap for now: 500 m (frigate). Carriers, dreadnoughts, super capitals and hive motherships are later.
 - Human **fighter drones**: small, agile, one central mag cannon + 2 missiles, scout ahead or ram to self-destruct (docs/FLEET_LOGIC.md section 9).
+- Drones: 6 m, 48 per frigate, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette; kills count as drone kills for the controller; jamming rules later.
