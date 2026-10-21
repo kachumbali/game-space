@@ -510,7 +510,7 @@ SHIPS.kestrel = {
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
   ],
   shield: { fore: 40, aft: 40 }, armor: { fore: 40, aft: 30, left: 35, right: 35 }, structure: 50,
-  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 5, sig: 1,
+  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 3, sig: 1,
   flameColor: 0x66c8ff,
 };
 
@@ -932,8 +932,8 @@ function scaleShip(def, newLength) {
 scaleShip(SHIPS.halberd, 128);
 scaleShip(SHIPS.gulper, 146);
 
-// human-testing tweak: fighters turn 50% faster (applies to player and AI alike)
-for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 1.5;
+// human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
+for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;
 // ======================================================================
 //  RENDERER / SCENE
 // ======================================================================
@@ -1406,7 +1406,7 @@ const WEAPONS = {
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 560, dmg: 2.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 560, dmg: 3.6, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
   lash: { kind: 'proj', name: 'LASH CANNON', cd: 2.0, v: 540, dmg: 34, dt: 'en', life: 3.2, spread: 0.002, color: 0xaaff40, len: 7, sz: 0.9, sfx: 'lash', glob: true, big: true },
@@ -1843,7 +1843,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
-  if (s === player) { shake = Math.min(1, shake + 0.1 + dmg * 0.012); hitFlash = Math.min(1, hitFlash + 0.18 + dmg * 0.01); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
+  if (s === player) { shake = Math.min(1, shake + 0.16 + dmg * 0.02); hitFlash = Math.min(1, hitFlash + 0.4 + dmg * 0.03); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
   const nz = lp.z / def.half[2], nx = lp.x / def.half[0];
   const facing = nz < 0 ? 'fore' : 'aft';
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
@@ -2073,7 +2073,7 @@ function pickTarget(s) {
     else if (role === 'corvette' || role === 'capital') sc *= isCapital(e) ? 0.6 : 1;
     else {
       sc *= isCapital(e) ? 3 : 1;
-      if (e === player) sc *= 0.8;
+      if (e === player) sc *= 0.55;
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
     }
@@ -2185,6 +2185,20 @@ function fighterAI(s, dt) {
     turnToward(s, aim, dt, 0.7); flightModels.arcade(s, { throttle: 0.5 }, dt); return;
   }
   const dist = ep.distanceTo(t.group.position);
+  // last-minute swerve: if a collision is imminent, break sideways instead of ramming
+  if (ai.mode === 'attack' && dist < 450) {
+    _ad.copy(t.group.position).sub(ep);
+    const closing = _ap.copy(s.vel).sub(t.vel).dot(_ad) / Math.max(dist, 1);
+    const ttc = closing > 8 ? (dist - t.def.radius - s.def.radius) / closing : 99;
+    if (ttc < 1.6 + ai.aggr * 0.5) {
+      _ad.normalize();
+      const sd = _af.crossVectors(_ad, _up);
+      if (sd.lengthSq() < 1e-4) sd.set(1, 0, 0);
+      sd.normalize().multiplyScalar(ai.dir || 1);
+      ai.mode = 'break'; ai.t = 1.3 + Math.random() * 1.2; ai.dir = -(ai.dir || 1);
+      ai.aimB = ep.clone().addScaledVector(sd, 380).addScaledVector(_up, (Math.random() - 0.5) * 260).addScaledVector(_ad, 120);
+    }
+  }
   if (ai.mode === 'attack') {
     aim.copy(leadPoint(s, t, primarySpeed(s)));
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
@@ -2889,7 +2903,7 @@ function updatePlayer(dt) {
   const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
   const roll = kb('KeyQ', 'KeyE');
   const tm = turnMul(s);
-  _eu.set(pitch * 1.6 * 1.5 * tm * dt, yaw * 1.1 * 1.5 * tm * dt, roll * 2.2 * 1.5 * tm * dt, 'XYZ');
+  _eu.set(pitch * 1.6 * 2.85 * tm * dt, yaw * 1.1 * 2.85 * tm * dt, roll * 2.2 * 2.85 * tm * dt, 'XYZ');
   s.group.quaternion.multiply(_dq.setFromEuler(_eu)).normalize();
   s.throttle = clamp(s.throttle + kb('KeyW', 'KeyS') * 0.6 * dt, 0, 1);
   const ab = keys.has('ShiftLeft') || keys.has('ShiftRight');
@@ -2916,7 +2930,7 @@ function updateShieldsAndFx(s, dt) {
   for (const f of ['fore', 'aft']) {
     const cap = s.def.shield[f] * sg;
     if (s.shield[f] > cap) s.shield[f] = cap;
-    if (s.def.shieldRegen && time - s.lastHit > 3 && s.shield[f] < cap)
+    if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s));
   }
   s.energy = Math.min(100, s.energy + 17 * powerMul(s) * dt);

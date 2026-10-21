@@ -12,7 +12,7 @@ function updatePlayer(dt) {
   const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
   const roll = kb('KeyQ', 'KeyE');
   const tm = turnMul(s);
-  _eu.set(pitch * 1.6 * 1.5 * tm * dt, yaw * 1.1 * 1.5 * tm * dt, roll * 2.2 * 1.5 * tm * dt, 'XYZ');
+  _eu.set(pitch * 1.6 * 2.85 * tm * dt, yaw * 1.1 * 2.85 * tm * dt, roll * 2.2 * 2.85 * tm * dt, 'XYZ');
   s.group.quaternion.multiply(_dq.setFromEuler(_eu)).normalize();
   s.throttle = clamp(s.throttle + kb('KeyW', 'KeyS') * 0.6 * dt, 0, 1);
   const ab = keys.has('ShiftLeft') || keys.has('ShiftRight');
@@ -39,7 +39,7 @@ function updateShieldsAndFx(s, dt) {
   for (const f of ['fore', 'aft']) {
     const cap = s.def.shield[f] * sg;
     if (s.shield[f] > cap) s.shield[f] = cap;
-    if (s.def.shieldRegen && time - s.lastHit > 3 && s.shield[f] < cap)
+    if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s));
   }
   s.energy = Math.min(100, s.energy + 17 * powerMul(s) * dt);

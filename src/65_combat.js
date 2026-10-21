@@ -22,7 +22,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
-  if (s === player) { shake = Math.min(1, shake + 0.1 + dmg * 0.012); hitFlash = Math.min(1, hitFlash + 0.18 + dmg * 0.01); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
+  if (s === player) { shake = Math.min(1, shake + 0.16 + dmg * 0.02); hitFlash = Math.min(1, hitFlash + 0.4 + dmg * 0.03); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
   const nz = lp.z / def.half[2], nx = lp.x / def.half[0];
   const facing = nz < 0 ? 'fore' : 'aft';
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');

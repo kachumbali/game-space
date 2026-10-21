@@ -22,7 +22,7 @@ function pickTarget(s) {
     else if (role === 'corvette' || role === 'capital') sc *= isCapital(e) ? 0.6 : 1;
     else {
       sc *= isCapital(e) ? 3 : 1;
-      if (e === player) sc *= 0.8;
+      if (e === player) sc *= 0.55;
       if (s.team === 0 && pp) sc += e.group.position.distanceTo(pp) * 0.6;     // wingmen protect the player
       if (e.def.ai?.role === 'bomber' && s.team === 0) sc *= 0.7;
     }
@@ -134,6 +134,20 @@ function fighterAI(s, dt) {
     turnToward(s, aim, dt, 0.7); flightModels.arcade(s, { throttle: 0.5 }, dt); return;
   }
   const dist = ep.distanceTo(t.group.position);
+  // last-minute swerve: if a collision is imminent, break sideways instead of ramming
+  if (ai.mode === 'attack' && dist < 450) {
+    _ad.copy(t.group.position).sub(ep);
+    const closing = _ap.copy(s.vel).sub(t.vel).dot(_ad) / Math.max(dist, 1);
+    const ttc = closing > 8 ? (dist - t.def.radius - s.def.radius) / closing : 99;
+    if (ttc < 1.6 + ai.aggr * 0.5) {
+      _ad.normalize();
+      const sd = _af.crossVectors(_ad, _up);
+      if (sd.lengthSq() < 1e-4) sd.set(1, 0, 0);
+      sd.normalize().multiplyScalar(ai.dir || 1);
+      ai.mode = 'break'; ai.t = 1.3 + Math.random() * 1.2; ai.dir = -(ai.dir || 1);
+      ai.aimB = ep.clone().addScaledVector(sd, 380).addScaledVector(_up, (Math.random() - 0.5) * 260).addScaledVector(_ad, 120);
+    }
+  }
   if (ai.mode === 'attack') {
     aim.copy(leadPoint(s, t, primarySpeed(s)));
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.8 + Math.random() * 1.5; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
