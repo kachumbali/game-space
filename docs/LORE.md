@@ -24,3 +24,4 @@ Everything here is the owner's stated direction; nothing is verified or final.
 - Human **fighter drones**: small, agile, one central mag cannon + 2 missiles, scout ahead or ram to self-destruct (docs/FLEET_LOGIC.md section 9).
 - Drones: 6 m, 48 per frigate, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette; kills count as drone kills for the controller; jamming rules later.
 - Heavy fighters carry a crew of 2: pilot and weapons specialist (the specialist can run the 2 slaved drones).
+- Specialist seat is AI for now: manages munitions, drones and ECM while the player flies and shoots; two-person crews eject in one pod; two-crew heavy fighters are human only.
