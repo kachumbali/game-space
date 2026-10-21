@@ -75,3 +75,7 @@ Ships, squadron strength and missile stocks carry over (FS2's persistent loadout
 ## Caveats
 Effort labels are guesses. No playtest evidence exists for the strategic layer. Genre references marked [M] are
 from memory and unverified.
+
+## Update 2026-10-21: owner's answers
+1. Player chooses a pilot from a finite persistent roster (state and memories). 2. Turn-based; a dogfight mission is
+one battle. 3. Pilots can eject and be rescued by SAR assets. Details: `docs/FLEET_LOGIC.md`.
