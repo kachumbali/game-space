@@ -40,7 +40,8 @@ Consequences and open points (analysis, not owner statements):
 ## Rules already set
 - Only capital ships jump; fighters and corvettes dock first (docs/FLEET_LOGIC.md section 8).
 - Pilots can eject; SAR assets can recover them (FROGG pilots cannot).
-- Ship size cap for now: 500 m (frigate). Carriers, dreadnoughts, super capitals and hive motherships are later.
+- Ship size cap for now: 500 m (frigate), except the FROGG **Bullfrog** (600 m, jump-capable spine carrier with a 36-fighter hangar; owner decision 2026-10-22, docs/BULLFROG.md). Carriers, dreadnoughts, super capitals and hive motherships are later.
+- FROGGs field **no drones**: their fighters are flown by neuro-slaved pilots (anti-AI doctrine); the Bullfrog's hangar holds crewed FROGG fighters only (Darter, Leaper, Spitter, Toad, Reaver).
 - Human **fighter drones**: small, agile, one central mag cannon + 2 missiles, scout ahead or ram to self-destruct (docs/FLEET_LOGIC.md section 9).
 - Drones: 6 m, 48 per frigate, slaved 1 per fighter / 2 per heavy fighter / 6 per corvette; kills count as drone kills for the controller; jamming rules later.
 - Heavy fighters carry a crew of 2: pilot and weapons specialist (the specialist can run the 2 slaved drones).

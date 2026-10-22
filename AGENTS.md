@@ -42,7 +42,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - **Every ship model view and blueprint must show subsystem positions** (engines, guns, PD turrets, shields, sensors,
   reactor, radiators, bays, cradles, muzzles). Use the `comps`, `mounts`, `turrets`, `engines` data as the single source.
 - Blueprint/plate generator scripts are in `tools/gen/` (moved 2026-10-22, not re-run since; see its README). Test scripts: `tools/tests/`.
-- Size cap for now: ships under 500 m (frigate). Only frigates jump; docking does not repair.
+- Size cap for now: ships under 500 m (frigate), **with one explicit exception: the FROGG Bullfrog (600 m, `cls: 'capital'`, jump-capable; owner decision 2026-10-22, docs/BULLFROG.md, src/79_bullfrog.js)**. Only frigates and the Bullfrog jump; docking does not repair.
 
 ## Delivery
 After a change the owner expects the rebuilt `index.html` plus screenshots. Update README and docs when

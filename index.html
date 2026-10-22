@@ -5700,7 +5700,6 @@ function hangarLaunch(s, b, cls) {
   const f = makeShip(BF.kind[cls], s.team, pos, s.group.quaternion.clone(), { grp: s.grp, skill: s.skill });
   f.vel.copy(s.vel).addScaledVector(_bv.set(0, -1, 0).applyQuaternion(s.group.quaternion), 30);
   f.carrier = s; f.hitCool = 2; f.ai.mode = 'attack';
-  H.out.push(f);
   bfLog.push({ ev: 'launch', t: +time.toFixed(1), bay: b.id, cls });
   return f;
 }
