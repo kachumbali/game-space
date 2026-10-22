@@ -5,6 +5,7 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | Script | What it checks |
 |---|---|
 | `suite1.py` | 10 URL variants load, no console errors |
+| `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `m2full.py` | mission 2 flow through all stages |
 | `bot2.py` | autopilot bot flight, no errors (note: its mission-2 run stays in the cinematic at t=3; not investigated) |
 | `duel2.py 10,12,14 3` | 4 Kestrels vs N FROGGs balance duels (args: FROGG counts, runs, sim-second limit) |

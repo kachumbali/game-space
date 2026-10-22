@@ -3,7 +3,9 @@
 // ======================================================================
 startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
 if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
+else if (params.has('sk')) startSkirmish(skFromParams());
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
+else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
 let last = performance.now();
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
@@ -19,6 +21,7 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
+  startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
   launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,

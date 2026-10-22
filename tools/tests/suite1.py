@@ -1,5 +1,5 @@
 from lib import *
-CASES=['?free','?free&q=low','?free&q=mid','?free&q=high','?free&wing=2&frigate&q=high','?free&n=6&wing=2&nuke=2&aifm=newton','?go&m=1','?go&m=2','?touch&free','?free&speed=2&nobloom']
+CASES=['?free','?free&q=low','?free&q=mid','?free&q=high','?free&wing=2&frigate&q=high','?free&n=6&wing=2&nuke=2&aifm=newton','?go&m=1','?go&m=2','?touch&free','?free&speed=2&nobloom','?m=2','?sk=darter:2,gulper:1&sk_wing=1','']
 for u in CASES:
     with Runner() as R:
         pg=R.page(640,360,u); pg.wait_for_timeout(1500)

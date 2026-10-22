@@ -144,6 +144,7 @@ function update(dt) {
   }
   updateWarnings(dt);
   if (game.mission) missionUpdate(dt);
+  if (game.mode === 'skirmish') skirmishUpdate(dt);
 
   for (const d of debris) {
     d.life += dt;
