@@ -34,8 +34,8 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 ## Git
 - Commit small, push to `origin main` (https://github.com/kachumbali/game-space). Do not force push. End each
   commit message with:
-  `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>` and
-  `Claude-Session: https://claude.ai/code/session_01TRehonFDPmfuVq2JLTyzaF`
+  `Co-Authored-By: Mistral Vibe (Mistral AI) <noreply@mistral.ai>`
+  (Earlier commits carry Claude trailers; tool history in docs/MILESTONE_2.md.)
 - Do not enable GitHub Pages without approval.
 
 ## Ship model rules
