@@ -41,8 +41,8 @@ def t_exeter(R):
     for regen in (False, True):
         pg=R.page(320,180,'?free&n=0&q=low')
         r=pg.evaluate('(arg)=>{'+PRE+'''
-          const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2000),{});bf.ai.role='capital';
-          const ex=g.spawnShip('exeter',0,V(0,0,-2000),V(0,0,0),{ai:'capital'});freeze(ex);
+          const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2300),{});bf.ai.role='capital';bf.stores.tad=0;
+          const ex=g.spawnShip('exeter',0,V(0,0,-2300),V(0,0,0),{ai:'capital'});freeze(ex);
           g.update(0.05);const sp=bf.spine||__bf.spineInit(bf);sp.tgt=ex;
           const out=[];
           for(let i=1;i<=6;i++){
