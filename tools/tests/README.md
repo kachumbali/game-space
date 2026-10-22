@@ -8,6 +8,7 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | `bullfrog_t.py [warn spine exeter friendly arcs pd hangar inst blast]` | Bullfrog (docs/BULLFROG.md): spine timeline, HUD warning, Exeter hit count, friendly-line refusal, turret arcs, PD vs missiles, hangar cadence/cap/bay loss, voxel instances and LOD, missile blast reach |
 | `bullfrog_eng.py SEED [LIMIT] [RANGE] [DT]` | owner acceptance engagement: Exeter + 12 Kestrels + 2 Halberds vs Bullfrog + hangar at 10 km (no rendering, about 10-30 s wall per run); results in docs/BALANCE_TESTS.md |
 | `bullfrog_surf.py`, `bullfrog_view.py` | Bullfrog turret/component surface probe; five-view screenshot renders (`/tmp/gs_bf_*.png`) |
+| `spine_sim.py [START_DIST] [LIMIT_S]` | Bullfrog-vs-Exeter 1v1 diagnostic (docs/BULLFROG.md 4.4a): spine charge/fire/fizzle timeline with shield/structure around each hit; Tadpoles and hangar fighters disabled (default 6000 m, 900 sim-s) |
 | `suite1.py` | 10 URL variants load, no console errors |
 | `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `music_t.py` | music: autoplay start on first input, mood per game state (patrol/combat/heavy in flight, menu on briefings, story in transits, win), correct track files, `?mute`, all audio files served |
