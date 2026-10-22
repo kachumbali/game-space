@@ -19,3 +19,16 @@ Source: `length` and `half` extents in `src/30_ships_human.js`, `src/31_ships_fr
 ![scale](img/ship_classes_scale.png)
 
 Kestrel row updated for the redesign; Halberd and Gulper rows for the 128/146 m scaling (span/height = 2 x half-extent). Kestrel multiples are relative to 12.4 m for the first row only approximately.
+
+## Weapon mounts and turrets (2026-10-22)
+- **Fixed mounts** (`mounts[].pos`, ship space): bolts, missiles' guns and beams originate exactly at `pos`, which must sit on the visible muzzle of the model. `tools/tests/muzzle_t.py` reports, per mount, the distance to the nearest solid voxel and whether the point is inside the hull, and writes marker screenshots (mount red, launch yellow, turret barrel tip green, turret base blue) to `/tmp/gs_shots/ships`.
+- **Turrets** (`turrets[]`: `{ w, pos, comp, side, cls }`). `pos` is the base on the hull surface, `side` +1 dorsal / -1 ventral, `comp` the hit zone that powers/kills it. `cls` is the size class by absolute diameter of the visible assembly:
+
+| cls | diameter | barrel | default for |
+|---|---|---|---|
+| S | 5 m | 1.2 x dia | `pd`, `sting` |
+| M | 11 m | 1.7 x dia | every other weapon (`laser`, `flaser`, `spitcannon`, ...) |
+| L | 30 m | 1.8 x dia | explicit `cls:'L'` only (heavy lance turrets) |
+  The diameter is clamped to 12 % of the hull length (small hulls). Beam turrets have one barrel, others twin barrels that alternate. Bolts and beams leave from the barrel tip of the rotated head (`T.muzzles`), not the turret centre. `comps[].r` of a turret should be about half the diameter (flag if it differs by more than 2x).
+- **Missile launch points**: optional `launch: [x, y, z]` per ship (ship space, x mirrors alternately left/right); sits at the front of the visible missile pod, pylon or bay mouth. Without it the default is a point under the nose (`half`-derived).
+- **Dead turrets** (component hp 0) stop firing, the barrel droops onto the hull and the assembly darkens.

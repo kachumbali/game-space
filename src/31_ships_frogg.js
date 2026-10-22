@@ -191,6 +191,7 @@ SHIPS.darter = {
   engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
   mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
   stores: { tick: 2, flare: 8 },
+  launch: [0.62, -0.32, -1.75],         // front of the flank pod
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-1.0, -0.15, 3.8], r: 0.8, hp: 7 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [1.0, -0.15, 3.8], r: 0.8, hp: 7 },
@@ -227,6 +228,7 @@ SHIPS.leaper = {
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
   mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
   stores: { tick: 2, flare: 10 },
+  launch: [0.9, -0.5, -2.8],            // front of the flank pod
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.2, -0.25, 5.2], r: 1.1, hp: 10 },
@@ -267,6 +269,7 @@ SHIPS.spitter = {
     { w: 'fang', pos: [1.6, -0.5, -8.0], comp: 'gunR', grp: 2 }, { w: 'fang', pos: [-1.6, -0.5, -8.0], comp: 'gunL', grp: 2 },
   ],
   stores: { tick: 4, flare: 10 },
+  launch: [1.9, -1.1, -0.5],            // front of the sac pod
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.8, -0.3, 6.2], r: 1.4, hp: 14 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.8, -0.3, 6.2], r: 1.4, hp: 14 },
@@ -310,6 +313,7 @@ SHIPS.toad = {
     { w: 'tad', pos: [0, -2.2, -2.9], comp: 'rack', grp: 3, store: 'tad' },
   ],
   stores: { tad: 3, flare: 16 },
+  launch: [0, -2.1, -3.3],              // front of the ventral torpedo pod cluster
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.3, 7.0], r: 1.6, hp: 18 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.3, 7.0], r: 1.6, hp: 18 },
@@ -356,6 +360,7 @@ SHIPS.reaver = {
     { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
   ],
   stores: { tick: 6, flare: 12 },
+  launch: [2.5, -0.7, -5.2],            // front of the flank pod
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.0, -0.3, 7.0], r: 1.8, hp: 18 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.0, -0.3, 7.0], r: 1.8, hp: 18 },
@@ -391,7 +396,7 @@ SHIPS.gulper = {
     // dorsal crest of spikes
     ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
     // sting turret bases
-    ell([3.6, 4.7, -2], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 4.8, 14], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }),
+    ell([3.6, 7.0, -2], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 5.5, 14], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }),
     // trailing blades
     nBlade([8, 0.5, 6], [16.5, 0.2, 34], 0.9), nBlade([7, -3, 12], [14, -3.8, 36], 0.7), nBlade([6, 3.5, 4], [12, 5.6, 30], 0.6),
     // engine nacelles
@@ -408,19 +413,20 @@ SHIPS.gulper = {
     { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
   ],
   turrets: [
-    { w: 'sting', pos: [3.6, 5.0, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 5.0, -2], comp: 'tur2', side: 1 },
-    { w: 'sting', pos: [3.4, 5.1, 14], comp: 'tur3', side: 1 }, { w: 'sting', pos: [-3.4, 5.1, 14], comp: 'tur4', side: 1 },
+    { w: 'sting', pos: [3.6, 7.35, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 7.35, -2], comp: 'tur2', side: 1 },
+    { w: 'sting', pos: [3.4, 5.85, 14], comp: 'tur3', side: 1 }, { w: 'sting', pos: [-3.4, 5.6, 14], comp: 'tur4', side: 1 },
   ],
   stores: { tad: 6, flare: 0 },
+  launch: [0, -6.4, -8.6],              // mouth of the ventral drum (launch bay)
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
     { id: 'lashL', name: 'LASH L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
     { id: 'lashR', name: 'LASH R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 5.0, -2], r: 1.5, hp: 26 },
-    { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 5.0, -2], r: 1.5, hp: 26 },
-    { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.1, 14], r: 1.5, hp: 26 },
-    { id: 'tur4', name: 'STING 4', role: 'turret', pos: [-3.4, 5.1, 14], r: 1.5, hp: 26 },
+    { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 7.35, -2], r: 1.5, hp: 26 },
+    { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 7.35, -2], r: 1.5, hp: 26 },
+    { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.85, 14], r: 1.5, hp: 26 },
+    { id: 'tur4', name: 'STING 4', role: 'turret', pos: [-3.4, 5.6, 14], r: 1.5, hp: 26 },
     { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 1.5, 0], r: 3.4, hp: 110 },
     { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 4.2, -17], r: 7.0, hp: 90 },
     { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },

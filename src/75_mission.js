@@ -197,7 +197,7 @@ function startMission(M, seg) {
     comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
     return;
   }
-  state = 'brief';
+  state = 'brief'; beamsClear();
   showBriefing(M);
 }
 

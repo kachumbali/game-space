@@ -32,7 +32,7 @@ function startTransit(tr) {
   cine = { t: 0, dur, tr, li: 0, fwd, side, beacon, fov: camera.fov, shot: -1, prevView: view };
   // shot list as fractions of the leg
   cine.shots = [['flyby', 0.26], ['orbit', 0.22], ['chase', 0.2], ['bow', 0.16], ['arrive', 0.16]];
-  state = 'cine';
+  state = 'cine'; beamsClear();
   document.body.classList.add('cine');
   if (capEl) capEl.textContent = '';
   sfx('jump');
@@ -130,7 +130,7 @@ function endTransit() {
   if (player) { player.throttle = 0.4; player.group.quaternion.copy(game.anchor.group.quaternion); }
   game.mstate.area = c.tr.area;
   cine = null;
-  state = 'play';
+  state = 'play'; beamsClear();
   if (fadeEl) { fadeEl.style.transition = 'none'; fadeEl.style.opacity = '1'; requestAnimationFrame(() => { fadeEl.style.transition = 'opacity 1.1s'; fadeEl.style.opacity = '0'; }); }
   if (area) comm('CONTROL', area.arrive || `Arrived at ${area.name}.`);
   sfx('jump');

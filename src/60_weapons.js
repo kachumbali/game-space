@@ -40,12 +40,12 @@ const WEAPONS = {
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
-  // Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
-  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true },
+  // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
+  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0 },       // continuous large laser: needs a big power pool (def.energyMax)
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -143,7 +143,7 @@ function beamFocus(F, w, tgt) {
   if (F.t < w.acq) return 0;
   return 0.25 + ((w.peak || 1) - 0.25) * Math.min(1, (F.t - w.acq) / w.ramp);
 }
-function fireBeam(s, w, wp, dirW, F) {
+function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   const end = wp.clone().addScaledVector(dirW, w.range);
   let bestS = null, bestHit = null, bestD = 1e9;
   for (const o of ships) {
@@ -158,7 +158,11 @@ function fireBeam(s, w, wp, dirW, F) {
   const bcol = new THREE.Color(w.color || 0xff5040);
   const live = !w.acq || mult > 0, k = live ? 3 : 0.7;            // a tracking beam is drawn thin and dim, a damaging beam bright
   const bc = [bcol.r * k, bcol.g * k, bcol.b * k, 1];
-  for (let d = 0; d < len; d += live ? 14 : 30) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), live ? 0.09 : 0.06, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
+  // the visible beam is drawn by 61_beams.js (ribbon + flares); `key` identifies the firing mount/turret so one record is refreshed per shot
+  const shieldUp = !!bestS && (bestS.shield.fore > 0 || bestS.shield.aft > 0);
+  beamNote(key || F || s, s, w, { obj: srcObj || s.group, local: srcLocal || s.group.worldToLocal(wp.clone()) },
+    bestS ? { obj: bestS.group, local: bestHit, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
+    live || (!!F && F.t >= w.acq && time - F.last < 1.2), w.acq ? Math.min(1, (F ? F.t : 0) / w.acq) : 1, shieldUp);      // a focused beam that just missed is still drawn as a firing beam
   if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
   const fr = bestS.team === s.team;
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
@@ -170,7 +174,7 @@ function fireBeam(s, w, wp, dirW, F) {
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
   applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
-  sparksAt(wpH, 4, 10, bc);
+  if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
 }
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
@@ -184,7 +188,7 @@ function fireMount(s, m) {
   const fixedConv = s.def.cls === 'fighter';
   const dl = _w2.set(0, 0, fixedConv ? -CONVERGE : -1000).sub(_w1.set(m.pos[0], m.pos[1], m.pos[2])).normalize();
   const dirW = dl.clone().applyQuaternion(s.group.quaternion);
-  if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
+  if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus, m, s.group, new THREE.Vector3(m.pos[0], m.pos[1], m.pos[2])); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
@@ -252,7 +256,7 @@ function launchMissile(s, wid) {
   s.group.updateMatrixWorld(true);
   const side = (s.launchAlt = -(s.launchAlt || 1));
   const half = s.def.half;
-  const lp = s.def.launch ? s.def.launch : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const lp = s.def.launch ? [side * Math.abs(s.def.launch[0]), s.def.launch[1], s.def.launch[2]] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
@@ -443,24 +447,41 @@ function updateFlashes(dt) {
 }
 
 // ---- turrets (point defence / anti-fighter) -------------------------------------------------------------
+// Turret classes by absolute diameter of the visible assembly (owner spec 2026-10-22): S about 5 m, M 10-15 m, L 20-40 m; barrels 1.2x (S) to 1.7-1.8x (M, L) the diameter.
+// `cls` on the turret data entry; default by weapon: pd/sting = S, everything else = M. Clamp: never more than 12% of the hull length (small hulls).
+const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
+function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'sting') ? 'S' : 'M'); }
+function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
 function makeTurret(s, t) {
-  const w = WEAPONS[t.w];
+  const w = WEAPONS[t.w], cls = turretCls(t), D = turretDia(s, t), bl = (TUR_BARREL[cls] || 1.5) * D;
   const g = new THREE.Group();
-  const col = s.def.fac === 'frogg' ? 0x4a3a24 : 0x8b949f, dark = s.def.fac === 'frogg' ? 0x24190f : 0x2c3138;
-  const sc = s.def.cls === 'corvette' ? 1 : 0.5;
-  const base = new THREE.Mesh(new THREE.BoxGeometry(1.5 * sc, 0.7 * sc, 1.5 * sc), new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, metalness: 0.25 }));
-  g.add(base);
-  const head = new THREE.Group(); head.position.y = 0.4 * sc * t.side; g.add(head);
-  head.add(new THREE.Mesh(new THREE.BoxGeometry(1.0 * sc, 0.5 * sc, 1.1 * sc), new THREE.MeshStandardMaterial({ color: col, roughness: 0.5, metalness: 0.3 })));
-  for (const x of [-0.28, 0.28]) {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(0.16 * sc, 0.16 * sc, 1.9 * sc), new THREE.MeshStandardMaterial({ color: dark, roughness: 0.5 }));
-    b.position.set(x * sc, 0, -1.2 * sc); head.add(b);
+  const fr = s.def.fac === 'frogg';
+  const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+  const mBase = mat(fr ? 0x4a3a24 : 0x8b949f, 0.6, 0.25), mHead = mat(fr ? 0x5a4630 : 0xa4acb6, 0.5, 0.3), mBar = mat(fr ? 0x24190f : 0x2c3138, 0.5, 0.4);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D, 14), mBase);
+  base.position.y = 0.08 * D; g.add(base);                                  // pos = hull surface: the ring sits mostly proud of it
+  const head = new THREE.Group(); head.position.y = 0.3 * D * t.side; g.add(head);
+  const hb = new THREE.Mesh(new THREE.BoxGeometry(0.72 * D, 0.38 * D, 0.82 * D), mHead); head.add(hb);
+  const beam = w.kind === 'beam', xs = beam ? [0] : [-0.17, 0.17];
+  const muzzles = [];
+  for (const x of xs) {
+    const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
+    const b = new THREE.Mesh(new THREE.BoxGeometry(th, th, bl), mBar);
+    b.position.set(x * D, 0, -(0.3 * D + bl / 2)); head.add(b);
+    const brake = new THREE.Mesh(new THREE.BoxGeometry(th * 1.5, th * 1.5, 0.1 * D), mBar);
+    brake.position.set(x * D, 0, -(0.3 * D + bl)); head.add(brake);
+    muzzles.push(new THREE.Vector3(x * D, 0, -(0.3 * D + bl + 0.05 * D)));
   }
+  if (beam) { const lens = new THREE.Mesh(new THREE.BoxGeometry(0.1 * D, 0.1 * D, 0.1 * D), new THREE.MeshBasicMaterial({ color: new THREE.Color(w.color).multiplyScalar(1.6) })); lens.position.copy(muzzles[0]).z += 0.02 * D; head.add(lens); }
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  head.visible = true;
-  return { def: t, w, wid: t.w, comp: t.comp, group: g, head, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzle: 1.6 * sc, q: new THREE.Quaternion() };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false };
+}
+function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
+  const m = T.muzzles[T.mi++ % T.muzzles.length];
+  T.head.updateWorldMatrix(true, false);
+  return T.head.localToWorld(out.copy(m));
 }
 function updateTurrets(s, dt) {
   if (!s.turrets.length) return;
@@ -470,9 +491,13 @@ function updateTurrets(s, dt) {
     const comp = compOf(s, T.comp);
     const dead = comp && comp.hp <= 0;
     T.group.visible = true;
-    if (dead) { T.head.rotation.x = 0.5; continue; }
+    if (dead) {                                                                 // dead turret: barrel droops onto the hull, assembly goes dark, no fire
+      if (!T.dead) { T.dead = true; for (const m of T.mats) m.color.multiplyScalar(0.3); }
+      T.head.quaternion.slerp(_wq.setFromAxisAngle(_w1.set(1, 0, 0), -0.7), Math.min(1, dt * 1.5));
+      continue;
+    }
     T.cool -= dt; T.thinkT -= dt;
-    const tp = T.group.getWorldPosition(_w1.clone());
+    const tp = T.head.getWorldPosition(_w1.clone());
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
       let best = null, bs = 1e9;
@@ -517,19 +542,21 @@ function updateTurrets(s, dt) {
     if (T.w.kind === 'beam') {
       const tol = clamp(0.8 * (tg.def ? tg.def.radius : 5) / Math.max(dist, 1), 0.004, 0.05);
       if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy) {
-        const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
+        const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
           T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
-          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 });
+          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
+          T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
       T.cool = T.w.cd;
-      const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
+      const mp = turretMuzzle(T, new THREE.Vector3());
+      T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
       if (Math.random() < 0.35) sparksAt(mp, 1, 5, [2.4, 2.0, 1.0, 1]);
       if (Math.random() < 0.25) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
