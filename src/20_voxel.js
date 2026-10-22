@@ -113,7 +113,7 @@ function primInside(p, x, y, z) {
 
 const _col = new THREE.Color(), _col2 = new THREE.Color();
 const voxCache = new Map();
-const resFor = (def, idx) => Math.min(RES_CAP, Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1)));
+const resFor = (def, idx) => Math.min(RES_CAP, def.resCap || RES_CAP, Math.round(DETAIL_STEPS[idx] * Math.pow(Math.max(1, def.length / 12), 0.4) * (def.resMul || 1)));
 
 // ======================================================================
 //  SURFACE DETAIL (procedural, deterministic, resolution-gated; see docs/SHIP_MANUAL.md "Surface detail")

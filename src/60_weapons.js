@@ -478,7 +478,7 @@ function updateTurrets(s, dt) {
       let best = null, bs = 1e9;
       const beamT = T.w.kind === 'beam';
       if (beamT && T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && T.tgt.group.position.distanceTo(tp) < T.w.range) best = T.tgt;   // a laser turret holds its target: focus is lost on every switch
-      else if (!beamT) for (const m of hostileMissiles) {                 // missiles first
+      else if (!beamT && !T.w.noPD) for (const m of hostileMissiles) {   // noPD (acid cannon) never shoots missiles                 // missiles first
         const d = m.pos.distanceTo(tp);
         if (d < T.w.range * 0.75 && (m.target === s || d < 500) && d < bs) { bs = d; best = m; }
       }
@@ -487,7 +487,8 @@ function updateTurrets(s, dt) {
         for (const e of ships) {
           if (!e.alive || e.team === s.team || e.dying) continue;
           const d = e.group.position.distanceTo(tp);
-          const pr = beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
+          if ((T.w.pdOnly && d > 300) || (T.w.bigOnly && e.def.cls === 'fighter' && d > 900)) continue;      // Bullfrog roles: thorn = missiles (ships only inside 300 m), heavy lance = big targets
+          const pr = T.w.noPD ? (e.def.cls === 'fighter' && e.def.ai?.role !== 'bomber' ? d * 3 : d) : beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
           if (d < T.w.range && pr < bs) { bs = pr; best = e; }
         }
       }

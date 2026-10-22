@@ -476,6 +476,82 @@ SHIPS.hivecarrier = {
   ai: { role: 'capital' },
 };
 
+
+// ---- BULLFROG: 600 m jump capital, forward spine lance + 36-fighter hangar (docs/BULLFROG.md). Authored at full size (no scaleShip).
+// Turret sizes (owner): S ~5 m (r 2.5), M ~12 m (r 6.5), L ~30 m (r 17). Positions: see BULLFROG.md 3.3 (L2 moved to z -165 so its blister clears bay A).
+const bfArch = z => {                                   // hand-placed rib arch with cyan seam towards the bow (BULLFROG.md 7.3), same maths as fRef for E=[0,0,30,70,38,255]
+  const cz = 30, rz = 255, rx = 70, ry = 38, th = 2.8, f = Math.sqrt(Math.max(0, 1 - ((z - cz) / rz) ** 2)) * 1.07;
+  const pts = [0.12, 0.7, 1.25, 1.85, 2.4].map(a => [rx * Math.sin(a) * f, ry * Math.cos(a) * f, z]);
+  return chain(pts, [th * 2, th * 2.3, th * 2.3, th * 2, th * 1.6], N.mt, { rust: N.ru, edge: N.ed, streak: 1 });
+};
+const bfT = (id, w, cls, x, y, z, side) => ({ w, cls, pos: [x, y, z], comp: id, side });
+const bfC = (id, name, role, x, y, z, r, hp) => ({ id, name, role, pos: [x, y, z], r, hp });
+const bfMir = (f) => [f(1), f(-1)];
+SHIPS.bullfrog = {
+  id: 'bullfrog', name: 'FROGG BULLFROG', cls: 'capital', fac: 'frogg', role: 'SPINE CARRIER',
+  length: 600, half: [95, 55, 300], mirror: true, rustK: 0.4, radius: 305, resMul: 0.85, resCap: 400,
+  jump: true, dock: { fighters: 36, corvettes: 0 },
+  launch: [0, -44, -40],
+  prims: [
+    ell([0, 0, 30], [68, 36, 255], N.dk, nSt(6, 0.1)),                                   // core barrel
+    ell([0, 24, 10], [52, 15, 225], N.dk2, nSt(6, 0.1)), ell([0, 32, -30], [34, 8, 165], N.dk, nSt(5, 0.1)),   // dorsal shells
+    ell([0, -4, 60], [88, 9, 200], N.dk, nSt(6, 0.1)), ell([0, -10, 90], [74, 7, 170], N.dk2, nSt(6, 0.1)),    // flare discs
+    ell([30, -2, -226], [24, 28, 62], N.dk, nSt(5, 0.1)), ell([28, 8, -210], [20, 14, 40], N.dk2, nSt(5, 0.1)), // split-jaw prow lobes
+    ell([0, 0, -176], [24, 26, 34], N.dk, nSt(5, 0.1)),                                  // skull block behind the spine slot
+    ...nMand(34, 16, -236, 92, 5.5), ...nMand(30, -18, -236, 80, 5), ...nMand(54, 0, -218, 64, 4.5),
+    seg([0, -4, -200], [0, -4, -252], 9, 7, N.dk), seg([0, -4, -250], [0, -4, -296], 6.5, 4.5, N.bl),   // spine emitter barrel
+    ell([0, -4, -297], [8, 8, 3], N.cy, { glow: true, glowF: 1.5 }),
+    ...[-258, -272, -286].map(z => ell([0, -4, z], [9, 9, 2.2], N.mt, nSt(2, 0))),       // collar plates
+    // ventral launch drum, hangar maws, torpedo tube cluster
+    seg([0, -30, -120], [0, -30, 130], 20, 17, N.dk, { dots: { col: N.pr, p: 0.02, f: 1 } }), ell([0, -30, 132], [15, 14, 6], N.dk2),
+    ell([0, -46, -95], [24, 7, 32], N.bl, { dots: { col: N.pr, p: 0.05, f: 1 } }), ell([0, -46, 90], [24, 7, 32], N.bl, { dots: { col: N.pr, p: 0.05, f: 1 } }),
+    ...[[-8, -48], [8, -48], [-8, -38], [8, -38]].map(([x, y]) => seg([x, y, -30], [x, y, -44], 3, 2.4, N.bl)),
+    nKeel(-46, -20, 20, 10, 5),
+    // heart dome (dorsal) over the reactor
+    ell([0, 30, 150], [36, 14, 34], N.dk2, nSt(5, 0.1)),
+    // turret housings: L barbette (dorsal) and blister (ventral) ~38 m footprint, M mounts ~12 m, S/PD ~5 m
+    ell([0, 30, -150], [19, 9, 20], N.mt, nSt(3, 0.1)), ell([0, -23, -165], [19, 9, 20], N.mt, nSt(3, 0.1)),
+    ...[[44, 30, -70], [54, 26, 80], [46, -28, -20]].map(([x, y, z]) => ell([x, y, z], [6.5, 3, 6.5], N.mt, nSt(2, 0))),
+    // shield gland blisters
+    ell([0, 33, -40], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }), ell([0, 31, 170], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }),
+    // rib arches to the bow, flank spikes
+    ...[-180, -160, -140, -120, -100].flatMap(bfArch),
+    ...[-150, -100, -50, 0, 50, 100, 150].map((z, i) => nSpike([34, 30, z], [40, 55 - i * 2, z + 36], 3.5 - i * 0.2)),
+    // trailing blades, pylons, engine nacelles
+    nBlade([40, 2, 150], [78, 6, 262], 3.2), nBlade([60, 2, 60], [92, 0, 290], 4), nBlade([48, -6, 90], [84, -8, 288], 3),
+    ...nNoz(24, 12, 244, 296, 12), ...nNoz(50, -4, 240, 294, 14), ...nNoz(76, 8, 236, 290, 11),
+    ...fDetail({ disc: [0, -4, 60, 88, 9, 200], rim: 18, E: [0, 0, 30, 70, 38, 255], refN: 11, plates: 14, gills: 8, collars: 9, ribs: 9, spikes: 8,
+      noz: [[24, 12, 244, 296, 12], [50, -4, 240, 294, 14], [76, 8, 236, 290, 11]], blades: [[[40, 2, 150], [78, 6, 262], 3.2], [[60, 2, 60], [92, 0, 290], 4]], guns: [[0, -4, -250, -296, 4.5]] }),
+  ],
+  engines: [[24, 12, 0], [50, -4, 0], [76, 8, 0]].flatMap(([x, y], i) => [{ pos: [x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 1), r: [12, 14, 11][i] }, { pos: [-x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 2), r: [12, 14, 11][i] }]),
+  mounts: [
+    { w: 'spine', pos: [0, -4, -299], comp: 'spine', grp: 9, store: 'spine' },
+    { w: 'tad', pos: [0, -43, -40], comp: 'tubes', grp: 3, store: 'tad' },
+  ],
+  turrets: [
+    bfT('L1', 'lanceL', 'L', 0, 34, -150, 1), bfT('L2', 'lanceL', 'L', 0, -26, -165, -1),
+    ...[['M1', 44, 30, -70, 1], ['M3', 54, 26, 80, 1], ['M5', 46, -28, -20, -1]].flatMap(([id, x, y, z, sd], i) => { const n = +id.slice(1); return [bfT('M' + n, 'acidT', 'M', x, y, z, sd), bfT('M' + (n + 1), 'acidT', 'M', -x, y, z, sd)]; }),
+    ...[['S1', 32, 34, -200, 1], ['S3', 40, 34, -10, 1], ['S5', 36, 32, 110, 1], ['S7', 36, -30, -130, -1], ['S9', 40, -30, 90, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('S' + n, 'sting', 'S', x, y, z, sd), bfT('S' + (n + 1), 'sting', 'S', -x, y, z, sd)]; }),
+    ...[['P1', 16, 40, -110, 1], ['P3', 24, 38, 150, 1], ['P5', 22, -36, -60, -1], ['P7', 26, -34, 200, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('P' + n, 'thorn', 'S', x, y, z, sd), bfT('P' + (n + 1), 'thorn', 'S', -x, y, z, sd)]; }),
+  ],
+  stores: { tad: 16, flare: 0 },
+  comps: [
+    bfC('spine', 'SPINE EMITTER', 'gun', 0, -4, -286, 13, 700),
+    bfC('L1', 'HEAVY LANCE DORSAL', 'turret', 0, 34, -150, 17, 260), bfC('L2', 'HEAVY LANCE VENTRAL', 'turret', 0, -26, -165, 17, 260),
+    ...[['M1', 44, 30, -70], ['M3', 54, 26, 80], ['M5', 46, -28, -20]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('M' + n, 'ACID M' + n, 'turret', x, y, z, 6.5, 120), bfC('M' + (n + 1), 'ACID M' + (n + 1), 'turret', -x, y, z, 6.5, 120)]; }),
+    ...[['S1', 32, 34, -200], ['S3', 40, 34, -10], ['S5', 36, 32, 110], ['S7', 36, -30, -130], ['S9', 40, -30, 90]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('S' + n, 'STING S' + n, 'turret', x, y, z, 2.5, 45), bfC('S' + (n + 1), 'STING S' + (n + 1), 'turret', -x, y, z, 2.5, 45)]; }),
+    ...[['P1', 16, 40, -110], ['P3', 24, 38, 150], ['P5', 22, -36, -60], ['P7', 26, -34, 200]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('P' + n, 'THORN PD P' + n, 'turret', x, y, z, 2.5, 40), bfC('P' + (n + 1), 'THORN PD P' + (n + 1), 'turret', -x, y, z, 2.5, 40)]; }),
+    ...[['E1', 24, 12], ['E3', 50, -4], ['E5', 76, 8]].flatMap(([id, x, y]) => { const n = +id.slice(1); return [bfC('E' + n, 'ENGINE E' + n, 'engine', x, y, 262, 14, 330), bfC('E' + (n + 1), 'ENGINE E' + (n + 1), 'engine', -x, y, 262, 14, 330)]; }),
+    bfC('shieldF', 'SHIELD GLAND FWD', 'shield', 0, 32, -40, 20, 700), bfC('shieldA', 'SHIELD GLAND AFT', 'shield', 0, 30, 170, 20, 600),
+    bfC('eyes', 'EYES', 'radar', 0, 28, -215, 16, 500), bfC('power', 'HEART', 'power', 0, 0, 150, 18, 1100),
+    bfC('bayA', 'HANGAR BAY A (18)', 'bay', 0, -32, -95, 22, 650), bfC('bayB', 'HANGAR BAY B (18)', 'bay', 0, -32, 90, 22, 650),
+    bfC('tubes', 'TORPEDO TUBES', 'gun', 0, -42, -10, 14, 500),
+  ],
+  shield: { fore: 2000, aft: 1600 }, armor: { type: 'hard', rating: 0.30 }, structure: 3000,
+  energyMax: 3200, energyRegen: 320, shieldRegen: 6, maxSpeed: 22, aiSpeed: 14, accel: 2.0, turn: 0.06, sig: 12, flameColor: 0xff6a2a,
+  ai: { role: 'lancer' },
+};
+
 // attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
-['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'hivecarrier'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
+['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'hivecarrier', 'bullfrog'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
 for (const id in SHIPS) if (SHIPS[id].fac === 'frogg') SHIPS[id].flameColor = 0x30dcff;      // cyan drive plumes

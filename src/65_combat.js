@@ -15,8 +15,8 @@ function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 :
 
 // reach multiplier of a subsystem's radius within which a hull impact damages it directly
 // parts that stick out of the hull can be hit directly through the armour (reach = radius x factor); SOFT = extra damage taken
-const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, radiator: 1.8 };
-const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2 };
+const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, radiator: 1.8, bay: 1.4 };
+const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {

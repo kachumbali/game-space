@@ -80,6 +80,8 @@ function orderFly(s, dt) {
 }
 function pickTarget(s) {
   const role = s.ai.role;
+  if (role === 'lancer') return lancerPick(s);                              // 79_bullfrog.js
+  if (s.ai.escort && s.ai.escort.alive) { const et = escortPick(s); if (et) return et; }
   if (s.ai.order && !isCapital(s)) { const ot = orderTarget(s); if (ot !== undefined) return ot; }
   if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
     const la = s.lastAttacker, hp = s.structure / s.def.structure;
@@ -176,6 +178,7 @@ function aiUpdate(s, dt) {
     if (ai.fleeT > 5) { s.alive = false; if (game.mission) comm('CONTROL', 'Damaged FROGG broke contact.', '#aab8c0'); return; }
   }
   if (isCapital(s)) return capitalAI(s, dt);
+  if (s.carrier && bfFighterHook(s, dt)) return;                             // Bullfrog fighters: spine corridor keep-out, orphan flight
   if (ai.order && orderFly(s, dt)) return;
   if (ai.role === 'bomber') return bomberAI(s, dt);
   return fighterAI(s, dt);
@@ -299,6 +302,8 @@ function bomberAI(s, dt) {
 }
 
 function capitalAI(s, dt) {
+  if (s.ai.role === 'lancer') return lancerAI(s, dt);
+  if (s.ai.escort && escortAI(s, dt)) return;
   const ai = s.ai, t = s.target, ep = s.group.position;
   if (!t) { aiFly(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);

@@ -5,7 +5,7 @@
 //  __game.startSkirmish(cfg)); game.mode = 'skirmish'. Win = enemy force dead (or endless respawn), lose = player down.
 //  Part 76 only calls other parts at run time, so there are no load-time dependencies on later parts.
 // ======================================================================
-const SK_ENEMY = ['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'halberd', 'exeter', 'hivecarrier'];
+const SK_ENEMY = ['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'halberd', 'exeter', 'bullfrog', 'hivecarrier'];
 const SK_PRESETS = [
   { id: 'w1', name: 'WAVES 1', rows: [['leaper', 1]] },
   { id: 'w2', name: 'WAVES 2', rows: [['darter', 1], ['leaper', 1]] },
@@ -15,9 +15,11 @@ const SK_PRESETS = [
   { id: 'gulper', name: 'GULPER', rows: [['gulper', 1], ['reaver', 1], ['darter', 2]] },
   { id: 'halberd', name: 'VS HALBERD', rows: [['halberd', 1]] },
   { id: 'exeter', name: 'VS EXETER', rows: [['exeter', 1]] },
-  { id: 'hive', name: 'HIVE CARRIER', rows: [['hivecarrier', 1]], warn: true },
+  { id: 'bullfrog', name: 'BULLFROG', rows: [['bullfrog', 1]], warn: true },
+  { id: 'bullfrog2', name: 'BULLFROG + 2 GULPER', rows: [['bullfrog', 1], ['gulper', 2]], warn: true },
+  { id: 'hive', name: 'HIVE CARRIER (UNARMED)', rows: [['hivecarrier', 1]], warn: true },
 ];
-const SK_RANGES = [['CLOSE', 800], ['MEDIUM', 2000], ['FAR', 4000]];
+const SK_RANGES = [['CLOSE', 800], ['MEDIUM', 2000], ['FAR', 4000], ['VERY FAR', 10000]];
 const SK_DEFAULT = { ship: 'kestrel', wing: 0, rows: [['leaper', 2]], skill: 3, wskill: 3, fm: 'arcade', missiles: true, respawn: false, range: 2000, look: 'lilypad', ally: 'none' };
 let skCfg = { ...SK_DEFAULT, rows: SK_DEFAULT.rows.map(r => [...r]) };
 try { const j = JSON.parse(localStorage.getItem('gs_sk') || 'null'); if (j && Array.isArray(j.rows)) skCfg = skNorm(j); } catch (e) { /* storage unavailable */ }
@@ -29,7 +31,7 @@ function skNorm(c) {
   o.wing = clamp(o.wing | 0, 0, 3); o.skill = clamp(o.skill | 0 || 3, 1, 5); o.wskill = clamp(o.wskill | 0 || 3, 1, 5);
   if (!SHIPS[o.ship] || o.ship !== 'kestrel') o.ship = 'kestrel';
   o.fm = o.fm === 'newton' ? 'newton' : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
-  o.range = clamp(+o.range || 2000, 300, 8000); if (!LOOKS[o.look]) o.look = 'lilypad';
+  o.range = clamp(+o.range || 2000, 300, 12000); if (!LOOKS[o.look]) o.look = 'lilypad';
   o.ally = ['halberd', 'exeter'].includes(o.ally) ? o.ally : 'none';
   return o;
 }
@@ -122,7 +124,8 @@ function showSkirmishSetup(focus) {
   const c = skCfg;
   const sc = $id('brief').querySelector('.panel')?.scrollTop || 0;
   const heavy = c.rows.some(r => r[0] === 'hivecarrier');
-  const cap = c.rows.some(r => ['gulper', 'halberd', 'exeter'].includes(r[0])) || c.ally !== 'none';
+  const bfw = c.rows.some(r => r[0] === 'bullfrog');
+  const cap = c.rows.some(r => ['gulper', 'halberd', 'exeter', 'bullfrog'].includes(r[0])) || c.ally !== 'none';
   const total = c.rows.reduce((a, r) => a + r[1], 0);
   const rows = c.rows.map((r, i) => `<div class="skrow"><select data-f="t${i}" data-t="${i}">${SK_ENEMY.map(k => `<option value="${k}" ${k === r[0] ? 'selected' : ''}>${SHIPS[k].name}</option>`).join('')}</select>
       <button data-f="m${i}" data-n="${i}" data-d="-1">-</button><b>${r[1]}</b><button data-f="p${i}" data-n="${i}" data-d="1">+</button><button data-f="x${i}" data-x="${i}" title="remove row">x</button></div>`).join('');
@@ -135,6 +138,7 @@ function showSkirmishSetup(focus) {
       <div class="skrow pre">${SK_PRESETS.map(p => `<button data-f="pre-${p.id}" data-pre="${p.id}">${p.name}</button>`).join('')}</div>
       ${rows}<div class="skrow"><button data-f="add" data-add="1">+ ADD ROW</button><button data-f="clr" data-clr="1">CLEAR</button></div>
       ${heavy ? '<div class="skwarn">WARNING: HIVE CARRIER is 2.5 km long and by far the heaviest model (coarse voxels, long build, low frame rate on weak GPUs). Not verified on real hardware.</div>' : ''}
+      ${bfw ? '<div class="skwarn">WARNING: BULLFROG is 600 m with a 3.2 km spine lance, 26 turrets and 36 fighters (about 40-60k voxels plus up to 12 airborne fighters at once). Not verified on real hardware.</div>' : ''}
       ${cap && !heavy ? '<div class="skwarn lo">Corvette and frigate models are heavy to voxelise (Halberd ~35k, Gulper ~78k instances); loading takes a moment.</div>' : ''}
     </div><div>
       <div class="sub">ENEMY SKILL (1 ROOKIE - 5 ACE)</div><div class="skrow">${skSeg('skill', [1, 2, 3, 4, 5].map(v => [v, v]), c.skill)}</div>
@@ -196,6 +200,7 @@ function startSkirmish(cfgIn) {
   log('SKIRMISH: ' + cfg.rows.map(r => r[1] + ' ' + SHIPS[r[0]].name).join(', '), '#ffd080');
   return game;
 }
+const _pf2 = new THREE.Vector3();
 function skSpawnForce() {
   const cfg = game.sk, pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
   wave++; game.skS.spawned++;
@@ -205,7 +210,8 @@ function skSpawnForce() {
     const dir = new THREE.Vector3().randomDirection().multiplyScalar(0.5).addScaledVector(pf, 0.8).normalize();
     const dist = cfg.range + (big ? def.radius : 0) + (big ? 0 : (n % 6) * 40);
     const pos = player.group.position.clone().addScaledVector(dir, dist);
-    const e = spawnShip(kind, 1, pos, player.group.position, { grp: 'W', skill: cfg.skill, fm: cfg.fm, ai: big && kind !== 'gulper' ? 'capital' : undefined });
+    const e = spawnShip(kind, 1, pos, player.group.position, { grp: 'W', skill: cfg.skill, fm: cfg.fm, ai: big && kind !== 'gulper' && def.ai?.role !== 'lancer' ? 'capital' : undefined });
+    if (kind === 'gulper') { const bfs = ships.find(x => x.team === 1 && x.ai.role === 'lancer'); if (bfs) { e.ai.escort = bfs; e.group.position.copy(bfs.group.position).addScaledVector(_pf2.set(0, 0, -1).applyQuaternion(bfs.group.quaternion), 750).addScaledVector(_pf2.set(1, 0, 0).applyQuaternion(bfs.group.quaternion), (i % 2 ? -1 : 1) * 575); } }
     if (!cfg.missiles) for (const k of MSL_ORDER) if (k in e.stores) e.stores[k] = 0;
   }
 }
