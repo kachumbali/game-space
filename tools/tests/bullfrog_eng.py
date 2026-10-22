@@ -28,7 +28,7 @@ STEP='''(sec)=>{const E=__E,g=E.g;let n=Math.round(sec/E.dt);
   while(n-->0){
     g.update(E.dt);E.t+=E.dt;
     for(const s of g.ships){if(!E.all.has(s)){E.all.set(s,{id:s.def.id,team:s.team,cls:s.def.cls,born:E.t});}}
-    for(const [s,r] of E.all){if(!r.dead&&(!s.alive||s.dying>0)&&s!==g.player){r.dead=E.t;r.jumped=!!s.jumped;r.removed=s.alive===false&&!s.dying&&!(s.structure<=0);}}
+    for(const [s,r] of E.all){if(!r.dead&&(!s.alive||s.dying>0)&&s!==g.player){r.dead=E.t;r.jumped=!!s.jumped;r.removed=(s.orphanT||0)>=30;r.by=s.lastAttacker?s.lastAttacker.def.id:null;}}
     if(E.first.cap===null&&E.ex.alive&&E.bf.alive&&E.ex.group.position.distanceTo(E.bf.group.position)<3400)E.first.cap=E.t;
     if(E.first.fighters===null){let f=false;for(const a of E.kes){if(!a.alive)continue;for(const b of g.ships){if(b.team===1&&b.def.cls==='fighter'&&b.alive&&a.group.position.distanceTo(b.group.position)<900){f=true;break;}}if(f)break;}if(f)E.first.fighters=E.t;}
     if(E.first.damage===null){const h=sum();if(h>0)E.first.damage=E.t;}
@@ -46,7 +46,7 @@ STEP='''(sec)=>{const E=__E,g=E.g;let n=Math.round(sec/E.dt);
 FINAL='''()=>{const E=__E,g=E.g,bf=E.bf,sp=bf.spine||{shots:[]};
   const recs=[...E.all.values()];const dead=(team,cls)=>recs.filter(r=>r.team===team&&r.cls===cls&&r.dead).length;
   const tot=(team,cls)=>recs.filter(r=>r.team===team&&r.cls===cls).length;
-  const cap=(s,id)=>{const r=E.all.get(s);return {alive:s.alive&&!(s.dying>0),died:r&&r.dead?+r.dead.toFixed(1):null,jumped:!!s.jumped,structPct:Math.round(100*Math.max(0,s.structure)/s.def.structure)};};
+  const cap=(s,id)=>{const r=E.all.get(s);return {by:(E.all.get(s)||{}).by||null,alive:s.alive&&!(s.dying>0),died:r&&r.dead?+r.dead.toFixed(1):null,jumped:!!s.jumped,structPct:Math.round(100*Math.max(0,s.structure)/s.def.structure)};};
   const H=bf.hangar||{launched:0,lostManifest:0,bays:[]};
   const orphaned=recs.filter(r=>r.team===1&&r.cls==='fighter'&&r.dead&&r.removed).length;
   return {t:+E.t.toFixed(1),first:E.first,exeter:cap(E.ex),bullfrog:cap(bf),halberds:E.hal.map(h=>cap(h)),
