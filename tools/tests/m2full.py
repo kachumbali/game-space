@@ -1,0 +1,17 @@
+from lib import *
+with Runner() as R:
+    pg=R.page(1280,720,'?go&m=2&nobloom')
+    pg.wait_for_timeout(1500)
+    pg.evaluate("()=>{__paused=true}")
+    def step(n,dt=0.05): pg.evaluate(f"()=>{{for(let i=0;i<{n};i++)__game.update({dt})}}")
+    def info(): return pg.evaluate("()=>({t:+__game.game.mstate.t.toFixed(1),stage:__game.game.mstate.stage,st:__game.state,area:__game.game.mstate.area||null,ships:__game.ships.filter(s=>s.alive).map(s=>s.def.id+(s.grp||'')).join(',')})")
+    def kill(g): pg.evaluate("(g)=>{__game.ships.filter(s=>s.grp===g&&s.alive).forEach(s=>__game.destroy(s))}",g)
+    step(80); print('transit1',info())
+    pg.keyboard.press('Space'); pg.wait_for_timeout(100)
+    step(5); print('after skip attempt (should still be cine <1.2s)',info())
+    step(30); pg.keyboard.press('Space'); step(5); print('skipped',info())
+    step(100); print('A',info()); kill('A'); step(120); print('B',info()); kill('B'); step(120); print('transit2',info())
+    step(700); print('after transit2',info()); step(80); print('C',info())
+    pg.screenshot(path=SP+'/m2_C.png')
+    kill('C'); step(200); print('end',info())
+    pg.wait_for_timeout(500); pg.screenshot(path=SP+'/m2_debrief.png'); print(R.errs[:6])
