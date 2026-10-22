@@ -383,7 +383,36 @@ SHIPS.exeter = {
     { id: 'cradleL', name: 'CRADLE L (corvette)', role: 'dock', pos: [-34, -7, 40], r: 14, hp: 300 },
     { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
   ],
-  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600,
+  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600, stores: { drone: 48 },
   maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff, energyMax: 2500, energyRegen: 350,
   ai: { role: 'capital' },
+};
+
+// ---- DRONE: unmanned 6 m wingman (docs/FLEET_LOGIC.md 9/9a). cls stays 'fighter' so fighter rules (fixed guns, PD priority, no big-ship death throes) apply;
+// `drone: true` switches on the drone AI/orders (56_drones.js). No pilot, no eject, no missiles, one light gun, small shield. Cheap voxel model (resMul).
+const D6 = { hull: 0xaab2bb, hull2: 0x8a929c, dark: 0x30363e, canopy: 0x2a9ad0, amber: 0xc79a3a };
+SHIPS.drone = {
+  id: 'drone', name: 'DRONE', cls: 'fighter', drone: true, fac: 'human', role: 'COMBAT DRONE (UNMANNED)',
+  length: 6, half: [2.9, 0.7, 3.4], mirror: true, radius: 3.3, seam: [1.5, 1.1], eye: [0, 0.3, -1.2], resMul: 0.32, noDetail: true,
+  prims: [
+    tap([0, 0, -1.0], 1.7, [0.16, 0.12], [0.5, 0.36], D6.hull, { sh: 'h' }),
+    tap([0, 0, 1.5], 1.5, [0.5, 0.36], [0.46, 0.34], D6.hull2, { sh: 'h' }),
+    ell([0, 0.22, -1.3], [0.26, 0.18, 0.6], D6.canopy, { glow: false }),
+    tap([1.5, -0.02, 1.2], 1.3, [1.2, 0.07], [0.5, 0.04], D6.hull2, { ax: 'x', sweep: 0.3 }),
+    tap([2.7, 0, 1.6], 0.15, [0.5, 0.06], [0.45, 0.05], D6.amber, { ax: 'x', sweep: 0.3 }),
+    tap([0, 0, 3.0], 0.25, [0.34, 0.27], [0.3, 0.24], 0x2a2d33, { sh: 'e' }),
+    ell([0, 0, 3.3], [0.24, 0.19, 0.08], 0x7fd0ff, { glow: true }),
+    seg([0, -0.3, -0.6], [0, -0.32, -3.0], 0.07, 0.05, D6.dark, { noMirror: true }),
+  ],
+  engines: [{ pos: [0, 0, 3.3], comp: 'eng', r: 0.3 }],
+  mounts: [{ w: 'dgun', pos: [0, -0.32, -3.05], comp: 'gun', grp: 1 }],
+  stores: {},
+  comps: [
+    { id: 'eng', name: 'ENGINE', role: 'engine', pos: [0, 0, 2.4], r: 0.9, hp: 5 },
+    { id: 'gun', name: 'GUN', role: 'gun', pos: [0, -0.3, -1.5], r: 0.6, hp: 4 },
+    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 0.8], r: 0.7, hp: 6 },
+  ],
+  shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
+  maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
+  ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
 };

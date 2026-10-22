@@ -4,6 +4,7 @@ from playwright.sync_api import sync_playwright
 # First run installs three@0.170.0 into GS_TEST_DIR (needs npm). Override GS_TEST_DIR / GS_CHROMIUM if your paths differ.
 REPO=os.path.abspath(os.path.join(os.path.dirname(__file__),'..','..'))
 SP=os.environ.get('GS_TEST_DIR','/tmp/gs_test')
+PORT=os.environ.get('GS_PORT','8765')     # set GS_PORT / GS_TEST_DIR to run beside another test run
 def prep():
     os.makedirs(SP,exist_ok=True)
     if not os.path.isdir(SP+'/node_modules/three'):
@@ -20,7 +21,7 @@ def chromium():
 class Runner:
     def __enter__(self):
         prep()
-        self.srv=subprocess.Popen(['python3','-m','http.server','8765','-d',SP],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        self.srv=subprocess.Popen(['python3','-m','http.server',PORT,'-d',SP],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         time.sleep(1)
         self.pw=sync_playwright().start()
         self.b=self.pw.chromium.launch(executable_path=chromium(),
@@ -32,7 +33,7 @@ class Runner:
         pg=ctx.new_page()
         pg.on('console',lambda m: self.errs.append((m.type,m.text)) if m.type in('error','warning') and '404' not in m.text and 'GPU stall' not in m.text and 'swiftshader' not in m.text.lower() else None)
         pg.on('pageerror',lambda e: self.errs.append(('pageerror',str(e))))
-        pg.goto('http://localhost:8765/index.html'+q); pg.wait_for_function('window.__game!==undefined',timeout=30000)
+        pg.goto('http://localhost:'+PORT+'/index.html'+q); pg.wait_for_function('window.__game!==undefined',timeout=30000)
         pg.add_style_tag(content='#msg{display:none!important}')
         return pg
     def __exit__(self,*a):

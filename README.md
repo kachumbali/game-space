@@ -12,6 +12,8 @@ appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS
 
 URL flags: `?go` skip menu and briefing · `?m=N` skip the menu, open mission N's briefing · `?free` free flight · `?sk=darter:3,leaper:2` skirmish (with `&sk_skill=1..5 &sk_wing=0..3 &sk_wskill &sk_fm=newton &sk_msl=0 &sk_respawn=1 &sk_range=800 &sk_look=reed &sk_ally=halberd|exeter`; `__game.startSkirmish(cfg)` takes the same as an object) · `?newcrew` reset crew record · `?touch` force touch UI ·
 `?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md.
+URL flags: `?go` skip briefing · `?free` free flight · `?newcrew` reset crew record · `?touch` force touch UI ·
+`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md. Drone flags: `?free&drones=N` (player carries N drones and launches up to the control limit; a fighter controls 1, `&dlimit=N` raises it, `&nolaunch` keeps them aboard).
 The game boots into the latest mission (Reedbed). Phones (touch, short side < 520 px) get a compact HUD (`body.phone`).
 
 ## Mission 1: Operation Lilypad
@@ -63,13 +65,14 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
 - **AI roles**: fighter, gunship, bomber, corvette/capital.
 
 ## Ships
-Human: Kestrel (fighter), Halberd (corvette). FROGG: Darter (interceptor), Leaper, Spitter (acid gunship), Toad
+Human: Kestrel (fighter), Halberd (corvette), Exeter (frigate, stock 48 drones), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (acid gunship), Toad
 (torpedo bomber), Reaver (heavy), Gulper (corvette). Ships are data (`src/30_*`, `src/31_*`); voxel resolution is one
 number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout
 `00_head.html` shell/CSS · `10_config` · `12_audio` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
 `55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `76_menu` (main menu, skirmish) · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
+`55_ships` · `56_drones` (drone controller model, orders, ram) · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
 
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
@@ -89,3 +92,4 @@ prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs
 
 ## Comms menu (src/78_coms.js, 2026-10-22)
 Key J (touch: COMMS). Tree: WINGMEN (all or one: attack my target, engage at will, protect me, defend capital, form on me [holds fire], weapons hold/free, return to base, status report) / CAPITAL-CONTROL (status, focus fire on my target, request fighter cover, CONTROL sitrep in missions) / DRONES (shown only when `dronesOf` exists) / TARGET (hail, identify, request assist from a non-wing friendly, capital menu). Orders live in `ship.ai.order`; `ai.hold` blocks guns and missiles. A pilot that is hit or has a missile inbound drops formation / RTB and defends itself. HAWK and SPARROW answer in character. Verified headless (`tools/tests/coms_t.py`); not played by hand. Not done: orders to other flights by group, wingmen asking the player for help, mission-scripted dialogue branches.
+- **Drones** (src/56_drones.js, docs/FLEET_LOGIC.md 9b): unmanned 6 m wingmen slaved to one controller (`ctrl.drones`, stock `ctrl.stores.drone`, control limit fighter 1 / corvette 6 / frigate 6). Orders `engage`, `all`, `protect`, `return`, `scout`, `ram` via `droneOrder(ctrl, order, tgt)`; `launchDrones(ctrl, n)`, `dronesOf(ctrl)` (all on `__game`). Ram damage = 0.002 x closing speed^2 to the subsystem under the contact point; lost drones stay lost; drone kills are credited to the controller (`ctrl.droneKills`); drones of a dead controller go autonomous. Test: `tools/tests/drone_t.py`. No in-game control yet except the HUD line (DRONES live/stock + order) and the URL flags; the comms menu is separate work.

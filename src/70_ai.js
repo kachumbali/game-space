@@ -164,6 +164,7 @@ function avoidance(s, aim) {
 }
 
 function aiUpdate(s, dt) {
+  if (s.def.drone) return droneAI(s, dt);        // unmanned: orders and controller logic in 56_drones.js
   const ai = s.ai;
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
   if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
