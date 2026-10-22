@@ -57,12 +57,14 @@ function playerFireMissile() {
 addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
+  if (comsKey(e)) { e.preventDefault(); return; }
   keys.add(e.code);
   if (!player) return;
   switch (e.code) {
     case 'KeyV': setView(view === 'cockpit' ? 'chase' : 'cockpit'); break;
     case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
     case 'KeyC': stick.x = stick.y = 0; break;
+    case 'KeyJ': comsToggle(); break;
     case 'KeyL': plogDownload(); break;
     case 'KeyR': if (!e.ctrlKey && !e.metaKey) askRestart(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;

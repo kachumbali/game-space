@@ -196,6 +196,7 @@ function fireMount(s, m) {
 }
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
 function fireGuns(s, mask) {
+  if (s !== player && s.ai && s.ai.hold) return false;          // comms order: weapons hold
   if (s !== player) plogTry(s);
   if (s !== player && friendlyInLine(s, Math.max(700, ...s.mounts.map(m => WEAPONS[m.w].range || 0)))) { plogHold(s); return false; }
   let n = 0, any = false;
@@ -242,6 +243,7 @@ function missileMesh(w) {
 }
 function launchMissile(s, wid) {
   const w = WEAPONS[wid];
+  if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
   const L = s.lock;
   const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;

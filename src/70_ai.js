@@ -34,8 +34,53 @@ function squadFocus(s) {
   q.tgt = best; q.t = time;
   return best;
 }
+// comms orders (src/78_coms.js): attack = fixed target until it dies; protect / defend = nearest threat to the player / the anchor (none -> loiter there)
+function orderTarget(s) {
+  const od = s.ai.order;
+  if (od.type === 'attack') {
+    if (od.tgt && od.tgt.alive && !od.tgt.dying) return od.tgt;
+    s.ai.order = null; return undefined;
+  }
+  if (od.type === 'protect' || od.type === 'defend') {
+    const c = od.type === 'protect' ? player : (game.anchor || comsCaps()[0] || player);
+    if (!c || !c.alive) return undefined;
+    let best = null, bd = 3500;
+    for (const e of hostilesOf(s)) {
+      const d = e.group.position.distanceTo(c.group.position) * (e.target === c ? 0.5 : 1);
+      if (d < bd) { bd = d; best = e; }
+    }
+    return best;
+  }
+  return undefined;
+}
+// formation / return-to-base: flown instead of the combat AI unless the pilot is being hit or a missile is inbound (self-defence wins)
+const FORM_SLOTS = [[-45, 4, 30], [45, 4, 30], [-95, 10, 60], [95, 10, 60], [0, 40, 50], [0, -40, 50]];
+function orderFly(s, dt) {
+  const od = s.ai.order, ai = s.ai;
+  if (!od || (od.type !== 'form' && od.type !== 'rtb') || isCapital(s) || ai.inc || time - (s.lastHit || -99) < 3) return false;
+  const ep = s.group.position, form = od.type === 'form';
+  const base = form ? (player && player.alive ? player : null) : (game.anchor && game.anchor.alive ? game.anchor : (player && player.alive ? player : null));
+  if (!base) return false;
+  let aim = _pt, thr, ang;
+  if (form) {
+    const o = FORM_SLOTS[(od.slot | 0) % FORM_SLOTS.length];
+    aim.set(o[0], o[1], o[2]); base.group.localToWorld(aim);
+    const d = ep.distanceTo(aim);
+    if (d < 70) { s.group.quaternion.rotateTowards(base.group.quaternion, s.def.turn * turnMul(s) * dt); }
+    else turnToward(s, aim, dt, 1.2);
+    thr = clamp(base.vel.length() / s.def.maxSpeed + (d - 40) / 500, 0.1, 1);
+    aiFly(s, { throttle: thr, ab: d > 700 }, dt);
+  } else {
+    aim.copy(base.group.position).add(_ad.set(Math.sin(time * 0.1 + ep.x) * 260, 30, Math.cos(time * 0.1 + ep.z) * 260));
+    avoidance(s, aim);
+    turnToward(s, aim, dt, 1);
+    aiFly(s, { throttle: ep.distanceTo(base.group.position) > 600 ? 0.9 : 0.45 }, dt);
+  }
+  return true;
+}
 function pickTarget(s) {
   const role = s.ai.role;
+  if (s.ai.order && !isCapital(s)) { const ot = orderTarget(s); if (ot !== undefined) return ot; }
   if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
     const la = s.lastAttacker, hp = s.structure / s.def.structure;
     const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);
@@ -130,6 +175,7 @@ function aiUpdate(s, dt) {
     if (ai.fleeT > 5) { s.alive = false; if (game.mission) comm('CONTROL', 'Damaged FROGG broke contact.', '#aab8c0'); return; }
   }
   if (isCapital(s)) return capitalAI(s, dt);
+  if (ai.order && orderFly(s, dt)) return;
   if (ai.role === 'bomber') return bomberAI(s, dt);
   return fighterAI(s, dt);
 }

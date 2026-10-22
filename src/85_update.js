@@ -122,7 +122,7 @@ function update(dt) {
   collideShips(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  lodTick(dt);
+  lodTick(dt); comsTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves

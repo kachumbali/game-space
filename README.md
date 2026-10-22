@@ -41,6 +41,7 @@ screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 | P | Graphics preset low / mid / high / ultra (URL `?q=high` or `?q=ultra` also enables MSAA and a larger sky) |
 | H | Key map overlay |
 | 4 / 5 / 6, 7 | Power allocation: +1 point to weapons / shields / engines (from the largest other), 7 = balance (touch: tap the POWER bars) |
+| J | Comms menu (touch: COMMS button): orders and requests to wingmen, capital ships, drones (when present) and the targeted ship; digits select, 0 back |
 | O | Options: audio, device preset (phone / tablet / laptop / desktop / max), distance LOD |
 
 Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW, TGT, AIM-T, WPN.
@@ -80,3 +81,6 @@ prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs
 - **Distance LOD + device presets** (options panel, `DEVICES`, `LOD_LEVELS`, `lodTick`): far ships are re-voxelised 1-3 detail steps lower; saved in localStorage `gs_gfx`. Sky size and MSAA still need a reload.
 - **HUD**: energy gauge same size and style as the throttle gauge (desktop left of the radar, touch left side); POWER widget above the radar; Newtonian vector markers (VEL, RETRO, REL, MATCH).
 - FROGG lasers +25 % (pulse 3.5, lance 3.0).
+
+## Comms menu (src/78_coms.js, 2026-10-22)
+Key J (touch: COMMS). Tree: WINGMEN (all or one: attack my target, engage at will, protect me, defend capital, form on me [holds fire], weapons hold/free, return to base, status report) / CAPITAL-CONTROL (status, focus fire on my target, request fighter cover, CONTROL sitrep in missions) / DRONES (shown only when `dronesOf` exists) / TARGET (hail, identify, request assist from a non-wing friendly, capital menu). Orders live in `ship.ai.order`; `ai.hold` blocks guns and missiles. A pilot that is hit or has a missile inbound drops formation / RTB and defends itself. HAWK and SPARROW answer in character. Verified headless (`tools/tests/coms_t.py`); not played by hand. Not done: orders to other flights by group, wingmen asking the player for help, mission-scripted dialogue branches.
