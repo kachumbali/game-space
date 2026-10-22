@@ -40,6 +40,8 @@ const WEAPONS = {
   laser: { kind: 'beam', name: 'LS-2 PULSE LASER', cd: 0.3, dmg: 6, dt: 'en', range: 1200, energy: 14, color: 0xff5040, sfx: 'pulse' },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 2.8, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 2.6, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -49,9 +51,9 @@ const WEAPONS = {
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 380, acc: 260, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
   nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 240, acc: 75, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
@@ -136,7 +138,8 @@ function fireBeam(s, w, wp, dirW) {
     if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
   }
   const len = bestS ? bestD : w.range;
-  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, [3, 0.5, 0.3, 1], [1, 0, 0, 0]);
+  const bcol = new THREE.Color(w.color || 0xff5040), bc = [bcol.r * 3, bcol.g * 3, bcol.b * 3, 1];
+  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
   if (!bestS) return;
   const fr = bestS.team === s.team, wpH = bestS.group.localToWorld(bestHit.clone());
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
@@ -144,7 +147,7 @@ function fireBeam(s, w, wp, dirW) {
   plogBoltHit({ owner: s, team: s.team }, bestS, w.dmg * (fr ? FF.bolt : 1), fr);
   applyHit(bestS, bestHit, w.dmg * (fr ? FF.bolt : 1), wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
-  sparksAt(wpH, 4, 10, [3, 0.8, 0.4, 1]);
+  sparksAt(wpH, 4, 10, bc);
 }
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);

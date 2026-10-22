@@ -45,3 +45,11 @@ incapacitation at 30 Gy). Friendly crews 400 m from the burst were close to the 
 
 ## Not verified
 Impact-fuze detonation; PD interception of the warhead; flash-blind effect on gameplay; skill levels against each other; any statistics beyond 3 runs.
+
+
+## 2026-10-22: FROGG lasers and missile doctrine
+Headless duels, `duel2.py`, arcade flight, 4 Kestrels vs N FROGGs (both skill 3), human wins out of runs:
+- Before lasers (after squad tactics): N=6 4/4 wins; N=10 3/4 wins (earlier runs 4/4).
+- Lasers at 3.4 dmg: N=6 2/2; N=10 1/2; N=14 0/2. Newtonian vs Newtonian 0/3 at the scenario count.
+- Lasers at 2.8 dmg, 950 m, 9 energy (shipped): N=10 3/3; N=12 1/3. Even point about 11-12, close to the 12:4 target. Newtonian flight still favours the FROGGs at these counts.
+Sample sizes are 2-3 runs per cell: treat as direction, not a measurement.

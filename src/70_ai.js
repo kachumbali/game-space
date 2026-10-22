@@ -88,7 +88,7 @@ function primaryRange(s) {
   return r || 400;
 }
 function primarySpeed(s) {
-  for (const m of s.mounts) if (!m.store && WEAPONS[m.w].v) return WEAPONS[m.w].v;
+  for (const m of s.mounts) if (!m.store) return WEAPONS[m.w].kind === 'beam' ? 1e6 : WEAPONS[m.w].v;
   return 500;
 }
 function gunsAlive(s) { return s.mounts.some(m => !m.store && (!compOf(s, m.comp) || compOf(s, m.comp).hp > 0)); }

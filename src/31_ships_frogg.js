@@ -225,7 +225,7 @@ SHIPS.leaper = {
     ...fDetail({ disc: [0, -0.1, 1.2, 3.6, 0.26, 3.4], E: [0, 0, 0.6, 1.35, 0.82, 5.2], plates: 6, gills: 4, collars: 4, noz: [[2.2, -0.2, 4.6, 6.8, 0.5]], blades: [[[1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3]], guns: [[0.65, -0.42, -5.6, -6.5, 0.13]] }),
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
-  mounts: [{ w: 'spit', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'spit', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }],
+  mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
   stores: { tick: 1, flare: 10 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
@@ -351,7 +351,8 @@ SHIPS.reaver = {
     { pos: [1.3, -0.5, 9.9], comp: 'engR', r: 0.5 }, { pos: [-1.3, -0.5, 9.9], comp: 'engL', r: 0.5 },
   ],
   mounts: [
-    { w: 'fang', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
+    { w: 'flaser', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
+    { w: 'fang', pos: [2.0, -0.5, -7.4], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-2.0, -0.5, -7.4], comp: 'gunL', grp: 1 },
     { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
   ],
   stores: { tick: 4, flare: 12 },
@@ -404,6 +405,7 @@ SHIPS.gulper = {
   ],
   mounts: [
     { w: 'lash', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'lash', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
+    { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
   ],
   turrets: [
     { w: 'sting', pos: [3.6, 5.0, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 5.0, -2], comp: 'tur2', side: 1 },
@@ -424,7 +426,7 @@ SHIPS.gulper = {
     { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },
   ],
   shield: { fore: 200, aft: 160 }, armor: { type: 'composite', rating: 0.31 }, structure: 380,
-  maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
+  energyMax: 400, energyRegen: 70, maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
   ai: { role: 'corvette' },
 };
 

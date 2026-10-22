@@ -28,10 +28,13 @@ Consequences and open points (analysis, not owner statements):
   matter against FROGG corvettes while miniguns and PD matter against missiles and fighters.
 - **PD and missiles:** better FROGG missiles raise the value of human PD (magazine reload windows; docs/CAPITAL_COMBAT.md). A FROGG laser fleet meets
   the heat/capacitor rules too: lasers add waste heat, so FROGG vents or heat-sink tissue (lore: biology undecided) set the sustained rate.
-- **Current implementation does not match this yet:** FROGG weapons are the Fang (kinetic) and Acid spitters, Acid cannon and Lash (energy);
-  there is no FROGG laser and no FROGG missile that outperforms the human ones (Tick, Tadpole torpedo versus Swift, Lance, Hammer).
-  Humans have Cannon, Plasma bolter, Railgun and PD-30; no laser. Retuning needs the owner's call on laser mechanics (instant beam vs pulse, dwell time,
-  heat per second) and on how much better the FROGG missiles should be.
+- **Implemented 2026-10-22 (owner chose "stronger FROGG missiles and lasers"; numbers are my defaults, see docs/OPEN_QUESTIONS.md 1-2):**
+  FROGG lasers are instant-hit beams. `flaser` (pulse bank, fighters: Leaper, Reaver, Spitter; 2.8 dmg, 0.1 s, 950 m, 9 energy per pulse so about a
+  12-pulse burst from the capacitor, then limited by recharge) and `lance` (continuous large laser, Gulper: 2.6 dmg, 0.06 s, 1500 m, 3 energy, power pool
+  400 with 70/s recharge). FROGG missiles improved: Tick range 1500->2200 m, turn 3.0->4.2, lock time 1.5->1.1 s, flare susceptibility 0.6->0.3;
+  Tadpole range 1800->2600 m, turn 0.8->1.1, decoy susceptibility 0.1->0.05. Humans keep Cannon, Plasma bolter, Railgun, PD-30 and the new `LS-2` laser
+  (instant beam, not mounted on any ship yet). Beams cannot be dodged and need no lead, so their damage is kept low; heat is not modelled yet (energy pool only).
+  Balance effect (headless duels, arcade flight, 4 Kestrels skill 3 vs N FROGGs skill 3): the human win rate dropped from 100% at N=10 to about 1/3-3/3 at N=10-12 and 0/3 at 14.
 - **Nuclear warheads:** not assigned to either side yet.
 
 ## Rules already set

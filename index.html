@@ -1703,7 +1703,7 @@ SHIPS.leaper = {
     ...fDetail({ disc: [0, -0.1, 1.2, 3.6, 0.26, 3.4], E: [0, 0, 0.6, 1.35, 0.82, 5.2], plates: 6, gills: 4, collars: 4, noz: [[2.2, -0.2, 4.6, 6.8, 0.5]], blades: [[[1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3]], guns: [[0.65, -0.42, -5.6, -6.5, 0.13]] }),
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
-  mounts: [{ w: 'spit', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'spit', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }],
+  mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
   stores: { tick: 1, flare: 10 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
@@ -1829,7 +1829,8 @@ SHIPS.reaver = {
     { pos: [1.3, -0.5, 9.9], comp: 'engR', r: 0.5 }, { pos: [-1.3, -0.5, 9.9], comp: 'engL', r: 0.5 },
   ],
   mounts: [
-    { w: 'fang', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
+    { w: 'flaser', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
+    { w: 'fang', pos: [2.0, -0.5, -7.4], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-2.0, -0.5, -7.4], comp: 'gunL', grp: 1 },
     { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
   ],
   stores: { tick: 4, flare: 12 },
@@ -1882,6 +1883,7 @@ SHIPS.gulper = {
   ],
   mounts: [
     { w: 'lash', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'lash', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
+    { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
   ],
   turrets: [
     { w: 'sting', pos: [3.6, 5.0, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 5.0, -2], comp: 'tur2', side: 1 },
@@ -1902,7 +1904,7 @@ SHIPS.gulper = {
     { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },
   ],
   shield: { fore: 200, aft: 160 }, armor: { type: 'composite', rating: 0.31 }, structure: 380,
-  maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
+  energyMax: 400, energyRegen: 70, maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
   ai: { role: 'corvette' },
 };
 
@@ -2703,7 +2705,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', blindUntil: 0, energy: 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || 'arcade', blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -2891,6 +2893,8 @@ const WEAPONS = {
   laser: { kind: 'beam', name: 'LS-2 PULSE LASER', cd: 0.3, dmg: 6, dt: 'en', range: 1200, energy: 14, color: 0xff5040, sfx: 'pulse' },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 2.8, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 2.6, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -2900,9 +2904,9 @@ const WEAPONS = {
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 380, acc: 260, turn: 3.0, burn: 6, life: 8, dmg: 22, blast: 9, fuze: 6, lockCone: 0.24, seekCone: 0.7, lockTime: 1.5, range: 1500, hp: 1, flareS: 0.6, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
   nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 240, acc: 75, turn: 0.8, burn: 16, life: 22, dmg: 140, blast: 28, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 1800, hp: 7, flareS: 0.1, chaffS: 0.1, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
@@ -2987,7 +2991,8 @@ function fireBeam(s, w, wp, dirW) {
     if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
   }
   const len = bestS ? bestD : w.range;
-  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, [3, 0.5, 0.3, 1], [1, 0, 0, 0]);
+  const bcol = new THREE.Color(w.color || 0xff5040), bc = [bcol.r * 3, bcol.g * 3, bcol.b * 3, 1];
+  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
   if (!bestS) return;
   const fr = bestS.team === s.team, wpH = bestS.group.localToWorld(bestHit.clone());
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
@@ -2995,7 +3000,7 @@ function fireBeam(s, w, wp, dirW) {
   plogBoltHit({ owner: s, team: s.team }, bestS, w.dmg * (fr ? FF.bolt : 1), fr);
   applyHit(bestS, bestHit, w.dmg * (fr ? FF.bolt : 1), wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
-  sparksAt(wpH, 4, 10, [3, 0.8, 0.4, 1]);
+  sparksAt(wpH, 4, 10, bc);
 }
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
@@ -3721,7 +3726,7 @@ function primaryRange(s) {
   return r || 400;
 }
 function primarySpeed(s) {
-  for (const m of s.mounts) if (!m.store && WEAPONS[m.w].v) return WEAPONS[m.w].v;
+  for (const m of s.mounts) if (!m.store) return WEAPONS[m.w].kind === 'beam' ? 1e6 : WEAPONS[m.w].v;
   return 500;
 }
 function gunsAlive(s) { return s.mounts.some(m => !m.store && (!compOf(s, m.comp) || compOf(s, m.comp).hp > 0)); }
@@ -4642,7 +4647,7 @@ function updateShieldsAndFx(s, dt) {
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s));
   }
-  s.energy = Math.min(100, s.energy + 17 * powerMul(s) * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
