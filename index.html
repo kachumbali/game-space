@@ -1359,7 +1359,7 @@ SHIPS.kestrel = {
   ],
   mounts: [
     { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'cannon', pos: [0.6, -0.45, -4.5], comp: 'gunR', grp: 1 },
-    { w: 'pulse', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'pulse', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
+    { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
   ],
   stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
   launch: [2.25, -0.4, 0.55],           // nose of the under-wing pylon missiles (x mirrors per launch)
@@ -1368,8 +1368,8 @@ SHIPS.kestrel = {
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
     { id: 'gunR', name: 'CANNON R', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 10 },
-    { id: 'wingL', name: 'PLASMA L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'wingR', name: 'PLASMA R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
+    { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
+    { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },
     { id: 'radar', name: 'RADAR', role: 'radar', pos: [0, -0.1, -3.9], r: 0.8, hp: 12 },
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
@@ -2084,7 +2084,7 @@ SHIPS.gulper = {
     { pos: [3.8, -2.2, 36.0], comp: 'engR', r: 1.5 }, { pos: [-3.8, -2.2, 36.0], comp: 'engL', r: 1.5 },
   ],
   mounts: [
-    { w: 'lash', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'lash', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
+    { w: 'rodg', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'rodg', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
     { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
   ],
   turrets: [
@@ -2096,8 +2096,8 @@ SHIPS.gulper = {
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'lashL', name: 'LASH L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'lashR', name: 'LASH R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
+    { id: 'lashL', name: 'ROD DRIVER L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
+    { id: 'lashR', name: 'ROD DRIVER R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
     { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 7.35, -2], r: 1.5, hp: 26 },
     { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 7.35, -2], r: 1.5, hp: 26 },
     { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.85, 14], r: 1.5, hp: 26 },
@@ -3445,7 +3445,7 @@ const FMX = 1.3;      // FROGG missile effectiveness vs the human equivalent (ow
 const WEAPONS = {
   // ---- human ----
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
-  pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 1000, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
+  he: { kind: 'proj', name: 'MK-30 HE CANNON', cd: 0.22, v: 1000, dmg: 9, dt: 'kin', life: 2.0, spread: 0.0015, ammo: 500, color: 0xffa860, len: 7, sz: 0.22, sfx: 'cannon', blast: 8 },    // high-explosive shells: direct hit + splash (blastAt) within 8 m; replaced the PL-4 plasma bolter in the realism pass 2026-10-22 (9 dmg/500 rds to hold the ~10 even point: kin hits shields at 0.7x vs the old en 1.25x, and the plasma had no magazine)
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true },    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
@@ -3456,21 +3456,21 @@ const WEAPONS = {
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
-  // ---- FROGG ----
-  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large laser: needs a big power pool (def.energyMax)
-  fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
-  spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
-  spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
-  lash: { kind: 'proj', name: 'LASH CANNON', cd: 2.0, v: 540, dmg: 34, dt: 'en', life: 3.2, spread: 0.002, color: 0xaaff40, len: 7, sz: 0.9, sfx: 'lash', glob: true, big: true },
-  sting: { kind: 'proj', name: 'STING', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true },
+  // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
+  flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
+  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  spit: { kind: 'proj', name: 'M-2 MASER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
+  spitcannon: { kind: 'proj', name: 'M-6 HEAVY MASER', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
+  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true },    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
+  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true },
   // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  tick: { kind: 'msl', name: 'SK-1 IR MISSILE', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
   nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  tad: { kind: 'msl', name: 'ST-2 TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
@@ -3723,12 +3723,12 @@ function hullGap(s, pos, maxD) {
   }
   return best;
 }
-function blastAt(pos, w, team, owner, direct) {
+function blastAt(pos, w, team, owner, direct, skip) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
   sfx('boom', pos.distanceTo(camera.position), w.torp ? 1.6 : 1);
   for (const s of ships) {
-    if (!s.alive || s.dying) continue;
+    if (!s.alive || s.dying || s === skip) continue;      // skip: HE bolts already dealt their direct hit to that ship
     const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
@@ -4014,6 +4014,7 @@ function updateBolts(dt) {
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
       applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
+      if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
       sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);
       b.life = 0; break;
@@ -5779,11 +5780,11 @@ function comsTick(dt) {
 //  Test seam: globalThis.__bf.
 // ======================================================================
 Object.assign(WEAPONS, {
-  // XL spine: not a gun mount weapon (mount has store:'spine' so fireGuns skips it); charge then an instant 12 m wide ray, see spineStep / spineFire
-  spine: { kind: 'spine', name: 'FROGG SPINE LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'SPINE', frogg: true },
-  lanceL: { kind: 'beam', name: 'FROGG HEAVY LANCE (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
-  acidT: { kind: 'proj', name: 'ACID CANNON (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'THORN POINT DEFENCE (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true },
+  // XL main (realism pass 2026-10-22: the FROGG energy family is masers; ids are stable, names are player-facing): mount has store:'spine' so fireGuns skips it; charge then an instant 12 m wide ray, see spineStep / spineFire
+  spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
+  lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
+  acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
+  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true },
 });
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
@@ -6782,7 +6783,7 @@ function updateRadarSide() {
   const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
   const cur = selectedMissile(p), ids = missileIds(p);
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
-  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div>`;
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip ${p.ammo.he < 1 ? 'zero' : ''}">HE ${p.ammo.he | 0}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
   const h = l + '|' + r;
   if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
@@ -6792,12 +6793,11 @@ function updateWeaponPanel() {
   const p = player;
   if (!p || !p.alive) { wpnEl.innerHTML = ''; return; }
   const m = k => p.fireMask & k;
-  const cn = p.ammo.cannon | 0, en = Math.round(p.energy);
-  const bar = (f, n = 10) => '█'.repeat(Math.round(f * n)) + '░'.repeat(n - Math.round(f * n));
+  const cn = p.ammo.cannon | 0;
   const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
   const ids = missileIds(p), cur = selectedMissile(p);
   let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
-  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 PLASMA ${bar(p.energy / 100, 8)} ${en}%</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   h += droneHudLine(p);

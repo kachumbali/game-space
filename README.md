@@ -53,9 +53,9 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
   moons, sun glare. Looks (`LOOKS`: lilypad, reed, ao2, ao3) are chosen by `M.look` / `area.look`; the sun direction and
   scene lighting follow the look. Bake takes seconds in software rendering; GPU/iPad timing unverified.
 - **Radar**: 3D forward-up scope with range rings, elevation stalks, missile triangles, target highlight.
-- **Lock-on**: seek → range → locking → locked; IR (heat), RF (radar, needs working radar), torpedoes, FROGG tick/tadpole.
+- **Lock-on**: seek → range → locking → locked; IR (heat), RF (radar, needs working radar), torpedoes, FROGG SK-1/ST-2.
   Flares fool IR missiles, chaff fools radar missiles. Lead pipper for guns.
-- **Weapons**: cannons (ammo), plasma bolters (energy capacitor), railgun, point-defence; FROGG fang/spit/lash/sting.
+- **Weapons**: cannons and HE shells (ammo), mass drivers, railguns, lasers, point-defence; FROGG masers and autocannons (realism pass 2026-10-22: ids like `fang`/`spit` are stable, the displayed names are the realistic ones).
   Missiles are guided, burn out, proximity-fuzed; PD turrets shoot missiles down. Beam weapons (laser, FROGG pulse laser and lance) are drawn as real beams from the muzzle
   (thin and dim while the turret acquires, bright with muzzle and impact flares once it burns; width `bw` per weapon, docs/LASERS.md section 7). Turrets come in classes S/M/L (5/11/30 m, docs/SHIPS.md) and fire from their barrel tips.
 - **Damage**: fore/aft shields → armour type (ablative/hard/composite, see docs/ARMOR.md) → structure, typed damage (kinetic/energy/explosive), components
@@ -67,8 +67,8 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
   `?mute` silences everything. On iPad the music volume slider may not work (iOS ignores element volume).
 
 ## Ships
-Human: Kestrel (fighter), Halberd (corvette), Exeter (frigate, stock 48 drones), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (acid gunship), Toad
-(torpedo bomber), Reaver (heavy), Gulper (corvette), **Bullfrog** (600 m jump capital: XL spine lance with a telegraphed 6 s charge and 30 s cooldown, 2 L / 6 M / 18 S+PD turrets, 36-fighter hangar, no drones; explicit exception to the 500 m cap; docs/BULLFROG.md, src/79_bullfrog.js, tests `tools/tests/bullfrog_t.py`, `bullfrog_eng.py`), Hive Carrier (unarmed catalogue ship). Ships are data (`src/30_*`, `src/31_*`); voxel resolution is one
+Human: Kestrel (fighter), Halberd (corvette), Exeter (frigate, stock 48 drones), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (maser gunship), Toad
+(torpedo bomber), Reaver (heavy), Gulper (corvette), **Bullfrog** (600 m jump capital: XL GX-1 charged lance with a telegraphed 6 s charge and 30 s cooldown, 1 L / 6 M / 18 S+PD turrets, 36-fighter hangar, no drones; explicit exception to the 500 m cap; docs/BULLFROG.md, src/79_bullfrog.js, tests `tools/tests/bullfrog_t.py`, `bullfrog_eng.py`), Hive Carrier (unarmed catalogue ship). Ships are data (`src/30_*`, `src/31_*`); voxel resolution is one
 number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout

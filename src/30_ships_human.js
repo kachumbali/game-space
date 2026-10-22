@@ -120,7 +120,7 @@ SHIPS.kestrel = {
   ],
   mounts: [
     { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'cannon', pos: [0.6, -0.45, -4.5], comp: 'gunR', grp: 1 },
-    { w: 'pulse', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'pulse', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
+    { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
   ],
   stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
   launch: [2.25, -0.4, 0.55],           // nose of the under-wing pylon missiles (x mirrors per launch)
@@ -129,8 +129,8 @@ SHIPS.kestrel = {
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
     { id: 'gunR', name: 'CANNON R', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 10 },
-    { id: 'wingL', name: 'PLASMA L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'wingR', name: 'PLASMA R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
+    { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
+    { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },
     { id: 'radar', name: 'RADAR', role: 'radar', pos: [0, -0.1, -3.9], r: 0.8, hp: 12 },
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },

@@ -128,3 +128,31 @@ Spine: 2 shots, 2 hits on Exeter, no kill. Tadpoles: 7 launched, 0 intercepted, 
 stops a Tadpole; check whether that is intended (docs/BULLFROG.md).
 
 Full review and follow-up plan: docs/UX_REVIEW.md.
+
+## Weapon catalogue realism pass re-measure (2026-10-22, after the HE/rod changes)
+
+Setup as above (4 Kestrels skill 3 vs mixed FROGGs skill 3, 3 runs per cell). The Kestrel's
+PL-4 plasma bolter (en 7, unlimited) became the MK-30 HE cannon (kin 9 + 8 m splash, 500 rds
+per mount); the Gulper's LASH CANNON became the R-12 penetrator driver (kin 34, 45% pierce).
+
+| Flight model | FROGGs | Before (plasma) | After (HE 7 dmg / 240 rds) | After (HE 9 dmg / 300 rds) | After (HE 9 dmg / 500 rds, final) |
+|---|---|---|---|---|---|
+| arcade | 8 | 3/3 | 1/3 | 2/3 | 1/3 ((3,0) (0,5) (2,2)) |
+| arcade | 10 | ~3/3 (older focus test) | 0/3 | 0/3 | 0/3 |
+| arcade | 12 | 0/3 | 0/3 | 0/3 | - |
+| Newtonian | 6 | 3/3 | 0/3 | - | 1/3 ((2,4) (3,2) (3,0)) |
+| Newtonian | 8 | mixed | 0/3 | - | 0/3 |
+
+Reading: the arcade even point moved from about 10 to about 7-8; Newtonian from about 7 to
+about 5-6. Cause: `DMGX` gives kin 0.7x vs shields where the plasma bolter had en 1.25x, so
+the Kestrel lost its shield-stripping tool; the splash (0.2-0.4 falloff) does not compensate
+against scattered single fighters. Raising damage 7 -> 9 and the magazine 240 -> 500 recovered
+about half the gap; 3-run cells are too noisy to tune further headlessly. If the old even point
+is wanted, the structural fix is a small fighter-scale laser (en) as a realistic secondary;
+that is an owner decision (it needs a third Kestrel mount group and a HUD line).
+
+Mechanics verified headlessly (scratch, not committed as tests): the HE shell splashes to a
+second Darter 8 m from the impact (shield-only damage, distance falloff) and a third at 600 m
+stays clean; at `q=low` fighters' voxel hulls are too coarse for bolt hits at all - a property
+of the engine, not of the weapon. The R-12 rod bypasses a 1e6 shield for 88 structure damage in
+11 s against a parked Halberd dummy (45% pierce working as designed).

@@ -28,7 +28,7 @@ where they differ, `docs/LORE.md` wins. Section 3 here resolves
   and a practical one.
 - **Wetware instead.** No combat computers: cloned, streamlined reptilian
   brain-stems are integrated directly into missile seekers, flight-control systems
-  and ship gunnery. This is why FROGG seekers (Tick, Tadpole) track harder and
+  and ship gunnery. This is why FROGG seekers (SK-1, ST-2) track harder and
   decoy worse than human equivalents (`src/60_weapons.js`, and see the reduced
   flare susceptibility in `docs/LORE.md`).
 - **Neuro-slaved pilots.** No cockpit, no conscious pilot: a stripped-down neural
@@ -48,7 +48,7 @@ Technical biomechanical predators, not insects. Graphite and gunmetal lamellar
 plates with rust streaks, swept-forward blades, exposed structural rib arches.
 Wide open-toothed bow maw with a glowing plasma throat; cyan coolant seams
 between the ribs; blocky drive clusters with cyan plumes aft; rows of dorsal
-spikes. Acid weapons stay venom green so they read against the cyan hull light.
+spikes. Maser bolts stay venom green so they read against the cyan hull light.
 Implementation: `fRef` and palette `N` in `src/31_ships_frogg.js` (reference art:
 `docs/img/frogg_reference_art.jpg`, on the working copy only). The AI-generated
 FROGG portraits supplied by the owner (horned scaled warrior, hive-hangar pilot)
@@ -56,14 +56,22 @@ match this palette; their usage terms must be confirmed before any in-game use.
 
 ## 4. Weapons and tactical doctrine
 
-- **Primary energy:** beam lasers - `flaser` pulse banks on fighters (Leaper,
-  Reaver, Spitter), continuous `lance` on the Gulper corvette; the Bullfrog adds
-  the telegraphed XL **spine lance** (`docs/BULLFROG.md`). Beams need focus before
-  they burn (`docs/LASERS.md` section 6), ramping to 2-3x damage on a held lock.
-- **Guided ordnance:** bio-neural seekers - the **Tick** interceptor missile and
-  the **Tadpole** heavy anti-ship missile (the Bullfrog's tubes). High tracking
-  rates, long reach, low decoy susceptibility (flare values halved 2026-10-22).
+(Realism pass 2026-10-22: the FROGG arsenal is conventional physics - masers and
+kinetics. Internal ids such as `spit`/`fang` are historical; the displayed names
+are the realistic ones.)
+
+- **Primary energy: masers** (microwave lasers) - `flaser` M-1 pulse banks on
+  fighters (Leaper, Reaver, Spitter), the continuous M-7 `lance` on the Gulper
+  corvette; the Bullfrog adds the telegraphed XL **GX-1 charged lance**
+  (`docs/BULLFROG.md`). Beams need focus before they burn (`docs/LASERS.md`
+  section 6), ramping to 2-3x damage on a held lock.
+- **Kinetics:** the R-9 autocannon on fighters, R-4/R-5 small turrets on
+  corvettes and the Bullfrog, and the R-12 penetrator driver - the Gulper's
+  AP-rod main gun (the FROGG answer to human railguns).
+- **Guided ordnance:** the **SK-1** interceptor missile and the **ST-2** heavy
+  anti-ship torpedo (the Bullfrog's tubes). High tracking rates, long reach,
+  low decoy susceptibility (flare values halved 2026-10-22).
 - **Doctrine:** overwhelm by numerical saturation (swarms from carriers and the
-  Bullfrog's 36-fighter hangar), extreme agility, persistent beam burn and
+  Bullfrog's 36-fighter hangar), extreme agility, persistent maser burn and
   long-range missile pressure. Humans answer with kinetics, railguns and layered
   point defence (`docs/LORE.md`, weapon doctrine).

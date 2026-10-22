@@ -409,7 +409,7 @@ SHIPS.gulper = {
     { pos: [3.8, -2.2, 36.0], comp: 'engR', r: 1.5 }, { pos: [-3.8, -2.2, 36.0], comp: 'engL', r: 1.5 },
   ],
   mounts: [
-    { w: 'lash', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'lash', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
+    { w: 'rodg', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'rodg', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
     { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
   ],
   turrets: [
@@ -421,8 +421,8 @@ SHIPS.gulper = {
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'lashL', name: 'LASH L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'lashR', name: 'LASH R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
+    { id: 'lashL', name: 'ROD DRIVER L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
+    { id: 'lashR', name: 'ROD DRIVER R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
     { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 7.35, -2], r: 1.5, hp: 26 },
     { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 7.35, -2], r: 1.5, hp: 26 },
     { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.85, 14], r: 1.5, hp: 26 },

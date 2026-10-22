@@ -24,11 +24,11 @@ real seconds = sim seconds / 0.375 (x 2.67). Speeds and turn rates in `SHIPS` ar
 | Shield | fore 2000 / aft 1600, regen 6/s (see open question 4) |
 | Structure / armour | 3000 / `hard`, rating 0.30 (capital threshold multiplier x2, so 12 per hit) |
 | Speed / accel / turn | 22 m/s, 2.0, 0.06 rad/s (= 0.0225 rad per real second, see 4.1), aiSpeed 14, sig 12 |
-| XL spine | 800 'en' damage, 20% piercing (ignores shield and armour), range 3200 m, 6 s charge (last 1.5 s heading frozen), 30 s cooldown (cycle 36 s = 96 real s), 800 energy |
-| L turrets | 2 x heavy lance, peak 13.5 per pulse, 10 pulses/s, range 1800 m |
-| M turrets | 6 x acid cannon, 24 per round, 1.3 s, range 1250 m |
-| S turrets / PD | 10 x sting (existing) + 8 x thorn (new PD) |
-| Torpedoes | 4 tubes, 16 Tadpoles, one in flight per target, reload 18-26 s |
+| XL spine | 800 'en' damage, 20% piercing (ignores shield and armour), range 3200 m, 6 s charge (last 1.5 s heading frozen), 30 s cooldown (cycle 36 s = 96 real s), 800 energy. Display name since the realism pass 2026-10-22: GX-1 CHARGED LANCE (id `spine` unchanged) |
+| L turrets | 1 x M-8 heavy maser (dorsal; the ventral lance was removed 2026-10-22), peak 13.5 per pulse, 10 pulses/s, range 1800 m |
+| M turrets | 6 x M-6T maser turret (was "acid cannon"; id `acidT` unchanged), 24 per round, 1.3 s, range 1250 m |
+| S turrets / PD | 10 x R-4 autocannon turret (id `sting`) + 8 x R-5 PD turret (id `thorn`) |
+| Torpedoes | 4 tubes, 16 ST-2 torpedoes (id `tad` unchanged), one in flight per target, reload 18-26 s |
 | Hangar | 2 bays, 18 fighters each (36 total: 12 Darter, 10 Leaper, 4 Spitter, 4 Toad, 6 Reaver), one launch per bay per 4.5 s, at most 12 airborne, no recovery |
 | Energy | pool 3200, regen 320/s; full fire draws about 142/s sustained, so energy is not the limiter |
 | Spine vs Exeter [C] | 3 hits always survivable; the 4th kills if the Exeter's shield cannot regenerate, the 5th kills if it can |
@@ -46,12 +46,12 @@ real seconds = sim seconds / 0.375 (x 2.67). Speeds and turn rates in `SHIPS` ar
 | Death: structure <= 0 or component `power` hp <= 0 | `applyHit`, `compEvent` | The heart is the second kill path |
 | EXPOSED roles and reach factors: turret 1.6, gun 1.6, engine 2.2, radar 1.5, shield 1.3, radiator 1.8 (times component radius); role `bay` and `power` are not exposed | `EXPOSED`, `SOFT` | Bays and heart are reachable only by internal hits within 2.2 r + 0.8 of their centre |
 | Non-beam turrets shoot missiles first (target is this ship, or within 500 m, within 0.75 x range), then ships; beam turrets hold their target and prefer big ones; turrets only cover their own hemisphere (`side` +1 dorsal, -1 ventral) | `updateTurrets` | All S, PD and M turrets would act as PD today; role split needs flags (3.4) |
-| PD bolt that kills a `torp: true` missile (Tadpole, HM-1, nuke) makes it detonate where it dies | `updateBolts`, `killMissile` | PD kills at 400-560 m are harmless for conventional warheads |
+| PD bolt that kills a `torp: true` missile (ST-2, HM-1, nuke) makes it detonate where it dies | `updateBolts`, `killMissile` | PD kills at 400-560 m are harmless for conventional warheads |
 | AI missile budget: one missile at a time per target, nothing inside 350 m, shot only at lock and below 0.7 x range, reload 6-16 s for torpedoes (14-24 s for others) | `missileLogic`, `src/70_ai.js` | Reused for the tubes with a longer reload |
-| `capitalAI` today: turn to lead point, throttle 0.7 beyond 900/1100 m, fire group 1 when aim error < 0.03, Tadpole every 5 s on any lock vs capitals; no budget check | `src/70_ai.js` | Needs a lancer variant (section 6) |
-| `blastAt` measures distance to a sphere of 0.62 x radius around the ship centre and skips ships where that distance exceeds the blast radius | `blastAt`, `src/60_weapons.js` | **A missile blast on a 600 m hull does nothing if it detonates more than about 217 m from the centre (189 + 28 for a Tadpole).** Prow and stern thirds are immune to missile blasts as the code reads. Not run; see open question 6 |
+| `capitalAI` today: turn to lead point, throttle 0.7 beyond 900/1100 m, fire group 1 when aim error < 0.03, ST-2 every 5 s on any lock vs capitals; no budget check | `src/70_ai.js` | Needs a lancer variant (section 6) |
+| `blastAt` measures distance to a sphere of 0.62 x radius around the ship centre and skips ships where that distance exceeds the blast radius | `blastAt`, `src/60_weapons.js` | **A missile blast on a 600 m hull does nothing if it detonates more than about 217 m from the centre (189 + 28 for an ST-2).** Prow and stern thirds are immune to missile blasts as the code reads. Not run; see open question 6 |
 | FROGG ships have no `shieldRegen` (Gulper, Hive Carrier, fighters); Exeter has 12/s | ship defs | My 6/s for the Bullfrog is a deviation |
-| Gulper is authored at 66 m but `scaleShip(SHIPS.gulper, 146)` runs at load (`src/32_scale.js`); in game it is 146 m, structure 380, shield 200/160, composite 0.31, 4 sting turrets, 2 lash, 2 lance, 6 Tadpoles | `src/31_ships_frogg.js`, `src/32_scale.js`, `docs/data/ships.csv` | The brief's "66 m Gulper" is the authored size, not the flown size |
+| Gulper is authored at 66 m but `scaleShip(SHIPS.gulper, 146)` runs at load (`src/32_scale.js`); in game it is 146 m, structure 380, shield 200/160, composite 0.31, 4 `sting` turrets (R-4), 2 `rodg` penetrator drivers (R-12), 2 `lance` maser lances (M-7), 6 ST-2 torpedoes | `src/31_ships_frogg.js`, `src/32_scale.js`, `docs/data/ships.csv` | The brief's "66 m Gulper" is the authored size, not the flown size |
 | Exeter in code: 450 m, structure 1600, shield 900/800, shieldRegen 12 (starts 4 s after the last hit), composite 0.27, **4** laser turrets (`LS-2`) + 3 PD (not 3 lasers), 2 rails (70 kin, 60% pierce, 2.4 s), turn 0.08 (not 0.05), energy 2500/350, reactor 800 hp | `src/30_ships_human.js` | Used for all Exeter arithmetic |
 | Rule conflict: `AGENTS.md`, `docs/LORE.md`, `docs/SHIP_MANUAL.md` still say "ships under 500 m, only frigates jump" | docs | The owner decision for 600 m overrides; those files need a line when this is built (I was told to edit only this file) |
 | Stale data: `docs/data/weapons.csv` shows flaser 2.8, lance 2.4, Tadpole 150; code has 3.5, 3.0, 195 | `src/60_weapons.js` (`FMX` 1.3) | I use the code values |
@@ -78,7 +78,7 @@ Why these numbers:
 - **L damage** is chosen so that two L turrets match the Exeter's four lasers (4.5 base, peak 13.5 vs 6 base, peak 18; both on the same focus rule from `docs/LASERS.md` section 6). [A] (With the single-lance decision of 2026-10-22 this is half the Exeter's old laser output; the Exeter has since been refit with 8 M lasers besides — see `docs/SHIPS.md`.)
 - **M turrets** are deliberately poor against fighters (slow 430 m/s shells, 1.3 s cycle): the owner wants fighters and missiles to be the danger to fighters, not turrets. [A]
 - **thorn** is slightly worse than the human `pd` (1.2 vs 1.3 damage, 750 vs 900 m, 4.0 vs 4.5 rad/s) because `docs/LORE.md` gives humans the better point defence; the FROGG answer is quantity (18 small turrets). [A]
-- **Tadpole** reuses the existing entry unchanged.
+- **ST-2** (id `tad`) reuses the existing entry unchanged.
 
 ### 3.2 Spine behaviour (new weapon kind), proposed rules
 1. **Charge** (6 s, [16 real]) starts only if energy >= 800, the emitter component is alive, and the corridor is clear (3.5). Energy is deducted at charge start.
@@ -166,7 +166,7 @@ Why fighters out-turn it [C]: a fighter crossing at speed v at range R sweeps v 
 | Exeter / Halberd laser at start of focus (1.5) | 1.5 | 1.9 | 0.02 |
 | Exeter laser at peak (18) | 18 | 22.5 | 15.8 |
 | Exeter laser at mid ramp (9) | 9 | 11.3 | 4.5 |
-| Own Tadpole (exp) | 195 | 195 | 150 |
+| Own ST-2 torpedo (exp) | 195 | 195 | 150 |
 | Spine | 800 | 640 x 1.25 = 800 shield-equivalent + 160 piercing | 723 after armour and piercing |
 
 So the Bullfrog ignores a Kestrel's guns against its structure (they matter only against exposed parts, below) and fears missiles, rails and held lasers. Switching to `composite` would make cannon and pulse fire roughly 10 times more effective against the hull (threshold still 12); I did not choose that because it removes the "needs capital firepower or luck" property.
@@ -188,7 +188,7 @@ Format follows `comps` (id, role, position, radius, hp). Positions of the turret
 | Heart | `power` | power | 0, 0, 150 | 18 | 1100 | **no** (reach for internal hits 40.4 m) | **ship destroyed** |
 | Hangar bay A (forward) | `bayA` | bay | 0, -32, -95 | 22 | 650 | no today; recommended yes (reach 1.4 r = 30.8 m) | its unlaunched manifest is lost (5.3) |
 | Hangar bay B (aft) | `bayB` | bay | 0, -32, 90 | 22 | 650 | as above | as above |
-| Torpedo tubes | `tubes` | gun | 0, -42, -10 | 14 | 500 | yes (22.4 m) | no Tadpole launches |
+| Torpedo tubes | `tubes` | gun | 0, -42, -10 | 14 | 500 | yes (22.4 m) | no ST-2 launches |
 
 Hit-point logic: structure 3000; reference ratios from the code [V]: Exeter turret 90 of 1600 (5.6%), reactor 800 (50%), shield 400 each, bay 400; Gulper heart 230 of 380 (60%). The Bullfrog's heart is 37% of structure, a turret 1.5-9%, so structure damage alone kills it before the heart does unless hits happen to land within 40 m of the heart. The modeller must keep the intact hull at least 42 m thick above and below the heart (dorsal heart dome and ventral drum, 7.3) so casual hits do not reach it.
 Because the exposed rule only applies after the shield is gone, **no component takes direct fire while the fore or aft shield on that side is up** (2000 / 1600 to strip, 4.2). Disarming the Bullfrog is a second-stage task.
@@ -216,7 +216,7 @@ Kestrel [V]: 2 cannon (3 kin, 0.085 s -> 23.5 rounds/s), 2 pulse (7 en, 0.22 s -
 - Shield strip at 100% fire and 100% hits: one Kestrel drains 129 shield per second (49.4 cannon + 79.5 pulse); four drain 516/s. Fore shield 2000 -> **3.9 s**.
 - Structure after that, 100% fire and hits: 21.6 per Kestrel per second (pulses 19.1, cannon 2.5), **86 per second for four**. All 28 missiles landing: 16 x 20.0 + 8 x 26.2 + 4 x 130.9 = **1053** structure. Remaining 3000 - 1053 = 1947 at 86/s = 22.6 s.
 - **Theoretical floor: 3.9 + 22.6 = about 26.5 sim-s (71 real s)** with every shot and every missile hitting, no Kestrel shot down, and no component diverting damage. Not achievable: the Bullfrog's PD (4.5) removes most missiles, and its turrets (below) kill Kestrels.
-- Kestrel survival [A guess, U]: against a jinking fighter FROGG gunnery hit about 9% of shots (`docs/OPEN_QUESTIONS.md` 9). About 8 small turrets can bear on one fighter; 8 x 12 shots/s x 7% = 6-7 hits/s of 1.5 each. A Kestrel takes about 21 hits to lose its shield (1.875 each) and about 60 on its structure at 0.84 each: roughly 80 hits, so **about 12 sim-s per Kestrel, 45-50 s for four**, before counting the 6 acid cannons, the held L beams and above all the 12 airborne fighters (4 Kestrels have lost 0/3 against 12 FROGG fighters in `docs/BALANCE_TESTS.md`).
+- Kestrel survival [A guess, U]: against a jinking fighter FROGG gunnery hit about 9% of shots (`docs/OPEN_QUESTIONS.md` 9). About 8 small turrets can bear on one fighter; 8 x 12 shots/s x 7% = 6-7 hits/s of 1.5 each. A Kestrel takes about 21 hits to lose its shield (1.875 each) and about 60 on its structure at 0.84 each: roughly 80 hits, so **about 12 sim-s per Kestrel, 45-50 s for four**, before counting the 6 maser turrets, the held L beams and above all the 12 airborne fighters (4 Kestrels have lost 0/3 against 12 FROGG fighters in `docs/BALANCE_TESTS.md`).
 - Conclusion: **4 Kestrels cannot kill a Bullfrog**; the best case (about 26 s of perfect fire) is longer than their expected life. What they can do is disarm it: after the shield on one facing is gone, every hit near a component sends 55% of the damage to it, bypassing armour. Per Kestrel on a component in reach: 0.55 x (23.5 x 3 + 9.1 x 7) = 74 per second. **Four Kestrels remove an L turret (260 hp) in about 1 s, the spine emitter (700) in about 2.4 s** at ideal fire; realistic 5-12 s. Disarming needs the shield stripped first (3.9 s ideal), so a 30-60 s attack window under fire. Actual destruction needs the Exeter's rails and lasers or luck with the heart. I expect a success rate well under 10% for the four Kestrels alone but have no support for a number.
 
 #### (c) Exeter against the Bullfrog

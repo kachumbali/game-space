@@ -49,3 +49,15 @@ Kestrel row updated for the redesign; Halberd and Gulper rows for the 128/146 m 
 | 8 M turrets (dorsal +-48, 21, 0 and +-14, 26, 130; ventral +-44, -21.2, 60 and +-14, -26.5, 120; 90 hp) | `laserM` LS-8 TURRET LASER | 13 en, cd 0.28 s, range 1800, focus peak x3 like the LS-2 |
 
 The XL charge/lock/cool machine (79_bullfrog.js) is now weapon-generic: any mount with `store: 'spine'` whose weapon has `kind: 'spine'` runs it, with the whole cycle read from the weapon entry (`charge`, `lockT`, `cd`, `delay`, `fizzleCd`, `lockHold`, `corridorHalf`, `warnName`, `bw`, `color`, `sfx`). The FROGG spine is driven by `lancerAI`, the Exeter's mass driver by `capitalAI` (charge gate: big target, in range, aligned, corridor clear; the ship steers onto the aim point while charging and freezes its heading at lock). The HUD charge warning names the weapon (`SPINE` / `MASS DRIVER`). Tests: `tools/tests/mdxl_t.py` (cycle and pierce), `bullfrog_t.py` arcs/spine/exeter (updated: single L, disarmed dummies).
+
+## Weapon catalogue realism pass (owner decision 2026-10-22)
+
+Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells with HE or penetrator rods, lasers, masers, nukes". Conventional physics only; internal ids (`spit`, `fang`, `tad`, ...) are stable, display names are what the player sees.
+
+**FROGG energy family -> masers** (en damage, the green bolts and cyan beams; stats unchanged): `flaser` M-1 PULSE MASER, `spit` M-2 MASER, `spitcannon` M-6 HEAVY MASER, `lance` M-7 MASER LANCE, `lanceL` M-8 HEAVY MASER (L), `acidT` M-6T MASER TURRET (M), `spine` GX-1 CHARGED LANCE (XL, kept as an energy lance per owner decision).
+
+**FROGG kinetics:** `fang` R-9 AUTOCANNON (already kinetic, renamed), `sting` R-4 AUTOCANNON TURRET (S), `thorn` R-5 PD TURRET (S). **New:** `rodg` R-12 PENETRATOR DRIVER (kin 34, 45% pierce, 1400 m/s, cd 2.6) - the AP-rod variant that replaced the LASH CANNON as the Gulper's main (its comps are ROD DRIVER L/R).
+
+**Missiles:** `tick` SK-1 IR MISSILE, `tad` ST-2 TORPEDO (stats unchanged).
+
+**Human:** the PL-4 PLASMA BOLTER is gone; the Kestrel's secondary (grp 2) is the new `he` MK-30 HE CANNON - kin 7 per shell plus splash: on impact the bolt calls `blastAt` (8 m radius, distance falloff, `exp` damage to everything but the direct target, which already took the full hit). Ammo 240 per mount like the cannon; the HUD reads GUN + HE. Balance re-measured in `docs/BALANCE_TESTS.md` (HE shells vs FROGG fighters; Gulper rods vs humans).

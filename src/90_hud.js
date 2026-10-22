@@ -185,7 +185,7 @@ function updateRadarSide() {
   const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
   const cur = selectedMissile(p), ids = missileIds(p);
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
-  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div>`;
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip ${p.ammo.he < 1 ? 'zero' : ''}">HE ${p.ammo.he | 0}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
   const h = l + '|' + r;
   if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
@@ -195,12 +195,11 @@ function updateWeaponPanel() {
   const p = player;
   if (!p || !p.alive) { wpnEl.innerHTML = ''; return; }
   const m = k => p.fireMask & k;
-  const cn = p.ammo.cannon | 0, en = Math.round(p.energy);
-  const bar = (f, n = 10) => '█'.repeat(Math.round(f * n)) + '░'.repeat(n - Math.round(f * n));
+  const cn = p.ammo.cannon | 0;
   const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
   const ids = missileIds(p), cur = selectedMissile(p);
   let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
-  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 PLASMA ${bar(p.energy / 100, 8)} ${en}%</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   h += droneHudLine(p);
