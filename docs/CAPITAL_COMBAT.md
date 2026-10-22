@@ -97,3 +97,5 @@ with current shield level on the exposed facing); yields per warhead class; blin
 4. Turret numbers per role (rate, magazine or capacitor, damage, heat).
 5. XL keel cannon: does the shield get pierced, and what is the turn-rate cost for a 450 m hull?
 6. How FROGGs dissipate heat.
+
+See also docs/NUKES.md for the detailed nuclear warhead design (classes, effects model, delivery, release rules, balance arithmetic); it supersedes the open parameters of section 2.4 as a proposal.
