@@ -156,3 +156,12 @@ second Darter 8 m from the impact (shield-only damage, distance falloff) and a t
 stays clean; at `q=low` fighters' voxel hulls are too coarse for bolt hits at all - a property
 of the engine, not of the weapon. The R-12 rod bypasses a 1e6 shield for 88 structure damage in
 11 s against a parked Halberd dummy (45% pierce working as designed).
+
+## AI power management re-measure (2026-10-22, after `powerAI`)
+
+Owner decision: all ships work their 12-point budget, not just the player. Same duel setup (4 Kestrels skill 3
+vs mixed FROGGs skill 3, 3 runs): arcade 8 -> 3/3, 10 -> 3/3, 12 -> 1/3. The even point is back at about
+10-11, the original plasma-bolter band - the AI power pass (both sides push shields under fire, engines when
+closing) restored what the HE swap had cost the Kestrels, roughly cancelling the shift recorded above.
+Both changes stay in; the two effects are recorded separately so either can be re-tuned on its own.
+Test: `tools/tests/power_t.py` (4/4 pass: fire -> SHIELDS, far -> ENGINES, calm -> 4/4/4, regen 1.48x).

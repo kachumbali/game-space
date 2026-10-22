@@ -165,7 +165,28 @@ function avoidance(s, aim) {
   return false;
 }
 
+// ---- power management (owner decision 2026-10-22: all ships work their 12-point budget, not just the player's fighter) ----
+// One point per decision, taken from the larger of the other two channels (powerShift). Cadence scales with skill:
+// skill 5 decides every ~1.6 s, skill 1 every ~3.6 s. Shields when taking hits, weapons when the capacitors run low
+// while fighting (self-gating: energy-free gun ships never pick it), engines when closing or running, balance when calm.
+function powerAI(s, dt) {
+  if (!s.pw) return;
+  s.pwT = (s.pwT ?? 2) - dt;
+  if (s.pwT > 0) return;
+  s.pwT = 1.6 + (5 - (s.skill || 3)) * 0.5 + Math.random();
+  const ai = s.ai, t = s.target;
+  let want = null;
+  const shMax = (s.def.shield?.fore || 0) + (s.def.shield?.aft || 0), shNow = s.shield.fore + s.shield.aft;
+  if (shMax > 0 && (shNow < shMax * 0.35 || time - s.lastHit < 4)) want = 's';
+  else if ((s.energyMax || 0) > 0 && s.energy < s.energyMax * 0.3 && t && !t.dying) want = 'w';
+  else if (t && !t.dying && (ai.mode === 'flee' || ai.mode === 'run' || ai.mode === 'spool' || s.group.position.distanceTo(t.group.position) > 2200)) want = 'e';
+  if (want) { powerShift(s, want); s.pwCalm = 0; return; }
+  if (s.pw.w !== 4 || s.pw.s !== 4 || s.pw.e !== 4) { s.pwCalm = (s.pwCalm || 0) + 1; if (s.pwCalm >= 2) powerReset(s); }
+  else s.pwCalm = 0;
+}
+
 function aiUpdate(s, dt) {
+  powerAI(s, dt);
   if (s.def.drone) return droneAI(s, dt);        // unmanned: orders and controller logic in 56_drones.js
   const ai = s.ai;
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
