@@ -35,3 +35,17 @@ Kestrel row updated for the redesign; Halberd and Gulper rows for the 128/146 m 
   The diameter is clamped to 12 % of the hull length (small hulls). Beam turrets have one barrel, others twin barrels that alternate. Bolts and beams leave from the barrel tip of the rotated head (`T.muzzles`), not the turret centre. `comps[].r` of a turret should be about half the diameter (flag if it differs by more than 2x).
 - **Missile launch points**: optional `launch: [x, y, z]` per ship (ship space, x mirrors alternately left/right); sits at the front of the visible missile pod, pylon or bay mouth. Without it the default is a point under the nose (`half`-derived).
 - **Dead turrets** (component hp 0) stop firing, the barrel droops onto the hull and the assembly darkens.
+
+## Capital refit (owner decision 2026-10-22)
+
+**Bullfrog**: as a carrier it keeps a single heavy lance - the dorsal `L1` (0, 38, -150, 260 hp). The ventral `L2` turret, its component and its model blister are removed; the ventral hemisphere now has no L. The spool condition ("disarmed") is spine emitter + L1 destroyed. Turret count 25 (1 L + 6 M + 10 S + 8 PD).
+
+**Exeter** keeps its old fit (2 RG-90 bow rails, 4 LS-2 lasers, 3 PD-30) and gains:
+
+| Mount | Weapon | Spec |
+|---|---|---|
+| XL main, muzzle 0, -2, -204 (bow face), emitter comp `mdxl` at 0, 0, -150, 600 hp, `store: 'spine'` | `mdxl` MK-90 MASS DRIVER | 900 kin, 60% pierce, 3200 m, 800 en; charge 5 s, lock 1.5 s before the end, cd 30 s (delay 15 s); kinetic rail-family twin of the FROGG spine |
+| 4 L turrets (dorsal pair at +-40, 23, -90; ventral pair at +-36, -25, 30; 140 hp, cls L) | `mdl` MD-55 MASS DRIVER | 60 kin, 40% pierce, cd 2.2 s, v 1800, range 2600; big targets only (fighters inside 900 m), never missiles |
+| 8 M turrets (dorsal +-48, 21, 0 and +-14, 26, 130; ventral +-44, -21.2, 60 and +-14, -26.5, 120; 90 hp) | `laserM` LS-8 TURRET LASER | 13 en, cd 0.28 s, range 1800, focus peak x3 like the LS-2 |
+
+The XL charge/lock/cool machine (79_bullfrog.js) is now weapon-generic: any mount with `store: 'spine'` whose weapon has `kind: 'spine'` runs it, with the whole cycle read from the weapon entry (`charge`, `lockT`, `cd`, `delay`, `fizzleCd`, `lockHold`, `corridorHalf`, `warnName`, `bw`, `color`, `sfx`). The FROGG spine is driven by `lancerAI`, the Exeter's mass driver by `capitalAI` (charge gate: big target, in range, aligned, corridor clear; the ship steers onto the aim point while charging and freezes its heading at lock). The HUD charge warning names the weapon (`SPINE` / `MASS DRIVER`). Tests: `tools/tests/mdxl_t.py` (cycle and pierce), `bullfrog_t.py` arcs/spine/exeter (updated: single L, disarmed dummies).

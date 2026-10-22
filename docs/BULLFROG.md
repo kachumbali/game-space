@@ -1,8 +1,8 @@
 # FROGG Bullfrog: 600 m jump capital with a spine lance and a 36-fighter hangar (design proposal)
 
 Status: **implemented 2026-10-22 (first pass, section 11 lists every deviation from this design and the measured results); sections 1-10 are the original design text, partly superseded by section 11.** Owner decisions (binding, 2026-10-22): name Bullfrog, 600 m, jump-capable;
-main weapon a super-heavy XL forward-fixed spine lance (whole ship aims); S-class point defence, ordinary S and M turrets, exactly 2 L turrets
-(one dorsal, one ventral); hangar for 36 fighters of mixed FROGG classes; **no FROGG drones** (neuro-slaved pilots, anti-AI); beating it must take luck,
+main weapon a super-heavy XL forward-fixed spine lance (whole ship aims); S-class point defence, ordinary S and M turrets, exactly 1 L turret
+(dorsal; **owner decision 2026-10-22: the carrier keeps a single lance, the ventral L2 was removed**); hangar for 36 fighters of mixed FROGG classes; **no FROGG drones** (neuro-slaved pilots, anti-AI); beating it must take luck,
 especially if the spine focuses a capital. Everything else below is my proposal with defaults.
 
 Evidence labels used in this file:
@@ -75,7 +75,7 @@ Why these numbers:
 - **Spine damage and pierce** come from the Exeter arithmetic in 4.4 (800/20% gives "4 hits survivable with regeneration, 3 without"). A 20% pierce also makes
   the shield less than a full defence against it. The earlier default in `docs/OPEN_QUESTIONS.md` item 4 was 50% shield pierce; at 800 damage that kills an Exeter on the 4th hit
   whether or not its shield regenerates (3 survivable, the shield stops mattering), and at 600 damage on the 5th or 6th. I prefer 20% because it keeps the shield and regeneration relevant. [C]
-- **L damage** is chosen so that two L turrets match the Exeter's four lasers (4.5 base, peak 13.5 vs 6 base, peak 18; both on the same focus rule from `docs/LASERS.md` section 6). [A]
+- **L damage** is chosen so that two L turrets match the Exeter's four lasers (4.5 base, peak 13.5 vs 6 base, peak 18; both on the same focus rule from `docs/LASERS.md` section 6). [A] (With the single-lance decision of 2026-10-22 this is half the Exeter's old laser output; the Exeter has since been refit with 8 M lasers besides — see `docs/SHIPS.md`.)
 - **M turrets** are deliberately poor against fighters (slow 430 m/s shells, 1.3 s cycle): the owner wants fighters and missiles to be the danger to fighters, not turrets. [A]
 - **thorn** is slightly worse than the human `pd` (1.2 vs 1.3 damage, 750 vs 900 m, 4.0 vs 4.5 rad/s) because `docs/LORE.md` gives humans the better point defence; the FROGG answer is quantity (18 small turrets). [A]
 - **Tadpole** reuses the existing entry unchanged.
@@ -96,7 +96,6 @@ Frame: x is port/starboard (listed for +x, mirrored), y up, z forward is negativ
 |---|---|---|---|---|---|---|
 | spine (mount) | `spine` | muzzle 0, -4, -299; emitter comp 0, -4, -286 | 0 / -0.07 / -0.498 (muzzle) | - | 700 | 13 |
 | L1 | `lanceL` | 0, 34, -150 | 0 / +0.62 / -0.250 | dorsal | 260 | 12 |
-| L2 | `lanceL` | 0, -30, -150 | 0 / -0.55 / -0.250 | ventral | 260 | 12 |
 | M1, M2 | `acidT` | +-44, 30, -70 | +-0.46 / +0.55 / -0.117 | dorsal | 120 | 8 |
 | M3, M4 | `acidT` | +-54, 26, 80 | +-0.57 / +0.47 / +0.133 | dorsal | 120 | 8 |
 | M5, M6 | `acidT` | +-46, -28, -20 | +-0.48 / -0.51 / -0.033 | ventral | 120 | 8 |
@@ -111,7 +110,7 @@ Frame: x is port/starboard (listed for +x, mirrored), y up, z forward is negativ
 | P7, P8 | `thorn` | +-26, -34, 200 | +-0.27 / -0.62 / +0.333 | ventral | 40 | 4 |
 | tubes (mount) | `tad`, grp 3, `store: 'tad'`; `def.launch` | comp 0, -42, -10; launch point 0, -44, -40 | 0 / -0.76 / -0.067 (launch) | - | 500 | 14 |
 
-Counts: 26 turrets (2 L + 6 M + 10 S + 8 PD). Dorsal hemisphere 15 turrets (L1, 4 M, 6 S, 4 PD), ventral 11 (L2, 2 M, 4 S, 4 PD). The code gives each turret a full hemisphere with a 0.05 margin; there is no
+Counts: 25 turrets (1 L + 6 M + 10 S + 8 PD). Dorsal hemisphere 15 turrets (L1, 4 M, 6 S, 4 PD), ventral 10 (2 M, 4 S, 4 PD) — the ventral hemisphere lost its only L with the L2 removal (2026-10-22). The code gives each turret a full hemisphere with a 0.05 margin; there is no
 azimuth limit. Optional later: real firing arcs (not needed for the numbers here).
 Arc meaning in practice [V]: a target slightly above the hull plane is reachable by the dorsal turrets and almost never by the ventral ones, and the reverse. Targets directly ahead or astern are covered by both, but the spine cannot fire astern (see doctrine: attack from astern).
 
@@ -178,7 +177,7 @@ Format follows `comps` (id, role, position, radius, hp). Positions of the turret
 | Component | id | Role | x, y, z (m) | r | hp | Exposed? | Effect when lost |
 |---|---|---|---|---|---|---|---|
 | Spine emitter | `spine` | gun | 0, -4, -286 | 13 | 700 | yes (reach 20.8 m) | Spine offline; <50%: charge 9 s, cooldown 45 s |
-| L turrets (2) | `L1`, `L2` | turret | see 3.3 | 12 | 260 each | yes (19.2 m) | that turret off |
+| L turret (1) | `L1` | turret | see 3.3 | 12 | 260 | yes (19.2 m) | that turret off |
 | M turrets (6) | `M1`-`M6` | turret | see 3.3 | 8 | 120 each | yes | off |
 | S turrets (10) | `S1`-`S10` | turret | see 3.3 | 4.5 | 45 each | yes | off |
 | PD turrets (8) | `P1`-`P8` | turret | see 3.3 | 4 | 40 each | yes | off |
@@ -384,7 +383,7 @@ fRef/fDetail     E = [0,0,30,70,38,255], refN 11, disc [0,-4,60,88,9,200], plate
 `fRef` draws rib arches between about z = -77 and +163 for the E above. For the spine to read as a charging weapon the arches (with cyan seams between them) should reach the bow: add 5 hand-placed arches (`chain` as in `fRef`) between z = -180 and -90. Charge cue (needs a small code addition): scale a cyan `flashAt` at the muzzle and emit sparks along the seams from aft to fore over the first 4.5 s; no per-instance emissive control exists in the renderer today, so a flash plus particles is the cheap version. The seam voxels are already `glow: true`.
 
 ### 7.4 Where every subsystem sits (every model view must show them, `AGENTS.md`)
-Markers per the key in `docs/SHIP_MANUAL.md` 3: engines (orange rings): the six nozzles; main gun (green square): spine emitter and the two L bases; PD (yellow triangle): P1-P8 and S1-S10; M turrets: green square, smaller; shield generator (cyan diamond): `shieldF` (z -40, dorsal blister) and `shieldA` (z +170); sensors (magenta ring): `eyes` at z -215; reactor (red cross): heart at z +150 under the dome; bays (purple box): maws at z -95 and +90; weapon muzzle (green plus): spine at z -299, tubes at z -40, L turret muzzles. Data source is `comps`, `mounts`, `turrets`, `engines`. Radiators: none (FROGG heat is undecided, `docs/CAPITAL_COMBAT.md` question 6).
+Markers per the key in `docs/SHIP_MANUAL.md` 3: engines (orange rings): the six nozzles; main gun (green square): spine emitter and the L1 base; PD (yellow triangle): P1-P8 and S1-S10; M turrets: green square, smaller; shield generator (cyan diamond): `shieldF` (z -40, dorsal blister) and `shieldA` (z +170); sensors (magenta ring): `eyes` at z -215; reactor (red cross): heart at z +150 under the dome; bays (purple box): maws at z -95 and +90; weapon muzzle (green plus): spine at z -299, tubes at z -40, the L turret muzzle. Data source is `comps`, `mounts`, `turrets`, `engines`. Radiators: none (FROGG heat is undecided, `docs/CAPITAL_COMBAT.md` question 6).
 
 ### 7.5 Voxel budget [C estimate, U]
 Rule [V]: `resFor = min(RES_CAP 420, round(DETAIL_STEPS[idx] x (length/12)^0.4 x resMul))`; length factor (600/12)^0.4 = 4.78; instance count is the shell only (cells with all 6 neighbours solid are dropped). Voxel size `vs = 600 / res`.

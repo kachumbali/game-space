@@ -529,7 +529,7 @@ function updateHud() {
   if (alive) {
     if (warnState.incoming.length) { const d = Math.min(...warnState.incoming.map(m => m.pos.distanceTo(p.group.position))); w = Math.floor(time * 6) % 2 ? `MISSILE INBOUND  ${d.toFixed(0)}m` : ''; }
     else if (warnState.lockedBy) w = Math.floor(time * 4) % 2 ? 'MISSILE LOCK' : '';
-    else if (warnState.spine && time - warnState.spine.t < 0.3) { const B = warnState.spine; w = B.lock ? (B.kind === 'ally' ? `SPINE LOCK ON ${B.name}` : 'SPINE LOCK - BREAK') : (Math.floor(time * 5) % 2 ? (B.kind === 'ally' ? `SPINE CHARGING AT ${B.name}` : 'SPINE CHARGING') : ''); }
+    else if (warnState.spine && time - warnState.spine.t < 0.3) { const B = warnState.spine, N = B.wn || 'SPINE'; w = B.lock ? (B.kind === 'ally' ? `${N} LOCK ON ${B.name}` : `${N} LOCK - BREAK`) : (Math.floor(time * 5) % 2 ? (B.kind === 'ally' ? `${N} CHARGING AT ${B.name}` : `${N} CHARGING`) : ''); }
     else if (warnState.beam) { const B = warnState.beam; w = B.live ? 'LASER ON YOU - BREAK' : (Math.floor(time * (3 + 8 * B.prog)) % 2 ? 'LASER TRACKING ' + Math.round(B.prog * 100) + '%' : ''); }
     else if (p.shield.fore + p.shield.aft < 4 && time - p.lastHit < 3) w = 'SHIELDS DOWN';
   }

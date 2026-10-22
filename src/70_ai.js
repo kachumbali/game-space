@@ -305,15 +305,30 @@ function capitalAI(s, dt) {
   if (s.ai.role === 'lancer') return lancerAI(s, dt);
   if (s.ai.escort && escortAI(s, dt)) return;
   const ai = s.ai, t = s.target, ep = s.group.position;
+  // XL main (Exeter mass driver): the same charge/lock/cool machine as the FROGG spine, driven from the normal capital loop
+  const sm = spineMountOf(s), sp = sm ? (s.spine || spineInit(s)) : null;
+  let sAim = null;
+  if (sp) {
+    const W = WEAPONS[sm.w];
+    sp.tgt = t;
+    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter') {
+      const d0 = ep.distanceTo(t.group.position), tm = s.def.turn * turnMul(s), e0 = aimError(s, leadPoint(s, t, 1e6));
+      if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= 4.5 && spineCorridorClear(s)) {
+        s.energy -= W.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
+        bfLog.push({ ev: 'charge', t: +time.toFixed(1), tgt: t.def.id, dist: Math.round(d0) });
+      }
+    }
+    sAim = spineStep(s, dt);
+  }
   if (!t) { aiFly(s, { throttle: 0.1 }, dt); return; }
   const dist = ep.distanceTo(t.group.position);
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
   const rng = primaryRange(s);
   const lp = leadPoint(s, t, primarySpeed(s));
-  turnToward(s, lp, dt, 1);
+  if (!(sp && sp.st === 'lock')) turnToward(s, sAim ?? lp, dt, 1);   // charging: steer onto the XL aim point; heading frozen from the lock on
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
-  aiFly(s, { throttle: thr }, dt);
+  aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
   if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);
   // torpedoes at capital targets

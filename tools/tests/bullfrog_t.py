@@ -22,6 +22,7 @@ def t_spine(R):
     r=pg.evaluate(js('''
       const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
       freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;   // target dummy: only the spine timeline is measured
+      for(const c of ex.comps)if(c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // 2026-10-22 refit: kill the dummy's XL and L/M turrets, else their hits slow the Bullfrog's emitter (charge 9 s) and the timeline check breaks
       const ev=[];let last='';let t=0;const sp=bf.spine||(()=>{g.update(0.05);return bf.spine})();
       stepN(110,(tt)=>{ex.vel.set(0,0,0);t=tt;if(sp.st!==last){ev.push([+tt.toFixed(2),sp.st,Math.round(bf.group.position.distanceTo(ex.group.position))]);last=sp.st;}});
       return {ev,shots:sp.shots,log:__bf.log.slice(0,12),energy:Math.round(bf.energy)};'''))
@@ -43,7 +44,8 @@ def t_exeter(R):
         r=pg.evaluate('(arg)=>{'+PRE+'''
           const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2300),{});bf.ai.role='capital';bf.stores.tad=0;
           const ex=g.spawnShip('exeter',0,V(0,0,-2300),V(0,0,0),{ai:'capital'});freeze(ex);
-          g.update(0.05);const sp=bf.spine||__bf.spineInit(bf);sp.tgt=ex;
+          for(const c of ex.comps)if(c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // 2026-10-22 refit: disarm the dummy's XL and L/M turrets
+          g.update(0.05);const sp=bf.spine||__bf.spineInit(bf);sp.tgt=ex;sp.st='off';   // 'off' keeps capitalAI's own spine cycle out; this test measures the direct spineFire calls
           const out=[];
           for(let i=1;i<=6;i++){
             if(!arg.regen)ex.lastHit=1e9;
@@ -85,10 +87,10 @@ def t_friendly(R):
 def t_arcs(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
-      const d=g.SHIPS.bullfrog;const cnt={};const N=2000;let minC={L:99,M:99,S:99,PD:99};const dirs=[];
+      const d=g.SHIPS.bullfrog;const cnt={};const N=2000;let minC={M:99,S:99,PD:99};let minLd=99;const dirs=[];
       for(let i=0;i<N;i++){const y=1-2*(i+0.5)/N,r=Math.sqrt(1-y*y),a=i*2.399963;dirs.push([r*Math.cos(a),y,r*Math.sin(a)]);}
       const cls=t=>t.cls==='S'&&t.w==='thorn'?'PD':t.cls;
-      for(const dv of dirs){const c={L:0,M:0,S:0,PD:0};for(const t of d.turrets)if(dv[1]*t.side>-0.05)c[cls(t)]++;for(const k in c)minC[k]=Math.min(minC[k],c[k]);}
+      for(const dv of dirs){const c={L:0,M:0,S:0,PD:0};for(const t of d.turrets)if(dv[1]*t.side>-0.05)c[cls(t)]++;for(const k of ['M','S','PD'])minC[k]=Math.min(minC[k],c[k]);if(dv[1]>0.25)minLd=Math.min(minLd,c.L);}
       const n={};for(const t of d.turrets){const k=cls(t)+(t.side>0?'d':'v');n[k]=(n[k]||0)+1;}
       // dynamic: a frozen hostile Kestrel at 700 m in 10 directions; count turrets that pick it and whether any bolt/beam leaves within 8 s
       const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-3000),{});bf.ai.role='capital';bf.hold=true;freeze(bf);
@@ -101,10 +103,11 @@ def t_arcs(R):
         dyn.push({dir:dv.join(','),turretsOnIt:tg,firstFire:+first.toFixed(2)});
         e.alive=false;g.update(0.05);
       }
-      return {minC,n,dyn};'''))
+      return {minC,minLd,n,dyn};'''))
     print(json.dumps(r))
-    check('every direction covered by >=1 L, M, S and PD turret (static hemisphere test)', all(v>=1 for v in r['minC'].values()), json.dumps(r['minC']))
-    check('counts: L 1d+1v, M 4d+2v, S 6d+4v, PD 4d+4v', r['n']=={'Ld':1,'Lv':1,'Md':4,'Mv':2,'Sd':6,'Sv':4,'PDd':4,'PDv':4}, json.dumps(r['n']))
+    check('every direction covered by >=1 M, S and PD turret (static hemisphere test)', all(v>=1 for v in r['minC'].values()), json.dumps(r['minC']))
+    check('dorsal hemisphere covered by the single remaining L lance', r['minLd']>=1, str(r['minLd']))
+    check('counts: L 1d (ventral lance removed 2026-10-22), M 4d+2v, S 6d+4v, PD 4d+4v', r['n']=={'Ld':1,'Md':4,'Mv':2,'Sd':6,'Sv':4,'PDd':4,'PDv':4}, json.dumps(r['n']))
     bad=[x for x in r['dyn'] if x['turretsOnIt']<1 or x['firstFire']<0]
     check('dynamic: a hostile at 800 m in each of 10 directions is engaged within 8 s', not bad, json.dumps(bad))
 

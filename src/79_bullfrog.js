@@ -6,7 +6,7 @@
 // ======================================================================
 Object.assign(WEAPONS, {
   // XL spine: not a gun mount weapon (mount has store:'spine' so fireGuns skips it); charge then an instant 12 m wide ray, see spineStep / spineFire
-  spine: { kind: 'spine', name: 'FROGG SPINE LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, bw: 12, color: 0x35e8ff, sfx: 'lash', frogg: true },
+  spine: { kind: 'spine', name: 'FROGG SPINE LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'SPINE', frogg: true },
   lanceL: { kind: 'beam', name: 'FROGG HEAVY LANCE (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
   acidT: { kind: 'proj', name: 'ACID CANNON (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
   thorn: { kind: 'proj', name: 'THORN POINT DEFENCE (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true },
@@ -22,56 +22,60 @@ const bfLog = [];      // shot / launch / event log for tests
 const isBullfrog = s => s.ai && s.ai.role === 'lancer';
 const bfHostile = (s, e) => e.alive && !e.dying && e.team !== s.team;
 const bfBig = e => e.def.cls === 'capital' || e.def.cls === 'frigate';
+// XL mains (FROGG spine, Exeter mass driver) are mounts with store:'spine'; the weapon entry carries the whole cycle (charge/lockT/cd/delay/...)
+const spineMountOf = s => s.def.mounts.find(m => m.store === 'spine');
+const spineW = s => WEAPONS[spineMountOf(s).w];
 
 // ---------------------------------------------------------------- spine
 function spineInit(s) {
-  return (s.spine = { st: 'cool', t: 0, cd: BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: BF.charge, startedAt: -99 });
+  return (s.spine = { st: 'cool', t: 0, cd: spineW(s).delay ?? BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: spineW(s).charge, startedAt: -99 });
 }
-function spineMuzzle(s, out) { const m = s.def.mounts[0]; s.group.updateMatrixWorld(true); return s.group.localToWorld(out.set(m.pos[0], m.pos[1], m.pos[2])); }
-// friendly (any class, own fighters included) on the nose line within 3300 m: the ray is 12 m wide, add its width and the other ship's radius
+function spineMuzzle(s, out) { const m = spineMountOf(s); s.group.updateMatrixWorld(true); return s.group.localToWorld(out.set(m.pos[0], m.pos[1], m.pos[2])); }
+// friendly (any class, own fighters included) on the nose line within range: the ray is `bw` m wide, add its width and the other ship's radius
 function spineCorridorClear(s) {
   spineMuzzle(s, _bfm);
+  const R = spineW(s).range + 100;
   _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   for (const f of ships) {
     if (f === s || !f.alive || f.dying || f.team !== s.team) continue;
     _bv.copy(f.group.position).sub(_bfm);
     const along = _bv.dot(_bf);
-    if (along < -f.def.radius || along > 3300) continue;
+    if (along < -f.def.radius || along > R) continue;
     if (_bv.addScaledVector(_bf, -along).length() < f.def.radius * 0.9 + 3 + 10) return false;
   }
   for (const m of missiles) {
     if (m.dead || m.team !== s.team) continue;
     _bv.copy(m.pos).sub(_bfm);
     const along = _bv.dot(_bf);
-    if (along > 0 && along < 3300 && _bv.addScaledVector(_bf, -along).length() < 25) return false;
+    if (along > 0 && along < R && _bv.addScaledVector(_bf, -along).length() < 25) return false;
   }
   return true;
 }
 function spineFxGet(s) {
   if (s.spine.fx) return s.spine.fx;
-  const m = s.def.mounts[0];
+  const m = spineMountOf(s), W = spineW(s), lc = new THREE.Color(W.color).lerp(new THREE.Color(0xffffff), 0.35);
   const mk = (geo, col, op) => { const x = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(3), transparent: true, opacity: op, depthWrite: false, blending: THREE.AdditiveBlending })); x.frustumCulled = false; x.visible = false; s.group.add(x); return x; };
-  const fx = { glow: mk(new THREE.SphereGeometry(1, 12, 8), 0x35e8ff, 0.7), line: mk(new THREE.BoxGeometry(1, 1, 1), 0x7ff4ff, 0.8), beam: mk(new THREE.BoxGeometry(1, 1, 1), 0x35e8ff, 0.8), core: mk(new THREE.BoxGeometry(1, 1, 1), 0xffffff, 1), fireT: -99, beamLen: 0 };
+  const fx = { glow: mk(new THREE.SphereGeometry(1, 12, 8), W.color, 0.7), line: mk(new THREE.BoxGeometry(1, 1, 1), lc, 0.8), beam: mk(new THREE.BoxGeometry(1, 1, 1), W.color, 0.8), core: mk(new THREE.BoxGeometry(1, 1, 1), 0xffffff, 1), fireT: -99, beamLen: 0 };
   fx.glow.position.set(m.pos[0], m.pos[1], m.pos[2]);
   return (s.spine.fx = fx);
 }
 function spineFxUpdate(s) {
-  const sp = s.spine, fx = spineFxGet(s), m = s.def.mounts[0], charging = sp.st === 'charge' || sp.st === 'lock';
+  const sp = s.spine, fx = spineFxGet(s), m = spineMountOf(s), W = spineW(s), charging = sp.st === 'charge' || sp.st === 'lock';
   fx.glow.visible = charging && sp.t > 0.3;
   if (fx.glow.visible) { const k = sp.t / sp.C; fx.glow.scale.setScalar(2 + 16 * k * k + (sp.st === 'lock' ? 2 * Math.sin(time * 30) : 0)); fx.glow.material.opacity = 0.35 + 0.5 * k; }
   fx.line.visible = sp.st === 'lock';                                     // thin aim line from the freeze on
-  if (fx.line.visible) { const L = sp.lineLen || BF.range; fx.line.scale.set(0.9, 0.9, L); fx.line.position.set(m.pos[0], m.pos[1], m.pos[2] - L / 2); }
+  if (fx.line.visible) { const L = sp.lineLen || W.range; fx.line.scale.set(0.9, 0.9, L); fx.line.position.set(m.pos[0], m.pos[1], m.pos[2] - L / 2); }
   const age = time - fx.fireT;
   fx.beam.visible = fx.core.visible = age >= 0 && age < 0.8;
   if (fx.beam.visible) {
     const L = fx.beamLen, f = 1 - age / 0.8;
-    fx.beam.scale.set(WEAPONS.spine.bw * (0.5 + 0.5 * f), WEAPONS.spine.bw * (0.5 + 0.5 * f), L); fx.beam.position.set(m.pos[0], m.pos[1], m.pos[2] - L / 2); fx.beam.material.opacity = 0.7 * f;
+    fx.beam.scale.set(W.bw * (0.5 + 0.5 * f), W.bw * (0.5 + 0.5 * f), L); fx.beam.position.set(m.pos[0], m.pos[1], m.pos[2] - L / 2); fx.beam.material.opacity = 0.7 * f;
     fx.core.scale.set(3, 3, L); fx.core.position.copy(fx.beam.position);
   }
 }
 // ray along the nose line from the muzzle; first ship whose hull it crosses takes the hit (fighters: distance test, others: five voxel traces across the 12 m width)
 function spineFire(s) {
-  const sp = s.spine, W = WEAPONS.spine;
+  const sp = s.spine, W = spineW(s);
   spineMuzzle(s, _bfm);
   _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   _br.set(1, 0, 0).applyQuaternion(s.group.quaternion); _bu.set(0, 1, 0).applyQuaternion(s.group.quaternion);
@@ -98,7 +102,7 @@ function spineFire(s) {
   }
   const fx = spineFxGet(s);
   fx.fireT = time; fx.beamLen = best ? bestD : W.range;
-  sfx('lash', 0, 1); sfx('boom', 0, 1.2);
+  sfx(W.sfx, 0, 1); sfx('boom', 0, 1.2);
   const rec = { t: +time.toFixed(1), tgt: sp.tgt ? sp.tgt.def.id : null, hit: best ? best.def.id : null, hitTeam: best ? best.team : null, hitPlayer: best === player };
   if (best) {
     const wp = best.group.localToWorld(bestLocal.clone()), fr = best.team === s.team;
@@ -114,30 +118,30 @@ function spineFire(s) {
 }
 // per-frame spine machine; lancerAI supplies s.spine.tgt / want. Returns an aim point while charging (the ship keeps turning onto it until the freeze)
 function spineStep(s, dt) {
-  const sp = s.spine || spineInit(s), em = compOf(s, 'spine');
+  const sp = s.spine || spineInit(s), m = spineMountOf(s), W = WEAPONS[m.w], em = compOf(s, m.comp);
   const slow = em && em.hp / em.max < 0.5 ? 1.5 : 1;
-  sp.C = BF.charge * slow;
+  sp.C = W.charge * slow;
   if (!em || em.hp <= 0) { sp.st = 'off'; spineFxUpdate(s); return null; }
   let aim = null;
   if (sp.st === 'cool') { sp.cd -= dt; if (sp.cd <= 0) sp.st = 'ready'; }
   else if (sp.st === 'charge' || sp.st === 'lock') {
     const t = sp.tgt;
     sp.t += dt;
-    if (!t || !t.alive || t.dying) { sp.st = 'cool'; sp.cd = BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'target gone', t: +time.toFixed(1) }); }
+    if (!t || !t.alive || t.dying) { sp.st = 'cool'; sp.cd = W.fizzleCd ?? BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'target gone', t: +time.toFixed(1) }); }
     else if (sp.st === 'charge') {
       const rem = Math.max(0, sp.C - sp.t);
       aim = sp.aimPt.copy(t.group.position).addScaledVector(_bv.copy(t.vel).sub(s.vel), Math.min(8, rem));
-      if (sp.t >= sp.C - BF.freeze) {
+      if (sp.t >= sp.C - W.lockT) {
         const err = aimError(s, aim), dist = s.group.position.distanceTo(t.group.position);
         const tol = clamp(0.45 * t.def.radius / Math.max(1, dist), 0.012, 0.04);
-        if (err > tol) { sp.st = 'cool'; sp.cd = BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'aim ' + err.toFixed(3) + '>' + tol.toFixed(3), t: +time.toFixed(1) }); aim = null; }
-        else { sp.st = 'lock'; sp.holdT = 0; sp.lineLen = Math.min(BF.range, dist + t.def.radius); aim = null; }
+        if (err > tol) { sp.st = 'cool'; sp.cd = W.fizzleCd ?? BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'aim ' + err.toFixed(3) + '>' + tol.toFixed(3), t: +time.toFixed(1) }); aim = null; }
+        else { sp.st = 'lock'; sp.holdT = 0; sp.lineLen = Math.min(W.range, dist + t.def.radius); aim = null; }
       }
     }
     if (sp.st === 'lock') {
       if (sp.t >= sp.C) {
-        if (!spineCorridorClear(s)) { sp.holdT += dt; if (sp.holdT > BF.lockHold) { sp.st = 'cool'; sp.cd = 10; bfLog.push({ ev: 'fizzle', why: 'friendly in line', t: +time.toFixed(1) }); } }
-        else { spineFire(s); sp.st = 'cool'; sp.cd = BF.cd * slow; }
+        if (!spineCorridorClear(s)) { sp.holdT += dt; if (sp.holdT > (W.lockHold ?? BF.lockHold)) { sp.st = 'cool'; sp.cd = 10; bfLog.push({ ev: 'fizzle', why: 'friendly in line', t: +time.toFixed(1) }); } }
+        else { spineFire(s); sp.st = 'cool'; sp.cd = W.cd * slow; }
       }
     }
     if (sp.st === 'charge' || sp.st === 'lock') spineWarn(s, sp, dt);
@@ -155,11 +159,12 @@ function spineWarn(s, sp, dt) {
     _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     _bv.copy(p.group.position).sub(s.group.position);
     const d = _bv.length();
-    if (d < 4000 && _bv.angleTo(_bf) < BF.corridorHalf) kind = 'near';
+    if (d < 4000 && _bv.angleTo(_bf) < (spineW(s).corridorHalf ?? BF.corridorHalf)) kind = 'near';
   }
   if (!kind) return;
-  warnState.spine = { t: time, kind, lock: sp.st === 'lock', prog: Math.min(1, sp.t / sp.C), name: t ? (t.callsign || t.def.name) : '?' };
-  if (sp.warnLogT === undefined || time - sp.warnLogT > 8) { sp.warnLogT = time; log(kind === 'ally' ? `SPINE CHARGING AT ${warnState.spine.name}` : 'SPINE CHARGING', '#ff5a4a'); sfx('alarm'); }
+  const wn = spineW(s).warnName || 'SPINE';
+  warnState.spine = { t: time, kind, lock: sp.st === 'lock', prog: Math.min(1, sp.t / sp.C), name: t ? (t.callsign || t.def.name) : '?', wn };
+  if (sp.warnLogT === undefined || time - sp.warnLogT > 8) { sp.warnLogT = time; log(kind === 'ally' ? `${wn} CHARGING AT ${warnState.spine.name}` : `${wn} CHARGING`, '#ff5a4a'); sfx('alarm'); }
   sp.toneT -= dt;
   if (sp.toneT <= 0) { const k = warnState.spine.prog; tone(300 + 900 * k, 320 + 1000 * k, 0.12, 'sawtooth', 0.09); sp.toneT = Math.max(0.1, 0.55 - 0.45 * k); }
 }
@@ -238,7 +243,7 @@ function lancerPick(s) {
 }
 function bfSpoolCheck(s) {
   const hp = s.structure / s.def.structure, g = id => compOf(s, id).hp <= 0;
-  return hp < 0.25 || (g('shieldF') && g('shieldA') && hp < 0.4) || (g('spine') && g('L1') && g('L2') && hp < 0.5);
+  return hp < 0.25 || (g('shieldF') && g('shieldA') && hp < 0.4) || (g('spine') && g('L1') && hp < 0.5);
 }
 function lancerAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
@@ -276,11 +281,11 @@ function lancerAI(s, dt) {
     thr = ai.mode === 'close' ? 0.7 : ai.mode === 'station' ? 0.15 : 0;
   } else ai.mode = 'hold';
   // ---- spine: start a charge
-  if (sp.st === 'ready' && big && dist < BF.range * 0.95 && s.energy >= WEAPONS.spine.energy) {
+  if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
     if (err / tm <= 4.5 && spineCorridorClear(s)) {
-      s.energy -= WEAPONS.spine.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
+      s.energy -= spineW(s).energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
       bfLog.push({ ev: 'charge', t: +time.toFixed(1), tgt: t.def.id, dist: Math.round(dist) });
     }
   }

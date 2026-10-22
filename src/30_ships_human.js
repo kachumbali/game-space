@@ -347,16 +347,28 @@ SHIPS.exeter = {
     ell([0, 0, 214.5], [20, 12, 2.5], E.glow, { glow: true }),
     ...eTur(0, 22, -110), ...eTur(24, 21, -40), ...eTur(-24, 21, -40), ...eTur(20, 26, 110), ...eTur(-20, 26, 110),
     ...eTur(0, -20, -80, -1), ...eTur(0, -21, 60, -1),
+    ...eTur(40, 21, -90), ...eTur(-40, 21, -90), ...eTur(36, -23, 30, -1), ...eTur(-36, -23, 30, -1),      // L mass driver seats
+    ...eTur(48, 19, 0), ...eTur(-48, 19, 0), ...eTur(14, 24, 130), ...eTur(-14, 24, 130),                  // M laser seats (dorsal)
+    ...eTur(44, -19.2, 60, -1), ...eTur(-44, -19.2, 60, -1), ...eTur(14, -24.5, 120, -1), ...eTur(-14, -24.5, 120, -1),  // M laser seats (ventral)
+    seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle: collar and glow on the bow face, between the prongs
     ...exeterDetail,
   ],
   engines: [{ pos: [80, -3, 229], comp: 'engR', r: 11 }, { pos: [-80, -3, 229], comp: 'engL', r: 11 }, { pos: [0, 0, 216], comp: 'engC', r: 18 }],
   mounts: [
     { w: 'rail', pos: [16, 5, -227], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-16, 5, -227], comp: 'railL', grp: 1 },    // bow prong tips (prims seg ends at [16,5,-226])
+    { w: 'mdxl', pos: [0, -2, -204], comp: 'mdxl', grp: 9, store: 'spine' },    // XL mass driver: emitter in the centre mass, muzzle at the bow face; charge machine in 79_bullfrog.js
   ],
   turrets: [
     { w: 'laser', pos: [0, 24, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 22.4, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 22.4, -40], comp: 'tur3', side: 1 },
     { w: 'pd', pos: [20, 28.7, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 28.7, 110], comp: 'tur5', side: 1 },
     { w: 'laser', pos: [0, -22.4, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -22.4, 60], comp: 'tur7', side: -1 },
+    // owner decision 2026-10-22: 2x2 L mass driver turrets (dorsal pair fwd, ventral pair mid) and 4x2 M lasers
+    { w: 'mdl', cls: 'L', pos: [40, 23, -90], comp: 'mdL1', side: 1 }, { w: 'mdl', cls: 'L', pos: [-40, 23, -90], comp: 'mdL2', side: 1 },
+    { w: 'mdl', cls: 'L', pos: [36, -25, 30], comp: 'mdL3', side: -1 }, { w: 'mdl', cls: 'L', pos: [-36, -25, 30], comp: 'mdL4', side: -1 },
+    { w: 'laserM', pos: [48, 21, 0], comp: 'mt1', side: 1 }, { w: 'laserM', pos: [-48, 21, 0], comp: 'mt2', side: 1 },
+    { w: 'laserM', pos: [14, 26, 130], comp: 'mt3', side: 1 }, { w: 'laserM', pos: [-14, 26, 130], comp: 'mt4', side: 1 },
+    { w: 'laserM', pos: [44, -21.2, 60], comp: 'mt5', side: -1 }, { w: 'laserM', pos: [-44, -21.2, 60], comp: 'mt6', side: -1 },
+    { w: 'laserM', pos: [14, -26.5, 120], comp: 'mt7', side: -1 }, { w: 'laserM', pos: [-14, -26.5, 120], comp: 'mt8', side: -1 },
   ],
   stores: { flare: 0 },
   comps: [
@@ -372,6 +384,13 @@ SHIPS.exeter = {
     { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 28.7, 110], r: 3.2, hp: 90 },
     { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -22.4, -80], r: 7, hp: 90 },
     { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -22.4, 60], r: 3.2, hp: 90 },
+    { id: 'mdxl', name: 'MASS DRIVER', role: 'gun', pos: [0, 0, -150], r: 14, hp: 600 },
+    { id: 'mdL1', name: 'MASS DRIVER 1', role: 'turret', pos: [40, 23, -90], r: 8, hp: 140 }, { id: 'mdL2', name: 'MASS DRIVER 2', role: 'turret', pos: [-40, 23, -90], r: 8, hp: 140 },
+    { id: 'mdL3', name: 'MASS DRIVER 3', role: 'turret', pos: [36, -25, 30], r: 8, hp: 140 }, { id: 'mdL4', name: 'MASS DRIVER 4', role: 'turret', pos: [-36, -25, 30], r: 8, hp: 140 },
+    { id: 'mt1', name: 'LS-8 LASER 1', role: 'turret', pos: [48, 21, 0], r: 6, hp: 90 }, { id: 'mt2', name: 'LS-8 LASER 2', role: 'turret', pos: [-48, 21, 0], r: 6, hp: 90 },
+    { id: 'mt3', name: 'LS-8 LASER 3', role: 'turret', pos: [14, 26, 130], r: 6, hp: 90 }, { id: 'mt4', name: 'LS-8 LASER 4', role: 'turret', pos: [-14, 26, 130], r: 6, hp: 90 },
+    { id: 'mt5', name: 'LS-8 LASER 5', role: 'turret', pos: [44, -21.2, 60], r: 6, hp: 90 }, { id: 'mt6', name: 'LS-8 LASER 6', role: 'turret', pos: [-44, -21.2, 60], r: 6, hp: 90 },
+    { id: 'mt7', name: 'LS-8 LASER 7', role: 'turret', pos: [14, -26.5, 120], r: 6, hp: 90 }, { id: 'mt8', name: 'LS-8 LASER 8', role: 'turret', pos: [-14, -26.5, 120], r: 6, hp: 90 },
     { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -100], r: 16, hp: 400 },
     { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 100], r: 16, hp: 400 },
     { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 26, 70], r: 16, hp: 350 },
