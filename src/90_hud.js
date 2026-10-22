@@ -32,11 +32,17 @@ function silhouette(def) {
   if (sil[def.id]) return sil[def.id];
   const cv = document.createElement('canvas'); cv.width = 150; cv.height = 170;
   const c = cv.getContext('2d');
-  const D = voxelize(def, def.cls === 'fighter' ? 28 : 40);
+  const D = voxelize(def, def.cls === 'fighter' ? 72 : 64);
   const sc = Math.min(58 / def.half[0], 64 / def.half[2]);
-  c.fillStyle = '#3d5058';
+  c.fillStyle = '#5d7a84';
   for (const v of D.voxels) c.fillRect(75 + v.x * sc - D.vs * sc * 0.5, 88 + v.z * sc - D.vs * sc * 0.5, D.vs * sc + 0.6, D.vs * sc + 0.6);
-  sil[def.id] = { cv, sc };
+  // hull outline: the silhouette dilated by one pixel in 8 directions, tinted, minus the silhouette itself (cached per hull)
+  const ol = document.createElement('canvas'); ol.width = 150; ol.height = 170;
+  const o = ol.getContext('2d');
+  for (const [dx, dy] of [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, -1], [-1, 1], [1, 1]]) o.drawImage(cv, dx, dy);
+  o.globalCompositeOperation = 'source-in'; o.fillStyle = 'rgba(160,255,215,.95)'; o.fillRect(0, 0, 150, 170);
+  o.globalCompositeOperation = 'destination-out'; o.drawImage(cv, 0, 0);
+  sil[def.id] = { cv, sc, ol };
   return sil[def.id];
 }
 
@@ -44,7 +50,7 @@ function drawDamage() {
   dctx.clearRect(0, 0, 150, 170);
   const p = player;
   if (!p || !p.alive) return;
-  const { cv, sc } = silhouette(p.def);
+  const { cv, sc, ol } = silhouette(p.def);
   dctx.drawImage(cv, 0, 0);
   const cx = 75, cy = 88, hx = p.def.half[0] * sc, hz = p.def.half[2] * sc;
   for (const [f, a0, a1] of [['fore', -2.6, -0.54], ['aft', 0.54, 2.6]]) {
@@ -61,6 +67,7 @@ function drawDamage() {
   bar(ap('left'), cx - hx - 9, cy - 35 * ap('left'), 3, 70 * ap('left'));
   bar(ap('right'), cx + hx + 6, cy - 35 * ap('right'), 3, 70 * ap('right'));
   drawCompZones(p, cx, cy, sc, cv);
+  dctx.drawImage(ol, 0, 0);                         // hull outline on top of the zones
 }
 
 // WC2-style damage schematic: every component is a zone shaped by its role (engine nacelle, gun barrel, turret ring, shield band, sensor oval,
