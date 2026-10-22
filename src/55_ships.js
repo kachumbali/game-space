@@ -7,7 +7,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     shield: { ...def.shield }, abl: {}, structure: def.structure,
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
-    target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
+    target: null, lastAttacker: null, kills: 0, drones: [], droneKills: 0, dronesLost: 0, dmgTaken: 0, spawnT: time,
     fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
@@ -102,6 +102,7 @@ function resetGame() {
 //   ?free&n=10        FROGG fighters per wave (default: the built-in wave table)
 //   ?free&wing=4      N AI Kestrel wingmen;  &wskill=1..5 their pilot skill (default 3);  &fskill=1..5 FROGG skill
 //   ?free&frigate     the Exeter (jump frigate) joins the human side, 700 m astern
+//   ?free&drones=N    the player carries N drones (launches up to the control limit, 1 for a fighter; &dlimit=N raises it; &nolaunch keeps them aboard)
 //   ?free&nuke=2      the player carries N 0.1 kT warheads (cycle missiles with G; proximity burst 120 m)
 //   ?free&aifm=newton AI ships fly under Newtonian rules
 function benchSetup() {
@@ -115,6 +116,11 @@ function benchSetup() {
   if (params.has('frigate')) {
     const f = makeShip('exeter', 0, player.group.position.clone().addScaledVector(pf, -700), new THREE.Quaternion(), { callsign: 'EXETER', id: 'exeter', ai: 'capital', hold: true });
     f.vel.set(0, 0, -4);
+  }
+  if (params.has('drones')) {            // ?drones=N stock (fighter control limit is 1: &dlimit=N overrides); launched at once unless &nolaunch
+    player.stores.drone = Math.max(0, +params.get('drones') || 0);
+    if (params.has('dlimit')) player.dlimit = Math.max(0, +params.get('dlimit') || 0);
+    if (!params.has('nolaunch')) launchDrones(player, 99);
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
 }

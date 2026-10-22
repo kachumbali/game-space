@@ -128,6 +128,7 @@ function updateWeaponPanel() {
   h += `<div class="${m(2) ? 'sel' : 'dim'}">2 PLASMA ${bar(p.energy / 100, 8)} ${en}%</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
+  h += droneHudLine(p);
   const L = p.lock;
   const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :
     L.state === 'range' ? 'OUT OF RANGE' : L.state === 'seek' ? 'SEEKING' : 'NO TARGET';

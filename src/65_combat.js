@@ -145,6 +145,7 @@ function updateDying(s, dt) {
 function destroy(s) {
   if (!s.alive) return;
   s.alive = false; s.dying = 0;
+  droneOnDestroy(s);
   explode(s);
   scene.remove(s.group);
   sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
@@ -229,6 +230,7 @@ function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
     if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
+    if (a.def.drone && a.dOrder === 'ram') { if (b.team !== a.team) droneRamCheck(a, b); continue; }   // ramming drones: see 56_drones.js (replaces the generic crash branch)
     const ma = MASS[a.def.cls] || 1, mb = MASS[b.def.cls] || 1;
     if (ma > mb) continue;                                  // a = the lighter body (equal masses are handled from both sides)
     if (a.hitCool > 0) continue;

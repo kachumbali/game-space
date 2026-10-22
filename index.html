@@ -1586,9 +1586,38 @@ SHIPS.exeter = {
     { id: 'cradleL', name: 'CRADLE L (corvette)', role: 'dock', pos: [-34, -7, 40], r: 14, hp: 300 },
     { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
   ],
-  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600,
+  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600, stores: { drone: 48 },
   maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff, energyMax: 2500, energyRegen: 350,
   ai: { role: 'capital' },
+};
+
+// ---- DRONE: unmanned 6 m wingman (docs/FLEET_LOGIC.md 9/9a). cls stays 'fighter' so fighter rules (fixed guns, PD priority, no big-ship death throes) apply;
+// `drone: true` switches on the drone AI/orders (56_drones.js). No pilot, no eject, no missiles, one light gun, small shield. Cheap voxel model (resMul).
+const D6 = { hull: 0xaab2bb, hull2: 0x8a929c, dark: 0x30363e, canopy: 0x2a9ad0, amber: 0xc79a3a };
+SHIPS.drone = {
+  id: 'drone', name: 'DRONE', cls: 'fighter', drone: true, fac: 'human', role: 'COMBAT DRONE (UNMANNED)',
+  length: 6, half: [2.9, 0.7, 3.4], mirror: true, radius: 3.3, seam: [1.5, 1.1], eye: [0, 0.3, -1.2], resMul: 0.32, noDetail: true,
+  prims: [
+    tap([0, 0, -1.0], 1.7, [0.16, 0.12], [0.5, 0.36], D6.hull, { sh: 'h' }),
+    tap([0, 0, 1.5], 1.5, [0.5, 0.36], [0.46, 0.34], D6.hull2, { sh: 'h' }),
+    ell([0, 0.22, -1.3], [0.26, 0.18, 0.6], D6.canopy, { glow: false }),
+    tap([1.5, -0.02, 1.2], 1.3, [1.2, 0.07], [0.5, 0.04], D6.hull2, { ax: 'x', sweep: 0.3 }),
+    tap([2.7, 0, 1.6], 0.15, [0.5, 0.06], [0.45, 0.05], D6.amber, { ax: 'x', sweep: 0.3 }),
+    tap([0, 0, 3.0], 0.25, [0.34, 0.27], [0.3, 0.24], 0x2a2d33, { sh: 'e' }),
+    ell([0, 0, 3.3], [0.24, 0.19, 0.08], 0x7fd0ff, { glow: true }),
+    seg([0, -0.3, -0.6], [0, -0.32, -3.0], 0.07, 0.05, D6.dark, { noMirror: true }),
+  ],
+  engines: [{ pos: [0, 0, 3.3], comp: 'eng', r: 0.3 }],
+  mounts: [{ w: 'dgun', pos: [0, -0.32, -3.05], comp: 'gun', grp: 1 }],
+  stores: {},
+  comps: [
+    { id: 'eng', name: 'ENGINE', role: 'engine', pos: [0, 0, 2.4], r: 0.9, hp: 5 },
+    { id: 'gun', name: 'GUN', role: 'gun', pos: [0, -0.3, -1.5], r: 0.6, hp: 4 },
+    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 0.8], r: 0.7, hp: 6 },
+  ],
+  shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
+  maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
+  ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
 };
 // ======================================================================
 //  FROGG fleet — organic bio-mech, sharp edges.
@@ -2850,7 +2879,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     shield: { ...def.shield }, abl: {}, structure: def.structure,
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
-    target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
+    target: null, lastAttacker: null, kills: 0, drones: [], droneKills: 0, dronesLost: 0, dmgTaken: 0, spawnT: time,
     fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
@@ -2945,6 +2974,7 @@ function resetGame() {
 //   ?free&n=10        FROGG fighters per wave (default: the built-in wave table)
 //   ?free&wing=4      N AI Kestrel wingmen;  &wskill=1..5 their pilot skill (default 3);  &fskill=1..5 FROGG skill
 //   ?free&frigate     the Exeter (jump frigate) joins the human side, 700 m astern
+//   ?free&drones=N    the player carries N drones (launches up to the control limit, 1 for a fighter; &dlimit=N raises it; &nolaunch keeps them aboard)
 //   ?free&nuke=2      the player carries N 0.1 kT warheads (cycle missiles with G; proximity burst 120 m)
 //   ?free&aifm=newton AI ships fly under Newtonian rules
 function benchSetup() {
@@ -2958,6 +2988,11 @@ function benchSetup() {
   if (params.has('frigate')) {
     const f = makeShip('exeter', 0, player.group.position.clone().addScaledVector(pf, -700), new THREE.Quaternion(), { callsign: 'EXETER', id: 'exeter', ai: 'capital', hold: true });
     f.vel.set(0, 0, -4);
+  }
+  if (params.has('drones')) {            // ?drones=N stock (fighter control limit is 1: &dlimit=N overrides); launched at once unless &nolaunch
+    player.stores.drone = Math.max(0, +params.get('drones') || 0);
+    if (params.has('dlimit')) player.dlimit = Math.max(0, +params.get('dlimit') || 0);
+    if (!params.has('nolaunch')) launchDrones(player, 99);
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
 }
@@ -2979,6 +3014,225 @@ function lodTick(dt) {
     }
     if (nd !== (s.lodDrop | 0)) { s.lodDrop = nd; buildVox(s); return; }
   }
+}
+// ======================================================================
+//  DRONES — unmanned 6 m wingmen slaved to one controller (docs/FLEET_LOGIC.md 9, 9a)
+//  Controller side: ctrl.drones[] (live drones), ctrl.stores.drone (stock aboard), control limit per class, ctrl.droneKills / dronesLost.
+//  Drone side: s.ctrl, s.dOrder ('engage'|'all'|'protect'|'return'|'scout'|'ram'|'orphan'), s.dTgt, s.dIdx.
+//  API (also on globalThis.__game): dronesOf(ctrl), launchDrones(ctrl, n), droneOrder(ctrl, order, tgt).
+//  AI runs through fighterAI (70_ai.js) for the shooting orders; scout, return and ram are drone-only flight laws below.
+// ======================================================================
+const DRONE_ORDERS = ['engage', 'all', 'protect', 'return', 'scout', 'ram'];
+const DRONE_LIMIT = { fighter: 1, corvette: 6, frigate: 6, capital: 6 };   // heavy fighter 2 = def.droneLimit; frigate: assumed 6 slaved (stock 48)
+const RAM_K = 0.002, RAM_VMAX = 250;      // ram damage = K x closing speed^2 (drone mass 1): ~72 at the 190 m/s top speed (6 rams ~ one Halberd), see docs/FLEET_LOGIC.md
+const SCOUT_RANGE = 2500, SCOUT_SENSE = 1800;
+const DRONE_LABEL = { engage: 'ENGAGE TARGET', all: 'ENGAGE ALL', protect: 'PROTECT ME', return: 'RETURN', scout: 'SCOUT', ram: 'RAM', orphan: 'NO CONTROLLER' };
+const _dqq = new THREE.Quaternion(), _dv = new THREE.Vector3(), _dw = new THREE.Vector3(), _dz = new THREE.Vector3();
+
+const droneLimitOf = c => (c.dlimit ?? c.def.droneLimit ?? DRONE_LIMIT[c.def.cls] ?? 0);
+function dronesOf(ctrl) {
+  if (!ctrl || !ctrl.drones) return [];
+  if (ctrl.drones.some(d => !d.alive || d.dying)) ctrl.drones = ctrl.drones.filter(d => d.alive && !d.dying);
+  return ctrl.drones;
+}
+const validHostile = (s, t) => !!t && t.alive && !t.dying && t.team !== s.team;
+
+// spawn up to n drones from ctrl.stores.drone, never beyond the control limit; returns the new drones
+function launchDrones(ctrl, n = 1) {
+  if (!ctrl || !ctrl.alive || ctrl.dying) return [];
+  const live = dronesOf(ctrl);
+  const k = Math.max(0, Math.min(Math.floor(n), ctrl.stores.drone | 0, droneLimitOf(ctrl) - live.length));
+  const out = [];
+  ctrl.group.updateMatrixWorld(true);
+  const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(ctrl.group.quaternion);
+  const side = new THREE.Vector3(1, 0, 0).applyQuaternion(ctrl.group.quaternion);
+  const up = new THREE.Vector3(0, 1, 0).applyQuaternion(ctrl.group.quaternion);
+  for (let i = 0; i < k; i++) {
+    const idx = live.length + i;
+    const pos = ctrl.group.position.clone().addScaledVector(fwd, ctrl.def.half[2] + 14 + (idx >> 3) * 12)
+      .addScaledVector(side, ((idx % 8) - 3.5) * 11).addScaledVector(up, (idx % 2 ? 1 : -1) * 4);
+    const d = makeShip('drone', ctrl.team, pos, ctrl.group.quaternion.clone(), { callsign: `${ctrl.callsign || ctrl.def.name} D${idx + 1}` });
+    d.vel.copy(ctrl.vel);
+    d.ctrl = ctrl; d.dOrder = 'protect'; d.dIdx = idx; d.dTgt = null; d.hitCool = 1;
+    ctrl.drones.push(d); out.push(d);
+  }
+  if (k) {
+    ctrl.stores.drone -= k;
+    plogN('drone.launch', k); plogEvent('drones launched ×' + k);
+    if (ctrl === player) log(`DRONES LAUNCHED ×${k}`, '#9ad7ff');
+  }
+  return out;
+}
+
+// order = 'engage'|'all'|'protect'|'return'|'scout'|'ram'; tgt = ship for engage/ram (default: the controller's target),
+// for scout a range in m (or {range}); returns the number of drones tasked
+function droneOrder(ctrl, order, tgt) {
+  if (!DRONE_ORDERS.includes(order) || !ctrl || !ctrl.alive || ctrl.dying) return 0;
+  const ds = dronesOf(ctrl);
+  if (!ds.length) return 0;
+  if (order === 'engage' || order === 'ram') {
+    tgt = tgt || ctrl.target;
+    if (!validHostile(ctrl, tgt)) return 0;
+  }
+  const range = order === 'scout' ? (typeof tgt === 'number' ? tgt : tgt?.range ?? SCOUT_RANGE) : 0;
+  const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(ctrl.group.quaternion);
+  ds.forEach(d => {
+    d.dOrder = order; d.dTgt = (order === 'engage' || order === 'ram') ? tgt : null;
+    d.target = d.dTgt; d.ai.tgtT = 0;
+    if (order === 'scout') { d.dDir = dir.clone(); d.dOrg = ctrl.group.position.clone(); d.dRange = range; }
+  });
+  plogN('drone.order.' + order); plogEvent(`drone order ${order} ×${ds.length}`);
+  if (ctrl === player) log(`DRONES: ${DRONE_LABEL[order]}${tgt && tgt.def ? ' ' + tgt.def.name : ''}`, '#9ad7ff');
+  return ds.length;
+}
+
+const droneHudLine = p => {
+  const live = dronesOf(p).length, stock = p.stores.drone | 0;
+  if (!live && !stock) return '';
+  const o = live ? DRONE_LABEL[p.drones[0].dOrder] || '' : '';
+  return `<div class="${live ? 'sel' : 'dim'}">DRONES ${live}/${stock}${o ? ' ' + o : ''}</div>`;
+};
+
+// ---- bookkeeping when a drone dies: credit its kills to the controller, count the loss (it stays lost) ----
+function droneOnDestroy(s) {
+  if (s.def.drone) {
+    if (s.ctrl) s.ctrl.dronesLost = (s.ctrl.dronesLost | 0) + 1;
+    plogN('drone.lost');
+  }
+  const la = s.lastAttacker;
+  if (la && la.def.drone && la.team !== s.team && la !== s) {
+    if (la.ctrl) la.ctrl.droneKills = (la.ctrl.droneKills | 0) + 1;
+    la.droneKills = (la.droneKills | 0) + 1;
+    plogN('drone.kills');
+  }
+}
+
+// ---- AI -------------------------------------------------------------------------------------------------
+function nearestHostile(s, from, maxD, pref) {
+  let best = null, bs = 1e12;
+  for (const e of hostilesOf(s)) {
+    const d = e.group.position.distanceTo(from);
+    if (d > maxD) continue;
+    const sc = d * (pref && isCapital(e) ? 2.5 : 1);
+    if (sc < bs) { bs = sc; best = e; }
+  }
+  return best;
+}
+function droneFormation(s, c, dt) {            // loose ring around the controller, matching its speed
+  const ep = s.group.position, n = Math.max(1, dronesOf(c).length);
+  const a = ((s.dIdx || 0) / n) * Math.PI * 2 + time * 0.25, R = 70 + c.def.radius * 0.5;
+  _dv.set(Math.cos(a) * R, Math.sin(a * 0.7) * R * 0.25, Math.sin(a) * R).add(c.group.position);
+  const dist = ep.distanceTo(_dv);
+  if (dist < 40) { _dw.set(0, 0, -100).applyQuaternion(c.group.quaternion).add(ep); turnToward(s, _dw, dt, 1); }
+  else turnToward(s, _dv, dt, 1.2);
+  aiFly(s, { throttle: clamp((c.vel.length() + (dist - 30) * 0.6) / s.def.maxSpeed, 0.12, 1) }, dt);
+}
+function scoutReport(s, c) {
+  if (time < (s.scT || 0)) return;
+  s.scT = time + 0.4;
+  for (const e of hostilesOf(s)) {
+    if (e.group.position.distanceTo(s.group.position) > SCOUT_SENSE) continue;
+    if (e.detectedBy) { e.detectedT = time; continue; }
+    e.detectedBy = c || s; e.detectedT = time;
+    if (c) (c.contacts ||= []).push(e);
+    plogN('drone.contacts'); plogEvent('scout contact ' + e.def.name);
+    if (c === player) log(`SCOUT: ${e.def.name} at ${Math.round(e.group.position.distanceTo(c.group.position))} m`, '#9ad7ff');
+  }
+}
+function droneAI(s, dt) {
+  const ai = s.ai;
+  ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
+  (s.pPrev ||= new THREE.Vector3()).copy(s.group.position);     // start-of-step position: ram contact is swept from here
+  sense(s);
+  let c = s.ctrl;
+  if (c && (!c.alive || c.dying)) {       // controller dead: autonomous, cannot be re-tasked (decision: defend, then fall back to the nearest friendly hull)
+    s.ctrl = c = null; s.dOrder = 'orphan'; s.dTgt = null; plogN('drone.orphan');
+  }
+  const o = s.dOrder || 'protect', ep = s.group.position;
+  if (o === 'orphan') {
+    const t = nearestHostile(s, ep, 700);
+    if (t) { s.target = t; return fighterAI(s, dt); }
+    s.target = null;
+    let home = null, hd = 1e12;
+    for (const f of ships) if (f.alive && !f.dying && f.team === s.team && isCapital(f)) { const d = f.group.position.distanceTo(ep); if (d < hd) { hd = d; home = f; } }
+    if (!home) { aiFly(s, { throttle: 0.05 }, dt); return; }       // nothing to return to: hold
+    const a = (s.dIdx || 0) * 0.9 + time * 0.2, R = home.def.radius * 1.3 + 60;
+    _dv.set(Math.cos(a) * R, 20, Math.sin(a) * R).add(home.group.position);
+    turnToward(s, _dv, dt, 1); aiFly(s, { throttle: ep.distanceTo(_dv) > 200 ? 0.8 : 0.2 }, dt);
+    return;
+  }
+  if (o === 'return') { s.target = null; return droneFormation(s, c, dt); }
+  if (o === 'scout') {
+    s.target = null;
+    _dv.copy(s.dDir).multiplyScalar(s.dRange).add(s.dOrg);
+    _dz.crossVectors(s.dDir, _up); if (_dz.lengthSq() < 1e-4) _dz.set(1, 0, 0);
+    _dv.addScaledVector(_dz.normalize(), (((s.dIdx || 0) % 5) - 2) * 120);
+    const dist = ep.distanceTo(_dv);
+    if (dist > 60) { turnToward(s, _dv, dt, 1); aiFly(s, { throttle: 1 }, dt); }
+    else { _dw.copy(s.dDir).multiplyScalar(100).add(ep); turnToward(s, _dw, dt, 1); aiFly(s, { throttle: 0.12 }, dt); }
+    return scoutReport(s, c);
+  }
+  if (o === 'ram') {
+    const t = s.dTgt;
+    if (!validHostile(s, t)) { s.dOrder = 'protect'; s.dTgt = null; return droneFormation(s, c, dt); }
+    s.target = t;
+    const lead = leadPoint(s, t, s.def.maxSpeed).clone();
+    turnToward(s, lead, dt, 1.2); aiFly(s, { throttle: 1 }, dt);
+    const dist = ep.distanceTo(t.group.position);
+    if (dist < 500 && aimError(s, lead) < 0.06) fireGuns(s, 3);
+    return;
+  }
+  if (o === 'engage') {
+    const t = s.dTgt;
+    if (!validHostile(s, t)) { s.dOrder = 'protect'; s.dTgt = null; if (c === player) log('DRONES: TARGET LOST, PROTECTING', '#9ad7ff'); return; }
+    s.target = t; return fighterAI(s, dt);
+  }
+  if (o === 'all') {
+    if (ai.tgtT <= 0 || !validHostile(s, s.target)) { s.target = nearestHostile(s, ep, 1e9, true); ai.tgtT = 3 + Math.random() * 2; }
+    if (s.target) return fighterAI(s, dt);
+    return droneFormation(s, c, dt);
+  }
+  // protect: stay with the controller, hit whatever attacks it or comes within 800 m of it, leash 1600 m
+  const la = c.lastAttacker;
+  let t = (la && validHostile(s, la) && time - (c.lastHit || -99) < 6 && la.group.position.distanceTo(c.group.position) < 1500) ? la : null;
+  t = t || nearestHostile(s, c.group.position, 800, false);
+  if (t && ep.distanceTo(c.group.position) < 1600) { s.target = t; return fighterAI(s, dt); }
+  s.target = null;
+  return droneFormation(s, c, dt);
+}
+
+// ---- ramming: swept contact test from the 65_combat collision loop. Damage = RAM_K x closing speed^2 delivered as near-unshieldable
+// kinetic damage (pierce 0.9) at the contact point, so the subsystem under it takes the hit. Only a drone that survives to contact gets here
+// (point defence and enemy guns kill it on the way in); the drone is consumed.
+function droneRamCheck(a, b) {
+  const reach = b.def.radius + 14;
+  if (a.group.position.distanceTo(b.group.position) > reach + a.vel.length() * 0.1) return false;
+  const hit = traceShip(b, a.pPrev || a.group.position, a.group.position);
+  if (!hit) return false;
+  const rel = _dv.copy(a.vel).sub(b.vel), v = Math.min(RAM_VMAX, rel.length());
+  const D = RAM_K * v * v;
+  // the drone punches in along its line of travel: the damage point sits up to 8 m inside the skin, so the subsystem behind the contact point is the one hit
+  const pen = Math.min(8, b.def.radius * 0.2);
+  _dw.copy(rel).normalize().applyQuaternion(_dqq.copy(b.group.quaternion).invert());
+  const inner = hit.clone().addScaledVector(_dw, pen);
+  let bc = null, bd = 1e9;                      // a subsystem within reach of the penetrator takes the hit squarely
+  for (const c of b.comps) {
+    if (c.hp <= 0) continue;
+    const d = _dz.set(c.pos[0], c.pos[1], c.pos[2]).distanceTo(hit);
+    if (d < c.r * 3 + 12 && d < bd) { bd = d; bc = c; }
+  }
+  if (bc) inner.set(bc.pos[0], bc.pos[1], bc.pos[2]);
+  const wp = b.group.localToWorld(hit.clone());
+  b.lastAttacker = a;
+  applyHit(b, inner, D, wp, 'kin', 0.9);
+  chip(b, hit, 1.4 + D * 0.01, 3 + D * 0.02, false);
+  flashAt(wp, 5, 0.3); sparksAt(wp, 40, 28); fireAt(wp, 10, 10);
+  sfx('boom', b === player ? 0 : wp.distanceTo(camera.position), 0.8);
+  if (b === player) shake = 1;
+  plogN('drone.ram'); plogN('drone.ramdmg', D); plogEvent(`drone ram ${b.def.name} ${Math.round(D)}`);
+  if (a.ctrl === player) log(`DRONE RAM: ${b.def.name} -${Math.round(D)}`, '#9ad7ff');
+  killShip(a);
+  return true;
 }
 // ---- play log: counters + 1 Hz samples, so "why do I take no damage" is answerable from data ---------------
 // Key L downloads the JSON. A short summary is also kept in localStorage ('gs_plog').
@@ -3055,6 +3309,7 @@ const WEAPONS = {
   // ---- human ----
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
   pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 1000, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
+  dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
   // Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
@@ -3727,6 +3982,7 @@ function updateDying(s, dt) {
 function destroy(s) {
   if (!s.alive) return;
   s.alive = false; s.dying = 0;
+  droneOnDestroy(s);
   explode(s);
   scene.remove(s.group);
   sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
@@ -3811,6 +4067,7 @@ function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
     if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
+    if (a.def.drone && a.dOrder === 'ram') { if (b.team !== a.team) droneRamCheck(a, b); continue; }   // ramming drones: see 56_drones.js (replaces the generic crash branch)
     const ma = MASS[a.def.cls] || 1, mb = MASS[b.def.cls] || 1;
     if (ma > mb) continue;                                  // a = the lighter body (equal masses are handled from both sides)
     if (a.hitCool > 0) continue;
@@ -3959,6 +4216,7 @@ function avoidance(s, aim) {
 }
 
 function aiUpdate(s, dt) {
+  if (s.def.drone) return droneAI(s, dt);        // unmanned: orders and controller logic in 56_drones.js
   const ai = s.ai;
   ai.t -= dt; ai.tgtT -= dt; ai.mslT -= dt; ai.cmT -= dt; ai.evadeT -= dt;
   if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
@@ -5179,6 +5437,7 @@ function updateWeaponPanel() {
   h += `<div class="${m(2) ? 'sel' : 'dim'}">2 PLASMA ${bar(p.energy / 100, 8)} ${en}%</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
+  h += droneHudLine(p);
   const L = p.lock;
   const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :
     L.state === 'range' ? 'OUT OF RANGE' : L.state === 'seek' ? 'SEEKING' : 'NO TARGET';
@@ -5547,6 +5806,7 @@ globalThis.__game = {
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
+Object.assign(globalThis.__game, { dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 </script>
 </body>
 </html>
