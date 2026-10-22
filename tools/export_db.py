@@ -1,7 +1,7 @@
 # needs the test runner (lib.Runner: local http server + Chromium via Playwright); see docs/BALANCE_TESTS.md
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'tests'))
-REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'tests'))
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from lib import *
 import json, csv, subprocess, datetime, sys
 OUT=REPO+'/docs/data/'
