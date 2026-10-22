@@ -17,7 +17,7 @@ const BF = {
   manifest: { D: 6, L: 5, S: 2, T: 2, R: 3 }, kind: { D: 'darter', L: 'leaper', S: 'spitter', T: 'toad', R: 'reaver' },
   seq: ['D', 'L', 'D', 'R', 'L', 'D', 'T', 'L', 'S', 'R'],
 };
-const _bv = new THREE.Vector3(), _bw = new THREE.Vector3(), _bf = new THREE.Vector3(), _bu = new THREE.Vector3(), _br = new THREE.Vector3(), _bm = new THREE.Vector3(), _be = new THREE.Vector3();
+const _bv = new THREE.Vector3(), _bw = new THREE.Vector3(), _bf = new THREE.Vector3(), _bu = new THREE.Vector3(), _br = new THREE.Vector3(), _bfm = new THREE.Vector3(), _be = new THREE.Vector3();
 const bfLog = [];      // shot / launch / event log for tests
 const isBullfrog = s => s.ai && s.ai.role === 'lancer';
 const bfHostile = (s, e) => e.alive && !e.dying && e.team !== s.team;
@@ -30,18 +30,18 @@ function spineInit(s) {
 function spineMuzzle(s, out) { const m = s.def.mounts[0]; s.group.updateMatrixWorld(true); return s.group.localToWorld(out.set(m.pos[0], m.pos[1], m.pos[2])); }
 // friendly (any class, own fighters included) on the nose line within 3300 m: the ray is 12 m wide, add its width and the other ship's radius
 function spineCorridorClear(s) {
-  spineMuzzle(s, _bm);
+  spineMuzzle(s, _bfm);
   _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   for (const f of ships) {
     if (f === s || !f.alive || f.dying || f.team !== s.team) continue;
-    _bv.copy(f.group.position).sub(_bm);
+    _bv.copy(f.group.position).sub(_bfm);
     const along = _bv.dot(_bf);
     if (along < -f.def.radius || along > 3300) continue;
     if (_bv.addScaledVector(_bf, -along).length() < f.def.radius * 0.9 + 3 + 10) return false;
   }
   for (const m of missiles) {
     if (m.dead || m.team !== s.team) continue;
-    _bv.copy(m.pos).sub(_bm);
+    _bv.copy(m.pos).sub(_bfm);
     const along = _bv.dot(_bf);
     if (along > 0 && along < 3300 && _bv.addScaledVector(_bf, -along).length() < 25) return false;
   }
@@ -72,26 +72,26 @@ function spineFxUpdate(s) {
 // ray along the nose line from the muzzle; first ship whose hull it crosses takes the hit (fighters: distance test, others: five voxel traces across the 12 m width)
 function spineFire(s) {
   const sp = s.spine, W = WEAPONS.spine;
-  spineMuzzle(s, _bm);
+  spineMuzzle(s, _bfm);
   _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   _br.set(1, 0, 0).applyQuaternion(s.group.quaternion); _bu.set(0, 1, 0).applyQuaternion(s.group.quaternion);
-  _be.copy(_bm).addScaledVector(_bf, W.range);
+  _be.copy(_bfm).addScaledVector(_bf, W.range);
   let best = null, bestD = 1e9, bestLocal = null;
   for (const o of ships) {
     if (!o.alive || o === s || o.dying) continue;
-    if (!segSphere(_bm, _be, o.group.position, o.def.radius + W.bw)) continue;
+    if (!segSphere(_bfm, _be, o.group.position, o.def.radius + W.bw)) continue;
     if (o.def.cls === 'fighter') {
-      _bv.copy(o.group.position).sub(_bm);
+      _bv.copy(o.group.position).sub(_bfm);
       const along = _bv.dot(_bf);
       if (along < 0 || along > W.range) continue;
       if (_bv.addScaledVector(_bf, -along).length() < W.bw / 2 + 0.5 * o.def.radius && along < bestD) { bestD = along; best = o; bestLocal = new THREE.Vector3(); }
     } else {
       for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) {
-        const a = _bw.copy(_bm).addScaledVector(_br, ox * W.bw * 0.4).addScaledVector(_bu, oy * W.bw * 0.4);
+        const a = _bw.copy(_bfm).addScaledVector(_br, ox * W.bw * 0.4).addScaledVector(_bu, oy * W.bw * 0.4);
         const b = _bv.copy(a).addScaledVector(_bf, W.range);
         const h = traceShip(o, a, b);
         if (!h) continue;
-        const d = o.group.localToWorld(h.clone()).sub(_bm).dot(_bf);
+        const d = o.group.localToWorld(h.clone()).sub(_bfm).dot(_bf);
         if (d < bestD) { bestD = d; best = o; bestLocal = h; }
       }
     }
@@ -317,9 +317,9 @@ function bfFighterHook(s, dt) {
   }
   const sp = c.spine;
   if (!sp || !(sp.st === 'charge' || sp.st === 'lock' || (sp.st === 'ready' && sp.want))) return false;
-  spineMuzzle(c, _bm);
+  spineMuzzle(c, _bfm);
   _bf.set(0, 0, -1).applyQuaternion(c.group.quaternion);
-  _bv.copy(ep).sub(_bm);
+  _bv.copy(ep).sub(_bfm);
   const along = _bv.dot(_bf);
   if (along < -40 || along > 3500) return false;
   _bw.copy(_bv).addScaledVector(_bf, -along);
