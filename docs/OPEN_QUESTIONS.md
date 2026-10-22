@@ -3,14 +3,14 @@
 Each item has my default; if you do not decide, the default is what I build. "Evidence" says what is measured versus assumed.
 
 ## A. Combat and balance
-1. **FROGG laser mechanics.** Lasers are instant-hit now (`laser` weapon exists, no ship carries one). Open: which FROGG ships get lasers, dwell time/heat per second, pulse versus continuous for capitals. Default: continuous large lasers on corvette+ FROGGs, pulse banks on fighters, heat limits sustained rate.
-2. **How much better are FROGG missiles?** Doctrine says better than human. Default: +30% range, +40% turn rate, harder to decoy (flare effectiveness x0.6).
+1. **FROGG laser mechanics. IMPLEMENTED with my defaults, please confirm or change.** Fighters (Leaper, Reaver, Spitter) carry `flaser` pulse banks (2.8 dmg, 950 m, capacitor-limited); the Gulper carries a continuous `lance` (1500 m, power pool 400, 70/s). Instant hit, no dodge, so damage is low. Heat is not modelled, only energy. Values are guesses, tuned by headless duels only.
+2. **FROGG missiles. IMPLEMENTED with my defaults.** Tick range +~45%, turn +40%, flare effectiveness halved; Tadpole similar. Larger than the +30%/x0.6 I proposed because the first pass did not move balance.
 3. **Shield layout.** Currently one energy pool per facing (fore/aft), no spot-size modelling. Default: keep.
 4. **XL keel cannon and frigate threat.** Whole ship aims; open: shield pierce, turn-rate cost for a 450 m hull. Default: pierces 50% of shield, frigate turns at 0.05 rad/s.
 5. **Nukes.** Hardening factor for hulls (no open source found), yields per warhead, shield attenuation of crew dose, where warheads come from in the story (rare finds, allied transfers, old stockpile).
 6. **Friendly fire and crashes.** Friendly bolts/blasts do 50% damage (placeholder). Wreck/debris crash damage not modelled. Default: keep 50%, add debris damage later.
 7. **FROGG heat.** Vents or heat-sink tissue (biology undecided).
-8. **Balance target.** Measured (headless, arcade flight): 4 Kestrels beat 6 and 10 FROGGs every time; with Newtonian flight humans lose some. You said humans win by tech and FROGGs by numbers and a Kestrel can be lost. Default: raise FROGG numbers per wave (not stats) until the arcade even point is about 12 FROGGs to 4 Kestrels.
+8. **Balance target.** Measured after lasers (headless, arcade flight): 4 Kestrels beat 10 FROGGs 3/3, 12 FROGGs 1/3; even point about 11-12, near the 12:4 target. With Newtonian flight humans lose at about 10. Samples are 2-3 runs per cell: direction, not measurement. Decide whether Newtonian should be the intended default difficulty.
 9. **"I take almost no damage" is not reproduced.** Measured: against a jinking player 8 FROGGs hit about 9% of shots and kill a Kestrel in about 10 sim-seconds; against my aimbot in mission 2 they hit 3 of 226 shots. Needs your play log (press L, send the JSON).
 
 ## B. Audio, art and presentation
@@ -21,7 +21,7 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 14. **Unplayed in context.** High-detail ship models at laptop frame rates are untested (software renderer only).
 
 ## C. Strategy layer and economy (`docs/ECONOMY.md` section 9)
-15. How many frigates does the player command (1 = corridor, 2-4 = economy matters)? Most consequential.
+15. ~~How many frigates~~ Decided: player commands 2-4 frigates. (Economy design should now assume that.)
 16. Logistics ship size class and jump drive.
 17. Drone storage versus docking slots.
 18. Is the player the commander of all task forces or one flight leader?
