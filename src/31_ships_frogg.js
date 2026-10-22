@@ -389,6 +389,9 @@ SHIPS.gulper = {
     ell([0, -0.4, -28], [7.4, 5.2, 7.4], N.dk, nSt(0.8, 0.1)),                              // blunt prow
     ell([0, 3.4, -26], [4.8, 2.4, 6], N.dk2, nSt(0.7, 0.1)),
     ...nEye(3.0, 0.8, -34.0, 2.6), ...nEye(6.2, -0.6, -31.8, 1.4),
+    // M-7 maser lances: emitter barrels on the upper prow (mirrored); the lance mounts sit at the glowing tips
+    seg([3.0, 1.2, -28.5], [3.0, 1.2, -33.0], 0.9, 0.7, N.bl, { rust: N.ru, lod: 2 }),
+    ell([3.0, 1.2, -33.2], [0.75, 0.75, 0.4], N.cy, { glow: true, glowF: 1.4, lod: 2 }),
     nPod([5.2, 1.0, -22], [2.2, 1.6, 3.6], N.dk2, 0.22), nPod([7.4, -1.6, -14], [2.0, 1.4, 3.0], N.dk2, 0.22),
     // ventral drum (supply/launch bay)
     seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, edge: N.ed, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),

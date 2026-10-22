@@ -42,6 +42,11 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 ## Ship model rules
 - **Every ship model view and blueprint must show subsystem positions** (engines, guns, PD turrets, shields, sensors,
   reactor, radiators, bays, cradles, muzzles). Use the `comps`, `mounts`, `turrets`, `engines` data as the single source.
+- **Every weapon needs a physical thing on the model, realistic for its type** (owner rule, 2026-10-22): a fixed mount needs a
+  visible barrel, emitter or pylon at its `pos` (rail/driver = long barrel; maser/laser = emitter with the weapon's colour;
+  missile = pylon/rack/pod); a missile store needs its `launch` point at the mouth of that rack/pod/bay; turrets get their
+  assembly from `makeTurret` plus a seat/housing prim on the hull. A mount or launch point floating on bare hull is a defect.
+  `tools/tests/muzzle_t.py` (numbers + marker screenshots in `$GS_SHOTS/ships`) is the check.
 - Blueprint/plate generator scripts are in `tools/gen/` (moved 2026-10-22, not re-run since; see its README). Test scripts: `tools/tests/`.
 - Size cap for now: ships under 500 m (frigate), **with one explicit exception: the FROGG Bullfrog (600 m, `cls: 'capital'`, jump-capable; owner decision 2026-10-22, docs/BULLFROG.md, src/79_bullfrog.js)**. Only frigates and the Bullfrog jump; docking does not repair.
 

@@ -103,9 +103,9 @@ SHIPS.kestrel = {
     seg([-0.62, -0.48, -5.7], [-0.62, -0.48, -5.9], 0.2, 0.2, 0x20252b, { noMirror: true }),
     seg([-0.62, -0.48, -6.1], [-0.62, -0.48, -6.3], 0.18, 0.18, 0x20252b, { noMirror: true }),
     seg([0.6, -0.42, -1.4], [0.6, -0.45, -4.4], 0.09, 0.07, K.dark, { noMirror: true }),
-    // wing-tip plasma bolters
+    // wing-tip MK-30 HE cannons: barrel + muzzle brake (realism pass 2026-10-22; was a plasma-bolter glow)
     seg([4.95, -0.04, 1.9], [4.95, -0.04, 0.7], 0.12, 0.09, K.dark),
-    ell([4.95, -0.04, 0.65], [0.1, 0.1, 0.08], 0x66ffcc, { glow: true }),
+    seg([4.95, -0.04, 0.78], [4.95, -0.04, 0.58], 0.17, 0.17, K.dark),
     // antennae, nav lights, ventral sensor legs
     seg([2.2, 0.4, 3.6], [4.2, 0.9, 5.2], 0.04, 0.02, K.dark),
     seg([0, 0.6, 1.2], [0, 1.1, 2.0], 0.04, 0.02, K.dark),
