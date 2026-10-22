@@ -335,6 +335,9 @@ const seg = (a, b, ra, rb, col, o = {}) => ({ t: 'seg', a, b, ra, rb, col, ...o 
 const chain = (pts, rs, col, o = {}) => pts.slice(1).map((p, i) => seg(pts[i], p, rs[i], rs[i + 1], col, o));
 
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+// pointer lock: the request returns a promise that can reject (headless/test browsers, no user engagement yet);
+// swallow it so it never surfaces as an unhandled-rejection console error
+function lockPointer() { try { canvas.requestPointerLock?.()?.catch?.(() => { /* lock unavailable */ }); } catch (e) { /* lock unavailable */ } }
 let FS = 1;      // HUD canvas font scale (phones use a smaller one)
 // ======================================================================
 //  AUDIO — tiny WebAudio synth (no assets). Starts on first user gesture. ?mute disables.
@@ -500,7 +503,7 @@ function toggleOpts(force) {
     $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
-  } else { el.style.display = 'none'; if (!isTouch && state === 'play') canvas.requestPointerLock?.(); }
+  } else { el.style.display = 'none'; if (!isTouch && state === 'play') lockPointer(); }
 }
 addEventListener('keydown', e => {
   if (e.code === 'KeyO' && !e.ctrlKey && !e.metaKey && !e.repeat) { toggleOpts(); e.preventDefault(); e.stopImmediatePropagation(); }
@@ -4977,7 +4980,7 @@ function startMission(M, seg) {
     if (prev) runActions(prev.do.filter(a => !a.transit && !a.comm));
     game.seg = seg;
     $id('brief').style.display = 'none'; state = 'play'; touchStarted = true;
-    if (!isTouch) canvas.requestPointerLock?.();
+    if (!isTouch) lockPointer();
     comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
     return;
   }
@@ -5106,8 +5109,8 @@ function showBriefing(M) {
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
-  $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
-  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); };
+  $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
+  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
   $id('bcred').onclick = () => showCredits(true);
@@ -5128,7 +5131,7 @@ function showDebrief() {
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
-  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); };
+  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
 }
 // ======================================================================
@@ -5193,7 +5196,7 @@ function menuFocus(sel) {
   if (el) el.focus({ preventScroll: false });
 }
 function menuLeave() { menuView = null; $id('brief').style.display = 'none'; }
-function launchLock() { if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); }
+function launchLock() { if (!isTouch) lockPointer(); touchStarted = true; audioInit(); }
 // back to the backdrop world + main menu (used by the restart dialog, briefing and debriefs)
 function openMenu(view) {
   startMission(lastMission());          // builds the backdrop world, shows the briefing; the menu then replaces it
@@ -6196,7 +6199,7 @@ msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode ==
 addEventListener('mousedown', e => {
   if (isTouch || rdlgOpen) return;
   if (state === 'brief' || $id('brief').style.display === 'flex') return;
-  if (document.pointerLockElement !== canvas) { canvas.requestPointerLock?.(); return; }
+  if (document.pointerLockElement !== canvas) { lockPointer(); return; }
   if (e.button === 0) mouseFire = true;
   if (e.button === 2) playerFireMissile();
 });
@@ -6333,7 +6336,7 @@ function askRestart() {
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
     : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
-  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') canvas.requestPointerLock?.(); };
+  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
   $id('rd0').onclick = close;
   $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };

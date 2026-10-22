@@ -193,7 +193,7 @@ function startMission(M, seg) {
     if (prev) runActions(prev.do.filter(a => !a.transit && !a.comm));
     game.seg = seg;
     $id('brief').style.display = 'none'; state = 'play'; touchStarted = true;
-    if (!isTouch) canvas.requestPointerLock?.();
+    if (!isTouch) lockPointer();
     comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
     return;
   }
@@ -322,8 +322,8 @@ function showBriefing(M) {
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
-  $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
-  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); };
+  $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
+  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
   $id('bcred').onclick = () => showCredits(true);
@@ -344,6 +344,6 @@ function showDebrief() {
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
-  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) canvas.requestPointerLock?.(); };
+  $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
 }

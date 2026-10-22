@@ -95,7 +95,7 @@ msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode ==
 addEventListener('mousedown', e => {
   if (isTouch || rdlgOpen) return;
   if (state === 'brief' || $id('brief').style.display === 'flex') return;
-  if (document.pointerLockElement !== canvas) { canvas.requestPointerLock?.(); return; }
+  if (document.pointerLockElement !== canvas) { lockPointer(); return; }
   if (e.button === 0) mouseFire = true;
   if (e.button === 2) playerFireMissile();
 });
@@ -232,7 +232,7 @@ function askRestart() {
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
     : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
-  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') canvas.requestPointerLock?.(); };
+  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
   $id('rd0').onclick = close;
   $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };

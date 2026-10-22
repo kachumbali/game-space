@@ -60,7 +60,7 @@ function menuFocus(sel) {
   if (el) el.focus({ preventScroll: false });
 }
 function menuLeave() { menuView = null; $id('brief').style.display = 'none'; }
-function launchLock() { if (!isTouch) canvas.requestPointerLock?.(); touchStarted = true; audioInit(); }
+function launchLock() { if (!isTouch) lockPointer(); touchStarted = true; audioInit(); }
 // back to the backdrop world + main menu (used by the restart dialog, briefing and debriefs)
 function openMenu(view) {
   startMission(lastMission());          // builds the backdrop world, shows the briefing; the menu then replaces it

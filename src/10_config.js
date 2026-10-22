@@ -63,4 +63,7 @@ const seg = (a, b, ra, rb, col, o = {}) => ({ t: 'seg', a, b, ra, rb, col, ...o 
 const chain = (pts, rs, col, o = {}) => pts.slice(1).map((p, i) => seg(pts[i], p, rs[i], rs[i + 1], col, o));
 
 const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+// pointer lock: the request returns a promise that can reject (headless/test browsers, no user engagement yet);
+// swallow it so it never surfaces as an unhandled-rejection console error
+function lockPointer() { try { canvas.requestPointerLock?.()?.catch?.(() => { /* lock unavailable */ }); } catch (e) { /* lock unavailable */ } }
 let FS = 1;      // HUD canvas font scale (phones use a smaller one)

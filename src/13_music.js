@@ -97,7 +97,7 @@ function toggleOpts(force) {
     $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
-  } else { el.style.display = 'none'; if (!isTouch && state === 'play') canvas.requestPointerLock?.(); }
+  } else { el.style.display = 'none'; if (!isTouch && state === 'play') lockPointer(); }
 }
 addEventListener('keydown', e => {
   if (e.code === 'KeyO' && !e.ctrlKey && !e.metaKey && !e.repeat) { toggleOpts(); e.preventDefault(); e.stopImmediatePropagation(); }
