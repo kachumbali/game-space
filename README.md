@@ -1,4 +1,4 @@
-# game-space
+# Claude Space Commander (repository: game-space)
 
 Voxel space shooter in the spirit of Wing Commander II / X-Wing / TIE Fighter. Enemies: **FROGGS**.
 The playable build is the single file `index.html` (Three.js from a CDN). Source lives in `src/*`;

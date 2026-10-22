@@ -1,6 +1,6 @@
 # Lasers: fluence, dwell time and what that means for the game (research note, 2026-10-21)
 
-Status: research and proposal, nothing implemented. Numbers marked [S] come from a source below; [C] are my own calculations from those numbers;
+Status: research and proposal; the focus mechanic of section 6 is implemented (2026-10-22), the rest is not. Numbers marked [S] come from a source below; [C] are my own calculations from those numbers;
 [P] are placeholders for the game. The sources themselves say their figures are illustrative.
 
 ## 1. What the sources give
@@ -95,3 +95,21 @@ dwell-time mechanic on armour and exposed parts, where the sources apply. It is 
 - [Atomic Rockets, Beam Weapons](https://www.projectrho.com/public_html/rocket/spacegunconvent2.php) (first 100,000 of about 104,000 characters read). Secondary compilation.
 - [Children of a Dead Earth wiki, Armor](https://coade.fandom.com/wiki/Armor) and the [patch-note thread](https://combatace.com/forums/topic/90566-children-of-a-dead-earth-hard-sci-fi-space-combat-sim/).
 - Not read: the ToughSF article returned a redirect I did not follow.
+
+
+## 6. Implemented 2026-10-22 (owner: "a steady beam delivers a lot of energy; shields and armour types come in")
+All beam weapons (human `laser`, FROGG `flaser` and `lance`) share one rule, in `src/60_weapons.js` (`beamFocus`):
+- A beam is instant-hit, but the ship it touches is only *tracked* at first: no damage until the beam has stayed on the **same ship** for `acq` sim-seconds.
+- After that the per-pulse damage climbs from 0.25x to `peak`x over `ramp` sim-seconds. Contact lost for longer than `gap` (default max(0.25 s, 2.5 x cooldown)) resets everything.
+- Because per-pulse damage grows, a held beam gets past the armour size threshold (ARMOR `thresh` x class) that stops light hits, and then the armour profile (`hard` 0.4x vs energy, `composite` 1.0x, `ablative` 1.5x) and shields (energy x1.25 vs shields) decide the rest. This matches the sources in sections 1-2: dwell time is the mechanic, ablative armour and target motion are the counters.
+- sim seconds x 1/0.375 = real seconds the player experiences.
+
+| Weapon | Carried by | acq (sim s / real s) | ramp | peak | base dmg | cd | range | energy/shot |
+|---|---|---|---|---|---|---|---|---|
+| `flaser` | FROGG Leaper, Reaver, Spitter | 0.35 / 0.9 | 0.5 | 2.2x | 2.8 | 0.1 | 950 | 9 (capacitor) |
+| `lance` | FROGG Gulper | 0.8 / 2.1 | 1.0 | 3.0x | 2.4 | 0.06 | 1500 | 3 (pool 400, +70/s) |
+| `laser` (LS-2 turret) | Halberd (2 dorsal-forward turrets), Exeter (4 turrets) | 0.5 / 1.3 | 0.8 | 3.0x | 6 | 0.25 | 1600 | 12 (Halberd pool 600, +100/s; Exeter 2500, +350/s) |
+
+Feedback to the pilot: a tracked player sees `LASER TRACKING n%` (blink speeds up) and hears a rising tick; once the beam is burning, `LASER ON YOU - BREAK` and a fast tone. A tracking beam is drawn thin and dim, a burning beam bright.
+Laser turrets hold their target (switching resets the focus), prefer large targets (PD turrets keep the fighters and missiles), do not fire with a friendly in the line, and spend ship energy.
+Not modelled: heat, mirror damage, spot size growth with range, ablative cap per second (the existing ablative rate cap applies as for any hit). All numbers are placeholders tuned in headless duels; none is verified by play.

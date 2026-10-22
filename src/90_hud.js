@@ -408,6 +408,7 @@ function updateHud() {
   if (alive) {
     if (warnState.incoming.length) { const d = Math.min(...warnState.incoming.map(m => m.pos.distanceTo(p.group.position))); w = Math.floor(time * 6) % 2 ? `MISSILE INBOUND  ${d.toFixed(0)}m` : ''; }
     else if (warnState.lockedBy) w = Math.floor(time * 4) % 2 ? 'MISSILE LOCK' : '';
+    else if (warnState.beam) { const B = warnState.beam; w = B.live ? 'LASER ON YOU - BREAK' : (Math.floor(time * (3 + 8 * B.prog)) % 2 ? 'LASER TRACKING ' + Math.round(B.prog * 100) + '%' : ''); }
     else if (p.shield.fore + p.shield.aft < 4 && time - p.lastHit < 3) w = 'SHIELDS DOWN';
   }
   if (w !== warnEl.textContent) warnEl.textContent = w;

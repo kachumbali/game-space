@@ -22,7 +22,7 @@ JS='''()=>{const g=__game,W=g.WEAPONS,rows=[],wrows=[];
    stores_ir:st.ir||0,stores_rf:st.rf||0,stores_torp:st.torp||0,stores_nuke:st.nuke||0,stores_flare:st.flare||0,
    stores_other:Object.entries(st).filter(([k])=>!['ir','rf','torp','nuke','flare'].includes(k)).map(([k,v])=>k+':'+v).join(' '),
    n_prims:(d.prims||[]).length,flame_color:'#'+(d.flameColor||0).toString(16).padStart(6,'0')});}
- for(const [id,w] of Object.entries(W)){wrows.push({id,name:w.name,kind:w.kind,damage_type:w.dt||'',damage:w.dmg??'',cooldown_s:w.cd??'',dps:w.cd?+(w.dmg/w.cd).toFixed(1):'',speed_mps:w.v??'',life_s:w.life??'',range_m:w.range??(w.v&&w.life?Math.round(w.v*w.life):''),spread_rad:w.spread??'',pierce:w.pierce??'',ammo:w.ammo??'',energy_per_shot:w.energy??'',turret:w.turret?1:'',seeker:w.seeker||'',lock_time_s:w.lockTime??'',lock_cone_rad:w.lockCone??'',hp:w.hp??'',nuclear:w.nuclear?1:''});}
+ for(const [id,w] of Object.entries(W)){wrows.push({id,name:w.name,kind:w.kind,damage_type:w.dt||'',damage:w.dmg??'',cooldown_s:w.cd??'',dps:w.cd?+(w.dmg/w.cd).toFixed(1):'',speed_mps:w.v??'',life_s:w.life??'',range_m:w.range??(w.v&&w.life?Math.round(w.v*w.life):''),spread_rad:w.spread??'',pierce:w.pierce??'',ammo:w.ammo??'',energy_per_shot:w.energy??'',turret:w.turret?1:'',seeker:w.seeker||'',lock_time_s:w.lockTime??'',lock_cone_rad:w.lockCone??'',hp:w.hp??'',nuclear:w.nuclear?1:'',focus_acq_s:w.acq??'',focus_ramp_s:w.ramp??'',focus_peak_mult:w.peak??''});}
  return {rows,wrows}}'''
 with Runner() as R:
     pg=R.page(320,180,'?free&n=0&wing=0'); pg.wait_for_timeout(800)

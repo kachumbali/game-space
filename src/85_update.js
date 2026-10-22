@@ -77,10 +77,12 @@ function updateWarnings(dt) {
     for (const s of ships) if (s.alive && s.team !== p.team && s.lock && s.lock.tgt === p && s.lock.p > 0.35) warnState.lockedBy++;
   }
   warnState.incoming = inc;
+  warnState.beam = p && p.alive && time - playerTrack.last < 0.4 ? playerTrack : null;      // a hostile laser is tracking or burning us
   if (!p || !p.alive || state !== 'play') { if (AUDIO.lockGain) AUDIO.lockGain.gain.value = 0; return; }
   AUDIO.warnT -= dt;
   if (inc.length) { if (AUDIO.warnT <= 0) { sfx('alarm'); AUDIO.warnT = 0.55; } }
   else if (warnState.lockedBy) { if (AUDIO.warnT <= 0) { sfx('warn'); AUDIO.warnT = 0.5; } }
+  else if (warnState.beam) { const B = warnState.beam; if (AUDIO.warnT <= 0) { tone(B.live ? 1500 : 900 + 500 * B.prog, B.live ? 1500 : 900 + 500 * B.prog, 0.05, 'square', 0.07); AUDIO.warnT = B.live ? 0.1 : 0.4 - 0.28 * B.prog; } }
   // own lock tone
   const L = p.lock;
   if (AUDIO.lockGain) AUDIO.lockGain.gain.value = L.state === 'locked' ? 0.05 : 0;

@@ -82,16 +82,17 @@ function toggleOpts(force) {
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
       + `<div class="onote">Music files are in the audio/ folder next to index.html. On iPad the music volume slider may have no effect (iOS); use on/off.</div>`
-      + `<button id="o_close">CLOSE <small>[O / ESC]</small></button></div>`;
+      + `<button id="o_close">CLOSE <small>[O / ESC]</small></button><button id="o_cred">CREDITS</button></div>`;
     el.style.display = 'flex';
     $id('o_music').onchange = e => { AOPT.music = e.target.checked; aoptSave(); };
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
     $id('o_close').onclick = () => toggleOpts(false);
+    $id('o_cred').onclick = () => showCredits(true);
   } else { el.style.display = 'none'; if (!isTouch && state === 'play') canvas.requestPointerLock?.(); }
 }
 addEventListener('keydown', e => {
   if (e.code === 'KeyO' && !e.ctrlKey && !e.metaKey && !e.repeat) { toggleOpts(); e.preventDefault(); e.stopImmediatePropagation(); }
-  else if (e.code === 'Escape' && optsOpen) { toggleOpts(false); e.stopImmediatePropagation(); }
+  else if (e.code === 'Escape' && optsOpen && !credOpen) { toggleOpts(false); e.stopImmediatePropagation(); }
 }, true);

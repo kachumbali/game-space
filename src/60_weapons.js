@@ -37,11 +37,13 @@ const WEAPONS = {
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
   pulse: { kind: 'proj', name: 'PL-4 PLASMA BOLTER', cd: 0.22, v: 1000, dmg: 7, dt: 'en', life: 2.0, spread: 0.0015, energy: 9, color: 0x66ffcc, len: 7, sz: 0.22, sfx: 'pulse' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
-  laser: { kind: 'beam', name: 'LS-2 PULSE LASER', cd: 0.3, dmg: 6, dt: 'en', range: 1200, energy: 14, color: 0xff5040, sfx: 'pulse' },
+  // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
+  // Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
+  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 2.8, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 2.6, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true },       // continuous large laser: needs a big power pool (def.energyMax)
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 2.8, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 2.4, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0 },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -92,7 +94,8 @@ function initArmament(s) {
   s.stores = { ...(def.stores || {}) };
   s.ammo = {};
   for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; }
-  s.energy = 100; s.fireMask = 3; s.sel = 0;
+  s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = 0;
+  s.bfocus = { tgt: null, t: 0, last: -9 };
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
   s.cm = 0;
   s.turrets = (def.turrets || []).map(t => makeTurret(s, t));
@@ -126,8 +129,19 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
     vel: _w2.clone().multiplyScalar(w.v).addScaledVector(s.vel, 0.9),
   });
 }
-// instant-hit beam: first ship along the ray takes the damage this frame (no travel time, so no lead needed)
-function fireBeam(s, w, wp, dirW) {
+// instant-hit beam: first ship along the ray is the one being tracked (no travel time, so no lead needed).
+// Focus rule: F = {tgt,t,last} of the shooter (one per ship for fixed guns, one per turret). Damage multiplier is 0 until the beam
+// has stayed on the same ship for w.acq sim-seconds, then 0.25 -> w.peak over w.ramp. A gap in contact longer than w.gap resets it.
+const playerTrack = { last: -99, prog: 0, live: false, by: null };
+function beamFocus(F, w, tgt) {
+  if (!F || !w.acq) return 1;
+  const gap = w.gap || Math.max(0.25, w.cd * 2.5);
+  if (F.tgt !== tgt || time - F.last > gap) { F.tgt = tgt; F.t = 0; } else F.t += time - F.last;
+  F.last = time;
+  if (F.t < w.acq) return 0;
+  return 0.25 + ((w.peak || 1) - 0.25) * Math.min(1, (F.t - w.acq) / w.ramp);
+}
+function fireBeam(s, w, wp, dirW, F) {
   const end = wp.clone().addScaledVector(dirW, w.range);
   let bestS = null, bestHit = null, bestD = 1e9;
   for (const o of ships) {
@@ -138,14 +152,21 @@ function fireBeam(s, w, wp, dirW) {
     if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
   }
   const len = bestS ? bestD : w.range;
-  const bcol = new THREE.Color(w.color || 0xff5040), bc = [bcol.r * 3, bcol.g * 3, bcol.b * 3, 1];
-  for (let d = 0; d < len; d += 14) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), 0.09, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
-  if (!bestS) return;
-  const fr = bestS.team === s.team, wpH = bestS.group.localToWorld(bestHit.clone());
+  const mult = bestS ? beamFocus(F, w, bestS) : 0;            // no contact: the focus is not advanced, it decays by the gap rule
+  const bcol = new THREE.Color(w.color || 0xff5040);
+  const live = !w.acq || mult > 0, k = live ? 3 : 0.7;            // a tracking beam is drawn thin and dim, a damaging beam bright
+  const bc = [bcol.r * k, bcol.g * k, bcol.b * k, 1];
+  for (let d = 0; d < len; d += live ? 14 : 30) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), live ? 0.09 : 0.06, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
+  if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
+  const fr = bestS.team === s.team;
+  if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
+  plogN(live ? 'beam.live' : 'beam.track');
+  if (!live) return;
+  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1);
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
-  plogBoltHit({ owner: s, team: s.team }, bestS, w.dmg * (fr ? FF.bolt : 1), fr);
-  applyHit(bestS, bestHit, w.dmg * (fr ? FF.bolt : 1), wpH, w.dt, 0);
+  plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
+  applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   sparksAt(wpH, 4, 10, bc);
 }
@@ -161,7 +182,7 @@ function fireMount(s, m) {
   const fixedConv = s.def.cls === 'fighter';
   const dl = _w2.set(0, 0, fixedConv ? -CONVERGE : -1000).sub(_w1.set(m.pos[0], m.pos[1], m.pos[2])).normalize();
   const dirW = dl.clone().applyQuaternion(s.group.quaternion);
-  if (w.kind === 'beam') fireBeam(s, w, wp, dirW); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
+  if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
@@ -449,7 +470,9 @@ function updateTurrets(s, dt) {
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
       let best = null, bs = 1e9;
-      for (const m of hostileMissiles) {                 // missiles first
+      const beamT = T.w.kind === 'beam';
+      if (beamT && T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && T.tgt.group.position.distanceTo(tp) < T.w.range) best = T.tgt;   // a laser turret holds its target: focus is lost on every switch
+      else if (!beamT) for (const m of hostileMissiles) {                 // missiles first
         const d = m.pos.distanceTo(tp);
         if (d < T.w.range * 0.75 && (m.target === s || d < 500) && d < bs) { bs = d; best = m; }
       }
@@ -458,7 +481,7 @@ function updateTurrets(s, dt) {
         for (const e of ships) {
           if (!e.alive || e.team === s.team || e.dying) continue;
           const d = e.group.position.distanceTo(tp);
-          const pr = e.def.cls === 'fighter' ? d : d * 2.2;
+          const pr = beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
           if (d < T.w.range && pr < bs) { bs = pr; best = e; }
         }
       }
@@ -468,7 +491,7 @@ function updateTurrets(s, dt) {
     if (!tg || tg.dead || tg.alive === false) { T.tgt = null; continue; }
     const tpos = tg.group ? tg.group.position : tg.pos, tvel = tg.vel;
     const dist = tpos.distanceTo(tp);
-    const tt = dist / T.w.v;
+    const tt = T.w.kind === 'beam' ? 0 : dist / T.w.v;
     _w2.copy(tpos).addScaledVector(tvel, tt).addScaledVector(s.vel, -tt);        // lead in ship-relative terms
     _w3.copy(_w2).sub(tp).normalize();
     // desired orientation in the ship's local space
@@ -476,7 +499,7 @@ function updateTurrets(s, dt) {
     const sideOk = ld.y * T.def.side > -0.05;
     if (!sideOk) continue;
     const up = new THREE.Vector3(0, T.def.side, 0);
-    const mat = new THREE.Matrix4().lookAt(new THREE.Vector3(), ld.clone().negate(), up);   // -Z of mesh points along ld
+    const mat = new THREE.Matrix4().lookAt(new THREE.Vector3(), ld, up);   // Matrix4.lookAt(eye,target): the mesh -Z axis points at target = along ld
     const want = new THREE.Quaternion().setFromRotationMatrix(mat);
     // base is fixed; the head tracks (convert to head-local: parent group may be flipped for ventral mounts)
     const parentInv = T.group.quaternion.clone().invert();
@@ -485,7 +508,20 @@ function updateTurrets(s, dt) {
     // aim error
     const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(T.head.quaternion).applyQuaternion(T.group.quaternion).applyQuaternion(sg.quaternion);
     const err = fwd.angleTo(_w3);
-    if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
+    if (T.w.kind === 'beam') {
+      const tol = clamp(0.8 * (tg.def ? tg.def.radius : 5) / Math.max(dist, 1), 0.004, 0.05);
+      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy) {
+        const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
+        let blocked = false;
+        for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
+        if (!blocked) {
+          T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
+          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 });
+          plogN('shots.turretbeam');
+          if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
+        }
+      }
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
       T.cool = T.w.cd;
       const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
       spawnBolt(s, T.wid, mp, fwd, 1);

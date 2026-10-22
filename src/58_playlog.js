@@ -31,6 +31,6 @@ function plogSave() { try { localStorage.setItem('gs_plog', JSON.stringify(plogS
 function plogDownload() {
   plogSave();
   const blob = new Blob([JSON.stringify({ summary: plogSummary(), previousRun: PLOG.prev || null, samples: PLOG.samples, events: PLOG.events }, null, 1)], { type: 'application/json' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'game-space-playlog.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'claude-space-commander-playlog.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 setInterval(plogSave, 15000);

@@ -13,6 +13,9 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 8. **Balance target.** Measured after lasers (headless, arcade flight): 4 Kestrels beat 10 FROGGs 3/3, 12 FROGGs 1/3; even point about 11-12, near the 12:4 target. With Newtonian flight humans lose at about 10. Samples are 2-3 runs per cell: direction, not measurement. Decide whether Newtonian should be the intended default difficulty.
 9. **"I take almost no damage" is not reproduced.** Measured: against a jinking player 8 FROGGs hit about 9% of shots and kill a Kestrel in about 10 sim-seconds; against my aimbot in mission 2 they hit 3 of 226 shots. Needs your play log (press L, send the JSON).
 
+9b. **Laser focus mechanic: IMPLEMENTED (your idea).** Shared by all beam weapons; numbers in docs/LASERS.md section 6 are my placeholders. Open: should heat and mirror damage be added; should the player's own fighter ever get a laser (LS-2 is turret-only now).
+9c. **Turret aiming bug fixed** (all turrets were aiming backwards, see docs/BALANCE_TESTS.md). Mission difficulty with a Halberd has changed and is unverified by play.
+
 ## B. Audio, art and presentation
 10. **Audio by ear.** Six SRG774 tracks and three CC0 sample layers are in; Kenney packs unreachable (403), no railgun/spit/lash samples. Tell me what to swap.
 11. **Cut scene look.** The voxel-head prototype was rejected. Decision: you generate 2D art from `docs/CUTSCENE_ART_PROMPTS.md` (recommended for faces) or I build voxel versions from your approved images.
@@ -35,5 +38,5 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 
 ## D. Project and tooling
 26. **Verification gaps.** Real-device performance (iPad, phone, laptop at high detail), phone readability, damage feel are unverified.
-27. **GitHub.** Tag `milestone-1` exists locally only (push was rejected); GitHub Pages is not enabled (needs your approval).
+27. **GitHub / publishing / licences.** The repo is private; GitHub Pages from a private repo needs a paid plan, so sharing means making it public. `docs/CREDITS.md` lists all licences (all CC0 audio and MIT three.js verified 2026-10-22); the FROGG reference image `docs/img/frogg_reference_art.jpg` has unknown provenance and should be confirmed or removed before the repo goes public. Tag `milestone-1` exists locally only (push was rejected); GitHub Pages is not enabled (needs your approval).
 28. **Test method.** Headless runs use a software renderer and an autopilot that is not representative of you; your play log is the only real evidence of how it feels.

@@ -29,7 +29,7 @@ Consequences and open points (analysis, not owner statements):
 - **PD and missiles:** better FROGG missiles raise the value of human PD (magazine reload windows; docs/CAPITAL_COMBAT.md). A FROGG laser fleet meets
   the heat/capacitor rules too: lasers add waste heat, so FROGG vents or heat-sink tissue (lore: biology undecided) set the sustained rate.
 - **Implemented 2026-10-22 (owner chose "stronger FROGG missiles and lasers"; numbers are my defaults, see docs/OPEN_QUESTIONS.md 1-2):**
-  FROGG lasers are instant-hit beams. `flaser` (pulse bank, fighters: Leaper, Reaver, Spitter; 2.8 dmg, 0.1 s, 950 m, 9 energy per pulse so about a
+  FROGG lasers are instant-hit beams that must first hold focus on a ship (docs/LASERS.md section 6) before they burn; a steady beam then ramps to 2-3x damage. `flaser` (pulse bank, fighters: Leaper, Reaver, Spitter; 2.8 dmg, 0.1 s, 950 m, 9 energy per pulse so about a
   12-pulse burst from the capacitor, then limited by recharge) and `lance` (continuous large laser, Gulper: 2.6 dmg, 0.06 s, 1500 m, 3 energy, power pool
   400 with 70/s recharge). FROGG missiles improved: Tick range 1500->2200 m, turn 3.0->4.2, lock time 1.5->1.1 s, flare susceptibility 0.6->0.3;
   Tadpole range 1800->2600 m, turn 0.8->1.1, decoy susceptibility 0.1->0.05. Humans keep Cannon, Plasma bolter, Railgun, PD-30 and the new `LS-2` laser

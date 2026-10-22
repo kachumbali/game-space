@@ -1,4 +1,4 @@
-# AGENTS.md: working on game-space
+# AGENTS.md: working on game-space (working title: Claude Space Commander)
 
 Read this before editing. Owner: Jonas; he tests builds on iPad/phone/desktop and iterates. Tone: sober,
 critical, evidence-weighted, no flattery; state what was and was not verified.
@@ -52,3 +52,6 @@ behaviour changes.
 ## Open items
 See docs/PLAN.md and docs/TIE_FIGHTER_COMPARISON.md. Unverified: real-device performance (sky bake, two
 corvettes + Gulper), phone readability, damage balance and turn feel.
+
+## Credits and licences
+Every third-party item (code, audio, art) must be listed in `src/15_credits.js` (shown in-game: briefing screen CREDITS, options panel) and `docs/CREDITS.md`, with its licence checked against the source page and the date. Do not add an asset whose licence you have not read.

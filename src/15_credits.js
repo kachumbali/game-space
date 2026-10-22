@@ -1,0 +1,46 @@
+// ======================================================================
+//  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
+//  Licences re-checked against each source page on 2026-10-22.
+// ======================================================================
+const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
+const CREDITS = [
+  ['GAME', [
+    ['Design and direction', 'Jonas Koll'],
+    ['Code, ship models, procedural sound, music direction, documentation', 'Claude (Anthropic)'],
+  ]],
+  ['ENGINE', [
+    ['three.js r170', 'MIT licence, © 2010-2024 three.js authors. https://threejs.org. Loaded at run time from the jsDelivr CDN (needs an internet connection).'],
+  ]],
+  ['MUSIC', [
+    ['"Dark Sci-Fi Audio Pack" by SRG774', 'CC0 1.0 Universal. https://opengameart.org/content/dark-sci-fi-audio-pack. Tracks airy, sector, urgent, pulse, victory, transmission, re-encoded to 96 kbps MP3.'],
+  ]],
+  ['SOUND SAMPLES', [
+    ['"Space Sound Effects" by messersm', 'CC0 1.0. https://opengameart.org/content/space-sound-effects (explosions, laser bolts)'],
+    ['"Synthesized explosion" by qubodup', 'CC0 1.0. https://opengameart.org/content/synthesized-explosion'],
+    ['"Warp Engine Engage Sound" by bart', 'CC0 1.0. https://opengameart.org/content/warp-engine-engage-sound (jump drive, first 5 s)'],
+  ]],
+  ['ORIGINAL WORK', [
+    ['Ships, weapons, effects', 'All ship models are built in code from voxel primitives. Most sound effects are synthesised live with the Web Audio API. No bitmap textures, fonts or video are used.'],
+    ['Setting and story', 'The Colonial Defence Force, Eagle Flight, the FROGGs and all characters are original.'],
+  ]],
+  ['INSPIRATION ONLY', [
+    ['Wing Commander, TIE Fighter, FreeSpace', 'Trademarks of their respective owners; no assets or code were taken and this game is not affiliated with or endorsed by them. FreeSpace 2 Open source was read for design ideas only.'],
+  ]],
+];
+let credOpen = false;
+function showCredits(force) {
+  const el = $id('cred'); if (!el) return;
+  const open = force !== undefined ? force : !credOpen;
+  if (open === credOpen) return;
+  credOpen = open;
+  if (!open) { el.style.display = 'none'; return; }
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const lnk = s => esc(s).replace(/(https?:\/\/[^\s)]+)/g, u => { const m = u.match(/^(.*?)([.,;]*)$/); return `<a href="${m[1]}" target="_blank" rel="noopener">${m[1]}</a>${m[2]}`; });
+  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()}<br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
+    + CREDITS.map(([sec, rows]) => `<div class="csec">${sec}</div>` + rows.map(([a, b]) => `<div class="crow"><b>${esc(a)}</b><span>${lnk(b)}</span></div>`).join('')).join('')
+    + `<div class="onote">CC0 means the author dedicated the work to the public domain; credit is not required but given. Full text: https://creativecommons.org/publicdomain/zero/1.0/ and https://opensource.org/license/mit. The same list is in docs/CREDITS.md.</div></div>`
+    + `<button id="c_close">CLOSE <small>[ESC]</small></button></div>`;
+  el.style.display = 'flex';
+  $id('c_close').onclick = () => showCredits(false);
+}
+addEventListener('keydown', e => { if (e.code === 'Escape' && credOpen) { showCredits(false); e.stopImmediatePropagation(); e.preventDefault(); } }, true);

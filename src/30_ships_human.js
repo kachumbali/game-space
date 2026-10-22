@@ -234,7 +234,7 @@ SHIPS.halberd = {
     { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
   ],
   turrets: [
-    { w: 'pd', pos: [3.4, 3.0, -12], comp: 'tur1', side: 1 }, { w: 'pd', pos: [-3.4, 3.0, -12], comp: 'tur2', side: 1 },
+    { w: 'laser', pos: [3.4, 3.0, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-3.4, 3.0, -12], comp: 'tur2', side: 1 },
     { w: 'pd', pos: [2.2, 3.1, 19], comp: 'tur3', side: 1 }, { w: 'pd', pos: [-2.2, 3.1, 19], comp: 'tur4', side: 1 },
     { w: 'pd', pos: [0, -3.2, -6], comp: 'tur5', side: -1 }, { w: 'pd', pos: [0, -3.3, 14], comp: 'tur6', side: -1 },
   ],
@@ -244,8 +244,8 @@ SHIPS.halberd = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
-    { id: 'tur1', name: 'PD 1', role: 'turret', pos: [3.4, 3.0, -12], r: 1.3, hp: 30 },
-    { id: 'tur2', name: 'PD 2', role: 'turret', pos: [-3.4, 3.0, -12], r: 1.3, hp: 30 },
+    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [3.4, 3.0, -12], r: 1.3, hp: 30 },
+    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-3.4, 3.0, -12], r: 1.3, hp: 30 },
     { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
     { id: 'tur4', name: 'PD 4', role: 'turret', pos: [-2.2, 3.1, 19], r: 1.3, hp: 30 },
     { id: 'tur5', name: 'PD 5', role: 'turret', pos: [0, -3.2, -6], r: 1.3, hp: 30 },
@@ -256,7 +256,7 @@ SHIPS.halberd = {
     { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 20], r: 3.6, hp: 200 },
   ],
   shield: { fore: 220, aft: 220 }, armor: { type: 'hard', rating: 0.28 }, structure: 420,
-  maxSpeed: 28, accel: 6, turn: 0.22, shieldRegen: 6, sig: 4, flameColor: 0x66c8ff,
+  maxSpeed: 28, accel: 6, turn: 0.22, shieldRegen: 6, sig: 4, flameColor: 0x66c8ff, energyMax: 600, energyRegen: 100,
 };
 
 // ---- EXETER class frigate (450 m): jump-capable, docks 2 corvettes + 12 fighters/drones (no repair) -------------
@@ -355,9 +355,9 @@ SHIPS.exeter = {
     { w: 'rail', pos: [14, 4, -226], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-14, 4, -226], comp: 'railL', grp: 1 },
   ],
   turrets: [
-    { w: 'pd', pos: [0, 22, -110], comp: 'tur1', side: 1 }, { w: 'pd', pos: [24, 21, -40], comp: 'tur2', side: 1 }, { w: 'pd', pos: [-24, 21, -40], comp: 'tur3', side: 1 },
+    { w: 'laser', pos: [0, 22, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 21, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 21, -40], comp: 'tur3', side: 1 },
     { w: 'pd', pos: [20, 26, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 26, 110], comp: 'tur5', side: 1 },
-    { w: 'pd', pos: [0, -20, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -21, 60], comp: 'tur7', side: -1 },
+    { w: 'laser', pos: [0, -20, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -21, 60], comp: 'tur7', side: -1 },
   ],
   stores: { flare: 0 },
   comps: [
@@ -366,12 +366,12 @@ SHIPS.exeter = {
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [80, -3, 205], r: 18, hp: 350 },
     { id: 'railL', name: 'RAIL L', role: 'gun', pos: [-14, 4, -205], r: 10, hp: 300 },
     { id: 'railR', name: 'RAIL R', role: 'gun', pos: [14, 4, -205], r: 10, hp: 300 },
-    { id: 'tur1', name: 'PD 1', role: 'turret', pos: [0, 22, -110], r: 7, hp: 90 },
-    { id: 'tur2', name: 'PD 2', role: 'turret', pos: [24, 21, -40], r: 7, hp: 90 },
-    { id: 'tur3', name: 'PD 3', role: 'turret', pos: [-24, 21, -40], r: 7, hp: 90 },
+    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [0, 22, -110], r: 7, hp: 90 },
+    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [24, 21, -40], r: 7, hp: 90 },
+    { id: 'tur3', name: 'LASER 3', role: 'turret', pos: [-24, 21, -40], r: 7, hp: 90 },
     { id: 'tur4', name: 'PD 4', role: 'turret', pos: [20, 26, 110], r: 7, hp: 90 },
     { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 26, 110], r: 7, hp: 90 },
-    { id: 'tur6', name: 'PD 6', role: 'turret', pos: [0, -20, -80], r: 7, hp: 90 },
+    { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -20, -80], r: 7, hp: 90 },
     { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -21, 60], r: 7, hp: 90 },
     { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -100], r: 16, hp: 400 },
     { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 100], r: 16, hp: 400 },
@@ -384,6 +384,6 @@ SHIPS.exeter = {
     { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
   ],
   shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600,
-  maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff,
+  maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff, energyMax: 2500, energyRegen: 350,
   ai: { role: 'capital' },
 };

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>Game Space</title>
+<title>Claude Space Commander</title>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden;
     font-family:ui-monospace,Menlo,Consolas,monospace;color:#8fffd0;user-select:none;
@@ -148,10 +148,16 @@
 #rdlg .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;max-width:420px;text-align:center}
 #rdlg h2{margin:0 0 14px;font-size:16px;letter-spacing:2px}#rdlg button{display:block;width:100%;margin:8px 0;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
 #rdlg button.alt{background:#10151c;border-color:#456}#rdlg button:hover{background:#164a38}
+#cred{display:none;position:fixed;inset:0;z-index:62;background:rgba(0,0,10,.82);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
+#cred .panel{background:#07101c;border:1px solid #3a6;padding:20px 26px;width:min(620px,94vw);max-height:92vh;display:flex;flex-direction:column}
+#cred h2{margin:0 0 10px;font-size:16px;letter-spacing:2px;text-align:center}#cred h2 small{font-size:11px;color:#7ab;letter-spacing:3px}
+#cred .cbody{overflow:auto;font-size:12px;line-height:1.45}#cred .csec{margin:12px 0 4px;color:#7fe0b0;letter-spacing:2px;font-size:11px;border-bottom:1px solid #234}
+#cred .crow{display:flex;flex-direction:column;margin:4px 0}#cred .crow span{color:#9bb}#cred a{color:#8cf;word-break:break-all}
+#cred button{margin-top:12px;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}#cred button:hover{background:#164a38}
 #opts{display:none;position:fixed;inset:0;z-index:61;background:rgba(0,0,10,.72);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
 #opts .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;width:min(440px,92vw)}
 #opts h2{margin:0 0 14px;font-size:16px;letter-spacing:2px;text-align:center}.orow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:10px 0}
-.orow input[type=range]{width:55%}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
+.orow input[type=range]{width:55%}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
 </style>
 <script type="importmap">
 {"imports":{
@@ -197,5 +203,6 @@
 <div id="brief"></div>
 <div id="rdlg"></div>
 <div id="opts"></div>
+<div id="cred"></div>
 
 <script type="module">
