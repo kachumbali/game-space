@@ -6693,7 +6693,16 @@ function updateTargetPanel(nd, closure) {
     const sum = o => Object.values(o).reduce((a, b) => a + b, 0);
     const pc = (cur, max) => max ? Math.round(100 * sum(cur) / sum(max)) : 0;
     const sel = subComp(t);
-    const sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
+    // ships with many components (Bullfrog: 40) show one chip per role (alive/total, worst health colour) plus the selected component by name
+    const RA = { engine: 'ENG', gun: 'GUN', turret: 'TUR', shield: 'SHD', radar: 'RDR', power: 'PWR', bay: 'BAY', dock: 'DCK', radiator: 'RAD', tube: 'TUB' };
+    let sys;
+    if (t.comps.length <= 14) sys = t.comps.map(c => `<span style="color:${hpCol(Math.max(0, c.hp) / c.max)}">${sel === c ? '[' + shortName(c) + ']' : shortName(c)}</span>`).join(' ');
+    else {
+      const by = {};
+      for (const c of t.comps) { const g = by[c.role] || (by[c.role] = { n: 0, ok: 0, w: 1 }); g.n++; if (c.hp > 0) g.ok++; g.w = Math.min(g.w, Math.max(0, c.hp) / c.max); }
+      sys = Object.keys(by).map(r => `<span style="color:${hpCol(by[r].w)}">${RA[r] || r.slice(0, 3).toUpperCase()} ${by[r].ok}/${by[r].n}</span>`).join(' ')
+        + (sel ? ` <span style="color:${hpCol(Math.max(0, sel.hp) / sel.max)}">[${shortName(sel)}]</span>` : '');
+    }
     const radarOk = !player || compFactor(player, 'radar') > 0.01;
     html = `<b>${d.name}</b> <span style="opacity:.7">${d.role}</span> <span style="opacity:.6">SKL ${t.skill | 0}</span>\n${radarOk ? nd.toFixed(0) : '???'} m   closing ${closure >= 0 ? '+' : ''}${closure.toFixed(0)} m/s\nSHD ${pc(t.shield, d.shield)}%  ARM ${ARMOR[d.armor.type].name} ${Math.round(100 * d.armor.rating)}%  STR ${Math.round(100 * Math.max(0, t.structure) / d.structure)}%\n${sys}`;
   }
