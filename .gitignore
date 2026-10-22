@@ -1,0 +1,6 @@
+# images are kept out of the public repo (owner decision 2026-10-22); they stay on the local working copy
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.webp
