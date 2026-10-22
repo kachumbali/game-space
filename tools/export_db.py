@@ -1,7 +1,10 @@
 # needs the test runner (lib.Runner: local http server + Chromium via Playwright); see docs/BALANCE_TESTS.md
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'tests'))
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from lib import *
 import json, csv, subprocess, datetime, sys
-OUT='/home/claude/game-space/docs/data/'
+OUT=REPO+'/docs/data/'
 JS='''()=>{const g=__game,W=g.WEAPONS,rows=[],wrows=[];
  const dps=(id)=>{const w=W[id];return w&&w.cd?(w.dmg||0)/w.cd:0};
  for(const [id,d] of Object.entries(g.SHIPS)){

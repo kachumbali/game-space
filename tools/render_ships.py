@@ -1,6 +1,9 @@
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'tests'))
+REPO = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
 from lib import *
 import sys
-OUT='/home/claude/game-space/docs/img/ships/'
+OUT=REPO+'/docs/img/ships/'
 Q=sys.argv[1] if len(sys.argv)>1 else 'high'
 ONLY=sys.argv[2].split(',') if len(sys.argv)>2 else None
 VIEWS=[('34',35,20),('top',0,88),('side',90,0),('front',180,8)]

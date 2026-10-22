@@ -41,8 +41,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 ## Ship model rules
 - **Every ship model view and blueprint must show subsystem positions** (engines, guns, PD turrets, shields, sensors,
   reactor, radiators, bays, cradles, muzzles). Use the `comps`, `mounts`, `turrets`, `engines` data as the single source.
-- Blueprint/plate generator scripts currently live in the session scratchpad (`bp.py`, `marks.py`, `subgrid.py`); move them
-  into the repo (`tools/`) before relying on them.
+- Blueprint/plate generator scripts are in `tools/gen/` (moved 2026-10-22, not re-run since; see its README). Test scripts: `tools/tests/`.
 - Size cap for now: ships under 500 m (frigate). Only frigates jump; docking does not repair.
 
 ## Delivery
