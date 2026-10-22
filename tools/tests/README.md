@@ -5,6 +5,9 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | Script | What it checks |
 |---|---|
 | `drone_t.py` | drones: launch/limits, each order, ram on a Halberd, PD vs drones, controller death (8 scenarios, one page each) |
+| `bullfrog_t.py [warn spine exeter friendly arcs pd hangar inst blast]` | Bullfrog (docs/BULLFROG.md): spine timeline, HUD warning, Exeter hit count, friendly-line refusal, turret arcs, PD vs missiles, hangar cadence/cap/bay loss, voxel instances and LOD, missile blast reach |
+| `bullfrog_eng.py SEED [LIMIT] [RANGE] [DT]` | owner acceptance engagement: Exeter + 12 Kestrels + 2 Halberds vs Bullfrog + hangar at 10 km (no rendering, about 10-30 s wall per run); results in docs/BALANCE_TESTS.md |
+| `bullfrog_surf.py`, `bullfrog_view.py` | Bullfrog turret/component surface probe; five-view screenshot renders (`/tmp/gs_bf_*.png`) |
 | `suite1.py` | 10 URL variants load, no console errors |
 | `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `m2full.py` | mission 2 flow through all stages |
