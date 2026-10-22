@@ -208,3 +208,24 @@ type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "w
 - **Answers (owner 2026-10-21):** (1) for now the player flies and shoots straight; the specialist handles munitions, drones and
   **ECM**. (2) A two-person crew ejects in **one pod** (both rescued or both lost together). (3) Heavy fighters with two crew
   are **human only**; FROGG backstory and biology come later.
+
+### 9b. Implemented 2026-10-22 (src/56_drones.js, tests/drone_t.py) and decisions taken
+- **Ship `drone`** (`SHIPS.drone`, `drone: true`, `cls: 'fighter'` so fighter rules apply): 6 m, structure 7, small shield 6/6, composite armour 0.1,
+  190 m/s, turn 2.6 (x2.85 like all fighters, so more agile than the Kestrel), one fixed `DR-2 mag cannon` (`dgun`: 3 dmg, 300 rounds), no missiles, no pilot,
+  no eject, no skill roster (AI skill 5 = machine gunnery). Cheap model (`resMul` 0.32, `noDetail`). Not added to the CSV/docs generation (not trivial: the generator scripts are in tools/gen and were not re-run).
+- **Controller model:** `ctrl.drones[]`, `ctrl.stores.drone` (stock), `ctrl.droneKills`, `ctrl.dronesLost`. Limit `droneLimitOf`: `ctrl.dlimit` (test override, `?dlimit=`) >
+  `def.droneLimit` (heavy fighter 2, none exist yet) > class table fighter 1, corvette 6, frigate 6, capital 6. **Assumption:** the frigate's "own slaved set" is 6;
+  its 48 stored drones can only be flown by the controllers they are handed to (no hand-over mechanic yet). The Exeter carries `stores.drone = 48`.
+- **`launchDrones(ctrl, n)`** spawns min(n, stock, limit - live) drones 14 m ahead of the hull, spread sideways, with the controller's velocity, order `protect`.
+  A lost drone is gone: stock is never refilled, a dead drone only frees a control slot (the stock can fill it again). **No docking/recovery in this version:** recovering a damaged drone into stock would heal it, which the owner rule forbids; `return` therefore means "rejoin and hold formation, no fire".
+- **Orders** (`droneOrder(ctrl, order, tgt)`, returns the number of drones tasked, 0 if invalid):
+  `engage` (tgt or ctrl.target; reverts to `protect` when it dies), `all` (nearest hostile, capitals weighted x2.5, re-picked every 3-5 s), `protect` (hit the controller's recent attacker, else any hostile within 800 m of it; leash 1600 m, else formation),
+  `return` (formation ring around the controller, no fire), `scout` (fly to `range` m, default 2500, along the controller's heading at order time, fanned sideways by drone index; hold there; every 0.4 s each hostile within 1800 m is marked `e.detectedBy = ctrl`, appended to `ctrl.contacts`, logged once; drones do not fire),
+  `ram` (fly straight at the lead point at full throttle, guns fire while closing).
+- **Ram rule** (replaces the generic crash branch in `collideShips` for ramming drones against hostiles; friendly overlap is ignored): contact is a swept trace over the step, so 190 m/s does not tunnel. Damage D = 0.002 x min(closing speed, 250)^2 (about 72 at top speed), applied via `applyHit` with `pierce 0.9`
+  (shield/armour mostly bypassed) at a point up to 8 m inside the skin, snapped to a subsystem within 3 r + 12 m of the contact. The drone is consumed. Bypassing PD only happens if the drone survives: PD and enemy guns shoot it down on the way in (PD already targets any hostile `cls fighter`, and drones are).
+  Measured (headless, one sample): three rams on a Halberd without PD did 105 structure + 93 on the rail gun; six drones against a Halberd with PD lost 1 to PD and 5 reached it. Balance not tuned.
+- **Controller death:** drones go `orphan`: no further orders, defend themselves against hostiles within 700 m, otherwise orbit the nearest friendly capital hull, or hold if none exists. They are not recovered and not lost. (Alternatives: self-destruct, or return to stock.)
+- **Kills:** `destroy()` credits a kill by a drone to `drone.ctrl.droneKills` (even if the controller has died), separate from `kills`/`CREW` records. Play log counters: `drone.launch`, `drone.order.*`, `drone.kills`, `drone.lost`, `drone.ram`, `drone.ramdmg`, `drone.contacts`, `drone.orphan`.
+- **Test flags / HUD:** `?free&drones=N[&dlimit=N][&nolaunch]`; the weapon panel shows `DRONES live/stock ORDER`. Comms menu integration is separate; the API is `dronesOf`, `launchDrones`, `droneOrder`, `droneLimitOf`, `DRONE_ORDERS` on `__game`.
+- **Not done:** jamming/link degradation, heavy fighter and logistics ship, drone assignment in the roster/save, dock slots, FROGG hacking, recovery, a UI to give orders.
