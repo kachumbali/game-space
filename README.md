@@ -73,6 +73,9 @@ number (`DETAIL_STEPS`), so detail scales up later.
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
 prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs/FS2OPEN_STUDY.md` (FS2 Open source study), `docs/STRATEGY_LAYER.md` (campaign/strategy proposal), `docs/FLEET_LOGIC.md` (ship roles, fleets, pilots, SAR). `docs/SHIP_MANUAL.md` (ship list, scale ladder, blueprints), `docs/LORE.md`, `docs/CAPITAL_COMBAT.md` (discussion). Agents: read `AGENTS.md` first.
 
+- `docs/STAR_MAP.md`: ~20 real star systems within 50 ly for the strategy layer (design proposal; data table `docs/data/stars.csv`).
+- `docs/STRATEGY_MECHANICS.md`: harvesting, factory ships, solar/fusion hubs, sieges (design proposal, nothing implemented).
+
 
 ## Systems added 2026-10-22
 - **Power allocation** (src/50_state.js `pwF`, `powerShift`): 12 points over weapons / shields / engines (default 4/4/4 = factor 1). Factor: 0 pts 0.2, 4 pts 1.0, 12 pts 1.96. Weapons = capacitor recharge, shields = shield recharge, engines = top speed (x0.8 + 0.2f), turn (x0.9 + 0.1f), afterburner pool and refill. AI ships stay at 4/4/4. Modelled on FreeSpace 2's ETS (key layout and factors are mine, not FS2's).
