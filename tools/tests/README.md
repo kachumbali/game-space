@@ -12,6 +12,9 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | `duel2.py 10,12,14 3` | 4 Kestrels vs N FROGGs balance duels (args: FROGG counts, runs, sim-second limit) |
 | `laser_t.py` | laser focus: ramp on a steady target, zero damage on a jinking one |
 | `tur_t.py`, `pd_t.py` | turret aiming and fire (Halberd / Exeter vs FROGGs) |
+| `beam_vis_t.py` | beam rendering: hostile Exeter lasers the player, asserts live beams in the pool, none in brief state, no console errors; screenshots to `$GS_SHOTS` (default /tmp/gs_shots) |
+| `muzzle_t.py [ids]` | muzzle/turret audit: mount distance to the hull voxels, turret hit-zone radius vs visible size, marker screenshots per ship in `$GS_SHOTS/ships` (`GS_NOSHOT=1` for numbers only) |
+| `tur_aim_t.py [ids]` | every turret (dorsal and ventral) aims its barrel at the target when firing (independent scene-graph check) and bolts leave from the barrel tip |
 | `cred_t.py`, `cred_t2.py` | credits screen from briefing and from the options panel |
 | `scen.py`, `plog_t.py`, `rdlg_t.py`, `beam_t.py`, `csv_t.py`, `render_t.py`, `view_t.py`, `tune_t.py`, `armor_t.py` | older scenarios: flight models, play log, restart dialog, beams, CSV check, renders |
 Some older scripts may still reference session-specific files; fix paths when you hit one.

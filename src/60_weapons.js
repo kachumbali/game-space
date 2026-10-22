@@ -162,7 +162,7 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   const shieldUp = !!bestS && (bestS.shield.fore > 0 || bestS.shield.aft > 0);
   beamNote(key || F || s, s, w, { obj: srcObj || s.group, local: srcLocal || s.group.worldToLocal(wp.clone()) },
     bestS ? { obj: bestS.group, local: bestHit, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
-    live, w.acq ? Math.min(1, (F ? F.t : 0) / w.acq) : 1, shieldUp);
+    live || (!!F && F.t >= w.acq && time - F.last < 1.2), w.acq ? Math.min(1, (F ? F.t : 0) / w.acq) : 1, shieldUp);      // a focused beam that just missed is still drawn as a firing beam
   if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
   const fr = bestS.team === s.team;
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
@@ -256,7 +256,7 @@ function launchMissile(s, wid) {
   s.group.updateMatrixWorld(true);
   const side = (s.launchAlt = -(s.launchAlt || 1));
   const half = s.def.half;
-  const lp = s.def.launch ? s.def.launch : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const lp = s.def.launch ? [side * Math.abs(s.def.launch[0]), s.def.launch[1], s.def.launch[2]] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
@@ -447,24 +447,41 @@ function updateFlashes(dt) {
 }
 
 // ---- turrets (point defence / anti-fighter) -------------------------------------------------------------
+// Turret classes by absolute diameter of the visible assembly (owner spec 2026-10-22): S about 5 m, M 10-15 m, L 20-40 m; barrels 1.2x (S) to 1.7-1.8x (M, L) the diameter.
+// `cls` on the turret data entry; default by weapon: pd/sting = S, everything else = M. Clamp: never more than 12% of the hull length (small hulls).
+const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
+function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'sting') ? 'S' : 'M'); }
+function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
 function makeTurret(s, t) {
-  const w = WEAPONS[t.w];
+  const w = WEAPONS[t.w], cls = turretCls(t), D = turretDia(s, t), bl = (TUR_BARREL[cls] || 1.5) * D;
   const g = new THREE.Group();
-  const col = s.def.fac === 'frogg' ? 0x4a3a24 : 0x8b949f, dark = s.def.fac === 'frogg' ? 0x24190f : 0x2c3138;
-  const sc = s.def.cls === 'corvette' ? 1 : 0.5;
-  const base = new THREE.Mesh(new THREE.BoxGeometry(1.5 * sc, 0.7 * sc, 1.5 * sc), new THREE.MeshStandardMaterial({ color: col, roughness: 0.6, metalness: 0.25 }));
-  g.add(base);
-  const head = new THREE.Group(); head.position.y = 0.4 * sc * t.side; g.add(head);
-  head.add(new THREE.Mesh(new THREE.BoxGeometry(1.0 * sc, 0.5 * sc, 1.1 * sc), new THREE.MeshStandardMaterial({ color: col, roughness: 0.5, metalness: 0.3 })));
-  for (const x of [-0.28, 0.28]) {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(0.16 * sc, 0.16 * sc, 1.9 * sc), new THREE.MeshStandardMaterial({ color: dark, roughness: 0.5 }));
-    b.position.set(x * sc, 0, -1.2 * sc); head.add(b);
+  const fr = s.def.fac === 'frogg';
+  const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
+  const mBase = mat(fr ? 0x4a3a24 : 0x8b949f, 0.6, 0.25), mHead = mat(fr ? 0x5a4630 : 0xa4acb6, 0.5, 0.3), mBar = mat(fr ? 0x24190f : 0x2c3138, 0.5, 0.4);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D, 14), mBase);
+  base.position.y = 0.08 * D; g.add(base);                                  // pos = hull surface: the ring sits mostly proud of it
+  const head = new THREE.Group(); head.position.y = 0.3 * D * t.side; g.add(head);
+  const hb = new THREE.Mesh(new THREE.BoxGeometry(0.72 * D, 0.38 * D, 0.82 * D), mHead); head.add(hb);
+  const beam = w.kind === 'beam', xs = beam ? [0] : [-0.17, 0.17];
+  const muzzles = [];
+  for (const x of xs) {
+    const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
+    const b = new THREE.Mesh(new THREE.BoxGeometry(th, th, bl), mBar);
+    b.position.set(x * D, 0, -(0.3 * D + bl / 2)); head.add(b);
+    const brake = new THREE.Mesh(new THREE.BoxGeometry(th * 1.5, th * 1.5, 0.1 * D), mBar);
+    brake.position.set(x * D, 0, -(0.3 * D + bl)); head.add(brake);
+    muzzles.push(new THREE.Vector3(x * D, 0, -(0.3 * D + bl + 0.05 * D)));
   }
+  if (beam) { const lens = new THREE.Mesh(new THREE.BoxGeometry(0.1 * D, 0.1 * D, 0.1 * D), new THREE.MeshBasicMaterial({ color: new THREE.Color(w.color).multiplyScalar(1.6) })); lens.position.copy(muzzles[0]).z += 0.02 * D; head.add(lens); }
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  head.visible = true;
-  return { def: t, w, wid: t.w, comp: t.comp, group: g, head, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzle: 1.6 * sc, muzzleLocal: new THREE.Vector3(0, 0, -1.6 * sc * 1.4), q: new THREE.Quaternion() };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false };
+}
+function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
+  const m = T.muzzles[T.mi++ % T.muzzles.length];
+  T.head.updateWorldMatrix(true, false);
+  return T.head.localToWorld(out.copy(m));
 }
 function updateTurrets(s, dt) {
   if (!s.turrets.length) return;
@@ -474,9 +491,13 @@ function updateTurrets(s, dt) {
     const comp = compOf(s, T.comp);
     const dead = comp && comp.hp <= 0;
     T.group.visible = true;
-    if (dead) { T.head.rotation.x = 0.5; continue; }
+    if (dead) {                                                                 // dead turret: barrel droops onto the hull, assembly goes dark, no fire
+      if (!T.dead) { T.dead = true; for (const m of T.mats) m.color.multiplyScalar(0.3); }
+      T.head.quaternion.slerp(_wq.setFromAxisAngle(_w1.set(1, 0, 0), -0.7), Math.min(1, dt * 1.5));
+      continue;
+    }
     T.cool -= dt; T.thinkT -= dt;
-    const tp = T.group.getWorldPosition(_w1.clone());
+    const tp = T.head.getWorldPosition(_w1.clone());
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
       let best = null, bs = 1e9;
@@ -521,19 +542,21 @@ function updateTurrets(s, dt) {
     if (T.w.kind === 'beam') {
       const tol = clamp(0.8 * (tg.def ? tg.def.radius : 5) / Math.max(dist, 1), 0.004, 0.05);
       if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy) {
-        const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
+        const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
           T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
-          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, T.muzzleLocal);
+          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
+          T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
       T.cool = T.w.cd;
-      const mp = T.head.localToWorld(new THREE.Vector3(0, 0, -T.muzzle * 1.4));
+      const mp = turretMuzzle(T, new THREE.Vector3());
+      T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
       if (Math.random() < 0.35) sparksAt(mp, 1, 5, [2.4, 2.0, 1.0, 1]);
       if (Math.random() < 0.25) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);

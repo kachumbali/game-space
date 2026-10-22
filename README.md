@@ -56,7 +56,8 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
 - **Lock-on**: seek → range → locking → locked; IR (heat), RF (radar, needs working radar), torpedoes, FROGG tick/tadpole.
   Flares fool IR missiles, chaff fools radar missiles. Lead pipper for guns.
 - **Weapons**: cannons (ammo), plasma bolters (energy capacitor), railgun, point-defence; FROGG fang/spit/lash/sting.
-  Missiles are guided, burn out, proximity-fuzed; PD turrets shoot missiles down.
+  Missiles are guided, burn out, proximity-fuzed; PD turrets shoot missiles down. Beam weapons (laser, FROGG pulse laser and lance) are drawn as real beams from the muzzle
+  (thin and dim while the turret acquires, bright with muzzle and impact flares once it burns; width `bw` per weapon, docs/LASERS.md section 7). Turrets come in classes S/M/L (5/11/30 m, docs/SHIPS.md) and fire from their barrel tips.
 - **Damage**: fore/aft shields → armour type (ablative/hard/composite, see docs/ARMOR.md) → structure, typed damage (kinetic/energy/explosive), components
   (engines, guns, shield, radar, power), voxel chipping and scorching. Corvettes die in stages.
 - **AI roles**: fighter, gunship, bomber, corvette/capital.

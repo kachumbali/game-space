@@ -40,7 +40,7 @@ void main() {
   float a = abs(vUv.x);
   float prof = exp(-a * a * vP.x);
   float tip = smoothstep(0.0, 0.015, vUv.y) * smoothstep(1.0, 0.985, vUv.y);
-  float I = prof * vCol.a * clamp(vP.z, 0.3, 1.0) * vNear * tip;
+  float I = prof * vCol.a * clamp(vP.z, 0.6, 1.0) * vNear * tip;
   vec3 col = mix(vCol.rgb, vec3(1.0), vP.y * prof) * I;
   gl_FragColor = vec4(col, 1.0);
   #include <tonemapping_fragment>
@@ -161,10 +161,10 @@ function renderBeams() {
       const i = n++;
       let g = P.glow;
       g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.b.x, r.b.y, r.b.z);
-      g.at.aP.setXYZW(i, wg * 0.5, 2.4, 2.0, 0.0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 1.1 : 0.9) * 1.6);
+      g.at.aP.setXYZW(i, wg * 0.5, 2.4, 2.6, 0.0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 1.1 : 0.9) * 1.6);
       g = P.core;
       g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.b.x, r.b.y, r.b.z);
-      g.at.aP.setXYZW(i, wc * 0.5, 5.0, 0.9, r.live ? 0.75 : 0.25); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 4.0 : 1.4));
+      g.at.aP.setXYZW(i, wc * 0.5, 5.0, 1.2, r.live ? 0.75 : 0.25); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 4.0 : 1.4));
       g = P.muz;
       g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z);
       g.at.aP.setXYZW(i, r.bw * (r.live ? 2.2 : 0.9), 0, 3.5, 0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 1.6 : 0.4));

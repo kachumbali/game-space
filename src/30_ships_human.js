@@ -123,6 +123,7 @@ SHIPS.kestrel = {
     { w: 'pulse', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'pulse', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
   ],
   stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
+  launch: [2.25, -0.4, 0.55],           // nose of the under-wing pylon missiles (x mirrors per launch)
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
@@ -147,7 +148,7 @@ const hTur = (x, y, z, dy = 1) => [                              // armoured tur
   ...ringSegs(x, y - 0.1 * dy, z - 0.5, z + 0.5, 1.3, 8, 0.07, 0x7a838d, { lod: 3 }),
 ];
 const halberdDetail = [
-  ...hTur(3.4, 3.0, -12), ...hTur(-3.4, 3.0, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -3.2, -6, -1), ...hTur(0, -3.3, 14, -1),
+  ...hTur(2.6, 1.85, -12), ...hTur(-2.6, 1.85, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
   // railgun: coil rings, capacitor blocks, muzzle shroud
   ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 3.9, z], 0.12, [1.65, 0.78], [1.65, 0.78], H.panel, { sh: 'e', lod: 2 })),
   ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 3.9, z - 0.3], 0.05, [1.7, 0.85], [1.7, 0.85], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
@@ -234,9 +235,9 @@ SHIPS.halberd = {
     { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
   ],
   turrets: [
-    { w: 'laser', pos: [3.4, 3.0, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-3.4, 3.0, -12], comp: 'tur2', side: 1 },
+    { w: 'laser', pos: [2.6, 1.85, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-2.6, 1.85, -12], comp: 'tur2', side: 1 },
     { w: 'pd', pos: [2.2, 3.1, 19], comp: 'tur3', side: 1 }, { w: 'pd', pos: [-2.2, 3.1, 19], comp: 'tur4', side: 1 },
-    { w: 'pd', pos: [0, -3.2, -6], comp: 'tur5', side: -1 }, { w: 'pd', pos: [0, -3.3, 14], comp: 'tur6', side: -1 },
+    { w: 'pd', pos: [0, -2.8, -6], comp: 'tur5', side: -1 }, { w: 'pd', pos: [0, -3.3, 14], comp: 'tur6', side: -1 },
   ],
   stores: { flare: 0 },
   comps: [
@@ -244,11 +245,11 @@ SHIPS.halberd = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [3.4, 3.0, -12], r: 1.3, hp: 30 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-3.4, 3.0, -12], r: 1.3, hp: 30 },
+    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [2.6, 1.85, -12], r: 2.8, hp: 30 },
+    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-2.6, 1.85, -12], r: 2.8, hp: 30 },
     { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
     { id: 'tur4', name: 'PD 4', role: 'turret', pos: [-2.2, 3.1, 19], r: 1.3, hp: 30 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [0, -3.2, -6], r: 1.3, hp: 30 },
+    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [0, -2.8, -6], r: 1.3, hp: 30 },
     { id: 'tur6', name: 'PD 6', role: 'turret', pos: [0, -3.3, 14], r: 1.3, hp: 30 },
     { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -10], r: 3.0, hp: 90 },
     { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 16], r: 3.0, hp: 90 },
@@ -263,10 +264,8 @@ SHIPS.halberd = {
 // Inspiration: angular grey/white wedge hull, dorsal slab, outboard engine pods on pylons, folded radiator panels,
 // PD turret clusters. Owner brief 2026-10-21. Catalogue model: not used in missions yet.
 const E = { white: 0xd8dce0, grey: 0x9aa2ab, grey2: 0x7d858f, dark: 0x262b31, panel: 0x4a525c, amber: 0xc79a3a, noz: 0x2a2d33, glow: 0x7fd0ff, orange: 0xd9772b };
-const eTur = (x, y, z, dy = 1) => [
+const eTur = (x, y, z, dy = 1) => [                       // turret seat only: the barrels are the real turret meshes (makeTurret, cls S/M)
   tap([x, y, z], 5, [6, 2.4], [6, 2.4], E.grey2, { sh: 'h' }),
-  seg([x - 1.8, y + 2.6 * dy, z + 1], [x - 1.8, y + 3.2 * dy, z - 10], 0.9, 0.7, E.dark),
-  seg([x + 1.8, y + 2.6 * dy, z + 1], [x + 1.8, y + 3.2 * dy, z - 10], 0.9, 0.7, E.dark),
 ];
 // ---- Exeter surface-detail prims (metres; voxel size at high detail is about 1 m) --------------------------------------
 const eTurD = (x, y, z, dy = 1) => [
@@ -352,12 +351,12 @@ SHIPS.exeter = {
   ],
   engines: [{ pos: [80, -3, 229], comp: 'engR', r: 11 }, { pos: [-80, -3, 229], comp: 'engL', r: 11 }, { pos: [0, 0, 216], comp: 'engC', r: 18 }],
   mounts: [
-    { w: 'rail', pos: [14, 4, -226], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-14, 4, -226], comp: 'railL', grp: 1 },
+    { w: 'rail', pos: [16, 5, -227], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-16, 5, -227], comp: 'railL', grp: 1 },    // bow prong tips (prims seg ends at [16,5,-226])
   ],
   turrets: [
-    { w: 'laser', pos: [0, 22, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 21, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 21, -40], comp: 'tur3', side: 1 },
-    { w: 'pd', pos: [20, 26, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 26, 110], comp: 'tur5', side: 1 },
-    { w: 'laser', pos: [0, -20, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -21, 60], comp: 'tur7', side: -1 },
+    { w: 'laser', pos: [0, 24, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 22.4, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 22.4, -40], comp: 'tur3', side: 1 },
+    { w: 'pd', pos: [20, 28.7, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 28.7, 110], comp: 'tur5', side: 1 },
+    { w: 'laser', pos: [0, -22.4, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -22.4, 60], comp: 'tur7', side: -1 },
   ],
   stores: { flare: 0 },
   comps: [
@@ -366,13 +365,13 @@ SHIPS.exeter = {
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [80, -3, 205], r: 18, hp: 350 },
     { id: 'railL', name: 'RAIL L', role: 'gun', pos: [-14, 4, -205], r: 10, hp: 300 },
     { id: 'railR', name: 'RAIL R', role: 'gun', pos: [14, 4, -205], r: 10, hp: 300 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [0, 22, -110], r: 7, hp: 90 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [24, 21, -40], r: 7, hp: 90 },
-    { id: 'tur3', name: 'LASER 3', role: 'turret', pos: [-24, 21, -40], r: 7, hp: 90 },
-    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [20, 26, 110], r: 7, hp: 90 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 26, 110], r: 7, hp: 90 },
-    { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -20, -80], r: 7, hp: 90 },
-    { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -21, 60], r: 7, hp: 90 },
+    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [0, 24, -110], r: 7, hp: 90 },
+    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [24, 22.4, -40], r: 7, hp: 90 },
+    { id: 'tur3', name: 'LASER 3', role: 'turret', pos: [-24, 22.4, -40], r: 7, hp: 90 },
+    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [20, 28.7, 110], r: 3.2, hp: 90 },
+    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 28.7, 110], r: 3.2, hp: 90 },
+    { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -22.4, -80], r: 7, hp: 90 },
+    { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -22.4, 60], r: 3.2, hp: 90 },
     { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -100], r: 16, hp: 400 },
     { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 100], r: 16, hp: 400 },
     { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 26, 70], r: 16, hp: 350 },

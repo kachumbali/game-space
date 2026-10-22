@@ -11,7 +11,7 @@ SETUP = '''()=>{const g=__game,T=g.THREE;__paused=true;const P=g.player;
  E.vel.set(0,0,0);E.hold=true;E.ai.hold=true;
  E.group.lookAt(new T.Vector3(0,-330,0));E.group.rotateY(Math.PI);E.group.updateMatrixWorld(true);
  return E.turrets.length}'''
-STEP = '''(n)=>{const g=__game;for(let i=0;i<n;i++){g.update(0.05);g.player.shield.fore=g.player.shield.aft=9999;g.player.structure=9999;g.player.vel.set(0,0,0);
+STEP = '''(n)=>{const g=__game;for(let i=0;i<n;i++){g.update(0.05);g.player.shield.fore=g.player.shield.aft=9999;g.player.structure=9999;g.player.vel.set(0,0,0);g.player.group.position.set(0,0,0);g.player.group.updateMatrixWorld(true);
  g.ships.forEach(s=>{if(s.team===1){s.vel.set(0,0,0);}});}
  const c=[...g.beamRec.values()].filter(r=>r.live).length;
  return {rec:g.beamRec.size,live:c,drawn:g.beamStat.n,t:g.ships.find(s=>s.team===1).turrets.map(T=>[T.wid,!!T.tgt])}}'''
@@ -20,15 +20,20 @@ with Runner() as R:
     pg = R.page(1280, 720, '?free&n=0'); pg.wait_for_timeout(600)
     pg.add_style_tag(content='body>div,#ov,#radar{display:none!important}')
     print('turrets', pg.evaluate(SETUP))
-    st = pg.evaluate(STEP, 60); print(st)
-    st = pg.evaluate(STEP, 70); print(st)
-    assert st['rec'] > 0 and st['drawn'] > 0, 'no beams'
+    st = pg.evaluate(STEP, 60); print(st); maxlive = st['live']
     pg.evaluate('()=>{__game.setView&&__game.setView("cockpit")}')
     # player eye (cockpit) looking at the Exeter
     pg.evaluate(CAM, [0, 0.6, -2.5, 0, -200, -900]); pg.wait_for_timeout(400); pg.screenshot(path=SHOTS + '/beam_cockpit.png')
     pg.evaluate(CAM, [420, -120, -450, 0, -250, -450]); pg.wait_for_timeout(400); pg.screenshot(path=SHOTS + '/beam_side.png')
     pg.evaluate(CAM, [70, -200, -520, 0, -310, -760]); pg.wait_for_timeout(400); pg.screenshot(path=SHOTS + '/beam_origin.png')
-    pg.evaluate(CAM, [0, 600, 3800, 0, -150, -300]); pg.wait_for_timeout(400); pg.screenshot(path=SHOTS + '/beam_far4km.png')
+    pg.evaluate(CAM, [3900, -100, -450, 0, -250, -450]); pg.wait_for_timeout(400); pg.screenshot(path=SHOTS + '/beam_far4km.png')
+    st = pg.evaluate(STEP, 70); print(st)
+    maxlive = max(maxlive, st['live'])
+    for _ in range(12):
+        if maxlive > 0: break
+        st = pg.evaluate(STEP, 20); maxlive = max(maxlive, st['live'])
+    assert maxlive > 0, 'no live (damaging) beam seen'     # later shots can miss the small fighter: those are drawn as tracking beams
+    assert st['rec'] > 0 and st['drawn'] > 0, 'no beams'
     # stale-beam checks: brief state hides, clear empties
     pg.evaluate('()=>{__game.state="brief";__game.renderBeams()}'); pg.wait_for_timeout(300)
     print('brief drawn', pg.evaluate('()=>__game.beamStat.n'))
