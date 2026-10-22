@@ -1,0 +1,5 @@
+id,name,kind,damage_type,damage,cooldown_s,dps,speed_mps,life_s,range_m,spread_rad,pierce,ammo,energy_per_shot,turret,seeker,lock_time_s,lock_cone_rad,hp,nuclear,focus_acq_s,focus_ramp_s,focus_peak_mult,charge_s,lock_s,width_m,track_rad_s,note
+spine,FROGG SPINE LANCE,spine,en,800,30,26.7,,,3200,,0.2,,800,,,,,,,,,,6,1.5,6,,NEW kind: charge 6 s (last 1.5 s heading frozen) then instant hit; cooldown 30 s counts from the shot; ship aims (def.turn 0.06); first hit stops the ray
+lanceL,FROGG HEAVY LANCE (L TURRET),beam,en,4.5,0.1,45,,,1800,,,,6,1,,,,,,0.6,1,3,,,,0.9,NEW entry: lance scaled for a turret; peak pulse 13.5; holds target (beam turret rule)
+acidT,ACID CANNON (M TURRET),proj,en,24,1.3,18.5,430,3,1250,0.002,,,,1,,,,,,,,,,,,1.6,NEW entry: spitcannon with range and track; needs flag noPD (do not shoot missiles)
+thorn,THORN POINT DEFENCE (S/PD TURRET),proj,en,1.2,0.07,17.1,1150,0.8,750,0.011,,,,1,,,,,,,,,,,,4,NEW entry: FROGG PD slightly worse than human PD-30 (lore: humans better at PD); needs flag pdOnly (missiles first and fighters inside 300 m only)
