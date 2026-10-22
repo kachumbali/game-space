@@ -96,3 +96,35 @@ Reading (not tuning data):
 - **Missile PD scenario (`bullfrog_t.py pd`, DT 0.0125):** 8 single Swifts from 1.2 km and 8 single HM-1 torpedoes from 1.5 km at a stationary Bullfrog and at a stationary Exeter: 0 of 8 killed in every cell of the final run (an earlier run killed 1 Swift and 2 torpedoes for the Bullfrog). A 16-missile salvo: 0 of 16 killed. The spec model (BULLFROG.md 4.4e, ~1.0 kill chance with 9 turrets bearing) is **not reproduced**: in the engine a turret starts from rest, slews at 3.6-4 rad/s and each missile is inside range for about 1 s, so most of the 16 turrets that select the missile fire only a few bolts (8 bolts total in the one traced Swift run, closest 23 m). The Exeter's PD fares the same. This is an engine property, not Bullfrog-specific; not tuned.
 - **Caveats:** six runs, no variance estimate; software renderer (irrelevant to the sim, which ran without rendering); DT 0.05 quantises turret cooldowns (thorn 0.07 s fires every 0.1 s) and lets a 900 m/s PD bolt skip a missile's 1.6 m hitbox (PD is weaker than in the live game, 0.0125 is closer to the live frame step); AI behaviour untuned (Kestrels go straight for the nearest target, all 12 are lost in 2 of 6 runs); hangar cap, spine delay and all spec numbers unchanged.
 - **Proposed tuning if the owner wants more or less luck (not applied):** lower `hangarCap` from 12 to 8 for a fairer fight; raise `BF.spineDelay`; PD slew rate is the lever that decides the Tadpole threat (an engine-wide change, so left alone).
+
+## 2026-10-22 (evening): re-measurement of the current build (2d6800b)
+
+Fresh runs after the day's commits (FROGG buffs, turret class S/M/L corrections, lore/music work
+touched no combat code). Harness: `tools/tests/duel2.py` (arcade) and the new
+`tools/tests/duel2n.py` (Newtonian variant: identical setup, `fm:'newton'` on spawn). 5 runs per
+cell unless noted. AI-vs-AI, skill 3 both sides: direction, not statistics.
+
+| Flight model | N FROGGs | Human wins |
+|---|---|---|
+| arcade | 6 | 5/5 |
+| arcade | 8 | 2/8 (one 3-run batch 2/3, one 5-run batch 0/5) |
+| arcade | 10 | 0/8 (3+5) |
+| arcade | 12 | 1/3 |
+| arcade | 14 | 0/3 |
+| Newtonian both sides | 4 | 3/5 |
+| Newtonian both sides | 6 | 0/5 |
+| Newtonian both sides | 8 | 0/5 |
+
+**Drift found: the arcade even point is now about 6-7 FROGGs, not the 11-12 recorded earlier the
+same day.** The intervening FROGG buff/laser work was stronger than its own re-measure suggested.
+Mission wave sizes tuned against the old even point play harder than designed; re-tune before the
+next play-test. Newtonian remains near-unwinnable at equal counts (evidence against making it the
+default, docs/OPEN_QUESTIONS.md A8).
+
+Bullfrog acceptance engagement (`bullfrog_eng.py`, seed 1, Exeter + 12 Kestrels + 2 Halberds vs
+Bullfrog + hangar, 10 km start): human win at t=291 s. Bullfrog destroyed by the Exeter rail; all
+36 hangar FROGGs destroyed; Halberds 100%; 8/12 human fighters lost; Exeter ends at 15% structure.
+Spine: 2 shots, 2 hits on Exeter, no kill. Tadpoles: 7 launched, 0 intercepted, 7 hits - PD never
+stops a Tadpole; check whether that is intended (docs/BULLFROG.md).
+
+Full review and follow-up plan: docs/UX_REVIEW.md.
