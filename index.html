@@ -3680,12 +3680,14 @@ function updateMissiles(dt) {
     if (m.age > m.w.life) { killMissile(m, false); continue; }
     if (m.age < 0.35) continue;                     // arming delay
     for (const s of ships) {
-      if (!s.alive || s.team === m.team || s.dying) continue;
+      if (!s.alive || s.dying) continue;
+      const fr = s.team === m.team;
+      if (fr && s === m.owner && m.age < 3) continue;                 // clear the launcher; friendly hulls are otherwise solid (blast and hit damage scaled by FF)
       const dc = s.group.position.distanceTo(m.pos);
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true); blastDirect(m, s); break; }
-      if (dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze
+      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
@@ -4095,6 +4097,22 @@ function solidAtWorld(s, wp) {
 // ---- ship / ship collisions: crash damage for every class, friend or foe -------------------------------
 // Mass classes are placeholders. Damage to each body = base(speed) x size factor x its share of the impact (the lighter ship takes more).
 const MASS = { fighter: 1, corvette: 25, frigate: 150, capital: 2000 };
+// the lighter body is tested at its extremities (nose, tail, wing tips, top, bottom, centre) and at where the centre was half a step ago,
+// not only at its centre, so a wing or nose that enters the other hull counts as a crash
+const _cpl = [[0, 0, 0], [0, 0, -1], [0, 0, 1], [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0]];
+const _cpv = new THREE.Vector3(), _cpr = new THREE.Vector3();
+function contactPoint(a, b, dt) {
+  a.group.updateMatrixWorld(true);
+  const h = a.def.half;
+  for (const k of _cpl) {
+    _cpv.set(k[0] * h[0] * 0.9, k[1] * h[1] * 0.9, k[2] * h[2] * 0.9);
+    a.group.localToWorld(_cpv);
+    if (solidAtWorld(b, _cpv)) return _cpv.clone();
+  }
+  _cpr.copy(a.group.position).addScaledVector(a.vel, -dt * 0.5);       // tunnelling guard at high closing speed
+  if (solidAtWorld(b, _cpr)) return _cpr.clone();
+  return null;
+}
 function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
@@ -4105,7 +4123,8 @@ function collideShips(dt) {
     if (a.hitCool > 0) continue;
     const d = a.group.position.distanceTo(b.group.position);
     if (d > b.def.radius + 3 || (mb === ma && d > (a.def.radius + b.def.radius) * 0.6)) continue;
-    if (!solidAtWorld(b, a.group.position)) continue;
+    const cp = contactPoint(a, b, dt);
+    if (!cp) continue;
     const rel = a.vel.clone().sub(b.vel);
     const sp = rel.length();
     a.hitCool = 0.6;
@@ -4114,8 +4133,8 @@ function collideShips(dt) {
     const base = (2 + sp * 0.22) * (1 + 0.35 * Math.sqrt(mu));
     const cap = 60 * (1 + 0.6 * Math.sqrt(mu));
     const dmgA = Math.min(cap, base * 2 * mb / (ma + mb)), dmgB = Math.min(cap, base * 2 * ma / (ma + mb));
-    const wpA = a.group.position.clone();
-    const lpA = new THREE.Vector3(0, 0, -a.def.half[2] * 0.5);
+    const wpA = cp.clone();
+    const lpA = a.group.worldToLocal(cp.clone());
     a.lastAttacker = b; b.lastAttacker = a;
     applyHit(a, lpA, dmgA, wpA, 'kin');
     if (mb === ma) b.hitCool = 0.6;

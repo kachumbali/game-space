@@ -378,12 +378,14 @@ function updateMissiles(dt) {
     if (m.age > m.w.life) { killMissile(m, false); continue; }
     if (m.age < 0.35) continue;                     // arming delay
     for (const s of ships) {
-      if (!s.alive || s.team === m.team || s.dying) continue;
+      if (!s.alive || s.dying) continue;
+      const fr = s.team === m.team;
+      if (fr && s === m.owner && m.age < 3) continue;                 // clear the launcher; friendly hulls are otherwise solid (blast and hit damage scaled by FF)
       const dc = s.group.position.distanceTo(m.pos);
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true); blastDirect(m, s); break; }
-      if (dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze
+      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
