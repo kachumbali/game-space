@@ -78,6 +78,7 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  beamsClear();
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
   for (const f of flashes) scene.remove(f.m);

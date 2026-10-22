@@ -113,3 +113,17 @@ All beam weapons (human `laser`, FROGG `flaser` and `lance`) share one rule, in 
 Feedback to the pilot: a tracked player sees `LASER TRACKING n%` (blink speeds up) and hears a rising tick; once the beam is burning, `LASER ON YOU - BREAK` and a fast tone. A tracking beam is drawn thin and dim, a burning beam bright.
 Laser turrets hold their target (switching resets the focus), prefer large targets (PD turrets keep the fighters and missiles), do not fire with a friendly in the line, and spend ship energy.
 Not modelled: heat, mirror damage, spot size growth with range, ablative cap per second (the existing ablative rate cap applies as for any hit). All numbers are placeholders tuned in headless duels; none is verified by play.
+
+## 7. Beam rendering (2026-10-22; owner: "laser lock was displayed, but can you also render a beam?")
+Source: `src/61_beams.js`; `fireBeam()` (60_weapons) stays hit-scan and calls `beamNote()` once per shot. The old trail of spark particles is gone.
+- **Record per emitter.** One record per firing mount or turret (`Map` keyed by the mount/turret). It lives `1.1 x cd + 0.03` sim-seconds after its last shot, so a weapon that keeps firing
+  draws a continuous beam; the brightness pulses (bright at the shot, easing about 35 % toward the next) with a fast flicker. Endpoints are anchored to objects (muzzle on the emitter, struck hull point on the target),
+  so the beam follows moving ships between shots. A miss ends at world range.
+- **States.** Acquiring (focus not yet reached `acq`): thin, dim, pulsing, getting brighter and wider with focus progress. Live (damaging): bright white-hot core plus a wider coloured glow, flicker, muzzle flare and an impact flare
+  (larger and blue-tinted when a shield absorbs the hit) plus a few sparks. Colour = `WEAPONS[id].color`.
+- **Width.** `WEAPONS[id].bw` = drawn beam width in metres (laser 1.0, flaser 0.3, lance 2.0; if omitted derived from dmg and range; clamp 0.15 to 20). Core = 0.5 bw, glow = 1.7 bw. The ribbon is widened with distance so the glow never drops below
+  about 2 px and the core about 1 px (brightness is reduced by the square root of the widening); a 12 m spine beam is therefore visible at 4 km and beyond. Ribbons fade out close to the camera (2 to 30 m) so a beam that ends on the player does not white out the screen; the impact flare gives the dot.
+- **Cost.** Four fixed InstancedBufferGeometry layers (glow, core, muzzle flare, impact flare), 48 instances each, camera-facing vertex shader, additive, depthWrite off, renderOrder 20, no per-frame allocation.
+  Cap 48 beams (beams on the player first, then nearest); beams with both ends beyond 12 km or outside the view frustum are skipped. Bloom picks the HDR core up.
+- **Lifecycle.** `beamsClear()` on world reset, briefing, cine start and cine end; nothing is drawn in state `brief`.
+- Test: `tools/tests/beam_vis_t.py` (Exeter lasers the player; screenshots in `/tmp/gs_shots`).

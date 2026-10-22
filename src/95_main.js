@@ -12,7 +12,7 @@ function frame(t) {
   last = t;
   musicTick(dt);
   if (!globalThis.__paused && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
-  renderBolts();
+  renderBolts(); renderBeams();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
   requestAnimationFrame(frame);
@@ -29,4 +29,4 @@ globalThis.__game = {
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
-Object.assign(globalThis.__game, { dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
+Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu

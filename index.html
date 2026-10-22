@@ -2980,6 +2980,7 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  beamsClear();
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
   for (const f of flashes) scene.remove(f.m);
@@ -3342,12 +3343,12 @@ const WEAPONS = {
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
   // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
-  // Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
-  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true },
+  // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
+  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0 },       // continuous large laser: needs a big power pool (def.energyMax)
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -3445,7 +3446,7 @@ function beamFocus(F, w, tgt) {
   if (F.t < w.acq) return 0;
   return 0.25 + ((w.peak || 1) - 0.25) * Math.min(1, (F.t - w.acq) / w.ramp);
 }
-function fireBeam(s, w, wp, dirW, F) {
+function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   const end = wp.clone().addScaledVector(dirW, w.range);
   let bestS = null, bestHit = null, bestD = 1e9;
   for (const o of ships) {
@@ -3460,7 +3461,11 @@ function fireBeam(s, w, wp, dirW, F) {
   const bcol = new THREE.Color(w.color || 0xff5040);
   const live = !w.acq || mult > 0, k = live ? 3 : 0.7;            // a tracking beam is drawn thin and dim, a damaging beam bright
   const bc = [bcol.r * k, bcol.g * k, bcol.b * k, 1];
-  for (let d = 0; d < len; d += live ? 14 : 30) sparks.emit(_w3.copy(wp).addScaledVector(dirW, d), _w4.set(0, 0, 0), live ? 0.09 : 0.06, bc, [bc[0] * 0.3, bc[1] * 0.3, bc[2] * 0.3, 0]);
+  // the visible beam is drawn by 61_beams.js (ribbon + flares); `key` identifies the firing mount/turret so one record is refreshed per shot
+  const shieldUp = !!bestS && (bestS.shield.fore > 0 || bestS.shield.aft > 0);
+  beamNote(key || F || s, s, w, { obj: srcObj || s.group, local: srcLocal || s.group.worldToLocal(wp.clone()) },
+    bestS ? { obj: bestS.group, local: bestHit, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
+    live, w.acq ? Math.min(1, (F ? F.t : 0) / w.acq) : 1, shieldUp);
   if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
   const fr = bestS.team === s.team;
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
@@ -3472,7 +3477,7 @@ function fireBeam(s, w, wp, dirW, F) {
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
   applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
-  sparksAt(wpH, 4, 10, bc);
+  if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
 }
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
@@ -3486,7 +3491,7 @@ function fireMount(s, m) {
   const fixedConv = s.def.cls === 'fighter';
   const dl = _w2.set(0, 0, fixedConv ? -CONVERGE : -1000).sub(_w1.set(m.pos[0], m.pos[1], m.pos[2])).normalize();
   const dirW = dl.clone().applyQuaternion(s.group.quaternion);
-  if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
+  if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus, m, s.group, new THREE.Vector3(m.pos[0], m.pos[1], m.pos[2])); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
@@ -3762,7 +3767,7 @@ function makeTurret(s, t) {
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
   head.visible = true;
-  return { def: t, w, wid: t.w, comp: t.comp, group: g, head, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzle: 1.6 * sc, q: new THREE.Quaternion() };
+  return { def: t, w, wid: t.w, comp: t.comp, group: g, head, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzle: 1.6 * sc, muzzleLocal: new THREE.Vector3(0, 0, -1.6 * sc * 1.4), q: new THREE.Quaternion() };
 }
 function updateTurrets(s, dt) {
   if (!s.turrets.length) return;
@@ -3824,7 +3829,7 @@ function updateTurrets(s, dt) {
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
           T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
-          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 });
+          fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, T.muzzleLocal);
           plogN('shots.turretbeam');
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
@@ -3869,6 +3874,192 @@ function updateBolts(dt) {
   }
   bolts = bolts.filter(b => b.life > 0);
 }
+// ======================================================================
+//  BEAM RENDERING  (kind:'beam' weapons: laser, flaser, lance, ...; docs/LASERS.md section 7)
+//  fireBeam() (60_weapons) is hit-scan and calls beamNote() once per shot. A beam record lives for about one cooldown after its last shot, so a
+//  weapon that keeps firing shows a continuous beam. Endpoints are anchored to objects (emitter muzzle, struck hull point) and re-evaluated every
+//  frame in renderBeams(); everything is drawn from fixed pools (no per-frame allocation): 2 ribbon layers (glow + core) and 2 flare layers
+//  (muzzle + impact) as InstancedBufferGeometry with a camera-facing vertex shader. Width is `w.bw` metres (default derived), widened with
+//  distance so a beam never drops below ~2 px (glow) / ~1 px (core).
+// ======================================================================
+const BEAM_CAP = 48, BEAM_FAR = 12000;
+const beamRec = new Map();                       // key (turret / mount) -> record
+let beamPool = null, beamFrustum = null;
+const _bm = new THREE.Matrix4(), _bS = new THREE.Sphere(), _bC = new THREE.Color();
+
+function beamBw(w) { return w.bw ?? Math.min(20, Math.max(0.15, 0.16 * Math.sqrt(w.dmg || 3) * Math.pow((w.range || 1000) / 1000, 0.3))); }
+
+const BEAM_VERT = `
+attribute vec2 corner; attribute vec3 aA; attribute vec3 aB; attribute vec4 aP; attribute vec4 aCol;
+uniform float uPx;
+varying vec2 vUv; varying vec4 vP; varying vec4 vCol; varying float vNear;
+void main() {
+  vec3 p = mix(aA, aB, corner.y);
+  vec3 dir = normalize(aB - aA + vec3(1e-5));
+  vec3 toCam = cameraPosition - p;
+  float d = max(length(toCam), 0.01);
+  vec3 c = cross(dir, toCam);
+  float sn = length(c) / d;                               // sine of the angle between beam and view line
+  vec3 camRight = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+  vec3 side = normalize(mix(normalize(cross(dir, camRight) + 1e-6), c / max(length(c), 1e-6), smoothstep(0.0, 0.05, sn)));
+  float hw = max(aP.x, d * uPx * aP.z * 0.5);              // half width: metres, but at least aP.z pixels
+  vec3 wp = p + side * corner.x * hw;
+  gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+  vUv = vec2(corner.x, corner.y);
+  vP = vec4(aP.y, aP.w, sqrt(aP.x / hw), 0.0);
+  vCol = aCol;
+  vNear = smoothstep(2.0, 30.0, d);
+}`;
+const BEAM_FRAG = `
+varying vec2 vUv; varying vec4 vP; varying vec4 vCol; varying float vNear;
+void main() {
+  float a = abs(vUv.x);
+  float prof = exp(-a * a * vP.x);
+  float tip = smoothstep(0.0, 0.015, vUv.y) * smoothstep(1.0, 0.985, vUv.y);
+  float I = prof * vCol.a * clamp(vP.z, 0.3, 1.0) * vNear * tip;
+  vec3 col = mix(vCol.rgb, vec3(1.0), vP.y * prof) * I;
+  gl_FragColor = vec4(col, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}`;
+const FLARE_VERT = `
+attribute vec2 corner; attribute vec3 aA; attribute vec4 aP; attribute vec4 aCol;
+uniform float uPx;
+varying vec2 vUv; varying vec4 vCol; varying float vNear;
+void main() {
+  vec3 toCam = cameraPosition - aA;
+  float d = max(length(toCam), 0.01);
+  float r = max(aP.x, d * uPx * aP.z * 0.5);
+  vec3 camRight = vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+  vec3 camUp = vec3(viewMatrix[0][1], viewMatrix[1][1], viewMatrix[2][1]);
+  vec3 wp = aA + (camRight * corner.x + camUp * corner.y) * r;
+  gl_Position = projectionMatrix * viewMatrix * vec4(wp, 1.0);
+  vUv = corner; vCol = aCol; vNear = smoothstep(1.5, 20.0, d) * clamp(sqrt(aP.x / r), 0.3, 1.0);
+}`;
+const FLARE_FRAG = `
+varying vec2 vUv; varying vec4 vCol; varying float vNear;
+void main() {
+  float r2 = dot(vUv, vUv);
+  float I = (exp(-r2 * 5.0) + 0.5 * exp(-r2 * 22.0)) * step(r2, 1.0) * (1.0 - r2) * vCol.a * vNear;
+  vec3 col = mix(vCol.rgb, vec3(1.0), 0.5 * exp(-r2 * 22.0)) * I;
+  gl_FragColor = vec4(col, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
+}`;
+
+function beamLayer(vert, frag, n, flare) {
+  const geo = new THREE.InstancedBufferGeometry();
+  const quad = flare ? [-1, -1, 1, -1, 1, 1, -1, 1] : [-1, 0, 1, 0, 1, 1, -1, 1];
+  geo.setAttribute('corner', new THREE.Float32BufferAttribute(quad, 2));
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(12), 3));     // dummy (bounds unused: frustumCulled off)
+  geo.setIndex([0, 1, 2, 0, 2, 3]);
+  const at = {
+    aA: new THREE.InstancedBufferAttribute(new Float32Array(n * 3), 3), aP: new THREE.InstancedBufferAttribute(new Float32Array(n * 4), 4),
+    aCol: new THREE.InstancedBufferAttribute(new Float32Array(n * 4), 4),
+  };
+  if (!flare) at.aB = new THREE.InstancedBufferAttribute(new Float32Array(n * 3), 3);
+  for (const k in at) { at[k].setUsage(THREE.DynamicDrawUsage); geo.setAttribute(k, at[k]); }
+  geo.instanceCount = 0;
+  const mat = new THREE.ShaderMaterial({
+    vertexShader: vert, fragmentShader: frag, uniforms: { uPx: { value: 0.002 } },
+    transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.frustumCulled = false; mesh.renderOrder = 20; scene.add(mesh);
+  return { mesh, geo, at, mat, n: 0 };
+}
+function beamInit() {
+  if (beamPool) return beamPool;
+  beamFrustum = new THREE.Frustum();
+  return (beamPool = {
+    glow: beamLayer(BEAM_VERT, BEAM_FRAG, BEAM_CAP, false), core: beamLayer(BEAM_VERT, BEAM_FRAG, BEAM_CAP, false),
+    muz: beamLayer(FLARE_VERT, FLARE_FRAG, BEAM_CAP, true), imp: beamLayer(FLARE_VERT, FLARE_FRAG, BEAM_CAP, true),
+  });
+}
+function beamsClear() { beamRec.clear(); if (beamPool) for (const k in beamPool) { beamPool[k].geo.instanceCount = 0; } }
+
+// One shot. key = the firing mount/turret; src/dst = { obj, local } (world point = obj.localToWorld(local)) or dst = { world }.
+function beamNote(key, s, w, src, dst, live, prog, shield) {
+  let r = beamRec.get(key);
+  if (!r) { r = { s: null, w: null, src: { obj: null, local: new THREE.Vector3() }, dstObj: null, dstLocal: new THREE.Vector3(), dstWorld: new THREE.Vector3(), hit: false }; beamRec.set(key, r); }
+  r.s = s; r.w = w; r.t = time; r.live = live; r.prog = prog; r.shield = shield;
+  r.src.obj = src.obj; r.src.local.copy(src.local);
+  r.hit = !!dst.obj;
+  if (dst.obj) { r.dstObj = dst.obj; r.dstLocal.copy(dst.local); r.dstShip = dst.ship; } else { r.dstObj = null; r.dstWorld.copy(dst.world); r.dstShip = null; }
+  r.bw = beamBw(w);
+  r.col = w.color || 0xff5040;
+}
+const _bList = [];
+function renderBeams() {
+  if (!beamPool) { if (!beamRec.size) return; beamInit(); }
+  const P = beamPool;
+  const show = state !== 'brief' && beamRec.size > 0;
+  let n = 0;
+  if (show) {
+    camera.updateMatrixWorld();
+    _bm.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); beamFrustum.setFromProjectionMatrix(_bm);
+    const px = 2 * Math.tan(camera.fov * Math.PI / 360) / Math.max(240, innerHeight);
+    for (const k in P) P[k].mat.uniforms.uPx.value = px;
+    _bList.length = 0;
+    for (const [key, r] of beamRec) {
+      const hold = r.w.cd * 1.1 + 0.03, age = time - r.t;
+      if (age > hold || age < 0 || !r.s || !r.s.alive || !r.src.obj) { if (age > hold + 1 || age < 0) beamRec.delete(key); continue; }
+      r.src.obj.updateWorldMatrix(true, false);
+      r.a = r.a || new THREE.Vector3(); r.b = r.b || new THREE.Vector3();
+      r.a.copy(r.src.local).applyMatrix4(r.src.obj.matrixWorld);
+      if (r.dstObj) { if (!r.dstShip || !r.dstShip.alive) { r.dstObj = null; r.dstWorld.copy(r.b); } else r.b.copy(r.dstLocal).applyMatrix4(r.dstObj.matrixWorld); }
+      if (!r.dstObj) r.b.copy(r.dstWorld);
+      const dc = camera.position.distanceTo(r.a);
+      if (dc > BEAM_FAR && camera.position.distanceTo(r.b) > BEAM_FAR) continue;
+      _bS.center.copy(r.a).add(r.b).multiplyScalar(0.5); _bS.radius = r.a.distanceTo(r.b) * 0.5 + r.bw * 3 + 5;
+      if (!beamFrustum.intersectsSphere(_bS)) continue;
+      r.pri = (r.dstShip === player ? 0 : 1e6) + Math.min(dc, camera.position.distanceTo(r.b));
+      r.age = age;
+      _bList.push(r);
+    }
+    if (_bList.length > BEAM_CAP) { _bList.sort((x, y) => x.pri - y.pri); _bList.length = BEAM_CAP; }
+    const T = time * 60;
+    for (const r of _bList) {
+      const w = r.w, ph = Math.min(1, r.age / w.cd);
+      let I, wc, wg;
+      if (r.live) {
+        const fl = 0.86 + 0.14 * Math.sin(T * 1.7 + n * 2.1) * Math.sin(T * 0.63 + n);       // fast flicker
+        I = (1 - 0.35 * ph) * fl;                                                             // pulse: bright at the shot, easing toward the next
+        wc = r.bw * 0.5; wg = r.bw * 1.7;
+      } else {
+        const p = 0.15 + 0.85 * (r.prog || 0), fl = 0.75 + 0.25 * Math.sin(T * 0.9 + n * 1.7);
+        I = 0.22 * (0.4 + p) * fl;                                                            // acquiring: thin, dim, pulsing, rising with focus progress
+        wc = r.bw * (0.18 + 0.2 * p); wg = r.bw * (0.55 + 0.4 * p);
+      }
+      const fadeOut = Math.min(1, (w.cd * 1.1 + 0.03 - r.age) / Math.max(0.05, w.cd * 0.4));      // fade over the end of the hold
+      I *= fadeOut;
+      _bC.setHex(r.col);
+      const i = n++;
+      let g = P.glow;
+      g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.b.x, r.b.y, r.b.z);
+      g.at.aP.setXYZW(i, wg * 0.5, 2.4, 2.0, 0.0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 1.1 : 0.9) * 1.6);
+      g = P.core;
+      g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.b.x, r.b.y, r.b.z);
+      g.at.aP.setXYZW(i, wc * 0.5, 5.0, 0.9, r.live ? 0.75 : 0.25); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 4.0 : 1.4));
+      g = P.muz;
+      g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z);
+      g.at.aP.setXYZW(i, r.bw * (r.live ? 2.2 : 0.9), 0, 3.5, 0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 1.6 : 0.4));
+      g = P.imp;
+      if (r.hit) {
+        if (r.shield && r.live) _bC.lerp(_c1.setHex(0x7fd0ff), 0.6);
+        g.at.aA.setXYZ(i, r.b.x, r.b.y, r.b.z);
+        g.at.aP.setXYZW(i, r.bw * (r.live ? (r.shield ? 5 : 3.2) : 1.2), 0, 4, 0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, I * (r.live ? 2.4 : 0.5) * (0.85 + 0.3 * Math.random()));
+      } else g.at.aCol.setW(i, 0);
+    }
+  }
+  for (const k in P) {
+    const L = P[k]; L.geo.instanceCount = n; L.mesh.visible = n > 0;
+    if (n) for (const a in L.at) { L.at[a].needsUpdate = true; }
+  }
+  beamStat.n = n;
+}
+const beamStat = { n: 0 };
+const _c1 = new THREE.Color();
 // ======================================================================
 //  COMBAT & DAMAGE — shields -> armour -> structure (typed damage), components, voxel chipping, death
 // ======================================================================
@@ -4664,7 +4855,7 @@ function startMission(M, seg) {
     comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
     return;
   }
-  state = 'brief';
+  state = 'brief'; beamsClear();
   showBriefing(M);
 }
 
@@ -5088,7 +5279,7 @@ function startTransit(tr) {
   cine = { t: 0, dur, tr, li: 0, fwd, side, beacon, fov: camera.fov, shot: -1, prevView: view };
   // shot list as fractions of the leg
   cine.shots = [['flyby', 0.26], ['orbit', 0.22], ['chase', 0.2], ['bow', 0.16], ['arrive', 0.16]];
-  state = 'cine';
+  state = 'cine'; beamsClear();
   document.body.classList.add('cine');
   if (capEl) capEl.textContent = '';
   sfx('jump');
@@ -5186,7 +5377,7 @@ function endTransit() {
   if (player) { player.throttle = 0.4; player.group.quaternion.copy(game.anchor.group.quaternion); }
   game.mstate.area = c.tr.area;
   cine = null;
-  state = 'play';
+  state = 'play'; beamsClear();
   if (fadeEl) { fadeEl.style.transition = 'none'; fadeEl.style.opacity = '1'; requestAnimationFrame(() => { fadeEl.style.transition = 'opacity 1.1s'; fadeEl.style.opacity = '0'; }); }
   if (area) comm('CONTROL', area.arrive || `Arrived at ${area.name}.`);
   sfx('jump');
@@ -6343,7 +6534,7 @@ function frame(t) {
   last = t;
   musicTick(dt);
   if (!globalThis.__paused && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
-  renderBolts();
+  renderBolts(); renderBeams();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
   requestAnimationFrame(frame);
@@ -6360,7 +6551,7 @@ globalThis.__game = {
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
-Object.assign(globalThis.__game, { dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
+Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 </script>
 </body>
 </html>
