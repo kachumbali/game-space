@@ -1,0 +1,20 @@
++-----------------------------------+
+                  |      EP-2 TANDEM SURVIVAL POD     |
+                  |     (Halberd Heavy Fighter)       |
+                  +-----------------------------------+
+                                    |
+          +-------------------------+-------------------------+
+          |                                                   |
+          v                                                   v
++-------------------+                               +-------------------+
+|  PILOT SEAT       |                               | SPECIALIST SEAT   |
+|  - Flight Stick   |                               | - Drone Command   |
+|  - Manual Thruster|                               | - ECM & Decoys    |
++-------------------+                               +-------------------+
+          |                                                   |
+          +-------------------------+-------------------------+
+                                    |
+                                    v
+            [Kevlar-Titanium Shield Shell & Ablative Plate]
+            [Low-Observable Passive Radar / IR Dampening]
+            [72-Hour Oxygen/Hydro-Recycler + Stasis Foam]

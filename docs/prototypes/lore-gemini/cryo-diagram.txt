@@ -1,0 +1,5 @@
+[POD CORE]              [VITRIFICATION FLUSH]           [STASIS LOCK]
++------------------------+    +----------------------+    +--------------------+
+| Metabolic Suppression  | -> | Cellular Fluid Swap  | -> | Core Temp: -140°C  |
+| Xenon-Argon Anesthetic |    | Cryo-protectant Gel  |    | Neural Flatline    |
++------------------------+    +----------------------+    +--------------------+

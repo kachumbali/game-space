@@ -2,6 +2,19 @@
 
 Everything here is the owner's stated direction; nothing is verified or final.
 
+## Adopted lore (2026-10-22, owner decision)
+The Gemini lore proposals are now **canon in adapted form** (raw text: `docs/prototypes/lore-gemini/`):
+- `docs/LORE_HISTORY.md` - timeline 2030s-2180s, the Oasis-9 incident, jump-drive limits.
+- `docs/LORE_FACTIONS.md` - ECU/UTDF, Void-Born Confederacy, Vanderbilt-Astra; Sol super-blocs;
+  the **Colonial Defence Force** (the player's side, per the briefing screen) and which in-game ships it fields;
+  ejection/SAR doctrine. Resolves OPEN_QUESTIONS #23.
+- `docs/LORE_FROGG.md` - FROGG species profile: cold-blooded thermal biology, wetware/anti-AI doctrine,
+  ship aesthetic, weapon doctrine. Decides OPEN_QUESTIONS #7 (heat biology = plasma heat-sinks and coolant
+  channels; still unmodelled in the engine).
+- Naming decisions where the proposals collided with canon: the **Halberd stays our 128 m corvette**;
+  the proposed two-seat heavy fighter became the **Falchion** (WC-style weapon name, planned ship, not built yet).
+  The jump threshold is "frigate-class and up" (about 450 m), not a hard 500 m.
+
 ## FROGGs
 - A **migratory hive species** in the manner of the aliens in *Independence Day*: they move from system to system
   consuming resources, with huge motherships and carriers (hive carriers 2-3 km, hive motherships ~10 km).

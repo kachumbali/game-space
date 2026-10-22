@@ -1,0 +1,10 @@
++---------------------------------------------------------------------------------+
+| SPECIFICATION            | VALUE / DETAILS                                      |
++--------------------------+------------------------------------------------------+
+| Class                    | Specialized Utility SAR Transport Flyer              |
+| Length / Profile         | 32 meters | Compact, armored, twin-engine profile      |
+| Crew                     | 3 (Pilot, Rescue/Grapple Specialist, Trauma Medic)   |
+| Patient / Pod Capacity   | Up to 6 ejection pods or 8 stretcher patients         |
+| Armor / Shielding        | Reinforced front ablative plates; heavy directional PD|
+| Primary Gear             | Forward magnetic grapple winch; ventral pod bay doors|
++---------------------------------------------------------------------------------+

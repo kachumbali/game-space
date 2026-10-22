@@ -1,0 +1,12 @@
+1. **Pan-Asian Union (PAU):** The dominant industrial force in Sol. Controls the largest orbital shipyards at Luna and Mars, producing the majority of humanity's 2km Mega-Transports and deep-space mining fleets.
+2. **North American Coalition (NAC):** Masters of heavy kinetic military hardware. Their fleet doctrine emphasizes mass-driver artillery, heavy composite plating, and long-range railgun corvettes.
+3. **European Commonwealth (EC):** Specialists in electronic counter-measures, point-defense systems (`PD-30`), optical sensor suites, and search-and-rescue (SAR) infrastructure.
+
+---
+
+## 3. The Megacorporations & Rim Sovereignty
+Outside the Sol System, UN authority thins rapidly. Deep-space resource extraction, habitat spinning, and colony administration are dominated by Weyland/Hamilton-style corporate behemoths:
+
+- **Vanderbilt-Astra Conglomerate (VAC):** Monopolizes jump-drive core manufacturing and sub-space navigation software. Operates private security fleets armed with prototype `LS-2` beam lasers. (Responsible for awakening the FROGGs at Sector Oasis-9).
+- **Armitage-Weyland Bio-Industrial:** Controls cryo-stasis technology, life-support synthesis, and atmospheric processing for planetary outposts.
+- **Sidero-Dynamics:** The premier asteroid-engineering cartel. Owns the proprietary fusion-torch systems used to hollow and spin 5–20km nickel-iron asteroids into "Hollow" habitats.

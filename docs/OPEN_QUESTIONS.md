@@ -9,7 +9,7 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 4. **XL keel cannon and frigate threat.** Whole ship aims; open: shield pierce, turn-rate cost for a 450 m hull. Default: pierces 50% of shield, frigate turns at 0.05 rad/s.
 5. **Nukes.** Hardening factor for hulls (no open source found), yields per warhead, shield attenuation of crew dose, where warheads come from in the story (rare finds, allied transfers, old stockpile).
 6. **Friendly fire and crashes.** Friendly bolts/blasts do 50% damage (placeholder). Wreck/debris crash damage not modelled. Default: keep 50%, add debris damage later.
-7. **FROGG heat.** Vents or heat-sink tissue (biology undecided).
+7. **FROGG heat.** Decided in lore 2026-10-22 (`docs/LORE_FROGG.md`): plasma heat-sinks and radiative coolant channels (the cyan seams); still not modelled in the engine, only energy pools.
 8. **Balance target.** Measured after lasers (headless, arcade flight): 4 Kestrels beat 10 FROGGs 3/3, 12 FROGGs 1/3; even point about 11-12, near the 12:4 target. With Newtonian flight humans lose at about 10. Samples are 2-3 runs per cell: direction, not measurement. Decide whether Newtonian should be the intended default difficulty.
 9. **"I take almost no damage" is not reproduced.** Measured: against a jinking player 8 FROGGs hit about 9% of shots and kill a Kestrel in about 10 sim-seconds; against my aimbot in mission 2 they hit 3 of 226 shots. Needs your play log (press L, send the JSON).
 
@@ -32,7 +32,7 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 20. Are human extraction sites finite?
 21. How do unfought battles resolve (auto-resolve assumed; reinforcements?).
 22. Permadeath default and rescue window; recruits as a flow or fixed. (Wingman death is now decided by how the ship died: base 75% eject, less for overkill, reactor breach, nukes; +/-5% per skill level.)
-23. Human factions: economically distinct? (deferred)
+23. ~~Human factions: economically distinct?~~ Decided 2026-10-22: ECU/UTDF, Void-Born Confederacy, Vanderbilt-Astra adopted (`docs/LORE_FACTIONS.md`); the player's side is the Colonial Defence Force. Open: whether blocs ever get distinct ship stats (currently one human `SHIPS` roster).
 24. Save policy: export/import, seed stored?
 25. Objections I raised that you have not answered: territory versus migratory hive (O2), nuke "elixir problem" (O3), whether pilot choice has consequences (O4), drone economics until jamming rules exist (O5).
 

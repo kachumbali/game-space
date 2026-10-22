@@ -1,0 +1,3 @@
+[FLIGHT DECK DISPATCH] -> [HIGH-SPEED DIVE TO HOT ZONE] -> [MAGNETIC POD RETRIEVAL] -> [IN-FLIGHT TRAUMA STABILIZATION]
+        |                                                            |                                     |
+  (Frigate / Asteroid)                                       (Ablative Shielding Active)             (Med-Bay Onboard)

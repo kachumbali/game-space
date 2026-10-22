@@ -1,0 +1,3 @@
+[EJECTION DETECTED] -> [LPI BEACON LOCK] -> [SAR CORVETTE DISPATCH] -> [TRACTOR / SAR DOCK]
+        |                                           |                         |
+  (Combat Zone)                             (PD Escort Cover)           (Trauma Bay)

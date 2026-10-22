@@ -1,0 +1,23 @@
+## 1. Sub-Capital Classes (< 500m)
+
+### **Fighters & Drones (6m – 20m)**
+- **`SD-4 Sentry` Drone (6m):** Mass-produced silicon-guided strike unit. Single mag cannon, 2 missile hardpoints. Expendable interceptor/decoy.
+- **Kestrel Line Fighter (12m):** Single-seat general-purpose fighter. Armored cockpit, single slaved drone command node.
+- **Halberd Heavy Fighter (18m):** Two-seat strike craft (Pilot + Drone/Weapons Specialist). Controls 2 slaved drones, heavy missile payloads.
+
+### **Corvettes (100m – 200m)**
+- **Human Corvettes (*Watchkeeper / Vanguard-C*):** Dedicated anti-fighter and anti-missile screen craft. Packed with rapid-fire kinetic PD cannons (`PD-30`) and miniguns. Must dock in a Frigate's external magnetic cradle to jump.
+- **FROGG *Gulper* Corvette (160m):** High-speed beam platform mounting continuous `lance` lasers. Uses aggressive vector thrusters to sweep beam burns across human capital hulls.
+
+---
+
+## 2. Capital & Jump-Capable Classes (500m+)
+
+### **Frigates (~500m)**
+- **Role:** The standard naval workhorse and minimum-size jump platform.
+- **Features:** Houses 48 `SD-4` drones, docking bays for up to 6 corvettes/fighters, point-defense grids, and military-grade railgun/missile batteries.
+- **Cap:** Current combat doctrine limits operational military hulls to 500m until larger dreadnought yards are constructed.
+
+### **Transports (500m Standard vs. 2km Mega-Transports)**
+- **Standard Freighter (500m):** Bulk ore and fuel container ships running supply routes between Sidero-Node asteroids and planetary outposts.
+- **Colony Mega-Transport (2,000m / 2km):** Massive, self-contained colony ships holding up to 250,000 colonists in deep cryo-stasis, complete with terraforming equipment, pre-fabricated outpost modules, and internal defense flight decks.

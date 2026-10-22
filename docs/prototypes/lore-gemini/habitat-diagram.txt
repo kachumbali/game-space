@@ -1,0 +1,8 @@
+Axial Zero-G Hub (Docking, Capital Refuel, Drone Bays)
+                        ||
+   /====================||====================\   <-- Thick Nickel-Iron Outer Hull
+  |  [Industrial Zone]  ||  [Agricultural Ring]|      (Radiation & Missile Shield)
+  |  [Living Terraces]  ||  [Sub-Surface Sinks]|
+   \====================||====================/
+                        ||
+             Equatorial Spun Grav-Ring (0.3g - 0.8g)
