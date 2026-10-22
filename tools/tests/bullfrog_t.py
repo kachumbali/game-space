@@ -218,7 +218,23 @@ def t_blast(R):
         check(f'{id}: blast at 97% of half-length (outer hull) deals damage', r[id][3]['dmg']>0, json.dumps(r[id]))
     check('halberd (small hull) behaviour: damage at the prow', r['halberd'][3]['dmg']>=0, json.dumps(r['halberd']))
 
-SC={'spine':t_spine,'exeter':t_exeter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast}
+def t_warn(R):
+    """HUD warning: the spine charges at an Exeter on the player's side (kind 'ally'); read warnState and the #warn element during the lock."""
+    pg=R.page(320,180,'?free&n=0&q=low')
+    r=pg.evaluate(js('''
+      g.player.team=0;g.player.group.position.set(0,0,-1500);g.player.vel.set(0,0,0);
+      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});bf.hangarCfg={count:0};const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
+      freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;g.update(0.05);const sp=bf.spine;const o={kinds:[]};
+      stepN(40,()=>{ex.vel.set(0,0,0);g.player.vel.set(0,0,0);g.player.group.position.set(0,0,-1500);bf.vel.set(0,0,0);bf.group.position.set(0,0,0);
+        const w=g.warnState.spine;if(w&&!o.kinds.includes(w.kind+':'+w.lock))o.kinds.push(w.kind+':'+w.lock);if(sp.st==='lock')return false;});
+      o.st=sp.st;return o;'''))
+    pg.wait_for_timeout(2000)
+    txt=pg.evaluate("(()=>{__game.updateHud();return document.getElementById('warn').textContent})()")
+    print(json.dumps(r),repr(txt))
+    check('warnState.spine set while charging at a friendly', len(r['kinds'])>0, str(r['kinds']))
+    check('HUD text during the lock', 'SPINE' in txt, repr(txt))
+
+SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast}
 if __name__=='__main__':
     names=sys.argv[1:] or list(SC)
     with Runner() as R:
