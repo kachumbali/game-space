@@ -69,6 +69,36 @@
   #brief button{font:inherit;font-size:14px;letter-spacing:2px;padding:10px 22px;background:#0f3a2c;color:#c8fff0;border:1px solid #4aa888;cursor:pointer}
   #brief button.alt{background:#10201c;border-color:#3a6a58;color:#8fcdb8;font-size:12px}
   #brief button:hover{background:#17614a}
+  /* main menu + skirmish setup (src/76_menu.js) */
+  #brief .menu.main{width:min(520px,94vw)}
+  #brief .mlist{display:flex;flex-direction:column;gap:8px;margin:14px 0 6px}
+  #brief .mi{display:flex;flex-direction:column;align-items:flex-start;text-align:left;width:100%;box-sizing:border-box;padding:10px 16px;font-size:15px}
+  #brief .mi span{font-size:10px;letter-spacing:1px;opacity:.65;margin-top:2px}
+  #brief .mi.alt b{font-size:12px}
+  #brief button:focus,#brief select:focus{outline:none;border-color:#ffd24a;color:#ffd24a}
+  #brief button.mi:focus{background:#17614a}
+  #brief .menu.sk{width:min(820px,96vw)}
+  #brief .menu h1{font-size:22px}
+  #brief .skg{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;margin-top:8px}
+  #brief .skrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 8px}
+  #brief .skrow.pre button{padding:4px 8px;font-size:10px;letter-spacing:1px}
+  #brief .skrow button{font-size:12px;padding:5px 10px;letter-spacing:1px}
+  #brief .skrow b{min-width:22px;text-align:center}
+  #brief .skrow select,#brief .menu select{font:inherit;font-size:12px;background:#0c2a22;color:#c8fff0;border:1px solid #3a6a58;padding:5px;max-width:100%}
+  #brief .seg{display:inline-flex;flex-wrap:wrap;gap:4px}
+  #brief .seg button.on{background:#17614a;border-color:#ffd24a;color:#ffd24a}
+  #brief .skwarn{margin:4px 0;padding:6px 8px;border:1px solid #ff8a5a;color:#ffb090;font-size:11px}#brief .skwarn.lo{border-color:#3a6a58;color:#8fcdb8}
+  #brief .btns.stick{position:sticky;bottom:-18px;background:rgba(6,16,14,.97);padding:10px 0 4px;margin-bottom:-4px}
+  @media (max-width:700px){#brief .skg{grid-template-columns:1fr}}
+  @media (max-height:520px),(max-width:520px){
+    #brief .panel{padding:10px 14px;font-size:12px}#brief .menu h1{font-size:17px;letter-spacing:2px}#brief h2{margin-bottom:4px}
+    #brief .mlist{gap:5px;margin:8px 0 4px}#brief .mi{padding:6px 12px;font-size:13px}#brief .mi span{display:none}
+    #brief .menu.main .mlist{display:grid;grid-template-columns:1fr 1fr}#brief .menu.main .mi{min-height:38px;justify-content:center}
+    #brief .skrow{margin-bottom:4px}#brief .skrow button{padding:4px 8px;font-size:11px}#brief .keys{display:none}
+    #brief button{padding:7px 14px;font-size:12px}
+    #brief .btns.stick{bottom:-10px}
+  }
+  @media (max-width:520px){#brief .menu.main .mlist{grid-template-columns:1fr}#brief .menu.main .mi span{display:block}}
   #touch{display:none}
   body.touch #touch{display:block}
   body.touch #radar{width:132px;height:132px;bottom:6px}

@@ -11,8 +11,10 @@ If it is slow: `?nobloom`, press `-` / `[` to lower voxel detail and `=` / `]` f
 ## Flags (add to the URL, e.g. `index.html?free&wing=3&frigate`)
 | Flag | Effect |
 |---|---|
-| `?go` | skip the briefing; boots into Operation Reedbed (latest mission) |
-| `?m=1` / `?m=2` | Operation Lilypad / Operation Reedbed |
+| (none) | boots into the main menu (campaign, skirmish, free flight, options, credits) |
+| `?go` | skip menu and briefing; boots into Operation Reedbed (latest mission) |
+| `?sk=darter:3,leaper:2` | quick skirmish without the menu; `&sk_skill=1..5`, `&sk_wing=0..3`, `&sk_fm=newton`, `&sk_msl=0`, `&sk_respawn=1`, `&sk_range=800`, `&sk_look=reed`, `&sk_ally=halberd` (the skirmish setup screen offers the same; see README) |
+| `?m=1` / `?m=2` | Operation Lilypad / Operation Reedbed (briefing, no menu) |
 | `?free` | free flight with FROGG waves |
 | `&n=10` | 10 FROGG fighters per wave (4 Kestrels vs about 10 is roughly an even fight in arcade flight) |
 | `&wing=4` | 4 AI Kestrel wingmen; `&wskill=1..5` their pilot skill; `&fskill=1..5` FROGG pilot skill |

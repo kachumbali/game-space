@@ -6,9 +6,11 @@ The playable build is the single file `index.html` (Three.js from a CDN). Source
 
 ## Play
 Open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.server`. Phones work: touch controls
-appear automatically. The game boots into the briefing for **Operation Lilypad** (about 2–4 minutes).
+appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS, SKIRMISH, FREE FLIGHT, OPTIONS, CREDITS; arrow keys + Enter or click/tap). Missions open the briefing; the restart dialog (R) and briefing have a MAIN MENU button.
 
-URL flags: `?go` skip briefing · `?free` free flight · `?newcrew` reset crew record · `?touch` force touch UI ·
+**Skirmish** (menu SKIRMISH): quick test fight. Choose wingmen (0-3), an optional friendly Halberd/Exeter, the enemy force as rows of ship + count (presets: Waves 1/2/3/5, Heavy, Gulper, vs Halberd, vs Exeter, Hive Carrier), enemy skill 1-5, friendly flight model, enemy missiles on/off, endless respawn, starting range (800 m / 2 km / 4 km) and environment look. The fight ends with a debrief (kills, time, accuracy, damage) and RESTART / SETUP / MAIN MENU. Corvettes and frigates are heavy to voxelise; the 2.5 km Hive Carrier is the heaviest (warning in the UI, not tested on real hardware). Setup is remembered in localStorage `gs_sk`.
+
+URL flags: `?go` skip menu and briefing · `?m=N` skip the menu, open mission N's briefing · `?free` free flight · `?sk=darter:3,leaper:2` skirmish (with `&sk_skill=1..5 &sk_wing=0..3 &sk_wskill &sk_fm=newton &sk_msl=0 &sk_respawn=1 &sk_range=800 &sk_look=reed &sk_ally=halberd|exeter`; `__game.startSkirmish(cfg)` takes the same as an object) · `?newcrew` reset crew record · `?touch` force touch UI ·
 `?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md.
 The game boots into the latest mission (Reedbed). Phones (touch, short side < 520 px) get a compact HUD (`body.phone`).
 
@@ -66,7 +68,7 @@ number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout
 `00_head.html` shell/CSS · `10_config` · `12_audio` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
-`55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
+`55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `76_menu` (main menu, skirmish) · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
 
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
