@@ -125,7 +125,7 @@ const resFor = (def, idx) => Math.min(RES_CAP, Math.round(DETAIL_STEPS[idx] * Ma
 //  Extra prim kinds in def.prims:  lod:n (any prim, only built at tier >= n);  win:{col,p} (lit windows on side faces);
 //  noDetail:true (no greebles/relief on that prim);  {t:'paint',box,col,side,mix,glow};  {t:'text',c,face,text,px,col}
 // ======================================================================
-const detailTier = (res, def) => (res < 120 || def.noDetail) ? 0 : detailIdx >= 7 ? 3 : detailIdx >= 6 ? 2 : detailIdx >= 5 ? 1 : 0;
+const detailTier = (res, def, idx = detailIdx) => (res < 120 || def.noDetail) ? 0 : idx >= 7 ? 3 : idx >= 6 ? 2 : idx >= 5 ? 1 : 0;
 const ihash = (a, b, c, s) => {
   let h = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263) + Math.imul(c | 0, 1274126177) + Math.imul(s | 0, -2048144777)) | 0;
   h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16;
@@ -542,8 +542,8 @@ function surfaceDetail(def, tier, G) {
   return { xg, tn };
 }
 
-function voxelize(def, res) {
-  const tier = detailTier(res, def);
+function voxelize(def, res, idx = detailIdx) {
+  const tier = detailTier(res, def, idx);
   const key = def.id + ':' + res + (tier ? ':t' + tier : '');
   if (voxCache.has(key)) return voxCache.get(key);
   const vs = def.length / res;

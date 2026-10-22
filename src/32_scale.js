@@ -27,3 +27,11 @@ scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;
 // FROGG pilots are neuro-slaved with very high G tolerance (owner 2026-10-21): their fighters turn and accelerate harder, so they re-engage fast
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter' && SHIPS[id].fac === 'frogg') { SHIPS[id].turn *= 1.5; SHIPS[id].accel *= 1.3; }
+
+// afterburner pool (seconds of burn): humans 20 s, refill ~25 s; FROGG fighters (neuro-slaved, bio-fuel) get 1.8x the pool, 2x the refill, and a stronger burn (owner 2026-10-22)
+for (const id in SHIPS) {
+  const d = SHIPS[id];
+  if (d.cls !== 'fighter') { d.abMax = 0; continue; }
+  const fr = d.fac === 'frogg';
+  d.abMax = fr ? 36 : 20; d.abRegen = fr ? 1.6 : 0.8; d.abSpd = fr ? 2.1 : 1.8; d.abAcc = fr ? 2.6 : 2.2;
+}

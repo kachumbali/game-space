@@ -129,6 +129,37 @@
   #tg .v{position:absolute;left:0;bottom:0;white-space:nowrap}
   #tg .l{position:absolute;left:32px;color:#8fd8c0;white-space:nowrap}
   body:not(.touch) #rgr{left:calc(50% + 196px)}
+  body:not(.touch) #rgl{left:calc(50% - 196px - 92px)}
+  /* desktop weapon-energy gauge: mirror of the throttle gauge, left of the radar */
+  #te{position:fixed;right:calc(50% + 124px);bottom:10px;width:64px;height:224px;z-index:5;font-size:11px;pointer-events:none;text-align:right}
+  #te .bar{position:absolute;right:0;top:18px;bottom:30px;width:26px;border:2px solid rgba(143,255,208,.7);border-radius:6px;background:rgba(10,30,24,.45);overflow:hidden}
+  #te .bar>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.55)}
+  #te .bar>u{position:absolute;left:0;right:0;height:1px;background:rgba(143,255,208,.4)}
+  #te .t{position:absolute;right:0;top:0;white-space:nowrap}
+  #te .v{position:absolute;right:0;bottom:0;white-space:nowrap}
+  #te .l{position:absolute;right:32px;color:#8fd8c0;white-space:nowrap;top:calc(18px + (100% - 48px) * 0.5 - 6px)}
+  body.touch #te,body.cine #te{display:none}
+  /* touch weapon-energy bar: same size and style as the throttle slider, on the left */
+  #ten{position:fixed;left:14px;bottom:80px;width:44px;height:160px;z-index:7;pointer-events:none;border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45);display:none;transform:scale(.8);transform-origin:0 100%}
+  #ten>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
+  #tenl{position:fixed;left:14px;bottom:58px;font-size:11px;z-index:7;width:48px;text-align:center;display:none;transform:scale(.8);transform-origin:0 100%;pointer-events:none}
+  body.touch #ten,body.touch #tenl{display:block}
+  body.touch.phone #ten,body.touch.phone #tenl{transform:scale(.68)}
+  body.touch #comm{left:76px;width:30vw}
+  body.cine #ten,body.cine #tenl,body.cine #ets{display:none!important}
+  /* power allocation widget (ETS): 12 points over weapons / shields / engines */
+  #ets{position:fixed;left:50%;bottom:242px;transform:translateX(-50%);z-index:6;font-size:10px;line-height:1.25;text-shadow:0 0 4px #000;min-width:150px}
+  #ets .et{text-align:center;opacity:.6;letter-spacing:2px;font-size:9px}
+  #ets .er{display:flex;align-items:center;gap:6px;margin-top:2px;cursor:pointer;padding:1px 3px;border-radius:3px;background:rgba(10,30,24,.35)}
+  #ets .er b{width:22px;font-weight:normal;color:#8fd8c0}
+  #ets .er i{display:flex;gap:1px;flex:1;font-style:normal}
+  #ets .er s{flex:1;height:7px;background:rgba(143,255,208,.12);border:1px solid rgba(143,255,208,.25);text-decoration:none}
+  #ets .er s.on{background:rgba(143,255,208,.75)}
+  #ets .er[data-pw=w] s.on{background:#ffb04a}#ets .er[data-pw=s] s.on{background:#6ac8ff}#ets .er[data-pw=e] s.on{background:#8fffa0}
+  #ets .er span{width:14px;text-align:right}
+  body:not(.touch) #ets{pointer-events:none}
+  body.touch #ets{bottom:146px}body.touch.phone #ets{bottom:122px;font-size:8px;min-width:116px}
+
   body.touch #tg,body.cine #tg{display:none}
   body.phone #tg{left:calc(50% + 66px);height:108px}
   #help{white-space:normal;max-width:min(880px,94vw);text-align:left}
@@ -157,7 +188,7 @@
 #opts{display:none;position:fixed;inset:0;z-index:61;background:rgba(0,0,10,.72);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
 #opts .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;width:min(440px,92vw)}
 #opts h2{margin:0 0 14px;font-size:16px;letter-spacing:2px;text-align:center}.orow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:10px 0}
-.orow input[type=range]{width:55%}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
+.orow input[type=range]{width:55%}.orow select{background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;padding:4px}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
 </style>
 <script type="importmap">
 {"imports":{
@@ -181,8 +212,10 @@
 <div id="wpn"></div>
 <canvas id="radar" width="448" height="448"></canvas>
 <div id="tg"><div class="t">THR <span id="tgt1">0</span>%</div><div class="bar"><i id="tgf"></i><b id="tgs"></b><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="ab" id="tgab">AB</div><div class="l" style="top:calc(18px + (100% - 48px) * 0.5 - 6px)">SPD</div><div class="v"><span id="tgv">0</span> m/s</div></div>
+<div id="te"><div class="t">PLS <span id="te1">0</span>%</div><div class="bar"><i id="tef"></i><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="l">NRG</div><div class="v"><span id="tev">0</span> AB <span id="teab">0</span>%</div></div>
+<div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Graphics: P cycles low / mid / high / ultra; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -196,6 +229,7 @@
   <div class="tbtn" id="bytgt">AIM-T</div>
   <div class="tbtn" id="bsub">SUB</div>
   <div class="tbtn" id="bsel">WPN</div>
+  <div id="tenl">NRG</div><div id="ten"><i></i></div>
   <div id="thrlbl">THR</div>
   <div id="thr"><i></i></div>
 </div>

@@ -40,6 +40,8 @@ screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 | `-` `=` `[` `]`, B | Voxel detail, pixel size (first step is 2x supersampling), bloom |
 | P | Graphics preset low / mid / high / ultra (URL `?q=high` or `?q=ultra` also enables MSAA and a larger sky) |
 | H | Key map overlay |
+| 4 / 5 / 6, 7 | Power allocation: +1 point to weapons / shields / engines (from the largest other), 7 = balance (touch: tap the POWER bars) |
+| O | Options: audio, device preset (phone / tablet / laptop / desktop / max), distance LOD |
 
 Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW, TGT, AIM-T, WPN.
 
@@ -69,3 +71,12 @@ number (`DETAIL_STEPS`), so detail scales up later.
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
 prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs/FS2OPEN_STUDY.md` (FS2 Open source study), `docs/STRATEGY_LAYER.md` (campaign/strategy proposal), `docs/FLEET_LOGIC.md` (ship roles, fleets, pilots, SAR). `docs/SHIP_MANUAL.md` (ship list, scale ladder, blueprints), `docs/LORE.md`, `docs/CAPITAL_COMBAT.md` (discussion). Agents: read `AGENTS.md` first.
+
+
+## Systems added 2026-10-22
+- **Power allocation** (src/50_state.js `pwF`, `powerShift`): 12 points over weapons / shields / engines (default 4/4/4 = factor 1). Factor: 0 pts 0.2, 4 pts 1.0, 12 pts 1.96. Weapons = capacitor recharge, shields = shield recharge, engines = top speed (x0.8 + 0.2f), turn (x0.9 + 0.1f), afterburner pool and refill. AI ships stay at 4/4/4. Modelled on FreeSpace 2's ETS (key layout and factors are mine, not FS2's).
+- **Afterburner pool** (`abTick`): drains 1/s while burning, empty = locked out until 25 %. Humans 20 s, refill 0.8/s, burn x1.8; FROGG fighters 36 s, refill 1.6/s, burn x2.1 (accel x2.6) and the AI burns on break-away runs and long re-engagements. Capitals have none.
+- **AI missile budget** (`missileLogic`): one missile at a time per target, none inside 350 m, 14-24 s reload, lock plus 70 % range. FROGG missiles do +30 % damage (`FMX`) and carry more (Darter/Leaper 2, Spitter 4, Reaver 6, Toad 3, Bomber 6).
+- **Distance LOD + device presets** (options panel, `DEVICES`, `LOD_LEVELS`, `lodTick`): far ships are re-voxelised 1-3 detail steps lower; saved in localStorage `gs_gfx`. Sky size and MSAA still need a reload.
+- **HUD**: energy gauge same size and style as the throttle gauge (desktop left of the radar, touch left side); POWER widget above the radar; Newtonian vector markers (VEL, RETRO, REL, MATCH).
+- FROGG lasers +25 % (pulse 3.5, lance 3.0).

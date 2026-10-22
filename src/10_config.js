@@ -22,12 +22,33 @@ const QUALITY = {
   ultra: { px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true },
 };
 const QORDER = ['low', 'mid', 'high', 'ultra'];
-const Q0 = QUALITY[params.get('q')] || null;
-let pixelIdx = Q0 ? PIXEL_STEPS.indexOf(Q0.px) : 2;
-let detailIdx = Q0 ? Q0.det : (isTouch ? 2 : 4);
-let qualityName = Q0 ? params.get('q') : 'mid';
-const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : (Q0 ? Q0.aa : 0);
-let bloomOn = !params.has('nobloom') && !(Q0 && !Q0.bloom);
+// device presets (options panel O): graphics values plus the distance-LOD level. phone / tablet / laptop keep the former defaults; desktop and max are the old high / ultra.
+// LOD: a ship far from the camera is re-voxelised 1-3 detail steps lower (thresholds are the apparent radius in rad, see LOD_LEVELS); damage is replayed on rebuild.
+const DEVICES = {
+  phone:   { label: 'PHONE',          px: 2,   det: 2, aa: 0, sky: 512,  bloom: true, lod: 'aggressive' },
+  tablet:  { label: 'TABLET (IPAD)',  px: 2,   det: 2, aa: 0, sky: 512,  bloom: true, lod: 'normal' },
+  laptop:  { label: 'LAPTOP',         px: 2,   det: 4, aa: 0, sky: 1024, bloom: true, lod: 'normal' },
+  desktop: { label: 'DESKTOP GPU',    px: 1,   det: 6, aa: 4, sky: 1536, bloom: true, lod: 'gentle' },
+  max:     { label: 'MAX (NO LOD)',   px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true, lod: 'off' },
+};
+const DEV_ORDER = ['auto', 'phone', 'tablet', 'laptop', 'desktop', 'max'];
+const LOD_LEVELS = { off: null, gentle: [0.012, 0.005, 0.002], normal: [0.02, 0.008, 0.0035], aggressive: [0.035, 0.015, 0.007] };
+const LOD_ORDER = ['off', 'gentle', 'normal', 'aggressive'];
+let GFX = {};
+try { GFX = JSON.parse(localStorage.getItem('gs_gfx') || '{}') || {}; } catch (e) { /* private mode: defaults */ }
+const gfxSave = () => { try { localStorage.setItem('gs_gfx', JSON.stringify(GFX)); } catch (e) { /* ignore */ } };
+function autoDevice() {
+  if (isTouch) return Math.min(innerWidth, innerHeight) < 520 ? 'phone' : 'tablet';
+  return (navigator.hardwareConcurrency || 4) > 8 ? 'desktop' : 'laptop';
+}
+const deviceName = () => (GFX.device && GFX.device !== 'auto' && DEVICES[GFX.device]) ? GFX.device : autoDevice();
+const Q0 = QUALITY[params.get('q')] || DEVICES[deviceName()];
+let pixelIdx = PIXEL_STEPS.indexOf(Q0.px);
+let detailIdx = Q0.det;
+let qualityName = QUALITY[params.get('q')] ? params.get('q') : deviceName();
+let lodLevel = LOD_LEVELS[GFX.lod] !== undefined ? GFX.lod : (QUALITY[params.get('q')] ? 'normal' : Q0.lod);
+const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : Q0.aa;
+let bloomOn = !params.has('nobloom') && Q0.bloom;
 const SUN = new THREE.Vector3(0.6, 0.4, 0.55).normalize();
 
 // ======================================================================

@@ -77,6 +77,8 @@ addEventListener('keydown', e => {
     case 'Digit1': player.fireMask = 1; break;
     case 'Digit2': player.fireMask = 2; break;
     case 'Digit3': player.fireMask = 3; break;
+    case 'Digit4': case 'Digit5': case 'Digit6': powerKey(player, PW_KEYS[+e.code.slice(5) - 4]); break;
+    case 'Digit7': powerKey(player, null); break;
     case 'KeyB': if (composer) bloomOn = !bloomOn; break;
     case 'KeyP': setQuality(QORDER[(QORDER.indexOf(qualityName) + 1) % QORDER.length]); break;
     case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
@@ -158,11 +160,26 @@ if (isTouch) {
   addEventListener('pointerdown', () => { touchStarted = true; });
 }
 
+// power allocation: 4 weapons / 5 shields / 6 engines each move one point there from the largest other system, 7 = balance
+function powerKey(s, k) {
+  if (!s || !s.alive) return;
+  if (k === null) powerReset(s); else if (!powerShift(s, k)) { log(`${PW_NAMES[k]} AT LIMIT`, '#ff5a4a'); return; }
+  sfx('click'); log(`POWER  WPN ${s.pw.w}  SHD ${s.pw.s}  ENG ${s.pw.e}`, '#ffd24a');
+}
+{ // touch / mouse: tap a bar of the power widget; tap the title to balance
+  const ets = document.getElementById('ets');
+  ets.addEventListener('pointerdown', e => {
+    const r = e.target.closest('[data-pw]'); if (!r) return;
+    e.stopPropagation(); e.preventDefault();
+    powerKey(player, r.dataset.pw === '=' ? null : r.dataset.pw);
+  });
+}
+
 function changeDetail(d) {
   const n = clamp(detailIdx + d, 0, DETAIL_STEPS.length - 1);
   if (n === detailIdx) return;
   detailIdx = n;
-  for (const s of ships) if (s.alive) buildVox(s);
+  for (const s of ships) if (s.alive) { s.lodDrop = 0; buildVox(s); }
 }
 
 // graphics preset at run time (sky size and antialiasing need a reload with ?q=)
@@ -173,6 +190,24 @@ function setQuality(name) {
   changeDetail(Q.det - detailIdx);
   if (composer) bloomOn = Q.bloom;
   log(`GRAPHICS ${name.toUpperCase()}: voxels ${DETAIL_STEPS[detailIdx]}, pixels ${Q.px < 1 ? '2x supersampled' : Q.px + 'x'}` + ((Q.aa || Q.sky > 1024) ? ' (reload with ?q=' + name + ' for MSAA and sky size)' : ''), '#9adcff');
+}
+
+// device preset (options panel): graphics values + LOD level. Sky size and MSAA are fixed at load: saved, applied after a reload.
+function setDevice(name, reload) {
+  GFX.device = name; gfxSave();
+  const D = DEVICES[deviceName()];
+  qualityName = deviceName();
+  pixelIdx = PIXEL_STEPS.indexOf(D.px); resize();
+  if (composer) bloomOn = D.bloom;
+  setLod(D.lod, true);
+  changeDetail(D.det - detailIdx);
+  log(`DEVICE ${name === 'auto' ? 'AUTO (' + D.label + ')' : D.label}: voxels ${DETAIL_STEPS[detailIdx]}, LOD ${lodLevel.toUpperCase()}` + ((D.aa || D.sky > 1024) ? ' (reload for MSAA and sky size)' : ''), '#9adcff');
+}
+function setLod(level, keep) {
+  if (!(level in LOD_LEVELS)) return;
+  lodLevel = level; GFX.lod = level; gfxSave();
+  if (!keep) log(`LOD ${level.toUpperCase()}`, '#9adcff');
+  for (const s of ships) if (s.alive && (s.lodDrop | 0)) { s.lodDrop = 0; buildVox(s); }   // re-evaluated by lodTick
 }
 
 // phones: smaller HUD fonts and controls

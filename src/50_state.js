@@ -9,35 +9,58 @@ function compFactor(s, role) {
   let t = 0; for (const c of cs) t += Math.max(0, c.hp) / c.max;
   return t / cs.length;
 }
-const speedMul = s => 0.3 + 0.7 * compFactor(s, 'engine');
-const turnMul = s => 0.45 + 0.55 * compFactor(s, 'engine');
+// ---- power allocation (FreeSpace 2 style ETS): 12 points over weapons / shields / engines, balanced = 4/4/4 = factor 1.0 ----
+// factor per system: 0 pts -> 0.2, 4 -> 1.0, 12 -> 1.96. Weapons: capacitor recharge. Shields: shield recharge. Engines: top speed, turn, afterburner pool and refill.
+const PW_KEYS = ['w', 's', 'e'], PW_NAMES = { w: 'WEAPONS', s: 'SHIELDS', e: 'ENGINES' };
+const pwF = (s, k) => { const l = s.pw ? s.pw[k] : 4; return l <= 4 ? 0.2 + 0.2 * l : 1 + 0.12 * (l - 4); };
+function powerShift(s, to) {                     // +1 point to `to`, taken from the larger of the other two (alternating on a tie)
+  const o = PW_KEYS.filter(k => k !== to).filter(k => s.pw[k] > 0);
+  if (s.pw[to] >= 12 || !o.length) return false;
+  o.sort((a, b) => s.pw[b] - s.pw[a] || ((s.pwFlip = !s.pwFlip) ? 1 : -1));
+  s.pw[o[0]]--; s.pw[to]++; return true;
+}
+const powerReset = s => { s.pw = { w: 4, s: 4, e: 4 }; };
+const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e'));
+const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e'));
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
+
+// ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
+function abTick(s, want, dt) {
+  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e');
+  if (!mx) { s.ab = false; return false; }
+  const on = want && !s.abLock && s.abFuel > 0;
+  if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
+  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * dt);
+  if (s.abLock && s.abFuel > mx * 0.25) s.abLock = false;
+  s.ab = on; return on;
+}
 
 const _fwd = new THREE.Vector3();
 const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    s.ab = !!cmd.ab;
-    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
-    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
-    s.ab = !!cmd.ab;
     s.vel.addScaledVector(_fwd, thrust * a * dt);
-    const cap = s.def.maxSpeed * 2.2;
+    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
     s.vel.addScaledVector(_fwd, cmd.thrust * a * dt);
     if (cmd.brake) s.vel.multiplyScalar(Math.exp(-1.8 * dt));
-    const cap = s.def.maxSpeed * 2.2;
+    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };
@@ -68,8 +91,9 @@ function disposeVox(s) {
 }
 function buildVox(s) {
   disposeVox(s);
-  const D = voxelize(s.def, resFor(s.def, detailIdx));
-  const cap = s.def.cls === 'fighter' ? (detailIdx >= 6 ? 20000 : 5000) : (detailIdx >= 6 ? 60000 : 30000);
+  const di = Math.max(0, detailIdx - (s.lodDrop | 0));       // distance LOD lowers the detail step of far ships
+  const D = voxelize(s.def, resFor(s.def, di), di);
+  const cap = s.def.cls === 'fighter' ? (di >= 6 ? 20000 : 5000) : (di >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
   D.voxels.forEach((v, i) => (v.g ? glowV : bodyV).push(i));
   const body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));

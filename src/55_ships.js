@@ -8,7 +8,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -117,4 +117,23 @@ function benchSetup() {
     f.vel.set(0, 0, -4);
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
+}
+
+// ---- distance LOD: ships whose apparent radius (rad) falls below the level's thresholds are rebuilt 1-3 detail steps lower (hysteresis 25%).
+// One rebuild per call so a swarm turning at once does not stall a frame; voxelize() caches every resolution it has built.
+let lodScan = 0;
+function lodTick(dt) {
+  const T = LOD_LEVELS[lodLevel];
+  lodScan -= dt; if (lodScan > 0) return;
+  lodScan = 0.25;
+  for (const s of ships) {
+    if (!s.alive || s.dying > 0 || !s.vox) continue;
+    let nd = 0;
+    if (T) {
+      const ang = s.def.radius / Math.max(1, s.group.position.distanceTo(camera.position));
+      for (let i = 0; i < T.length; i++) if (ang < T[i] * ((s.lodDrop | 0) > i ? 1.25 : 1)) nd = i + 1;
+      nd = Math.min(nd, detailIdx);
+    }
+    if (nd !== (s.lodDrop | 0)) { s.lodDrop = nd; buildVox(s); return; }
+  }
 }

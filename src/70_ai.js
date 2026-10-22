@@ -144,6 +144,8 @@ function aimNoise(s, dist) {          // slowly wandering aim offset: low-skill 
   if (time > ai.nT) { ai.nT = time + 0.4 + Math.random() * 0.3; ai.nV.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(skillV(s, 'noise')); }
   return _an.copy(ai.nV).multiplyScalar(dist);
 }
+// AI missile budget: one shot at a time per target (no dog-piling while a friendly missile is still guided at it), nothing inside gun range,
+// a long reload (14-24 s) and a shot only on a solid lock well inside range. Measured: tools/tests/msl_t.py
 function missileLogic(s, dt, wantIds) {
   const ai = s.ai;
   const ids = missileIds(s).filter(id => wantIds.includes(id) && s.stores[id] > 0);
@@ -151,9 +153,10 @@ function missileLogic(s, dt, wantIds) {
   s.sel = missileIds(s).indexOf(ids[0]);
   lockUpdate(s, dt * skillV(s, 'react'));          // AI pilots are slower to get a tone than a human
   const d = s.lock.d;
-  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && Math.random() < dt * 0.8) {
+  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && d > 350 && Math.random() < dt * 0.8) {
+    if (missiles.some(m => !m.dead && m.team === s.team && m.target === s.target)) return;
     launchMissile(s, ids[0]);
-    ai.mslT = (WEAPONS[ids[0]].torp ? 6 : 12) + Math.random() * 8;
+    ai.mslT = (WEAPONS[ids[0]].torp ? 6 : 14) + Math.random() * 10;
   }
 }
 
@@ -196,6 +199,8 @@ function fighterAI(s, dt) {
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
+  // FROGG pilots burn hard: break-away runs and re-engagement from long range, while the pool lasts
+  if (s.def.fac === 'frogg' && s.abFuel > s.def.abMax * 0.3 && (ai.mode === 'break' || (ai.mode === 'attack' && dist > 900))) { ab = true; thr = 1; }
   if (ai.mode === 'evade') {                 // break perpendicular to the incoming missile and corkscrew
     const m = ai.inc;
     if (m) { _ad.copy(m.pos).sub(ep).normalize(); _ap.crossVectors(_ad, _up).normalize().multiplyScalar(ai.dir); aim.copy(ep).addScaledVector(_ap, 300).addScaledVector(_up, Math.sin(time * 3) * 120); }

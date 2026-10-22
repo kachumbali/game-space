@@ -129,6 +129,37 @@
   #tg .v{position:absolute;left:0;bottom:0;white-space:nowrap}
   #tg .l{position:absolute;left:32px;color:#8fd8c0;white-space:nowrap}
   body:not(.touch) #rgr{left:calc(50% + 196px)}
+  body:not(.touch) #rgl{left:calc(50% - 196px - 92px)}
+  /* desktop weapon-energy gauge: mirror of the throttle gauge, left of the radar */
+  #te{position:fixed;right:calc(50% + 124px);bottom:10px;width:64px;height:224px;z-index:5;font-size:11px;pointer-events:none;text-align:right}
+  #te .bar{position:absolute;right:0;top:18px;bottom:30px;width:26px;border:2px solid rgba(143,255,208,.7);border-radius:6px;background:rgba(10,30,24,.45);overflow:hidden}
+  #te .bar>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.55)}
+  #te .bar>u{position:absolute;left:0;right:0;height:1px;background:rgba(143,255,208,.4)}
+  #te .t{position:absolute;right:0;top:0;white-space:nowrap}
+  #te .v{position:absolute;right:0;bottom:0;white-space:nowrap}
+  #te .l{position:absolute;right:32px;color:#8fd8c0;white-space:nowrap;top:calc(18px + (100% - 48px) * 0.5 - 6px)}
+  body.touch #te,body.cine #te{display:none}
+  /* touch weapon-energy bar: same size and style as the throttle slider, on the left */
+  #ten{position:fixed;left:14px;bottom:80px;width:44px;height:160px;z-index:7;pointer-events:none;border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45);display:none;transform:scale(.8);transform-origin:0 100%}
+  #ten>i{position:absolute;left:0;right:0;bottom:0;background:rgba(143,255,208,.5);border-radius:8px}
+  #tenl{position:fixed;left:14px;bottom:58px;font-size:11px;z-index:7;width:48px;text-align:center;display:none;transform:scale(.8);transform-origin:0 100%;pointer-events:none}
+  body.touch #ten,body.touch #tenl{display:block}
+  body.touch.phone #ten,body.touch.phone #tenl{transform:scale(.68)}
+  body.touch #comm{left:76px;width:30vw}
+  body.cine #ten,body.cine #tenl,body.cine #ets{display:none!important}
+  /* power allocation widget (ETS): 12 points over weapons / shields / engines */
+  #ets{position:fixed;left:50%;bottom:242px;transform:translateX(-50%);z-index:6;font-size:10px;line-height:1.25;text-shadow:0 0 4px #000;min-width:150px}
+  #ets .et{text-align:center;opacity:.6;letter-spacing:2px;font-size:9px}
+  #ets .er{display:flex;align-items:center;gap:6px;margin-top:2px;cursor:pointer;padding:1px 3px;border-radius:3px;background:rgba(10,30,24,.35)}
+  #ets .er b{width:22px;font-weight:normal;color:#8fd8c0}
+  #ets .er i{display:flex;gap:1px;flex:1;font-style:normal}
+  #ets .er s{flex:1;height:7px;background:rgba(143,255,208,.12);border:1px solid rgba(143,255,208,.25);text-decoration:none}
+  #ets .er s.on{background:rgba(143,255,208,.75)}
+  #ets .er[data-pw=w] s.on{background:#ffb04a}#ets .er[data-pw=s] s.on{background:#6ac8ff}#ets .er[data-pw=e] s.on{background:#8fffa0}
+  #ets .er span{width:14px;text-align:right}
+  body:not(.touch) #ets{pointer-events:none}
+  body.touch #ets{bottom:146px}body.touch.phone #ets{bottom:122px;font-size:8px;min-width:116px}
+
   body.touch #tg,body.cine #tg{display:none}
   body.phone #tg{left:calc(50% + 66px);height:108px}
   #help{white-space:normal;max-width:min(880px,94vw);text-align:left}
@@ -157,7 +188,7 @@
 #opts{display:none;position:fixed;inset:0;z-index:61;background:rgba(0,0,10,.72);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
 #opts .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;width:min(440px,92vw)}
 #opts h2{margin:0 0 14px;font-size:16px;letter-spacing:2px;text-align:center}.orow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:10px 0}
-.orow input[type=range]{width:55%}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
+.orow input[type=range]{width:55%}.orow select{background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;padding:4px}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
 </style>
 <script type="importmap">
 {"imports":{
@@ -181,8 +212,10 @@
 <div id="wpn"></div>
 <canvas id="radar" width="448" height="448"></canvas>
 <div id="tg"><div class="t">THR <span id="tgt1">0</span>%</div><div class="bar"><i id="tgf"></i><b id="tgs"></b><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="ab" id="tgab">AB</div><div class="l" style="top:calc(18px + (100% - 48px) * 0.5 - 6px)">SPD</div><div class="v"><span id="tgv">0</span> m/s</div></div>
+<div id="te"><div class="t">PLS <span id="te1">0</span>%</div><div class="bar"><i id="tef"></i><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="l">NRG</div><div class="v"><span id="tev">0</span> AB <span id="teab">0</span>%</div></div>
+<div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Graphics: P cycles low / mid / high / ultra; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -196,6 +229,7 @@
   <div class="tbtn" id="bytgt">AIM-T</div>
   <div class="tbtn" id="bsub">SUB</div>
   <div class="tbtn" id="bsel">WPN</div>
+  <div id="tenl">NRG</div><div id="ten"><i></i></div>
   <div id="thrlbl">THR</div>
   <div id="thr"><i></i></div>
 </div>
@@ -230,12 +264,33 @@ const QUALITY = {
   ultra: { px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true },
 };
 const QORDER = ['low', 'mid', 'high', 'ultra'];
-const Q0 = QUALITY[params.get('q')] || null;
-let pixelIdx = Q0 ? PIXEL_STEPS.indexOf(Q0.px) : 2;
-let detailIdx = Q0 ? Q0.det : (isTouch ? 2 : 4);
-let qualityName = Q0 ? params.get('q') : 'mid';
-const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : (Q0 ? Q0.aa : 0);
-let bloomOn = !params.has('nobloom') && !(Q0 && !Q0.bloom);
+// device presets (options panel O): graphics values plus the distance-LOD level. phone / tablet / laptop keep the former defaults; desktop and max are the old high / ultra.
+// LOD: a ship far from the camera is re-voxelised 1-3 detail steps lower (thresholds are the apparent radius in rad, see LOD_LEVELS); damage is replayed on rebuild.
+const DEVICES = {
+  phone:   { label: 'PHONE',          px: 2,   det: 2, aa: 0, sky: 512,  bloom: true, lod: 'aggressive' },
+  tablet:  { label: 'TABLET (IPAD)',  px: 2,   det: 2, aa: 0, sky: 512,  bloom: true, lod: 'normal' },
+  laptop:  { label: 'LAPTOP',         px: 2,   det: 4, aa: 0, sky: 1024, bloom: true, lod: 'normal' },
+  desktop: { label: 'DESKTOP GPU',    px: 1,   det: 6, aa: 4, sky: 1536, bloom: true, lod: 'gentle' },
+  max:     { label: 'MAX (NO LOD)',   px: 0.5, det: 7, aa: 4, sky: 2048, bloom: true, lod: 'off' },
+};
+const DEV_ORDER = ['auto', 'phone', 'tablet', 'laptop', 'desktop', 'max'];
+const LOD_LEVELS = { off: null, gentle: [0.012, 0.005, 0.002], normal: [0.02, 0.008, 0.0035], aggressive: [0.035, 0.015, 0.007] };
+const LOD_ORDER = ['off', 'gentle', 'normal', 'aggressive'];
+let GFX = {};
+try { GFX = JSON.parse(localStorage.getItem('gs_gfx') || '{}') || {}; } catch (e) { /* private mode: defaults */ }
+const gfxSave = () => { try { localStorage.setItem('gs_gfx', JSON.stringify(GFX)); } catch (e) { /* ignore */ } };
+function autoDevice() {
+  if (isTouch) return Math.min(innerWidth, innerHeight) < 520 ? 'phone' : 'tablet';
+  return (navigator.hardwareConcurrency || 4) > 8 ? 'desktop' : 'laptop';
+}
+const deviceName = () => (GFX.device && GFX.device !== 'auto' && DEVICES[GFX.device]) ? GFX.device : autoDevice();
+const Q0 = QUALITY[params.get('q')] || DEVICES[deviceName()];
+let pixelIdx = PIXEL_STEPS.indexOf(Q0.px);
+let detailIdx = Q0.det;
+let qualityName = QUALITY[params.get('q')] ? params.get('q') : deviceName();
+let lodLevel = LOD_LEVELS[GFX.lod] !== undefined ? GFX.lod : (QUALITY[params.get('q')] ? 'normal' : Q0.lod);
+const AA_SAMPLES = params.has('aa') ? Math.max(0, parseInt(params.get('aa')) || 4) : Q0.aa;
+let bloomOn = !params.has('nobloom') && Q0.bloom;
 const SUN = new THREE.Vector3(0.6, 0.4, 0.55).normalize();
 
 // ======================================================================
@@ -394,11 +449,14 @@ function toggleOpts(force) {
   if (open) {
     document.exitPointerLock?.();
     const row = (id, label, inner) => `<div class="orow"><label for="${id}">${label}</label>${inner}</div>`;
-    el.innerHTML = `<div class="panel"><h2>AUDIO OPTIONS</h2>`
+    el.innerHTML = `<div class="panel"><h2>OPTIONS</h2>`
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
+      + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
+      + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
       + `<div class="onote">Music files are in the audio/ folder next to index.html. On iPad the music volume slider may have no effect (iOS); use on/off.</div>`
       + `<button id="o_close">CLOSE <small>[O / ESC]</small></button><button id="o_cred">CREDITS</button></div>`;
     el.style.display = 'flex';
@@ -406,6 +464,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_dev').onchange = e => setDevice(e.target.value);
+    $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
   } else { el.style.display = 'none'; if (!isTouch && state === 'play') canvas.requestPointerLock?.(); }
@@ -589,7 +649,7 @@ const resFor = (def, idx) => Math.min(RES_CAP, Math.round(DETAIL_STEPS[idx] * Ma
 //  Extra prim kinds in def.prims:  lod:n (any prim, only built at tier >= n);  win:{col,p} (lit windows on side faces);
 //  noDetail:true (no greebles/relief on that prim);  {t:'paint',box,col,side,mix,glow};  {t:'text',c,face,text,px,col}
 // ======================================================================
-const detailTier = (res, def) => (res < 120 || def.noDetail) ? 0 : detailIdx >= 7 ? 3 : detailIdx >= 6 ? 2 : detailIdx >= 5 ? 1 : 0;
+const detailTier = (res, def, idx = detailIdx) => (res < 120 || def.noDetail) ? 0 : idx >= 7 ? 3 : idx >= 6 ? 2 : idx >= 5 ? 1 : 0;
 const ihash = (a, b, c, s) => {
   let h = (Math.imul(a | 0, 374761393) + Math.imul(b | 0, 668265263) + Math.imul(c | 0, 1274126177) + Math.imul(s | 0, -2048144777)) | 0;
   h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16;
@@ -1006,8 +1066,8 @@ function surfaceDetail(def, tier, G) {
   return { xg, tn };
 }
 
-function voxelize(def, res) {
-  const tier = detailTier(res, def);
+function voxelize(def, res, idx = detailIdx) {
+  const tier = detailTier(res, def, idx);
   const key = def.id + ':' + res + (tier ? ':t' + tier : '');
   if (voxCache.has(key)) return voxCache.get(key);
   const vs = def.length / res;
@@ -1722,7 +1782,7 @@ SHIPS.darter = {
   ],
   engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
   mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
-  stores: { tick: 1, flare: 8 },
+  stores: { tick: 2, flare: 8 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-1.0, -0.15, 3.8], r: 0.8, hp: 7 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [1.0, -0.15, 3.8], r: 0.8, hp: 7 },
@@ -1758,7 +1818,7 @@ SHIPS.leaper = {
   ],
   engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
   mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
-  stores: { tick: 1, flare: 10 },
+  stores: { tick: 2, flare: 10 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.2, -0.25, 5.2], r: 1.1, hp: 10 },
@@ -1798,7 +1858,7 @@ SHIPS.spitter = {
     { w: 'spitcannon', pos: [0, 1.35, -8.8], comp: 'cannon', grp: 1 },
     { w: 'fang', pos: [1.6, -0.5, -8.0], comp: 'gunR', grp: 2 }, { w: 'fang', pos: [-1.6, -0.5, -8.0], comp: 'gunL', grp: 2 },
   ],
-  stores: { tick: 2, flare: 10 },
+  stores: { tick: 4, flare: 10 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.8, -0.3, 6.2], r: 1.4, hp: 14 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.8, -0.3, 6.2], r: 1.4, hp: 14 },
@@ -1841,7 +1901,7 @@ SHIPS.toad = {
     { w: 'fang', pos: [1.0, 0.1, -7.6], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-1.0, 0.1, -7.6], comp: 'gunL', grp: 1 },
     { w: 'tad', pos: [0, -2.2, -2.9], comp: 'rack', grp: 3, store: 'tad' },
   ],
-  stores: { tad: 2, flare: 16 },
+  stores: { tad: 3, flare: 16 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.3, 7.0], r: 1.6, hp: 18 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.3, 7.0], r: 1.6, hp: 18 },
@@ -1887,7 +1947,7 @@ SHIPS.reaver = {
     { w: 'fang', pos: [2.0, -0.5, -7.4], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-2.0, -0.5, -7.4], comp: 'gunL', grp: 1 },
     { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
   ],
-  stores: { tick: 4, flare: 12 },
+  stores: { tick: 6, flare: 12 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.0, -0.3, 7.0], r: 1.8, hp: 18 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.0, -0.3, 7.0], r: 1.8, hp: 18 },
@@ -1943,7 +2003,7 @@ SHIPS.gulper = {
     { w: 'sting', pos: [3.6, 5.0, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 5.0, -2], comp: 'tur2', side: 1 },
     { w: 'sting', pos: [3.4, 5.1, 14], comp: 'tur3', side: 1 }, { w: 'sting', pos: [-3.4, 5.1, 14], comp: 'tur4', side: 1 },
   ],
-  stores: { tad: 4, flare: 0 },
+  stores: { tad: 6, flare: 0 },
   comps: [
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
@@ -2040,6 +2100,14 @@ scaleShip(SHIPS.hivecarrier, 2500);   // hive carrier 2.5 km (owner scale ladder
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= 2.85;
 // FROGG pilots are neuro-slaved with very high G tolerance (owner 2026-10-21): their fighters turn and accelerate harder, so they re-engage fast
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter' && SHIPS[id].fac === 'frogg') { SHIPS[id].turn *= 1.5; SHIPS[id].accel *= 1.3; }
+
+// afterburner pool (seconds of burn): humans 20 s, refill ~25 s; FROGG fighters (neuro-slaved, bio-fuel) get 1.8x the pool, 2x the refill, and a stronger burn (owner 2026-10-22)
+for (const id in SHIPS) {
+  const d = SHIPS[id];
+  if (d.cls !== 'fighter') { d.abMax = 0; continue; }
+  const fr = d.fac === 'frogg';
+  d.abMax = fr ? 36 : 20; d.abRegen = fr ? 1.6 : 0.8; d.abSpd = fr ? 2.1 : 1.8; d.abAcc = fr ? 2.6 : 2.2;
+}
 // ======================================================================
 //  RENDERER / SCENE
 // ======================================================================
@@ -2095,7 +2163,7 @@ resize();
 //    the same SUN vector as the directional light
 //  ?skyres=N overrides the cubemap size (testing).
 // ======================================================================
-const SKY_RES = parseInt(params.get('skyres')) || (isTouch ? 512 : (Q0 ? Q0.sky : 1024));
+const SKY_RES = parseInt(params.get('skyres')) || Q0.sky;
 const OCT = isTouch ? 4 : 6;                // fbm octaves in the planet shaders
 const PLANET_DIR = new THREE.Vector3(-0.55, -0.22, -0.8).normalize();
 let PLANET_DIST = 3300;
@@ -2580,35 +2648,58 @@ function compFactor(s, role) {
   let t = 0; for (const c of cs) t += Math.max(0, c.hp) / c.max;
   return t / cs.length;
 }
-const speedMul = s => 0.3 + 0.7 * compFactor(s, 'engine');
-const turnMul = s => 0.45 + 0.55 * compFactor(s, 'engine');
+// ---- power allocation (FreeSpace 2 style ETS): 12 points over weapons / shields / engines, balanced = 4/4/4 = factor 1.0 ----
+// factor per system: 0 pts -> 0.2, 4 -> 1.0, 12 -> 1.96. Weapons: capacitor recharge. Shields: shield recharge. Engines: top speed, turn, afterburner pool and refill.
+const PW_KEYS = ['w', 's', 'e'], PW_NAMES = { w: 'WEAPONS', s: 'SHIELDS', e: 'ENGINES' };
+const pwF = (s, k) => { const l = s.pw ? s.pw[k] : 4; return l <= 4 ? 0.2 + 0.2 * l : 1 + 0.12 * (l - 4); };
+function powerShift(s, to) {                     // +1 point to `to`, taken from the larger of the other two (alternating on a tie)
+  const o = PW_KEYS.filter(k => k !== to).filter(k => s.pw[k] > 0);
+  if (s.pw[to] >= 12 || !o.length) return false;
+  o.sort((a, b) => s.pw[b] - s.pw[a] || ((s.pwFlip = !s.pwFlip) ? 1 : -1));
+  s.pw[o[0]]--; s.pw[to]++; return true;
+}
+const powerReset = s => { s.pw = { w: 4, s: 4, e: 4 }; };
+const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e'));
+const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e'));
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
+
+// ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
+function abTick(s, want, dt) {
+  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e');
+  if (!mx) { s.ab = false; return false; }
+  const on = want && !s.abLock && s.abFuel > 0;
+  if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
+  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * dt);
+  if (s.abLock && s.abFuel > mx * 0.25) s.abLock = false;
+  s.ab = on; return on;
+}
 
 const _fwd = new THREE.Vector3();
 const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    s.ab = !!cmd.ab;
-    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
-    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (cmd.ab ? 1.8 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
-    s.ab = !!cmd.ab;
     s.vel.addScaledVector(_fwd, thrust * a * dt);
-    const cap = s.def.maxSpeed * 2.2;
+    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
-    const a = s.def.accel * speedMul(s) * (cmd.ab ? 2.2 : 1);
+    const ab = abTick(s, !!cmd.ab, dt);
+    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
     s.vel.addScaledVector(_fwd, cmd.thrust * a * dt);
     if (cmd.brake) s.vel.multiplyScalar(Math.exp(-1.8 * dt));
-    const cap = s.def.maxSpeed * 2.2;
+    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };
@@ -2639,8 +2730,9 @@ function disposeVox(s) {
 }
 function buildVox(s) {
   disposeVox(s);
-  const D = voxelize(s.def, resFor(s.def, detailIdx));
-  const cap = s.def.cls === 'fighter' ? (detailIdx >= 6 ? 20000 : 5000) : (detailIdx >= 6 ? 60000 : 30000);
+  const di = Math.max(0, detailIdx - (s.lodDrop | 0));       // distance LOD lowers the detail step of far ships
+  const D = voxelize(s.def, resFor(s.def, di), di);
+  const cap = s.def.cls === 'fighter' ? (di >= 6 ? 20000 : 5000) : (di >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
   D.voxels.forEach((v, i) => (v.g ? glowV : bodyV).push(i));
   const body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));
@@ -2759,7 +2851,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -2869,6 +2961,25 @@ function benchSetup() {
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
 }
+
+// ---- distance LOD: ships whose apparent radius (rad) falls below the level's thresholds are rebuilt 1-3 detail steps lower (hysteresis 25%).
+// One rebuild per call so a swarm turning at once does not stall a frame; voxelize() caches every resolution it has built.
+let lodScan = 0;
+function lodTick(dt) {
+  const T = LOD_LEVELS[lodLevel];
+  lodScan -= dt; if (lodScan > 0) return;
+  lodScan = 0.25;
+  for (const s of ships) {
+    if (!s.alive || s.dying > 0 || !s.vox) continue;
+    let nd = 0;
+    if (T) {
+      const ang = s.def.radius / Math.max(1, s.group.position.distanceTo(camera.position));
+      for (let i = 0; i < T.length; i++) if (ang < T[i] * ((s.lodDrop | 0) > i ? 1.25 : 1)) nd = i + 1;
+      nd = Math.min(nd, detailIdx);
+    }
+    if (nd !== (s.lodDrop | 0)) { s.lodDrop = nd; buildVox(s); return; }
+  }
+}
 // ---- play log: counters + 1 Hz samples, so "why do I take no damage" is answerable from data ---------------
 // Key L downloads the JSON. A short summary is also kept in localStorage ('gs_plog').
 const PLOG = { t0: Date.now(), mission: '', cnt: {}, samples: [], events: [] };
@@ -2939,6 +3050,7 @@ function friendlyInLine(s, maxD = 700) {           // AI holds fire when a frien
 }
 const ARMOR_THRESH_CLS = { fighter: 0.25, corvette: 1, frigate: 1.5, capital: 2 };
 
+const FMX = 1.3;      // FROGG missile effectiveness vs the human equivalent (owner 2026-10-22): +30% warhead damage
 const WEAPONS = {
   // ---- human ----
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
@@ -2949,8 +3061,8 @@ const WEAPONS = {
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true },
   pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
   // ---- FROGG ----
-  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 2.8, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 2.4, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0 },       // continuous large laser: needs a big power pool (def.energyMax)
+  flaser: { kind: 'beam', name: 'FROGG PULSE LASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
+  lance: { kind: 'beam', name: 'FROGG LANCE LASER', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0 },       // continuous large laser: needs a big power pool (def.energyMax)
   fang: { kind: 'proj', name: 'FANG SPITTER', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
   spit: { kind: 'proj', name: 'ACID SPITTER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'ACID CANNON', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
@@ -2960,9 +3072,9 @@ const WEAPONS = {
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
+  tick: { kind: 'msl', name: 'TICK (IR)', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
   nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
-  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
+  tad: { kind: 'msl', name: 'TADPOLE TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
@@ -3872,6 +3984,8 @@ function aimNoise(s, dist) {          // slowly wandering aim offset: low-skill 
   if (time > ai.nT) { ai.nT = time + 0.4 + Math.random() * 0.3; ai.nV.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).normalize().multiplyScalar(skillV(s, 'noise')); }
   return _an.copy(ai.nV).multiplyScalar(dist);
 }
+// AI missile budget: one shot at a time per target (no dog-piling while a friendly missile is still guided at it), nothing inside gun range,
+// a long reload (14-24 s) and a shot only on a solid lock well inside range. Measured: tools/tests/msl_t.py
 function missileLogic(s, dt, wantIds) {
   const ai = s.ai;
   const ids = missileIds(s).filter(id => wantIds.includes(id) && s.stores[id] > 0);
@@ -3879,9 +3993,10 @@ function missileLogic(s, dt, wantIds) {
   s.sel = missileIds(s).indexOf(ids[0]);
   lockUpdate(s, dt * skillV(s, 'react'));          // AI pilots are slower to get a tone than a human
   const d = s.lock.d;
-  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && Math.random() < dt * 0.8) {
+  if (s.lock.state === 'locked' && ai.mslT <= 0 && s.lock.tgt === s.target && d < WEAPONS[ids[0]].range * 0.7 && d > 350 && Math.random() < dt * 0.8) {
+    if (missiles.some(m => !m.dead && m.team === s.team && m.target === s.target)) return;
     launchMissile(s, ids[0]);
-    ai.mslT = (WEAPONS[ids[0]].torp ? 6 : 12) + Math.random() * 8;
+    ai.mslT = (WEAPONS[ids[0]].torp ? 6 : 14) + Math.random() * 10;
   }
 }
 
@@ -3924,6 +4039,8 @@ function fighterAI(s, dt) {
     if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
+  // FROGG pilots burn hard: break-away runs and re-engagement from long range, while the pool lasts
+  if (s.def.fac === 'frogg' && s.abFuel > s.def.abMax * 0.3 && (ai.mode === 'break' || (ai.mode === 'attack' && dist > 900))) { ab = true; thr = 1; }
   if (ai.mode === 'evade') {                 // break perpendicular to the incoming missile and corkscrew
     const m = ai.inc;
     if (m) { _ad.copy(m.pos).sub(ep).normalize(); _ap.crossVectors(_ad, _up).normalize().multiplyScalar(ai.dir); aim.copy(ep).addScaledVector(_ap, 300).addScaledVector(_up, Math.sin(time * 3) * 120); }
@@ -4565,6 +4682,8 @@ addEventListener('keydown', e => {
     case 'Digit1': player.fireMask = 1; break;
     case 'Digit2': player.fireMask = 2; break;
     case 'Digit3': player.fireMask = 3; break;
+    case 'Digit4': case 'Digit5': case 'Digit6': powerKey(player, PW_KEYS[+e.code.slice(5) - 4]); break;
+    case 'Digit7': powerKey(player, null); break;
     case 'KeyB': if (composer) bloomOn = !bloomOn; break;
     case 'KeyP': setQuality(QORDER[(QORDER.indexOf(qualityName) + 1) % QORDER.length]); break;
     case 'BracketLeft': pixelIdx = Math.max(0, pixelIdx - 1); resize(); break;
@@ -4646,11 +4765,26 @@ if (isTouch) {
   addEventListener('pointerdown', () => { touchStarted = true; });
 }
 
+// power allocation: 4 weapons / 5 shields / 6 engines each move one point there from the largest other system, 7 = balance
+function powerKey(s, k) {
+  if (!s || !s.alive) return;
+  if (k === null) powerReset(s); else if (!powerShift(s, k)) { log(`${PW_NAMES[k]} AT LIMIT`, '#ff5a4a'); return; }
+  sfx('click'); log(`POWER  WPN ${s.pw.w}  SHD ${s.pw.s}  ENG ${s.pw.e}`, '#ffd24a');
+}
+{ // touch / mouse: tap a bar of the power widget; tap the title to balance
+  const ets = document.getElementById('ets');
+  ets.addEventListener('pointerdown', e => {
+    const r = e.target.closest('[data-pw]'); if (!r) return;
+    e.stopPropagation(); e.preventDefault();
+    powerKey(player, r.dataset.pw === '=' ? null : r.dataset.pw);
+  });
+}
+
 function changeDetail(d) {
   const n = clamp(detailIdx + d, 0, DETAIL_STEPS.length - 1);
   if (n === detailIdx) return;
   detailIdx = n;
-  for (const s of ships) if (s.alive) buildVox(s);
+  for (const s of ships) if (s.alive) { s.lodDrop = 0; buildVox(s); }
 }
 
 // graphics preset at run time (sky size and antialiasing need a reload with ?q=)
@@ -4661,6 +4795,24 @@ function setQuality(name) {
   changeDetail(Q.det - detailIdx);
   if (composer) bloomOn = Q.bloom;
   log(`GRAPHICS ${name.toUpperCase()}: voxels ${DETAIL_STEPS[detailIdx]}, pixels ${Q.px < 1 ? '2x supersampled' : Q.px + 'x'}` + ((Q.aa || Q.sky > 1024) ? ' (reload with ?q=' + name + ' for MSAA and sky size)' : ''), '#9adcff');
+}
+
+// device preset (options panel): graphics values + LOD level. Sky size and MSAA are fixed at load: saved, applied after a reload.
+function setDevice(name, reload) {
+  GFX.device = name; gfxSave();
+  const D = DEVICES[deviceName()];
+  qualityName = deviceName();
+  pixelIdx = PIXEL_STEPS.indexOf(D.px); resize();
+  if (composer) bloomOn = D.bloom;
+  setLod(D.lod, true);
+  changeDetail(D.det - detailIdx);
+  log(`DEVICE ${name === 'auto' ? 'AUTO (' + D.label + ')' : D.label}: voxels ${DETAIL_STEPS[detailIdx]}, LOD ${lodLevel.toUpperCase()}` + ((D.aa || D.sky > 1024) ? ' (reload for MSAA and sky size)' : ''), '#9adcff');
+}
+function setLod(level, keep) {
+  if (!(level in LOD_LEVELS)) return;
+  lodLevel = level; GFX.lod = level; gfxSave();
+  if (!keep) log(`LOD ${level.toUpperCase()}`, '#9adcff');
+  for (const s of ships) if (s.alive && (s.lodDrop | 0)) { s.lodDrop = 0; buildVox(s); }   // re-evaluated by lodTick
 }
 
 // phones: smaller HUD fonts and controls
@@ -4736,9 +4888,9 @@ function updateShieldsAndFx(s, dt) {
     const cap = s.def.shield[f] * sg;
     if (s.shield[f] > cap) s.shield[f] = cap;
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
-      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s));
+      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's'));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -4758,7 +4910,7 @@ function updateShieldsAndFx(s, dt) {
     const ok = c.hp > 0 && s.dying <= 0;
     f.mesh.visible = ok;
     if (!ok) continue;
-    const fl = clamp(sp / (s.def.maxSpeed * 0.9), 0.25, 2.2) * (s === player && keys.has('ShiftLeft') ? 1.5 : 1) * (compState(c) === 1 ? 0.6 + Math.random() * 0.6 : 1);
+    const fl = clamp(sp / (s.def.maxSpeed * 0.9), 0.25, 2.2) * (s.ab ? 1.5 : 1) * (compState(c) === 1 ? 0.6 + Math.random() * 0.6 : 1);
     const kr = f.r / 0.42, len = (1.0 + fl * 1.6) * clamp(f.r * 2.4, 0.7, 7);
     f.mesh.scale.set(kr, kr, len);
     f.mesh.position.z = f.z + len * 0.5 - 0.15;
@@ -4818,6 +4970,7 @@ function update(dt) {
   collideShips(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
+  lodTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
@@ -5008,7 +5161,7 @@ function updateRadarSide() {
   const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
   const cur = selectedMissile(p), ids = missileIds(p);
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
-  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div><span class="vb"><i style="height:${Math.round(en * 100)}%;background:${ec}"></i></span>`;
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
   const h = l + '|' + r;
   if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
@@ -5081,7 +5234,39 @@ function interceptPoint(sp, sv, tp, tv, v) {
 }
 
 
-const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3();
+const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3(), _vv = new THREE.Vector3();
+// Newtonian flight: transparent vector projections (the nose and the velocity no longer agree, so show where we are really going).
+// prograde (ring + three prongs) / retrograde (ring + X) of our velocity, a faint line from the nose to prograde with the drift angle,
+// and, with a target, the same pair for the velocity RELATIVE to it (cyan): prograde = where we drift relative to it, retrograde = burn toward it to match speed.
+function drawVectors(c, p, cx, cy) {
+  const f = _vv.set(0, 0, -1).applyQuaternion(p.group.quaternion).clone();
+  const mark = (v, col, label, retro) => {
+    const sp = v.length(); if (sp < 1.5) return;
+    const dir = v.clone().divideScalar(sp);
+    const far = p.group.position.clone().addScaledVector(dir, 3000);
+    const q = project(far), n = retro ? -1 : 1;
+    const drift = Math.round(f.angleTo(dir) * 57.3);
+    c.save(); c.globalAlpha = 0.55; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2;
+    if (q.front && q.x > 0 && q.x < ovW && q.y > 0 && q.y < ovH) {
+      if (!retro) { c.globalAlpha = 0.22; c.setLineDash([3, 6]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(q.x, q.y); c.stroke(); c.setLineDash([]); c.globalAlpha = 0.55; }
+      c.beginPath(); c.arc(q.x, q.y, 11, 0, 7);
+      if (retro) { c.moveTo(q.x - 8, q.y - 8); c.lineTo(q.x + 8, q.y + 8); c.moveTo(q.x + 8, q.y - 8); c.lineTo(q.x - 8, q.y + 8); }
+      else { c.moveTo(q.x - 11, q.y); c.lineTo(q.x - 20, q.y); c.moveTo(q.x + 11, q.y); c.lineTo(q.x + 20, q.y); c.moveTo(q.x, q.y - 11); c.lineTo(q.x, q.y - 20); }
+      c.stroke();
+      c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left';
+      c.fillText(label + ' ' + sp.toFixed(0) + (retro ? '' : '  ' + drift + '°'), q.x + 16, q.y + 22);
+    } else { c.globalAlpha = 0.7; edgeArrow(c, q.x, q.y, q.front, col, label + ' ' + sp.toFixed(0) + ' ' + drift + '°'); }
+    c.restore();
+  };
+  mark(p.vel, '#8fffd0', 'VEL', false);
+  mark(_rel.copy(p.vel).negate(), '#8fffd0', 'RETRO', true);
+  if (target && target.alive) {
+    const rv = p.vel.clone().sub(target.vel);
+    mark(rv, '#6ae0ff', 'REL', false);                       // where we are drifting relative to the target
+    mark(rv.clone().negate(), '#6ae0ff', 'MATCH', true);     // burn toward this to cancel the relative velocity
+  }
+}
+
 function drawOverlay(alive) {
   octx.setTransform(ovDpr, 0, 0, ovDpr, 0, 0);
   octx.clearRect(0, 0, ovW, ovH);
@@ -5094,6 +5279,7 @@ function drawOverlay(alive) {
   c.moveTo(cx - 24, cy); c.lineTo(cx - 17, cy); c.moveTo(cx + 17, cy); c.lineTo(cx + 24, cy);
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
+  if (flightMode === 'newton') drawVectors(c, p, cx, cy);
   // seeker cone of the selected missile
   const wid = selectedMissile(p), L = p.lock;
   if (wid) {
@@ -5268,8 +5454,8 @@ function updateHud() {
   const S = game.mstate;
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
-    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
-    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
+    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
@@ -5280,7 +5466,14 @@ function updateHud() {
   msg.style.display = showMsg ? 'flex' : 'none';
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
-  if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+  if (isTouch && alive) {
+    document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+    document.querySelector('#ten>i').style.height = clamp(p.energy / (p.energyMax || 100), 0, 1) * 100 + '%';
+    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    const bt = `BOOST<br>${ab}`; if (bb._t !== bt) { bb.innerHTML = bt; bb._t = bt; }
+    bb.style.opacity = p.abLock ? .45 : 1;
+  }
+  updateEts(p, alive);
   if (!isTouch) {                                   // desktop throttle gauge (right of the radar)
     const sp = alive ? p.vel.length() : 0, mx = p.def.maxSpeed;
     const nw = flightMode === 'newton';
@@ -5288,6 +5481,11 @@ function updateHud() {
     $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
     $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
     $id('tgab').classList.toggle('on', !!(alive && p.ab));
+    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 'AB';
+    const ef = alive ? clamp(p.energy / (p.energyMax || 100), 0, 1) : 0;
+    $id('te1').textContent = Math.round(ef * 100); $id('tef').style.height = ef * 100 + '%';
+    $id('tef').style.background = ef < 0.25 ? 'rgba(255,90,74,.7)' : ef < 0.5 ? 'rgba(255,210,74,.65)' : 'rgba(143,255,208,.55)';
+    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
     $id('tgv').textContent = Math.round(sp);
   }
 
@@ -5310,6 +5508,16 @@ function updateHud() {
     else if (p.shield.fore + p.shield.aft < 4 && time - p.lastHit < 3) w = 'SHIELDS DOWN';
   }
   if (w !== warnEl.textContent) warnEl.textContent = w;
+}
+
+// ---- power allocation widget -----------------------------------------------------------------------------
+const etsEl = document.getElementById('ets');
+let lastEts = '';
+function updateEts(p, alive) {
+  if (!alive) { if (lastEts) etsEl.innerHTML = lastEts = ''; return; }
+  const row = k => `<div class="er" data-pw="${k}"><b>${{ w: 'WPN', s: 'SHD', e: 'ENG' }[k]}</b><i>${Array.from({ length: 12 }, (_, n) => `<s class="${n < p.pw[k] ? 'on' : ''}"></s>`).join('')}</i><span>${p.pw[k]}</span></div>`;
+  const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
+  if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
 }
 // ======================================================================
 //  MAIN LOOP
@@ -5334,7 +5542,7 @@ requestAnimationFrame(frame);
 globalThis.__game = {
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
-  launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, comm, game, warnState, CREW,
+  launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },

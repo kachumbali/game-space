@@ -76,11 +76,14 @@ function toggleOpts(force) {
   if (open) {
     document.exitPointerLock?.();
     const row = (id, label, inner) => `<div class="orow"><label for="${id}">${label}</label>${inner}</div>`;
-    el.innerHTML = `<div class="panel"><h2>AUDIO OPTIONS</h2>`
+    el.innerHTML = `<div class="panel"><h2>OPTIONS</h2>`
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
+      + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
+      + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
       + `<div class="onote">Music files are in the audio/ folder next to index.html. On iPad the music volume slider may have no effect (iOS); use on/off.</div>`
       + `<button id="o_close">CLOSE <small>[O / ESC]</small></button><button id="o_cred">CREDITS</button></div>`;
     el.style.display = 'flex';
@@ -88,6 +91,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_dev').onchange = e => setDevice(e.target.value);
+    $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
   } else { el.style.display = 'none'; if (!isTouch && state === 'play') canvas.requestPointerLock?.(); }

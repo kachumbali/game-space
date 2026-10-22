@@ -1,5 +1,6 @@
 # Next round plan (after human test of current build)
 
+Status 2026-10-22: afterburner pool (A5), power allocation (FS2 ETS), distance LOD with device presets, FROGG afterburner/missile/laser buffs, AI missile budget, Newtonian vector markers done; balance even point now ~7-8 FROGGs (docs/BALANCE_TESTS.md). Open: wingman orders, player system damage + support ship (docs/FREESPACE2_COMPARISON.md).
 Status 2026-10-21: A1-A4 done (vacuum decoys/missiles, plasma bolter rename, faster missiles, piercing railgun, fleeing ships break contact). Multi-area missions + transit cutscenes done (mission 2). Sky/planet rework done (src/41_sky.js). Phone HUD compaction done. Next candidates: see docs/TIE_FIGHTER_COMPARISON.md (power allocation first). Remaining: resolution/LOD, afterburner fuel (A5), fighter subsystems.
 
 ## A. Cheap realism fixes (from docs/REALISM.md)

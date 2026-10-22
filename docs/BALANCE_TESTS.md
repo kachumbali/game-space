@@ -59,3 +59,14 @@ Sample sizes are 2-3 runs per cell: treat as direction, not a measurement.
 - Isolated check (`laser_t.py`): a stationary target takes no damage for about the first 0.35 s (sim) and then ramps to a plateau; the same target jinking 14 m sideways takes zero laser damage.
 - **Bug found and fixed: all turret aiming was rotated 180 degrees** (`Matrix4.lookAt` was given the negated direction in `updateTurrets`). PD turrets, FROGG sting turrets and the new laser turrets all pointed away from their targets and almost never fired (PD test: 2 bolts in 4 s before, 33 after). Every earlier result that included a Halberd, Exeter or Gulper (missions 1-3, `scen.py`, any capital-ship scenario) was measured without working point defence. Fighter-only duels (`duel2.py`) are not affected. Missions have not been replayed for feel since the fix; expect FROGG missiles and fighters to be hit harder when they close on a Halberd.
 - Corvette vs FROGG (headless, stationary Halberd, 8 FROGGs Toad/Leaper mix): all 8 killed in 36 s, Halberd hull 160/420. Exeter alone killed 8 in 24 s without hull damage. Single runs, no variance data.
+
+
+## 2026-10-22: after FROGG buffs (lasers +25 %, missiles +30 % damage and more stock, afterburner pool 36 s / x2.1) and the AI missile budget
+`tools/tests/duel2.py N 3 240`, 4 Kestrels vs N FROGGs, 3 runs per cell (direction, not measurement; software renderer):
+| N | human wins | note |
+|---|---|---|
+| 6 | 2/3 | |
+| 8 | 1/3 | |
+| 10 | 0/3 | was 3/3 before the buffs |
+| 12 | 0/3 | was 1/3 |
+The even point moved from about 11-12 to about 7-8 FROGGs (target was 12:4). Not retuned: the owner asked for the buffs; the combined size is a decision for the owner. `msl_t.py 8 3 180`: before, humans launched 7-15 of 28 missiles and FROGGs 7-9 of 9 (stock exhausted); after, humans 7-16, FROGGs 13-14 of 18 (the budget rule is not what limits them; stock and reload are).

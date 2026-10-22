@@ -110,7 +110,7 @@ function updateRadarSide() {
   const en = clamp(p.energy / 100, 0, 1), ec = en < 0.25 ? '#ff5a4a' : en < 0.5 ? '#ffd24a' : '#7dffb0';
   const cur = selectedMissile(p), ids = missileIds(p);
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
-  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div><span class="vb"><i style="height:${Math.round(en * 100)}%;background:${ec}"></i></span>`;
+  const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip">PLS ${Math.round(p.energy)}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
   const h = l + '|' + r;
   if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
@@ -183,7 +183,39 @@ function interceptPoint(sp, sv, tp, tv, v) {
 }
 
 
-const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3();
+const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3(), _vv = new THREE.Vector3();
+// Newtonian flight: transparent vector projections (the nose and the velocity no longer agree, so show where we are really going).
+// prograde (ring + three prongs) / retrograde (ring + X) of our velocity, a faint line from the nose to prograde with the drift angle,
+// and, with a target, the same pair for the velocity RELATIVE to it (cyan): prograde = where we drift relative to it, retrograde = burn toward it to match speed.
+function drawVectors(c, p, cx, cy) {
+  const f = _vv.set(0, 0, -1).applyQuaternion(p.group.quaternion).clone();
+  const mark = (v, col, label, retro) => {
+    const sp = v.length(); if (sp < 1.5) return;
+    const dir = v.clone().divideScalar(sp);
+    const far = p.group.position.clone().addScaledVector(dir, 3000);
+    const q = project(far), n = retro ? -1 : 1;
+    const drift = Math.round(f.angleTo(dir) * 57.3);
+    c.save(); c.globalAlpha = 0.55; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2;
+    if (q.front && q.x > 0 && q.x < ovW && q.y > 0 && q.y < ovH) {
+      if (!retro) { c.globalAlpha = 0.22; c.setLineDash([3, 6]); c.beginPath(); c.moveTo(cx, cy); c.lineTo(q.x, q.y); c.stroke(); c.setLineDash([]); c.globalAlpha = 0.55; }
+      c.beginPath(); c.arc(q.x, q.y, 11, 0, 7);
+      if (retro) { c.moveTo(q.x - 8, q.y - 8); c.lineTo(q.x + 8, q.y + 8); c.moveTo(q.x + 8, q.y - 8); c.lineTo(q.x - 8, q.y + 8); }
+      else { c.moveTo(q.x - 11, q.y); c.lineTo(q.x - 20, q.y); c.moveTo(q.x + 11, q.y); c.lineTo(q.x + 20, q.y); c.moveTo(q.x, q.y - 11); c.lineTo(q.x, q.y - 20); }
+      c.stroke();
+      c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left';
+      c.fillText(label + ' ' + sp.toFixed(0) + (retro ? '' : '  ' + drift + '°'), q.x + 16, q.y + 22);
+    } else { c.globalAlpha = 0.7; edgeArrow(c, q.x, q.y, q.front, col, label + ' ' + sp.toFixed(0) + ' ' + drift + '°'); }
+    c.restore();
+  };
+  mark(p.vel, '#8fffd0', 'VEL', false);
+  mark(_rel.copy(p.vel).negate(), '#8fffd0', 'RETRO', true);
+  if (target && target.alive) {
+    const rv = p.vel.clone().sub(target.vel);
+    mark(rv, '#6ae0ff', 'REL', false);                       // where we are drifting relative to the target
+    mark(rv.clone().negate(), '#6ae0ff', 'MATCH', true);     // burn toward this to cancel the relative velocity
+  }
+}
+
 function drawOverlay(alive) {
   octx.setTransform(ovDpr, 0, 0, ovDpr, 0, 0);
   octx.clearRect(0, 0, ovW, ovH);
@@ -196,6 +228,7 @@ function drawOverlay(alive) {
   c.moveTo(cx - 24, cy); c.lineTo(cx - 17, cy); c.moveTo(cx + 17, cy); c.lineTo(cx + 24, cy);
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
+  if (flightMode === 'newton') drawVectors(c, p, cx, cy);
   // seeker cone of the selected missile
   const wid = selectedMissile(p), L = p.lock;
   if (wid) {
@@ -370,8 +403,8 @@ function updateHud() {
   const S = game.mstate;
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
-    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}\n` +
-    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
+    `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
@@ -382,7 +415,14 @@ function updateHud() {
   msg.style.display = showMsg ? 'flex' : 'none';
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
-  if (isTouch && alive) document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+  if (isTouch && alive) {
+    document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
+    document.querySelector('#ten>i').style.height = clamp(p.energy / (p.energyMax || 100), 0, 1) * 100 + '%';
+    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    const bt = `BOOST<br>${ab}`; if (bb._t !== bt) { bb.innerHTML = bt; bb._t = bt; }
+    bb.style.opacity = p.abLock ? .45 : 1;
+  }
+  updateEts(p, alive);
   if (!isTouch) {                                   // desktop throttle gauge (right of the radar)
     const sp = alive ? p.vel.length() : 0, mx = p.def.maxSpeed;
     const nw = flightMode === 'newton';
@@ -390,6 +430,11 @@ function updateHud() {
     $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
     $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
     $id('tgab').classList.toggle('on', !!(alive && p.ab));
+    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 'AB';
+    const ef = alive ? clamp(p.energy / (p.energyMax || 100), 0, 1) : 0;
+    $id('te1').textContent = Math.round(ef * 100); $id('tef').style.height = ef * 100 + '%';
+    $id('tef').style.background = ef < 0.25 ? 'rgba(255,90,74,.7)' : ef < 0.5 ? 'rgba(255,210,74,.65)' : 'rgba(143,255,208,.55)';
+    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
     $id('tgv').textContent = Math.round(sp);
   }
 
@@ -412,4 +457,14 @@ function updateHud() {
     else if (p.shield.fore + p.shield.aft < 4 && time - p.lastHit < 3) w = 'SHIELDS DOWN';
   }
   if (w !== warnEl.textContent) warnEl.textContent = w;
+}
+
+// ---- power allocation widget -----------------------------------------------------------------------------
+const etsEl = document.getElementById('ets');
+let lastEts = '';
+function updateEts(p, alive) {
+  if (!alive) { if (lastEts) etsEl.innerHTML = lastEts = ''; return; }
+  const row = k => `<div class="er" data-pw="${k}"><b>${{ w: 'WPN', s: 'SHD', e: 'ENG' }[k]}</b><i>${Array.from({ length: 12 }, (_, n) => `<s class="${n < p.pw[k] ? 'on' : ''}"></s>`).join('')}</i><span>${p.pw[k]}</span></div>`;
+  const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
+  if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
 }

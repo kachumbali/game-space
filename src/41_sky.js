@@ -8,7 +8,7 @@
 //    the same SUN vector as the directional light
 //  ?skyres=N overrides the cubemap size (testing).
 // ======================================================================
-const SKY_RES = parseInt(params.get('skyres')) || (isTouch ? 512 : (Q0 ? Q0.sky : 1024));
+const SKY_RES = parseInt(params.get('skyres')) || Q0.sky;
 const OCT = isTouch ? 4 : 6;                // fbm octaves in the planet shaders
 const PLANET_DIR = new THREE.Vector3(-0.55, -0.22, -0.8).normalize();
 let PLANET_DIST = 3300;

@@ -40,9 +40,9 @@ function updateShieldsAndFx(s, dt) {
     const cap = s.def.shield[f] * sg;
     if (s.shield[f] > cap) s.shield[f] = cap;
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
-      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s));
+      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's'));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -62,7 +62,7 @@ function updateShieldsAndFx(s, dt) {
     const ok = c.hp > 0 && s.dying <= 0;
     f.mesh.visible = ok;
     if (!ok) continue;
-    const fl = clamp(sp / (s.def.maxSpeed * 0.9), 0.25, 2.2) * (s === player && keys.has('ShiftLeft') ? 1.5 : 1) * (compState(c) === 1 ? 0.6 + Math.random() * 0.6 : 1);
+    const fl = clamp(sp / (s.def.maxSpeed * 0.9), 0.25, 2.2) * (s.ab ? 1.5 : 1) * (compState(c) === 1 ? 0.6 + Math.random() * 0.6 : 1);
     const kr = f.r / 0.42, len = (1.0 + fl * 1.6) * clamp(f.r * 2.4, 0.7, 7);
     f.mesh.scale.set(kr, kr, len);
     f.mesh.position.z = f.z + len * 0.5 - 0.15;
@@ -122,6 +122,7 @@ function update(dt) {
   collideShips(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
+  lodTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
