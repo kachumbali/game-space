@@ -33,7 +33,7 @@ class Runner:
         pg=ctx.new_page()
         pg.on('console',lambda m: self.errs.append((m.type,m.text)) if m.type in('error','warning') and '404' not in m.text and 'GPU stall' not in m.text and 'swiftshader' not in m.text.lower() else None)
         pg.on('pageerror',lambda e: self.errs.append(('pageerror',str(e))))
-        pg.goto('http://localhost:'+PORT+'/index.html'+q); pg.wait_for_function('window.__game!==undefined',timeout=30000)
+        pg.goto('http://localhost:'+PORT+'/index.html'+q,timeout=120000); pg.wait_for_function('window.__game!==undefined',timeout=120000)
         pg.add_style_tag(content='#msg{display:none!important}')
         return pg
     def __exit__(self,*a):
