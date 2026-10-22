@@ -25,7 +25,7 @@ SC['engage']=('?free&drones=3&dlimit=3','''()=>{'''+PRE+'''
  step(600,()=>{E.vel.set(0,0,0);E.group.position.set(0,0,-900);});
  r.orders=g.dronesOf(P).map(d=>d.dOrder); r.targetDead=!E.alive; r.droneKills=P.droneKills; r.personal=P.kills;
  const F=g.spawnShip('darter',1,V(300,0,-700),V(0,0,0),{}); F.ai.role='hold'; F.shield.fore=F.shield.aft=0; F.structure=3;
- r.nAll=g.droneOrder(P,'all'); step(100,()=>{F.vel.set(0,0,0);F.group.position.set(300,0,-700);}); r.allTgt=g.dronesOf(P).filter(d=>d.target&&d.target.team===1).length; step(500,()=>{F.vel.set(0,0,0);F.group.position.set(300,0,-700);});
+ r.nAll=g.droneOrder(P,'all'); step(5,()=>{F.vel.set(0,0,0);F.group.position.set(300,0,-700);}); r.allTgt=g.dronesOf(P).filter(d=>d.target&&d.target.team===1).length; step(595,()=>{F.vel.set(0,0,0);F.group.position.set(300,0,-700);});
  r.allKills=P.droneKills; r.live=live(P); r.enemiesLeft=g.ships.filter(s=>s.team===1&&s.alive).length;
  return r}''')
 SC['protect_return']=('?free&drones=3&dlimit=3','''()=>{'''+PRE+'''
@@ -91,7 +91,7 @@ SC['ctrl_death']=('?free','''()=>{'''+PRE+'''
  return r}''')
 CHK={
  'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==6 and r['corvLaunch']==6 and r['exStock']==48,
- 'engage':lambda r:r['n']==3 and r['targetDead'] and r['droneKills']>=1 and r['personal']==0 and r['nAll']>0 and r['allTgt']>=1,
+ 'engage':lambda r:r['n']==3 and r['targetDead'] and r['droneKills']>=1 and r['personal']==0 and r['nAll']>0 and r['allTgt']>=1 and r['allKills']>=2,
  'protect_return':lambda r:r['retDist']<400 and r['protDist']<400 and r['attackerDead'],
  'scout':lambda r:r['detected'] and r['contacts']>=1 and max(r['fwd'])>1400,
  'ram_corvette':lambda r:r['rams']>=1 and r['structureLoss']>20 and len(r['compLoss'])>=1,

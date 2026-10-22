@@ -1,9 +1,10 @@
 # Headless tests (Playwright + Chromium, software renderer)
 Run from this folder: `cd tools/tests && python3 suite1.py`. Needs `pip install playwright` (Chromium already installed, or set `GS_CHROMIUM`) and `npm` (first run installs three@0.170.0 into `GS_TEST_DIR`, default `/tmp/gs_test`).
-Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run pages one at a time; several in one run time out.
+Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run pages one at a time; several in one run time out. To run beside another test run set `GS_PORT` and `GS_TEST_DIR` (default 8765, /tmp/gs_test; symlink node_modules into the new dir).
 
 | Script | What it checks |
 |---|---|
+| `drone_t.py` | drones: launch/limits, each order, ram on a Halberd, PD vs drones, controller death (8 scenarios, one page each) |
 | `suite1.py` | 10 URL variants load, no console errors |
 | `m2full.py` | mission 2 flow through all stages |
 | `bot2.py` | autopilot bot flight, no errors (note: its mission-2 run stays in the cinematic at t=3; not investigated) |
