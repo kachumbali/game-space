@@ -9,7 +9,8 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Everything shares one module scope: functions hoist, but top-level `const/let` are in the TDZ until their
   part runs. Part N must not use a later part's `let/const` at load time (a past bug: `FS` declared in 90_hud
   but used by 80_input; fix = declare in `10_config.js`). Symptom: page never sets `window.__game`.
-- Source map: 00_head.html (shell/CSS) · 10_config · 12_audio · 20_voxel · 30/31_ships · 32_scale · 40_scene ·
+- Source map: 00_head.html (shell/CSS) · 10_config · 12_audio · 13_music (mood/crossfade, options panel) · 14_samples (CC0
+  sample layer) · 15_credits · 20_voxel · 30/31_ships · 32_scale · 40_scene ·
   41_sky · 45_particles · 50_state · 55_ships · 60_weapons · 65_combat · 70_ai · 75_mission · 77_cine ·
   80_input · 85_update · 90_hud · 95_main · 99_tail.html.
 

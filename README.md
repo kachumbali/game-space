@@ -61,6 +61,10 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
 - **Damage**: fore/aft shields → armour type (ablative/hard/composite, see docs/ARMOR.md) → structure, typed damage (kinetic/energy/explosive), components
   (engines, guns, shield, radar, power), voxel chipping and scorching. Corvettes die in stages.
 - **AI roles**: fighter, gunship, bomber, corvette/capital.
+- **Music** (`src/13_music.js`): mp3 tracks in `audio/`, switched by mood with a ~1.6 s crossfade: menu and briefing `airy`,
+  flight `sector`, combat `combat-dogfight` (low bed), heavy fights `combat-bombast` (6+ hostiles near), victory `victory`,
+  transit cutscenes `transmission`. Starts on the first key press/tap (browser autoplay rule); on/off and volume in OPTIONS (O),
+  `?mute` silences everything. On iPad the music volume slider may not work (iOS ignores element volume).
 
 ## Ships
 Human: Kestrel (fighter), Halberd (corvette), Exeter (frigate, stock 48 drones), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (acid gunship), Toad
@@ -68,9 +72,8 @@ Human: Kestrel (fighter), Halberd (corvette), Exeter (frigate, stock 48 drones),
 number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout
-`00_head.html` shell/CSS · `10_config` · `12_audio` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
-`55_ships` · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `76_menu` (main menu, skirmish) · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
-`55_ships` · `56_drones` (drone controller model, orders, ram) · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `77_cine` (transit cutscenes) · `80_input` · `85_update` · `90_hud` · `95_main`.
+`00_head.html` shell/CSS · `10_config` · `12_audio` · `13_music` (music moods, options panel) · `14_samples` (CC0 sample layer) · `15_credits` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
+`55_ships` · `56_drones` (drone controller model, orders, ram) · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `76_menu` (main menu, skirmish) · `77_cine` (transit cutscenes) · `78_coms` (comms menu) · `79_bullfrog` · `80_input` · `85_update` · `90_hud` · `95_main`.
 
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
