@@ -61,3 +61,15 @@ Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells wit
 **Missiles:** `tick` SK-1 IR MISSILE, `tad` ST-2 TORPEDO (stats unchanged).
 
 **Human:** the PL-4 PLASMA BOLTER is gone; the Kestrel's secondary (grp 2) is the new `he` MK-30 HE CANNON - kin 7 per shell plus splash: on impact the bolt calls `blastAt` (8 m radius, distance falloff, `exp` damage to everything but the direct target, which already took the full hit). Ammo 240 per mount like the cannon; the HUD reads GUN + HE. Balance re-measured in `docs/BALANCE_TESTS.md` (HE shells vs FROGG fighters; Gulper rods vs humans).
+
+## Magazine rule and fleet tenders (owner decision 2026-10-22)
+
+"Every kinetic weapon carries ammo; the magazine scales with the weapon, the XL's is 100 slugs; fleet tender ships resupply."
+
+- **Mount weapons** draw from `s.ammo[wid]` pools (`ammoMax` = per-mount sum, cached at makeShip): RG-90 rail 100 rds/mount, GA-9 rotary 900, MK-20 cannon 600, MK-30 HE 500, DR-2 300, R-9 autocannon 400, R-12 penetrator 60.
+- **Turret weapons** get per-turret drums (`T.ammo`, from the weapon's `ammo`): PD-30 1500 (Phalanx-style, ~110 s), R-4 800, R-5 1000, MD-55 250. A dry turret goes dark like a dead one but keeps tracking; only a tender restores it.
+- **XL mains**: the MK-90 mass driver carries `mag: 100` slugs (`sp.mag`, decremented per shot, charge gates require a slug); the GX-1 charged lance is an energy weapon - its "ammo" is the reactor budget.
+- **Energy weapons** (lasers, masers) have no magazine: the reactor and the power budget are their supply.
+- **New weapon**: `rotary` GA-9 ROTARY CANNON (A-10-style, Halberd grp 2, ventral nose): 25 rps, 2.8 kin + 15% pierce per round, 900-rd magazine = 36 s of fire - the magazine IS the weapon. The AI fires it only inside 1300 m (its reach); capitalAI now fires both mount groups up close and group 1 at range - this also woke the Gulper's grp-2 maser lances, which had never fired under AI.
+- **TENDER** (new ship, unarmed, 200 m): rearm service via `tenderTick` (55_ships.js) - friendly ships within `serviceR` 600 m regain gun ammo at 40 rds/s, a missile or flare every 2 s, an XL slug every 3 s. Binding rule kept: **rearm is not repair** - no structure, component or shield restoration. Visible cargo: container rows and service booms; 24-fighter / 4-corvette dock capacity.
+- Test: `tools/tests/magazine_t.py` (11 checks).

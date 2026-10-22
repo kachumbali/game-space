@@ -120,6 +120,7 @@ function update(dt) {
     updateShieldsAndFx(s, dt);
   }
   collideShips(dt);
+  tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
   lodTick(dt); comsTick(dt);

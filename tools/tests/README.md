@@ -11,6 +11,7 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | `spine_sim.py [START_DIST] [LIMIT_S]` | Bullfrog-vs-Exeter 1v1 diagnostic (docs/BULLFROG.md 4.4a): spine charge/fire/fizzle timeline with shield/structure around each hit; Tadpoles and hangar fighters disabled (default 6000 m, 900 sim-s) |
 | `mdxl_t.py` | Exeter MK-90 mass driver (XL): capitalAI-driven cycle (delay 15 s, charge 5 s, lock 3.5 s, cd 30 s) and ~540 kinetic pierce per hit vs a disarmed Bullfrog dummy |
 | `power_t.py` | AI power management (all ships): under fire -> SHIELDS, distant target -> ENGINES, pressure gone -> 4/4/4; shield regen at pw.s 8 is ~1.48x the balanced rate |
+| `magazine_t.py` | Magazines (owner rule: every kinetic weapon carries ammo; XL = 100 slugs): mount pools drain, dry turret drums go dark, dry XL will not charge, GA-9 rotary fires and runs dry, Gulper grp-2 lances fire under AI, tender rearms ammo/stores/slugs but repairs nothing |
 | `suite1.py` | 10 URL variants load, no console errors |
 | `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `music_t.py` | music: autoplay start on first input, mood per game state (patrol/combat/heavy in flight, menu on briefings, story in transits, win), correct track files, `?mute`, all audio files served |

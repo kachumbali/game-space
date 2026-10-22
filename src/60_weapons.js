@@ -38,23 +38,24 @@ const WEAPONS = {
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
   he: { kind: 'proj', name: 'MK-30 HE CANNON', cd: 0.22, v: 1000, dmg: 9, dt: 'kin', life: 2.0, spread: 0.0015, ammo: 500, color: 0xffa860, len: 7, sz: 0.22, sfx: 'cannon', blast: 8 },    // high-explosive shells: direct hit + splash (blastAt) within 8 m; replaced the PL-4 plasma bolter in the realism pass 2026-10-22 (9 dmg/500 rds to hold the ~10 even point: kin hits shields at 0.7x vs the old en 1.25x, and the plasma had no magazine)
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
-  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
-  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true },    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
+  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100 },   // magazine rule 2026-10-22: every kinetic weapon carries ammo
+  rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
+  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250 },    // 250-rd magazine ~9 min of fire    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
   // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
-  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER' },
+  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
   // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
   // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
+  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500 },    // Phalanx-style drum: ~110 s of continuous fire, then dry
   // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
   flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
   lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
-  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang', ammo: 400 },   // ~64 s of fire
   spit: { kind: 'proj', name: 'M-2 MASER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'M-6 HEAVY MASER', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
-  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true },    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
-  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true },
+  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true, ammo: 60 },    // heavy rods: small magazine, big weapon (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
+  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true, ammo: 800 },
   // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
@@ -99,7 +100,8 @@ function initArmament(s) {
   s.mounts = (def.mounts || []).map(m => ({ ...m, cool: Math.random() * 0.1 }));
   s.stores = { ...(def.stores || {}) };
   s.ammo = {};
-  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; }
+  s.ammoMax = {};
+  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) { s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; s.ammoMax[m.w] = (s.ammoMax[m.w] || 0) + w.ammo; } }
   s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = 0;
   s.bfocus = { tgt: null, t: 0, last: -9 };
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
@@ -493,7 +495,7 @@ function makeTurret(s, t) {
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], ammo: w.ammo || Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
@@ -571,8 +573,10 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0) {
       T.cool = T.w.cd;
+      T.ammo--;
+      if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks
       const mp = turretMuzzle(T, new THREE.Vector3());
       T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);

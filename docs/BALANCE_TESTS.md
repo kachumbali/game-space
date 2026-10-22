@@ -165,3 +165,12 @@ vs mixed FROGGs skill 3, 3 runs): arcade 8 -> 3/3, 10 -> 3/3, 12 -> 1/3. The eve
 closing) restored what the HE swap had cost the Kestrels, roughly cancelling the shift recorded above.
 Both changes stay in; the two effects are recorded separately so either can be re-tuned on its own.
 Test: `tools/tests/power_t.py` (4/4 pass: fire -> SHIELDS, far -> ENGINES, calm -> 4/4/4, regen 1.48x).
+
+## Magazine rule re-measure (2026-10-22, after ammo on all kinetic weapons)
+
+Every kinetic weapon now carries a magazine (RG-90 100/mount, PD-30 1500/turret, R-9 400/mount, R-12 60/mount;
+Halberd gains the GA-9 rotary, 900 rds; the Exeter's XL gets 100 slugs). Same duel setup: arcade 8 -> 2/3,
+10 -> 3/3 - the even point stays about 10. The 300-s stalemates (e.g. (2,1,300)) are both sides dry: the
+FROGG gun pools last ~64 s of continuous fire, the Kestrels' ~51 s cannon / ~110 s HE, and after that the
+fights are decided by missiles and masers. capitalAI now fires both mount groups up close, which woke the
+Gulper's grp-2 maser lances (they had never fired under AI before). Test: `tools/tests/magazine_t.py`.

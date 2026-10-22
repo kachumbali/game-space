@@ -9,7 +9,7 @@ Object.assign(WEAPONS, {
   spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
   lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
   acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true },
+  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000 },   // PD drum (magazine rule 2026-10-22)
 });
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
@@ -28,7 +28,7 @@ const spineW = s => WEAPONS[spineMountOf(s).w];
 
 // ---------------------------------------------------------------- spine
 function spineInit(s) {
-  return (s.spine = { st: 'cool', t: 0, cd: spineW(s).delay ?? BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: spineW(s).charge, startedAt: -99 });
+  return (s.spine = { st: 'cool', t: 0, cd: spineW(s).delay ?? BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: spineW(s).charge, mag: spineW(s).mag ?? Infinity, startedAt: -99 });
 }
 function spineMuzzle(s, out) { const m = spineMountOf(s); s.group.updateMatrixWorld(true); return s.group.localToWorld(out.set(m.pos[0], m.pos[1], m.pos[2])); }
 // friendly (any class, own fighters included) on the nose line within range: the ray is `bw` m wide, add its width and the other ship's radius
@@ -114,6 +114,7 @@ function spineFire(s) {
     if (best === player) shake = 1;
   }
   sp.shots.push(rec); bfLog.push({ ev: 'spine', by: s.callsign || 'BF', ...rec });
+  sp.mag--;
   return rec;
 }
 // per-frame spine machine; lancerAI supplies s.spine.tgt / want. Returns an aim point while charging (the ship keeps turning onto it until the freeze)
@@ -280,8 +281,8 @@ function lancerAI(s, dt) {
     else if (ai.mode === 'open' && dist > BF.bandFar) ai.mode = 'station';
     thr = ai.mode === 'close' ? 0.7 : ai.mode === 'station' ? 0.15 : 0;
   } else ai.mode = 'hold';
-  // ---- spine: start a charge
-  if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy) {
+  // ---- spine: start a charge (needs a slug in the magazine)
+  if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy && sp.mag > 0) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
     if (err / tm <= 4.5 && spineCorridorClear(s)) {

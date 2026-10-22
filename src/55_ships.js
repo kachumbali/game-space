@@ -144,3 +144,20 @@ function lodTick(dt) {
     if (nd !== (s.lodDrop | 0)) { s.lodDrop = nd; buildVox(s); return; }
   }
 }
+
+// ---- fleet tender service (owner decision 2026-10-22: tender ships resupply the magazine rule) ----
+// Rearms friendly ships within `def.serviceR`: gun ammo pools toward `ammoMax`, missile/flare stores toward the def, XL slugs toward the weapon's magazine.
+// Binding rule kept (AGENTS.md, "docking does not repair"): rearm is not repair - no structure, component or shield restoration.
+function tenderTick(dt) {
+  for (const t of ships) {
+    if (!t.alive || !t.def.tender) continue;
+    const R = t.def.serviceR || 600;
+    for (const s of ships) {
+      if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
+      if (s.group.position.distanceTo(t.group.position) > R) continue;
+      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * dt);            // 40 rounds/s
+      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * dt);   // one missile/flare per 2 s
+      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt / 3); }  // one XL slug per 3 s
+    }
+  }
+}

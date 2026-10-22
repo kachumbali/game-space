@@ -1441,6 +1441,10 @@ SHIPS.halberd = {
     seg([-0.9, 3.9, -8], [-0.9, 3.9, -30.5], 0.5, 0.42, H.dark),
     tap([0, 3.9, -16], 0.3, [1.5, 0.75], [1.5, 0.75], H.panel, { sh: 'e' }),
     tap([0, 3.9, -24], 0.3, [1.4, 0.7], [1.4, 0.7], H.panel, { sh: 'e' }),
+    // GA-9 rotary cannon (ventral nose, owner 2026-10-22): cradle + barrel cluster + muzzle disc
+    tap([0, -2.3, -27], 2.6, [1.2, 1.2], [1.0, 1.0], 0x6e7782, { sh: 'h' }),
+    seg([0, -2.3, -29], [0, -2.3, -30.4], 0.55, 0.45, H.dark),
+    tap([0, -2.3, -30.2], 0.4, [0.7, 0.7], [0.65, 0.65], H.dark, { sh: 'e' }),
     // bridge tower + mast
     tap([0, 5.3, 10], 3.4, [1.6, 2.2], [2.5, 2.4], 0xa9afb7, { sh: 'h', win: { col: 0xffc060, p: 0.75, f: 1.6, o: 2, pu: 4, wu: 2, pv: 4 } }),
     tap([0, 6.0, 6.55], 0.2, [1.5, 0.32], [1.5, 0.32], H.amber, { glow: true, glowF: 1.3 }),
@@ -1472,6 +1476,7 @@ SHIPS.halberd = {
   engines: [{ pos: [0, 0, 31.8], comp: 'engC', r: 1.9 }, { pos: [3.9, 0, 31.6], comp: 'engR', r: 1.25 }, { pos: [-3.9, 0, 31.6], comp: 'engL', r: 1.25 }],
   mounts: [
     { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
+    { w: 'rotary', pos: [0, -2.3, -30.6], comp: 'rotary', grp: 2 },   // GA-9 rotary (owner 2026-10-22): ventral nose, A-10-style
   ],
   turrets: [
     { w: 'laser', pos: [2.6, 1.85, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-2.6, 1.85, -12], comp: 'tur2', side: 1 },
@@ -1484,6 +1489,7 @@ SHIPS.halberd = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
+    { id: 'rotary', name: 'GA-9 ROTARY', role: 'gun', pos: [0, -2.3, -27], r: 2.0, hp: 120 },
     { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [2.6, 1.85, -12], r: 2.8, hp: 30 },
     { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-2.6, 1.85, -12], r: 2.8, hp: 30 },
     { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
@@ -1672,6 +1678,55 @@ SHIPS.drone = {
   shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
   maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
   ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
+};
+
+// ---- TENDER: unarmed fleet resupply ship (owner decision 2026-10-22: fleet tender ships for the magazine rule) ----
+// Rearms friendly ships within `serviceR` (ammo pools, missile stores, XL slugs) at `tenderTick` (55_ships.js).
+// Binding rule kept: rearm is not repair - structure, components and shields are NOT restored (AGENTS.md).
+SHIPS.tender = {
+  id: 'tender', name: 'TENDER', cls: 'frigate', fac: 'human', role: 'FLEET TENDER',
+  length: 200, half: [40, 24, 100], mirror: true, radius: 105, seam: [5, 4], resMul: 0.5,
+  jump: true, dock: { fighters: 24, corvettes: 4 }, repair: false, tender: true, serviceR: 600,
+  prims: [
+    tap([0, 0, 10], 150, [26, 16], [34, 20], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.008 } }),       // long box hull
+    tap([0, 8, 0], 120, [22, 5], [26, 6], E.white, { sh: 'h' }),                                          // dorsal deck
+    // ordnance and supply containers (the cargo it delivers, visible per the model rules)
+    ...[-60, -40, -20, 0, 20, 40, 60].flatMap(z => [
+      tap([14, 13.5, z], 14, [6.5, 4], [6.5, 4], z % 40 ? E.grey2 : E.orange, { sh: 'h', dots: { col: E.amber, p: 0.03 } }),
+      tap([8, 12.5, z], 14, [5, 3.5], [5, 3.5], E.panel, { sh: 'h' }),
+    ]),
+    tap([0, -13, 10], 140, [16, 6], [20, 7], E.grey2, { sh: 'h' }),                                       // ventral cargo keel
+    // bow service section: booms and cradles for alongside rearm
+    tap([0, 0, -70], 24, [14, 12], [8, 7], E.grey, { sh: 'd' }),
+    seg([16, 2, -62], [34, 2, -62], 1.6, 1.2, E.dark), seg([-16, 2, -62], [-34, 2, -62], 1.6, 1.2, E.dark),
+    ell([36, 2, -62], [3.4, 2.2, 3.4], E.grey2), ell([-36, 2, -62], [3.4, 2.2, 3.4], E.grey2),
+    // bridge tower + mast
+    tap([0, 16, 50], 12, [8, 5], [10, 6], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),
+    seg([0, 22, 52], [0, 30, 52], 0.5, 0.25, E.grey2), ell([0, 30.5, 52], [2.4, 0.3, 2.4], E.grey),
+    // engine block aft
+    tap([0, 0, 88], 14, [16, 13], [14, 11], E.noz, { sh: 'h' }),
+    ell([12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([-12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([0, 0, 95.5], [6.5, 6, 2], E.glow, { glow: true }),
+    // nav lights
+    ell([38, 0, 60], [0.8, 0.6, 0.8], 0xff3030, { glow: true, noMirror: true }),
+  ],
+  engines: [{ pos: [12, 0, 96], comp: 'engR', r: 5 }, { pos: [-12, 0, 96], comp: 'engL', r: 5 }, { pos: [0, 0, 96], comp: 'engC', r: 6 }],
+  mounts: [],
+  turrets: [],
+  stores: { flare: 24 },
+  comps: [
+    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 90], r: 6, hp: 260 },
+    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-12, 0, 90], r: 5, hp: 200 },
+    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [12, 0, 90], r: 5, hp: 200 },
+    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 55], r: 9, hp: 420 },
+    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 17, 50], r: 7, hp: 180 },
+    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -70], r: 9, hp: 200 },
+    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 85], r: 9, hp: 200 },
+    { id: 'bayA', name: 'SERVICE BAY A', role: 'bay', pos: [14, 13.5, 0], r: 8, hp: 220 },
+    { id: 'bayB', name: 'SERVICE BAY B', role: 'bay', pos: [-14, 13.5, 0], r: 8, hp: 220 },
+  ],
+  shield: { fore: 600, aft: 500 }, armor: { type: 'composite', rating: 0.25 }, structure: 1400,
+  maxSpeed: 24, accel: 2.5, turn: 0.07, shieldRegen: 8, sig: 10, flameColor: 0x66c8ff, energyMax: 2000, energyRegen: 300,
+  ai: { role: 'capital' },
 };
 // ======================================================================
 //  FROGG fleet — organic bio-mech, sharp edges.
@@ -3155,6 +3210,23 @@ function lodTick(dt) {
     if (nd !== (s.lodDrop | 0)) { s.lodDrop = nd; buildVox(s); return; }
   }
 }
+
+// ---- fleet tender service (owner decision 2026-10-22: tender ships resupply the magazine rule) ----
+// Rearms friendly ships within `def.serviceR`: gun ammo pools toward `ammoMax`, missile/flare stores toward the def, XL slugs toward the weapon's magazine.
+// Binding rule kept (AGENTS.md, "docking does not repair"): rearm is not repair - no structure, component or shield restoration.
+function tenderTick(dt) {
+  for (const t of ships) {
+    if (!t.alive || !t.def.tender) continue;
+    const R = t.def.serviceR || 600;
+    for (const s of ships) {
+      if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
+      if (s.group.position.distanceTo(t.group.position) > R) continue;
+      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * dt);            // 40 rounds/s
+      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * dt);   // one missile/flare per 2 s
+      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt / 3); }  // one XL slug per 3 s
+    }
+  }
+}
 // ======================================================================
 //  DRONES — unmanned 6 m wingmen slaved to one controller (docs/FLEET_LOGIC.md 9, 9a)
 //  Controller side: ctrl.drones[] (live drones), ctrl.stores.drone (stock aboard), control limit per class, ctrl.droneKills / dronesLost.
@@ -3450,23 +3522,24 @@ const WEAPONS = {
   cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
   he: { kind: 'proj', name: 'MK-30 HE CANNON', cd: 0.22, v: 1000, dmg: 9, dt: 'kin', life: 2.0, spread: 0.0015, ammo: 500, color: 0xffa860, len: 7, sz: 0.22, sfx: 'cannon', blast: 8 },    // high-explosive shells: direct hit + splash (blastAt) within 8 m; replaced the PL-4 plasma bolter in the realism pass 2026-10-22 (9 dmg/500 rds to hold the ~10 even point: kin hits shields at 0.7x vs the old en 1.25x, and the plasma had no magazine)
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
-  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6 },
-  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true },    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
+  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100 },   // magazine rule 2026-10-22: every kinetic weapon carries ammo
+  rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
+  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250 },    // 250-rd magazine ~9 min of fire    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
   // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
-  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER' },
+  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
   // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
   // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true },
+  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500 },    // Phalanx-style drum: ~110 s of continuous fire, then dry
   // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
   flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
   lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
-  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang' },
+  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang', ammo: 400 },   // ~64 s of fire
   spit: { kind: 'proj', name: 'M-2 MASER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
   spitcannon: { kind: 'proj', name: 'M-6 HEAVY MASER', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
-  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true },    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
-  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true },
+  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true, ammo: 60 },    // heavy rods: small magazine, big weapon (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
+  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true, ammo: 800 },
   // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
   ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
@@ -3511,7 +3584,8 @@ function initArmament(s) {
   s.mounts = (def.mounts || []).map(m => ({ ...m, cool: Math.random() * 0.1 }));
   s.stores = { ...(def.stores || {}) };
   s.ammo = {};
-  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; }
+  s.ammoMax = {};
+  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) { s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; s.ammoMax[m.w] = (s.ammoMax[m.w] || 0) + w.ammo; } }
   s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = 0;
   s.bfocus = { tgt: null, t: 0, last: -9 };
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
@@ -3905,7 +3979,7 @@ function makeTurret(s, t) {
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], ammo: w.ammo || Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
@@ -3983,8 +4057,10 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range) {
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0) {
       T.cool = T.w.cd;
+      T.ammo--;
+      if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks
       const mp = turretMuzzle(T, new THREE.Vector3());
       T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
@@ -4822,7 +4898,7 @@ function capitalAI(s, dt) {
   if (sp) {
     const W = WEAPONS[sm.w];
     sp.tgt = t;
-    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter') {
+    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter' && sp.mag > 0) {
       const d0 = ep.distanceTo(t.group.position), tm = s.def.turn * turnMul(s), e0 = aimError(s, leadPoint(s, t, 1e6));
       if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= 4.5 && spineCorridorClear(s)) {
         s.energy -= W.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
@@ -4841,7 +4917,8 @@ function capitalAI(s, dt) {
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);
+  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) fireGuns(s, 0b11);   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  else if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (s.stores.tad > 0 || s.stores.torp > 0) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
@@ -5808,7 +5885,7 @@ Object.assign(WEAPONS, {
   spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
   lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
   acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true },
+  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000 },   // PD drum (magazine rule 2026-10-22)
 });
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
@@ -5827,7 +5904,7 @@ const spineW = s => WEAPONS[spineMountOf(s).w];
 
 // ---------------------------------------------------------------- spine
 function spineInit(s) {
-  return (s.spine = { st: 'cool', t: 0, cd: spineW(s).delay ?? BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: spineW(s).charge, startedAt: -99 });
+  return (s.spine = { st: 'cool', t: 0, cd: spineW(s).delay ?? BF.spineDelay, tgt: null, aimPt: new THREE.Vector3(), shots: [], want: false, toneT: 0, fx: null, holdT: 0, C: spineW(s).charge, mag: spineW(s).mag ?? Infinity, startedAt: -99 });
 }
 function spineMuzzle(s, out) { const m = spineMountOf(s); s.group.updateMatrixWorld(true); return s.group.localToWorld(out.set(m.pos[0], m.pos[1], m.pos[2])); }
 // friendly (any class, own fighters included) on the nose line within range: the ray is `bw` m wide, add its width and the other ship's radius
@@ -5913,6 +5990,7 @@ function spineFire(s) {
     if (best === player) shake = 1;
   }
   sp.shots.push(rec); bfLog.push({ ev: 'spine', by: s.callsign || 'BF', ...rec });
+  sp.mag--;
   return rec;
 }
 // per-frame spine machine; lancerAI supplies s.spine.tgt / want. Returns an aim point while charging (the ship keeps turning onto it until the freeze)
@@ -6079,8 +6157,8 @@ function lancerAI(s, dt) {
     else if (ai.mode === 'open' && dist > BF.bandFar) ai.mode = 'station';
     thr = ai.mode === 'close' ? 0.7 : ai.mode === 'station' ? 0.15 : 0;
   } else ai.mode = 'hold';
-  // ---- spine: start a charge
-  if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy) {
+  // ---- spine: start a charge (needs a slug in the magazine)
+  if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy && sp.mag > 0) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
     if (err / tm <= 4.5 && spineCorridorClear(s)) {
@@ -6538,6 +6616,7 @@ function update(dt) {
     updateShieldsAndFx(s, dt);
   }
   collideShips(dt);
+  tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
   lodTick(dt); comsTick(dt);

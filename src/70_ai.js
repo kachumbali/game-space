@@ -332,7 +332,7 @@ function capitalAI(s, dt) {
   if (sp) {
     const W = WEAPONS[sm.w];
     sp.tgt = t;
-    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter') {
+    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter' && sp.mag > 0) {
       const d0 = ep.distanceTo(t.group.position), tm = s.def.turn * turnMul(s), e0 = aimError(s, leadPoint(s, t, 1e6));
       if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= 4.5 && spineCorridorClear(s)) {
         s.energy -= W.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
@@ -351,7 +351,8 @@ function capitalAI(s, dt) {
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);
+  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) fireGuns(s, 0b11);   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  else if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (s.stores.tad > 0 || s.stores.torp > 0) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';

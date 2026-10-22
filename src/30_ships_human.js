@@ -202,6 +202,10 @@ SHIPS.halberd = {
     seg([-0.9, 3.9, -8], [-0.9, 3.9, -30.5], 0.5, 0.42, H.dark),
     tap([0, 3.9, -16], 0.3, [1.5, 0.75], [1.5, 0.75], H.panel, { sh: 'e' }),
     tap([0, 3.9, -24], 0.3, [1.4, 0.7], [1.4, 0.7], H.panel, { sh: 'e' }),
+    // GA-9 rotary cannon (ventral nose, owner 2026-10-22): cradle + barrel cluster + muzzle disc
+    tap([0, -2.3, -27], 2.6, [1.2, 1.2], [1.0, 1.0], 0x6e7782, { sh: 'h' }),
+    seg([0, -2.3, -29], [0, -2.3, -30.4], 0.55, 0.45, H.dark),
+    tap([0, -2.3, -30.2], 0.4, [0.7, 0.7], [0.65, 0.65], H.dark, { sh: 'e' }),
     // bridge tower + mast
     tap([0, 5.3, 10], 3.4, [1.6, 2.2], [2.5, 2.4], 0xa9afb7, { sh: 'h', win: { col: 0xffc060, p: 0.75, f: 1.6, o: 2, pu: 4, wu: 2, pv: 4 } }),
     tap([0, 6.0, 6.55], 0.2, [1.5, 0.32], [1.5, 0.32], H.amber, { glow: true, glowF: 1.3 }),
@@ -233,6 +237,7 @@ SHIPS.halberd = {
   engines: [{ pos: [0, 0, 31.8], comp: 'engC', r: 1.9 }, { pos: [3.9, 0, 31.6], comp: 'engR', r: 1.25 }, { pos: [-3.9, 0, 31.6], comp: 'engL', r: 1.25 }],
   mounts: [
     { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
+    { w: 'rotary', pos: [0, -2.3, -30.6], comp: 'rotary', grp: 2 },   // GA-9 rotary (owner 2026-10-22): ventral nose, A-10-style
   ],
   turrets: [
     { w: 'laser', pos: [2.6, 1.85, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-2.6, 1.85, -12], comp: 'tur2', side: 1 },
@@ -245,6 +250,7 @@ SHIPS.halberd = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
     { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
+    { id: 'rotary', name: 'GA-9 ROTARY', role: 'gun', pos: [0, -2.3, -27], r: 2.0, hp: 120 },
     { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [2.6, 1.85, -12], r: 2.8, hp: 30 },
     { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-2.6, 1.85, -12], r: 2.8, hp: 30 },
     { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
@@ -433,4 +439,53 @@ SHIPS.drone = {
   shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
   maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
   ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
+};
+
+// ---- TENDER: unarmed fleet resupply ship (owner decision 2026-10-22: fleet tender ships for the magazine rule) ----
+// Rearms friendly ships within `serviceR` (ammo pools, missile stores, XL slugs) at `tenderTick` (55_ships.js).
+// Binding rule kept: rearm is not repair - structure, components and shields are NOT restored (AGENTS.md).
+SHIPS.tender = {
+  id: 'tender', name: 'TENDER', cls: 'frigate', fac: 'human', role: 'FLEET TENDER',
+  length: 200, half: [40, 24, 100], mirror: true, radius: 105, seam: [5, 4], resMul: 0.5,
+  jump: true, dock: { fighters: 24, corvettes: 4 }, repair: false, tender: true, serviceR: 600,
+  prims: [
+    tap([0, 0, 10], 150, [26, 16], [34, 20], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.008 } }),       // long box hull
+    tap([0, 8, 0], 120, [22, 5], [26, 6], E.white, { sh: 'h' }),                                          // dorsal deck
+    // ordnance and supply containers (the cargo it delivers, visible per the model rules)
+    ...[-60, -40, -20, 0, 20, 40, 60].flatMap(z => [
+      tap([14, 13.5, z], 14, [6.5, 4], [6.5, 4], z % 40 ? E.grey2 : E.orange, { sh: 'h', dots: { col: E.amber, p: 0.03 } }),
+      tap([8, 12.5, z], 14, [5, 3.5], [5, 3.5], E.panel, { sh: 'h' }),
+    ]),
+    tap([0, -13, 10], 140, [16, 6], [20, 7], E.grey2, { sh: 'h' }),                                       // ventral cargo keel
+    // bow service section: booms and cradles for alongside rearm
+    tap([0, 0, -70], 24, [14, 12], [8, 7], E.grey, { sh: 'd' }),
+    seg([16, 2, -62], [34, 2, -62], 1.6, 1.2, E.dark), seg([-16, 2, -62], [-34, 2, -62], 1.6, 1.2, E.dark),
+    ell([36, 2, -62], [3.4, 2.2, 3.4], E.grey2), ell([-36, 2, -62], [3.4, 2.2, 3.4], E.grey2),
+    // bridge tower + mast
+    tap([0, 16, 50], 12, [8, 5], [10, 6], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),
+    seg([0, 22, 52], [0, 30, 52], 0.5, 0.25, E.grey2), ell([0, 30.5, 52], [2.4, 0.3, 2.4], E.grey),
+    // engine block aft
+    tap([0, 0, 88], 14, [16, 13], [14, 11], E.noz, { sh: 'h' }),
+    ell([12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([-12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([0, 0, 95.5], [6.5, 6, 2], E.glow, { glow: true }),
+    // nav lights
+    ell([38, 0, 60], [0.8, 0.6, 0.8], 0xff3030, { glow: true, noMirror: true }),
+  ],
+  engines: [{ pos: [12, 0, 96], comp: 'engR', r: 5 }, { pos: [-12, 0, 96], comp: 'engL', r: 5 }, { pos: [0, 0, 96], comp: 'engC', r: 6 }],
+  mounts: [],
+  turrets: [],
+  stores: { flare: 24 },
+  comps: [
+    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 90], r: 6, hp: 260 },
+    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-12, 0, 90], r: 5, hp: 200 },
+    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [12, 0, 90], r: 5, hp: 200 },
+    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 55], r: 9, hp: 420 },
+    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 17, 50], r: 7, hp: 180 },
+    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -70], r: 9, hp: 200 },
+    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 85], r: 9, hp: 200 },
+    { id: 'bayA', name: 'SERVICE BAY A', role: 'bay', pos: [14, 13.5, 0], r: 8, hp: 220 },
+    { id: 'bayB', name: 'SERVICE BAY B', role: 'bay', pos: [-14, 13.5, 0], r: 8, hp: 220 },
+  ],
+  shield: { fore: 600, aft: 500 }, armor: { type: 'composite', rating: 0.25 }, structure: 1400,
+  maxSpeed: 24, accel: 2.5, turn: 0.07, shieldRegen: 8, sig: 10, flameColor: 0x66c8ff, energyMax: 2000, energyRegen: 300,
+  ai: { role: 'capital' },
 };
