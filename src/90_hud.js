@@ -60,14 +60,73 @@ function drawDamage() {
   bar(ap('aft'), cx - 35 * ap('aft'), cy + hz + 6, 70 * ap('aft'), 3);
   bar(ap('left'), cx - hx - 9, cy - 35 * ap('left'), 3, 70 * ap('left'));
   bar(ap('right'), cx + hx + 6, cy - 35 * ap('right'), 3, 70 * ap('right'));
+  drawCompZones(p, cx, cy, sc, cv);
+}
+
+// WC2-style damage schematic: every component is a zone shaped by its role (engine nacelle, gun barrel, turret ring, shield band, sensor oval,
+// reactor block), clipped to the hull silhouette so it reads as the hull section lighting up. Colour = health (green / amber / red / dead hatch),
+// a white flash when the component was just hit, and a label on anything damaged.
+const dzc = document.createElement('canvas'); dzc.width = 150; dzc.height = 170;
+const dzx = dzc.getContext('2d');
+const zoneCol = r => (r <= 0 ? [90, 20, 16] : r <= 0.33 ? [255, 74, 58] : r <= 0.66 ? [255, 190, 60] : [90, 240, 140]);
+function zoneShape(t, c, x, y, k, hx) {         // t = a 2D context (after beginPath) or a Path2D: both take the same calls
+  const r = Math.max(2.2, c.r * k), role = c.role;
+  if (role === 'engine') t.roundRect(x - r * 0.95, y - r * 0.8, r * 1.9, r * 3.0, 1.5);
+  else if (role === 'gun') t.roundRect(x - Math.max(1.6, r * 0.55), y - r * 3.2, Math.max(3.2, r * 1.1), r * 4.4, 1);
+  else if (role === 'turret') t.arc(x, y, Math.max(3, r), 0, 7);
+  else if (role === 'shield') t.ellipse(x, y, Math.min(hx * 0.8, r * 3.4), Math.max(3, r * 1.3), 0, 0, 7);
+  else if (role === 'radar') t.ellipse(x, y, Math.max(3.5, r * 1.4), Math.max(3, r * 0.9), 0, 0, 7);
+  else if (role === 'power') t.roundRect(x - r * 0.95, y - r * 0.95, r * 1.9, r * 1.9, 3);
+  else t.roundRect(x - r, y - r * 0.8, r * 2, r * 1.6, 2);
+}
+const zonePath = (c, x, y, k, hx) => { dzx.beginPath(); zoneShape(dzx, c, x, y, k, hx); };
+function drawCompZones(p, cx, cy, sc, cv) {
+  const hx = p.def.half[0] * sc;
+  dzx.clearRect(0, 0, 150, 170);
+  dzx.globalCompositeOperation = 'source-over'; dzx.drawImage(cv, 0, 0);
+  dzx.globalCompositeOperation = 'source-atop';
+  const rows = [];
   for (const c of p.comps) {
     const r = Math.max(0, c.hp) / c.max;
-    const x = cx + c.pos[0] * sc, y = cy + c.pos[2] * sc, rad = Math.max(3.2, c.r * sc * 0.5);
-    dctx.fillStyle = hpCol(r); dctx.globalAlpha = 0.85;
-    dctx.beginPath(); dctx.arc(x, y, rad, 0, 7); dctx.fill();
-    dctx.globalAlpha = 1;
-    if (r <= 0) { dctx.strokeStyle = '#000'; dctx.lineWidth = 1.5; dctx.beginPath(); dctx.moveTo(x - rad, y - rad); dctx.lineTo(x + rad, y + rad); dctx.moveTo(x + rad, y - rad); dctx.lineTo(x - rad, y + rad); dctx.stroke(); }
+    if (c._hpSeen != null && c.hp < c._hpSeen - 1e-6) c._flash = time;
+    c._hpSeen = c.hp;
+    const x = cx + c.pos[0] * sc, y = cy + c.pos[2] * sc;
+    const fl = c._flash != null && time - c._flash < 0.45 ? 1 - (time - c._flash) / 0.45 : 0;
+    const col = zoneCol(r);
+    dzx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${r <= 0 ? 0.9 : 0.62})`;
+    zonePath(c, x, y, sc, hx); dzx.fill();
+    if (r <= 0) {                                                     // dead: diagonal hatch
+      dzx.save(); zonePath(c, x, y, sc, hx); dzx.clip();
+      dzx.strokeStyle = 'rgba(0,0,0,.75)'; dzx.lineWidth = 1;
+      for (let q = -12; q < 12; q += 3) { dzx.beginPath(); dzx.moveTo(x + q - 8, y + 8); dzx.lineTo(x + q + 8, y - 8); dzx.stroke(); }
+      dzx.restore();
+    }
+    if (fl > 0) { dzx.fillStyle = `rgba(255,255,255,${0.85 * fl})`; zonePath(c, x, y, sc, hx); dzx.fill(); }
+    rows.push({ c, r, x, y, col });
   }
+  dctx.drawImage(dzc, 0, 0);
+  // zone outlines on top (not clipped), then labels for damaged systems (worst first, at most 4)
+  dctx.lineWidth = 1;
+  for (const o of rows) {
+    const P = new Path2D(); zoneShape(P, o.c, o.x, o.y, sc, hx);
+    dctx.strokeStyle = `rgba(${o.col[0]},${o.col[1]},${o.col[2]},${o.r <= 0 ? 0.9 : 0.8})`;
+    dctx.stroke(P);
+  }
+  dctx.font = '8px monospace';
+  const placed = [];
+  rows.filter(o => o.r < 0.99).sort((a, b) => a.r - b.r).slice(0, 4).forEach(o => {
+    const txt = shortName(o.c) + (o.r <= 0 ? ' X' : ' ' + Math.round(o.r * 100)), w = dctx.measureText(txt).width;
+    let right = o.x >= cx;
+    if (right && o.x + 10 + w > 148) right = false; else if (!right && o.x - 10 - w < 2) right = true;      // keep the label on the canvas
+    const tx = right ? o.x + 10 : o.x - 10;
+    let ty = o.y + 3;
+    while (placed.some(q => q.right === right && Math.abs(q.y - ty) < 9)) ty += 9;                               // no overlapping labels
+    placed.push({ right, y: ty });
+    dctx.textAlign = right ? 'left' : 'right';
+    dctx.fillStyle = 'rgba(0,0,0,.7)'; dctx.fillRect(right ? tx - 1 : tx - w - 1, ty - 8, w + 2, 10);
+    dctx.fillStyle = `rgb(${o.col[0]},${o.col[1]},${o.col[2]})`;
+    dctx.fillText(txt, tx, ty);
+  });
 }
 
 const shortName = c => c.name.replace('ENGINE', 'ENG').replace('SHIELD', 'SHD').replace('REACTOR', 'RCT').replace('CANNON', 'CAN').replace('LASER', 'LAS').replace('PLASMA', 'PLS').replace('TORP RACK', 'TORP').replace(' GLAND', '').replace('ACID ', '').slice(0, 7);
