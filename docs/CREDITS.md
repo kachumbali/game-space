@@ -8,7 +8,8 @@ Every licence below was re-read from its source page on **2026-10-22**.
 | Item | Author | Licence | Source | Where used |
 |---|---|---|---|---|
 | three.js r170 | three.js authors | MIT, "Copyright (c) 2010-2024 three.js authors" | https://github.com/mrdoob/three.js/blob/r170/LICENSE | Loaded from the jsDelivr CDN at run time (`src/00_head.html`); not bundled, so the game needs internet |
-| "Dark Sci-Fi Audio Pack" (airy, sector, urgent, pulse, victory, transmission) | SRG774 | CC0 1.0 | https://opengameart.org/content/dark-sci-fi-audio-pack | `audio/*.mp3`, re-encoded to 96 kbps |
+| "Dark Sci-Fi Audio Pack" (airy, sector, urgent, pulse, victory, transmission) | SRG774 | CC0 1.0 | https://opengameart.org/content/dark-sci-fi-audio-pack | `audio/*.mp3`, re-encoded to 96 kbps; urgent and pulse are now fallback combat tracks (see below) |
+| Combat loops "dogfight" and "bombast" (`audio/combat-dogfight.mp3`, `audio/combat-bombast.mp3`) | owner-commissioned, composed with Google Gemini code tools 2026-10-22 | original work for this project | generators + MIDI in `tools/gen/music/` | combat and heavy music moods (`src/13_music.js`), rendered offline with FluidSynth 2.6.1 + GeneralUser GS soundfont (S. Christian Collins, "GeneralUser GS License v2.0", free for private and commercial music use); the soundfont itself is not shipped |
 | "Space Sound Effects" (explosion1/3/5, laser3/4) | messersm | CC0 1.0 | https://opengameart.org/content/space-sound-effects | base64 in `src/14_samples.js` |
 | "Synthesized explosion" | qubodup | CC0 1.0 | https://opengameart.org/content/synthesized-explosion | base64 in `src/14_samples.js` |
 | "Warp Engine Engage Sound" (first 5 s) | bart | CC0 1.0 | https://opengameart.org/content/warp-engine-engage-sound | base64 in `src/14_samples.js` |

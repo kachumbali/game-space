@@ -7,7 +7,9 @@
 const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
-const MUSIC_FILES = { menu: 'audio/airy.mp3', patrol: 'audio/sector.mp3', combat: 'audio/urgent.mp3', heavy: 'audio/pulse.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
+// Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
+// under gameplay, bombast = full anthem for heavy fights. urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
+const MUSIC_FILES = { menu: 'audio/airy.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
 const MUS = { el: {}, want: null, started: false, combatT: 0, mood: null };
 function musEl(k) {
   if (!MUS.el[k]) { const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'win'; a.volume = 0; MUS.el[k] = a; }

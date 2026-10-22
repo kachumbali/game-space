@@ -4,6 +4,8 @@ Research date: 2026-10-21. Every row below was read on the cited page on that da
 
 Existing sfx ids (src/12_audio.js): cannon, pulse, fang, spit, spitbig, rail, lash, pd, msl, flare, hit, shield, boom(n), blip, alarm, warn, launchwarn, jump, click; plus the lock-tone oscillator. No engine hum or music exists today.
 
+Update 2026-10-22: music exists now - the SRG774 CC0 tracks in `audio/` (mapped in `src/13_music.js`), and two owner-commissioned combat loops composed with the Gemini code tools and rendered from GM MIDI (`tools/gen/music/`): `combat-dogfight.mp3` now serves the `combat` mood, `combat-bombast.mp3` the `heavy` mood; `urgent.mp3`/`pulse.mp3` remain as fallbacks. The shortlist below was the pre-music research and is kept for auditioning alternatives.
+
 Licence key: CC0 = https://creativecommons.org/publicdomain/zero/1.0/ ; CC-BY 3.0 = https://creativecommons.org/licenses/by/3.0/ ; CC-BY 4.0 = https://creativecommons.org/licenses/by/4.0/. All CC-BY items permit commercial use and redistribution (including inside a bundled file) provided attribution is given and changes are indicated; re-encoding/trimming counts as a modification, so keep a "modified" note in credits.
 
 ## 1. Music
