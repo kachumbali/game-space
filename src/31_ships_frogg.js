@@ -510,8 +510,8 @@ SHIPS.bullfrog = {
     // heart dome (dorsal) over the reactor
     ell([0, 30, 150], [36, 14, 34], N.dk2, nSt(5, 0.1)),
     // turret housings: L barbette (dorsal) and blister (ventral) ~38 m footprint, M mounts ~12 m, S/PD ~5 m
-    ell([0, 30, -150], [19, 9, 20], N.mt, nSt(3, 0.1)), ell([0, -23, -165], [19, 9, 20], N.mt, nSt(3, 0.1)),
-    ...[[44, 30, -70], [54, 26, 80], [46, -28, -20]].map(([x, y, z]) => ell([x, y, z], [6.5, 3, 6.5], N.mt, nSt(2, 0))),
+    ell([0, 31, -150], [19, 9, 20], N.mt, nSt(3, 0.1)), ell([0, -24, -165], [19, 9, 20], N.mt, nSt(3, 0.1)),
+    ...[[44, 33, -70], [54, 28, 80], [46, -30, -20]].map(([x, y, z]) => ell([x, y, z], [6.5, 3, 6.5], N.mt, nSt(2, 0))),
     // shield gland blisters
     ell([0, 33, -40], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }), ell([0, 31, 170], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }),
     // rib arches to the bow, flank spikes
@@ -529,21 +529,21 @@ SHIPS.bullfrog = {
     { w: 'tad', pos: [0, -43, -40], comp: 'tubes', grp: 3, store: 'tad' },
   ],
   turrets: [
-    bfT('L1', 'lanceL', 'L', 0, 34, -150, 1), bfT('L2', 'lanceL', 'L', 0, -26, -165, -1),
-    ...[['M1', 44, 30, -70, 1], ['M3', 54, 26, 80, 1], ['M5', 46, -28, -20, -1]].flatMap(([id, x, y, z, sd], i) => { const n = +id.slice(1); return [bfT('M' + n, 'acidT', 'M', x, y, z, sd), bfT('M' + (n + 1), 'acidT', 'M', -x, y, z, sd)]; }),
-    ...[['S1', 32, 34, -200, 1], ['S3', 40, 34, -10, 1], ['S5', 36, 32, 110, 1], ['S7', 36, -30, -130, -1], ['S9', 40, -30, 90, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('S' + n, 'sting', 'S', x, y, z, sd), bfT('S' + (n + 1), 'sting', 'S', -x, y, z, sd)]; }),
-    ...[['P1', 16, 40, -110, 1], ['P3', 24, 38, 150, 1], ['P5', 22, -36, -60, -1], ['P7', 26, -34, 200, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('P' + n, 'thorn', 'S', x, y, z, sd), bfT('P' + (n + 1), 'thorn', 'S', -x, y, z, sd)]; }),
+    bfT('L1', 'lanceL', 'L', 0, 38, -150, 1), bfT('L2', 'lanceL', 'L', 0, -31, -165, -1),
+    ...[['M1', 44, 33, -70, 1], ['M3', 54, 28, 80, 1], ['M5', 46, -30, -20, -1]].flatMap(([id, x, y, z, sd], i) => { const n = +id.slice(1); return [bfT('M' + n, 'acidT', 'M', x, y, z, sd), bfT('M' + (n + 1), 'acidT', 'M', -x, y, z, sd)]; }),
+    ...[['S1', 32, 43, -200, 1], ['S3', 40, 35, -10, 1], ['S5', 36, 35, 110, 1], ['S7', 36, -20, -130, -1], ['S9', 40, -27, 90, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('S' + n, 'sting', 'S', x, y, z, sd), bfT('S' + (n + 1), 'sting', 'S', -x, y, z, sd)]; }),
+    ...[['P1', 16, 37, -110, 1], ['P3', 24, 40, 150, 1], ['P5', 22, -30, -60, -1], ['P7', 26, -23, 200, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('P' + n, 'thorn', 'S', x, y, z, sd), bfT('P' + (n + 1), 'thorn', 'S', -x, y, z, sd)]; }),
   ],
   stores: { tad: 16, flare: 0 },
   comps: [
     bfC('spine', 'SPINE EMITTER', 'gun', 0, -4, -286, 13, 700),
-    bfC('L1', 'HEAVY LANCE DORSAL', 'turret', 0, 34, -150, 17, 260), bfC('L2', 'HEAVY LANCE VENTRAL', 'turret', 0, -26, -165, 17, 260),
-    ...[['M1', 44, 30, -70], ['M3', 54, 26, 80], ['M5', 46, -28, -20]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('M' + n, 'ACID M' + n, 'turret', x, y, z, 6.5, 120), bfC('M' + (n + 1), 'ACID M' + (n + 1), 'turret', -x, y, z, 6.5, 120)]; }),
-    ...[['S1', 32, 34, -200], ['S3', 40, 34, -10], ['S5', 36, 32, 110], ['S7', 36, -30, -130], ['S9', 40, -30, 90]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('S' + n, 'STING S' + n, 'turret', x, y, z, 2.5, 45), bfC('S' + (n + 1), 'STING S' + (n + 1), 'turret', -x, y, z, 2.5, 45)]; }),
-    ...[['P1', 16, 40, -110], ['P3', 24, 38, 150], ['P5', 22, -36, -60], ['P7', 26, -34, 200]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('P' + n, 'THORN PD P' + n, 'turret', x, y, z, 2.5, 40), bfC('P' + (n + 1), 'THORN PD P' + (n + 1), 'turret', -x, y, z, 2.5, 40)]; }),
+    bfC('L1', 'HEAVY LANCE DORSAL', 'turret', 0, 38, -150, 17, 260), bfC('L2', 'HEAVY LANCE VENTRAL', 'turret', 0, -31, -165, 17, 260),
+    ...[['M1', 44, 33, -70], ['M3', 54, 28, 80], ['M5', 46, -30, -20]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('M' + n, 'ACID M' + n, 'turret', x, y, z, 6.5, 120), bfC('M' + (n + 1), 'ACID M' + (n + 1), 'turret', -x, y, z, 6.5, 120)]; }),
+    ...[['S1', 32, 43, -200], ['S3', 40, 35, -10], ['S5', 36, 35, 110], ['S7', 36, -20, -130], ['S9', 40, -27, 90]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('S' + n, 'STING S' + n, 'turret', x, y, z, 2.5, 45), bfC('S' + (n + 1), 'STING S' + (n + 1), 'turret', -x, y, z, 2.5, 45)]; }),
+    ...[['P1', 16, 37, -110], ['P3', 24, 40, 150], ['P5', 22, -30, -60], ['P7', 26, -23, 200]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('P' + n, 'THORN PD P' + n, 'turret', x, y, z, 2.5, 40), bfC('P' + (n + 1), 'THORN PD P' + (n + 1), 'turret', -x, y, z, 2.5, 40)]; }),
     ...[['E1', 24, 12], ['E3', 50, -4], ['E5', 76, 8]].flatMap(([id, x, y]) => { const n = +id.slice(1); return [bfC('E' + n, 'ENGINE E' + n, 'engine', x, y, 262, 14, 330), bfC('E' + (n + 1), 'ENGINE E' + (n + 1), 'engine', -x, y, 262, 14, 330)]; }),
     bfC('shieldF', 'SHIELD GLAND FWD', 'shield', 0, 32, -40, 20, 700), bfC('shieldA', 'SHIELD GLAND AFT', 'shield', 0, 30, 170, 20, 600),
-    bfC('eyes', 'EYES', 'radar', 0, 28, -215, 16, 500), bfC('power', 'HEART', 'power', 0, 0, 150, 18, 1100),
+    bfC('eyes', 'EYES', 'radar', 0, 14, -215, 16, 500), bfC('power', 'HEART', 'power', 0, 0, 150, 18, 1100),
     bfC('bayA', 'HANGAR BAY A (18)', 'bay', 0, -32, -95, 22, 650), bfC('bayB', 'HANGAR BAY B (18)', 'bay', 0, -32, 90, 22, 650),
     bfC('tubes', 'TORPEDO TUBES', 'gun', 0, -42, -10, 14, 500),
   ],

@@ -277,7 +277,7 @@ function lancerAI(s, dt) {
     thr = ai.mode === 'close' ? 0.7 : ai.mode === 'station' ? 0.15 : 0;
   } else ai.mode = 'hold';
   // ---- spine: start a charge
-  if (sp.st === 'ready' && big && dist < BF.range * 0.95 && s.energy >= WEAPONS.spine.energy && time > BF.spineDelay) {
+  if (sp.st === 'ready' && big && dist < BF.range * 0.95 && s.energy >= WEAPONS.spine.energy) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
     if (err / tm <= 4.5 && spineCorridorClear(s)) {
@@ -366,4 +366,4 @@ function escortAI(s, dt) {
   return true;
 }
 
-globalThis.__bf = { BF, spineInit, spineStep, spineFire, spineCorridorClear, hangarInit, hangarUpdate, lancerAI, lancerPick, log: bfLog, escortAI, escortPick, bfFighterHook };
+globalThis.__bf = { resFor, blastAt, BF, spineInit, spineStep, spineFire, spineCorridorClear, hangarInit, hangarUpdate, lancerAI, lancerPick, log: bfLog, escortAI, escortPick, bfFighterHook };
