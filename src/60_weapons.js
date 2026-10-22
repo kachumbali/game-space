@@ -298,6 +298,18 @@ function friendlyNote(by, victim) {
   if (by) by.ffHits = (by.ffHits || 0) + 1;
   if (time - _ffLog > 1.5) { _ffLog = time; log(by === player ? `FRIENDLY FIRE: ${victim.callsign || victim.def.name}` : `HIT BY FRIENDLY FIRE (${by?.callsign || by?.def.name || '?'})`, '#ffb040'); }
 }
+const _hg = new THREE.Vector3(), _hd = new THREE.Vector3();
+// distance from a world point to the nearest hull voxel (probes toward the centre and along the 6 axes, up to maxD); Infinity if none
+function hullGap(s, pos, maxD) {
+  s.group.worldToLocal(_hg.copy(pos));
+  const lp = _hg.clone();
+  let best = Infinity;
+  for (const d of [_hd.copy(lp).negate().normalize().clone(), new THREE.Vector3(1, 0, 0), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1)]) {
+    const h = traceShipLocal(s, lp, d, maxD + 1);
+    if (h) best = Math.min(best, h.distanceTo(lp));
+  }
+  return best;
+}
 function blastAt(pos, w, team, owner, direct) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
@@ -307,7 +319,8 @@ function blastAt(pos, w, team, owner, direct) {
     const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
-    const surf = Math.max(0, dc - s.def.radius * 0.62);
+    let surf = Math.max(0, dc - s.def.radius * 0.62);
+    if (surf > w.blast && s.def.radius > 150 && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // long hulls (Exeter, Bullfrog, Hive Carrier): measure from the hull, not a 0.62 R sphere around the centre
     if (surf > w.blast) continue;
     const f = (direct === s ? 1 : Math.max(0.2, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
@@ -503,7 +516,7 @@ function updateTurrets(s, dt) {
       let best = null, bs = 1e9;
       const beamT = T.w.kind === 'beam';
       if (beamT && T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && T.tgt.group.position.distanceTo(tp) < T.w.range) best = T.tgt;   // a laser turret holds its target: focus is lost on every switch
-      else if (!beamT) for (const m of hostileMissiles) {                 // missiles first
+      else if (!beamT && !T.w.noPD) for (const m of hostileMissiles) {   // noPD (acid cannon) never shoots missiles                 // missiles first
         const d = m.pos.distanceTo(tp);
         if (d < T.w.range * 0.75 && (m.target === s || d < 500) && d < bs) { bs = d; best = m; }
       }
@@ -512,7 +525,8 @@ function updateTurrets(s, dt) {
         for (const e of ships) {
           if (!e.alive || e.team === s.team || e.dying) continue;
           const d = e.group.position.distanceTo(tp);
-          const pr = beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
+          if ((T.w.pdOnly && d > 300) || (T.w.bigOnly && e.def.cls === 'fighter' && d > 900)) continue;      // Bullfrog roles: thorn = missiles (ships only inside 300 m), heavy lance = big targets
+          const pr = T.w.noPD ? (e.def.cls === 'fighter' && e.def.ai?.role !== 'bomber' ? d * 3 : d) : beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
           if (d < T.w.range && pr < bs) { bs = pr; best = e; }
         }
       }

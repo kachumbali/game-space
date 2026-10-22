@@ -70,3 +70,29 @@ Sample sizes are 2-3 runs per cell: treat as direction, not a measurement.
 | 10 | 0/3 | was 3/3 before the buffs |
 | 12 | 0/3 | was 1/3 |
 The even point moved from about 11-12 to about 7-8 FROGGs (target was 12:4). Not retuned: the owner asked for the buffs; the combined size is a decision for the owner. `msl_t.py 8 3 180`: before, humans launched 7-15 of 28 missiles and FROGGs 7-9 of 9 (stock exhausted); after, humans 7-16, FROGGs 13-14 of 18 (the budget rule is not what limits them; stock and reload are).
+
+
+## 2026-10-22: Bullfrog acceptance engagement (first implementation, untuned)
+Script `tools/tests/bullfrog_eng.py SEED 900 10000 DT`; raw per-run JSON: `docs/data/bullfrog_engagement_runs.json`. Setup: human side Exeter + 12 Kestrels (AI skill 3, group K) + 2 Halberds
+(escorting the Exeter via `ai.escort`) vs Bullfrog (skill 3) with its 36 fighters launched by the hangar logic; start 10,000 m apart head-on, both AI, no player involvement (player parked 200 km away),
+headless `update(DT)`, rendering disabled, cap 900 sim-s (all runs ended on a capital's death at 246-301 s). "First contact (capitals)" = capital centres < 3.4 km (spine range); "first contact (fighters)" = first Kestrel within 900 m of a FROGG fighter.
+Seeds replace `Math.random` before spawning, but runs with the same seed are NOT reproducible (a, seed 1-3 vs the first batch differed); read the six runs as six samples.
+
+| run | DT | first contact caps / fighters (s) | winner | Exeter died (s) | Bullfrog died (s) | spine shots (t, target, killed?) | Kestrels lost | FROGG fighters lost / launched | Tadpoles launched / PD-intercepted / hit (sources) | hangar launches |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 0.05 | 184 / 54 | FROGG | 252 | alive, hull 48% | 1: 199.5 Exeter, no kill | 8 / 12 | 22 / 33 | 9 / 0 / 8 (8 Toad, 1 Bullfrog) | 33 |
+| 2 | 0.05 | 183 / 54 | FROGG | 238 | alive, hull 61% | 1: 199.3 Exeter, no kill | 3 / 12 | 19 / 31 | 6 / 0 / 6 (Toad) | 31 |
+| 3 | 0.05 | 224 / 54 | human | alive, hull 90% | 293 (spooled a jump at 289 s, 23% hull, destroyed 3 s later) | 1: 255.7 Exeter, no kill | 8 / 12 | 21 / 34 | 1 / 0 / 1 (Bullfrog) | 34 |
+| 4 | 0.0125 | 184 / 54 | FROGG | 240 | alive, hull 56% | 2: 199.5, 238.5 Exeter, no kill | 12 / 12 | 28 / 33 | 6 / 0 / 5 (5 Toad, 1 Bullfrog) | 33 |
+| 5 | 0.0125 | 185 / 54 | human | alive, hull 23% | 251 (spooled at 249 s, 25% hull) | 2: 200.9, 242.4 Exeter, no kill | 5 / 12 | 36 / 36 | 11 / 4 / 7 (10 Toad, 1 Bullfrog) | 36 |
+| 6 | 0.0125 | 202 / 54 | FROGG | 258 | alive, hull 55% | 2: 217.6, 256.6 Exeter, no kill | 12 / 12 | 11 / 23 | 1 / 0 / 1 (Bullfrog) | 23 |
+
+Halberds (runs 1-6): lost 1, 1, 0, 1, 0, 2 of 2. FROGG fighters "launched" is what the hangar had released when the fight ended; no bay was destroyed in any run (`lostManifest` 0). Kestrel losses count every Kestrel death including late ones after the Exeter died.
+Totals: FROGG 4 wins, human 2 wins. The four FROGG wins ended with the Bullfrog at 48-61% hull; both human wins came from the Bullfrog dropping below 25% and spooling a jump while the Exeter's fire finished it.
+
+Reading (not tuning data):
+- **Not degenerate:** both sides close, fighters meet at about 54 s, capitals reach spine range at 183-224 s, the fight resolves in 4-5 minutes of sim time, and the result goes both ways. The spine fired 1-2 times per run, always at the Exeter, hit every time, and killed it in none (the Exeter always survived the shot; the owner's "survives a few hits" holds). The Exeter died to the sum of Toad Tadpoles, fighters and the Bullfrog's turrets; the Bullfrog died only when the Exeter's lasers and rails and the Kestrels got through.
+- **The Tadpole count is dominated by Toads** (4 Toads x 3 Tadpoles) and **PD stops almost none** (0 of 16 at DT 0.05; 4 of 18 at DT 0.0125). Same cause as the PD scenario test below.
+- **Missile PD scenario (`bullfrog_t.py pd`, DT 0.0125):** 8 single Swifts from 1.2 km and 8 single HM-1 torpedoes from 1.5 km at a stationary Bullfrog and at a stationary Exeter: 0 of 8 killed in every cell of the final run (an earlier run killed 1 Swift and 2 torpedoes for the Bullfrog). A 16-missile salvo: 0 of 16 killed. The spec model (BULLFROG.md 4.4e, ~1.0 kill chance with 9 turrets bearing) is **not reproduced**: in the engine a turret starts from rest, slews at 3.6-4 rad/s and each missile is inside range for about 1 s, so most of the 16 turrets that select the missile fire only a few bolts (8 bolts total in the one traced Swift run, closest 23 m). The Exeter's PD fares the same. This is an engine property, not Bullfrog-specific; not tuned.
+- **Caveats:** six runs, no variance estimate; software renderer (irrelevant to the sim, which ran without rendering); DT 0.05 quantises turret cooldowns (thorn 0.07 s fires every 0.1 s) and lets a 900 m/s PD bolt skip a missile's 1.6 m hitbox (PD is weaker than in the live game, 0.0125 is closer to the live frame step); AI behaviour untuned (Kestrels go straight for the nearest target, all 12 are lost in 2 of 6 runs); hangar cap, spine delay and all spec numbers unchanged.
+- **Proposed tuning if the owner wants more or less luck (not applied):** lower `hangarCap` from 12 to 8 for a fairer fight; raise `BF.spineDelay`; PD slew rate is the lever that decides the Tadpole threat (an engine-wide change, so left alone).

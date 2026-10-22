@@ -6,14 +6,15 @@ the models, they are not independent design drawings. Re-generate after model ch
 scratchpad, not yet in the repo).
 
 ## 1. Scale ladder (owner decision 2026-10-21)
-**Current scope: ships under 500 m.** The frigate (up to ~500 m) is the largest class for now, can jump, and can dock (not
-repair) 2 corvettes and 12 fighters / large fighter drones. Everything above 500 m in the table is deferred.
+**Current scope: ships under 500 m, plus one exception (owner decision 2026-10-22): the FROGG Bullfrog, 600 m, `cls: 'capital'`, jump-capable.** The frigate (up to ~500 m) is otherwise the largest class for now, can jump, and can dock (not
+repair) 2 corvettes and 12 fighters / large fighter drones. Everything else above 500 m in the table is deferred.
 | Class | Length | Status |
 |---|---|---|
 | Fighter / interceptor | 10-20 m | built (Kestrel, Darter, Leaper) |
 | Gunship / bomber / heavy fighter | 16-20 m | built (Spitter, Toad, Reaver) |
 | Corvette | 100-150 m | built (Halberd 128 m, Gulper 146 m) |
 | Frigate (jump-capable, in scope) | 300-500 m | human Exeter class built (450 m); FROGG frigate planned |
+| FROGG Bullfrog (explicit exception) | 600 m | built (spine lance, 26 turrets, 36-fighter hangar; docs/BULLFROG.md) |
 | Human carrier / dreadnought | ~1.5 km | deferred (beyond current 500 m cap) |
 | Hive carrier | 2-3 km | deferred; catalogue model exists at 2.5 km |
 | Super capital (human) | ~5 km | deferred |
@@ -34,7 +35,8 @@ Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). 
 | Reaver | FROGG | fighter (heavy role) | heavy fighter | 19 m | 95 m/s |
 | Gulper | FROGG | corvette | escort corvette | 146 m | 34 m/s |
 | Exeter class | human | frigate | jump frigate, docks 2 corvettes + 12 fighters/drones (no repair) | 450 m | 30 m/s |
-| Hive Carrier | FROGG | capital | super carrier (deferred, over 500 m cap) | 2,500 m | 12 m/s (placeholder) |
+| Bullfrog | FROGG | capital | spine carrier: XL forward lance, 2 L + 6 M + 18 S/PD turrets, 4 Tadpole tubes, hangar of 36 fighters, jump drive (exception to the 500 m cap) | 600 m | 22 m/s (AI 14) |
+| Hive Carrier | FROGG | capital | super carrier, unarmed catalogue model (deferred, over 500 m cap) | 2,500 m | 12 m/s (placeholder) |
 Note: the Spitter/Toad/Reaver have `cls: 'fighter'` in data; a separate role field is needed once class masks exist.
 ### Planned (no models yet)
 Human drone wingman (large fighter drone), FROGG frigate, human carrier (~1.5 km, deferred), human dreadnought (~1.5 km, deferred), human super capital (~5 km, deferred),

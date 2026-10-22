@@ -15,11 +15,11 @@ function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 :
 
 // reach multiplier of a subsystem's radius within which a hull impact damages it directly
 // parts that stick out of the hull can be hit directly through the armour (reach = radius x factor); SOFT = extra damage taken
-const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, radiator: 1.8 };
-const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2 };
+const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, radiator: 1.8, bay: 1.4 };
+const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
@@ -48,7 +48,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
     }
     if (ex) {
       const before = compState(ex), dc = d * 0.55 * X[2] * (SOFT[ex.role] || 1);
-      ex.hp -= dc; d -= d * 0.55;
+      ex.hp -= dc; if (!through) d -= d * 0.55;
       s.structure -= dc * 0.1;
       sparksAt(wp, 5, 14); fireAt(wp, 1, 3);
       const after = compState(ex);
@@ -91,7 +91,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0) {
   }
   if (best) {
     const before = compState(best);
-    best.hp -= d * 0.7 + spall; s.structure -= d * 0.3;
+    best.hp -= (through ? d * 0.4 : d * 0.7) + spall; s.structure -= through ? d : d * 0.3;
     const after = compState(best);
     if (after > before) compEvent(s, best, after);
   } else s.structure -= d;
