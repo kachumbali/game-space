@@ -30,6 +30,12 @@ if (params.has('yard')) {
     </div>
     <div id="yard-bounds" class="yardnote"></div>
     <button id="yard-apply-bounds" type="button">Apply suggested bounds</button>
+    <div class="yardrow yardexports">
+      <button id="yard-copy-prims" type="button">Copy prims JS</button>
+      <button id="yard-copy-db" type="button">Copy db entry (JSON)</button>
+      <button id="yard-save-sheet" type="button">Save PNG sheet</button>
+    </div>
+    <div id="yard-export-status" class="yardnote" role="status" aria-live="polite"></div>
     <div id="yard-stat" class="yardstat"></div>
     <div class="yardnote" id="yard-reference">CYAN SILHOUETTE: KESTREL / 12.4 m</div>
   </section>`;
@@ -42,6 +48,7 @@ if (params.has('yard')) {
   const YARD_error = document.getElementById('yard-error');
   const YARD_dbError = document.getElementById('yard-db-error');
   const YARD_bounds = document.getElementById('yard-bounds');
+  const YARD_exportStatus = document.getElementById('yard-export-status');
   const YARD_canvas = document.getElementById('c');
   const YARD_group = new THREE.Group();
   const YARD_model = new THREE.Group();
@@ -290,6 +297,111 @@ if (params.has('yard')) {
     YARD_dbChange();
   }
 
+  function YARD_primsExport() {
+    const prims = JSON.parse(YARD_prims.value);
+    if (!Array.isArray(prims)) throw new Error('Prims source must be an array.');
+    return JSON.stringify(prims, (key, value) => key === '_' ? undefined : value, 2);
+  }
+
+  function YARD_dbExport() {
+    const entry = JSON.parse(YARD_dbEditor.value);
+    if (!entry || typeof entry !== 'object' || Array.isArray(entry)) throw new Error('Database entry must be a JSON object.');
+    return JSON.stringify(entry, null, 2);
+  }
+
+  async function YARD_copy(text) {
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return;
+      } catch (error) {
+        if (!document.execCommand) throw error;
+      }
+    }
+    const field = document.createElement('textarea');
+    field.value = text;
+    field.style.cssText = 'position:fixed;left:-10000px;top:0';
+    document.body.appendChild(field);
+    field.focus();
+    field.select();
+    const copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) throw new Error('Clipboard copy is unavailable in this browser context.');
+  }
+
+  async function YARD_copyAction(kind) {
+    try {
+      const text = kind === 'prims' ? YARD_primsExport() : YARD_dbExport();
+      await YARD_copy(text);
+      YARD_exportStatus.textContent = `${kind === 'prims' ? 'Prims JS' : 'Database entry JSON'} copied.`;
+    } catch (error) {
+      YARD_exportStatus.textContent = error instanceof Error ? error.message : String(error);
+    }
+  }
+
+  function YARD_saveSheet() {
+    let downloadUrl = null;
+    try {
+      const sheet = document.createElement('canvas');
+      sheet.width = 900;
+      sheet.height = 540;
+      const context = sheet.getContext('2d');
+      if (!context) throw new Error('Could not create a 2D canvas for the export sheet.');
+      const originalFov = camera.fov, originalBackground = scene.backgroundIntensity;
+      const radius = Math.max(YARD_def.radius || 0, Math.hypot(...YARD_def.half));
+      const distance = Math.max(radius * 4.2, 25);
+      const views = [
+        { label: '3/4', az: 35, el: 22, up: [0, 1, 0] },
+        { label: 'TOP', az: 0, el: 89.5, up: [0, 0, -1] },
+        { label: 'SIDE', az: 90, el: 0, up: [0, 1, 0] },
+        { label: 'FRONT', az: 180, el: 0, up: [0, 1, 0] },
+      ];
+      context.fillStyle = '#071016';
+      context.fillRect(0, 0, sheet.width, sheet.height);
+      renderer.setSize(450, 270, false);
+      camera.fov = 30;
+      camera.aspect = 450 / 270;
+      camera.updateProjectionMatrix();
+      views.forEach((view, index) => {
+        const az = THREE.MathUtils.degToRad(view.az), el = THREE.MathUtils.degToRad(view.el), c = Math.cos(el);
+        camera.up.set(...view.up);
+        camera.position.set(Math.sin(az) * c * distance, Math.sin(el) * distance, Math.cos(az) * c * distance);
+        camera.lookAt(0, 0, 0);
+        camera.updateMatrixWorld(true);
+        renderer.render(scene, camera);
+        const x = (index % 2) * 450, y = Math.floor(index / 2) * 270;
+        context.drawImage(renderer.domElement, x, y, 450, 270);
+        context.fillStyle = '#061016d9';
+        context.fillRect(x, y + 239, 450, 31);
+        context.fillStyle = '#b8ead8';
+        context.font = '12px ui-monospace, Menlo, Consolas, monospace';
+        context.fillText(`${view.label}  ·  ${YARD_def.name || YARD_def.id}`, x + 12, y + 259);
+      });
+      camera.fov = originalFov;
+      scene.backgroundIntensity = originalBackground;
+      resize();
+      YARD_camera();
+      sheet.toBlob(blob => {
+        if (!blob) {
+          YARD_exportStatus.textContent = 'PNG encoding failed.';
+          return;
+        }
+        downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = `${YARD_dbEntry?.id || YARD_def.id}_sheet.png`;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+        YARD_exportStatus.textContent = 'Saved 900 × 540 four-view PNG sheet.';
+      }, 'image/png');
+    } catch (error) {
+      if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+      resize();
+      YARD_camera();
+      YARD_exportStatus.textContent = error instanceof Error ? error.message : String(error);
+    }
+  }
+
   function YARD_selectShip(id) {
     const original = __game.SHIPS[id];
     const def = original ? { ...original, id: 'yard-' + id, prims: JSON.parse(JSON.stringify(original.prims, (key, value) => key === '_' ? undefined : value)) } : {
@@ -358,6 +470,9 @@ if (params.has('yard')) {
     YARD_dbEditor.value = JSON.stringify(YARD_dbEntry, null, 2);
     YARD_dbChange();
   });
+  document.getElementById('yard-copy-prims').addEventListener('click', () => YARD_copyAction('prims'));
+  document.getElementById('yard-copy-db').addEventListener('click', () => YARD_copyAction('db'));
+  document.getElementById('yard-save-sheet').addEventListener('click', YARD_saveSheet);
   document.getElementById('yard-grid').addEventListener('change', event => { YARD_grid.visible = event.target.checked; });
   YARD_selectShip(YARD_select.value);
   scene.add(YARD_group);
