@@ -14,6 +14,7 @@ macOS test invocation (as used 2026-10-22): `cd tools/tests && GS_CHROMIUM="$HOM
 | `mdxl_t.py` | Exeter MK-90 mass driver (XL): capitalAI-driven cycle (delay 15 s, charge 5 s, lock 3.5 s, cd 30 s) and ~540 kinetic pierce per hit vs a disarmed Bullfrog dummy |
 | `power_t.py` | AI power management (all ships): under fire -> SHIELDS, distant target -> ENGINES, pressure gone -> 4/4/4; shield regen at pw.s 8 is ~1.48x the balanced rate |
 | `magazine_t.py` | Magazines (owner rule: every kinetic weapon carries ammo; XL = 100 slugs): mount pools drain, dry turret drums go dark, dry XL will not charge, GA-9 rotary fires and runs dry, Gulper grp-2 lances fire under AI, tender rearms ammo/stores/slugs but repairs nothing |
+| `tender_pd_t.py` | Seeded tender service: Halberd PD turret drums refill at the documented 20 rds/s proximity rate and 40 rds/s docked rate; dry flags clear |
 | `discipline_t.py` | Gun discipline (60/30/5 bands measured as drain rates), the Kestrel MD-9 mag (fires, draws energy), and the nuke yield dial (0.1 vs 2 kT kill radius) |
 | `dock_t.py` | Tactical docking: approach + D -> auto-dock at the boom, glue while rearming at double the hovering trickle, auto-undock when full, manual undock, nothing repaired |
 | `p0_t.py` | P0 pass: real pause freezes the sim in real time (Esc / touch II), PD proximity flak intercepts torpedoes (4 of 4 vs the 0-of-7 baseline), same seed -> identical Math.random streams |
