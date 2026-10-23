@@ -18,22 +18,39 @@ the displayed names are the realistic ones.
   `acq` seconds; damage then climbs from 0.25x to `peak` over `ramp`. Dwell time is a real stat.
 - **Blast** (`blastAt`): distance falloff, minimum 20% at the rim, 50% to friendlies; the direct target of an
   HE bolt takes its hit separately and is skipped by the splash.
-- **Magazines** (owner rule): every kinetic weapon carries ammo and runs dry - mount pools (`s.ammo`,
-  capacities cached in `s.ammoMax`), per-turret drums (`T.ammo`; a dry turret goes dark but keeps tracking),
-  and the MK-90's 100 slugs (`sp.mag`). Energy weapons have no magazine: the reactor and the ETS power budget
-  are their feed.
+- **Gun classes** (owner rule 2026-10-22): chemical guns (ammo only), mag/rail (a little energy AND ammo -
+  projectile plus capacitor), energy only (reactor-fed). **Magazines**: every kinetic weapon carries ammo and
+  runs dry - mount pools (`s.ammo`, capacities cached in `s.ammoMax`), per-turret drums (`T.ammo`; a dry turret
+  goes dark but keeps tracking), and the MK-90's 100 slugs (`sp.mag`). Energy weapons have no magazine: the
+  reactor and the ETS power budget are their feed.
+
+## 1b. Gun classes and faction lean (owner statement 2026-10-22)
+
+Three gun classes, plus ordnance:
+
+| Class | Feed | Weapons |
+|---|---|---|
+| 1. Chemical guns | ammunition only, no energy draw | MK-20, MK-30 HE, GA-9, DR-2 (human); R-9 (FROGG) |
+| 2. Mag / rail | a little energy AND ammo - the projectile plus the capacitor discharge | RG-90 (12 en/shot, 100 rds), MD-9 (30 en, 120 slugs), MD-55 (15 en, 250 rds), MK-90 (800 en, 100 slugs), R-12 (6 en, 60 rds) |
+| 3. Energy only | no magazine; the reactor is the feed (ETS WEAPONS speeds it) | LS-2, LS-8, all M- masers, the GX-1 XL |
+| 4. Ordnance | missile stores; drones are HUMAN-ONLY (FROGG anti-AI doctrine - "dead silicon" - fields no autonomous machines; their seekers are wetware) | SW-9, LN-3, HM-1, NK-1 (human); SK-1, ST-2 (FROGG); SD-4 drones (human only) |
+
+Faction lean: **FROGG energy-heavy** (masers and wetware ordnance; kinetics few and specialised), **humans
+ammo-heavy** (chemical guns and rails carry; energy is support and PD). FROGG pressure never stops because
+reactors recharge; human firepower is heavier per engagement but sorties end dry - which is what the Tender
+is for. Full lore: `docs/LORE.md` weapon doctrine.
 
 ## 2. Human weapons
 
 | Weapon | Kind | Dmg/shot | ROF | Vel | Range | Pierce | Energy | Magazine | Notes |
 |---|---|---|---|---|---|---|---|---|---|
 | MK-20 CANNON | proj kin | 3 | 11.8/s | 900 | 1620 | - | - | 600/mnt (~51 s) | Kestrel left boom |
-| MD-9 MAG DRIVER | proj kin | 26 | 0.56/s | 1600 | 2720 | 25% | 30/shot | none - capacitor-fed | Kestrel heavy hitter: 30 of the 100-pt pool per slug, 17/s regen; the ETS WEAPONS channel feeds this |
+| MD-9 MAG DRIVER | proj kin | 26 | 0.56/s | 1600 | 2720 | 25% | 30/shot | 120 slugs (~3.6 min) | Kestrel heavy hitter, class 2: slug plus capacitor - 30 energy of the 100-pt pool per shot, and a small magazine |
 | MK-30 HE CANNON | proj kin | 9 + 8 m blast | 4.5/s | 1000 | 2000 | - | - | 500/mnt (~110 s) | splash punishes swarms |
 | DR-2 MAG CANNON | proj kin | 3 | 11.8/s | 900 | 1350 | - | - | 300 (~25 s) | Drone |
 | GA-9 ROTARY CANNON | proj kin | 2.8 | 25/s | 1100 | 1320 | 15% | - | 900 (36 s) | A-10-style, Halberd grp 2; AI fires it only inside 1300 m |
-| RG-90 RAILGUN | proj kin | 70 | 0.42/s | 2000 | 4400 | 60% | - | 100/mnt (~4 min) | best kinetic pierce in the game |
-| MD-55 MASS DRIVER (L) | proj kin | 60 | 0.45/s | 1800 | 2600 | 40% | - | 250/turret (~9 min) | bigOnly, noPD |
+| RG-90 RAILGUN | proj kin | 70 | 0.42/s | 2000 | 4400 | 60% | 12/shot | 100/mnt (~4 min) | class 2: best kinetic pierce in the game |
+| MD-55 MASS DRIVER (L) | proj kin | 60 | 0.45/s | 1800 | 2600 | 40% | 15/shot | 250/turret (~9 min) | class 2; bigOnly, noPD |
 | LS-2 TURRET LASER | beam en | 6/pulse | 4/s | - | 1600 | - | 12/pulse | reactor | peak x3 after 0.5 s acq |
 | LS-8 TURRET LASER (M) | beam en | 13/pulse | 3.6/s | - | 1800 | - | 26/pulse | reactor | peak x3 |
 | PD-30 POINT DEFENCE | proj kin | 1.3 | 13.3/s | 1100 | 900 | - | - | 1500/turret (~110 s) | Phalanx-style drum |
@@ -63,7 +80,7 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | Mark | Dmg | ROF | Vel | Range | Pierce | Magazine | Notes |
 |---|---|---|---|---|---|---|---|
 | R-9 AUTOCANNON | 4.5 kin | 6.2/s | 900 | 1800 | - | 400/mnt (~64 s) | half the MK-20's volume, 1.5x the bite |
-| R-12 PENETRATOR DRIVER | 34 kin | 0.38/s | 1400 | 3080 | 45% | 60/mnt | AP rod; flags under review (section 7) |
+| R-12 PENETRATOR DRIVER | 34 kin | 0.38/s | 1400 | 3080 | 45% | 6/shot | 60/mnt | class 2 AP rod; flags under review (section 7) |
 
 ## 4. Ordnance (all ships, stores-limited)
 

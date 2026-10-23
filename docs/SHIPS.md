@@ -66,7 +66,7 @@ Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells wit
 
 "Every kinetic weapon carries ammo; the magazine scales with the weapon, the XL's is 100 slugs; fleet tender ships resupply."
 
-- **Mount weapons** draw from `s.ammo[wid]` pools (`ammoMax` = per-mount sum, cached at makeShip): RG-90 rail 100 rds/mount, GA-9 rotary 900, MK-20 cannon 600, MK-30 HE 500, DR-2 300, R-9 autocannon 400, R-12 penetrator 60.
+- **Mount weapons** draw from `s.ammo[wid]` pools (`ammoMax` = per-mount sum, cached at makeShip): RG-90 rail 100 rds/mount (12 energy/shot - the mag/rail class draws a little of both), MD-9 mag 120 slugs (30 energy/shot), GA-9 rotary 900, MK-20 cannon 600, MK-30 HE 500, DR-2 300, R-9 autocannon 400, R-12 penetrator 60 (6 energy/shot).
 - **Turret weapons** get per-turret drums (`T.ammo`, from the weapon's `ammo`): PD-30 1500 (Phalanx-style, ~110 s), R-4 800, R-5 1000, MD-55 250. A dry turret goes dark like a dead one but keeps tracking; only a tender restores it.
 - **XL mains**: the MK-90 mass driver carries `mag: 100` slugs (`sp.mag`, decremented per shot, charge gates require a slug); the GX-1 charged lance is an energy weapon - its "ammo" is the reactor budget.
 - **Energy weapons** (lasers, masers) have no magazine: the reactor and the power budget are their supply.

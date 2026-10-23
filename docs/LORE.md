@@ -31,6 +31,29 @@ The Gemini lore proposals are now **canon in adapted form** (raw text: `docs/pro
 - Large ships (corvette and bigger) carry point defence (CRAM-style guns and PD lasers); heat forces radiators
   (docs/CAPITAL_COMBAT.md).
 ## Weapon doctrine (owner statement 2026-10-21)
+
+**Gun classes and faction lean (owner statement 2026-10-22):** three gun classes, and the factions lean on
+them differently.
+1. **Chemical guns** - ammunition only, no energy draw: MK-20, MK-30 HE, GA-9 rotary, DR-2 (humans);
+   R-9 (FROGG). The magazine is the only constraint; firing them costs the ship nothing but rounds.
+2. **Mag / rail** - a little energy AND ammunition: the projectile plus the capacitor discharge that throws
+   it. RG-90, MD-9, MD-55, MK-90 (humans); R-12 (FROGG). Rails eat both a small capacitor draw per slug and
+   a magazine; the ETS WEAPONS channel feeds the recharge.
+3. **Energy only** - no magazine, the reactor is the feed: lasers and masers, the LS/ M- series, and the two
+   XL lances' charge cycles (GX-1 fully, MK-90 hybrid: it is class 2 at XL scale - 100 slugs plus 800 energy
+   a shot).
+
+Faction lean: **FROGG are energy-heavy** (masers and wetware-guided ordnance; their kinetics are few and
+specialised), **humans are ammo-heavy** (chemical guns and rails carry the day; energy weapons are support
+and point-defence). Intended feel: FROGG pressure never stops because reactors recharge; human firepower
+is heavier per engagement but sorties end dry, which is what tenders are for.
+
+**Ordnance (owner statement 2026-10-22):** the fourth category is missiles and drones. Missiles both sides
+carry (humans: SW-9, LN-3, HM-1, NK-1; FROGG: SK-1, ST-2 - better seekers, harder to decoy). **Drones are
+humans-only**, because the FROGG anti-AI doctrine ("dead silicon") fields no autonomous machines of any kind:
+their missile guidance is wetware (cloned brain-stems), their fighters are neuro-slaved pilots, and a human
+fighter's slaved SD-4 drones are precisely the thing FROGG propaganda mocks.
+
 - **FROGGs:** lasers, and better missiles than the humans (longer reach, better seekers/manoeuvre, harder to decoy; to be tuned).
 - **Humans:** better in railguns, miniguns (rapid-fire kinetic) and point defence, plus some lasers.
 - Intended feel: the FROGGs win by numbers and energy/missile pressure, the humans by kinetic firepower and layered PD.
@@ -63,6 +86,6 @@ Consequences and open points (analysis, not owner statements):
 ## FROGG ship look (owner reference art, 2026-10-21)
 Reference: `docs/img/frogg_reference_art.jpg`. Graphite and gunmetal carapace in layered plates, **open toothed maw** at the bow (jaws
 with teeth, glowing throat), **rib arches** over the hull with **cyan light seams** between them, rows of dorsal spikes, blocky
-cylindrical drive clusters aft with **cyan plumes**. Acid weapons stay venom green so they read against the cyan hull light.
+cylindrical drive clusters aft with **cyan plumes**. Maser bolts stay venom green so they read against the cyan hull light.
 Implementation: `fRef` and the palette `N` in `src/31_ships_frogg.js`; detail layer palette in `src/20_voxel.js` (frogg).
 Not yet matched: the long leaf-shaped flank plates of the carrier and the dreadnought's full jaw; cruiser/dreadnought classes do not exist yet.

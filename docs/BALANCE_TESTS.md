@@ -182,3 +182,11 @@ swapped one MK-20 for the MD-9 mag (26 kin, 25% pierce, 30 energy per slug - cap
 arcade 8 -> 2/3, 10 -> 1/3. The even point still reads ~9-10; the 10-cell swung from 3/3 to 1/3, within the
 recorded noise band for 3-run cells. Discipline duty cycles measured headlessly: free 60 rds/6 s, 50% band
 34 (57% duty vs the designed 54%), 20% band 15 (25% vs 23%). Tests: `tools/tests/discipline_t.py`.
+
+## Gun-class taxonomy (owner statement 2026-10-22)
+
+Three gun classes, now also true in the stats: chemical guns (ammo only), mag/rail (a little energy AND ammo -
+RG-90 12 en/shot, MD-9 30 en + 120 slugs, MD-55 15 en, R-12 6 en), energy only (reactor-fed). FROGG lean
+energy-heavy, humans ammo-heavy; drones are human-only (FROGG anti-AI). Duels after the class-2 energy draws:
+arcade 8 -> 2/3, 10 -> 2/3 - the even point holds ~10-11. Tests unaffected (discipline_t 10/10, magazine_t
+11/11, suite1 13/13).

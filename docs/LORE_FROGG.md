@@ -67,7 +67,10 @@ are the realistic ones.)
   section 6), ramping to 2-3x damage on a held lock.
 - **Kinetics:** the R-9 autocannon on fighters, R-4/R-5 small turrets on
   corvettes and the Bullfrog, and the R-12 penetrator driver - the Gulper's
-  AP-rod main gun (the FROGG answer to human railguns).
+  AP-rod main gun (the FROGG answer to human railguns). Faction lean (owner
+  statement 2026-10-22): FROGG arsenals are energy-heavy - kinetics are the few
+  specialised exceptions (the three gun classes and the lean are defined in
+  `docs/LORE.md`, weapon doctrine).
 - **Guided ordnance:** the **SK-1** interceptor missile and the **ST-2** heavy
   anti-ship torpedo (the Bullfrog's tubes). High tracking rates, long reach,
   low decoy susceptibility (flare values halved 2026-10-22).
