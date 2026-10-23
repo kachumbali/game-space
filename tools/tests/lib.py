@@ -28,8 +28,9 @@ class Runner:
           args=['--no-sandbox','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--use-gl=angle'])
         self.errs=[]
         return self
-    def page(self,w,h,q='',touch=False):
+    def page(self,w,h,q='',touch=False,init_script=None):
         ctx=self.b.new_context(viewport={'width':w,'height':h},has_touch=touch,is_mobile=touch)
+        if init_script: ctx.add_init_script(init_script)
         pg=ctx.new_page()
         pg.on('console',lambda m: self.errs.append((m.type,m.text,m.location)) if m.type=='error' else None)
         pg.on('pageerror',lambda e: self.errs.append(('pageerror',str(e))))
