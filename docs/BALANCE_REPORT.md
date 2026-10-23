@@ -3,6 +3,7 @@
 - **Date:** 2026-10-23
 - **Branch:** `balance-sweep`
 - **Game/source commit measured:** `6a9efeb3cf1aa6f8c44d07d54265fd0e7befc5bc`
+- **Harness and data commit:** `9d60f8daee07fcc8946cf99cbfece2e0ede5cbbb`
 - **Runs:** 20 per scenario, seeds 1-20 (140 total)
 - **Runtime:** Playwright + Chromium for Testing, SwiftShader, `q=low`
 
@@ -76,11 +77,11 @@ also include `q=low`.
 | F | `?sk=bullfrog:1&sk_ship=kestrel&sk_wship=kestrel&sk_wing=2&sk_skill=3&sk_range=2000&seed=N` |
 
 The game/data source SHA above was captured before the report and harness were
-committed. The report commit contains the harness used to run it. For a direct
-comparison, check out this report's branch and verify that the game/data source
-SHA matches; a changed game build or harness invalidates the comparison.
-Same-seed repeat check: scenario A, seed 1, produced identical results on two
-separate runs.
+committed. Commit `9d60f8daee07fcc8946cf99cbfece2e0ede5cbbb` contains the
+harness and data used for the runs. For a direct comparison, check out that
+commit and verify that the game/data source SHA matches; a changed game build
+or harness invalidates the comparison. Same-seed repeat check: scenario A,
+seed 1, produced identical results on two separate runs.
 
 The Exeter retune was already present in the measured source: LS-2 damage 3
 and LS-8 damage 6.5. Neither value was changed here.
