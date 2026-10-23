@@ -24,7 +24,11 @@ Colours are `"#rrggbb"` strings and become ints at load (`src/16_db.js`, keys `c
 
 1. Edit `data/db.json`.
 2. `python3 build.py` (embeds it) and `python3 tools/validate_db.py` (weapons exist, mounts point at real components, armour/class tables complete; also runs in CI).
-3. `python3 tools/export_db.py` regenerates `docs/data/ships.csv` / `weapons.csv` from the running game (derived views).
+3. `python3 tools/export_db.py` regenerates `docs/data/ships.csv` / `weapons.csv` from the current build (derived views; never edit by hand).
+4. `python3 tools/render_pack.py` renders all ships into one captioned contact-sheet PNG per faction
+   (requires the Playwright/Chromium test environment and Pillow).
+   It reads captions and weapon names from `data/db.json`; output defaults to the git-ignored
+   `docs/img/ships/contact_sheets/`. Set `--quality low|mid|high|ultra` or `--output DIR` as needed.
 
 ## Next step (not started)
 

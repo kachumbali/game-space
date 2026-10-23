@@ -1,6 +1,8 @@
 # Ship sizes (model units = metres)
 
-Source: `length` and `half` extents in `src/30_ships_human.js`, `src/31_ships_frogg.js`. Span/height = 2 x half-extent (includes wings, spines, turrets), so they can exceed the nominal length.
+Source: raw ship data in `data/db.json`; `src/32_scale.js` applies runtime size changes to selected ships.
+Values below are the in-game dimensions after scaling. Span/height = 2 x half-extent (includes wings, spines,
+turrets), so they can exceed the nominal length.
 
 | Ship | Side | Class | Length m | Span m | Height m | Length vs Kestrel | Max speed m/s |
 |---|---|---|---|---|---|---|---|
@@ -46,7 +48,7 @@ Kestrel row updated for the redesign; Halberd and Gulper rows for the 128/146 m 
 |---|---|---|
 | XL main, muzzle 0, -2, -204 (bow face), emitter comp `mdxl` at 0, 0, -150, 600 hp, `store: 'spine'` | `mdxl` MK-90 MASS DRIVER | 900 kin, 60% pierce, 3200 m, 800 en; charge 5 s, lock 1.5 s before the end, cd 30 s (delay 15 s); kinetic rail-family twin of the FROGG spine |
 | 4 L turrets (dorsal pair at +-40, 23, -90; ventral pair at +-36, -25, 30; 140 hp, cls L) | `mdl` MD-55 MASS DRIVER | 60 kin, 40% pierce, cd 2.2 s, v 1800, range 2600; big targets only (fighters inside 900 m), never missiles |
-| 8 M turrets (dorsal +-48, 21, 0 and +-14, 26, 130; ventral +-44, -21.2, 60 and +-14, -26.5, 120; 90 hp) | `laserM` LS-8 TURRET LASER | 13 en, cd 0.28 s, range 1800, focus peak x3 like the LS-2 |
+| 8 M turrets (dorsal +-48, 21, 0 and +-14, 26, 130; ventral +-44, -21.2, 60 and +-14, -26.5, 120; 90 hp) | `laserM` LS-8 TURRET LASER | 6.5 en, cd 0.28 s, range 1800, focus peak x3 like the LS-2 |
 
 The XL charge/lock/cool machine (79_bullfrog.js) is now weapon-generic: any mount with `store: 'spine'` whose weapon has `kind: 'spine'` runs it, with the whole cycle read from the weapon entry (`charge`, `lockT`, `cd`, `delay`, `fizzleCd`, `lockHold`, `corridorHalf`, `warnName`, `bw`, `color`, `sfx`). The FROGG spine is driven by `lancerAI`, the Exeter's mass driver by `capitalAI` (charge gate: big target, in range, aligned, corridor clear; the ship steers onto the aim point while charging and freezes its heading at lock). The HUD charge warning names the weapon (`SPINE` / `MASS DRIVER`). Tests: `tools/tests/mdxl_t.py` (cycle and pierce), `bullfrog_t.py` arcs/spine/exeter (updated: single L, disarmed dummies).
 
@@ -60,7 +62,7 @@ Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells wit
 
 **Missiles:** `tick` SK-1 IR MISSILE, `tad` ST-2 TORPEDO (stats unchanged).
 
-**Human:** the PL-4 PLASMA BOLTER is gone; the Kestrel's secondary (grp 2) is the new `he` MK-30 HE CANNON - kin 7 per shell plus splash: on impact the bolt calls `blastAt` (8 m radius, distance falloff, `exp` damage to everything but the direct target, which already took the full hit). Ammo 240 per mount like the cannon; the HUD reads GUN + HE. Balance re-measured in `docs/BALANCE_TESTS.md` (HE shells vs FROGG fighters; Gulper rods vs humans).
+**Human:** the PL-4 PLASMA BOLTER is gone; the Kestrel's secondary (grp 2) is the `he` MK-30 HE CANNON - kin 9 per shell plus splash: on impact the bolt calls `blastAt` (8 m radius, distance falloff, `exp` damage to everything but the direct target, which already took the full hit). Its magazine is 500 rounds per mount; the HUD reads GUN + HE. Balance measurements are documented in `docs/BALANCE_TESTS.md`.
 
 ## Magazine rule and fleet tenders (owner decision 2026-10-22)
 

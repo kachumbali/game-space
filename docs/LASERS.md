@@ -98,7 +98,7 @@ dwell-time mechanic on armour and exposed parts, where the sources apply. It is 
 
 
 ## 6. Implemented 2026-10-22 (owner: "a steady beam delivers a lot of energy; shields and armour types come in")
-All beam weapons (human `laser`, FROGG `flaser` and `lance` - the FROGG beams are masers since the realism pass of 2026-10-22) share one rule, in `src/60_weapons.js` (`beamFocus`):
+All beam weapons (human `laser`, FROGG `flaser` and `lance` - the FROGG beams are masers since the realism pass of 2026-10-22) share one rule in the runtime; their stats are stored in `data/db.json`:
 - A beam is instant-hit, but the ship it touches is only *tracked* at first: no damage until the beam has stayed on the **same ship** for `acq` sim-seconds.
 - After that the per-pulse damage climbs from 0.25x to `peak`x over `ramp` sim-seconds. Contact lost for longer than `gap` (default max(0.25 s, 2.5 x cooldown)) resets everything.
 - Because per-pulse damage grows, a held beam gets past the armour size threshold (ARMOR `thresh` x class) that stops light hits, and then the armour profile (`hard` 0.4x vs energy, `composite` 1.0x, `ablative` 1.5x) and shields (energy x1.25 vs shields) decide the rest. This matches the sources in sections 1-2: dwell time is the mechanic, ablative armour and target motion are the counters.
@@ -106,9 +106,9 @@ All beam weapons (human `laser`, FROGG `flaser` and `lance` - the FROGG beams ar
 
 | Weapon | Carried by | acq (sim s / real s) | ramp | peak | base dmg | cd | range | energy/shot |
 |---|---|---|---|---|---|---|---|---|
-| `flaser` (M-1 PULSE MASER) | FROGG Leaper, Reaver, Spitter | 0.35 / 0.9 | 0.5 | 2.2x | 2.8 | 0.1 | 950 | 9 (capacitor) |
-| `lance` (M-7 MASER LANCE) | FROGG Gulper | 0.8 / 2.1 | 1.0 | 3.0x | 2.4 | 0.06 | 1500 | 3 (pool 400, +70/s) |
-| `laser` (LS-2 turret) | Halberd (2 dorsal-forward turrets), Exeter (4 turrets) | 0.5 / 1.3 | 0.8 | 3.0x | 6 | 0.25 | 1600 | 12 (Halberd pool 600, +100/s; Exeter 2500, +350/s) |
+| `flaser` (M-1 PULSE MASER) | FROGG Leaper, Reaver, Spitter | 0.35 / 0.9 | 0.5 | 2.2x | 3.5 | 0.1 | 950 | 9 (capacitor) |
+| `lance` (M-7 MASER LANCE) | FROGG Gulper | 0.8 / 2.1 | 1.0 | 3.0x | 3 | 0.06 | 1500 | 3 (pool 400, +70/s) |
+| `laser` (LS-2 turret) | Halberd (2 dorsal-forward turrets), Exeter (4 turrets) | 0.5 / 1.3 | 0.8 | 3.0x | 3 | 0.25 | 1600 | 12 (Halberd pool 600, +100/s; Exeter 2500, +350/s) |
 
 Feedback to the pilot: a tracked player sees `LASER TRACKING n%` (blink speeds up) and hears a rising tick; once the beam is burning, `LASER ON YOU - BREAK` and a fast tone. A tracking beam is drawn thin and dim, a burning beam bright.
 Laser turrets hold their target (switching resets the focus), prefer large targets (PD turrets keep the fighters and missiles), do not fire with a friendly in the line, and spend ship energy.

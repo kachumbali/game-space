@@ -2,8 +2,11 @@
 
 Handbook-style overview of every ship class, existing and planned. Blueprint plates are **generated from the current
 voxel model data** (orthographic-style renders, silhouette + shading edges, measured overall dimensions); they document
-the models, they are not independent design drawings. Re-generate after model changes (script kept in the working
-scratchpad, not yet in the repo).
+the models, they are not independent design drawings. `tools/render_ships.py` generates the per-ship views;
+`tools/render_pack.py` generates faction contact sheets. Their PNG output is git-ignored and should not be committed.
+
+Current ship stats live in `data/db.json`. Lengths shown here are in-game sizes after runtime scaling in
+`src/32_scale.js`; use `python3 tools/export_db.py` for generated detailed ship and weapon tables.
 
 ## 1. Scale ladder (owner decision 2026-10-21)
 **Current scope: ships under 500 m, plus one exception (owner decision 2026-10-22): the FROGG Bullfrog, 600 m, `cls: 'capital'`, jump-capable.** The frigate (up to ~500 m) is otherwise the largest class for now, can jump, and can dock (not
@@ -14,7 +17,7 @@ repair) 2 corvettes and 12 fighters / large fighter drones. Everything else abov
 | Gunship / bomber / heavy fighter | 16-20 m | built (Spitter, Toad, Reaver) |
 | Corvette | 100-150 m | built (Halberd 128 m, Gulper 146 m) |
 | Frigate (jump-capable, in scope) | 300-500 m | human Exeter class built (450 m); FROGG frigate planned |
-| FROGG Bullfrog (explicit exception) | 600 m | built (spine lance, 26 turrets, 36-fighter hangar; docs/BULLFROG.md) |
+| FROGG Bullfrog (explicit exception) | 600 m | built (spine lance, 25 turrets, 36-fighter hangar; docs/BULLFROG.md) |
 | Human carrier / dreadnought | ~1.5 km | deferred (beyond current 500 m cap) |
 | Hive carrier | 2-3 km | deferred; catalogue model exists at 2.5 km |
 | Super capital (human) | ~5 km | deferred |
@@ -26,16 +29,16 @@ Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). 
 ### Built
 | Ship | Side | Class | Role | Length | Max speed |
 |---|---|---|---|---|---|
-| Kestrel | human | fighter | multirole fighter | 12 m | 150 m/s |
+| Kestrel | human | fighter | multirole fighter | 12.4 m | 150 m/s |
 | Halberd | human | corvette | escort / mothership | 128 m | 28 m/s |
 | Darter | FROGG | fighter | interceptor | 9.5 m | 165 m/s |
 | Leaper | FROGG | fighter | line fighter | 13.6 m | 120 m/s |
-| Spitter | FROGG | fighter (gunship role) | acid gunship | 16 m | 90 m/s |
+| Spitter | FROGG | fighter (gunship role) | maser gunship | 16 m | 90 m/s |
 | Toad | FROGG | fighter (bomber role) | torpedo bomber | 19 m | 78 m/s |
 | Reaver | FROGG | fighter (heavy role) | heavy fighter | 19 m | 95 m/s |
 | Gulper | FROGG | corvette | escort corvette | 146 m | 34 m/s |
 | Exeter class | human | frigate | jump frigate, docks 2 corvettes + 12 fighters/drones (no repair) | 450 m | 30 m/s |
-| Bullfrog | FROGG | capital | spine carrier: XL forward lance, 2 L + 6 M + 18 S/PD turrets, 4 Tadpole tubes, hangar of 36 fighters, jump drive (exception to the 500 m cap) | 600 m | 22 m/s (AI 14) |
+| Bullfrog | FROGG | capital | spine carrier: XL forward lance, 1 L + 6 M + 10 S + 8 PD turrets, 16 ST-2 torpedoes, hangar of 36 fighters, jump drive (exception to the 500 m cap) | 600 m | 22 m/s |
 | Hive Carrier | FROGG | capital | super carrier, unarmed catalogue model (deferred, over 500 m cap) | 2,500 m | 12 m/s (placeholder) |
 Note: the Spitter/Toad/Reaver have `cls: 'fighter'` in data; a separate role field is needed once class masks exist.
 ### Planned (no models yet)

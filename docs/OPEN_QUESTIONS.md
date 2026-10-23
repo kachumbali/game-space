@@ -3,7 +3,7 @@
 Each item has my default; if you do not decide, the default is what I build. "Evidence" says what is measured versus assumed.
 
 ## A. Combat and balance
-1. **FROGG laser mechanics. IMPLEMENTED with my defaults, please confirm or change.** Fighters (Leaper, Reaver, Spitter) carry `flaser` pulse banks (2.8 dmg, 950 m, capacitor-limited); the Gulper carries a continuous `lance` (1500 m, power pool 400, 70/s). Instant hit, no dodge, so damage is low. Heat is not modelled, only energy. Values are guesses, tuned by headless duels only.
+1. **FROGG laser mechanics. Historical question; implemented values are now in `data/db.json` and `docs/LASERS.md`.** Fighters (Leaper, Reaver, Spitter) carry `flaser` pulse banks (3.5 base dmg, 950 m, capacitor-limited); the Gulper carries a continuous `lance` (3 base dmg, 1500 m, power pool 400, 70/s). Instant hit, no dodge, so damage is low. Heat is not modelled, only energy. The cited defaults are not current balance conclusions.
 2. **FROGG missiles. IMPLEMENTED with my defaults.** Tick range +~45%, turn +40%, flare effectiveness halved; Tadpole similar. Larger than the +30%/x0.6 I proposed because the first pass did not move balance.
 3. **Shield layout.** Currently one energy pool per facing (fore/aft), no spot-size modelling. Default: keep.
 4. **XL keel cannon and frigate threat.** Whole ship aims; open: shield pierce, turn-rate cost for a 450 m hull. Default: pierces 50% of shield, frigate turns at 0.05 rad/s.
