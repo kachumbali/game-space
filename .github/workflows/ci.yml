@@ -10,6 +10,7 @@ jobs:
       # build.py concatenates src/* AND fails on duplicate top-level names
       # (the _bm merge collision broke the whole page once; owner P0 2026-10-22)
       - run: python3 build.py
+      - run: python3 tools/validate_db.py     # data/db.json consistency (weapons exist, mounts point at real components)
       - uses: actions/upload-artifact@v4
         with:
           name: index-html

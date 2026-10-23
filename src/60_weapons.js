@@ -11,11 +11,7 @@ const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1],
 //   rate    ablative only: max damage absorbed per second as a fraction of structure (burst capacity 1.5 s); beyond it hits pass through
 //   spall   share of the blocked damage that reaches a nearby internal component when the armour is breached
 // Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
-const ARMOR = {
-  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00, nuke: 1.60 }, thresh: 0, rate: 0.60, spall: 0.04 },
-  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00, nuke: 0.60 }, thresh: 6, rate: 0,    spall: 0.30 },
-  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00, nuke: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
-};
+const ARMOR = DB.armor;
 // ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
 const FF = { bolt: 0.5, blast: 0.5 };
 const _ff = new THREE.Vector3(), _fw = new THREE.Vector3();
@@ -30,42 +26,10 @@ function friendlyInLine(s, maxD = 700) {           // AI holds fire when a frien
   }
   return false;
 }
-const ARMOR_THRESH_CLS = { fighter: 0.25, corvette: 1, frigate: 1.5, capital: 2 };
+const ARMOR_THRESH_CLS = DB.armorThreshCls;
 
 const FMX = 1.3;      // FROGG missile effectiveness vs the human equivalent (owner 2026-10-22): +30% warhead damage
-const WEAPONS = {
-  // ---- human ----
-  cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
-  he: { kind: 'proj', name: 'MK-30 HE CANNON', cd: 0.22, v: 1000, dmg: 9, dt: 'kin', life: 2.0, spread: 0.0015, ammo: 500, color: 0xffa860, len: 7, sz: 0.22, sfx: 'cannon', blast: 8 },    // high-explosive shells: direct hit + splash (blastAt) within 8 m; replaced the PL-4 plasma bolter in the realism pass 2026-10-22 (9 dmg/500 rds to hold the ~10 even point: kin hits shields at 0.7x vs the old en 1.25x, and the plasma had no magazine)
-  dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
-  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100, energy: 12 },   // mag/rail class (owner 2026-10-22): projectile + capacitor - ammo AND a small energy draw
-  rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
-  fmag: { kind: 'proj', name: 'MD-9 MAG DRIVER', cd: 1.8, v: 1600, dmg: 26, dt: 'kin', pierce: 0.25, life: 1.7, spread: 0.002, energy: 30, ammo: 120, color: 0xcfe8ff, len: 14, sz: 0.4, sfx: 'rail', big: true },    // Kestrel heavy hitter, mag/rail class (owner 2026-10-22): 30 energy per slug from the 100-pt pool AND a 120-slug magazine - projectile plus capacitor; the ETS WEAPONS channel speeds the recharge
-  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250, energy: 15 },    // mag/rail class: 250-rd magazine ~9 min of fire + a small capacitor draw per slug    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
-  // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
-  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
-  // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
-  // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
-  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
-  laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500, flak: 6 },    // Phalanx-style drum ~110 s; flak 6: proximity-burst vs missiles (owner P0 2026-10-22: direct hits on a 1.6 m box intercepted nothing)
-  // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
-  flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
-  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang', ammo: 400 },   // ~64 s of fire
-  spit: { kind: 'proj', name: 'M-2 MASER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
-  spitcannon: { kind: 'proj', name: 'M-6 HEAVY MASER', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
-  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true, ammo: 60, energy: 6 },    // mag/rail class: heavy rods, small magazine + capacitor draw (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
-  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true, ammo: 800 },
-  // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
-  ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
-  rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
-  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'SK-1 IR MISSILE', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  nuke: { kind: 'msl', name: 'NK-1 TAC WARHEAD (0.5 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.5 },   // owner 2026-10-22: standard load is a realistic battlefield yield (B61-style sub-kiloton tactical setting); dial via `?nukeKt=` 0.1 (minimum) to 10 kT; strategic 100 kT-10 MT is lore-only (docs/NUKES.md)
-  tad: { kind: 'msl', name: 'ST-2 TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
-  flare: { kind: 'cm', name: 'FLARES / CHAFF' },
-};
+const WEAPONS = DB.weapons;
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
 
 // ---- shared scratch + rendering of projectiles (one InstancedMesh per weapon type) -----------------

@@ -4,13 +4,7 @@
 //  Everything here is looked up at run time (parts 60/65/70 call the functions below); the only load-time use of earlier parts is WEAPONS.
 //  Test seam: globalThis.__bf.
 // ======================================================================
-Object.assign(WEAPONS, {
-  // XL main (realism pass 2026-10-22: the FROGG energy family is masers; ids are stable, names are player-facing): mount has store:'spine' so fireGuns skips it; charge then an instant 12 m wide ray, see spineStep / spineFire
-  spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
-  lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
-  acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000, flak: 5 },   // PD drum + proximity-burst flak, radius 5 vs the PD-30's 6 (humans keep the better PD)
-});
+// weapons defined in data/db.json (merged into DB.weapons)
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
   hangarInterval: 4.5, hangarCap: 12, emergencyInterval: 1.5, spoolT: 20, corridorHalf: 0.12,

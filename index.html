@@ -572,6 +572,20 @@ function showCredits(force) {
 }
 addEventListener('keydown', e => { if (e.code === 'Escape' && credOpen) { showCredits(false); e.stopImmediatePropagation(); e.preventDefault(); } }, true);
 // ======================================================================
+//  DATABASE  - ship, weapon and armour technical data (single source of truth: data/db.json)
+//  build.py embeds data/db.json here. Edit the JSON, not this file; geometry (prims) stays in 30_/31_ships_*.js.
+//  Colours are "#rrggbb" strings in the JSON and become ints here for the keys below.
+// ======================================================================
+const DB = {"ships":{"kestrel":{"id":"kestrel","name":"KESTREL","cls":"fighter","fac":"human","role":"HEAVY FIGHTER","length":12.4,"half":[5.2,2.2,6.9],"mirror":true,"radius":6.6,"seam":[1.5,1.1],"eye":[0,0.62,-2.5],"engines":[{"pos":[3.35,0.5,6.4],"comp":"engR","r":0.46},{"pos":[-3.35,0.5,6.4],"comp":"engL","r":0.46},{"pos":[3.9,-0.6,6.75],"comp":"engR","r":0.42},{"pos":[-3.9,-0.6,6.75],"comp":"engL","r":0.42}],"mounts":[{"w":"cannon","pos":[-0.62,-0.48,-6.45],"comp":"gunL","grp":1},{"w":"fmag","pos":[0.6,-0.45,-4.55],"comp":"gunR","grp":1},{"w":"he","pos":[4.95,-0.04,0.6],"comp":"wingR","grp":2},{"w":"he","pos":[-4.95,-0.04,0.6],"comp":"wingL","grp":2}],"stores":{"ir":4,"rf":2,"torp":1,"flare":24},"launch":[2.25,-0.4,0.55],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-3.6,-0.05,4.4],"r":1.5,"hp":16},{"id":"engR","name":"ENGINE R","role":"engine","pos":[3.6,-0.05,4.4],"r":1.5,"hp":16},{"id":"gunL","name":"CANNON L","role":"gun","pos":[-0.62,-0.45,-3.8],"r":0.9,"hp":10},{"id":"gunR","name":"MD-9 MAG","role":"gun","pos":[0.6,-0.45,-3.2],"r":0.7,"hp":12},{"id":"wingL","name":"HE GUN L","role":"gun","pos":[-4.6,-0.04,1.4],"r":0.8,"hp":9},{"id":"wingR","name":"HE GUN R","role":"gun","pos":[4.6,-0.04,1.4],"r":0.8,"hp":9},{"id":"shield","name":"SHIELD GEN","role":"shield","pos":[0,0.2,1.2],"r":0.9,"hp":20},{"id":"radar","name":"RADAR","role":"radar","pos":[0,-0.1,-3.9],"r":0.8,"hp":12},{"id":"power","name":"REACTOR","role":"power","pos":[0,0,2.6],"r":1,"hp":30}],"shield":{"fore":40,"aft":40},"armor":{"type":"composite","rating":0.44},"structure":50,"maxSpeed":150,"accel":75,"turn":2.2,"shieldRegen":1,"sig":1,"flameColor":"#66c8ff"},"halberd":{"id":"halberd","name":"HALBERD","cls":"corvette","fac":"human","role":"ESCORT CORVETTE","length":64,"half":[15,11,33],"mirror":true,"radius":38,"seam":[3.2,2.4],"engines":[{"pos":[0,0,31.8],"comp":"engC","r":1.9},{"pos":[3.9,0,31.6],"comp":"engR","r":1.25},{"pos":[-3.9,0,31.6],"comp":"engL","r":1.25}],"mounts":[{"w":"rail","pos":[0.9,3.9,-31],"comp":"rail","grp":1},{"w":"rail","pos":[-0.9,3.9,-31],"comp":"rail","grp":1},{"w":"rotary","pos":[0,-2.3,-30.6],"comp":"rotary","grp":2}],"turrets":[{"w":"laser","pos":[2.6,1.85,-12],"comp":"tur1","side":1},{"w":"laser","pos":[-2.6,1.85,-12],"comp":"tur2","side":1},{"w":"pd","pos":[2.2,3.1,19],"comp":"tur3","side":1},{"w":"pd","pos":[-2.2,3.1,19],"comp":"tur4","side":1},{"w":"pd","pos":[0,-2.8,-6],"comp":"tur5","side":-1},{"w":"pd","pos":[0,-3.3,14],"comp":"tur6","side":-1}],"stores":{"flare":0},"comps":[{"id":"engC","name":"ENGINE C","role":"engine","pos":[0,0,26],"r":3,"hp":120},{"id":"engL","name":"ENGINE L","role":"engine","pos":[-3.9,0,26],"r":2.2,"hp":70},{"id":"engR","name":"ENGINE R","role":"engine","pos":[3.9,0,26],"r":2.2,"hp":70},{"id":"rail","name":"RAILGUN","role":"gun","pos":[0,3.5,-12],"r":3.5,"hp":140},{"id":"rotary","name":"GA-9 ROTARY","role":"gun","pos":[0,-2.3,-27],"r":2,"hp":120},{"id":"tur1","name":"LASER 1","role":"turret","pos":[2.6,1.85,-12],"r":2.8,"hp":30},{"id":"tur2","name":"LASER 2","role":"turret","pos":[-2.6,1.85,-12],"r":2.8,"hp":30},{"id":"tur3","name":"PD 3","role":"turret","pos":[2.2,3.1,19],"r":1.3,"hp":30},{"id":"tur4","name":"PD 4","role":"turret","pos":[-2.2,3.1,19],"r":1.3,"hp":30},{"id":"tur5","name":"PD 5","role":"turret","pos":[0,-2.8,-6],"r":1.3,"hp":30},{"id":"tur6","name":"PD 6","role":"turret","pos":[0,-3.3,14],"r":1.3,"hp":30},{"id":"shieldF","name":"SHIELD FWD","role":"shield","pos":[0,0,-10],"r":3,"hp":90},{"id":"shieldA","name":"SHIELD AFT","role":"shield","pos":[0,0,16],"r":3,"hp":90},{"id":"bridge","name":"BRIDGE","role":"radar","pos":[0,5.3,10],"r":3,"hp":90},{"id":"power","name":"REACTOR","role":"power","pos":[0,0,20],"r":3.6,"hp":200}],"shield":{"fore":220,"aft":220},"armor":{"type":"hard","rating":0.28},"structure":420,"maxSpeed":28,"accel":6,"turn":0.22,"shieldRegen":6,"sig":4,"flameColor":"#66c8ff","energyMax":600,"energyRegen":100},"exeter":{"id":"exeter","name":"EXETER","cls":"frigate","fac":"human","role":"JUMP FRIGATE","length":450,"half":[108,48,230],"mirror":true,"radius":235,"seam":[9,7],"resMul":0.6,"jump":true,"dock":{"fighters":12,"corvettes":2},"repair":false,"engines":[{"pos":[80,-3,229],"comp":"engR","r":11},{"pos":[-80,-3,229],"comp":"engL","r":11},{"pos":[0,0,216],"comp":"engC","r":18}],"mounts":[{"w":"rail","pos":[16,5,-227],"comp":"railR","grp":1},{"w":"rail","pos":[-16,5,-227],"comp":"railL","grp":1},{"w":"mdxl","pos":[0,-2,-204],"comp":"mdxl","grp":9,"store":"spine"}],"turrets":[{"w":"laser","pos":[0,24,-110],"comp":"tur1","side":1},{"w":"laser","pos":[24,22.4,-40],"comp":"tur2","side":1},{"w":"laser","pos":[-24,22.4,-40],"comp":"tur3","side":1},{"w":"pd","pos":[20,28.7,110],"comp":"tur4","side":1},{"w":"pd","pos":[-20,28.7,110],"comp":"tur5","side":1},{"w":"laser","pos":[0,-22.4,-80],"comp":"tur6","side":-1},{"w":"pd","pos":[0,-22.4,60],"comp":"tur7","side":-1},{"w":"mdl","cls":"L","pos":[40,23,-90],"comp":"mdL1","side":1},{"w":"mdl","cls":"L","pos":[-40,23,-90],"comp":"mdL2","side":1},{"w":"mdl","cls":"L","pos":[36,-25,30],"comp":"mdL3","side":-1},{"w":"mdl","cls":"L","pos":[-36,-25,30],"comp":"mdL4","side":-1},{"w":"laserM","pos":[48,21,0],"comp":"mt1","side":1},{"w":"laserM","pos":[-48,21,0],"comp":"mt2","side":1},{"w":"laserM","pos":[14,26,130],"comp":"mt3","side":1},{"w":"laserM","pos":[-14,26,130],"comp":"mt4","side":1},{"w":"laserM","pos":[44,-21.2,60],"comp":"mt5","side":-1},{"w":"laserM","pos":[-44,-21.2,60],"comp":"mt6","side":-1},{"w":"laserM","pos":[14,-26.5,120],"comp":"mt7","side":-1},{"w":"laserM","pos":[-14,-26.5,120],"comp":"mt8","side":-1}],"stores":{"drone":48},"comps":[{"id":"engC","name":"ENGINE C","role":"engine","pos":[0,0,200],"r":20,"hp":500},{"id":"engL","name":"ENGINE L","role":"engine","pos":[-80,-3,205],"r":18,"hp":350},{"id":"engR","name":"ENGINE R","role":"engine","pos":[80,-3,205],"r":18,"hp":350},{"id":"railL","name":"RAIL L","role":"gun","pos":[-14,4,-205],"r":10,"hp":300},{"id":"railR","name":"RAIL R","role":"gun","pos":[14,4,-205],"r":10,"hp":300},{"id":"tur1","name":"LASER 1","role":"turret","pos":[0,24,-110],"r":7,"hp":90},{"id":"tur2","name":"LASER 2","role":"turret","pos":[24,22.4,-40],"r":7,"hp":90},{"id":"tur3","name":"LASER 3","role":"turret","pos":[-24,22.4,-40],"r":7,"hp":90},{"id":"tur4","name":"PD 4","role":"turret","pos":[20,28.7,110],"r":3.2,"hp":90},{"id":"tur5","name":"PD 5","role":"turret","pos":[-20,28.7,110],"r":3.2,"hp":90},{"id":"tur6","name":"LASER 6","role":"turret","pos":[0,-22.4,-80],"r":7,"hp":90},{"id":"tur7","name":"PD 7","role":"turret","pos":[0,-22.4,60],"r":3.2,"hp":90},{"id":"mdxl","name":"MASS DRIVER","role":"gun","pos":[0,0,-150],"r":14,"hp":600},{"id":"mdL1","name":"MASS DRIVER 1","role":"turret","pos":[40,23,-90],"r":8,"hp":140},{"id":"mdL2","name":"MASS DRIVER 2","role":"turret","pos":[-40,23,-90],"r":8,"hp":140},{"id":"mdL3","name":"MASS DRIVER 3","role":"turret","pos":[36,-25,30],"r":8,"hp":140},{"id":"mdL4","name":"MASS DRIVER 4","role":"turret","pos":[-36,-25,30],"r":8,"hp":140},{"id":"mt1","name":"LS-8 LASER 1","role":"turret","pos":[48,21,0],"r":6,"hp":90},{"id":"mt2","name":"LS-8 LASER 2","role":"turret","pos":[-48,21,0],"r":6,"hp":90},{"id":"mt3","name":"LS-8 LASER 3","role":"turret","pos":[14,26,130],"r":6,"hp":90},{"id":"mt4","name":"LS-8 LASER 4","role":"turret","pos":[-14,26,130],"r":6,"hp":90},{"id":"mt5","name":"LS-8 LASER 5","role":"turret","pos":[44,-21.2,60],"r":6,"hp":90},{"id":"mt6","name":"LS-8 LASER 6","role":"turret","pos":[-44,-21.2,60],"r":6,"hp":90},{"id":"mt7","name":"LS-8 LASER 7","role":"turret","pos":[14,-26.5,120],"r":6,"hp":90},{"id":"mt8","name":"LS-8 LASER 8","role":"turret","pos":[-14,-26.5,120],"r":6,"hp":90},{"id":"shieldF","name":"SHIELD FWD","role":"shield","pos":[0,0,-100],"r":16,"hp":400},{"id":"shieldA","name":"SHIELD AFT","role":"shield","pos":[0,0,100],"r":16,"hp":400},{"id":"bridge","name":"BRIDGE","role":"radar","pos":[0,26,70],"r":16,"hp":350},{"id":"power","name":"REACTOR","role":"power","pos":[0,0,150],"r":22,"hp":800},{"id":"radL","name":"RADIATOR L","role":"radiator","pos":[-70,0,130],"r":20,"hp":250},{"id":"radR","name":"RADIATOR R","role":"radiator","pos":[70,0,130],"r":20,"hp":250},{"id":"bay","name":"FIGHTER BAY (12)","role":"bay","pos":[0,-7,-170],"r":16,"hp":400},{"id":"cradleL","name":"CRADLE L (corvette)","role":"dock","pos":[-34,-7,40],"r":14,"hp":300},{"id":"cradleR","name":"CRADLE R (corvette)","role":"dock","pos":[34,-7,40],"r":14,"hp":300}],"shield":{"fore":900,"aft":800},"armor":{"type":"composite","rating":0.27},"structure":1600,"maxSpeed":30,"accel":3,"turn":0.08,"shieldRegen":12,"sig":8,"flameColor":"#66c8ff","energyMax":2500,"energyRegen":350,"ai":{"role":"capital"}},"drone":{"id":"drone","name":"DRONE","cls":"fighter","drone":true,"fac":"human","role":"COMBAT DRONE (UNMANNED)","length":6,"half":[2.9,0.7,3.4],"mirror":true,"radius":3.3,"seam":[1.5,1.1],"eye":[0,0.3,-1.2],"resMul":0.32,"noDetail":true,"engines":[{"pos":[0,0,3.3],"comp":"eng","r":0.3}],"mounts":[{"w":"dgun","pos":[0,-0.32,-3.05],"comp":"gun","grp":1}],"stores":{},"comps":[{"id":"eng","name":"ENGINE","role":"engine","pos":[0,0,2.4],"r":0.9,"hp":5},{"id":"gun","name":"GUN","role":"gun","pos":[0,-0.3,-1.5],"r":0.6,"hp":4},{"id":"power","name":"REACTOR","role":"power","pos":[0,0,0.8],"r":0.7,"hp":6}],"shield":{"fore":6,"aft":6},"armor":{"type":"composite","rating":0.1},"structure":7,"maxSpeed":190,"accel":120,"turn":2.6,"shieldRegen":0.5,"sig":0.4,"aiSpeed":150,"flameColor":"#66c8ff","ai":{"role":"fighter","aggr":1,"skill":5}},"tender":{"id":"tender","name":"TENDER","cls":"frigate","fac":"human","role":"FLEET TENDER","length":200,"half":[40,24,100],"mirror":true,"radius":105,"seam":[5,4],"resMul":0.5,"jump":true,"dock":{"fighters":24,"corvettes":4},"repair":false,"tender":true,"serviceR":600,"engines":[{"pos":[12,0,96],"comp":"engR","r":5},{"pos":[-12,0,96],"comp":"engL","r":5},{"pos":[0,0,96],"comp":"engC","r":6}],"mounts":[],"turrets":[],"stores":{"flare":24},"comps":[{"id":"engC","name":"ENGINE C","role":"engine","pos":[0,0,90],"r":6,"hp":260},{"id":"engL","name":"ENGINE L","role":"engine","pos":[-12,0,90],"r":5,"hp":200},{"id":"engR","name":"ENGINE R","role":"engine","pos":[12,0,90],"r":5,"hp":200},{"id":"power","name":"REACTOR","role":"power","pos":[0,0,55],"r":9,"hp":420},{"id":"bridge","name":"BRIDGE","role":"radar","pos":[0,17,50],"r":7,"hp":180},{"id":"shieldF","name":"SHIELD FWD","role":"shield","pos":[0,0,-70],"r":9,"hp":200},{"id":"shieldA","name":"SHIELD AFT","role":"shield","pos":[0,0,85],"r":9,"hp":200},{"id":"bayA","name":"SERVICE BAY A","role":"bay","pos":[14,13.5,0],"r":8,"hp":220},{"id":"bayB","name":"SERVICE BAY B","role":"bay","pos":[-14,13.5,0],"r":8,"hp":220}],"shield":{"fore":600,"aft":500},"armor":{"type":"composite","rating":0.25},"structure":1400,"maxSpeed":24,"accel":2.5,"turn":0.07,"shieldRegen":8,"sig":10,"flameColor":"#66c8ff","energyMax":2000,"energyRegen":300,"ai":{"role":"capital"}},"darter":{"id":"darter","name":"FROGG DARTER","cls":"fighter","fac":"frogg","role":"INTERCEPTOR","length":9.5,"half":[4.6,1.8,5.4],"mirror":true,"rustK":0.4,"radius":5.4,"engines":[{"pos":[1,-0.15,5],"comp":"engR","r":0.3},{"pos":[-1,-0.15,5],"comp":"engL","r":0.3}],"mounts":[{"w":"fang","pos":[0.4,-0.3,-4.9],"comp":"gunR","grp":1},{"w":"fang","pos":[-0.4,-0.3,-4.9],"comp":"gunL","grp":1}],"stores":{"tick":2,"flare":8},"launch":[0.62,-0.32,-1.75],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-1,-0.15,3.8],"r":0.8,"hp":7},{"id":"engR","name":"ENGINE R","role":"engine","pos":[1,-0.15,3.8],"r":0.8,"hp":7},{"id":"gunL","name":"GUN L","role":"gun","pos":[-0.4,-0.3,-3],"r":0.6,"hp":5},{"id":"gunR","name":"GUN R","role":"gun","pos":[0.4,-0.3,-3],"r":0.6,"hp":5},{"id":"shield","name":"SHIELD","role":"shield","pos":[0,0.1,0.8],"r":0.8,"hp":8},{"id":"power","name":"HEART","role":"power","pos":[0,0,1.8],"r":0.9,"hp":12}],"shield":{"fore":10,"aft":8},"armor":{"type":"composite","rating":0.46},"structure":14,"maxSpeed":165,"aiSpeed":120,"accel":90,"turn":2.6,"sig":0.8,"flameColor":"#30dcff","ai":{"role":"fighter","aggr":1}},"leaper":{"id":"leaper","name":"FROGG LEAPER","cls":"fighter","fac":"frogg","role":"FIGHTER","length":13.6,"half":[6.6,2.4,7.6],"mirror":true,"rustK":0.4,"radius":8,"engines":[{"pos":[2.2,-0.2,6.8],"comp":"engR","r":0.5},{"pos":[-2.2,-0.2,6.8],"comp":"engL","r":0.5}],"mounts":[{"w":"flaser","pos":[0.65,-0.42,-6.6],"comp":"gunR","grp":1},{"w":"flaser","pos":[-0.65,-0.42,-6.6],"comp":"gunL","grp":1},{"w":"spit","pos":[0.9,-0.3,-6],"comp":"gunR","grp":2},{"w":"spit","pos":[-0.9,-0.3,-6],"comp":"gunL","grp":2}],"stores":{"tick":2,"flare":10},"launch":[0.9,-0.5,-2.8],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-2.2,-0.25,5.2],"r":1.1,"hp":10},{"id":"engR","name":"ENGINE R","role":"engine","pos":[2.2,-0.25,5.2],"r":1.1,"hp":10},{"id":"gunL","name":"GUN L","role":"gun","pos":[-0.65,-0.4,-4.4],"r":0.8,"hp":8},{"id":"gunR","name":"GUN R","role":"gun","pos":[0.65,-0.4,-4.4],"r":0.8,"hp":8},{"id":"shield","name":"SHIELD","role":"shield","pos":[0,0.2,1.2],"r":1.1,"hp":12},{"id":"power","name":"HEART","role":"power","pos":[0,0,2.8],"r":1.2,"hp":18}],"shield":{"fore":16,"aft":14},"armor":{"type":"composite","rating":0.5},"structure":25,"maxSpeed":120,"aiSpeed":85,"accel":65,"turn":1.7,"sig":1,"flameColor":"#30dcff","ai":{"role":"fighter","aggr":0.8}},"spitter":{"id":"spitter","name":"FROGG SPITTER","cls":"fighter","fac":"frogg","role":"GUNSHIP","length":16,"half":[7.6,3.2,9],"mirror":true,"rustK":0.4,"radius":9.5,"engines":[{"pos":[2.8,-0.3,8.4],"comp":"engR","r":0.72},{"pos":[-2.8,-0.3,8.4],"comp":"engL","r":0.72}],"mounts":[{"w":"spitcannon","pos":[0,1.35,-8.8],"comp":"cannon","grp":1},{"w":"fang","pos":[1.6,-0.5,-8],"comp":"gunR","grp":2},{"w":"fang","pos":[-1.6,-0.5,-8],"comp":"gunL","grp":2}],"stores":{"tick":4,"flare":10},"launch":[1.9,-1.1,-0.5],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-2.8,-0.3,6.2],"r":1.4,"hp":14},{"id":"engR","name":"ENGINE R","role":"engine","pos":[2.8,-0.3,6.2],"r":1.4,"hp":14},{"id":"cannon","name":"ACID CANNON","role":"gun","pos":[0,1.2,-3],"r":1.4,"hp":20},{"id":"gunL","name":"GUN L","role":"gun","pos":[-1.6,-0.5,-5.5],"r":0.8,"hp":8},{"id":"gunR","name":"GUN R","role":"gun","pos":[1.6,-0.5,-5.5],"r":0.8,"hp":8},{"id":"shield","name":"SHIELD","role":"shield","pos":[0,0.3,1.6],"r":1.4,"hp":16},{"id":"power","name":"HEART","role":"power","pos":[0,0,3.2],"r":1.6,"hp":26}],"shield":{"fore":30,"aft":24},"armor":{"type":"ablative","rating":0.5},"structure":38,"maxSpeed":90,"aiSpeed":66,"accel":50,"turn":1.1,"sig":1.3,"flameColor":"#30dcff","ai":{"role":"gunship","aggr":0.6}},"toad":{"id":"toad","name":"FROGG TOAD","cls":"fighter","fac":"frogg","role":"TORPEDO BOMBER","length":19,"half":[8.8,3.6,10.4],"mirror":true,"rustK":0.4,"radius":11,"engines":[{"pos":[3.6,-0.3,9.4],"comp":"engR","r":0.85},{"pos":[-3.6,-0.3,9.4],"comp":"engL","r":0.85}],"mounts":[{"w":"fang","pos":[1,0.1,-7.6],"comp":"gunR","grp":1},{"w":"fang","pos":[-1,0.1,-7.6],"comp":"gunL","grp":1},{"w":"tad","pos":[0,-2.2,-2.9],"comp":"rack","grp":3,"store":"tad"}],"stores":{"tad":3,"flare":16},"launch":[0,-2.1,-3.3],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-3.6,-0.3,7],"r":1.6,"hp":18},{"id":"engR","name":"ENGINE R","role":"engine","pos":[3.6,-0.3,7],"r":1.6,"hp":18},{"id":"gunL","name":"GUN L","role":"gun","pos":[-1,0.1,-4.8],"r":0.9,"hp":8},{"id":"gunR","name":"GUN R","role":"gun","pos":[1,0.1,-4.8],"r":0.9,"hp":8},{"id":"rack","name":"TORP RACK","role":"gun","pos":[0,-2,1.5],"r":1.6,"hp":20},{"id":"shield","name":"SHIELD","role":"shield","pos":[0,0.6,0.5],"r":1.6,"hp":16},{"id":"power","name":"HEART","role":"power","pos":[0,0.2,3],"r":2,"hp":34}],"shield":{"fore":26,"aft":22},"armor":{"type":"composite","rating":0.45},"structure":55,"maxSpeed":78,"aiSpeed":58,"accel":40,"turn":0.9,"sig":1.4,"flameColor":"#30dcff","ai":{"role":"bomber","aggr":0.3}},"reaver":{"id":"reaver","name":"FROGG REAVER","cls":"fighter","fac":"frogg","role":"HEAVY FIGHTER","length":19,"half":[9.6,3.6,10.8],"mirror":true,"rustK":0.4,"radius":11.5,"engines":[{"pos":[3.2,-0.3,9.8],"comp":"engR","r":0.8},{"pos":[-3.2,-0.3,9.8],"comp":"engL","r":0.8},{"pos":[1.3,-0.5,9.9],"comp":"engR","r":0.5},{"pos":[-1.3,-0.5,9.9],"comp":"engL","r":0.5}],"mounts":[{"w":"flaser","pos":[1.2,-0.55,-8.8],"comp":"gunR","grp":1},{"w":"flaser","pos":[-1.2,-0.55,-8.8],"comp":"gunL","grp":1},{"w":"fang","pos":[2,-0.5,-7.4],"comp":"gunR","grp":1},{"w":"fang","pos":[-2,-0.5,-7.4],"comp":"gunL","grp":1},{"w":"spit","pos":[2.4,-0.4,-6.2],"comp":"gunR","grp":2},{"w":"spit","pos":[-2.4,-0.4,-6.2],"comp":"gunL","grp":2}],"stores":{"tick":6,"flare":12},"launch":[2.5,-0.7,-5.2],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-3,-0.3,7],"r":1.8,"hp":18},{"id":"engR","name":"ENGINE R","role":"engine","pos":[3,-0.3,7],"r":1.8,"hp":18},{"id":"gunL","name":"GUNS L","role":"gun","pos":[-1.8,-0.4,-4.5],"r":1.3,"hp":14},{"id":"gunR","name":"GUNS R","role":"gun","pos":[1.8,-0.4,-4.5],"r":1.3,"hp":14},{"id":"shield","name":"SHIELD","role":"shield","pos":[0,0.3,1.8],"r":1.6,"hp":20},{"id":"power","name":"HEART","role":"power","pos":[0,0,3.6],"r":1.9,"hp":30}],"shield":{"fore":40,"aft":40},"armor":{"type":"hard","rating":0.43},"structure":60,"maxSpeed":95,"aiSpeed":66,"accel":50,"turn":1.15,"sig":1.3,"flameColor":"#30dcff","ai":{"role":"fighter","aggr":0.9}},"gulper":{"id":"gulper","name":"FROGG GULPER","cls":"corvette","fac":"frogg","role":"ESCORT CORVETTE","length":66,"half":[17,13,38],"mirror":true,"rustK":0.4,"radius":40,"engines":[{"pos":[9.5,-1,35.4],"comp":"engR","r":2.7},{"pos":[-9.5,-1,35.4],"comp":"engL","r":2.7},{"pos":[3.8,-2.2,36],"comp":"engR","r":1.5},{"pos":[-3.8,-2.2,36],"comp":"engL","r":1.5}],"mounts":[{"w":"rodg","pos":[5.5,-2.4,-35.3],"comp":"lashR","grp":1},{"w":"rodg","pos":[-5.5,-2.4,-35.3],"comp":"lashL","grp":1},{"w":"lance","pos":[3,1.2,-33],"comp":"lashR","grp":2},{"w":"lance","pos":[-3,1.2,-33],"comp":"lashL","grp":2}],"turrets":[{"w":"sting","pos":[3.6,7.35,-2],"comp":"tur1","side":1},{"w":"sting","pos":[-3.6,7.35,-2],"comp":"tur2","side":1},{"w":"sting","pos":[3.4,5.85,14],"comp":"tur3","side":1},{"w":"sting","pos":[-3.4,5.6,14],"comp":"tur4","side":1}],"stores":{"tad":6,"flare":0},"launch":[0,-6.4,-8.6],"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-9.5,-1,27],"r":3.6,"hp":90},{"id":"engR","name":"ENGINE R","role":"engine","pos":[9.5,-1,27],"r":3.6,"hp":90},{"id":"lashL","name":"ROD DRIVER L","role":"gun","pos":[-5.5,-2.4,-24],"r":2.4,"hp":70},{"id":"lashR","name":"ROD DRIVER R","role":"gun","pos":[5.5,-2.4,-24],"r":2.4,"hp":70},{"id":"tur1","name":"STING 1","role":"turret","pos":[3.6,7.35,-2],"r":1.5,"hp":26},{"id":"tur2","name":"STING 2","role":"turret","pos":[-3.6,7.35,-2],"r":1.5,"hp":26},{"id":"tur3","name":"STING 3","role":"turret","pos":[3.4,5.85,14],"r":1.5,"hp":26},{"id":"tur4","name":"STING 4","role":"turret","pos":[-3.4,5.6,14],"r":1.5,"hp":26},{"id":"shield","name":"SHIELD GLAND","role":"shield","pos":[0,1.5,0],"r":3.4,"hp":110},{"id":"eyes","name":"EYES","role":"radar","pos":[0,4.2,-17],"r":7,"hp":90},{"id":"power","name":"HEART","role":"power","pos":[0,-1,8],"r":4.2,"hp":230}],"shield":{"fore":200,"aft":160},"armor":{"type":"composite","rating":0.31},"structure":380,"energyMax":400,"energyRegen":70,"maxSpeed":34,"aiSpeed":26,"accel":6,"turn":0.2,"sig":4,"flameColor":"#30dcff","ai":{"role":"corvette"}},"hivecarrier":{"id":"hivecarrier","name":"FROGG HIVE CARRIER","cls":"capital","fac":"frogg","role":"SUPER CARRIER","length":900,"half":[270,120,450],"mirror":true,"rustK":0.4,"radius":470,"resMul":0.25,"jump":true,"dock":{"fighters":60,"corvettes":6},"engines":[{"pos":[60,0,440],"comp":"engR","r":40},{"pos":[-60,0,440],"comp":"engL","r":40}],"mounts":[],"turrets":[],"stores":{"flare":0},"comps":[{"id":"engL","name":"ENGINE L","role":"engine","pos":[-60,0,380],"r":60,"hp":900},{"id":"engR","name":"ENGINE R","role":"engine","pos":[60,0,380],"r":60,"hp":900},{"id":"shield","name":"SHIELD GLAND","role":"shield","pos":[0,30,0],"r":70,"hp":1200},{"id":"eyes","name":"EYES","role":"radar","pos":[0,20,-400],"r":60,"hp":800},{"id":"power","name":"HEART","role":"power","pos":[0,0,120],"r":80,"hp":2400}],"shield":{"fore":4000,"aft":3200},"armor":{"type":"composite","rating":0.21},"structure":6000,"maxSpeed":12,"aiSpeed":8,"accel":0.5,"turn":0.03,"sig":20,"flameColor":"#30dcff","ai":{"role":"capital"}},"bullfrog":{"id":"bullfrog","name":"FROGG BULLFROG","cls":"capital","fac":"frogg","role":"SPINE CARRIER","length":600,"half":[95,55,300],"mirror":true,"rustK":0.4,"radius":305,"resMul":0.85,"resCap":400,"jump":true,"dock":{"fighters":36,"corvettes":0},"launch":[0,-44,-40],"engines":[{"pos":[24,12,296],"comp":"E1","r":12},{"pos":[-24,12,296],"comp":"E2","r":12},{"pos":[50,-4,294],"comp":"E3","r":14},{"pos":[-50,-4,294],"comp":"E4","r":14},{"pos":[76,8,290],"comp":"E5","r":11},{"pos":[-76,8,290],"comp":"E6","r":11}],"mounts":[{"w":"spine","pos":[0,-4,-299],"comp":"spine","grp":9,"store":"spine"},{"w":"tad","pos":[0,-43,-40],"comp":"tubes","grp":3,"store":"tad"}],"turrets":[{"w":"lanceL","cls":"L","pos":[0,38,-150],"comp":"L1","side":1},{"w":"acidT","cls":"M","pos":[44,33,-70],"comp":"M1","side":1},{"w":"acidT","cls":"M","pos":[-44,33,-70],"comp":"M2","side":1},{"w":"acidT","cls":"M","pos":[54,28,80],"comp":"M3","side":1},{"w":"acidT","cls":"M","pos":[-54,28,80],"comp":"M4","side":1},{"w":"acidT","cls":"M","pos":[46,-30,-20],"comp":"M5","side":-1},{"w":"acidT","cls":"M","pos":[-46,-30,-20],"comp":"M6","side":-1},{"w":"sting","cls":"S","pos":[32,43,-200],"comp":"S1","side":1},{"w":"sting","cls":"S","pos":[-32,43,-200],"comp":"S2","side":1},{"w":"sting","cls":"S","pos":[40,35,-10],"comp":"S3","side":1},{"w":"sting","cls":"S","pos":[-40,35,-10],"comp":"S4","side":1},{"w":"sting","cls":"S","pos":[36,35,110],"comp":"S5","side":1},{"w":"sting","cls":"S","pos":[-36,35,110],"comp":"S6","side":1},{"w":"sting","cls":"S","pos":[36,-20,-130],"comp":"S7","side":-1},{"w":"sting","cls":"S","pos":[-36,-20,-130],"comp":"S8","side":-1},{"w":"sting","cls":"S","pos":[40,-27,90],"comp":"S9","side":-1},{"w":"sting","cls":"S","pos":[-40,-27,90],"comp":"S10","side":-1},{"w":"thorn","cls":"S","pos":[16,37,-110],"comp":"P1","side":1},{"w":"thorn","cls":"S","pos":[-16,37,-110],"comp":"P2","side":1},{"w":"thorn","cls":"S","pos":[24,40,150],"comp":"P3","side":1},{"w":"thorn","cls":"S","pos":[-24,40,150],"comp":"P4","side":1},{"w":"thorn","cls":"S","pos":[22,-30,-60],"comp":"P5","side":-1},{"w":"thorn","cls":"S","pos":[-22,-30,-60],"comp":"P6","side":-1},{"w":"thorn","cls":"S","pos":[26,-23,200],"comp":"P7","side":-1},{"w":"thorn","cls":"S","pos":[-26,-23,200],"comp":"P8","side":-1}],"stores":{"tad":16,"flare":0},"comps":[{"id":"spine","name":"SPINE EMITTER","role":"gun","pos":[0,-4,-286],"r":13,"hp":700},{"id":"L1","name":"HEAVY LANCE DORSAL","role":"turret","pos":[0,38,-150],"r":17,"hp":260},{"id":"M1","name":"ACID M1","role":"turret","pos":[44,33,-70],"r":6.5,"hp":120},{"id":"M2","name":"ACID M2","role":"turret","pos":[-44,33,-70],"r":6.5,"hp":120},{"id":"M3","name":"ACID M3","role":"turret","pos":[54,28,80],"r":6.5,"hp":120},{"id":"M4","name":"ACID M4","role":"turret","pos":[-54,28,80],"r":6.5,"hp":120},{"id":"M5","name":"ACID M5","role":"turret","pos":[46,-30,-20],"r":6.5,"hp":120},{"id":"M6","name":"ACID M6","role":"turret","pos":[-46,-30,-20],"r":6.5,"hp":120},{"id":"S1","name":"STING S1","role":"turret","pos":[32,43,-200],"r":2.5,"hp":45},{"id":"S2","name":"STING S2","role":"turret","pos":[-32,43,-200],"r":2.5,"hp":45},{"id":"S3","name":"STING S3","role":"turret","pos":[40,35,-10],"r":2.5,"hp":45},{"id":"S4","name":"STING S4","role":"turret","pos":[-40,35,-10],"r":2.5,"hp":45},{"id":"S5","name":"STING S5","role":"turret","pos":[36,35,110],"r":2.5,"hp":45},{"id":"S6","name":"STING S6","role":"turret","pos":[-36,35,110],"r":2.5,"hp":45},{"id":"S7","name":"STING S7","role":"turret","pos":[36,-20,-130],"r":2.5,"hp":45},{"id":"S8","name":"STING S8","role":"turret","pos":[-36,-20,-130],"r":2.5,"hp":45},{"id":"S9","name":"STING S9","role":"turret","pos":[40,-27,90],"r":2.5,"hp":45},{"id":"S10","name":"STING S10","role":"turret","pos":[-40,-27,90],"r":2.5,"hp":45},{"id":"P1","name":"THORN PD P1","role":"turret","pos":[16,37,-110],"r":2.5,"hp":40},{"id":"P2","name":"THORN PD P2","role":"turret","pos":[-16,37,-110],"r":2.5,"hp":40},{"id":"P3","name":"THORN PD P3","role":"turret","pos":[24,40,150],"r":2.5,"hp":40},{"id":"P4","name":"THORN PD P4","role":"turret","pos":[-24,40,150],"r":2.5,"hp":40},{"id":"P5","name":"THORN PD P5","role":"turret","pos":[22,-30,-60],"r":2.5,"hp":40},{"id":"P6","name":"THORN PD P6","role":"turret","pos":[-22,-30,-60],"r":2.5,"hp":40},{"id":"P7","name":"THORN PD P7","role":"turret","pos":[26,-23,200],"r":2.5,"hp":40},{"id":"P8","name":"THORN PD P8","role":"turret","pos":[-26,-23,200],"r":2.5,"hp":40},{"id":"E1","name":"ENGINE E1","role":"engine","pos":[24,12,262],"r":14,"hp":330},{"id":"E2","name":"ENGINE E2","role":"engine","pos":[-24,12,262],"r":14,"hp":330},{"id":"E3","name":"ENGINE E3","role":"engine","pos":[50,-4,262],"r":14,"hp":330},{"id":"E4","name":"ENGINE E4","role":"engine","pos":[-50,-4,262],"r":14,"hp":330},{"id":"E5","name":"ENGINE E5","role":"engine","pos":[76,8,262],"r":14,"hp":330},{"id":"E6","name":"ENGINE E6","role":"engine","pos":[-76,8,262],"r":14,"hp":330},{"id":"shieldF","name":"SHIELD GLAND FWD","role":"shield","pos":[0,32,-40],"r":20,"hp":700},{"id":"shieldA","name":"SHIELD GLAND AFT","role":"shield","pos":[0,30,170],"r":20,"hp":600},{"id":"eyes","name":"EYES","role":"radar","pos":[0,14,-215],"r":16,"hp":500},{"id":"power","name":"HEART","role":"power","pos":[0,0,150],"r":18,"hp":1100},{"id":"bayA","name":"HANGAR BAY A (18)","role":"bay","pos":[0,-32,-95],"r":22,"hp":650},{"id":"bayB","name":"HANGAR BAY B (18)","role":"bay","pos":[0,-32,90],"r":22,"hp":650},{"id":"tubes","name":"TORPEDO TUBES","role":"gun","pos":[0,-42,-10],"r":14,"hp":500}],"shield":{"fore":2000,"aft":1600},"armor":{"type":"hard","rating":0.3},"structure":3000,"energyMax":3200,"energyRegen":320,"shieldRegen":6,"maxSpeed":22,"aiSpeed":14,"accel":2,"turn":0.06,"sig":12,"flameColor":"#30dcff","ai":{"role":"lancer"}}},"weapons":{"cannon":{"kind":"proj","name":"MK-20 CANNON","cd":0.085,"v":900,"dmg":3,"dt":"kin","life":1.8,"spread":0.004,"ammo":600,"color":"#ffd9a0","len":3.4,"sz":0.14,"sfx":"cannon"},"he":{"kind":"proj","name":"MK-30 HE CANNON","cd":0.22,"v":1000,"dmg":9,"dt":"kin","life":2,"spread":0.0015,"ammo":500,"color":"#ffa860","len":7,"sz":0.22,"sfx":"cannon","blast":8},"dgun":{"kind":"proj","name":"DR-2 MAG CANNON","cd":0.085,"v":900,"dmg":3,"dt":"kin","life":1.5,"spread":0.005,"ammo":300,"color":"#ffd9a0","len":2.6,"sz":0.11,"sfx":"cannon"},"rail":{"kind":"proj","name":"RG-90 RAILGUN","cd":2.4,"v":2000,"dmg":70,"dt":"kin","life":2.2,"spread":0.0003,"color":"#cfe8ff","len":22,"sz":0.55,"sfx":"rail","big":true,"pierce":0.6,"ammo":100,"energy":12},"rotary":{"kind":"proj","name":"GA-9 ROTARY CANNON","cd":0.04,"v":1100,"dmg":2.8,"dt":"kin","pierce":0.15,"life":1.2,"spread":0.008,"ammo":900,"color":"#ffd9a0","len":3,"sz":0.16,"sfx":"cannon"},"fmag":{"kind":"proj","name":"MD-9 MAG DRIVER","cd":1.8,"v":1600,"dmg":26,"dt":"kin","pierce":0.25,"life":1.7,"spread":0.002,"energy":30,"ammo":120,"color":"#cfe8ff","len":14,"sz":0.4,"sfx":"rail","big":true},"mdl":{"kind":"proj","name":"MD-55 MASS DRIVER (L)","cd":2.2,"v":1800,"dmg":60,"dt":"kin","life":1.6,"spread":0.0008,"color":"#cfe8ff","len":26,"sz":0.9,"sfx":"rail","big":true,"pierce":0.4,"range":2600,"track":1.2,"turret":true,"noPD":true,"bigOnly":true,"ammo":250,"energy":15},"mdxl":{"kind":"spine","name":"MK-90 MASS DRIVER","dmg":900,"dt":"kin","pierce":0.6,"range":3200,"energy":800,"charge":5,"lockT":1.5,"cd":30,"delay":15,"fizzleCd":8,"lockHold":3,"corridorHalf":0.12,"bw":12,"color":"#cfe8ff","sfx":"rail","warnName":"MASS DRIVER","mag":100},"laser":{"kind":"beam","name":"LS-2 TURRET LASER","cd":0.25,"dmg":6,"dt":"en","range":1600,"energy":12,"color":"#ff5040","sfx":"pulse","acq":0.5,"ramp":0.8,"peak":3,"track":2.2,"turret":true,"bw":1},"laserM":{"kind":"beam","name":"LS-8 TURRET LASER (M)","cd":0.28,"dmg":13,"dt":"en","range":1800,"energy":26,"color":"#ff6030","sfx":"pulse","acq":0.6,"ramp":0.8,"peak":3,"track":1.8,"turret":true,"bw":1.6},"pd":{"kind":"proj","name":"PD-30 POINT DEFENCE","cd":0.075,"v":1100,"dmg":1.3,"dt":"kin","life":0.85,"spread":0.012,"color":"#ffe0b0","len":3.2,"sz":0.13,"sfx":"pd","range":900,"track":4.5,"turret":true,"ammo":1500,"flak":6},"flaser":{"kind":"beam","name":"M-1 PULSE MASER","cd":0.1,"dmg":3.5,"dt":"en","range":950,"energy":9,"color":"#35e8ff","sfx":"pulse","frogg":true,"acq":0.35,"ramp":0.5,"peak":2.2,"bw":0.3},"lance":{"kind":"beam","name":"M-7 MASER LANCE","cd":0.06,"dmg":3,"dt":"en","range":1500,"energy":3,"color":"#35e8ff","sfx":"pulse","frogg":true,"acq":0.8,"ramp":1,"peak":3,"bw":2},"fang":{"kind":"proj","name":"R-9 AUTOCANNON","cd":0.16,"v":900,"dmg":4.5,"dt":"kin","life":2,"spread":0.01,"color":"#c8ff40","len":2.4,"sz":0.14,"sfx":"fang","ammo":400},"spit":{"kind":"proj","name":"M-2 MASER","cd":0.5,"v":330,"dmg":7,"dt":"en","life":2.6,"spread":0.006,"color":"#9dff3a","len":1.7,"sz":0.42,"sfx":"spit","glob":true},"spitcannon":{"kind":"proj","name":"M-6 HEAVY MASER","cd":1.3,"v":430,"dmg":24,"dt":"en","life":3,"spread":0.002,"color":"#b6ff20","len":2.6,"sz":0.75,"sfx":"spitbig","glob":true},"rodg":{"kind":"proj","name":"R-12 PENETRATOR DRIVER","cd":2.6,"v":1400,"dmg":34,"dt":"kin","pierce":0.45,"life":2.2,"spread":0.002,"color":"#d8ff80","len":9,"sz":0.7,"sfx":"rail","big":true,"ammo":60,"energy":6},"sting":{"kind":"proj","name":"R-4 AUTOCANNON TURRET (S)","cd":0.09,"v":900,"dmg":1.5,"dt":"en","life":0.9,"spread":0.012,"color":"#b0ff50","len":2.4,"sz":0.16,"sfx":"pd","range":800,"track":3.6,"turret":true,"ammo":800},"ir":{"kind":"msl","name":"SW-9 SWIFT (IR)","seeker":"ir","v0":70,"vmax":420,"acc":300,"turn":3.4,"burn":6.5,"life":9,"dmg":26,"blast":10,"fuze":6,"lockCone":0.22,"seekCone":0.75,"lockTime":1.2,"range":1700,"hp":1,"flareS":0.7,"chaffS":0,"color":"#eeeeee","flame":"#ffe0a0","size":1},"rf":{"kind":"msl","name":"LN-3 LANCE (RADAR)","seeker":"rf","v0":70,"vmax":380,"acc":240,"turn":2.7,"burn":9,"life":12,"dmg":34,"blast":11,"fuze":7,"lockCone":0.55,"seekCone":0.95,"lockTime":2.4,"range":3400,"hp":1,"flareS":0.05,"chaffS":0.65,"color":"#e8e8d8","flame":"#ffd090","size":1.15},"torp":{"kind":"msl","name":"HM-1 HAMMER TORPEDO","seeker":"ir","v0":40,"vmax":260,"acc":80,"turn":0.9,"burn":16,"life":22,"dmg":170,"blast":30,"fuze":12,"lockCone":0.45,"seekCone":0.8,"lockTime":1.8,"range":2000,"hp":7,"flareS":0.15,"chaffS":0.15,"color":"#c8c8c0","flame":"#ffc070","size":2.2,"torp":true},"tick":{"kind":"msl","name":"SK-1 IR MISSILE","seeker":"ir","v0":60,"vmax":460,"acc":300,"turn":4.2,"burn":7,"life":9,"dmg":31.200000000000003,"blast":9,"fuze":6,"lockCone":0.28,"seekCone":0.9,"lockTime":1.1,"range":2200,"hp":1,"flareS":0.3,"chaffS":0,"color":"#7a6a3a","flame":"#b4ff40","size":1,"frogg":true},"nuke":{"kind":"msl","name":"NK-1 TAC WARHEAD (0.5 kT)","seeker":"ir","v0":40,"vmax":300,"acc":90,"turn":1.2,"burn":14,"life":20,"dmg":0,"blast":0,"fuze":120,"lockCone":0.45,"seekCone":0.8,"lockTime":2,"range":2200,"hp":5,"flareS":0.2,"chaffS":0.2,"color":"#e8e0a0","flame":"#ffc070","size":2.4,"torp":true,"nuclear":true,"yield":0.5},"tad":{"kind":"msl","name":"ST-2 TORPEDO","seeker":"ir","v0":35,"vmax":280,"acc":85,"turn":1.1,"burn":18,"life":26,"dmg":195,"blast":28,"fuze":12,"lockCone":0.5,"seekCone":0.9,"lockTime":1.6,"range":2600,"hp":8,"flareS":0.05,"chaffS":0.05,"color":"#9a4a22","flame":"#b4ff40","size":2,"torp":true,"frogg":true},"flare":{"kind":"cm","name":"FLARES / CHAFF"},"spine":{"kind":"spine","name":"GX-1 CHARGED LANCE","dmg":800,"dt":"en","pierce":0.2,"range":3200,"energy":800,"charge":6,"lockT":1.5,"cd":30,"delay":15,"fizzleCd":8,"lockHold":3,"corridorHalf":0.12,"bw":12,"color":"#35e8ff","sfx":"lash","warnName":"LANCE","frogg":true},"lanceL":{"kind":"beam","name":"M-8 HEAVY MASER (L)","cd":0.1,"dmg":4.5,"dt":"en","range":1800,"energy":6,"color":"#35e8ff","sfx":"pulse","frogg":true,"acq":0.6,"ramp":1,"peak":3,"track":0.9,"turret":true,"bw":4,"bigOnly":true},"acidT":{"kind":"proj","name":"M-6T MASER TURRET (M)","cd":1.3,"v":430,"dmg":24,"dt":"en","life":3,"spread":0.002,"color":"#b6ff20","len":2.6,"sz":0.75,"sfx":"spitbig","glob":true,"range":1250,"track":1.6,"turret":true,"noPD":true},"thorn":{"kind":"proj","name":"R-5 PD TURRET (S)","cd":0.07,"v":1150,"dmg":1.2,"dt":"en","life":0.8,"spread":0.011,"color":"#b0ff50","len":2.4,"sz":0.14,"sfx":"pd","range":750,"track":4,"turret":true,"pdOnly":true,"ammo":1000,"flak":5}},"armor":{"ablative":{"name":"ABLATIVE","prof":{"kin":0.5,"en":1.5,"exp":1,"nuke":1.6},"thresh":0,"rate":0.6,"spall":0.04},"hard":{"name":"HARD","prof":{"kin":1.4,"en":0.4,"exp":1,"nuke":0.6},"thresh":6,"rate":0,"spall":0.3},"composite":{"name":"COMPOSITE","prof":{"kin":1,"en":1,"exp":1,"nuke":1},"thresh":3,"rate":0,"spall":0.12}},"mass":{"fighter":1,"corvette":25,"frigate":150,"capital":2000},"armorThreshCls":{"fighter":0.25,"corvette":1,"frigate":1.5,"capital":2}};
+(function hexify(o) {
+  const HEXKEYS = ['flameColor', 'color', 'flame'];
+  for (const k in o) {
+    const v = o[k];
+    if (v && typeof v === 'object') hexify(v);
+    else if (typeof v === 'string' && HEXKEYS.includes(k) && /^#[0-9a-fA-F]{6}$/.test(v)) o[k] = parseInt(v.slice(1), 16);
+  }
+})(DB);
+// ======================================================================
 //  VOXELISER v2
 //  prim types:  tap  tapered extrusion along Z (ax:'x' wing / 'y' fin: h=[chord,thickness], sweep = z shift per unit along), cross-section sh: r(ect) e(llipse) d(iamond) h(chamfered rect)
 //               ell  ellipsoid            seg  tapered capsule between two points (horns, legs, barrels, spines)
@@ -1316,8 +1330,7 @@ const kestrelDetail = [
 ];
 
 SHIPS.kestrel = {
-  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'HEAVY FIGHTER',   // owner reclassification 2026-10-22 (docs/SHIP_CLASSES.md)
-  length: 12.4, half: [5.2, 2.2, 6.9], mirror: true, radius: 6.6, seam: [1.5, 1.1], eye: [0, 0.62, -2.5],
+  ...DB.ships.kestrel,
   prims: [
     // long chined fuselage: drooping chin nose into a wide flat wing-body
     tap([0, -0.2, -3.3], 2.0, [0.22, 0.14], [0.66, 0.38], K.hull, { sh: 'd', sweepY: 0.11 }),
@@ -1369,30 +1382,6 @@ SHIPS.kestrel = {
     ell([5.1, 0, 3.0], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
     ...kestrelDetail,
   ],
-  engines: [
-    { pos: [3.35, 0.5, 6.4], comp: 'engR', r: 0.46 }, { pos: [-3.35, 0.5, 6.4], comp: 'engL', r: 0.46 },
-    { pos: [3.9, -0.6, 6.75], comp: 'engR', r: 0.42 }, { pos: [-3.9, -0.6, 6.75], comp: 'engL', r: 0.42 },
-  ],
-  mounts: [
-    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'fmag', pos: [0.6, -0.45, -4.55], comp: 'gunR', grp: 1 },   // right boom carries the MD-9 mag (owner 2026-10-22): 3 gun systems - cannon, mag, HE - plus missiles
-    { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
-  ],
-  stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
-  launch: [2.25, -0.4, 0.55],           // nose of the under-wing pylon missiles (x mirrors per launch)
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.05, 4.4], r: 1.5, hp: 16 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
-    { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
-    { id: 'gunR', name: 'MD-9 MAG', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 12 },
-    { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },
-    { id: 'radar', name: 'RADAR', role: 'radar', pos: [0, -0.1, -3.9], r: 0.8, hp: 12 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
-  ],
-  shield: { fore: 40, aft: 40 }, armor: { type: 'composite', rating: 0.44 }, structure: 50,
-  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 1, sig: 1,
-  flameColor: 0x66c8ff,
 };
 
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
@@ -1442,8 +1431,7 @@ const halberdDetail = [
 ];
 
 SHIPS.halberd = {
-  id: 'halberd', name: 'HALBERD', cls: 'corvette', fac: 'human', role: 'ESCORT CORVETTE',
-  length: 64, half: [15, 11, 33], mirror: true, radius: 38, seam: [3.2, 2.4],
+  ...DB.ships.halberd,
   prims: [
     tap([0, 0, 2], 22, [3.2, 2.4], [4.8, 3.4], 0xb7bcc3, { sh: 'h' }),                        // main hull
     tap([0, -0.1, -25], 7, [0.4, 0.5], [3.2, 2.4], 0x9aa1aa, { sh: 'd' }),                    // bow wedge
@@ -1489,36 +1477,6 @@ SHIPS.halberd = {
     ell([3.6, 2.6, 0], [0.25, 0.2, 0.25], 0x30ff60, { glow: true, noMirror: true }),
     ...halberdDetail,
   ],
-  engines: [{ pos: [0, 0, 31.8], comp: 'engC', r: 1.9 }, { pos: [3.9, 0, 31.6], comp: 'engR', r: 1.25 }, { pos: [-3.9, 0, 31.6], comp: 'engL', r: 1.25 }],
-  mounts: [
-    { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
-    { w: 'rotary', pos: [0, -2.3, -30.6], comp: 'rotary', grp: 2 },   // GA-9 rotary (owner 2026-10-22): ventral nose, A-10-style
-  ],
-  turrets: [
-    { w: 'laser', pos: [2.6, 1.85, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-2.6, 1.85, -12], comp: 'tur2', side: 1 },
-    { w: 'pd', pos: [2.2, 3.1, 19], comp: 'tur3', side: 1 }, { w: 'pd', pos: [-2.2, 3.1, 19], comp: 'tur4', side: 1 },
-    { w: 'pd', pos: [0, -2.8, -6], comp: 'tur5', side: -1 }, { w: 'pd', pos: [0, -3.3, 14], comp: 'tur6', side: -1 },
-  ],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 26], r: 3.0, hp: 120 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
-    { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
-    { id: 'rotary', name: 'GA-9 ROTARY', role: 'gun', pos: [0, -2.3, -27], r: 2.0, hp: 120 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [2.6, 1.85, -12], r: 2.8, hp: 30 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-2.6, 1.85, -12], r: 2.8, hp: 30 },
-    { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
-    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [-2.2, 3.1, 19], r: 1.3, hp: 30 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [0, -2.8, -6], r: 1.3, hp: 30 },
-    { id: 'tur6', name: 'PD 6', role: 'turret', pos: [0, -3.3, 14], r: 1.3, hp: 30 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -10], r: 3.0, hp: 90 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 16], r: 3.0, hp: 90 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 5.3, 10], r: 3.0, hp: 90 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 20], r: 3.6, hp: 200 },
-  ],
-  shield: { fore: 220, aft: 220 }, armor: { type: 'hard', rating: 0.28 }, structure: 420,
-  maxSpeed: 28, accel: 6, turn: 0.22, shieldRegen: 6, sig: 4, flameColor: 0x66c8ff, energyMax: 600, energyRegen: 100,
 };
 
 // ---- EXETER class frigate (450 m): jump-capable, docks 2 corvettes + 12 fighters/drones (no repair) -------------
@@ -1572,9 +1530,7 @@ const exeterDetail = [
 ];
 
 SHIPS.exeter = {
-  id: 'exeter', name: 'EXETER', cls: 'frigate', fac: 'human', role: 'JUMP FRIGATE',
-  length: 450, half: [108, 48, 230], mirror: true, radius: 235, seam: [9, 7], resMul: 0.6,
-  jump: true, dock: { fighters: 12, corvettes: 2 }, repair: false,
+  ...DB.ships.exeter,
   prims: [
     tap([0, 0, 10], 185, [22, 12], [46, 22], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.012 } }),            // wedge hull
     tap([0, 13.5, 0], 150, [20, 4], [34, 5], E.white, { sh: 'h' }),                                          // dorsal slab
@@ -1614,65 +1570,13 @@ SHIPS.exeter = {
     seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle: collar and glow on the bow face, between the prongs
     ...exeterDetail,
   ],
-  engines: [{ pos: [80, -3, 229], comp: 'engR', r: 11 }, { pos: [-80, -3, 229], comp: 'engL', r: 11 }, { pos: [0, 0, 216], comp: 'engC', r: 18 }],
-  mounts: [
-    { w: 'rail', pos: [16, 5, -227], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-16, 5, -227], comp: 'railL', grp: 1 },    // bow prong tips (prims seg ends at [16,5,-226])
-    { w: 'mdxl', pos: [0, -2, -204], comp: 'mdxl', grp: 9, store: 'spine' },    // XL mass driver: emitter in the centre mass, muzzle at the bow face; charge machine in 79_bullfrog.js
-  ],
-  turrets: [
-    { w: 'laser', pos: [0, 24, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 22.4, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 22.4, -40], comp: 'tur3', side: 1 },
-    { w: 'pd', pos: [20, 28.7, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 28.7, 110], comp: 'tur5', side: 1 },
-    { w: 'laser', pos: [0, -22.4, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -22.4, 60], comp: 'tur7', side: -1 },
-    // owner decision 2026-10-22: 2x2 L mass driver turrets (dorsal pair fwd, ventral pair mid) and 4x2 M lasers
-    { w: 'mdl', cls: 'L', pos: [40, 23, -90], comp: 'mdL1', side: 1 }, { w: 'mdl', cls: 'L', pos: [-40, 23, -90], comp: 'mdL2', side: 1 },
-    { w: 'mdl', cls: 'L', pos: [36, -25, 30], comp: 'mdL3', side: -1 }, { w: 'mdl', cls: 'L', pos: [-36, -25, 30], comp: 'mdL4', side: -1 },
-    { w: 'laserM', pos: [48, 21, 0], comp: 'mt1', side: 1 }, { w: 'laserM', pos: [-48, 21, 0], comp: 'mt2', side: 1 },
-    { w: 'laserM', pos: [14, 26, 130], comp: 'mt3', side: 1 }, { w: 'laserM', pos: [-14, 26, 130], comp: 'mt4', side: 1 },
-    { w: 'laserM', pos: [44, -21.2, 60], comp: 'mt5', side: -1 }, { w: 'laserM', pos: [-44, -21.2, 60], comp: 'mt6', side: -1 },
-    { w: 'laserM', pos: [14, -26.5, 120], comp: 'mt7', side: -1 }, { w: 'laserM', pos: [-14, -26.5, 120], comp: 'mt8', side: -1 },
-  ],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 200], r: 20, hp: 500 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-80, -3, 205], r: 18, hp: 350 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [80, -3, 205], r: 18, hp: 350 },
-    { id: 'railL', name: 'RAIL L', role: 'gun', pos: [-14, 4, -205], r: 10, hp: 300 },
-    { id: 'railR', name: 'RAIL R', role: 'gun', pos: [14, 4, -205], r: 10, hp: 300 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [0, 24, -110], r: 7, hp: 90 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [24, 22.4, -40], r: 7, hp: 90 },
-    { id: 'tur3', name: 'LASER 3', role: 'turret', pos: [-24, 22.4, -40], r: 7, hp: 90 },
-    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [20, 28.7, 110], r: 3.2, hp: 90 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 28.7, 110], r: 3.2, hp: 90 },
-    { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -22.4, -80], r: 7, hp: 90 },
-    { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -22.4, 60], r: 3.2, hp: 90 },
-    { id: 'mdxl', name: 'MASS DRIVER', role: 'gun', pos: [0, 0, -150], r: 14, hp: 600 },
-    { id: 'mdL1', name: 'MASS DRIVER 1', role: 'turret', pos: [40, 23, -90], r: 8, hp: 140 }, { id: 'mdL2', name: 'MASS DRIVER 2', role: 'turret', pos: [-40, 23, -90], r: 8, hp: 140 },
-    { id: 'mdL3', name: 'MASS DRIVER 3', role: 'turret', pos: [36, -25, 30], r: 8, hp: 140 }, { id: 'mdL4', name: 'MASS DRIVER 4', role: 'turret', pos: [-36, -25, 30], r: 8, hp: 140 },
-    { id: 'mt1', name: 'LS-8 LASER 1', role: 'turret', pos: [48, 21, 0], r: 6, hp: 90 }, { id: 'mt2', name: 'LS-8 LASER 2', role: 'turret', pos: [-48, 21, 0], r: 6, hp: 90 },
-    { id: 'mt3', name: 'LS-8 LASER 3', role: 'turret', pos: [14, 26, 130], r: 6, hp: 90 }, { id: 'mt4', name: 'LS-8 LASER 4', role: 'turret', pos: [-14, 26, 130], r: 6, hp: 90 },
-    { id: 'mt5', name: 'LS-8 LASER 5', role: 'turret', pos: [44, -21.2, 60], r: 6, hp: 90 }, { id: 'mt6', name: 'LS-8 LASER 6', role: 'turret', pos: [-44, -21.2, 60], r: 6, hp: 90 },
-    { id: 'mt7', name: 'LS-8 LASER 7', role: 'turret', pos: [14, -26.5, 120], r: 6, hp: 90 }, { id: 'mt8', name: 'LS-8 LASER 8', role: 'turret', pos: [-14, -26.5, 120], r: 6, hp: 90 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -100], r: 16, hp: 400 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 100], r: 16, hp: 400 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 26, 70], r: 16, hp: 350 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 150], r: 22, hp: 800 },
-    { id: 'radL', name: 'RADIATOR L', role: 'radiator', pos: [-70, 0, 130], r: 20, hp: 250 },
-    { id: 'radR', name: 'RADIATOR R', role: 'radiator', pos: [70, 0, 130], r: 20, hp: 250 },
-    { id: 'bay', name: 'FIGHTER BAY (12)', role: 'bay', pos: [0, -7, -170], r: 16, hp: 400 },
-    { id: 'cradleL', name: 'CRADLE L (corvette)', role: 'dock', pos: [-34, -7, 40], r: 14, hp: 300 },
-    { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
-  ],
-  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600, stores: { drone: 48 },
-  maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff, energyMax: 2500, energyRegen: 350,
-  ai: { role: 'capital' },
 };
 
 // ---- DRONE: unmanned 6 m wingman (docs/FLEET_LOGIC.md 9/9a). cls stays 'fighter' so fighter rules (fixed guns, PD priority, no big-ship death throes) apply;
 // `drone: true` switches on the drone AI/orders (56_drones.js). No pilot, no eject, no missiles, one light gun, small shield. Cheap voxel model (resMul).
 const D6 = { hull: 0xaab2bb, hull2: 0x8a929c, dark: 0x30363e, canopy: 0x2a9ad0, amber: 0xc79a3a };
 SHIPS.drone = {
-  id: 'drone', name: 'DRONE', cls: 'fighter', drone: true, fac: 'human', role: 'COMBAT DRONE (UNMANNED)',
-  length: 6, half: [2.9, 0.7, 3.4], mirror: true, radius: 3.3, seam: [1.5, 1.1], eye: [0, 0.3, -1.2], resMul: 0.32, noDetail: true,
+  ...DB.ships.drone,
   prims: [
     tap([0, 0, -1.0], 1.7, [0.16, 0.12], [0.5, 0.36], D6.hull, { sh: 'h' }),
     tap([0, 0, 1.5], 1.5, [0.5, 0.36], [0.46, 0.34], D6.hull2, { sh: 'h' }),
@@ -1683,26 +1587,13 @@ SHIPS.drone = {
     ell([0, 0, 3.3], [0.24, 0.19, 0.08], 0x7fd0ff, { glow: true }),
     seg([0, -0.3, -0.6], [0, -0.32, -3.0], 0.07, 0.05, D6.dark, { noMirror: true }),
   ],
-  engines: [{ pos: [0, 0, 3.3], comp: 'eng', r: 0.3 }],
-  mounts: [{ w: 'dgun', pos: [0, -0.32, -3.05], comp: 'gun', grp: 1 }],
-  stores: {},
-  comps: [
-    { id: 'eng', name: 'ENGINE', role: 'engine', pos: [0, 0, 2.4], r: 0.9, hp: 5 },
-    { id: 'gun', name: 'GUN', role: 'gun', pos: [0, -0.3, -1.5], r: 0.6, hp: 4 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 0.8], r: 0.7, hp: 6 },
-  ],
-  shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
-  maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
-  ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
 };
 
 // ---- TENDER: unarmed fleet resupply ship (owner decision 2026-10-22: fleet tender ships for the magazine rule) ----
 // Rearms friendly ships within `serviceR` (ammo pools, missile stores, XL slugs) at `tenderTick` (55_ships.js).
 // Binding rule kept: rearm is not repair - structure, components and shields are NOT restored (AGENTS.md).
 SHIPS.tender = {
-  id: 'tender', name: 'TENDER', cls: 'frigate', fac: 'human', role: 'FLEET TENDER',
-  length: 200, half: [40, 24, 100], mirror: true, radius: 105, seam: [5, 4], resMul: 0.5,
-  jump: true, dock: { fighters: 24, corvettes: 4 }, repair: false, tender: true, serviceR: 600,
+  ...DB.ships.tender,
   prims: [
     tap([0, 0, 10], 150, [26, 16], [34, 20], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.008 } }),       // long box hull
     tap([0, 8, 0], 120, [22, 5], [26, 6], E.white, { sh: 'h' }),                                          // dorsal deck
@@ -1725,24 +1616,6 @@ SHIPS.tender = {
     // nav lights
     ell([38, 0, 60], [0.8, 0.6, 0.8], 0xff3030, { glow: true, noMirror: true }),
   ],
-  engines: [{ pos: [12, 0, 96], comp: 'engR', r: 5 }, { pos: [-12, 0, 96], comp: 'engL', r: 5 }, { pos: [0, 0, 96], comp: 'engC', r: 6 }],
-  mounts: [],
-  turrets: [],
-  stores: { flare: 24 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 90], r: 6, hp: 260 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-12, 0, 90], r: 5, hp: 200 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [12, 0, 90], r: 5, hp: 200 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 55], r: 9, hp: 420 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 17, 50], r: 7, hp: 180 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -70], r: 9, hp: 200 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 85], r: 9, hp: 200 },
-    { id: 'bayA', name: 'SERVICE BAY A', role: 'bay', pos: [14, 13.5, 0], r: 8, hp: 220 },
-    { id: 'bayB', name: 'SERVICE BAY B', role: 'bay', pos: [-14, 13.5, 0], r: 8, hp: 220 },
-  ],
-  shield: { fore: 600, aft: 500 }, armor: { type: 'composite', rating: 0.25 }, structure: 1400,
-  maxSpeed: 24, accel: 2.5, turn: 0.07, shieldRegen: 8, sig: 10, flameColor: 0x66c8ff, energyMax: 2000, energyRegen: 300,
-  ai: { role: 'capital' },
 };
 // ======================================================================
 //  FROGG fleet — organic bio-mech, sharp edges.
@@ -1918,8 +1791,7 @@ const fRef = o => {
 
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
-  id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
-  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, rustK: 0.4, radius: 5.4,
+  ...DB.ships.darter,
   prims: [
     ell([0, -0.05, 0.9], [2.3, 0.2, 2.4], N.dk, nSt(0.14)), ell([0, 0.18, 0.5], [1.5, 0.16, 2.8], N.dk2, nSt(0.14)),
     ...nMand(0.45, -0.1, -3.7, 1.5, 0.16), nKeel(-0.4, -0.8, 1.6, 0.9, 0.16),
@@ -1934,27 +1806,11 @@ SHIPS.darter = {
     seg([0.4, -0.3, -3.5], [0.4, -0.3, -4.9], 0.09, 0.06, N.bl),                           // mouth guns
     ...fDetail({ disc: [0, -0.05, 0.9, 2.3, 0.2, 2.4], E: [0, 0, 0.5, 0.9, 0.58, 3.9], plates: 5, gills: 3, collars: 3, ribs: 3, spikes: 3, noz: [[1.0, -0.15, 3.4, 4.9, 0.3]], blades: [[[0.55, 0.05, 0.8], [3.9, -0.05, 5.0], 0.22]], guns: [[0.4, -0.3, -3.6, -4.8, 0.09]] }),
   ],
-  engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
-  mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
-  stores: { tick: 2, flare: 8 },
-  launch: [0.62, -0.32, -1.75],         // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-1.0, -0.15, 3.8], r: 0.8, hp: 7 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [1.0, -0.15, 3.8], r: 0.8, hp: 7 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-0.4, -0.3, -3.0], r: 0.6, hp: 5 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [0.4, -0.3, -3.0], r: 0.6, hp: 5 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.1, 0.8], r: 0.8, hp: 8 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 1.8], r: 0.9, hp: 12 },
-  ],
-  shield: { fore: 10, aft: 8 }, armor: { type: 'composite', rating: 0.46 }, structure: 14,
-  maxSpeed: 165, aiSpeed: 120, accel: 90, turn: 2.6, sig: 0.8, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 1.0 },
 };
 
 // ---- LEAPER: line fighter (13 m) --------------------------------------------
 SHIPS.leaper = {
-  id: 'leaper', name: 'FROGG LEAPER', cls: 'fighter', fac: 'frogg', role: 'FIGHTER',
-  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, rustK: 0.4, radius: 8,
+  ...DB.ships.leaper,
   prims: [
     ell([0, -0.1, 1.2], [3.6, 0.26, 3.4], N.dk, nSt(0.2)), ell([0, 0.3, 0.8], [2.4, 0.2, 3.8], N.dk2, nSt(0.2)),
     ...nMand(0.7, -0.15, -5.0, 2.2, 0.24), nKeel(-0.6, -1.4, 2.4, 1.2, 0.22),
@@ -1971,27 +1827,11 @@ SHIPS.leaper = {
     seg([0.65, -0.42, -5.6], [0.65, -0.42, -6.6], 0.13, 0.09, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.2, 3.6, 0.26, 3.4], E: [0, 0, 0.6, 1.35, 0.82, 5.2], plates: 6, gills: 4, collars: 4, noz: [[2.2, -0.2, 4.6, 6.8, 0.5]], blades: [[[1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3]], guns: [[0.65, -0.42, -5.6, -6.5, 0.13]] }),
   ],
-  engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
-  mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
-  stores: { tick: 2, flare: 10 },
-  launch: [0.9, -0.5, -2.8],            // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.2, -0.25, 5.2], r: 1.1, hp: 10 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-0.65, -0.4, -4.4], r: 0.8, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [0.65, -0.4, -4.4], r: 0.8, hp: 8 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.2, 1.2], r: 1.1, hp: 12 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 2.8], r: 1.2, hp: 18 },
-  ],
-  shield: { fore: 16, aft: 14 }, armor: { type: 'composite', rating: 0.5 }, structure: 25,
-  maxSpeed: 120, aiSpeed: 85, accel: 65, turn: 1.7, sig: 1, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 0.8 },
 };
 
 // ---- SPITTER: gunship (16 m) — dorsal acid cannon ---------------------------
 SHIPS.spitter = {
-  id: 'spitter', name: 'FROGG SPITTER', cls: 'fighter', fac: 'frogg', role: 'GUNSHIP',
-  length: 16, half: [7.6, 3.2, 9.0], mirror: true, rustK: 0.4, radius: 9.5,
+  ...DB.ships.spitter,
   prims: [
     ell([0, -0.2, 1.4], [4.6, 0.34, 4.4], N.dk, nSt(0.24)), ell([0, 0.5, 1.0], [3.2, 0.26, 4.8], N.dk2, nSt(0.24)),
     ...nMand(1.1, -0.25, -6.6, 2.8, 0.3), nKeel(-1.0, 0.0, 4.4, 1.5, 0.3),
@@ -2009,33 +1849,13 @@ SHIPS.spitter = {
     seg([1.6, -0.5, -7.2], [1.6, -0.5, -8.0], 0.16, 0.1, N.bl),
     ...fDetail({ disc: [0, -0.2, 1.4, 4.6, 0.34, 4.4], E: [0, 0, 0.8, 1.9, 1.05, 6.6], plates: 6, gills: 4, collars: 5, gc: 1, noz: [[2.8, -0.3, 6.2, 8.4, 0.72]], blades: [[[1.9, 0.2, -0.2], [7.4, -0.1, 7.4], 0.38]], guns: [[1.6, -0.5, -7.2, -7.9, 0.16]] }),
   ],
-  engines: [{ pos: [2.8, -0.3, 8.4], comp: 'engR', r: 0.72 }, { pos: [-2.8, -0.3, 8.4], comp: 'engL', r: 0.72 }],
-  mounts: [
-    { w: 'spitcannon', pos: [0, 1.35, -8.8], comp: 'cannon', grp: 1 },
-    { w: 'fang', pos: [1.6, -0.5, -8.0], comp: 'gunR', grp: 2 }, { w: 'fang', pos: [-1.6, -0.5, -8.0], comp: 'gunL', grp: 2 },
-  ],
-  stores: { tick: 4, flare: 10 },
-  launch: [1.9, -1.1, -0.5],            // front of the sac pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.8, -0.3, 6.2], r: 1.4, hp: 14 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.8, -0.3, 6.2], r: 1.4, hp: 14 },
-    { id: 'cannon', name: 'ACID CANNON', role: 'gun', pos: [0, 1.2, -3.0], r: 1.4, hp: 20 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-1.6, -0.5, -5.5], r: 0.8, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [1.6, -0.5, -5.5], r: 0.8, hp: 8 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.6], r: 1.4, hp: 16 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.2], r: 1.6, hp: 26 },
-  ],
-  shield: { fore: 30, aft: 24 }, armor: { type: 'ablative', rating: 0.5 }, structure: 38,
-  maxSpeed: 90, aiSpeed: 66, accel: 50, turn: 1.1, sig: 1.3, flameColor: 0xffa030,
-  ai: { role: 'gunship', aggr: 0.6 },
 };
 
 // ---- TOAD: torpedo bomber (19 m) --------------------------------------------
 const toadWarts = [[1.9, 0.9, -0.3, 0.33], [-1.7, 1.0, 0.8, 0.3], [0.8, 1.35, 1.8, 0.36], [2.4, 0.5, 2.2, 0.3], [0.2, 1.2, -1.4, 0.26],
   [1.3, 1.15, 3.4, 0.28], [2.7, 0.2, 0.6, 0.27], [1.0, 1.4, 0.2, 0.3], [2.0, 0.95, 4.2, 0.25]];
 SHIPS.toad = {
-  id: 'toad', name: 'FROGG TOAD', cls: 'fighter', fac: 'frogg', role: 'TORPEDO BOMBER',
-  length: 19, half: [8.8, 3.6, 10.4], mirror: true, rustK: 0.4, radius: 11,
+  ...DB.ships.toad,
   prims: [
     ell([0, -0.1, 1.6], [5.8, 0.42, 5.2], N.dk, nSt(0.28)), ell([0, 0.8, 1.2], [4.0, 0.3, 5.6], N.dk2, nSt(0.28)),
     ...nMand(1.5, -0.2, -7.6, 3.2, 0.36), nKeel(-1.4, 1.0, 5.0, 1.8, 0.35), ...nComb(0.6, -1.3, 4.4, 4, 3.2, 0.5),
@@ -2053,31 +1873,11 @@ SHIPS.toad = {
     seg([1.0, 0.1, -8.4], [1.0, 0.1, -7.6], 0.18, 0.12, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.6, 5.8, 0.42, 5.2], E: [0, 0, 0.6, 2.6, 1.55, 7.6], plates: 7, gills: 5, collars: 5, noz: [[3.6, -0.3, 7.4, 9.4, 0.85]], blades: [[[2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45]], guns: [[1.0, 0.1, -8.4, -7.6, 0.18]] }),
   ],
-  engines: [{ pos: [3.6, -0.3, 9.4], comp: 'engR', r: 0.85 }, { pos: [-3.6, -0.3, 9.4], comp: 'engL', r: 0.85 }],
-  mounts: [
-    { w: 'fang', pos: [1.0, 0.1, -7.6], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-1.0, 0.1, -7.6], comp: 'gunL', grp: 1 },
-    { w: 'tad', pos: [0, -2.2, -2.9], comp: 'rack', grp: 3, store: 'tad' },
-  ],
-  stores: { tad: 3, flare: 16 },
-  launch: [0, -2.1, -3.3],              // front of the ventral torpedo pod cluster
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.3, 7.0], r: 1.6, hp: 18 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.3, 7.0], r: 1.6, hp: 18 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-1.0, 0.1, -4.8], r: 0.9, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [1.0, 0.1, -4.8], r: 0.9, hp: 8 },
-    { id: 'rack', name: 'TORP RACK', role: 'gun', pos: [0, -2.0, 1.5], r: 1.6, hp: 20 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.6, 0.5], r: 1.6, hp: 16 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0.2, 3.0], r: 2.0, hp: 34 },
-  ],
-  shield: { fore: 26, aft: 22 }, armor: { type: 'composite', rating: 0.45 }, structure: 55,
-  maxSpeed: 78, aiSpeed: 58, accel: 40, turn: 0.9, sig: 1.4, flameColor: 0xffa030,
-  ai: { role: 'bomber', aggr: 0.3 },
 };
 
 // ---- REAVER: heavy assault fighter (19 m) -----------------------------------
 SHIPS.reaver = {
-  id: 'reaver', name: 'FROGG REAVER', cls: 'fighter', fac: 'frogg', role: 'HEAVY FIGHTER',
-  length: 19, half: [9.6, 3.6, 10.8], mirror: true, rustK: 0.4, radius: 11.5,
+  ...DB.ships.reaver,
   prims: [
     ell([0, -0.1, 1.2], [6.2, 0.44, 5.6], N.dk, nSt(0.28)), ell([0, 0.9, 0.8], [4.4, 0.32, 6.0], N.dk2, nSt(0.28)),
     ...nMand(1.6, -0.2, -8.6, 3.6, 0.4), ...nMand(0.9, -0.5, -8.4, 2.2, 0.28), nKeel(-1.2, 0.0, 5.0, 1.9, 0.38),
@@ -2096,34 +1896,11 @@ SHIPS.reaver = {
     seg([1.2, -0.55, -8.0], [1.2, -0.55, -8.8], 0.18, 0.12, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.2, 6.2, 0.44, 5.6], E: [0, 0, 0.8, 2.7, 1.5, 8.0], plates: 7, gills: 5, collars: 5, gc: 2, noz: [[3.2, -0.3, 7.4, 9.8, 0.8], [1.3, -0.5, 8.0, 9.9, 0.5]], blades: [[[2.7, 0.15, 0.4], [9.2, -0.15, 9.2], 0.45], [[2.2, 0.6, 1.0], [7.4, 0.9, 8.2], 0.3]], guns: [[1.2, -0.55, -8.0, -8.8, 0.18]] }),
   ],
-  engines: [
-    { pos: [3.2, -0.3, 9.8], comp: 'engR', r: 0.8 }, { pos: [-3.2, -0.3, 9.8], comp: 'engL', r: 0.8 },
-    { pos: [1.3, -0.5, 9.9], comp: 'engR', r: 0.5 }, { pos: [-1.3, -0.5, 9.9], comp: 'engL', r: 0.5 },
-  ],
-  mounts: [
-    { w: 'flaser', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
-    { w: 'fang', pos: [2.0, -0.5, -7.4], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-2.0, -0.5, -7.4], comp: 'gunL', grp: 1 },
-    { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
-  ],
-  stores: { tick: 6, flare: 12 },
-  launch: [2.5, -0.7, -5.2],            // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.0, -0.3, 7.0], r: 1.8, hp: 18 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.0, -0.3, 7.0], r: 1.8, hp: 18 },
-    { id: 'gunL', name: 'GUNS L', role: 'gun', pos: [-1.8, -0.4, -4.5], r: 1.3, hp: 14 },
-    { id: 'gunR', name: 'GUNS R', role: 'gun', pos: [1.8, -0.4, -4.5], r: 1.3, hp: 14 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.8], r: 1.6, hp: 20 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.6], r: 1.9, hp: 30 },
-  ],
-  shield: { fore: 40, aft: 40 }, armor: { type: 'hard', rating: 0.43 }, structure: 60,
-  maxSpeed: 95, aiSpeed: 66, accel: 50, turn: 1.15, sig: 1.3, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 0.9 },
 };
 
 // ---- GULPER: escort corvette (66 m) -----------------------------------------
 SHIPS.gulper = {
-  id: 'gulper', name: 'FROGG GULPER', cls: 'corvette', fac: 'frogg', role: 'ESCORT CORVETTE',
-  length: 66, half: [17, 13, 38], mirror: true, rustK: 0.4, radius: 40,
+  ...DB.ships.gulper,
   prims: [
     ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
     ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
@@ -2153,44 +1930,12 @@ SHIPS.gulper = {
     seg([5.5, -2.4, -30], [5.5, -2.4, -35.3], 1.3, 0.8, N.bl),
     ...fDetail({ disc: [0, -0.5, 4, 15, 1.3, 20], E: [0, 0, 2, 9.6, 6.4, 29], plates: 9, gills: 6, collars: 7, ribs: 7, spikes: 6, noz: [[9.5, -1.0, 24, 35.4, 2.7], [3.8, -2.2, 31, 36.0, 1.5]], blades: [[[8, 0.5, 6], [16.5, 0.2, 34], 0.9], [[7, -3, 12], [14, -3.8, 36], 0.7]], guns: [[5.5, -2.4, -30, -35.3, 1.0]] }),
   ],
-  engines: [
-    { pos: [9.5, -1.0, 35.4], comp: 'engR', r: 2.7 }, { pos: [-9.5, -1.0, 35.4], comp: 'engL', r: 2.7 },
-    { pos: [3.8, -2.2, 36.0], comp: 'engR', r: 1.5 }, { pos: [-3.8, -2.2, 36.0], comp: 'engL', r: 1.5 },
-  ],
-  mounts: [
-    { w: 'rodg', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'rodg', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
-    { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
-  ],
-  turrets: [
-    { w: 'sting', pos: [3.6, 7.35, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 7.35, -2], comp: 'tur2', side: 1 },
-    { w: 'sting', pos: [3.4, 5.85, 14], comp: 'tur3', side: 1 }, { w: 'sting', pos: [-3.4, 5.6, 14], comp: 'tur4', side: 1 },
-  ],
-  stores: { tad: 6, flare: 0 },
-  launch: [0, -6.4, -8.6],              // mouth of the ventral drum (launch bay)
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'lashL', name: 'ROD DRIVER L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'lashR', name: 'ROD DRIVER R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 7.35, -2], r: 1.5, hp: 26 },
-    { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 7.35, -2], r: 1.5, hp: 26 },
-    { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.85, 14], r: 1.5, hp: 26 },
-    { id: 'tur4', name: 'STING 4', role: 'turret', pos: [-3.4, 5.6, 14], r: 1.5, hp: 26 },
-    { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 1.5, 0], r: 3.4, hp: 110 },
-    { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 4.2, -17], r: 7.0, hp: 90 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },
-  ],
-  shield: { fore: 200, aft: 160 }, armor: { type: 'composite', rating: 0.31 }, structure: 380,
-  energyMax: 400, energyRegen: 70, maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
-  ai: { role: 'corvette' },
 };
 
 // ---- HIVE CARRIER: migratory brood-ark, jump-capable super carrier (900 m) ---------------------------
 // Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
 SHIPS.hivecarrier = {
-  id: 'hivecarrier', name: 'FROGG HIVE CARRIER', cls: 'capital', fac: 'frogg', role: 'SUPER CARRIER',
-  length: 900, half: [270, 120, 450], mirror: true, rustK: 0.4, radius: 470, resMul: 0.25,
-  jump: true, dock: { fighters: 60, corvettes: 6 },
+  ...DB.ships.hivecarrier,
   prims: [
     // carapace: stacked overlapping shell plates
     ell([0, 0, 40], [150, 70, 330], N.dk, nSt(14, 0.1)),
@@ -2216,19 +1961,6 @@ SHIPS.hivecarrier = {
     ...nNoz(60, 0, 330, 440, 40), ...nNoz(150, -10, 320, 430, 32), ...nNoz(200, 10, 300, 410, 24),
     ...fDetail({ disc: [0, -10, 60, 250, 18, 300], rim: 22, E: [0, 0, 40, 150, 70, 330], plates: 12, gills: 8, collars: 9, ribs: 8, spikes: 8, noz: [[60, 0, 330, 440, 40], [150, -10, 320, 430, 32], [200, 10, 300, 410, 24]], blades: [[[120, 20, 150], [265, 10, 440], 16]] }),
   ],
-  engines: [{ pos: [60, 0, 440], comp: 'engR', r: 40 }, { pos: [-60, 0, 440], comp: 'engL', r: 40 }],
-  mounts: [], turrets: [],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-60, 0, 380], r: 60, hp: 900 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [60, 0, 380], r: 60, hp: 900 },
-    { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 30, 0], r: 70, hp: 1200 },
-    { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 20, -400], r: 60, hp: 800 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 120], r: 80, hp: 2400 },
-  ],
-  shield: { fore: 4000, aft: 3200 }, armor: { type: 'composite', rating: 0.21 }, structure: 6000,
-  maxSpeed: 12, aiSpeed: 8, accel: 0.5, turn: 0.03, sig: 20, flameColor: 0xff6a2a,
-  ai: { role: 'capital' },
 };
 
 
@@ -2239,14 +1971,9 @@ const bfArch = z => {                                   // hand-placed rib arch 
   const pts = [0.12, 0.7, 1.25, 1.85, 2.4].map(a => [rx * Math.sin(a) * f, ry * Math.cos(a) * f, z]);
   return chain(pts, [th * 2, th * 2.3, th * 2.3, th * 2, th * 1.6], N.mt, { rust: N.ru, edge: N.ed, streak: 1 });
 };
-const bfT = (id, w, cls, x, y, z, side) => ({ w, cls, pos: [x, y, z], comp: id, side });
-const bfC = (id, name, role, x, y, z, r, hp) => ({ id, name, role, pos: [x, y, z], r, hp });
 const bfMir = (f) => [f(1), f(-1)];
 SHIPS.bullfrog = {
-  id: 'bullfrog', name: 'FROGG BULLFROG', cls: 'capital', fac: 'frogg', role: 'SPINE CARRIER',
-  length: 600, half: [95, 55, 300], mirror: true, rustK: 0.4, radius: 305, resMul: 0.85, resCap: 400,
-  jump: true, dock: { fighters: 36, corvettes: 0 },
-  launch: [0, -44, -40],
+  ...DB.ships.bullfrog,
   prims: [
     ell([0, 0, 30], [68, 36, 255], N.dk, nSt(6, 0.1)),                                   // core barrel
     ell([0, 24, 10], [52, 15, 225], N.dk2, nSt(6, 0.1)), ell([0, 32, -30], [34, 8, 165], N.dk, nSt(5, 0.1)),   // dorsal shells
@@ -2278,33 +2005,6 @@ SHIPS.bullfrog = {
     ...fDetail({ disc: [0, -4, 60, 88, 9, 200], rim: 18, E: [0, 0, 30, 70, 38, 255], refN: 11, plates: 14, gills: 8, collars: 9, ribs: 9, spikes: 8,
       noz: [[24, 12, 244, 296, 12], [50, -4, 240, 294, 14], [76, 8, 236, 290, 11]], blades: [[[40, 2, 150], [78, 6, 262], 3.2], [[60, 2, 60], [92, 0, 290], 4]], guns: [[0, -4, -250, -296, 4.5]] }),
   ],
-  engines: [[24, 12, 0], [50, -4, 0], [76, 8, 0]].flatMap(([x, y], i) => [{ pos: [x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 1), r: [12, 14, 11][i] }, { pos: [-x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 2), r: [12, 14, 11][i] }]),
-  mounts: [
-    { w: 'spine', pos: [0, -4, -299], comp: 'spine', grp: 9, store: 'spine' },
-    { w: 'tad', pos: [0, -43, -40], comp: 'tubes', grp: 3, store: 'tad' },
-  ],
-  turrets: [
-    bfT('L1', 'lanceL', 'L', 0, 38, -150, 1),
-    ...[['M1', 44, 33, -70, 1], ['M3', 54, 28, 80, 1], ['M5', 46, -30, -20, -1]].flatMap(([id, x, y, z, sd], i) => { const n = +id.slice(1); return [bfT('M' + n, 'acidT', 'M', x, y, z, sd), bfT('M' + (n + 1), 'acidT', 'M', -x, y, z, sd)]; }),
-    ...[['S1', 32, 43, -200, 1], ['S3', 40, 35, -10, 1], ['S5', 36, 35, 110, 1], ['S7', 36, -20, -130, -1], ['S9', 40, -27, 90, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('S' + n, 'sting', 'S', x, y, z, sd), bfT('S' + (n + 1), 'sting', 'S', -x, y, z, sd)]; }),
-    ...[['P1', 16, 37, -110, 1], ['P3', 24, 40, 150, 1], ['P5', 22, -30, -60, -1], ['P7', 26, -23, 200, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('P' + n, 'thorn', 'S', x, y, z, sd), bfT('P' + (n + 1), 'thorn', 'S', -x, y, z, sd)]; }),
-  ],
-  stores: { tad: 16, flare: 0 },
-  comps: [
-    bfC('spine', 'SPINE EMITTER', 'gun', 0, -4, -286, 13, 700),
-    bfC('L1', 'HEAVY LANCE DORSAL', 'turret', 0, 38, -150, 17, 260),
-    ...[['M1', 44, 33, -70], ['M3', 54, 28, 80], ['M5', 46, -30, -20]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('M' + n, 'ACID M' + n, 'turret', x, y, z, 6.5, 120), bfC('M' + (n + 1), 'ACID M' + (n + 1), 'turret', -x, y, z, 6.5, 120)]; }),
-    ...[['S1', 32, 43, -200], ['S3', 40, 35, -10], ['S5', 36, 35, 110], ['S7', 36, -20, -130], ['S9', 40, -27, 90]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('S' + n, 'STING S' + n, 'turret', x, y, z, 2.5, 45), bfC('S' + (n + 1), 'STING S' + (n + 1), 'turret', -x, y, z, 2.5, 45)]; }),
-    ...[['P1', 16, 37, -110], ['P3', 24, 40, 150], ['P5', 22, -30, -60], ['P7', 26, -23, 200]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('P' + n, 'THORN PD P' + n, 'turret', x, y, z, 2.5, 40), bfC('P' + (n + 1), 'THORN PD P' + (n + 1), 'turret', -x, y, z, 2.5, 40)]; }),
-    ...[['E1', 24, 12], ['E3', 50, -4], ['E5', 76, 8]].flatMap(([id, x, y]) => { const n = +id.slice(1); return [bfC('E' + n, 'ENGINE E' + n, 'engine', x, y, 262, 14, 330), bfC('E' + (n + 1), 'ENGINE E' + (n + 1), 'engine', -x, y, 262, 14, 330)]; }),
-    bfC('shieldF', 'SHIELD GLAND FWD', 'shield', 0, 32, -40, 20, 700), bfC('shieldA', 'SHIELD GLAND AFT', 'shield', 0, 30, 170, 20, 600),
-    bfC('eyes', 'EYES', 'radar', 0, 14, -215, 16, 500), bfC('power', 'HEART', 'power', 0, 0, 150, 18, 1100),
-    bfC('bayA', 'HANGAR BAY A (18)', 'bay', 0, -32, -95, 22, 650), bfC('bayB', 'HANGAR BAY B (18)', 'bay', 0, -32, 90, 22, 650),
-    bfC('tubes', 'TORPEDO TUBES', 'gun', 0, -42, -10, 14, 500),
-  ],
-  shield: { fore: 2000, aft: 1600 }, armor: { type: 'hard', rating: 0.30 }, structure: 3000,
-  energyMax: 3200, energyRegen: 320, shieldRegen: 6, maxSpeed: 22, aiSpeed: 14, accel: 2.0, turn: 0.06, sig: 12, flameColor: 0xff6a2a,
-  ai: { role: 'lancer' },
 };
 
 // attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
@@ -3573,11 +3273,7 @@ const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1],
 //   rate    ablative only: max damage absorbed per second as a fraction of structure (burst capacity 1.5 s); beyond it hits pass through
 //   spall   share of the blocked damage that reaches a nearby internal component when the armour is breached
 // Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
-const ARMOR = {
-  ablative:  { name: 'ABLATIVE',  prof: { kin: 0.50, en: 1.50, exp: 1.00, nuke: 1.60 }, thresh: 0, rate: 0.60, spall: 0.04 },
-  hard:      { name: 'HARD',      prof: { kin: 1.40, en: 0.40, exp: 1.00, nuke: 0.60 }, thresh: 6, rate: 0,    spall: 0.30 },
-  composite: { name: 'COMPOSITE', prof: { kin: 1.00, en: 1.00, exp: 1.00, nuke: 1.00 }, thresh: 3, rate: 0,    spall: 0.12 },
-};
+const ARMOR = DB.armor;
 // ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
 const FF = { bolt: 0.5, blast: 0.5 };
 const _ff = new THREE.Vector3(), _fw = new THREE.Vector3();
@@ -3592,42 +3288,10 @@ function friendlyInLine(s, maxD = 700) {           // AI holds fire when a frien
   }
   return false;
 }
-const ARMOR_THRESH_CLS = { fighter: 0.25, corvette: 1, frigate: 1.5, capital: 2 };
+const ARMOR_THRESH_CLS = DB.armorThreshCls;
 
 const FMX = 1.3;      // FROGG missile effectiveness vs the human equivalent (owner 2026-10-22): +30% warhead damage
-const WEAPONS = {
-  // ---- human ----
-  cannon: { kind: 'proj', name: 'MK-20 CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.8, spread: 0.004, ammo: 600, color: 0xffd9a0, len: 3.4, sz: 0.14, sfx: 'cannon' },
-  he: { kind: 'proj', name: 'MK-30 HE CANNON', cd: 0.22, v: 1000, dmg: 9, dt: 'kin', life: 2.0, spread: 0.0015, ammo: 500, color: 0xffa860, len: 7, sz: 0.22, sfx: 'cannon', blast: 8 },    // high-explosive shells: direct hit + splash (blastAt) within 8 m; replaced the PL-4 plasma bolter in the realism pass 2026-10-22 (9 dmg/500 rds to hold the ~10 even point: kin hits shields at 0.7x vs the old en 1.25x, and the plasma had no magazine)
-  dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
-  rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100, energy: 12 },   // mag/rail class (owner 2026-10-22): projectile + capacitor - ammo AND a small energy draw
-  rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
-  fmag: { kind: 'proj', name: 'MD-9 MAG DRIVER', cd: 1.8, v: 1600, dmg: 26, dt: 'kin', pierce: 0.25, life: 1.7, spread: 0.002, energy: 30, ammo: 120, color: 0xcfe8ff, len: 14, sz: 0.4, sfx: 'rail', big: true },    // Kestrel heavy hitter, mag/rail class (owner 2026-10-22): 30 energy per slug from the 100-pt pool AND a 120-slug magazine - projectile plus capacitor; the ETS WEAPONS channel speeds the recharge
-  mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250, energy: 15 },    // mag/rail class: 250-rd magazine ~9 min of fire + a small capacitor draw per slug    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
-  // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
-  mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
-  // lasers: instant hit, but they must FOCUS: no damage until the beam has stayed on one ship for `acq` sim-seconds, then per-pulse damage climbs from 0.25x to `peak`x over `ramp`. A steady beam deposits far more per hit, which is what gets through hard-armour size thresholds; armour/shield type then decides the rest.
-  // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
-  laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
-  laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500, flak: 6 },    // Phalanx-style drum ~110 s; flak 6: proximity-burst vs missiles (owner P0 2026-10-22: direct hits on a 1.6 m box intercepted nothing)
-  // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
-  flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
-  lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
-  fang: { kind: 'proj', name: 'R-9 AUTOCANNON', cd: 0.16, v: 900, dmg: 4.5, dt: 'kin', life: 2.0, spread: 0.01, color: 0xc8ff40, len: 2.4, sz: 0.14, sfx: 'fang', ammo: 400 },   // ~64 s of fire
-  spit: { kind: 'proj', name: 'M-2 MASER', cd: 0.5, v: 330, dmg: 7, dt: 'en', life: 2.6, spread: 0.006, color: 0x9dff3a, len: 1.7, sz: 0.42, sfx: 'spit', glob: true },
-  spitcannon: { kind: 'proj', name: 'M-6 HEAVY MASER', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true },
-  rodg: { kind: 'proj', name: 'R-12 PENETRATOR DRIVER', cd: 2.6, v: 1400, dmg: 34, dt: 'kin', pierce: 0.45, life: 2.2, spread: 0.002, color: 0xd8ff80, len: 9, sz: 0.7, sfx: 'rail', big: true, ammo: 60, energy: 6 },    // mag/rail class: heavy rods, small magazine + capacitor draw (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family
-  sting: { kind: 'proj', name: 'R-4 AUTOCANNON TURRET (S)', cd: 0.09, v: 900, dmg: 1.5, dt: 'en', life: 0.9, spread: 0.012, color: 0xb0ff50, len: 2.4, sz: 0.16, sfx: 'pd', range: 800, track: 3.6, turret: true, ammo: 800 },
-  // ---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)
-  ir: { kind: 'msl', name: 'SW-9 SWIFT (IR)', seeker: 'ir', v0: 70, vmax: 420, acc: 300, turn: 3.4, burn: 6.5, life: 9, dmg: 26, blast: 10, fuze: 6, lockCone: 0.22, seekCone: 0.75, lockTime: 1.2, range: 1700, hp: 1, flareS: 0.7, chaffS: 0, color: 0xeeeeee, flame: 0xffe0a0, size: 1 },
-  rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
-  torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
-  tick: { kind: 'msl', name: 'SK-1 IR MISSILE', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  nuke: { kind: 'msl', name: 'NK-1 TAC WARHEAD (0.5 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.5 },   // owner 2026-10-22: standard load is a realistic battlefield yield (B61-style sub-kiloton tactical setting); dial via `?nukeKt=` 0.1 (minimum) to 10 kT; strategic 100 kT-10 MT is lore-only (docs/NUKES.md)
-  tad: { kind: 'msl', name: 'ST-2 TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
-  flare: { kind: 'cm', name: 'FLARES / CHAFF' },
-};
+const WEAPONS = DB.weapons;
 const MSL_ORDER = ['ir', 'rf', 'torp', 'tick', 'tad', 'nuke'];
 
 // ---- shared scratch + rendering of projectiles (one InstancedMesh per weapon type) -----------------
@@ -6018,13 +5682,7 @@ function comsTick(dt) {
 //  Everything here is looked up at run time (parts 60/65/70 call the functions below); the only load-time use of earlier parts is WEAPONS.
 //  Test seam: globalThis.__bf.
 // ======================================================================
-Object.assign(WEAPONS, {
-  // XL main (realism pass 2026-10-22: the FROGG energy family is masers; ids are stable, names are player-facing): mount has store:'spine' so fireGuns skips it; charge then an instant 12 m wide ray, see spineStep / spineFire
-  spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
-  lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
-  acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000, flak: 5 },   // PD drum + proximity-burst flak, radius 5 vs the PD-30's 6 (humans keep the better PD)
-});
+// weapons defined in data/db.json (merged into DB.weapons)
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
   hangarInterval: 4.5, hangarCap: 12, emergencyInterval: 1.5, spoolT: 20, corridorHalf: 0.12,

@@ -10,7 +10,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
   part runs. Part N must not use a later part's `let/const` at load time (a past bug: `FS` declared in 90_hud
   but used by 80_input; fix = declare in `10_config.js`). Symptom: page never sets `window.__game`.
 - Source map: 00_head.html (shell/CSS) · 10_config · 12_audio · 13_music (mood/crossfade, options panel) · 14_samples (CC0
-  sample layer) · 15_credits · 20_voxel · 30/31_ships · 32_scale · 40_scene ·
+  sample layer) · 15_credits · 16_db (embeds data/db.json) · 20_voxel · 30/31_ships · 32_scale · 40_scene ·
   41_sky · 45_particles · 50_state · 55_ships · 60_weapons · 65_combat · 70_ai · 75_mission · 77_cine ·
   80_input · 85_update · 90_hud · 95_main · 99_tail.html.
 
@@ -31,6 +31,11 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - No enemies exist at t=0 (first group spawns ~4 s after launch); step the sim before hit tests.
 - Run pages one at a time (several in one run time out). Hide overlays (`#brief,#ov,...`) for ship sheets.
 - Check: no console errors, mission flow completes (bot), screenshots at 1280x720 and 844x390 / 390x844.
+
+## Ship database (owner decision 2026-10-23)
+- **`data/db.json` is the single source of truth for every ship, weapon, armour profile, mass class and armour class multiplier.** Edit the numbers there, not in `src/30/31_ships_*.js` or `60_weapons.js` (those keep only geometry: `prims`). `build.py` embeds the JSON via `src/16_db.js`. Details: `docs/DATABASE.md`.
+- After editing: `python3 build.py && python3 tools/validate_db.py`. Design comments from the old source live under `notes` in the JSON.
+- `docs/data/*.csv` are generated views (`tools/export_db.py`), never edited by hand.
 
 ## Git
 - **Work in branches** (owner rule 2026-10-22): commit work in progress to a feature branch; merge to main when green. Never let two agents edit the same working tree.

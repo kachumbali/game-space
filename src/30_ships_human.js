@@ -64,8 +64,7 @@ const kestrelDetail = [
 ];
 
 SHIPS.kestrel = {
-  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'HEAVY FIGHTER',   // owner reclassification 2026-10-22 (docs/SHIP_CLASSES.md)
-  length: 12.4, half: [5.2, 2.2, 6.9], mirror: true, radius: 6.6, seam: [1.5, 1.1], eye: [0, 0.62, -2.5],
+  ...DB.ships.kestrel,
   prims: [
     // long chined fuselage: drooping chin nose into a wide flat wing-body
     tap([0, -0.2, -3.3], 2.0, [0.22, 0.14], [0.66, 0.38], K.hull, { sh: 'd', sweepY: 0.11 }),
@@ -117,30 +116,6 @@ SHIPS.kestrel = {
     ell([5.1, 0, 3.0], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
     ...kestrelDetail,
   ],
-  engines: [
-    { pos: [3.35, 0.5, 6.4], comp: 'engR', r: 0.46 }, { pos: [-3.35, 0.5, 6.4], comp: 'engL', r: 0.46 },
-    { pos: [3.9, -0.6, 6.75], comp: 'engR', r: 0.42 }, { pos: [-3.9, -0.6, 6.75], comp: 'engL', r: 0.42 },
-  ],
-  mounts: [
-    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'fmag', pos: [0.6, -0.45, -4.55], comp: 'gunR', grp: 1 },   // right boom carries the MD-9 mag (owner 2026-10-22): 3 gun systems - cannon, mag, HE - plus missiles
-    { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
-  ],
-  stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
-  launch: [2.25, -0.4, 0.55],           // nose of the under-wing pylon missiles (x mirrors per launch)
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.05, 4.4], r: 1.5, hp: 16 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
-    { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
-    { id: 'gunR', name: 'MD-9 MAG', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 12 },
-    { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
-    { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },
-    { id: 'radar', name: 'RADAR', role: 'radar', pos: [0, -0.1, -3.9], r: 0.8, hp: 12 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 2.6], r: 1.0, hp: 30 },
-  ],
-  shield: { fore: 40, aft: 40 }, armor: { type: 'composite', rating: 0.44 }, structure: 50,
-  maxSpeed: 150, accel: 75, turn: 2.2, shieldRegen: 1, sig: 1,
-  flameColor: 0x66c8ff,
 };
 
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
@@ -190,8 +165,7 @@ const halberdDetail = [
 ];
 
 SHIPS.halberd = {
-  id: 'halberd', name: 'HALBERD', cls: 'corvette', fac: 'human', role: 'ESCORT CORVETTE',
-  length: 64, half: [15, 11, 33], mirror: true, radius: 38, seam: [3.2, 2.4],
+  ...DB.ships.halberd,
   prims: [
     tap([0, 0, 2], 22, [3.2, 2.4], [4.8, 3.4], 0xb7bcc3, { sh: 'h' }),                        // main hull
     tap([0, -0.1, -25], 7, [0.4, 0.5], [3.2, 2.4], 0x9aa1aa, { sh: 'd' }),                    // bow wedge
@@ -237,36 +211,6 @@ SHIPS.halberd = {
     ell([3.6, 2.6, 0], [0.25, 0.2, 0.25], 0x30ff60, { glow: true, noMirror: true }),
     ...halberdDetail,
   ],
-  engines: [{ pos: [0, 0, 31.8], comp: 'engC', r: 1.9 }, { pos: [3.9, 0, 31.6], comp: 'engR', r: 1.25 }, { pos: [-3.9, 0, 31.6], comp: 'engL', r: 1.25 }],
-  mounts: [
-    { w: 'rail', pos: [0.9, 3.9, -31], comp: 'rail', grp: 1 }, { w: 'rail', pos: [-0.9, 3.9, -31], comp: 'rail', grp: 1 },
-    { w: 'rotary', pos: [0, -2.3, -30.6], comp: 'rotary', grp: 2 },   // GA-9 rotary (owner 2026-10-22): ventral nose, A-10-style
-  ],
-  turrets: [
-    { w: 'laser', pos: [2.6, 1.85, -12], comp: 'tur1', side: 1 }, { w: 'laser', pos: [-2.6, 1.85, -12], comp: 'tur2', side: 1 },
-    { w: 'pd', pos: [2.2, 3.1, 19], comp: 'tur3', side: 1 }, { w: 'pd', pos: [-2.2, 3.1, 19], comp: 'tur4', side: 1 },
-    { w: 'pd', pos: [0, -2.8, -6], comp: 'tur5', side: -1 }, { w: 'pd', pos: [0, -3.3, 14], comp: 'tur6', side: -1 },
-  ],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 26], r: 3.0, hp: 120 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.9, 0, 26], r: 2.2, hp: 70 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.9, 0, 26], r: 2.2, hp: 70 },
-    { id: 'rail', name: 'RAILGUN', role: 'gun', pos: [0, 3.5, -12], r: 3.5, hp: 140 },
-    { id: 'rotary', name: 'GA-9 ROTARY', role: 'gun', pos: [0, -2.3, -27], r: 2.0, hp: 120 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [2.6, 1.85, -12], r: 2.8, hp: 30 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [-2.6, 1.85, -12], r: 2.8, hp: 30 },
-    { id: 'tur3', name: 'PD 3', role: 'turret', pos: [2.2, 3.1, 19], r: 1.3, hp: 30 },
-    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [-2.2, 3.1, 19], r: 1.3, hp: 30 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [0, -2.8, -6], r: 1.3, hp: 30 },
-    { id: 'tur6', name: 'PD 6', role: 'turret', pos: [0, -3.3, 14], r: 1.3, hp: 30 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -10], r: 3.0, hp: 90 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 16], r: 3.0, hp: 90 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 5.3, 10], r: 3.0, hp: 90 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 20], r: 3.6, hp: 200 },
-  ],
-  shield: { fore: 220, aft: 220 }, armor: { type: 'hard', rating: 0.28 }, structure: 420,
-  maxSpeed: 28, accel: 6, turn: 0.22, shieldRegen: 6, sig: 4, flameColor: 0x66c8ff, energyMax: 600, energyRegen: 100,
 };
 
 // ---- EXETER class frigate (450 m): jump-capable, docks 2 corvettes + 12 fighters/drones (no repair) -------------
@@ -320,9 +264,7 @@ const exeterDetail = [
 ];
 
 SHIPS.exeter = {
-  id: 'exeter', name: 'EXETER', cls: 'frigate', fac: 'human', role: 'JUMP FRIGATE',
-  length: 450, half: [108, 48, 230], mirror: true, radius: 235, seam: [9, 7], resMul: 0.6,
-  jump: true, dock: { fighters: 12, corvettes: 2 }, repair: false,
+  ...DB.ships.exeter,
   prims: [
     tap([0, 0, 10], 185, [22, 12], [46, 22], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.012 } }),            // wedge hull
     tap([0, 13.5, 0], 150, [20, 4], [34, 5], E.white, { sh: 'h' }),                                          // dorsal slab
@@ -362,65 +304,13 @@ SHIPS.exeter = {
     seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle: collar and glow on the bow face, between the prongs
     ...exeterDetail,
   ],
-  engines: [{ pos: [80, -3, 229], comp: 'engR', r: 11 }, { pos: [-80, -3, 229], comp: 'engL', r: 11 }, { pos: [0, 0, 216], comp: 'engC', r: 18 }],
-  mounts: [
-    { w: 'rail', pos: [16, 5, -227], comp: 'railR', grp: 1 }, { w: 'rail', pos: [-16, 5, -227], comp: 'railL', grp: 1 },    // bow prong tips (prims seg ends at [16,5,-226])
-    { w: 'mdxl', pos: [0, -2, -204], comp: 'mdxl', grp: 9, store: 'spine' },    // XL mass driver: emitter in the centre mass, muzzle at the bow face; charge machine in 79_bullfrog.js
-  ],
-  turrets: [
-    { w: 'laser', pos: [0, 24, -110], comp: 'tur1', side: 1 }, { w: 'laser', pos: [24, 22.4, -40], comp: 'tur2', side: 1 }, { w: 'laser', pos: [-24, 22.4, -40], comp: 'tur3', side: 1 },
-    { w: 'pd', pos: [20, 28.7, 110], comp: 'tur4', side: 1 }, { w: 'pd', pos: [-20, 28.7, 110], comp: 'tur5', side: 1 },
-    { w: 'laser', pos: [0, -22.4, -80], comp: 'tur6', side: -1 }, { w: 'pd', pos: [0, -22.4, 60], comp: 'tur7', side: -1 },
-    // owner decision 2026-10-22: 2x2 L mass driver turrets (dorsal pair fwd, ventral pair mid) and 4x2 M lasers
-    { w: 'mdl', cls: 'L', pos: [40, 23, -90], comp: 'mdL1', side: 1 }, { w: 'mdl', cls: 'L', pos: [-40, 23, -90], comp: 'mdL2', side: 1 },
-    { w: 'mdl', cls: 'L', pos: [36, -25, 30], comp: 'mdL3', side: -1 }, { w: 'mdl', cls: 'L', pos: [-36, -25, 30], comp: 'mdL4', side: -1 },
-    { w: 'laserM', pos: [48, 21, 0], comp: 'mt1', side: 1 }, { w: 'laserM', pos: [-48, 21, 0], comp: 'mt2', side: 1 },
-    { w: 'laserM', pos: [14, 26, 130], comp: 'mt3', side: 1 }, { w: 'laserM', pos: [-14, 26, 130], comp: 'mt4', side: 1 },
-    { w: 'laserM', pos: [44, -21.2, 60], comp: 'mt5', side: -1 }, { w: 'laserM', pos: [-44, -21.2, 60], comp: 'mt6', side: -1 },
-    { w: 'laserM', pos: [14, -26.5, 120], comp: 'mt7', side: -1 }, { w: 'laserM', pos: [-14, -26.5, 120], comp: 'mt8', side: -1 },
-  ],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 200], r: 20, hp: 500 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-80, -3, 205], r: 18, hp: 350 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [80, -3, 205], r: 18, hp: 350 },
-    { id: 'railL', name: 'RAIL L', role: 'gun', pos: [-14, 4, -205], r: 10, hp: 300 },
-    { id: 'railR', name: 'RAIL R', role: 'gun', pos: [14, 4, -205], r: 10, hp: 300 },
-    { id: 'tur1', name: 'LASER 1', role: 'turret', pos: [0, 24, -110], r: 7, hp: 90 },
-    { id: 'tur2', name: 'LASER 2', role: 'turret', pos: [24, 22.4, -40], r: 7, hp: 90 },
-    { id: 'tur3', name: 'LASER 3', role: 'turret', pos: [-24, 22.4, -40], r: 7, hp: 90 },
-    { id: 'tur4', name: 'PD 4', role: 'turret', pos: [20, 28.7, 110], r: 3.2, hp: 90 },
-    { id: 'tur5', name: 'PD 5', role: 'turret', pos: [-20, 28.7, 110], r: 3.2, hp: 90 },
-    { id: 'tur6', name: 'LASER 6', role: 'turret', pos: [0, -22.4, -80], r: 7, hp: 90 },
-    { id: 'tur7', name: 'PD 7', role: 'turret', pos: [0, -22.4, 60], r: 3.2, hp: 90 },
-    { id: 'mdxl', name: 'MASS DRIVER', role: 'gun', pos: [0, 0, -150], r: 14, hp: 600 },
-    { id: 'mdL1', name: 'MASS DRIVER 1', role: 'turret', pos: [40, 23, -90], r: 8, hp: 140 }, { id: 'mdL2', name: 'MASS DRIVER 2', role: 'turret', pos: [-40, 23, -90], r: 8, hp: 140 },
-    { id: 'mdL3', name: 'MASS DRIVER 3', role: 'turret', pos: [36, -25, 30], r: 8, hp: 140 }, { id: 'mdL4', name: 'MASS DRIVER 4', role: 'turret', pos: [-36, -25, 30], r: 8, hp: 140 },
-    { id: 'mt1', name: 'LS-8 LASER 1', role: 'turret', pos: [48, 21, 0], r: 6, hp: 90 }, { id: 'mt2', name: 'LS-8 LASER 2', role: 'turret', pos: [-48, 21, 0], r: 6, hp: 90 },
-    { id: 'mt3', name: 'LS-8 LASER 3', role: 'turret', pos: [14, 26, 130], r: 6, hp: 90 }, { id: 'mt4', name: 'LS-8 LASER 4', role: 'turret', pos: [-14, 26, 130], r: 6, hp: 90 },
-    { id: 'mt5', name: 'LS-8 LASER 5', role: 'turret', pos: [44, -21.2, 60], r: 6, hp: 90 }, { id: 'mt6', name: 'LS-8 LASER 6', role: 'turret', pos: [-44, -21.2, 60], r: 6, hp: 90 },
-    { id: 'mt7', name: 'LS-8 LASER 7', role: 'turret', pos: [14, -26.5, 120], r: 6, hp: 90 }, { id: 'mt8', name: 'LS-8 LASER 8', role: 'turret', pos: [-14, -26.5, 120], r: 6, hp: 90 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -100], r: 16, hp: 400 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 100], r: 16, hp: 400 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 26, 70], r: 16, hp: 350 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 150], r: 22, hp: 800 },
-    { id: 'radL', name: 'RADIATOR L', role: 'radiator', pos: [-70, 0, 130], r: 20, hp: 250 },
-    { id: 'radR', name: 'RADIATOR R', role: 'radiator', pos: [70, 0, 130], r: 20, hp: 250 },
-    { id: 'bay', name: 'FIGHTER BAY (12)', role: 'bay', pos: [0, -7, -170], r: 16, hp: 400 },
-    { id: 'cradleL', name: 'CRADLE L (corvette)', role: 'dock', pos: [-34, -7, 40], r: 14, hp: 300 },
-    { id: 'cradleR', name: 'CRADLE R (corvette)', role: 'dock', pos: [34, -7, 40], r: 14, hp: 300 },
-  ],
-  shield: { fore: 900, aft: 800 }, armor: { type: 'composite', rating: 0.27 }, structure: 1600, stores: { drone: 48 },
-  maxSpeed: 30, accel: 3, turn: 0.08, shieldRegen: 12, sig: 8, flameColor: 0x66c8ff, energyMax: 2500, energyRegen: 350,
-  ai: { role: 'capital' },
 };
 
 // ---- DRONE: unmanned 6 m wingman (docs/FLEET_LOGIC.md 9/9a). cls stays 'fighter' so fighter rules (fixed guns, PD priority, no big-ship death throes) apply;
 // `drone: true` switches on the drone AI/orders (56_drones.js). No pilot, no eject, no missiles, one light gun, small shield. Cheap voxel model (resMul).
 const D6 = { hull: 0xaab2bb, hull2: 0x8a929c, dark: 0x30363e, canopy: 0x2a9ad0, amber: 0xc79a3a };
 SHIPS.drone = {
-  id: 'drone', name: 'DRONE', cls: 'fighter', drone: true, fac: 'human', role: 'COMBAT DRONE (UNMANNED)',
-  length: 6, half: [2.9, 0.7, 3.4], mirror: true, radius: 3.3, seam: [1.5, 1.1], eye: [0, 0.3, -1.2], resMul: 0.32, noDetail: true,
+  ...DB.ships.drone,
   prims: [
     tap([0, 0, -1.0], 1.7, [0.16, 0.12], [0.5, 0.36], D6.hull, { sh: 'h' }),
     tap([0, 0, 1.5], 1.5, [0.5, 0.36], [0.46, 0.34], D6.hull2, { sh: 'h' }),
@@ -431,26 +321,13 @@ SHIPS.drone = {
     ell([0, 0, 3.3], [0.24, 0.19, 0.08], 0x7fd0ff, { glow: true }),
     seg([0, -0.3, -0.6], [0, -0.32, -3.0], 0.07, 0.05, D6.dark, { noMirror: true }),
   ],
-  engines: [{ pos: [0, 0, 3.3], comp: 'eng', r: 0.3 }],
-  mounts: [{ w: 'dgun', pos: [0, -0.32, -3.05], comp: 'gun', grp: 1 }],
-  stores: {},
-  comps: [
-    { id: 'eng', name: 'ENGINE', role: 'engine', pos: [0, 0, 2.4], r: 0.9, hp: 5 },
-    { id: 'gun', name: 'GUN', role: 'gun', pos: [0, -0.3, -1.5], r: 0.6, hp: 4 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 0.8], r: 0.7, hp: 6 },
-  ],
-  shield: { fore: 6, aft: 6 }, armor: { type: 'composite', rating: 0.1 }, structure: 7,
-  maxSpeed: 190, accel: 120, turn: 2.6, shieldRegen: 0.5, sig: 0.4, aiSpeed: 150, flameColor: 0x66c8ff,
-  ai: { role: 'fighter', aggr: 1.0, skill: 5 },   // machine gunnery
 };
 
 // ---- TENDER: unarmed fleet resupply ship (owner decision 2026-10-22: fleet tender ships for the magazine rule) ----
 // Rearms friendly ships within `serviceR` (ammo pools, missile stores, XL slugs) at `tenderTick` (55_ships.js).
 // Binding rule kept: rearm is not repair - structure, components and shields are NOT restored (AGENTS.md).
 SHIPS.tender = {
-  id: 'tender', name: 'TENDER', cls: 'frigate', fac: 'human', role: 'FLEET TENDER',
-  length: 200, half: [40, 24, 100], mirror: true, radius: 105, seam: [5, 4], resMul: 0.5,
-  jump: true, dock: { fighters: 24, corvettes: 4 }, repair: false, tender: true, serviceR: 600,
+  ...DB.ships.tender,
   prims: [
     tap([0, 0, 10], 150, [26, 16], [34, 20], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.008 } }),       // long box hull
     tap([0, 8, 0], 120, [22, 5], [26, 6], E.white, { sh: 'h' }),                                          // dorsal deck
@@ -473,22 +350,4 @@ SHIPS.tender = {
     // nav lights
     ell([38, 0, 60], [0.8, 0.6, 0.8], 0xff3030, { glow: true, noMirror: true }),
   ],
-  engines: [{ pos: [12, 0, 96], comp: 'engR', r: 5 }, { pos: [-12, 0, 96], comp: 'engL', r: 5 }, { pos: [0, 0, 96], comp: 'engC', r: 6 }],
-  mounts: [],
-  turrets: [],
-  stores: { flare: 24 },
-  comps: [
-    { id: 'engC', name: 'ENGINE C', role: 'engine', pos: [0, 0, 90], r: 6, hp: 260 },
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-12, 0, 90], r: 5, hp: 200 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [12, 0, 90], r: 5, hp: 200 },
-    { id: 'power', name: 'REACTOR', role: 'power', pos: [0, 0, 55], r: 9, hp: 420 },
-    { id: 'bridge', name: 'BRIDGE', role: 'radar', pos: [0, 17, 50], r: 7, hp: 180 },
-    { id: 'shieldF', name: 'SHIELD FWD', role: 'shield', pos: [0, 0, -70], r: 9, hp: 200 },
-    { id: 'shieldA', name: 'SHIELD AFT', role: 'shield', pos: [0, 0, 85], r: 9, hp: 200 },
-    { id: 'bayA', name: 'SERVICE BAY A', role: 'bay', pos: [14, 13.5, 0], r: 8, hp: 220 },
-    { id: 'bayB', name: 'SERVICE BAY B', role: 'bay', pos: [-14, 13.5, 0], r: 8, hp: 220 },
-  ],
-  shield: { fore: 600, aft: 500 }, armor: { type: 'composite', rating: 0.25 }, structure: 1400,
-  maxSpeed: 24, accel: 2.5, turn: 0.07, shieldRegen: 8, sig: 10, flameColor: 0x66c8ff, energyMax: 2000, energyRegen: 300,
-  ai: { role: 'capital' },
 };

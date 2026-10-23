@@ -172,8 +172,7 @@ const fRef = o => {
 
 // ---- DARTER: light interceptor (9 m) ---------------------------------------
 SHIPS.darter = {
-  id: 'darter', name: 'FROGG DARTER', cls: 'fighter', fac: 'frogg', role: 'INTERCEPTOR',
-  length: 9.5, half: [4.6, 1.8, 5.4], mirror: true, rustK: 0.4, radius: 5.4,
+  ...DB.ships.darter,
   prims: [
     ell([0, -0.05, 0.9], [2.3, 0.2, 2.4], N.dk, nSt(0.14)), ell([0, 0.18, 0.5], [1.5, 0.16, 2.8], N.dk2, nSt(0.14)),
     ...nMand(0.45, -0.1, -3.7, 1.5, 0.16), nKeel(-0.4, -0.8, 1.6, 0.9, 0.16),
@@ -188,27 +187,11 @@ SHIPS.darter = {
     seg([0.4, -0.3, -3.5], [0.4, -0.3, -4.9], 0.09, 0.06, N.bl),                           // mouth guns
     ...fDetail({ disc: [0, -0.05, 0.9, 2.3, 0.2, 2.4], E: [0, 0, 0.5, 0.9, 0.58, 3.9], plates: 5, gills: 3, collars: 3, ribs: 3, spikes: 3, noz: [[1.0, -0.15, 3.4, 4.9, 0.3]], blades: [[[0.55, 0.05, 0.8], [3.9, -0.05, 5.0], 0.22]], guns: [[0.4, -0.3, -3.6, -4.8, 0.09]] }),
   ],
-  engines: [{ pos: [1.0, -0.15, 5.0], comp: 'engR', r: 0.3 }, { pos: [-1.0, -0.15, 5.0], comp: 'engL', r: 0.3 }],
-  mounts: [{ w: 'fang', pos: [0.4, -0.3, -4.9], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-0.4, -0.3, -4.9], comp: 'gunL', grp: 1 }],
-  stores: { tick: 2, flare: 8 },
-  launch: [0.62, -0.32, -1.75],         // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-1.0, -0.15, 3.8], r: 0.8, hp: 7 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [1.0, -0.15, 3.8], r: 0.8, hp: 7 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-0.4, -0.3, -3.0], r: 0.6, hp: 5 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [0.4, -0.3, -3.0], r: 0.6, hp: 5 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.1, 0.8], r: 0.8, hp: 8 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 1.8], r: 0.9, hp: 12 },
-  ],
-  shield: { fore: 10, aft: 8 }, armor: { type: 'composite', rating: 0.46 }, structure: 14,
-  maxSpeed: 165, aiSpeed: 120, accel: 90, turn: 2.6, sig: 0.8, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 1.0 },
 };
 
 // ---- LEAPER: line fighter (13 m) --------------------------------------------
 SHIPS.leaper = {
-  id: 'leaper', name: 'FROGG LEAPER', cls: 'fighter', fac: 'frogg', role: 'FIGHTER',
-  length: 13.6, half: [6.6, 2.4, 7.6], mirror: true, rustK: 0.4, radius: 8,
+  ...DB.ships.leaper,
   prims: [
     ell([0, -0.1, 1.2], [3.6, 0.26, 3.4], N.dk, nSt(0.2)), ell([0, 0.3, 0.8], [2.4, 0.2, 3.8], N.dk2, nSt(0.2)),
     ...nMand(0.7, -0.15, -5.0, 2.2, 0.24), nKeel(-0.6, -1.4, 2.4, 1.2, 0.22),
@@ -225,27 +208,11 @@ SHIPS.leaper = {
     seg([0.65, -0.42, -5.6], [0.65, -0.42, -6.6], 0.13, 0.09, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.2, 3.6, 0.26, 3.4], E: [0, 0, 0.6, 1.35, 0.82, 5.2], plates: 6, gills: 4, collars: 4, noz: [[2.2, -0.2, 4.6, 6.8, 0.5]], blades: [[[1.1, 0.1, 0.0], [6.1, -0.1, 5.8], 0.3]], guns: [[0.65, -0.42, -5.6, -6.5, 0.13]] }),
   ],
-  engines: [{ pos: [2.2, -0.2, 6.8], comp: 'engR', r: 0.5 }, { pos: [-2.2, -0.2, 6.8], comp: 'engL', r: 0.5 }],
-  mounts: [{ w: 'flaser', pos: [0.65, -0.42, -6.6], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-0.65, -0.42, -6.6], comp: 'gunL', grp: 1 }, { w: 'spit', pos: [0.9, -0.3, -6.0], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-0.9, -0.3, -6.0], comp: 'gunL', grp: 2 }],
-  stores: { tick: 2, flare: 10 },
-  launch: [0.9, -0.5, -2.8],            // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.2, -0.25, 5.2], r: 1.1, hp: 10 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.2, -0.25, 5.2], r: 1.1, hp: 10 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-0.65, -0.4, -4.4], r: 0.8, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [0.65, -0.4, -4.4], r: 0.8, hp: 8 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.2, 1.2], r: 1.1, hp: 12 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 2.8], r: 1.2, hp: 18 },
-  ],
-  shield: { fore: 16, aft: 14 }, armor: { type: 'composite', rating: 0.5 }, structure: 25,
-  maxSpeed: 120, aiSpeed: 85, accel: 65, turn: 1.7, sig: 1, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 0.8 },
 };
 
 // ---- SPITTER: gunship (16 m) — dorsal acid cannon ---------------------------
 SHIPS.spitter = {
-  id: 'spitter', name: 'FROGG SPITTER', cls: 'fighter', fac: 'frogg', role: 'GUNSHIP',
-  length: 16, half: [7.6, 3.2, 9.0], mirror: true, rustK: 0.4, radius: 9.5,
+  ...DB.ships.spitter,
   prims: [
     ell([0, -0.2, 1.4], [4.6, 0.34, 4.4], N.dk, nSt(0.24)), ell([0, 0.5, 1.0], [3.2, 0.26, 4.8], N.dk2, nSt(0.24)),
     ...nMand(1.1, -0.25, -6.6, 2.8, 0.3), nKeel(-1.0, 0.0, 4.4, 1.5, 0.3),
@@ -263,33 +230,13 @@ SHIPS.spitter = {
     seg([1.6, -0.5, -7.2], [1.6, -0.5, -8.0], 0.16, 0.1, N.bl),
     ...fDetail({ disc: [0, -0.2, 1.4, 4.6, 0.34, 4.4], E: [0, 0, 0.8, 1.9, 1.05, 6.6], plates: 6, gills: 4, collars: 5, gc: 1, noz: [[2.8, -0.3, 6.2, 8.4, 0.72]], blades: [[[1.9, 0.2, -0.2], [7.4, -0.1, 7.4], 0.38]], guns: [[1.6, -0.5, -7.2, -7.9, 0.16]] }),
   ],
-  engines: [{ pos: [2.8, -0.3, 8.4], comp: 'engR', r: 0.72 }, { pos: [-2.8, -0.3, 8.4], comp: 'engL', r: 0.72 }],
-  mounts: [
-    { w: 'spitcannon', pos: [0, 1.35, -8.8], comp: 'cannon', grp: 1 },
-    { w: 'fang', pos: [1.6, -0.5, -8.0], comp: 'gunR', grp: 2 }, { w: 'fang', pos: [-1.6, -0.5, -8.0], comp: 'gunL', grp: 2 },
-  ],
-  stores: { tick: 4, flare: 10 },
-  launch: [1.9, -1.1, -0.5],            // front of the sac pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-2.8, -0.3, 6.2], r: 1.4, hp: 14 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [2.8, -0.3, 6.2], r: 1.4, hp: 14 },
-    { id: 'cannon', name: 'ACID CANNON', role: 'gun', pos: [0, 1.2, -3.0], r: 1.4, hp: 20 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-1.6, -0.5, -5.5], r: 0.8, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [1.6, -0.5, -5.5], r: 0.8, hp: 8 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.6], r: 1.4, hp: 16 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.2], r: 1.6, hp: 26 },
-  ],
-  shield: { fore: 30, aft: 24 }, armor: { type: 'ablative', rating: 0.5 }, structure: 38,
-  maxSpeed: 90, aiSpeed: 66, accel: 50, turn: 1.1, sig: 1.3, flameColor: 0xffa030,
-  ai: { role: 'gunship', aggr: 0.6 },
 };
 
 // ---- TOAD: torpedo bomber (19 m) --------------------------------------------
 const toadWarts = [[1.9, 0.9, -0.3, 0.33], [-1.7, 1.0, 0.8, 0.3], [0.8, 1.35, 1.8, 0.36], [2.4, 0.5, 2.2, 0.3], [0.2, 1.2, -1.4, 0.26],
   [1.3, 1.15, 3.4, 0.28], [2.7, 0.2, 0.6, 0.27], [1.0, 1.4, 0.2, 0.3], [2.0, 0.95, 4.2, 0.25]];
 SHIPS.toad = {
-  id: 'toad', name: 'FROGG TOAD', cls: 'fighter', fac: 'frogg', role: 'TORPEDO BOMBER',
-  length: 19, half: [8.8, 3.6, 10.4], mirror: true, rustK: 0.4, radius: 11,
+  ...DB.ships.toad,
   prims: [
     ell([0, -0.1, 1.6], [5.8, 0.42, 5.2], N.dk, nSt(0.28)), ell([0, 0.8, 1.2], [4.0, 0.3, 5.6], N.dk2, nSt(0.28)),
     ...nMand(1.5, -0.2, -7.6, 3.2, 0.36), nKeel(-1.4, 1.0, 5.0, 1.8, 0.35), ...nComb(0.6, -1.3, 4.4, 4, 3.2, 0.5),
@@ -307,31 +254,11 @@ SHIPS.toad = {
     seg([1.0, 0.1, -8.4], [1.0, 0.1, -7.6], 0.18, 0.12, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.6, 5.8, 0.42, 5.2], E: [0, 0, 0.6, 2.6, 1.55, 7.6], plates: 7, gills: 5, collars: 5, noz: [[3.6, -0.3, 7.4, 9.4, 0.85]], blades: [[[2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45]], guns: [[1.0, 0.1, -8.4, -7.6, 0.18]] }),
   ],
-  engines: [{ pos: [3.6, -0.3, 9.4], comp: 'engR', r: 0.85 }, { pos: [-3.6, -0.3, 9.4], comp: 'engL', r: 0.85 }],
-  mounts: [
-    { w: 'fang', pos: [1.0, 0.1, -7.6], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-1.0, 0.1, -7.6], comp: 'gunL', grp: 1 },
-    { w: 'tad', pos: [0, -2.2, -2.9], comp: 'rack', grp: 3, store: 'tad' },
-  ],
-  stores: { tad: 3, flare: 16 },
-  launch: [0, -2.1, -3.3],              // front of the ventral torpedo pod cluster
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.3, 7.0], r: 1.6, hp: 18 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.3, 7.0], r: 1.6, hp: 18 },
-    { id: 'gunL', name: 'GUN L', role: 'gun', pos: [-1.0, 0.1, -4.8], r: 0.9, hp: 8 },
-    { id: 'gunR', name: 'GUN R', role: 'gun', pos: [1.0, 0.1, -4.8], r: 0.9, hp: 8 },
-    { id: 'rack', name: 'TORP RACK', role: 'gun', pos: [0, -2.0, 1.5], r: 1.6, hp: 20 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.6, 0.5], r: 1.6, hp: 16 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0.2, 3.0], r: 2.0, hp: 34 },
-  ],
-  shield: { fore: 26, aft: 22 }, armor: { type: 'composite', rating: 0.45 }, structure: 55,
-  maxSpeed: 78, aiSpeed: 58, accel: 40, turn: 0.9, sig: 1.4, flameColor: 0xffa030,
-  ai: { role: 'bomber', aggr: 0.3 },
 };
 
 // ---- REAVER: heavy assault fighter (19 m) -----------------------------------
 SHIPS.reaver = {
-  id: 'reaver', name: 'FROGG REAVER', cls: 'fighter', fac: 'frogg', role: 'HEAVY FIGHTER',
-  length: 19, half: [9.6, 3.6, 10.8], mirror: true, rustK: 0.4, radius: 11.5,
+  ...DB.ships.reaver,
   prims: [
     ell([0, -0.1, 1.2], [6.2, 0.44, 5.6], N.dk, nSt(0.28)), ell([0, 0.9, 0.8], [4.4, 0.32, 6.0], N.dk2, nSt(0.28)),
     ...nMand(1.6, -0.2, -8.6, 3.6, 0.4), ...nMand(0.9, -0.5, -8.4, 2.2, 0.28), nKeel(-1.2, 0.0, 5.0, 1.9, 0.38),
@@ -350,34 +277,11 @@ SHIPS.reaver = {
     seg([1.2, -0.55, -8.0], [1.2, -0.55, -8.8], 0.18, 0.12, N.bl),
     ...fDetail({ disc: [0, -0.1, 1.2, 6.2, 0.44, 5.6], E: [0, 0, 0.8, 2.7, 1.5, 8.0], plates: 7, gills: 5, collars: 5, gc: 2, noz: [[3.2, -0.3, 7.4, 9.8, 0.8], [1.3, -0.5, 8.0, 9.9, 0.5]], blades: [[[2.7, 0.15, 0.4], [9.2, -0.15, 9.2], 0.45], [[2.2, 0.6, 1.0], [7.4, 0.9, 8.2], 0.3]], guns: [[1.2, -0.55, -8.0, -8.8, 0.18]] }),
   ],
-  engines: [
-    { pos: [3.2, -0.3, 9.8], comp: 'engR', r: 0.8 }, { pos: [-3.2, -0.3, 9.8], comp: 'engL', r: 0.8 },
-    { pos: [1.3, -0.5, 9.9], comp: 'engR', r: 0.5 }, { pos: [-1.3, -0.5, 9.9], comp: 'engL', r: 0.5 },
-  ],
-  mounts: [
-    { w: 'flaser', pos: [1.2, -0.55, -8.8], comp: 'gunR', grp: 1 }, { w: 'flaser', pos: [-1.2, -0.55, -8.8], comp: 'gunL', grp: 1 },
-    { w: 'fang', pos: [2.0, -0.5, -7.4], comp: 'gunR', grp: 1 }, { w: 'fang', pos: [-2.0, -0.5, -7.4], comp: 'gunL', grp: 1 },
-    { w: 'spit', pos: [2.4, -0.4, -6.2], comp: 'gunR', grp: 2 }, { w: 'spit', pos: [-2.4, -0.4, -6.2], comp: 'gunL', grp: 2 },
-  ],
-  stores: { tick: 6, flare: 12 },
-  launch: [2.5, -0.7, -5.2],            // front of the flank pod
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.0, -0.3, 7.0], r: 1.8, hp: 18 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.0, -0.3, 7.0], r: 1.8, hp: 18 },
-    { id: 'gunL', name: 'GUNS L', role: 'gun', pos: [-1.8, -0.4, -4.5], r: 1.3, hp: 14 },
-    { id: 'gunR', name: 'GUNS R', role: 'gun', pos: [1.8, -0.4, -4.5], r: 1.3, hp: 14 },
-    { id: 'shield', name: 'SHIELD', role: 'shield', pos: [0, 0.3, 1.8], r: 1.6, hp: 20 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 3.6], r: 1.9, hp: 30 },
-  ],
-  shield: { fore: 40, aft: 40 }, armor: { type: 'hard', rating: 0.43 }, structure: 60,
-  maxSpeed: 95, aiSpeed: 66, accel: 50, turn: 1.15, sig: 1.3, flameColor: 0xffa030,
-  ai: { role: 'fighter', aggr: 0.9 },
 };
 
 // ---- GULPER: escort corvette (66 m) -----------------------------------------
 SHIPS.gulper = {
-  id: 'gulper', name: 'FROGG GULPER', cls: 'corvette', fac: 'frogg', role: 'ESCORT CORVETTE',
-  length: 66, half: [17, 13, 38], mirror: true, rustK: 0.4, radius: 40,
+  ...DB.ships.gulper,
   prims: [
     ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
     ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
@@ -407,44 +311,12 @@ SHIPS.gulper = {
     seg([5.5, -2.4, -30], [5.5, -2.4, -35.3], 1.3, 0.8, N.bl),
     ...fDetail({ disc: [0, -0.5, 4, 15, 1.3, 20], E: [0, 0, 2, 9.6, 6.4, 29], plates: 9, gills: 6, collars: 7, ribs: 7, spikes: 6, noz: [[9.5, -1.0, 24, 35.4, 2.7], [3.8, -2.2, 31, 36.0, 1.5]], blades: [[[8, 0.5, 6], [16.5, 0.2, 34], 0.9], [[7, -3, 12], [14, -3.8, 36], 0.7]], guns: [[5.5, -2.4, -30, -35.3, 1.0]] }),
   ],
-  engines: [
-    { pos: [9.5, -1.0, 35.4], comp: 'engR', r: 2.7 }, { pos: [-9.5, -1.0, 35.4], comp: 'engL', r: 2.7 },
-    { pos: [3.8, -2.2, 36.0], comp: 'engR', r: 1.5 }, { pos: [-3.8, -2.2, 36.0], comp: 'engL', r: 1.5 },
-  ],
-  mounts: [
-    { w: 'rodg', pos: [5.5, -2.4, -35.3], comp: 'lashR', grp: 1 }, { w: 'rodg', pos: [-5.5, -2.4, -35.3], comp: 'lashL', grp: 1 },
-    { w: 'lance', pos: [3.0, 1.2, -33.0], comp: 'lashR', grp: 2 }, { w: 'lance', pos: [-3.0, 1.2, -33.0], comp: 'lashL', grp: 2 },
-  ],
-  turrets: [
-    { w: 'sting', pos: [3.6, 7.35, -2], comp: 'tur1', side: 1 }, { w: 'sting', pos: [-3.6, 7.35, -2], comp: 'tur2', side: 1 },
-    { w: 'sting', pos: [3.4, 5.85, 14], comp: 'tur3', side: 1 }, { w: 'sting', pos: [-3.4, 5.6, 14], comp: 'tur4', side: 1 },
-  ],
-  stores: { tad: 6, flare: 0 },
-  launch: [0, -6.4, -8.6],              // mouth of the ventral drum (launch bay)
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [9.5, -1.0, 27], r: 3.6, hp: 90 },
-    { id: 'lashL', name: 'ROD DRIVER L', role: 'gun', pos: [-5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'lashR', name: 'ROD DRIVER R', role: 'gun', pos: [5.5, -2.4, -24], r: 2.4, hp: 70 },
-    { id: 'tur1', name: 'STING 1', role: 'turret', pos: [3.6, 7.35, -2], r: 1.5, hp: 26 },
-    { id: 'tur2', name: 'STING 2', role: 'turret', pos: [-3.6, 7.35, -2], r: 1.5, hp: 26 },
-    { id: 'tur3', name: 'STING 3', role: 'turret', pos: [3.4, 5.85, 14], r: 1.5, hp: 26 },
-    { id: 'tur4', name: 'STING 4', role: 'turret', pos: [-3.4, 5.6, 14], r: 1.5, hp: 26 },
-    { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 1.5, 0], r: 3.4, hp: 110 },
-    { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 4.2, -17], r: 7.0, hp: 90 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, -1, 8], r: 4.2, hp: 230 },
-  ],
-  shield: { fore: 200, aft: 160 }, armor: { type: 'composite', rating: 0.31 }, structure: 380,
-  energyMax: 400, energyRegen: 70, maxSpeed: 34, aiSpeed: 26, accel: 6, turn: 0.2, sig: 4, flameColor: 0xffa030,
-  ai: { role: 'corvette' },
 };
 
 // ---- HIVE CARRIER: migratory brood-ark, jump-capable super carrier (900 m) ---------------------------
 // Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
 SHIPS.hivecarrier = {
-  id: 'hivecarrier', name: 'FROGG HIVE CARRIER', cls: 'capital', fac: 'frogg', role: 'SUPER CARRIER',
-  length: 900, half: [270, 120, 450], mirror: true, rustK: 0.4, radius: 470, resMul: 0.25,
-  jump: true, dock: { fighters: 60, corvettes: 6 },
+  ...DB.ships.hivecarrier,
   prims: [
     // carapace: stacked overlapping shell plates
     ell([0, 0, 40], [150, 70, 330], N.dk, nSt(14, 0.1)),
@@ -470,19 +342,6 @@ SHIPS.hivecarrier = {
     ...nNoz(60, 0, 330, 440, 40), ...nNoz(150, -10, 320, 430, 32), ...nNoz(200, 10, 300, 410, 24),
     ...fDetail({ disc: [0, -10, 60, 250, 18, 300], rim: 22, E: [0, 0, 40, 150, 70, 330], plates: 12, gills: 8, collars: 9, ribs: 8, spikes: 8, noz: [[60, 0, 330, 440, 40], [150, -10, 320, 430, 32], [200, 10, 300, 410, 24]], blades: [[[120, 20, 150], [265, 10, 440], 16]] }),
   ],
-  engines: [{ pos: [60, 0, 440], comp: 'engR', r: 40 }, { pos: [-60, 0, 440], comp: 'engL', r: 40 }],
-  mounts: [], turrets: [],
-  stores: { flare: 0 },
-  comps: [
-    { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-60, 0, 380], r: 60, hp: 900 },
-    { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [60, 0, 380], r: 60, hp: 900 },
-    { id: 'shield', name: 'SHIELD GLAND', role: 'shield', pos: [0, 30, 0], r: 70, hp: 1200 },
-    { id: 'eyes', name: 'EYES', role: 'radar', pos: [0, 20, -400], r: 60, hp: 800 },
-    { id: 'power', name: 'HEART', role: 'power', pos: [0, 0, 120], r: 80, hp: 2400 },
-  ],
-  shield: { fore: 4000, aft: 3200 }, armor: { type: 'composite', rating: 0.21 }, structure: 6000,
-  maxSpeed: 12, aiSpeed: 8, accel: 0.5, turn: 0.03, sig: 20, flameColor: 0xff6a2a,
-  ai: { role: 'capital' },
 };
 
 
@@ -493,14 +352,9 @@ const bfArch = z => {                                   // hand-placed rib arch 
   const pts = [0.12, 0.7, 1.25, 1.85, 2.4].map(a => [rx * Math.sin(a) * f, ry * Math.cos(a) * f, z]);
   return chain(pts, [th * 2, th * 2.3, th * 2.3, th * 2, th * 1.6], N.mt, { rust: N.ru, edge: N.ed, streak: 1 });
 };
-const bfT = (id, w, cls, x, y, z, side) => ({ w, cls, pos: [x, y, z], comp: id, side });
-const bfC = (id, name, role, x, y, z, r, hp) => ({ id, name, role, pos: [x, y, z], r, hp });
 const bfMir = (f) => [f(1), f(-1)];
 SHIPS.bullfrog = {
-  id: 'bullfrog', name: 'FROGG BULLFROG', cls: 'capital', fac: 'frogg', role: 'SPINE CARRIER',
-  length: 600, half: [95, 55, 300], mirror: true, rustK: 0.4, radius: 305, resMul: 0.85, resCap: 400,
-  jump: true, dock: { fighters: 36, corvettes: 0 },
-  launch: [0, -44, -40],
+  ...DB.ships.bullfrog,
   prims: [
     ell([0, 0, 30], [68, 36, 255], N.dk, nSt(6, 0.1)),                                   // core barrel
     ell([0, 24, 10], [52, 15, 225], N.dk2, nSt(6, 0.1)), ell([0, 32, -30], [34, 8, 165], N.dk, nSt(5, 0.1)),   // dorsal shells
@@ -532,33 +386,6 @@ SHIPS.bullfrog = {
     ...fDetail({ disc: [0, -4, 60, 88, 9, 200], rim: 18, E: [0, 0, 30, 70, 38, 255], refN: 11, plates: 14, gills: 8, collars: 9, ribs: 9, spikes: 8,
       noz: [[24, 12, 244, 296, 12], [50, -4, 240, 294, 14], [76, 8, 236, 290, 11]], blades: [[[40, 2, 150], [78, 6, 262], 3.2], [[60, 2, 60], [92, 0, 290], 4]], guns: [[0, -4, -250, -296, 4.5]] }),
   ],
-  engines: [[24, 12, 0], [50, -4, 0], [76, 8, 0]].flatMap(([x, y], i) => [{ pos: [x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 1), r: [12, 14, 11][i] }, { pos: [-x, y, [296, 294, 290][i]], comp: 'E' + (2 * i + 2), r: [12, 14, 11][i] }]),
-  mounts: [
-    { w: 'spine', pos: [0, -4, -299], comp: 'spine', grp: 9, store: 'spine' },
-    { w: 'tad', pos: [0, -43, -40], comp: 'tubes', grp: 3, store: 'tad' },
-  ],
-  turrets: [
-    bfT('L1', 'lanceL', 'L', 0, 38, -150, 1),
-    ...[['M1', 44, 33, -70, 1], ['M3', 54, 28, 80, 1], ['M5', 46, -30, -20, -1]].flatMap(([id, x, y, z, sd], i) => { const n = +id.slice(1); return [bfT('M' + n, 'acidT', 'M', x, y, z, sd), bfT('M' + (n + 1), 'acidT', 'M', -x, y, z, sd)]; }),
-    ...[['S1', 32, 43, -200, 1], ['S3', 40, 35, -10, 1], ['S5', 36, 35, 110, 1], ['S7', 36, -20, -130, -1], ['S9', 40, -27, 90, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('S' + n, 'sting', 'S', x, y, z, sd), bfT('S' + (n + 1), 'sting', 'S', -x, y, z, sd)]; }),
-    ...[['P1', 16, 37, -110, 1], ['P3', 24, 40, 150, 1], ['P5', 22, -30, -60, -1], ['P7', 26, -23, 200, -1]].flatMap(([id, x, y, z, sd]) => { const n = +id.slice(1); return [bfT('P' + n, 'thorn', 'S', x, y, z, sd), bfT('P' + (n + 1), 'thorn', 'S', -x, y, z, sd)]; }),
-  ],
-  stores: { tad: 16, flare: 0 },
-  comps: [
-    bfC('spine', 'SPINE EMITTER', 'gun', 0, -4, -286, 13, 700),
-    bfC('L1', 'HEAVY LANCE DORSAL', 'turret', 0, 38, -150, 17, 260),
-    ...[['M1', 44, 33, -70], ['M3', 54, 28, 80], ['M5', 46, -30, -20]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('M' + n, 'ACID M' + n, 'turret', x, y, z, 6.5, 120), bfC('M' + (n + 1), 'ACID M' + (n + 1), 'turret', -x, y, z, 6.5, 120)]; }),
-    ...[['S1', 32, 43, -200], ['S3', 40, 35, -10], ['S5', 36, 35, 110], ['S7', 36, -20, -130], ['S9', 40, -27, 90]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('S' + n, 'STING S' + n, 'turret', x, y, z, 2.5, 45), bfC('S' + (n + 1), 'STING S' + (n + 1), 'turret', -x, y, z, 2.5, 45)]; }),
-    ...[['P1', 16, 37, -110], ['P3', 24, 40, 150], ['P5', 22, -30, -60], ['P7', 26, -23, 200]].flatMap(([id, x, y, z]) => { const n = +id.slice(1); return [bfC('P' + n, 'THORN PD P' + n, 'turret', x, y, z, 2.5, 40), bfC('P' + (n + 1), 'THORN PD P' + (n + 1), 'turret', -x, y, z, 2.5, 40)]; }),
-    ...[['E1', 24, 12], ['E3', 50, -4], ['E5', 76, 8]].flatMap(([id, x, y]) => { const n = +id.slice(1); return [bfC('E' + n, 'ENGINE E' + n, 'engine', x, y, 262, 14, 330), bfC('E' + (n + 1), 'ENGINE E' + (n + 1), 'engine', -x, y, 262, 14, 330)]; }),
-    bfC('shieldF', 'SHIELD GLAND FWD', 'shield', 0, 32, -40, 20, 700), bfC('shieldA', 'SHIELD GLAND AFT', 'shield', 0, 30, 170, 20, 600),
-    bfC('eyes', 'EYES', 'radar', 0, 14, -215, 16, 500), bfC('power', 'HEART', 'power', 0, 0, 150, 18, 1100),
-    bfC('bayA', 'HANGAR BAY A (18)', 'bay', 0, -32, -95, 22, 650), bfC('bayB', 'HANGAR BAY B (18)', 'bay', 0, -32, 90, 22, 650),
-    bfC('tubes', 'TORPEDO TUBES', 'gun', 0, -42, -10, 14, 500),
-  ],
-  shield: { fore: 2000, aft: 1600 }, armor: { type: 'hard', rating: 0.30 }, structure: 3000,
-  energyMax: 3200, energyRegen: 320, shieldRegen: 6, maxSpeed: 22, aiSpeed: 14, accel: 2.0, turn: 0.06, sig: 12, flameColor: 0xff6a2a,
-  ai: { role: 'lancer' },
 };
 
 // attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
