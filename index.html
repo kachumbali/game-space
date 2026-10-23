@@ -5237,8 +5237,9 @@ const SK_PRESETS = [
   { id: 'bullfrog2', name: 'BULLFROG + 2 GULPER', rows: [['bullfrog', 1], ['gulper', 2]], warn: true },
   { id: 'hive', name: 'HIVE CARRIER (UNARMED)', rows: [['hivecarrier', 1]], warn: true },
 ];
+const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['merlin', 'MERLIN (light fighter)']];   // skirmish: your ship and your wingmen's ship
 const SK_RANGES = [['CLOSE', 800], ['MEDIUM', 2000], ['FAR', 4000], ['VERY FAR', 10000]];
-const SK_DEFAULT = { ship: 'kestrel', wing: 0, rows: [['leaper', 2]], skill: 3, wskill: 3, fm: 'arcade', missiles: true, respawn: false, range: 2000, look: 'lilypad', ally: 'none' };
+const SK_DEFAULT = { ship: 'kestrel', wship: 'kestrel', wing: 0, rows: [['leaper', 2]], skill: 3, wskill: 3, fm: 'arcade', missiles: true, respawn: false, range: 2000, look: 'lilypad', ally: 'none' };
 let skCfg = { ...SK_DEFAULT, rows: SK_DEFAULT.rows.map(r => [...r]) };
 try { const j = JSON.parse(localStorage.getItem('gs_sk') || 'null'); if (j && Array.isArray(j.rows)) skCfg = skNorm(j); } catch (e) { /* storage unavailable */ }
 function skSave() { try { localStorage.setItem('gs_sk', JSON.stringify(skCfg)); } catch (e) { /* ignore */ } }
@@ -5247,18 +5248,19 @@ function skNorm(c) {
   o.rows = (c.rows || SK_DEFAULT.rows).map(r => Array.isArray(r) ? [r[0], r[1]] : [r.t, r.n]).filter(r => SHIPS[r[0]] && r[1] > 0).map(r => [r[0], Math.min(20, r[1] | 0)]);
   if (!o.rows.length) o.rows = SK_DEFAULT.rows.map(r => [...r]);
   o.wing = clamp(o.wing | 0, 0, 3); o.skill = clamp(o.skill | 0 || 3, 1, 5); o.wskill = clamp(o.wskill | 0 || 3, 1, 5);
-  if (!SHIPS[o.ship] || o.ship !== 'kestrel') o.ship = 'kestrel';
+  if (!SHIPS[o.ship] || !SK_PLAYER.some(x => x[0] === o.ship)) o.ship = 'kestrel';
+  if (!SHIPS[o.wship] || !SK_PLAYER.some(x => x[0] === o.wship)) o.wship = 'kestrel';
   o.fm = o.fm === 'newton' ? 'newton' : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
   o.range = clamp(+o.range || 2000, 300, 12000); if (!LOOKS[o.look]) o.look = 'lilypad';
   o.ally = ['halberd', 'exeter'].includes(o.ally) ? o.ally : 'none';
   return o;
 }
-// URL form: ?sk=darter:3,leaper:2&sk_skill=3&sk_wing=2  (also sk_wskill, sk_fm, sk_msl=0|1, sk_respawn=1, sk_range, sk_look, sk_ally)
+// URL form: ?sk=darter:3,leaper:2&sk_skill=3&sk_wing=2  (also sk_ship=kestrel|merlin, sk_wship=kestrel|merlin, sk_wskill, sk_fm, sk_msl=0|1, sk_respawn=1, sk_range, sk_look, sk_ally)
 function skFromParams() {
   const rows = (params.get('sk') || '').split(',').map(s => s.trim()).filter(Boolean).map(s => { const [t, n] = s.split(':'); return [t, n === undefined ? 1 : parseInt(n) || 1]; });
   const g = (k, d) => params.has(k) ? params.get(k) : d;
   return skNorm({
-    rows: rows.length ? rows : SK_DEFAULT.rows, skill: +g('sk_skill', 3), wskill: +g('sk_wskill', 3), wing: +g('sk_wing', 0), fm: g('sk_fm', 'arcade'),
+    rows: rows.length ? rows : SK_DEFAULT.rows, ship: g('sk_ship', 'kestrel'), wship: g('sk_wship', 'kestrel'), skill: +g('sk_skill', 3), wskill: +g('sk_wskill', 3), wing: +g('sk_wing', 0), fm: g('sk_fm', 'arcade'),
     missiles: g('sk_msl', '1') !== '0', respawn: params.has('sk_respawn') && g('sk_respawn', '1') !== '0', range: +g('sk_range', 2000), look: g('sk_look', 'lilypad'), ally: g('sk_ally', 'none'),
   });
 }
@@ -5349,8 +5351,9 @@ function showSkirmishSetup(focus) {
       <button data-f="m${i}" data-n="${i}" data-d="-1">-</button><b>${r[1]}</b><button data-f="p${i}" data-n="${i}" data-d="1">+</button><button data-f="x${i}" data-x="${i}" title="remove row">x</button></div>`).join('');
   menuShell(`<div class="sub">SKIRMISH · QUICK TEST</div><h1>SETUP</h1>
     <div class="skg"><div>
-      <div class="sub">YOUR SHIP</div><div class="skrow"><select data-f="ship" id="sk_ship"><option value="kestrel">KESTREL (multirole fighter)</option></select></div>
+      <div class="sub">YOUR SHIP</div><div class="skrow"><select data-f="ship" id="sk_ship">${SK_PLAYER.map(([k, n]) => `<option value="${k}" ${k === c.ship ? 'selected' : ''}>${n}</option>`).join('')}</select></div>
       <div class="sub">WINGMEN (HUMAN, AI)</div><div class="skrow">${skSeg('wing', [[0, 0], [1, 1], [2, 2], [3, 3]], c.wing)}</div>
+      <div class="sub">WINGMEN'S SHIP</div><div class="skrow">${skSeg('wship', SK_PLAYER.map(([k, n]) => [n.split(' ')[0], k]), c.wship)}</div>
       <div class="sub">ESCORT CAPITAL (YOUR SIDE)</div><div class="skrow">${skSeg('ally', [['NONE', 'none'], ['HALBERD', 'halberd'], ['EXETER', 'exeter']], c.ally)}</div>
       <div class="sub">ENEMY FORCE · ${total} SHIP${total === 1 ? '' : 'S'}</div>
       <div class="skrow pre">${SK_PRESETS.map(p => `<button data-f="pre-${p.id}" data-pre="${p.id}">${p.name}</button>`).join('')}</div>
@@ -5379,6 +5382,7 @@ function showSkirmishSetup(focus) {
   el.querySelectorAll('[data-x]').forEach(b => { b.onclick = () => { skCfg.rows.splice(+b.dataset.x, 1); redo(); }; });
   el.querySelector('[data-add]').onclick = () => { skCfg.rows.push(['leaper', 1]); redo('add'); };
   el.querySelector('[data-clr]').onclick = () => { skCfg.rows = []; redo('clr'); };
+  $id('sk_ship').onchange = e => { skCfg.ship = e.target.value; skSave(); };
   $id('sk_look').onchange = e => { skCfg.look = e.target.value; skSave(); };
   $id('sk_back').onclick = showMainMenu;
   $id('sk_go').onclick = () => {
@@ -5407,7 +5411,7 @@ function startSkirmish(cfgIn) {
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
   for (let i = 0; i < cfg.wing; i++) {
     const pos = p.group.position.clone().addScaledVector(pf, -80).add(new THREE.Vector3((i - (cfg.wing - 1) / 2) * 60, (i % 2) * 25, 0));
-    makeShip('kestrel', 0, pos, new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: cfg.wskill, fm: cfg.fm });
+    makeShip(cfg.wship, 0, pos, new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: cfg.wskill, fm: cfg.fm });
   }
   if (cfg.ally !== 'none') {
     const a = makeShip(cfg.ally, 0, p.group.position.clone().addScaledVector(pf, -700), new THREE.Quaternion(), { callsign: cfg.ally.toUpperCase(), id: 'ally', ai: 'capital', hold: true });

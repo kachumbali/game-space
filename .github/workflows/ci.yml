@@ -19,9 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-lint
     timeout-minutes: 10
-    env:
-      GS_TEST_DIR: ${{ runner.temp }}/gs_test
     steps:
+      - run: echo "GS_TEST_DIR=$RUNNER_TEMP/gs_test" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
