@@ -63,12 +63,17 @@ with Runner() as R:
     check('flak intercepts torpedoes in flight (0 of 7 was the recorded baseline)', r['intercepted'] >= 2, str(r))
 
     # P0: seeded determinism - same seed, identical draws
-    a = R.page(320, 180, '?free&n=0&seed=7'); a.wait_for_timeout(300)
-    b = R.page(320, 180, '?free&n=0&seed=7'); b.wait_for_timeout(300)
+    a = R.page(320, 180, '?free&n=0&seed=7&q=low'); a.wait_for_timeout(300)
+    b = R.page(320, 180, '?free&n=0&seed=7&q=low'); b.wait_for_timeout(300)
     ra = a.evaluate('()=>[Math.random(),Math.random(),Math.random()]')
     rb = b.evaluate('()=>[Math.random(),Math.random(),Math.random()]')
     check('same seed -> identical Math.random streams', ra == rb, f'{ra} vs {rb}')
-    c = R.page(320, 180, '?free&n=0&seed=8'); c.wait_for_timeout(300)
+    c = R.page(320, 180, '?free&n=0&seed=8&q=low'); c.wait_for_timeout(300)
     rc = c.evaluate('()=>Math.random()')
     check('different seed -> different stream', abs(rc - ra[0]) > 1e-9, str(rc))
+    try:
+        assert_no_console_errors(R)
+    except AssertionError as e:
+        check('no browser console errors or warnings', False, str(e))
     print('FAILED: ' + (str(fails) if fails else 'none'))
+    if fails: raise SystemExit(1)

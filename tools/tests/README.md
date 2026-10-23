@@ -2,6 +2,8 @@
 Run from this folder: `cd tools/tests && python3 suite1.py`. Needs `pip install playwright` (Chromium already installed, or set `GS_CHROMIUM`) and `npm` (first run installs three@0.170.0 into `GS_TEST_DIR`, default `/tmp/gs_test`).
 Run `python3 ../../build.py` first: the tests serve the built `index.html`. The build also fails on duplicate top-level names (owner P0 2026-10-22). `?seed=N` in page URLs makes a run deterministic; duel cells should quote >= 20 runs.
 
+CI runs `build_lint_t.py`, `validate_db.py`, `suite1.py`, `p0_t.py`, `cred_t.py`, and `cred_t2.py` on Ubuntu with Playwright Chromium and software rendering. The browser tests fail on captured console errors; CI uploads their logs as `playwright-test-logs`.
+
 macOS test invocation (as used 2026-10-22): `cd tools/tests && GS_CHROMIUM="$HOME/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" /tmp/gs_venv/bin/python <script>.py` - `/tmp/gs_venv` is a throwaway venv with playwright (`python3 -m venv /tmp/gs_venv && /tmp/gs_venv/bin/pip install playwright` to recreate). See docs/HANDOFF.md for gotchas (q=low and bolt hits, ai.hold blocks guns AND launches, missile-death tracking). The build also fails on duplicate top-level names (owner P0 2026-10-22). `?seed=N` in page URLs makes a run deterministic; duel cells should quote >= 20 runs. Run pages one at a time; several in one run time out. To run beside another test run set `GS_PORT` and `GS_TEST_DIR` (default 8765, /tmp/gs_test; symlink node_modules into the new dir).
 
 | Script | What it checks |

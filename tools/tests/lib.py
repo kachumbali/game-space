@@ -31,13 +31,17 @@ class Runner:
     def page(self,w,h,q='',touch=False):
         ctx=self.b.new_context(viewport={'width':w,'height':h},has_touch=touch,is_mobile=touch)
         pg=ctx.new_page()
-        pg.on('console',lambda m: self.errs.append((m.type,m.text)) if m.type in('error','warning') and '404' not in m.text and 'GPU stall' not in m.text and 'swiftshader' not in m.text.lower() else None)
+        pg.on('console',lambda m: self.errs.append((m.type,m.text,m.location)) if m.type=='error' else None)
         pg.on('pageerror',lambda e: self.errs.append(('pageerror',str(e))))
+        pg.on('response',lambda r: self.errs.append(('http',r.status,r.url)) if r.status>=400 else None)
         pg.goto('http://localhost:'+PORT+'/index.html'+q,timeout=120000); pg.wait_for_function('window.__game!==undefined',timeout=120000)
         pg.add_style_tag(content='#msg{display:none!important}')
         return pg
     def __exit__(self,*a):
         self.b.close(); self.pw.stop(); self.srv.terminate()
+def assert_no_console_errors(runner):
+    if runner.errs:
+        raise AssertionError(f'Browser console errors/warnings: {runner.errs}')
 # place enemy relative to player: distance d along forward, offsets, yaw/pitch of enemy
 PLACE='''([d,ox,oy,yaw,pitch,idx])=>{const g=__game;const es=g.ships.filter(s=>s.team===1);const e=es[idx||0];const P=g.player;
   es.forEach(x=>{if(x!==e){x.group.position.set(5000,0,5000);}});
