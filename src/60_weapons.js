@@ -40,6 +40,7 @@ const WEAPONS = {
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100 },   // magazine rule 2026-10-22: every kinetic weapon carries ammo
   rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
+  fmag: { kind: 'proj', name: 'MD-9 MAG DRIVER', cd: 1.8, v: 1600, dmg: 26, dt: 'kin', pierce: 0.25, life: 1.7, spread: 0.002, energy: 30, color: 0xcfe8ff, len: 14, sz: 0.4, sfx: 'rail', big: true },    // Kestrel heavy hitter (owner 2026-10-22): rail-family, energy-budgeted - 30 of the fighter's 100-point pool per slug, 17/s regen; no magazine, the capacitor is the feed. This is what the ETS WEAPONS channel feeds on a Kestrel
   mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250 },    // 250-rd magazine ~9 min of fire    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
   // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
   mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
@@ -61,7 +62,7 @@ const WEAPONS = {
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
   tick: { kind: 'msl', name: 'SK-1 IR MISSILE', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
+  nuke: { kind: 'msl', name: 'NK-1 TAC WARHEAD (0.5 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.5 },   // owner 2026-10-22: standard load is a realistic battlefield yield (B61-style sub-kiloton tactical setting); dial via `?nukeKt=` 0.1 (minimum) to 10 kT; strategic 100 kT-10 MT is lore-only (docs/NUKES.md)
   tad: { kind: 'msl', name: 'ST-2 TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
@@ -381,7 +382,7 @@ const nukeLog = [];
 function killMissile(m, blast) {
   if (m.dead) return;
   m.dead = true;
-  if (blast && m.w.nuclear) nukeAt(m.pos, m.w.yield, m.owner);
+  if (blast && m.w.nuclear) nukeAt(m.pos, (m.owner && m.owner.nukeKt) || m.w.yield, m.owner);   // per-ship yield dial (owner 2026-10-22)
   else if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
 }

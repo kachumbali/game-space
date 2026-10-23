@@ -79,13 +79,13 @@ with Runner() as R:
       stepN(8,(t)=>{gu.vel.set(0,0,0);gu.group.position.set(0,0,-800);hal.vel.set(0,0,0);hal.group.position.set(0,0,0);
         if(g.bolts.some(b=>b.wid==='rotary'))sawRotary=true;});
       const fired=hal.ammo.rotary;
-      hal.ammo.rotary=10;
+      hal.ammo.rotary=10;   // ~1% of pool: below the 5% gun-empty line of the discipline rule
       stepN(6,(t)=>{gu.vel.set(0,0,0);gu.group.position.set(0,0,-800);hal.vel.set(0,0,0);hal.group.position.set(0,0,0);});
-      return {sawRotary,firedFrom900:hal.ammoMax.rotary-fired,dry:hal.ammo.rotary};'''))
+      return {sawRotary,firedFrom900:hal.ammoMax.rotary-fired,held:hal.ammo.rotary,gunEmpty:!!hal.gunEmpty};'''))
     print(json.dumps(r))
     check('the GA-9 rotary fires under AI', r['sawRotary'], str(r))
     check('the rotary magazine drains (900-rd pool, 36 s of fire)', 0 < r['firedFrom900'] <= 900, str(r))
-    check('the rotary runs dry and stops at 0', r['dry'] == 0, str(r))
+    check('below 5% the Halberd goes gun-empty and the rotary stops (discipline)', r['gunEmpty'] and r['held'] == 10, str(r))
 
     # 5: the Gulper's grp-2 maser lances now fire under AI (capitalAI used to fire group 1 only)
     pg = R.page(320,180,'?free&n=0&q=low')
@@ -93,7 +93,7 @@ with Runner() as R:
       const gu=g.spawnShip('gulper',1,V(0,0,0),V(0,0,-1),{ai:'capital'});
       const hal=g.spawnShip('halberd',0,V(0,0,-700),V(0,0,0),{});
       hal.shield.fore=hal.shield.aft=1e6;hal.structure=1e6;hal.ai.hold=true;hal.vel.set(0,0,0);
-      gu.ammo.rodg=0;gu.stores.tad=0;   // rods and torpedoes silent: any energy draw is the grp-2 maser lances
+      gu.stores.tad=0;   // torpedoes silent; rods stay full (rods cost no energy, and zeroing them trips gun-empty)
       gu.target=hal;
       const e0=gu.energyMax;
       stepN(6,()=>{hal.vel.set(0,0,0);hal.group.position.set(0,0,-700);gu.vel.set(0,0,0);gu.group.position.set(0,0,0);});

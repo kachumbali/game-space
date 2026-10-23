@@ -102,7 +102,10 @@ SHIPS.kestrel = {
     ell([-0.62, -0.45, -2.2], [0.24, 0.2, 0.9], K.hull2, { noMirror: true }),
     seg([-0.62, -0.48, -5.7], [-0.62, -0.48, -5.9], 0.2, 0.2, 0x20252b, { noMirror: true }),
     seg([-0.62, -0.48, -6.1], [-0.62, -0.48, -6.3], 0.18, 0.18, 0x20252b, { noMirror: true }),
-    seg([0.6, -0.42, -1.4], [0.6, -0.45, -4.4], 0.09, 0.07, K.dark, { noMirror: true }),
+    seg([0.6, -0.42, -1.0], [0.6, -0.45, -4.5], 0.14, 0.11, K.dark, { noMirror: true }),   // MD-9 mag barrel on the right boom
+    tap([0.6, -0.44, -2.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),
+    tap([0.6, -0.44, -3.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),   // coil collars
+    tap([0.6, -0.45, -4.45], 0.15, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e', noMirror: true }),   // muzzle
     // wing-tip MK-30 HE cannons: barrel + muzzle brake (realism pass 2026-10-22; was a plasma-bolter glow)
     seg([4.95, -0.04, 1.9], [4.95, -0.04, 0.7], 0.12, 0.09, K.dark),
     seg([4.95, -0.04, 0.78], [4.95, -0.04, 0.58], 0.17, 0.17, K.dark),
@@ -119,7 +122,7 @@ SHIPS.kestrel = {
     { pos: [3.9, -0.6, 6.75], comp: 'engR', r: 0.42 }, { pos: [-3.9, -0.6, 6.75], comp: 'engL', r: 0.42 },
   ],
   mounts: [
-    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'cannon', pos: [0.6, -0.45, -4.5], comp: 'gunR', grp: 1 },
+    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'fmag', pos: [0.6, -0.45, -4.55], comp: 'gunR', grp: 1 },   // right boom carries the MD-9 mag (owner 2026-10-22): 3 gun systems - cannon, mag, HE - plus missiles
     { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
   ],
   stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
@@ -128,7 +131,7 @@ SHIPS.kestrel = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
-    { id: 'gunR', name: 'CANNON R', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 10 },
+    { id: 'gunR', name: 'MD-9 MAG', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 12 },
     { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },

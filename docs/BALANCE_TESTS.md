@@ -174,3 +174,11 @@ Halberd gains the GA-9 rotary, 900 rds; the Exeter's XL gets 100 slugs). Same du
 FROGG gun pools last ~64 s of continuous fire, the Kestrels' ~51 s cannon / ~110 s HE, and after that the
 fights are decided by missiles and masers. capitalAI now fires both mount groups up close, which woke the
 Gulper's grp-2 maser lances (they had never fired under AI before). Test: `tools/tests/magazine_t.py`.
+
+## Gun discipline + MD-9 mag re-measure (2026-10-22)
+
+AI ammo guns now fire in shrinking bursts below 60%/30% of pool and stop at 5% (discipline); the Kestrel
+swapped one MK-20 for the MD-9 mag (26 kin, 25% pierce, 30 energy per slug - capacitor-fed). Same duel setup:
+arcade 8 -> 2/3, 10 -> 1/3. The even point still reads ~9-10; the 10-cell swung from 3/3 to 1/3, within the
+recorded noise band for 3-run cells. Discipline duty cycles measured headlessly: free 60 rds/6 s, 50% band
+34 (57% duty vs the designed 54%), 20% band 15 (25% vs 23%). Tests: `tools/tests/discipline_t.py`.

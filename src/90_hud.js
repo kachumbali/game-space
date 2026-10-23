@@ -198,8 +198,9 @@ function updateWeaponPanel() {
   const cn = p.ammo.cannon | 0;
   const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
   const ids = missileIds(p), cur = selectedMissile(p);
-  let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
-  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
+  const low = (a, mx) => (a <= mx * 0.05 ? ' bad' : '');   // gun discipline (owner 2026-10-22): near-empty state at 5%
+  let h = `<div class="${m(1) ? 'sel' : 'dim'}${low(cn, p.ammoMax.cannon)}">1 CANNON ×${cn} + MD-9 MAG</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}${low(p.ammo.he | 0, p.ammoMax.he)}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   h += droneHudLine(p);

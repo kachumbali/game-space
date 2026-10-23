@@ -124,6 +124,7 @@ function benchSetup() {
     if (!params.has('nolaunch')) launchDrones(player, 99);
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
+  if (params.has('nukeKt')) player.nukeKt = Math.min(10, Math.max(0.1, +params.get('nukeKt') || 0.5));   // tactical yield dial, kT (owner 2026-10-22): 0.1 minimum, 10 max in-game
 }
 
 // ---- distance LOD: ships whose apparent radius (rad) falls below the level's thresholds are rebuilt 1-3 detail steps lower (hysteresis 25%).

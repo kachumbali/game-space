@@ -1,6 +1,8 @@
 # Nuclear warheads: design for the Exeter stock, Kestrel torpedoes and Exeter launch (design paper, nothing implemented)
 
-Status: design paper, 2026-10-22. No code was changed. **Every number below is an unsimulated placeholder** unless it is
+Status: **implemented 2026-10-22** (`nukeAt` fluence model in src/60_weapons.js, NK-1 missile, `?nuke=` and `?nukeKt=` params; one recorded engagement in docs/BALANCE_TESTS.md). The design text below is the original paper; section numbers supercede where the code moved on.** Yield dial (owner decision 2026-10-22): the standard NK-1 load is 0.5 kT - a realistic sub-kiloton tactical setting (B61-family style); 0.1 kT is the dial minimum and 10 kT the in-game maximum via `?nukeKt=` (per-ship `nukeKt` override). Strategic warheads - **100 kT to 10 MT** - are lore-only for now: no launcher, no ship carries them, they exist in doctrine (planetkiller / fleet-annihilation tier, docs/LORE_HISTORY.md scale) and any future implementation needs its own design pass.
+
+Original paper below. **Every number below is an unsimulated placeholder** unless it is
 explicitly marked as taken from existing code. The point of the numbers is internal consistency and a stated rationale,
 not realism or measured balance.
 

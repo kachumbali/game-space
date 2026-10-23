@@ -165,6 +165,26 @@ function avoidance(s, aim) {
   return false;
 }
 
+// ---- gun discipline (owner decision 2026-10-22): AI ammo weapons fire in bursts that shorten as the magazines empty ----
+// Above 60% of the pool: free fire. 60-30%: 0.7 s bursts / 0.6 s pauses. 30-5%: 0.35 s bursts / 1.2 s pauses.
+// At 5% the ship goes to gun-empty status and stops gun fire entirely (missiles and energy weapons are unaffected).
+// Ships without ammo weapons (all-energy fits) pass straight through - the discipline is a magazine doctrine.
+function gunBurstOK(s, dt) {
+  let f = 1;
+  for (const k in s.ammoMax) f = Math.min(f, s.ammo[k] / s.ammoMax[k]);
+  if (f <= 0.05) {
+    if (!s.gunEmpty) { s.gunEmpty = true; if (s === player) log('GUNS EMPTY - MAGAZINES AT 5%', '#ff5a4a'); }
+    return false;
+  }
+  s.gunEmpty = false;
+  const onT = f > 0.6 ? 1e9 : f > 0.3 ? 0.7 : 0.35;
+  const offT = f > 0.6 ? 0 : f > 0.3 ? 0.6 : 1.2;
+  s.gb = s.gb || { t: 0, on: true };
+  s.gb.t += dt;
+  if (s.gb.on ? s.gb.t >= onT : s.gb.t >= offT) { s.gb.on = !s.gb.on; s.gb.t = 0; }
+  return s.gb.on;
+}
+
 // ---- power management (owner decision 2026-10-22: all ships work their 12-point budget, not just the player's fighter) ----
 // One point per decision, taken from the larger of the other two channels (powerShift). Cadence scales with skill:
 // skill 5 decides every ~1.6 s, skill 1 every ~3.6 s. Shields when taking hits, weapons when the capacitors run low
@@ -287,8 +307,8 @@ function fighterAI(s, dt) {
     const err = aimError(s, lead);
     const rng = primaryRange(s);
     const tol = AI_TUNE.tolMul * (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
-    if (err < tol && dist < rng) fireGuns(s, 0b11);
-    else if (err < tol * 1.6 && dist < rng * 0.8) fireGuns(s, 0b10);
+    if (err < tol && dist < rng) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }
+    else if (err < tol * 1.6 && dist < rng * 0.8) { if (gunBurstOK(s, dt)) fireGuns(s, 0b10); }
   }
   missileLogic(s, dt, ['ir', 'rf', 'tick']);
 }
@@ -319,7 +339,7 @@ function bomberAI(s, dt) {
   aiFly(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
   // defend with guns if a fighter is on the nose
   const p = hostilesOf(s).find(e => !isCapital(e) && e.group.position.distanceTo(ep) < 450 && aimError(s, e.group.position) < 0.07);
-  if (p) fireGuns(s, 0b11);
+  if (p && gunBurstOK(s, dt)) fireGuns(s, 0b11);
 }
 
 function capitalAI(s, dt) {
@@ -351,8 +371,8 @@ function capitalAI(s, dt) {
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) fireGuns(s, 0b11);   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
-  else if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);                 // at range only the mains (XL store mounts are skipped by fireGuns)
+  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  else if (err < 0.03 && dist < rng * 1.4) { if (gunBurstOK(s, dt)) fireGuns(s, 0b1); }                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (s.stores.tad > 0 || s.stores.torp > 0) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';

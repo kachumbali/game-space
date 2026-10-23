@@ -1341,7 +1341,10 @@ SHIPS.kestrel = {
     ell([-0.62, -0.45, -2.2], [0.24, 0.2, 0.9], K.hull2, { noMirror: true }),
     seg([-0.62, -0.48, -5.7], [-0.62, -0.48, -5.9], 0.2, 0.2, 0x20252b, { noMirror: true }),
     seg([-0.62, -0.48, -6.1], [-0.62, -0.48, -6.3], 0.18, 0.18, 0x20252b, { noMirror: true }),
-    seg([0.6, -0.42, -1.4], [0.6, -0.45, -4.4], 0.09, 0.07, K.dark, { noMirror: true }),
+    seg([0.6, -0.42, -1.0], [0.6, -0.45, -4.5], 0.14, 0.11, K.dark, { noMirror: true }),   // MD-9 mag barrel on the right boom
+    tap([0.6, -0.44, -2.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),
+    tap([0.6, -0.44, -3.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),   // coil collars
+    tap([0.6, -0.45, -4.45], 0.15, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e', noMirror: true }),   // muzzle
     // wing-tip MK-30 HE cannons: barrel + muzzle brake (realism pass 2026-10-22; was a plasma-bolter glow)
     seg([4.95, -0.04, 1.9], [4.95, -0.04, 0.7], 0.12, 0.09, K.dark),
     seg([4.95, -0.04, 0.78], [4.95, -0.04, 0.58], 0.17, 0.17, K.dark),
@@ -1358,7 +1361,7 @@ SHIPS.kestrel = {
     { pos: [3.9, -0.6, 6.75], comp: 'engR', r: 0.42 }, { pos: [-3.9, -0.6, 6.75], comp: 'engL', r: 0.42 },
   ],
   mounts: [
-    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'cannon', pos: [0.6, -0.45, -4.5], comp: 'gunR', grp: 1 },
+    { w: 'cannon', pos: [-0.62, -0.48, -6.45], comp: 'gunL', grp: 1 }, { w: 'fmag', pos: [0.6, -0.45, -4.55], comp: 'gunR', grp: 1 },   // right boom carries the MD-9 mag (owner 2026-10-22): 3 gun systems - cannon, mag, HE - plus missiles
     { w: 'he', pos: [4.95, -0.04, 0.6], comp: 'wingR', grp: 2 }, { w: 'he', pos: [-4.95, -0.04, 0.6], comp: 'wingL', grp: 2 },
   ],
   stores: { ir: 4, rf: 2, torp: 1, flare: 24 },
@@ -1367,7 +1370,7 @@ SHIPS.kestrel = {
     { id: 'engL', name: 'ENGINE L', role: 'engine', pos: [-3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'engR', name: 'ENGINE R', role: 'engine', pos: [3.6, -0.05, 4.4], r: 1.5, hp: 16 },
     { id: 'gunL', name: 'CANNON L', role: 'gun', pos: [-0.62, -0.45, -3.8], r: 0.9, hp: 10 },
-    { id: 'gunR', name: 'CANNON R', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 10 },
+    { id: 'gunR', name: 'MD-9 MAG', role: 'gun', pos: [0.6, -0.45, -3.2], r: 0.7, hp: 12 },
     { id: 'wingL', name: 'HE GUN L', role: 'gun', pos: [-4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'wingR', name: 'HE GUN R', role: 'gun', pos: [4.6, -0.04, 1.4], r: 0.8, hp: 9 },
     { id: 'shield', name: 'SHIELD GEN', role: 'shield', pos: [0, 0.2, 1.2], r: 0.9, hp: 20 },
@@ -3190,6 +3193,7 @@ function benchSetup() {
     if (!params.has('nolaunch')) launchDrones(player, 99);
   }
   if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
+  if (params.has('nukeKt')) player.nukeKt = Math.min(10, Math.max(0.1, +params.get('nukeKt') || 0.5));   // tactical yield dial, kT (owner 2026-10-22): 0.1 minimum, 10 max in-game
 }
 
 // ---- distance LOD: ships whose apparent radius (rad) falls below the level's thresholds are rebuilt 1-3 detail steps lower (hysteresis 25%).
@@ -3524,6 +3528,7 @@ const WEAPONS = {
   dgun: { kind: 'proj', name: 'DR-2 MAG CANNON', cd: 0.085, v: 900, dmg: 3.0, dt: 'kin', life: 1.5, spread: 0.005, ammo: 300, color: 0xffd9a0, len: 2.6, sz: 0.11, sfx: 'cannon' },
   rail: { kind: 'proj', name: 'RG-90 RAILGUN', cd: 2.4, v: 2000, dmg: 70, dt: 'kin', life: 2.2, spread: 0.0003, color: 0xcfe8ff, len: 22, sz: 0.55, sfx: 'rail', big: true, pierce: 0.6, ammo: 100 },   // magazine rule 2026-10-22: every kinetic weapon carries ammo
   rotary: { kind: 'proj', name: 'GA-9 ROTARY CANNON', cd: 0.04, v: 1100, dmg: 2.8, dt: 'kin', pierce: 0.15, life: 1.2, spread: 0.008, ammo: 900, color: 0xffd9a0, len: 3.0, sz: 0.16, sfx: 'cannon' },    // A-10-style (owner 2026-10-22): 25 rps, 900-rd magazine = 36 s of fire - the magazine IS the weapon
+  fmag: { kind: 'proj', name: 'MD-9 MAG DRIVER', cd: 1.8, v: 1600, dmg: 26, dt: 'kin', pierce: 0.25, life: 1.7, spread: 0.002, energy: 30, color: 0xcfe8ff, len: 14, sz: 0.4, sfx: 'rail', big: true },    // Kestrel heavy hitter (owner 2026-10-22): rail-family, energy-budgeted - 30 of the fighter's 100-point pool per slug, 17/s regen; no magazine, the capacitor is the feed. This is what the ETS WEAPONS channel feeds on a Kestrel
   mdl: { kind: 'proj', name: 'MD-55 MASS DRIVER (L)', cd: 2.2, v: 1800, dmg: 60, dt: 'kin', life: 1.6, spread: 0.0008, color: 0xcfe8ff, len: 26, sz: 0.9, sfx: 'rail', big: true, pierce: 0.4, range: 2600, track: 1.2, turret: true, noPD: true, bigOnly: true, ammo: 250 },    // 250-rd magazine ~9 min of fire    // Exeter L turret: rail-family slug, big targets only (fighters inside 900 m)
   // XL main, Exeter (owner decision 2026-10-22): same charge/lock/cool machine as the FROGG spine (79_bullfrog.js), but a kinetic slug from the rail family; mount carries store:'spine' so fireGuns skips it
   mdxl: { kind: 'spine', name: 'MK-90 MASS DRIVER', dmg: 900, dt: 'kin', pierce: 0.6, range: 3200, energy: 800, charge: 5, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0xcfe8ff, sfx: 'rail', warnName: 'MASS DRIVER', mag: 100 },    // 100 slugs (owner 2026-10-22: the magazine scales with the weapon, the XL's is 100)
@@ -3545,7 +3550,7 @@ const WEAPONS = {
   rf: { kind: 'msl', name: 'LN-3 LANCE (RADAR)', seeker: 'rf', v0: 70, vmax: 380, acc: 240, turn: 2.7, burn: 9, life: 12, dmg: 34, blast: 11, fuze: 7, lockCone: 0.55, seekCone: 0.95, lockTime: 2.4, range: 3400, hp: 1, flareS: 0.05, chaffS: 0.65, color: 0xe8e8d8, flame: 0xffd090, size: 1.15 },
   torp: { kind: 'msl', name: 'HM-1 HAMMER TORPEDO', seeker: 'ir', v0: 40, vmax: 260, acc: 80, turn: 0.9, burn: 16, life: 22, dmg: 170, blast: 30, fuze: 12, lockCone: 0.45, seekCone: 0.8, lockTime: 1.8, range: 2000, hp: 7, flareS: 0.15, chaffS: 0.15, color: 0xc8c8c0, flame: 0xffc070, size: 2.2, torp: true },
   tick: { kind: 'msl', name: 'SK-1 IR MISSILE', seeker: 'ir', v0: 60, vmax: 460, acc: 300, turn: 4.2, burn: 7, life: 9, dmg: 24 * FMX, blast: 9, fuze: 6, lockCone: 0.28, seekCone: 0.9, lockTime: 1.1, range: 2200, hp: 1, flareS: 0.3, chaffS: 0, color: 0x7a6a3a, flame: 0xb4ff40, size: 1, frogg: true },
-  nuke: { kind: 'msl', name: 'NK-1 WARHEAD (0.1 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.1 },
+  nuke: { kind: 'msl', name: 'NK-1 TAC WARHEAD (0.5 kT)', seeker: 'ir', v0: 40, vmax: 300, acc: 90, turn: 1.2, burn: 14, life: 20, dmg: 0, blast: 0, fuze: 120, lockCone: 0.45, seekCone: 0.8, lockTime: 2.0, range: 2200, hp: 5, flareS: 0.2, chaffS: 0.2, color: 0xe8e0a0, flame: 0xffc070, size: 2.4, torp: true, nuclear: true, yield: 0.5 },   // owner 2026-10-22: standard load is a realistic battlefield yield (B61-style sub-kiloton tactical setting); dial via `?nukeKt=` 0.1 (minimum) to 10 kT; strategic 100 kT-10 MT is lore-only (docs/NUKES.md)
   tad: { kind: 'msl', name: 'ST-2 TORPEDO', seeker: 'ir', v0: 35, vmax: 280, acc: 85, turn: 1.1, burn: 18, life: 26, dmg: 150 * FMX, blast: 28, fuze: 12, lockCone: 0.5, seekCone: 0.9, lockTime: 1.6, range: 2600, hp: 8, flareS: 0.05, chaffS: 0.05, color: 0x9a4a22, flame: 0xb4ff40, size: 2.0, torp: true, frogg: true },
   flare: { kind: 'cm', name: 'FLARES / CHAFF' },
 };
@@ -3865,7 +3870,7 @@ const nukeLog = [];
 function killMissile(m, blast) {
   if (m.dead) return;
   m.dead = true;
-  if (blast && m.w.nuclear) nukeAt(m.pos, m.w.yield, m.owner);
+  if (blast && m.w.nuclear) nukeAt(m.pos, (m.owner && m.owner.nukeKt) || m.w.yield, m.owner);   // per-ship yield dial (owner 2026-10-22)
   else if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
 }
@@ -4731,6 +4736,26 @@ function avoidance(s, aim) {
   return false;
 }
 
+// ---- gun discipline (owner decision 2026-10-22): AI ammo weapons fire in bursts that shorten as the magazines empty ----
+// Above 60% of the pool: free fire. 60-30%: 0.7 s bursts / 0.6 s pauses. 30-5%: 0.35 s bursts / 1.2 s pauses.
+// At 5% the ship goes to gun-empty status and stops gun fire entirely (missiles and energy weapons are unaffected).
+// Ships without ammo weapons (all-energy fits) pass straight through - the discipline is a magazine doctrine.
+function gunBurstOK(s, dt) {
+  let f = 1;
+  for (const k in s.ammoMax) f = Math.min(f, s.ammo[k] / s.ammoMax[k]);
+  if (f <= 0.05) {
+    if (!s.gunEmpty) { s.gunEmpty = true; if (s === player) log('GUNS EMPTY - MAGAZINES AT 5%', '#ff5a4a'); }
+    return false;
+  }
+  s.gunEmpty = false;
+  const onT = f > 0.6 ? 1e9 : f > 0.3 ? 0.7 : 0.35;
+  const offT = f > 0.6 ? 0 : f > 0.3 ? 0.6 : 1.2;
+  s.gb = s.gb || { t: 0, on: true };
+  s.gb.t += dt;
+  if (s.gb.on ? s.gb.t >= onT : s.gb.t >= offT) { s.gb.on = !s.gb.on; s.gb.t = 0; }
+  return s.gb.on;
+}
+
 // ---- power management (owner decision 2026-10-22: all ships work their 12-point budget, not just the player's fighter) ----
 // One point per decision, taken from the larger of the other two channels (powerShift). Cadence scales with skill:
 // skill 5 decides every ~1.6 s, skill 1 every ~3.6 s. Shields when taking hits, weapons when the capacitors run low
@@ -4853,8 +4878,8 @@ function fighterAI(s, dt) {
     const err = aimError(s, lead);
     const rng = primaryRange(s);
     const tol = AI_TUNE.tolMul * (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
-    if (err < tol && dist < rng) fireGuns(s, 0b11);
-    else if (err < tol * 1.6 && dist < rng * 0.8) fireGuns(s, 0b10);
+    if (err < tol && dist < rng) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }
+    else if (err < tol * 1.6 && dist < rng * 0.8) { if (gunBurstOK(s, dt)) fireGuns(s, 0b10); }
   }
   missileLogic(s, dt, ['ir', 'rf', 'tick']);
 }
@@ -4885,7 +4910,7 @@ function bomberAI(s, dt) {
   aiFly(s, { throttle: ai.mode === 'run' ? Math.max(0.7, s.def.aiSpeed / s.def.maxSpeed) : 1 }, dt);
   // defend with guns if a fighter is on the nose
   const p = hostilesOf(s).find(e => !isCapital(e) && e.group.position.distanceTo(ep) < 450 && aimError(s, e.group.position) < 0.07);
-  if (p) fireGuns(s, 0b11);
+  if (p && gunBurstOK(s, dt)) fireGuns(s, 0b11);
 }
 
 function capitalAI(s, dt) {
@@ -4917,8 +4942,8 @@ function capitalAI(s, dt) {
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) fireGuns(s, 0b11);   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
-  else if (err < 0.03 && dist < rng * 1.4) fireGuns(s, 0b1);                 // at range only the mains (XL store mounts are skipped by fireGuns)
+  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  else if (err < 0.03 && dist < rng * 1.4) { if (gunBurstOK(s, dt)) fireGuns(s, 0b1); }                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (s.stores.tad > 0 || s.stores.torp > 0) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
@@ -6899,8 +6924,9 @@ function updateWeaponPanel() {
   const cn = p.ammo.cannon | 0;
   const cls = (on, ok = true) => (on ? 'sel' : 'dim') + (ok ? '' : ' bad');
   const ids = missileIds(p), cur = selectedMissile(p);
-  let h = `<div class="${m(1) ? 'sel' : 'dim'}">1 CANNON ${String(cn).padStart(3, ' ')}</div>`;
-  h += `<div class="${m(2) ? 'sel' : 'dim'}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
+  const low = (a, mx) => (a <= mx * 0.05 ? ' bad' : '');   // gun discipline (owner 2026-10-22): near-empty state at 5%
+  let h = `<div class="${m(1) ? 'sel' : 'dim'}${low(cn, p.ammoMax.cannon)}">1 CANNON ×${cn} + MD-9 MAG</div>`;
+  h += `<div class="${m(2) ? 'sel' : 'dim'}${low(p.ammo.he | 0, p.ammoMax.he)}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   h += droneHudLine(p);
