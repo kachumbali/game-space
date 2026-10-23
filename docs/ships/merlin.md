@@ -18,15 +18,15 @@ specialist-class workload; the Merlin has no second seat and no drone store), po
 
 **What it is bad at** (by construction, verified in the numbers of section e/f):
 - Staying alive under focus: about 47 percent of the Kestrel's effective hit points against small kinetic hits (section e).
-- Killing anything armoured or large: two 3-damage MK-20s are below the effective threshold for any hull with `thresh` armour at corvette
-  scale or above (corvette thresh 3 to 6, class multiplier 1.0; the fighter scale 0.25 only protects *fighters*). It does nothing to a
-  Halberd-class hull and little to a Toad's shield; missiles are its only capital-adjacent contribution, 2 x 26.
+- Killing anything armoured or large: HARD armour (thresh 6, scaled by class: corvette x 1.0) nearly stops every hit below 6 damage, so a
+  3-damage MK-20 round does almost nothing to a Halberd-class hull (the fighter scale 0.25 only softens this for fighters). Missiles
+  (2 x 26) are its only capital-adjacent contribution.
 - Endurance: 1,200 cannon rounds (51 sim-s of both guns firing), no magazine of heavier ammunition, 2 missiles, 12 flares.
 - Beam-armed FROGG fighters (Leaper and up): the M-1 pulse maser's peak output kills it in well under a second once the beam has acquired.
 - The reactor-kill rule (`applyHit`: a dead `power` component kills the ship) makes its small, central reactor the cheapest way to kill it.
 
 **How the AI should fly it.** Existing `ai.role` values in `src/70_ai.js` are `fighter`, `gunship`, `bomber`, `corvette`, `capital`, `lancer`.
-There is no `interceptor` role: the Darter's `role: "INTERCEPTOR"` is a label string only, and the AI's AI-role is `fighter`.
+There is no `interceptor` role: the Darter's `role: "INTERCEPTOR"` is a label string only, and the AI role it gets is `fighter`.
 - Use `ai: { "role": "fighter", "aggr": 0.9 }`. `fighterAI` flies attack / break / evade / flee, fires bursts under the gun-discipline rule, and
   launches `ir` missiles via `missileLogic` at 350 m to 0.7 x 1700 m. That is the whole doctrine the current code can express.
 - `aggr` 0.9 (Kestrel default 0.8, Darter and Drone 1.0): the flee rule `hurt && aggr < 0.7` is switched off, so it does not run when hurt (it is
@@ -64,10 +64,9 @@ the longitudinal half-extent: Kestrel 6.6 vs 6.9, Darter 5.4 vs 5.4, Leaper 8.0 
 | `radius` | **5.0** | 6.6 | Convention above. Also the broad-phase part of hit probability: 24 percent smaller. |
 | Frontal cross-section (2 x half x, 2 x half y) | 7.8 x 3.2 = 25 m2 | 10.4 x 4.4 = 46 m2 (0.54x) | Upper bound (box); real silhouette is smaller. A real part of "flimsier" is "harder to hit": voxel collision uses the solid voxels, so this ratio matters more than `radius`. |
 | `seam` | [1.2, 0.9] | [1.5, 1.1] | Panel-seam spacing scaled by 0.8 (visual only, keeps panel density readable on a smaller hull). |
-| `eye` | [0, 0.5, -1.8] | [0, 0.62, -2.5] | Cockpit at roughly 40 percent of the length from the nose, as on the Kestrel (-2.5 / 12.4 = 20 percent of length behind nose point; Merlin -1.8 / 9 = 20 percent). |
+| `eye` | [0, 0.5, -1.8] | [0, 0.62, -2.5] | Same cockpit position relative to the nose as the Kestrel: 3.7 m behind the nose point of 12.4 m (30 percent of length); Merlin 2.7 m of 9 m (30 percent). |
 
-Class mass: `mass.fighter = 1` (collision uses `reduced mass` class values, not length). Merlin is the same class as everything else; a Merlin-Kestrel collision
-damages the Merlin more only through the ordinary "lighter body" rule if mass classes ever differ, which they currently do not.
+Class mass: `mass.fighter = 1` for every fighter, so the crash rule treats a Merlin like a Kestrel (mass is by class, not length).
 
 Voxel cost: ships are voxelised by size; at 9 m this is below the Kestrel, so no `resMul` or `noDetail` is set (the Drone sets both because it is 6 m and expendable;
 a hand-flown Merlin should keep the detail tiers).
@@ -155,7 +154,7 @@ Reasons:
   - `flare` 12: between the Darter (8) and Leaper (10) and half the Kestrel's 24. The AI's evade loop spends flares at 0.9-1.9 s intervals; 12 flares last about 18 s of continuous deployment. Reason: the screen is exposed to more missile fire than the Kestrel; cheaper to keep a modest pool than to let it fall to zero by design. This is a choice; the sketch does not specify flares.
 - Ordnance total (magazine damage plus missiles): Merlin 3,652 vs Kestrel 14,262 = 26 percent.
 - **No new weapon proposed.** A genuine light PD weapon (a small turret like the PD-30 on the Halberd) would be a new thing; the sketch does not ask for one and `turrets` is empty here.
-- Energy/ammo implications: both weapons are chemical. No energy draw, no capacitor use. Rearm at a Tender restores both pools at 40 rounds/s per mount (docs/WEAPONS.md) and a missile per 2 s; a Merlin returns to full in about 15 s of service for the guns, 4 s for the missiles.
+- Energy/ammo implications: both weapons are chemical. No energy draw, no capacitor use. Rearm at a Tender restores both pools at 40 rounds/s per mount (docs/WEAPONS.md) and a missile per 2 s; a 600-round pool takes about 15 s at 40 rounds/s (if the mounts fill in parallel; not checked), the two missiles about 4 s.
 
 ## (g) Power
 
@@ -188,7 +187,7 @@ the Merlin is about 0.47 of a Kestrel in survivability and 0.54 in gun damage pe
 
 **Kill speed.** At equal accuracy: against a Darter (hit points 40 kinetic) the Merlin's guns need about 0.6 s of continuous hits; the Darter's guns need about 1.2 s on the Merlin (69). In an equal-accuracy exchange the Merlin kills about twice as fast. But the Darter turns 56 percent harder in game (11.1 vs 7.1), so it will often get the nose to bear first; the Merlin's closing speed (175 vs 165) and wider fire cone (it fires 23.5 rounds/s) offset this partly. Against a Leaper (hit points 74): the Merlin needs about 1.0 s on target; the Leaper's two M-1 beams at peak need about 0.3 s on the Merlin (48-62 hit points / 154 dps) but only after they have acquired for 0.35 s and ramped for 0.5 s, and only inside 950 m, where the Merlin's 1,620 m cannon outranges it. The Merlin therefore wins the approach and loses the knife fight.
 
-**Survivability against ordnance.** A single SK-1 (31.2 damage, blast 9) takes the Merlin's shield (22) and most of its structure. One hit leaves a Merlin at about 10-20 percent structure; two kill it. The Kestrel survives about 2.5 missile hits. A Merlin flight is therefore about as vulnerable to missile fire as to guns, and the evade/flare logic matters more than for a Kestrel (hence 12 flares).
+**Survivability against ordnance.** Direct hit with an SK-1 (31.2 damage, typed `exp`: shield x 1.0, structure x 1.1; blast falloff, pierce and component kills ignored): the first hit strips the Merlin's 22-point shield and puts about 7 into structure; the second does about 24 and kills it (26). The Kestrel (shield 40, armour 0.44) dies on the fourth hit. Hand arithmetic, not a run. A Merlin flight is therefore about as vulnerable to missile fire as to guns, and the evade/flare logic matters more than for a Kestrel (hence 12 flares).
 
 **Intended expectation (hypothesis, not measured):**
 1. 1v1 Merlin (skill 3) vs Darter (skill 3): Merlin wins **55-70 percent**. Vs Leaper: Merlin wins **25-40 percent**. Vs Kestrel: Merlin loses **70-85 percent** (a Kestrel has 2.1x the hit points and HE).
