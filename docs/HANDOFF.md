@@ -80,3 +80,10 @@ new owner decision it surfaced). The next session starts at item 3.
 - Nuke fluence at 0.1 kT kills fighters within ~42 m, 2 kT within ~190 m (measured, discipline_t).
 - The Kestrel's ETS WEAPONS channel feeds the MD-9 (30 en/slug); powerAI pushes WEAPONS when energy
   is low while fighting.
+
+## Branch `ship-db` (Claude session 2026-10-23, not yet merged to main)
+
+- **Ship database**: `data/db.json` is now the single source of truth for ships, weapons, armour, mass tables; `src/16_db.js` embeds it; `python3 tools/validate_db.py` checks it (also in CI). Edit the JSON, not `60_weapons.js` / `30-31_ships_*.js` (those keep geometry only). See `docs/DATABASE.md`. Balance-neutral extraction, verified by diffing the full runtime objects.
+- **Exeter laser retune** (owner OK 2026-10-23): LS-2 dmg 6 -> 3, LS-8 13 -> 6.5. Hand-play showed the Bullfrog and its fighters dying in seconds. **The item-2 acceptance numbers above (Exeter 87-90%) were measured BEFORE this retune**; re-run once `ship-db` is merged.
+- Do not edit weapon/ship numbers in `src/` on main while this branch is open: it deletes those literals and will conflict.
+- Next planned step (needs the owner's explicit freeze exception): engineering power model in the database. Not started.
