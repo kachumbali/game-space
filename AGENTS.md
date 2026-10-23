@@ -33,6 +33,9 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Check: no console errors, mission flow completes (bot), screenshots at 1280x720 and 844x390 / 390x844.
 
 ## Git
+- **Work in branches** (owner rule 2026-10-22): commit work in progress to a feature branch; merge to main when green. Never let two agents edit the same working tree.
+- **New player-facing systems are frozen until the owner has hand-played the build on iPad** (owner rule 2026-10-22: power, afterburner, magazines, energy budgets, comms, drones, docking, the nuke dial all shipped with zero hand-play data). Any new player-facing system needs, in the same commit: a touch binding, an AI default so it can be ignored, and a line in the help overlay.
+- **Balance claims need seeded runs**: `?seed=` makes the whole sim deterministic (mulberry32, 10_config). Duel cells quote >= 20 runs or do not claim an even point.
 - Commit small, push to `origin main` (https://github.com/kachumbali/game-space). Do not force push. End each
   commit message with:
   `Co-Authored-By: Mistral Vibe (Mistral AI) <noreply@mistral.ai>`

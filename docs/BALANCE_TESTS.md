@@ -190,3 +190,12 @@ RG-90 12 en/shot, MD-9 30 en + 120 slugs, MD-55 15 en, R-12 6 en), energy only (
 energy-heavy, humans ammo-heavy; drones are human-only (FROGG anti-AI). Duels after the class-2 energy draws:
 arcade 8 -> 2/3, 10 -> 2/3 - the even point holds ~10-11. Tests unaffected (discipline_t 10/10, magazine_t
 11/11, suite1 13/13).
+
+## P0 pass (owner directive 2026-10-22): seeded 20-run measurement standard
+
+`?seed=N` makes the whole sim deterministic (mulberry32 over Math.random, 10_config). Duel cells now
+quote >= 20 runs or do not claim an even point. First 20-run cell (arcade, 4 Kestrels sk3 vs 10 FROGGs
+sk3, seeded): **human wins 9/20 = 45%, Wilson 95% CI [25%, 66%]** - the even point at N=10 is confirmed
+at 20 runs (the old 3-run cells gave 0/3 to 3/3 at this cell; the noise estimate was right). PD-vs-torpedo
+is fixed by swept proximity flak (p0_t: 4 of 4 intercepted at 270-402 m, was 0 of 7); the acceptance
+engagement should be re-measured. S1 real pause and S2 touch parity are in (UX_REVIEW workplan status).

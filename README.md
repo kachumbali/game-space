@@ -39,6 +39,8 @@ screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 | N | Cycle subsystem on target (pipper aims at it); touch: SUB |
 | K | Radar range 1.5 / 3 / 6 km |
 | V, F, H, M | View, flight model, help, mute |
+| Esc | Real pause: the sim freezes while the overlay is up (touch: the II button; UX_REVIEW S1) |
+| ?seed=N / ?fps | Deterministic sim for balance runs / ms-per-frame overlay + play-log frame times + detail governor (owner P0 2026-10-22) |
 | `-` `=` `[` `]`, B | Voxel detail, pixel size (first step is 2x supersampling), bloom |
 | P | Graphics preset low / mid / high / ultra (URL `?q=high` or `?q=ultra` also enables MSAA and a larger sky) |
 | H | Key map overlay |

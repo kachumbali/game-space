@@ -1,6 +1,6 @@
 # Headless tests (Playwright + Chromium, software renderer)
 Run from this folder: `cd tools/tests && python3 suite1.py`. Needs `pip install playwright` (Chromium already installed, or set `GS_CHROMIUM`) and `npm` (first run installs three@0.170.0 into `GS_TEST_DIR`, default `/tmp/gs_test`).
-Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run pages one at a time; several in one run time out. To run beside another test run set `GS_PORT` and `GS_TEST_DIR` (default 8765, /tmp/gs_test; symlink node_modules into the new dir).
+Run `python3 ../../build.py` first: the tests serve the built `index.html`. The build also fails on duplicate top-level names (owner P0 2026-10-22). `?seed=N` in page URLs makes a run deterministic; duel cells should quote >= 20 runs. Run pages one at a time; several in one run time out. To run beside another test run set `GS_PORT` and `GS_TEST_DIR` (default 8765, /tmp/gs_test; symlink node_modules into the new dir).
 
 | Script | What it checks |
 |---|---|
@@ -14,6 +14,7 @@ Run `python3 ../../build.py` first: the tests serve the built `index.html`. Run 
 | `magazine_t.py` | Magazines (owner rule: every kinetic weapon carries ammo; XL = 100 slugs): mount pools drain, dry turret drums go dark, dry XL will not charge, GA-9 rotary fires and runs dry, Gulper grp-2 lances fire under AI, tender rearms ammo/stores/slugs but repairs nothing |
 | `discipline_t.py` | Gun discipline (60/30/5 bands measured as drain rates), the Kestrel MD-9 mag (fires, draws energy), and the nuke yield dial (0.1 vs 2 kT kill radius) |
 | `dock_t.py` | Tactical docking: approach + D -> auto-dock at the boom, glue while rearming at double the hovering trickle, auto-undock when full, manual undock, nothing repaired |
+| `p0_t.py` | P0 pass: real pause freezes the sim in real time (Esc / touch II), PD proximity flak intercepts torpedoes (4 of 4 vs the 0-of-7 baseline), same seed -> identical Math.random streams |
 | `suite1.py` | 10 URL variants load, no console errors |
 | `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `music_t.py` | music: autoplay start on first input, mood per game state (patrol/combat/heavy in flight, menu on briefings, story in transits, win), correct track files, `?mute`, all audio files served |

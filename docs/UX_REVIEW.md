@@ -141,6 +141,8 @@ except S4.
 
 ## 4. Workplan for adoption
 
+Status 2026-10-22 (p0-fixes branch): **S1 done** (real pause: Esc + touch II button + overlay; the frame loop gates on userPause - p0_t verifies a real-time freeze). **S2 done** (lock-status chip beside the radar, RAD touch button, touch legend in the help overlay). **S4 partially done**: the PD-vs-torpedo hole is fixed with swept, proximity-burst flak (p0_t: 4 of 4 intercepted, was 0 of 7); difficulty selector and mission-wave retune still open, now blocked on the owner's iPad playtest per the freeze rule. Balance harness is seeded (`?seed=`), 20-run cells are the standard.
+
 Sessions are sized to one build + test + push each. S1 and S2 first because they change what the
 owner's next device test should cover.
 

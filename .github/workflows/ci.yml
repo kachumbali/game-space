@@ -1,0 +1,16 @@
+name: build
+on: [push, pull_request]
+jobs:
+  build-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      # build.py concatenates src/* AND fails on duplicate top-level names
+      # (the _bm merge collision broke the whole page once; owner P0 2026-10-22)
+      - run: python3 build.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: index-html
+          path: index.html

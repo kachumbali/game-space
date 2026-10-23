@@ -23,7 +23,7 @@
   #cap{position:fixed;left:0;right:0;bottom:3vh;text-align:center;z-index:9;color:#8fffd0;letter-spacing:3px;font-size:13px;text-shadow:0 0 6px #000;pointer-events:none}
   #cap span{display:block;font-size:10px;opacity:.7;letter-spacing:2px;margin-top:3px}
   body.cine #bars{display:block}
-  body.cine #hud,body.cine #tgt,body.cine #radar,body.cine #wpn,body.cine #objs,body.cine #log,body.cine #dmg,body.cine #ov,body.cine #canopy,body.cine #warn,body.cine #thr,body.cine #thrlbl,body.cine .tbtn,body.cine #msg{display:none!important}
+  body.cine #hud,body.cine #tgt,body.cine #radar,body.cine #wpn,body.cine #objs,body.cine #log,body.cine #dmg,body.cine #ov,body.cine #canopy,body.cine #warn,body.cine #pauseOv,body.cine #thr,body.cine #thrlbl,body.cine .tbtn,body.cine #msg{display:none!important}
   body.cine #comm{bottom:13vh}
   #brief .bm.cur{border-color:#ffd24a;color:#ffd24a}
   #hit{position:fixed;inset:0;pointer-events:none;z-index:2;opacity:0;
@@ -55,7 +55,9 @@
     text-shadow:0 0 8px #000;z-index:6;pointer-events:none;letter-spacing:2px;text-align:center}
   #msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9;
     font-size:20px;text-align:center;background:rgba(0,0,0,.4);white-space:pre-line}
-  #help{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;line-height:1.6;background:rgba(5,12,10,.88);
+  #pauseOv{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;display:none;text-align:center;font-size:26px;letter-spacing:6px;color:#d8fff0;background:rgba(5,12,10,.82);border:1px solid #2b4a40;border-radius:8px;padding:26px 44px}
+#pauseOv span{display:block;margin-top:10px;font-size:12px;letter-spacing:2px;color:#6f9488}
+#help{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;line-height:1.6;background:rgba(5,12,10,.88);
     border:1px solid #3a6a58;padding:16px 22px;z-index:8;white-space:pre;display:none}
   #brief{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;background:rgba(2,6,8,.62)}
   #brief .panel{width:min(760px,94vw);max-height:92vh;overflow:auto;background:rgba(6,16,14,.94);border:1px solid #3a6a58;padding:18px 24px;line-height:1.5;font-size:13px}
@@ -245,10 +247,13 @@
 <div id="te"><div class="t">PLS <span id="te1">0</span>%</div><div class="bar"><i id="tef"></i><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="l">NRG</div><div class="v"><span id="tev">0</span> AB <span id="teab">0</span>%</div></div>
 <div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
+<div id="pauseOv">PAUSED<br><span>ESC TO RESUME</span></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
+  <div class="tbtn" id="bpause">&#10073;&#10073;</div>
+  <div class="tbtn" id="brad">RAD</div>
   <div class="tbtn" id="bmsl">MSL</div>
   <div class="tbtn" id="bflr">FLARE</div>
   <div class="tbtn" id="bboost">BOOST</div>
@@ -280,6 +285,11 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 //  CONFIG
 // ======================================================================
 const params = new URLSearchParams(location.search);
+let userPause = false;
+if (params.has('seed')) {   // seedable deterministic runs for balance measurement (owner P0 2026-10-22): mulberry32, one global swap, all 65 Math.random call sites become deterministic
+  let __s = (parseInt(params.get('seed')) >>> 0) || 1;
+  Math.random = function () { __s |= 0; __s = __s + 0x6D2B79F5 | 0; let t = Math.imul(__s ^ __s >>> 15, 1 | __s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}   // S1 real pause (UX_REVIEW 5bdc9c1): the sim freezes on Esc or the touch pause button - a phone call must not get the pilot killed
 // global sim speed (human-testing build: 37.5%). Override with ?speed=1
 const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.375));
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || params.has('touch');
@@ -3600,7 +3610,7 @@ const WEAPONS = {
   // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500 },    // Phalanx-style drum: ~110 s of continuous fire, then dry
+  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500, flak: 6 },    // Phalanx-style drum ~110 s; flak 6: proximity-burst vs missiles (owner P0 2026-10-22: direct hits on a 1.6 m box intercepted nothing)
   // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
   flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
   lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
@@ -4145,10 +4155,25 @@ function updateBolts(dt) {
     b.prev.copy(b.pos);
     b.pos.addScaledVector(b.vel, dt);
     b.life -= dt;
-    // missiles can be shot down
+    // missiles can be shot down - swept in the missile's frame (owner P0 2026-10-22: the old test used
+    // the end-of-step position against a 1.6 m box and intercepted 0 of 7 torpedoes), and PD guns are
+    // proximity-burst flak: anything inside `w.flak` of the shell's path detonates it
     for (const m of missiles) {
       if (m.dead || m.team === b.team) continue;
-      if (segSphere(b.prev, b.pos, m.pos, 1.6)) { m.hp -= b.dmg * (b.w.big ? 10 : 1); b.life = 0; if (m.hp <= 0) killMissile(m, m.w.torp ? true : false); break; }
+      const R = b.w.flak || 1.6;
+      _w4.copy(m.pos).addScaledVector(m.vel, dt);   // where the missile will be by the end of this step
+      if (segSeg(b.prev, b.pos, m.pos, _w4) > R) continue;
+      m.hp -= b.dmg * (b.w.big ? 10 : 1);
+      b.life = 0;
+      if (b.w.flak) {   // proximity burst: every missile inside the flak radius takes the hit
+        flashAt(b.pos, 5, 0.2); sparksAt(b.pos, 8, 6);
+        for (const o of missiles) {
+          if (o.dead || o === m || o.team === b.team) continue;
+          if (o.pos.distanceTo(b.pos) <= b.w.flak) { o.hp -= b.dmg; if (o.hp <= 0) killMissile(o, o.w.torp ? true : false); }
+        }
+      }
+      if (m.hp <= 0) killMissile(m, m.w.torp ? true : false);
+      break;
     }
     if (b.life <= 0) continue;
     for (const s of ships) {
@@ -4538,6 +4563,29 @@ function explode(s) {
   sparksAt(center, 120 * Math.min(k, 3), 50); fireAt(center, 50 * Math.min(k, 3), big ? 30 : 22); smokeAt(center, 30 * Math.min(k, 3), 10);
 }
 
+function segSeg(p1, q1, p2, q2) {   // min distance between segments p1q1 and p2q2 (P0: swept bolt vs swept missile)
+  const d1x = q1.x - p1.x, d1y = q1.y - p1.y, d1z = q1.z - p1.z;
+  const d2x = q2.x - p2.x, d2y = q2.y - p2.y, d2z = q2.z - p2.z;
+  const rx = p1.x - p2.x, ry = p1.y - p2.y, rz = p1.z - p2.z;
+  const a = d1x * d1x + d1y * d1y + d1z * d1z, e = d2x * d2x + d2y * d2y + d2z * d2z;
+  const f = d2x * rx + d2y * ry + d2z * rz;
+  let s = 0, t = 0;
+  if (a <= 1e-9 && e <= 1e-9) return Math.hypot(rx, ry, rz);
+  if (a <= 1e-9) t = clamp(f / e, 0, 1);
+  else {
+    const c = d1x * rx + d1y * ry + d1z * rz;
+    if (e <= 1e-9) s = clamp(-c / a, 0, 1);
+    else {
+      const b = d1x * d2x + d1y * d2y + d1z * d2z, den = a * e - b * b;
+      s = den > 1e-9 ? clamp((b * f - c * e) / den, 0, 1) : 0;
+      t = (b * s + f) / e;
+      if (t < 0) { t = 0; s = clamp(-c / a, 0, 1); }
+      else if (t > 1) { t = 1; s = clamp((b - c) / a, 0, 1); }
+    }
+  }
+  const cx = rx + d1x * s - d2x * t, cy = ry + d1y * s - d2y * t, cz = rz + d1z * s - d2z * t;
+  return Math.hypot(cx, cy, cz);
+}
 function segSphere(a, b, c, r) {   // does segment a->b hit sphere (c,r)?
   const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
   const l2 = dx * dx + dy * dy + dz * dz || 1e-9;
@@ -5975,7 +6023,7 @@ Object.assign(WEAPONS, {
   spine: { kind: 'spine', name: 'GX-1 CHARGED LANCE', dmg: 800, dt: 'en', pierce: 0.2, range: 3200, energy: 800, charge: 6, lockT: 1.5, cd: 30, delay: 15, fizzleCd: 8, lockHold: 3, corridorHalf: 0.12, bw: 12, color: 0x35e8ff, sfx: 'lash', warnName: 'LANCE', frogg: true },
   lanceL: { kind: 'beam', name: 'M-8 HEAVY MASER (L)', cd: 0.1, dmg: 4.5, dt: 'en', range: 1800, energy: 6, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.6, ramp: 1.0, peak: 3.0, track: 0.9, turret: true, bw: 4, bigOnly: true },
   acidT: { kind: 'proj', name: 'M-6T MASER TURRET (M)', cd: 1.3, v: 430, dmg: 24, dt: 'en', life: 3.0, spread: 0.002, color: 0xb6ff20, len: 2.6, sz: 0.75, sfx: 'spitbig', glob: true, range: 1250, track: 1.6, turret: true, noPD: true },
-  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000 },   // PD drum (magazine rule 2026-10-22)
+  thorn: { kind: 'proj', name: 'R-5 PD TURRET (S)', cd: 0.07, v: 1150, dmg: 1.2, dt: 'en', life: 0.8, spread: 0.011, color: 0xb0ff50, len: 2.4, sz: 0.14, sfx: 'pd', range: 750, track: 4.0, turret: true, pdOnly: true, ammo: 1000, flak: 5 },   // PD drum + proximity-burst flak, radius 5 vs the PD-30's 6 (humans keep the better PD)
 });
 const BF = {
   spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
@@ -6412,6 +6460,7 @@ addEventListener('keydown', e => {
     case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
+    case 'Escape': pauseToggle(); break;   // S1: real pause (Esc exits pointer lock; Esc again resumes)
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
@@ -6488,6 +6537,8 @@ if (isTouch) {
   hold('bboost', () => keys.add('ShiftLeft'), () => keys.delete('ShiftLeft'));
   hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
+  hold('bpause', () => pauseToggle(), () => {});   // S1 touch parity: the pause button
+  hold('brad', () => { radarIdx = (radarIdx + 1) % RADAR_RANGES.length; }, () => {});   // S2 touch parity: radar range (desktop key K)
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});
   hold('btgt', () => { if (player && player.alive) cycleTarget(); }, () => {});
   hold('bytgt', () => targetCrosshair(), () => {});
@@ -6980,8 +7031,10 @@ function updateRadarSide() {
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
   const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip ${p.ammo.he < 1 ? 'zero' : ''}">HE ${p.ammo.he | 0}</div><br><div class="chip ${p.ammo.fmag < 1 ? 'zero' : ''}">MAG ${p.ammo.fmag | 0}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
-  const h = l + '|' + r;
-  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
+  const L = p.lock, lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCK</span>' : L.state === 'locking' ? `LOCK ${Math.round(L.p * 100)}%` : L.state === 'range' ? 'RANGE' : L.state === 'seek' ? 'SEEK' : 'NO LOCK';
+  const lc = `<div class="chip">${lt}</div>`;   // S2 touch parity: lock status lives next to the radar, where a thumb player looks
+  const h = l + '|' + r + '|' + lc;
+  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r + '<br>' + lc; lastRg = h; }
 }
 let lastWpn = '';
 function updateWeaponPanel() {
@@ -7269,6 +7322,7 @@ function drawRadar(alive) {
 }
 
 function updateHud() {
+  const po = $id('pauseOv'); if (po) po.style.display = userPause && state === 'play' ? 'block' : 'none';   // S1
   const p = player, alive = !!(p && p.alive);
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
@@ -7349,11 +7403,32 @@ else if (params.has('sk')) startSkirmish(skFromParams());
 else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
 else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
 let last = performance.now();
+const FPS_ON = params.has('fps');   // owner P0 2026-10-22: ?fps = overlay + play-log frame times + a detail governor (opt-in; headless runs unaffected)
+let fpsAcc = 0, fpsN = 0, fpsT = 0, fpsEl = null;
+function fpsTick(ms, dt) {
+  if (!FPS_ON) return;
+  fpsAcc += ms; fpsN++; fpsT += dt;
+  if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.6);padding:2px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
+  if (fpsT >= 1) {
+    const avg = fpsAcc / fpsN;
+    fpsEl.textContent = avg.toFixed(0) + ' ms/frame  ' + (1000 / avg).toFixed(0) + ' fps';
+    plogN('frame.ms.avg', avg); plogN('frame.count', fpsN);   // frame times in the play log (key L)
+    if (avg > 40 && state === 'play' && detailIdx > 0) changeDetail(-1);   // governor: long frames -> drop a detail step
+    fpsAcc = fpsN = fpsT = 0;
+  }
+}
+function pauseToggle() {   // S1: pause/resume in flight (Esc or the touch II button); dialogs keep their own gating
+  if (state !== 'play' || rdlgOpen || optsOpen) return;
+  userPause = !userPause;
+  log(userPause ? 'PAUSED' : 'RESUMED', '#ffd24a');
+  sfx('click');
+}
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
+  if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
   musicTick(dt);
-  if (!globalThis.__paused && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));
+  if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
   renderBolts(); renderBeams();
   updateHud();
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
@@ -7366,7 +7441,7 @@ globalThis.__game = {
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
-  dockTry, get dock() { return dock; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
+  dockTry, get dock() { return dock; }, pauseToggle, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },

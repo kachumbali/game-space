@@ -180,6 +180,29 @@ function explode(s) {
   sparksAt(center, 120 * Math.min(k, 3), 50); fireAt(center, 50 * Math.min(k, 3), big ? 30 : 22); smokeAt(center, 30 * Math.min(k, 3), 10);
 }
 
+function segSeg(p1, q1, p2, q2) {   // min distance between segments p1q1 and p2q2 (P0: swept bolt vs swept missile)
+  const d1x = q1.x - p1.x, d1y = q1.y - p1.y, d1z = q1.z - p1.z;
+  const d2x = q2.x - p2.x, d2y = q2.y - p2.y, d2z = q2.z - p2.z;
+  const rx = p1.x - p2.x, ry = p1.y - p2.y, rz = p1.z - p2.z;
+  const a = d1x * d1x + d1y * d1y + d1z * d1z, e = d2x * d2x + d2y * d2y + d2z * d2z;
+  const f = d2x * rx + d2y * ry + d2z * rz;
+  let s = 0, t = 0;
+  if (a <= 1e-9 && e <= 1e-9) return Math.hypot(rx, ry, rz);
+  if (a <= 1e-9) t = clamp(f / e, 0, 1);
+  else {
+    const c = d1x * rx + d1y * ry + d1z * rz;
+    if (e <= 1e-9) s = clamp(-c / a, 0, 1);
+    else {
+      const b = d1x * d2x + d1y * d2y + d1z * d2z, den = a * e - b * b;
+      s = den > 1e-9 ? clamp((b * f - c * e) / den, 0, 1) : 0;
+      t = (b * s + f) / e;
+      if (t < 0) { t = 0; s = clamp(-c / a, 0, 1); }
+      else if (t > 1) { t = 1; s = clamp((b - c) / a, 0, 1); }
+    }
+  }
+  const cx = rx + d1x * s - d2x * t, cy = ry + d1y * s - d2y * t, cz = rz + d1z * s - d2z * t;
+  return Math.hypot(cx, cy, cz);
+}
 function segSphere(a, b, c, r) {   // does segment a->b hit sphere (c,r)?
   const dx = b.x - a.x, dy = b.y - a.y, dz = b.z - a.z;
   const l2 = dx * dx + dy * dy + dz * dz || 1e-9;

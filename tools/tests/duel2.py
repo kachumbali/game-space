@@ -14,7 +14,7 @@ JS=f"""([NA,M,kind,seed,ska,skb])=>{{const g=__game;__paused=true;const T=g.THRE
   let t=0;while(t<{LIMIT}&&A1.some(s=>s.alive)&&B1.some(s=>s.alive)){{g.update(0.05);t+=0.05;}}
   return {{t:Math.round(t),a:A1.filter(s=>s.alive).length,b:B1.filter(s=>s.alive).length}}}}"""
 with Runner() as R:
-    pg=R.page(800,450,'?free'); pg.wait_for_timeout(500)
+    pg=R.page(800,450,'?free&seed=99'); pg.wait_for_timeout(500)   # P0: one seeded page serves all runs - the mulberry32 stream advances per evaluate, so the run sequence is deterministic
     for M in Ms:
         res=[pg.evaluate(JS,[NA,M,KIND,t,3,3]) for t in range(TR)]
         print(f'4 Kestrel(sk3) vs {M} FROGG(sk3):',[(r['a'],r['b'],r['t']) for r in res], 'human wins',sum(1 for r in res if r['b']==0 and r['a']>0),'/',TR)

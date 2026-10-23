@@ -72,6 +72,7 @@ addEventListener('keydown', e => {
     case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
+    case 'Escape': pauseToggle(); break;   // S1: real pause (Esc exits pointer lock; Esc again resumes)
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
@@ -148,6 +149,8 @@ if (isTouch) {
   hold('bboost', () => keys.add('ShiftLeft'), () => keys.delete('ShiftLeft'));
   hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
+  hold('bpause', () => pauseToggle(), () => {});   // S1 touch parity: the pause button
+  hold('brad', () => { radarIdx = (radarIdx + 1) % RADAR_RANGES.length; }, () => {});   // S2 touch parity: radar range (desktop key K)
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});
   hold('btgt', () => { if (player && player.alive) cycleTarget(); }, () => {});
   hold('bytgt', () => targetCrosshair(), () => {});

@@ -48,7 +48,7 @@ const WEAPONS = {
   // `bw` = drawn beam width in metres (61_beams.js; default derived from dmg and range, max 20). Losing the target for > `gap` resets it. (sim seconds; real time = /SIM_SPEED 0.375). Turret lasers on corvettes and up.
   laser: { kind: 'beam', name: 'LS-2 TURRET LASER', cd: 0.25, dmg: 6, dt: 'en', range: 1600, energy: 12, color: 0xff5040, sfx: 'pulse', acq: 0.5, ramp: 0.8, peak: 3.0, track: 2.2, turret: true, bw: 1.0 },
   laserM: { kind: 'beam', name: 'LS-8 TURRET LASER (M)', cd: 0.28, dmg: 13, dt: 'en', range: 1800, energy: 26, color: 0xff6030, sfx: 'pulse', acq: 0.6, ramp: 0.8, peak: 3.0, track: 1.8, turret: true, bw: 1.6 },    // Exeter M turret: the LS-2's heavier sister
-  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500 },    // Phalanx-style drum: ~110 s of continuous fire, then dry
+  pd: { kind: 'proj', name: 'PD-30 POINT DEFENCE', cd: 0.075, v: 1100, dmg: 1.3, dt: 'kin', life: 0.85, spread: 0.012, color: 0xffe0b0, len: 3.2, sz: 0.13, sfx: 'pd', range: 900, track: 4.5, turret: true, ammo: 1500, flak: 6 },    // Phalanx-style drum ~110 s; flak 6: proximity-burst vs missiles (owner P0 2026-10-22: direct hits on a 1.6 m box intercepted nothing)
   // ---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees)
   flaser: { kind: 'beam', name: 'M-1 PULSE MASER', cd: 0.1, dmg: 3.5, dt: 'en', range: 950, energy: 9, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.35, ramp: 0.5, peak: 2.2, bw: 0.3 },     // fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge
   lance: { kind: 'beam', name: 'M-7 MASER LANCE', cd: 0.06, dmg: 3.0, dt: 'en', range: 1500, energy: 3, color: 0x35e8ff, sfx: 'pulse', frogg: true, acq: 0.8, ramp: 1.0, peak: 3.0, bw: 2.0 },       // continuous large maser: needs a big power pool (def.energyMax)
@@ -593,10 +593,25 @@ function updateBolts(dt) {
     b.prev.copy(b.pos);
     b.pos.addScaledVector(b.vel, dt);
     b.life -= dt;
-    // missiles can be shot down
+    // missiles can be shot down - swept in the missile's frame (owner P0 2026-10-22: the old test used
+    // the end-of-step position against a 1.6 m box and intercepted 0 of 7 torpedoes), and PD guns are
+    // proximity-burst flak: anything inside `w.flak` of the shell's path detonates it
     for (const m of missiles) {
       if (m.dead || m.team === b.team) continue;
-      if (segSphere(b.prev, b.pos, m.pos, 1.6)) { m.hp -= b.dmg * (b.w.big ? 10 : 1); b.life = 0; if (m.hp <= 0) killMissile(m, m.w.torp ? true : false); break; }
+      const R = b.w.flak || 1.6;
+      _w4.copy(m.pos).addScaledVector(m.vel, dt);   // where the missile will be by the end of this step
+      if (segSeg(b.prev, b.pos, m.pos, _w4) > R) continue;
+      m.hp -= b.dmg * (b.w.big ? 10 : 1);
+      b.life = 0;
+      if (b.w.flak) {   // proximity burst: every missile inside the flak radius takes the hit
+        flashAt(b.pos, 5, 0.2); sparksAt(b.pos, 8, 6);
+        for (const o of missiles) {
+          if (o.dead || o === m || o.team === b.team) continue;
+          if (o.pos.distanceTo(b.pos) <= b.w.flak) { o.hp -= b.dmg; if (o.hp <= 0) killMissile(o, o.w.torp ? true : false); }
+        }
+      }
+      if (m.hp <= 0) killMissile(m, m.w.torp ? true : false);
+      break;
     }
     if (b.life <= 0) continue;
     for (const s of ships) {

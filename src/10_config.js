@@ -8,6 +8,11 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 //  CONFIG
 // ======================================================================
 const params = new URLSearchParams(location.search);
+let userPause = false;
+if (params.has('seed')) {   // seedable deterministic runs for balance measurement (owner P0 2026-10-22): mulberry32, one global swap, all 65 Math.random call sites become deterministic
+  let __s = (parseInt(params.get('seed')) >>> 0) || 1;
+  Math.random = function () { __s |= 0; __s = __s + 0x6D2B79F5 | 0; let t = Math.imul(__s ^ __s >>> 15, 1 | __s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+}   // S1 real pause (UX_REVIEW 5bdc9c1): the sim freezes on Esc or the touch pause button - a phone call must not get the pilot killed
 // global sim speed (human-testing build: 37.5%). Override with ?speed=1
 const SIM_SPEED = Math.max(0.1, Math.min(2, parseFloat(params.get('speed')) || 0.375));
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in globalThis || params.has('touch');

@@ -187,8 +187,10 @@ function updateRadarSide() {
   const tag = { ir: 'IR', rf: 'RF', torp: 'TORP', tick: 'TICK', tad: 'TAD' };
   const l = `<div class="chip ${p.ammo.cannon < 1 ? 'zero' : ''}">GUN ${p.ammo.cannon | 0}</div><br><div class="chip ${p.ammo.he < 1 ? 'zero' : ''}">HE ${p.ammo.he | 0}</div><br><div class="chip ${p.ammo.fmag < 1 ? 'zero' : ''}">MAG ${p.ammo.fmag | 0}</div>`;
   const r = ids.map(id => `<div class="chip ${id === cur ? 'sel' : ''} ${p.stores[id] < 1 ? 'zero' : ''}">${id === cur ? '▶' : ''}${tag[id] || id.toUpperCase()} ×${p.stores[id] | 0}</div>`).join('<br>') + `<br><div class="chip ${p.stores.flare < 1 ? 'zero' : ''}">CM ×${p.stores.flare | 0}</div>`;
-  const h = l + '|' + r;
-  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r; lastRg = h; }
+  const L = p.lock, lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCK</span>' : L.state === 'locking' ? `LOCK ${Math.round(L.p * 100)}%` : L.state === 'range' ? 'RANGE' : L.state === 'seek' ? 'SEEK' : 'NO LOCK';
+  const lc = `<div class="chip">${lt}</div>`;   // S2 touch parity: lock status lives next to the radar, where a thumb player looks
+  const h = l + '|' + r + '|' + lc;
+  if (h !== lastRg) { rglEl.innerHTML = l; rgrEl.innerHTML = r + '<br>' + lc; lastRg = h; }
 }
 let lastWpn = '';
 function updateWeaponPanel() {
@@ -476,6 +478,7 @@ function drawRadar(alive) {
 }
 
 function updateHud() {
+  const po = $id('pauseOv'); if (po) po.style.display = userPause && state === 'play' ? 'block' : 'none';   // S1
   const p = player, alive = !!(p && p.alive);
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
