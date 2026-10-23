@@ -1,7 +1,9 @@
-# Handoff: session state 2026-10-22 (post-P0 pass, pre-iPad-playtest freeze)
+# Handoff: session state 2026-10-23 (post acceptance re-measure, pre-iPad-playtest freeze)
 
 Written for the next session before context compaction. Authoritative docs are listed first; do not
-re-derive what they already state. Sober facts only.
+re-derive what they already state. Sober facts only. Last session (2026-10-23, main = d8eeb3a): handoff
+item 2 done — the acceptance engagement re-measure under flak (item 2 below holds the numbers and the
+new owner decision it surfaced). The next session starts at item 3.
 
 ## Rules now binding (AGENTS.md, owner directives)
 
@@ -29,6 +31,9 @@ re-derive what they already state. Sober facts only.
   identity (last-seen position), not by polling `m.dead`.
 - Repo history was rewritten once by the owner (fd3f015 -> 6c68171) and the P0 commit was amended
   (729ef2d -> fde8b8c). On a rejected push: `git fetch`, inspect divergence, rebase; do not force-push.
+- Environment verified 2026-10-23: the throwaway venv, Chromium 1243 and `bullfrog_eng.py` all work;
+  acceptance runs took 2-7 s wall each (rendering disabled). No server/venv setup needed beyond the
+  commands above.
 
 ## System state (all committed; main includes the 2026-10-23 acceptance re-measure)
 
