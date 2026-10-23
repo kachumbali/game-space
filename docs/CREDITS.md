@@ -4,6 +4,15 @@ Working title: **Claude Space Commander** (owner decision 2026-10-22; the reposi
 The in-game credits screen (briefing screen -> CREDITS, or options panel [O] -> CREDITS) shows the same list from `src/15_credits.js`. Keep both in sync.
 Every licence below was re-read from its source page on **2026-10-22**.
 
+## Who made what (AI tools and people)
+| Contributor | Role |
+|---|---|
+| Jonas Koll | Design and direction, all owner decisions |
+| Claude (Anthropic) | Engine, ships, missions, game systems, procedural sound, most documentation (git trailer `Co-Authored-By: Claude ...`) |
+| Mistral Vibe (Mistral AI) | Later development passes from 2026-10-22: weapons and capital ships, magazines, balance and UX review, documentation (trailer `Co-Authored-By: Mistral Vibe ...`) |
+| Google Gemini | Lore proposals (history, factions, FROGG species; raw text in `docs/prototypes/lore-gemini/`) and the two combat music loops (composed with Gemini code tools) |
+The code, text and music above were produced with AI tools under the owner's direction. The copyright status of purely machine-generated work varies by jurisdiction (for example US Copyright Office guidance, 2023-2025), which affects how it can be protected, not whether it can be used. Check each tool's terms before any commercial release.
+
 ## Shipped with the game
 | Item | Author | Licence | Source | Where used |
 |---|---|---|---|---|
@@ -25,8 +34,8 @@ Wing Commander, TIE Fighter and FreeSpace are trademarks of their owners; this p
 ## Images are not in the repository
 Owner decision 2026-10-22: no image files are committed (`.gitignore` excludes png/jpg/gif/webp; 122 files were untracked). The ship renders, blueprints, marked sheets and the FROGG reference image exist only on the working copy, so image links in the other docs are broken on GitHub. They remain in git history before this commit.
 
-## Was in the repository, now removed from tracking
-- `docs/img/frogg_reference_art.jpg` is an image you supplied as the reference for the FROGG look. I do not know who made it or under what licence. The game does not load it, but it is in the repo, and the FROGG redesign was adapted from it. If the repository becomes public, either confirm you have the right to publish it or remove it (and I will tell you which docs reference it).
+## Not shipped and not in the repository
+- The FROGG look was adapted from AI-generated portraits the owner supplied (not distributed, not in the repository; the one image that had been committed was purged from git history on 2026-10-22). Provenance and the generator's terms are the owner's to confirm before any use in the game.
 - Cut scene art, once generated from `docs/CUTSCENE_ART_PROMPTS.md`: record the tool, model and date for each asset in `docs/ART_CREDITS.md` and check the generator's terms.
 - Audio downloaded but unused (celestialghost8 "Laser weapon burst fire", theMinesAreShakin "Rocket Engine", both CC0 per `docs/AUDIO_CREDITS.md`) is not in the repo.
 - Development-only tools (Playwright, Chromium, Python) are not distributed with the game.
