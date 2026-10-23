@@ -118,6 +118,64 @@ SHIPS.kestrel = {
   ],
 };
 
+SHIPS.merlin = {
+  ...DB.ships.merlin,
+  prims: [
+    // Narrow chined fuselage, with a drooping nose ahead of the single canopy.
+    tap([0, -0.08, -2.35], 4.3, [0.16, 0.12], [0.58, 0.3], K.hull, { sh: 'd' }),
+    tap([0, 0, -0.25], 3.1, [0.58, 0.32], [0.92, 0.36], K.hull2, { sh: 'h' }),
+    tap([0, 0.02, 1.7], 3.2, [0.92, 0.36], [0.56, 0.3], K.hull3, { sh: 'h' }),
+    tap([0, -0.38, 0.7], 3.5, [0.48, 0.12], [0.72, 0.13], K.dark, { sh: 'h' }),
+    tap([0, -0.12, -4.28], 0.32, [0.05, 0.05], [0.16, 0.1], K.dark, { sh: 'd' }),
+    // One-seat bubble canopy centered on the documented eye position.
+    ell([0, 0.43, -1.8], [0.34, 0.3, 0.82], K.canopy, { glow: false }),
+    tap([0, 0.53, -1.8], 1.45, [0.37, 0.035], [0.37, 0.035], K.white, { sh: 'e' }),
+    // Swept delta wings keep the tips within the 7.8 m span.
+    tap([2.15, -0.03, 1.65], 0.22, [1.72, 0.12], [0.16, 0.055], K.hull2, { ax: 'x', sweep: 0.34, sh: 'r' }),
+    tap([2.55, 0.01, 0.9], 0.12, [1.35, 0.08], [0.16, 0.045], K.white, { ax: 'x', sweep: 0.34 }),
+    tap([3.35, -0.02, 2.75], 0.16, [0.52, 0.07], [0.12, 0.04], K.amber, { ax: 'x', sweep: 0.2 }),
+    // Canted tail fins with the specified orange identification bands.
+    tap([0.92, 0.75, 3.25], 1.4, [0.54, 0.08], [0.28, 0.05], K.hull, { ax: 'y', sweep: 0.38, rot: [0, 0, -0.28] }),
+    tap([0.98, 1.34, 3.53], 0.12, [0.36, 0.07], [0.28, 0.05], H.orange, { ax: 'y', sweep: 0.38, rot: [0, 0, -0.28] }),
+    // Twin close-in nacelles end at the database engine/nozzle positions.
+    ...[-1.5, 1.5].flatMap(x => [
+      tap([x, 0, 3.78], 1.8, [0.42, 0.34], [0.38, 0.3], K.hull3, { sh: 'h' }),
+      tap([x, 0.15, 4.4], 0.2, [0.4, 0.32], [0.4, 0.32], K.dark, { sh: 'e' }),
+      ...ringSegs(x, 0.15, 4.52, 4.9, 0.5, 10, 0.045, H.nozzle, { lod: 2 }),
+      ell([x, 0.15, 4.88], [0.28, 0.28, 0.08], H.glow, { glow: true }),
+    ]),
+    // MK-20 breech fairings and the paired 1.5 m barrels, ending at each mount.
+    ...[-1, 1].flatMap(side => {
+      const x = side * 0.55;
+      return [
+        ell([x, -0.3, -3.18], [0.22, 0.18, 0.48], K.hull3, { noMirror: true }),
+        seg([x, -0.3, -3.25], [x, -0.3, -4.75], 0.075, 0.06, K.dark, { noMirror: true }),
+        tap([x, -0.3, -4.75], 0.1, [0.09, 0.09], [0.09, 0.09], 0x20252b, { sh: 'e', noMirror: true }),
+      ];
+    }),
+    // Twin underwing IR rails and missiles; the nose of each missile is the mirrored launch point.
+    ...[-1, 1].flatMap(side => {
+      const x = side * 1.7;
+      return [
+        seg([x, -0.48, 0.3], [x, -0.48, 1.45], 0.055, 0.045, K.dark, { noMirror: true }),
+        seg([x - side * 0.12, -0.48, 0.65], [x - side * 0.12, -0.48, 1.4], 0.025, 0.025, K.white, { noMirror: true }),
+        seg([x, -0.32, 0.3], [x, -0.32, 1.2], 0.12, 0.07, K.hull3, { noMirror: true }),
+        tap([x, -0.32, 0.36], 0.12, [0.1, 0.08], [0.1, 0.08], H.amber, { sh: 'e', glow: true, noMirror: true }),
+      ];
+    }),
+    // Subsystem housings: radar nose, shield emitter and reactor cooling grille.
+    ell([0, -0.1, -3.8], [0.24, 0.16, 0.28], K.dark, { glow: false }),
+    ell([0, 0.2, 0.9], [0.34, 0.12, 0.32], K.white, { glow: false }),
+    seg([0, 0.28, 0.78], [0, 0.72, 0.9], 0.025, 0.018, K.dark),
+    ...rungs(0, 0.38, 1.7, 2.25, 4, 0.24, 0.08, 0.025, K.dark, { lod: 2 }),
+    // Tail flare slots and simple fleet markings.
+    ...[-0.5, 0.5].map(x => tap([x, 0.5, 4.22], 0.28, [0.1, 0.08], [0.1, 0.08], K.dark, { sh: 'e', noMirror: true, lod: 2 })),
+    { t: 'paint', box: [-2.8, 0.08, 0.2, 2.8, 0.28, 1.0], col: K.white, side: 'top', mix: 0.78 },
+    { t: 'paint', box: [-0.38, 0.1, -4.12, 0.38, 0.38, -3.55], col: K.white, side: 'top', mix: 0.9 },
+    { t: 'text', c: [1.22, 0.16, 1.05], face: '+x', text: 'CDF', px: 0.085, col: K.dark },
+  ],
+};
+
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
 // ---- Halberd surface-detail prims (authored at 64 m, scaled with the ship) ---------------------------------------------
 const hTur = (x, y, z, dy = 1) => [                              // armoured turret seat + ammo drum for each PD turret

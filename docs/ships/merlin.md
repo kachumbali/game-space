@@ -1,7 +1,7 @@
 # Merlin: human light fighter (specification)
 
-Status: proposal, not in the build. Specification only: no geometry, no code, `data/db.json` untouched. The database fragment is
-`docs/ships/merlin.db.json` (drop-in value for `ships.merlin`; no `prims`). Source for the class: `docs/SHIP_CLASSES.md` section 1
+Status: implemented on branch `ship-merlin`. Geometry is in `src/30_ships_human.js`; `data/db.json` now contains the entry below,
+without `prims`. The database fragment remains the source for the specified Merlin numbers. Source for the class: `docs/SHIP_CLASSES.md` section 1
 (light fighter) and the section 3 fit sketch (2x MK-20, 2x SW-9, no mag, no HE; faster and flimsier than the Kestrel).
 
 Everything below that is a number is either read from `data/db.json` / the source (marked as such) or a design choice with its reason.
@@ -240,4 +240,29 @@ Voxel budget: below the Kestrel (smaller bounding volume); keep the detail tiers
 - **Dead energy channel** (g) and **inert `sig`** (e) are existing system properties; they make two of the Merlin's numbers decorative today.
 - **Speed vs Drone.** 175 m/s is inside the 15 percent band of the Drone's 190; if drones are used as wingmen of Merlins, a Merlin wingman may outrun the pack on cruise. AI cruise is separated by `aiSpeed` (drone 150 vs Merlin default 140).
 - **Magazine capacity is per-mount weapon data**: "no big magazine" is achieved by omission (no MD-9, no HE), not by a Merlin-specific ammunition number; if the cannon pool changes, the Merlin changes with it.
-- **Evidence quality.** All balance statements in (h) are hand arithmetic on db numbers plus the existing 20-run Kestrel cell; the Merlin has never been in the sim. The AI skill, `aggr` and the interception gap can move the results by more than the design margins above.
+- **Evidence quality.** The balance statements in (h) are hand arithmetic on db numbers plus the existing 20-run Kestrel cell. The functional combat test is not balance evidence; the AI skill, `aggr` and interception gap can move outcomes by more than the design margins above.
+
+## Owner decisions 2026-10-23
+- Q2 (dead energy channel): accepted. The ETS split stays; the Merlin has no energy weapons, so points can be shifted between shields and engines (the weapons share is effectively free; power step 2 must treat an unused weapons bus that way). Watch whether this makes the Merlin too tough in the T2 duel tests.
+- Q3 (interceptor AI): approved for ALL light fighters and interceptors (Merlin and the FROGG Darter): a minimal AI preference for bombers and inbound missiles. AI-only, no player-facing change; the Darter's existing balance cells must be re-measured afterwards.
+- Q4 (armour 0.30, reactor 15 hp): keep as written; measure reactor-kill frequency in T2.
+- Q5 (afterburner): global rules for now; review after a few rounds of measurement.
+- Q1 (gun fit): A, 2x MK-20 cannon (owner 2026-10-23); the GA-9 and MK-30 HE variants stay as later options (an HE variant is the natural interceptor sub-type).
+
+## Implementation and verification 2026-10-23
+
+Added only the specified ship data, human-fighter geometry, and `tools/tests/merlin_t.py`. The Merlin is absent from menus, skirmish
+presets, missions, and wings; the existing generic skirmish URL parser accepts `?sk=merlin:2`. The Shipyard mid-detail render contains
+2,664 voxels (below the 6,000 limit). Its PNG sheet was saved outside the repository under `$GS_SHOTS/merlin/`.
+
+Checks run:
+- `python3 build.py` — passed.
+- `python3 tools/validate_db.py` — 14 ships, 29 weapons, 3 armour types; OK.
+- `python3 tools/power_table.py` — Merlin row: `merlin fighter 36 12 60 1 15 0 - -`.
+- `python3 tools/tests/merlin_t.py` — passed; both ships fired over 60 simulated seconds, model and URL-spawn checks passed, no browser errors.
+- `python3 tools/tests/muzzle_t.py merlin` — passed; nearest solid voxel was 0.01-0.02 m from the cannon mounts and launch point; no browser errors.
+- `cd tools/tests && python3 suite1.py` — passed; every URL variant reported `ERRS []`.
+- `python3 tools/tests/yard_t.py` — failed twice only at the existing wheel-zoom assertion; all other Shipyard checks passed. Shipyard code was not changed.
+
+Not verified: real-device appearance/performance, owner hand-play, and the proposed seeded balance cells. The single combat test is a
+functional check, not balance evidence.
