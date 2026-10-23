@@ -176,6 +176,76 @@ SHIPS.merlin = {
   ],
 };
 
+SHIPS.bittern = {
+  ...DB.ships.bittern,
+  prims: [
+    // Blunt stepped nose and deep, straight fuselage
+    tap([0, -0.05, -6.3], 8.8, [0.45, 0.55], [1.7, 1.7], K.hull, { sh: 'h' }),
+    tap([0, 0.05, -2.0], 8.0, [1.7, 1.7], [1.7, 1.8], K.hull3, { sh: 'h' }),
+    tap([0, -0.75, -0.3], 7.5, [1.5, 1.0], [1.65, 1.25], K.hull2, { sh: 'h' }),
+    tap([0, -1.45, 0.0], 7.0, [1.1, 0.35], [1.25, 0.4], K.dark, { sh: 'h' }),
+    tap([0, 0.12, -9.6], 1.7, [0.5, 0.55], [1.0, 0.9], K.dark, { sh: 'd' }),
+    tap([0, 0.1, -8.9], 0.35, [1.28, 1.1], [1.28, 1.1], K.white, { sh: 'h' }),
+    // Tandem canopy for pilot and weapons officer
+    ell([0, 1.62, -6.0], [0.9, 0.72, 2.35], K.canopy),
+    ...[-7.5, -6.0, -4.5].map(z => tap([0, 2.22, z], 0.045, [0.9, 0.05], [0.85, 0.05], K.dark, { sh: 'e', lod: 2 })),
+    seg([0, 2.34, -8.2], [0, 2.34, -3.8], 0.035, 0.035, K.dark, { lod: 2 }),
+    // Broad constant-chord wings with white leading edges and amber tips
+    tap([5.35, 0.02, 2.5], 7.3, [0.28, 6.0], [0.24, 2.5], K.hull2, { ax: 'x', sweep: 0.08, seam: [2.2, 1.6] }),
+    tap([5.15, 0.2, -3.05], 7.1, [0.09, 0.24], [0.08, 0.2], K.white, { ax: 'x', sweep: 0.08 }),
+    tap([5.35, 0.18, 8.15], 7.3, [0.25, 0.22], [0.22, 0.2], K.amber, { ax: 'x', sweep: 0.08 }),
+    // Twin box nacelles, intake louvers and four individually placed nozzles
+    ...[-5.2, -3.6, 3.6, 5.2].map(x => tap([x, 0.3, 7.0], 7.7, [0.92, 1.0], [0.84, 0.95], K.hull3, { sh: 'h', noMirror: true })),
+    ...[-5.2, -3.6, 3.6, 5.2].map(x => tap([x, 0.3, 3.25], 0.12, [0.82, 0.86], [0.82, 0.86], K.dark, { sh: 'h', dots: { col: K.amber, p: 0.14 }, noMirror: true })),
+    ...[-5.2, -3.6, 3.6, 5.2].flatMap(x => [
+      tap([x, 0.3, 10.28], 0.38, [0.78, 0.72], [0.78, 0.72], H.nozzle, { sh: 'e', noMirror: true }),
+      ...ringSegs(x, 0.3, 10.48, 10.92, 0.62, 10, 0.045, 0x5a6068, { lod: 2, noMirror: true }),
+      ell([x, 0.3, 10.96], [0.54, 0.5, 0.04], H.glow, { glow: true, noMirror: true }),
+    ]),
+    // Twin outward-canted tail fins with amber tips
+    tap([2.8, 2.45, 8.0], 1.75, [0.16, 1.65], [0.1, 0.9], K.hull, { ax: 'y', sweep: 0.18, rot: [0, 0, -0.26] }),
+    tap([2.8, 3.32, 8.0], 0.12, [0.12, 0.62], [0.08, 0.35], K.amber, { ax: 'y', rot: [0, 0, -0.26] }),
+    // Nose HE barrels with visible shrouds and muzzle brakes
+    ...[-1.6, 1.6].flatMap(x => [
+      seg([x, -0.8, -8.95], [x, -0.8, -10.58], 0.16, 0.12, K.dark, { noMirror: true }),
+      ...[-9.35, -9.85, -10.35].map(z => tap([x, -0.8, z], 0.06, [0.2, 0.2], [0.2, 0.2], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
+      tap([x, -0.8, -10.68], 0.13, [0.19, 0.19], [0.19, 0.19], H.nozzle, { sh: 'e', noMirror: true }),
+    ]),
+    // Four pale HM-1 bodies on paired belly cradles; all four mouths align at launch z
+    ...[-3.4, -2.6, 2.6, 3.4].flatMap(x => [
+      seg([x, -2.45, -5.18], [x, -2.45, 0.48], 0.3, 0.3, 0xc8c8c0, { noMirror: true }),
+      seg([x, -2.45, -5.2], [x, -2.45, -4.45], 0.04, 0.28, 0xd04a3a, { noMirror: true }),
+      tap([x, -2.45, 0.2], 0.32, [0.3, 0.3], [0.3, 0.3], H.dark, { sh: 'e', noMirror: true }),
+      ...[-4.3, -1.4].map(z => tap([x, -2.45, z], 0.11, [0.34, 0.34], [0.34, 0.34], K.amber, { sh: 'e', noMirror: true })),
+      seg([x, -1.85, -5.2], [x, -2.12, -5.2], 0.14, 0.12, K.dark, { noMirror: true }),
+      seg([x, -1.85, 1.95], [x, -2.12, 1.95], 0.14, 0.12, K.dark, { noMirror: true }),
+      seg([x, -1.9, -5.2], [x, -1.9, 1.95], 0.12, 0.1, K.hull3, { noMirror: true }),
+    ]),
+    // Dorsal and ventral PD turret seats (the barrels are built by makeTurret)
+    tap([0, 1.63, 5.6], 0.52, [1.25, 0.55], [1.25, 0.55], K.dark, { sh: 'e' }),
+    tap([0, 1.86, 5.6], 0.28, [1.05, 0.32], [1.05, 0.32], K.hull3, { sh: 'e' }),
+    ...ringSegs(0, 1.85, 5.1, 6.1, 0.72, 8, 0.06, K.dark, { lod: 2 }),
+    tap([0, -1.63, 5.0], 0.52, [1.25, 0.55], [1.25, 0.55], K.dark, { sh: 'e' }),
+    tap([0, -1.86, 5.0], 0.28, [1.05, 0.32], [1.05, 0.32], K.hull3, { sh: 'e' }),
+    ...ringSegs(0, -1.85, 4.5, 5.5, 0.72, 8, 0.06, K.dark, { lod: 2 }),
+    // Avionics/shield block and reactor housing mark the other major components
+    tap([0, 1.02, 0.4], 2.0, [1.1, 0.32], [1.35, 0.38], K.dark, { sh: 'h' }),
+    tap([0, 1.26, 0.4], 1.1, [0.72, 0.16], [0.92, 0.18], K.hull3, { sh: 'h', dots: { col: K.amber, p: 0.22 } }),
+    tap([0, 0.15, 4.0], 2.2, [1.15, 0.9], [1.3, 0.9], K.panel, { sh: 'h' }),
+    ...rungs(0, 0.72, 3.15, 4.85, 5, 1.1, 0.12, 0.08, K.amber, { lod: 2 }),
+    // Radar legs, antennae, and red/green wingtip navigation lights
+    ell([0, 0.1, -10.05], [0.18, 0.16, 0.08], 0x30e0ff, { glow: true }),
+    seg([-0.55, 0.4, -8.0], [-0.8, 0.85, -8.65], 0.035, 0.02, K.dark, { lod: 2 }),
+    seg([0.55, 0.4, -8.0], [0.8, 0.85, -8.65], 0.035, 0.02, K.dark, { lod: 2 }),
+    ell([-8.85, 0.08, 6.5], [0.12, 0.1, 0.12], 0xff3030, { glow: true, noMirror: true }),
+    ell([8.85, 0.08, 6.5], [0.12, 0.1, 0.12], 0x30ff60, { glow: true, noMirror: true }),
+    // Aft registration and warning marks
+    { t: 'paint', box: [-7.7, -0.15, 7.4, 7.7, 0.25, 7.8], col: K.white, side: 'top', mix: 0.85 },
+    { t: 'paint', box: [-3.8, -2.15, -4.8, 3.8, -1.9, 1.7], col: K.amber, side: 'bottom', mix: 0.8 },
+    { t: 'text', c: [1.6, 0.1, 2.0], face: '+x', text: 'CDF', px: 0.3, col: K.white },
+  ],
+};
+
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
 // ---- Halberd surface-detail prims (authored at 64 m, scaled with the ship) ---------------------------------------------
 const hTur = (x, y, z, dy = 1) => [                              // armoured turret seat + ammo drum for each PD turret

@@ -1,12 +1,12 @@
 # Bittern (CDF torpedo bomber): ship specification
 
-Status: specification for owner review, 2026-10-23. Nothing is implemented. Companion file: `docs/ships/bittern.db.json`
-(drop-in value for `data/db.json` `ships.bittern`, no `prims`).
+Status: owner decisions recorded 2026-10-23; geometry, database entry and AI behavior implemented. Companion file:
+`docs/ships/bittern.db.json` is the drop-in `data/db.json` value (no `prims`).
 
 What was verified: the JSON parses and passes `tools/validate_db.py` and `tools/power_table.py` when inserted into a scratch copy of
 `data/db.json` (the repo file was not touched). Damage numbers below are hand arithmetic over the pipeline in `src/65_combat.js`
-(`applyHit`) and `src/60_weapons.js` (`blastAt`, `nukeAt`), reproduced with a short script. **No game run was made.** Every balance
-statement in section (h) is a prior, not a measurement.
+(`applyHit`) and `src/60_weapons.js` (`blastAt`, `nukeAt`), reproduced with a short script. The browser smoke test covers spawn,
+weapons, URL access and Shipyard loading; balance claims in section (h) remain priors, not measurements.
 
 Sources read: `docs/SHIP_CLASSES.md`, `WEAPONS.md`, `NUKES.md`, `CAPITAL_COMBAT.md`, `DATABASE.md`, `POWER.md`, `ARMOR.md`, `SHIPS.md`,
 `LORE.md`, `LORE_FACTIONS.md`, `FLEET_LOGIC.md`, `AGENTS.md`, `data/db.json` (Kestrel, Toad, Halberd, Gulper, Bullfrog),
@@ -28,18 +28,16 @@ hull that can cost a FROGG corvette its shield and most of its structure in one 
    Gulper rod reach (3,080 m): the rods are the Bittern's main killer in this approach.
 4. Break away, then fall back behind the Kestrels. Several Bitterns release together: a salvo of 8 to 16 is the only answer to flak.
 
-**How the AI flies it today (`bomberAI`, `src/70_ai.js:316`, `ai.role: 'bomber'`).** Read from code:
-- `pickTarget` multiplies distance by 0.25 for capitals and 2.5 for others. A fighter closer than 1/10 of the capital's distance
-  wins the pick at the 3 to 6 s retarget.
-- `bomberAI` returns to `fighterAI` and **permanently sets `ai.role = 'fighter'`, `aggr = 0.5`** when the target is not a capital or when
-  `stores.tad + stores.torp` is 0. It is a one-way mutation, so one retarget onto a fighter ends the bomber behaviour for the sortie.
-- In `run` it steers at the target's centre at `aiSpeed`, no weaving. It launches when the lock is `locked`, `mslT <= 0` and
-  distance < 0.8 x range. `mslT = 1.6` s. Flares are dropped when a missile is inbound at 70 to 520 m.
-- The `egress` branch (6 s, 500 m behind) triggers only at `dist < radius*0.5 + 220` with torpedoes left. **After the last torpedo
-  the next tick sees empty stores and flips to `fighterAI`: no break-away happens.** A dry Bittern with two forward HE guns then
-  hunts the nearest enemy at aggr 0.5. This applies to the Toad too.
-- Only `tad` and `torp` are fired. `nuke` is never fired by the AI (the `wantIds` of the bomber path do not contain it), which is
-  currently the only thing standing between an AI Bittern and an NK-1 release.
+**How the AI flies it (`bomberAI`, `src/70_ai.js`, `ai.role: 'bomber'`).**
+- It switches from a non-capital target to the nearest available capital. If no capital is available, it uses fighter tactics without
+  changing `ai.role` or aggression.
+- It launches HM-1 when locked, `mslT <= 0` and within 0.8 x range; the interval is 1.6 s. Flares are dropped when a missile is inbound
+  at 70 to 520 m.
+- Empty stores or the close pass trigger a 6 s break-away. After the last store, it then forms 90 m behind the nearest friendly
+  non-bomber. The same AI behavior applies to the Toad.
+- An explicitly scripted NK-1 loadout gets a release branch only when locked, beyond 1,800 m from the target, and no friendly ship is
+  within 1,500 m of the target. It immediately breaks away. This keep-clear is not a fix for the NK-1 crew-dose bug; scripted nuclear
+  use remains hazardous.
 - Kestrels never fire `torp` (`missileLogic` is called with `ir, rf, tick`), so the Bittern is the first human user of `bomberAI`.
 
 **What it is bad at.** Everything else: no fixed guns that point aft (mounts fire -Z only), turn 2.28 rad/s against the
@@ -51,19 +49,17 @@ already in the code; the escort must absorb it.
 
 ## (b) Lore line and crew
 
-**Lore line.** *BITTERN, CDF torpedo bomber, 22 m, crew 3. Named for the marsh heron that stands still and strikes once. It
+**Lore line.** *BITTERN, CDF torpedo bomber, 22 m, crew 2. Named for the marsh heron that stands still and strikes once. It
 carries four Hammer torpedoes (or three and a tactical warhead) to a firing point 1.6 km from a capital hull, and it is flown by people
 who are trusted to turn round afterwards. Without Kestrels in front of it, it is cargo.*
 
-**Crew 3** (heavy-fighter rule in `docs/LORE.md`: 2 crew, specialist seat is AI for now; the bomber adds a third):
+**Crew 2** (owner decision 2026-10-23; the gunner is automated):
 | Seat | Job | In the engine now |
 |---|---|---|
 | Pilot | flies; fires nose HE | player or AI pilot |
-| Weapons officer | locks, fuzes and releases ordnance; for NK-1 holds the release/arm step (`NUKES.md` section 4.3) and sets proximity burst | AI seat, as for the Kestrel's specialist |
-| Systems gunner | PD turrets, flares, ECM | turrets are automatic (`updateTurrets`) |
+| Weapons officer | locks and releases ordnance | specialist seat is automated, as for the Kestrel |
 
-Reason for three: the owner sketch says 2 to 3; the second turret and the release/fuze workload justify the third. The EP-2 tandem
-survival pod (`LORE_FACTIONS.md` section 5) seats two: see open question 5.
+The two-seat EP-2 tandem survival pod (`LORE_FACTIONS.md` section 5) fits the crew. PD turrets and countermeasures remain automatic.
 
 ---
 
@@ -102,7 +98,7 @@ Effective turn = `turn` x 2.85 (all fighters, `32_scale.js`), x 1.5 more for FRO
 | Armour | composite 0.44 | composite 0.45 | **ablative 0.50** | see (e). |
 | `sig` | 1 | 1.4 | **1.6** | Toad scaled by length (1.4 x 22/19); lock time = lockTime / (sig x 0.7). |
 | Stores | 4 SW-9, 2 LN-3, 1 HM-1 | 3 ST-2 | **4 HM-1, 2 SW-9, 32 flares** | (f) |
-| Crew | 1 | 1 | **3** | (b) |
+| Crew | 1 | 1 | **2** | (b) |
 | Points to kill, fore, damage units (no pierce, no cap) | kin 146 / en 121 | kin 137 / en 121 | **kin 315 / en 632** | shield/mult + structure/(1 - stop); ablative stop 0.25 kin, 0.75 en. |
 
 Afterburner: not in the database. `32_scale.js` gives every `cls: 'fighter'` the human pool (20 s, x1.8 speed): a Bittern would burn at
@@ -299,21 +295,14 @@ the JSON above sits on a feature listed here.
 
 ---
 
-## (j) Open questions for the owner and risks
+## (j) Owner decisions and risks
 
-**Open questions (5).**
-1. **Tail defence weapon.** Fixed `he` cannot point aft. Accept PD-30 turrets as the aft armament (in the JSON), or commission `heT`, a
-   turret HE weapon (proposed above)? The sketch asks for HE, the engine allows PD.
-2. **Nuclear loadout gating.** The current NK-1 kills any ship within about 1 km by crew dose, the Bullfrog included, and also kills
-   friendlies and the launcher, including when flak detonates it. May the Bittern ship NK-1 only as a scripted option until CPF /
-   `crewFrac` and the release interlock of `NUKES.md` section 4 exist?
-3. **AI scope.** `bomberAI` needs changes for this ship to behave as section (a) says: no permanent role flip, a real break-away
-   and return-to-escort after the last torpedo, an NK-1 branch with keep-clear, and some escort cohesion. Under the AGENTS.md rule a
-   new system needs an AI default; are these `70_ai.js` changes in scope for the Bittern commit, or a separate piece of work?
-4. **Afterburner.** The Bittern inherits the human fighter afterburner (162 m/s) because `cls` is `fighter`. Allow a database
-   override (`abMax`, `abSpd`) for bombers, or accept a bomber that bursts faster than a Kestrel cruises?
-5. **Crew three vs the survival pod.** The EP-2 pod seats two. Third seat ejects separately, a larger pod (EP-3), or crew two and the
-   gunner is automation?
+**Owner decisions (2026-10-23).**
+1. **Tail defence:** keep the two specified PD-30 turrets; do not add `heT`.
+2. **NK-1:** omit it from default stores. Scripted loadouts may add it; the current crew-dose bug still makes nuclear use hazardous.
+3. **AI:** include the bomberAI role-preservation, final-run break-away/return-to-escort, NK-1 keep-clear and escort-cohesion changes.
+4. **Afterburner:** accept the inherited fighter afterburner (162 m/s); do not add a bomber override.
+5. **Crew:** use two crew; gunner functions are automated and the EP-2 pod remains sufficient.
 
 **Risks.**
 - **Torpedo survival is the ship's entire value and is unmeasured.** HM-1 `hp 7` against flak; the Toad's 21 of 22 intercepted is the
@@ -321,7 +310,8 @@ the JSON above sits on a feature listed here.
 - **Fuze geometry against the Bullfrog.** Fuze at 0.55 x 305 + 12 = 180 m from the centre can fire outside the 30 m blast reach on a
   beam-on approach (`blastAt` uses `hullGap` for hulls over 150 m radius; no hull within 30 m means zero damage). Nose-on hits are
   fine. Unchecked in the build.
-- **Bomber role flip and no break-away** (section a): a Bittern that has dropped its load becomes a slow fighter.
+- **Bomber AI has only smoke coverage.** The role-preservation and return-to-escort path pass the browser regression, but the
+  engagement and keep-clear behavior have not been validated in seeded balance runs.
 - **Fighter-sized hull with PD turrets.** No fighter has turrets in the build; `updateTurrets`, the HUD component list, voxel seats
   and the 2.64 m clamp are untested at this scale. Friendly HE splash (8 m, 50%) near escorts is a separate hazard of the two
   nose guns.

@@ -14,7 +14,7 @@ repair) 2 corvettes and 12 fighters / large fighter drones. Everything else abov
 | Class | Length | Status |
 |---|---|---|
 | Fighter / interceptor | 10-20 m | built (Kestrel, Darter, Leaper) |
-| Gunship / bomber / heavy fighter | 16-20 m | built (Spitter, Toad, Reaver) |
+| Gunship / bomber / heavy fighter | 16-22 m | built (Spitter, Toad, Reaver, Bittern) |
 | Corvette | 100-150 m | built (Halberd 128 m, Gulper 146 m) |
 | Frigate (jump-capable, in scope) | 300-500 m | human Exeter class built (450 m); FROGG frigate planned |
 | FROGG Bullfrog (explicit exception) | 600 m | built (spine lance, 25 turrets, 36-fighter hangar; docs/BULLFROG.md) |
@@ -30,6 +30,7 @@ Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). 
 | Ship | Side | Class | Role | Length | Max speed |
 |---|---|---|---|---|---|
 | Kestrel | human | fighter | multirole fighter | 12.4 m | 150 m/s |
+| Bittern | human | fighter | torpedo bomber (URL-only: `?sk=bittern:2`) | 22 m | 90 m/s |
 | Halberd | human | corvette | escort / mothership | 128 m | 28 m/s |
 | Darter | FROGG | fighter | interceptor | 9.5 m | 165 m/s |
 | Leaper | FROGG | fighter | line fighter | 13.6 m | 120 m/s |

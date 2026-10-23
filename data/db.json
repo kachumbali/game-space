@@ -317,6 +317,62 @@
         "skill": 3
       }
     },
+    "bittern": {
+      "id": "bittern",
+      "name": "BITTERN",
+      "cls": "fighter",
+      "fac": "human",
+      "role": "TORPEDO BOMBER",
+      "length": 22,
+      "half": [9.0, 3.4, 11.0],
+      "mirror": true,
+      "radius": 11.5,
+      "seam": [2.2, 1.6],
+      "eye": [0, 2.2, -7.2],
+      "engines": [
+        {"pos": [3.6, 0.3, 10.9], "comp": "engR", "r": 0.9},
+        {"pos": [-3.6, 0.3, 10.9], "comp": "engL", "r": 0.9},
+        {"pos": [5.2, 0.3, 10.9], "comp": "engR", "r": 0.9},
+        {"pos": [-5.2, 0.3, 10.9], "comp": "engL", "r": 0.9}
+      ],
+      "mounts": [
+        {"w": "he", "pos": [1.6, -0.8, -10.9], "comp": "gunR", "grp": 1},
+        {"w": "he", "pos": [-1.6, -0.8, -10.9], "comp": "gunL", "grp": 1},
+        {"w": "torp", "pos": [3.0, -2.45, -5.2], "comp": "rackR", "grp": 3, "store": "torp"},
+        {"w": "torp", "pos": [-3.0, -2.45, -5.2], "comp": "rackL", "grp": 3, "store": "torp"}
+      ],
+      "turrets": [
+        {"w": "pd", "pos": [0, 1.85, 5.6], "comp": "tur1", "side": 1},
+        {"w": "pd", "pos": [0, -1.85, 5.0], "comp": "tur2", "side": -1}
+      ],
+      "stores": {"ir": 2, "torp": 4, "flare": 32},
+      "launch": [3.0, -2.45, -5.2],
+      "comps": [
+        {"id": "engL", "name": "ENGINE L", "role": "engine", "pos": [-4.4, 0.3, 8.0], "r": 2.0, "hp": 44},
+        {"id": "engR", "name": "ENGINE R", "role": "engine", "pos": [4.4, 0.3, 8.0], "r": 2.0, "hp": 44},
+        {"id": "gunL", "name": "HE GUN L", "role": "gun", "pos": [-1.6, -0.8, -9.0], "r": 0.7, "hp": 18},
+        {"id": "gunR", "name": "HE GUN R", "role": "gun", "pos": [1.6, -0.8, -9.0], "r": 0.7, "hp": 18},
+        {"id": "rackL", "name": "TORP RACK L", "role": "gun", "pos": [-3.0, -2.3, -1.6], "r": 2.4, "hp": 40},
+        {"id": "rackR", "name": "TORP RACK R", "role": "gun", "pos": [3.0, -2.3, -1.6], "r": 2.4, "hp": 40},
+        {"id": "tur1", "name": "PD DORSAL", "role": "turret", "pos": [0, 2.0, 5.6], "r": 1.3, "hp": 18},
+        {"id": "tur2", "name": "PD VENTRAL", "role": "turret", "pos": [0, -2.0, 5.0], "r": 1.3, "hp": 18},
+        {"id": "shield", "name": "SHIELD GEN", "role": "shield", "pos": [0, 1.1, 0.4], "r": 1.4, "hp": 45},
+        {"id": "radar", "name": "RADAR", "role": "radar", "pos": [0, 0.1, -9.6], "r": 0.9, "hp": 28},
+        {"id": "power", "name": "REACTOR", "role": "power", "pos": [0, 0.2, 4.0], "r": 1.8, "hp": 80}
+      ],
+      "shield": {"fore": 90, "aft": 80},
+      "armor": {"type": "ablative", "rating": 0.5},
+      "structure": 140,
+      "maxSpeed": 90,
+      "aiSpeed": 66,
+      "accel": 32,
+      "turn": 0.8,
+      "shieldRegen": 2,
+      "power": {"plantMW": 105, "capacitorMJ": 150},
+      "sig": 1.6,
+      "flameColor": "#66c8ff",
+      "ai": {"role": "bomber", "aggr": 0.3}
+    },
     "halberd": {
       "id": "halberd",
       "name": "HALBERD",
