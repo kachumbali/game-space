@@ -117,7 +117,9 @@ swarm; PD is qualitatively superior (PD-30 vs R-5) but drum-limited. Magazines b
 Tender is the strategic hull because rearm - not repair - is the only undo.
 
 **FROGG doctrine**: numbers and pressure. Masers never run dry, so FROGG pressure never stops; kinetics hit
-harder per round but carry small magazines; torpedoes are the capital answer (ST-2 at 8 hp survives most PD);
+harder per round but carry small magazines; torpedoes were the capital answer until the flak pass - ST-2 at
+8 hp is now intercepted in flight (21 of 22 resolved, 2026-10-23), so saturation salvos are the remaining
+path;
 the swarm (Darter through Bullfrog hangar) forces the HE-splash trade. Wetware seekers track harder and decoy
 worse than human equivalents.
 
@@ -139,10 +141,13 @@ discipline (was: dry ships fought on as if armed); no AI ammo awareness at all (
 
 Open, in priority order:
 
-1. **Torpedo interception is the hole in the defence.** ST-2 at 8 hp: 7 launched, 7 hit, 0 intercepted in the
-   acceptance engagement. A Bullfrog's 16 torpedoes exceed the Exeter's entire HP pool with perfect PD, and
-   the magazine rule means saturation can also exhaust the PD drums first. Needs either tougher PD, an
-   interceptor missile, or dedicated escort doctrine.
+1. **Torpedo interception inverted: PD won, and the Bullfrog's own doctrine now never appears.** The
+   swept-proximity flak pass closed the measured hole (acceptance re-measure 2026-10-23: 21 of 22
+   resolved Toad Tadpoles intercepted, 1 hit; was 7 launched, 7 hit, 0 intercepted, and 0 of 16 / 4 of
+   18 in the six-run set). The engagement flipped to 6/6 human with the Exeter at 87-90% structure, and
+   the Bullfrog died before its own 16 ST-2 tubes fired in any run (bfLaunched 0 of 6). New decision
+   for the owner: an early Bullfrog ST-2 salvo, a tougher ST-2 (8 hp is now trivially flakked), or a PD
+   retune - the acceptance fight is no longer competitive (docs/BALANCE_TESTS.md 2026-10-23).
 2. **The AI does not know the Tender matters.** `pickTarget` scores the resupply hull like any other; a human
    will kill it first, the AI will ignore it. Combined with the FROGG having no tender, long engagements are
    attrition-asymmetric.

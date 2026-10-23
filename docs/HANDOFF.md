@@ -30,7 +30,7 @@ re-derive what they already state. Sober facts only.
 - Repo history was rewritten once by the owner (fd3f015 -> 6c68171) and the P0 commit was amended
   (729ef2d -> fde8b8c). On a rejected push: `git fetch`, inspect divergence, rebase; do not force-push.
 
-## System state (all committed, main = fde8b8c)
+## System state (all committed; main includes the 2026-10-23 acceptance re-measure)
 
 - Weapons: `docs/WEAPONS.md` (three gun classes, red-team open list section 7). Magazines everywhere;
   gun discipline 60/30/5 bands; Kestrel = HEAVY FIGHTER (cannon + MD-9 mag 120 slugs + HE).
@@ -50,8 +50,12 @@ re-derive what they already state. Sober facts only.
 
 1. **Blocked on iPad playtest** (freeze): S4 difficulty selector on briefing + mission-wave retune
    (UX_REVIEW S4 remains); S3 feel pack, S5 onboarding beats, S6 consistency sweep (UX_REVIEW workplan).
-2. **Bullfrog acceptance engagement re-measure under flak** (`bullfrog_eng.py`) — the PD fix must move
-   the 0/7-interception record; run and record in BALANCE_TESTS.
+2. **DONE 2026-10-23** — Bullfrog acceptance engagement re-measured under flak (`bullfrog_eng.py`, six
+   runs, seeds 1-3 at DT 0.05/0.0125): 21 of 24 Tadpoles intercepted, 1 hit; human 6/6 (was 2/6);
+   Exeter 87-90% at end; the Bullfrog's own 16 ST-2 tubes never fired (it dies at ~200 s, before its
+   salvo). Recorded in BALANCE_TESTS (2026-10-23 section) + raw JSON (`flak_*` keys). **New owner
+   decision**: the engagement is now one-sided; levers this points at: early Bullfrog ST-2 salvo,
+   PD-30/R-5 burst strength, `spineDelay` (hangarCap 12->8 is now the wrong direction). Not tuned.
 3. **Mission bot**: extend m2full to report player/ship losses end-to-end for missions 1-2, seeded
    (`?seed=`), 20 runs; owner directive "measure balance where it is played".
 4. **More 20-run duel cells** (8 and 12 FROGGs) to bracket the even point with CIs.
@@ -66,7 +70,8 @@ re-derive what they already state. Sober facts only.
 - Even point (arcade, 4 Kestrel sk3 vs FROGG sk3, seeded 20 runs at N=10): human wins 45%, Wilson CI
   [26%, 66%] — even point ~10 confirmed. Post-dry fights are decided by missiles/masers.
 - The XL's 100 slugs never bind in a mission (one slug per 30 s); it is a campaign number.
-- Tadpole/ST-2 vs PD before flak: 0/7 (recorded); after: 4/4 at 270-402 m.
+- Tadpole/ST-2 vs PD before flak: 0/7 (recorded); after: 4/4 at 270-402 m (p0_t); in the full
+  acceptance engagement (2026-10-23): 21 of 24 intercepted, 6/6 human wins, Exeter 87-90% at end.
 - Nuke fluence at 0.1 kT kills fighters within ~42 m, 2 kT within ~190 m (measured, discipline_t).
 - The Kestrel's ETS WEAPONS channel feeds the MD-9 (30 en/slug); powerAI pushes WEAPONS when energy
   is low while fighting.

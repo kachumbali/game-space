@@ -198,4 +198,46 @@ quote >= 20 runs or do not claim an even point. First 20-run cell (arcade, 4 Kes
 sk3, seeded): **human wins 9/20 = 45%, Wilson 95% CI [25%, 66%]** - the even point at N=10 is confirmed
 at 20 runs (the old 3-run cells gave 0/3 to 3/3 at this cell; the noise estimate was right). PD-vs-torpedo
 is fixed by swept proximity flak (p0_t: 4 of 4 intercepted at 270-402 m, was 0 of 7); the acceptance
-engagement should be re-measured. S1 real pause and S2 touch parity are in (UX_REVIEW workplan status).
+engagement was re-measured 2026-10-23, see the next section (6/6 human wins, 21 of 24 Tadpoles
+intercepted). S1 real pause and S2 touch parity are in (UX_REVIEW workplan status).
+
+## 2026-10-23: Bullfrog acceptance engagement re-measure under swept-proximity flak (post-P0, fde8b8c)
+
+Same harness and protocol as the 2026-10-22 six-run set: `tools/tests/bullfrog_eng.py SEED 900 10000 DT`,
+seeds 1-3 at DT 0.05 and 1-3 at DT 0.0125, Exeter + 12 Kestrels (sk3) + 2 Halberds vs Bullfrog (sk3) +
+hangar, 10 km head-on, both AI, rendering disabled, cap 900 sim-s. Raw per-run JSON appended to
+`docs/data/bullfrog_engagement_runs.json` under `flak_dt*_seedN`. No console errors in any run.
+
+| run | DT | first contact caps / fighters (s) | winner | Exeter end | Bullfrog died (s) | spine shots (all: hit Exeter, no kill) | Kestrels lost | FROGG lost / total | Tadpoles launched / intercepted / hit | hangar launches |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | 0.05 | 157 / 48 | human | 87% alive | 197 | 1 (171.0) | 3 / 12 | 26 / 31 | 8 / 5 / 1 (all Toad) | 31 |
+| 2 | 0.05 | 162 / 48 | human | 90% alive | 218 | 1 (177.6, 1 fizzle) | 0 / 12 | 36 / 36 | 12 / 12 / 0 (Toad) | 36 |
+| 3 | 0.05 | 157 / 48 | human | 90% alive | 202 | 1 (171.1, 1 fizzle) | 3 / 12 | 16 / 35 | 0 launched | 35 |
+| 4 | 0.0125 | 158 / 48 | human | 90% alive | 203 | 1 (173.9, 1 fizzle) | 6 / 12 | 20 / 33 | 0 launched | 33 |
+| 5 | 0.0125 | 156 / 48 | human | 90% alive | 200 | 1 (171.4) | 4 / 12 | 23 / 33 | 1 / 1 / 0 (Toad) | 33 |
+| 6 | 0.0125 | 157 / 49 | human | 90% alive | 200 | 1 (172.0) | 5 / 12 | 21 / 32 | 3 / 3 / 0 (Toad) | 32 |
+
+Totals vs the 2026-10-22 set: **human 6/6 (was 2/6)**; Exeter alive at 87-90% in every run (was dead in
+4/6); Halberds 0 of 12 lost (was 5 of 12). Tadpoles: 24 launched, 21 intercepted, 1 hit, 2 unresolved at
+run end (was: 0 of 16 intercepted at DT 0.05, 4 of 18 at DT 0.0125, 28 hits). The Bullfrog spooled a
+jump in 5 of 6 runs (at 22-25% structure) and was destroyed mid-spool every time; **its own 16 ST-2
+tubes never fired in any run** (bfLaunched 0; the pre-flak set had 1 Bullfrog-launched Tadpole in four
+of six runs). Fights are shorter: 197-218 s (was 238-301 s).
+
+Reading (not tuning data):
+- **The flak fix moved the interception record exactly as p0_t predicted**: 21 of 22 resolved Toad
+  Tadpoles killed in flight, 1 hit. With the Toad warheads gone, the Exeter's end state moved from
+  0-23% structure (dead in 4/6) to 87-90%, and the surviving Kestrels (0-6 lost of 12, was 3-12)
+  ground down the FROGG fighters harder (16-36 lost per run).
+- **This is not a flak-only comparison.** The 2026-10-22 series between the two measurement sets also
+  changed combat (HE/rod realism pass, powerAI, magazines + gun discipline, gun-class energy draws,
+  capitalAI firing both mount groups). The interception count is the flak fix; the win flip is the sum
+  of the series.
+- **The acceptance engagement is no longer a fight.** 6/6 human with the Exeter barely scratched, and
+  the Bullfrog dies before its own torpedo doctrine appears. If the owner wants the engagement
+  competitive again, the levers this data points at are an early Bullfrog ST-2 salvo (its tubes never
+  fired), PD-30/R-5 burst strength, and `spineDelay`; `hangarCap 12 -> 8` (proposed 2026-10-22) is now
+  the wrong direction. Not tuned - feature freeze until the iPad playtest.
+- Caveats as before: six runs, no variance estimate; q=low (bolt-vs-fighter hits do not land at this
+  quality - fighter kills are missile/maser/turret-driven, same as the recorded set); rendering
+  disabled, so the software renderer is irrelevant.
