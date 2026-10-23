@@ -5,6 +5,35 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Claude Space Commander</title>
 <style>
+  body.yard> :not(#c):not(#yard){display:none!important}
+  #yard{position:fixed;inset:0;z-index:30;pointer-events:none;color:#b8ead8;font:12px/1.45 ui-monospace,Menlo,Consolas,monospace}
+  #yard *{box-sizing:border-box}
+  #yard .ypanel{position:absolute;top:12px;left:12px;width:min(355px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;
+    padding:12px;background:rgba(4,12,16,.91);border:1px solid #31505c;box-shadow:0 8px 30px #0009;pointer-events:auto}
+  #yard h1{margin:0 0 8px;color:#d8fff0;font-size:16px;letter-spacing:2px}
+  #yard label{display:block;margin:8px 0 3px;color:#83b8a5}
+  #yard select,#yard textarea,#yard button{width:100%;font:inherit;color:#c8fff0;background:#0b201d;border:1px solid #315c4d;padding:6px}
+  #yard textarea{height:280px;resize:vertical;white-space:pre;font-size:11px;tab-size:2;user-select:text}
+  #yard #yard-prims{height:220px}
+  #yard #yard-db-entry{height:230px}
+  #yard button{width:auto;cursor:pointer}
+  #yard button:hover{border-color:#ffd080}
+  #yard .yardrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  #yard .yardexports{margin-top:8px}
+  #yard .yardexports button{flex:1;min-width:96px;font-size:10px;padding:6px 4px}
+  #yard-export-status{min-height:15px}
+  #yard .yardrow label{display:inline-flex;align-items:center;gap:4px;margin:6px 0}
+  #yard .yardrow input{accent-color:#83eac1}
+  #yard .yardnote{color:#80a99a;font-size:10px}
+  #yard .yardstat{color:#ffd080;margin-top:8px}
+  #yard .yarderror{min-height:16px;color:#ff8d7b;white-space:pre-wrap}
+  body.yard #c{pointer-events:auto}
+  @media(max-width:700px){
+    #yard .yardrow select{width:auto;min-width:52px;flex:1}
+  }
+  @media(max-width:600px) and (orientation:portrait){
+    #yard .ypanel{top:auto;bottom:12px;left:12px;width:calc(100vw - 24px);max-height:42vh}
+  }
   html,body{margin:0;height:100%;background:#000;overflow:hidden;
     font-family:ui-monospace,Menlo,Consolas,monospace;color:#8fffd0;user-select:none;
     touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none}

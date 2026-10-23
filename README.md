@@ -13,6 +13,8 @@ appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS
 URL flags: `?go` skip menu and briefing · `?m=N` skip the menu, open mission N's briefing · `?free` free flight · `?sk=darter:3,leaper:2` skirmish (with `&sk_skill=1..5 &sk_wing=0..3 &sk_wskill &sk_fm=newton &sk_msl=0 &sk_respawn=1 &sk_range=800 &sk_look=reed &sk_ally=halberd|exeter`; `__game.startSkirmish(cfg)` takes the same as an object) · `?newcrew` reset crew record · `?touch` force touch UI ·
 `?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md. Drone flags: `?free&drones=N` (player carries N drones and launches up to the control limit; a fighter controls 1, `&dlimit=N` raises it, `&nolaunch` keeps them aboard).
 
+**Shipyard:** open `index.html?yard` (or `?yard=kestrel`) for the voxel workbench. It edits primitive geometry and a ship database entry without changing normal play; usage is in [docs/SHIP_MANUAL.md](docs/SHIP_MANUAL.md#10-shipyard-workbench).
+
 ## Mission 1: Operation Lilypad
 You fly Eagle Lead (Kestrel) from the corvette HSS Halberd with wingmen HAWK and SPARROW.
 1. Kill the FROGG strike wave (Darters, Leapers). 2. Stop the Toad torpedo bombers before they launch at the Halberd.
