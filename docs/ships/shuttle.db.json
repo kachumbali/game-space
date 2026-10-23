@@ -1,0 +1,225 @@
+{
+  "id": "tern",
+  "name": "TERN",
+  "cls": "fighter",
+  "shuttle": true,
+  "fac": "human",
+  "role": "RESUPPLY SHUTTLE",
+  "length": 34,
+  "half": [
+    9.0,
+    5.0,
+    17.5
+  ],
+  "mirror": true,
+  "radius": 18,
+  "seam": [
+    2.0,
+    1.5
+  ],
+  "eye": [
+    0,
+    1.9,
+    -13.2
+  ],
+  "resMul": 0.8,
+  "repair": false,
+  "xfer": {
+    "range": 45,
+    "hoses": 2,
+    "ammoRate": 45,
+    "ordRate": 0.5,
+    "droneS": 8,
+    "slugS": 4
+  },
+  "cargo": {
+    "ammo": 3600,
+    "ir": 8,
+    "rf": 4,
+    "torp": 2,
+    "flare": 48,
+    "drone": 6,
+    "slug": 4
+  },
+  "engines": [
+    {
+      "pos": [
+        3.4,
+        0.2,
+        16.5
+      ],
+      "comp": "engR",
+      "r": 1.0
+    },
+    {
+      "pos": [
+        -3.4,
+        0.2,
+        16.5
+      ],
+      "comp": "engL",
+      "r": 1.0
+    },
+    {
+      "pos": [
+        0,
+        0,
+        16.8
+      ],
+      "comp": "engC",
+      "r": 1.3
+    }
+  ],
+  "mounts": [],
+  "turrets": [],
+  "stores": {
+    "flare": 12
+  },
+  "comps": [
+    {
+      "id": "engC",
+      "name": "ENGINE C",
+      "role": "engine",
+      "pos": [
+        0,
+        0,
+        14.2
+      ],
+      "r": 1.6,
+      "hp": 40
+    },
+    {
+      "id": "engL",
+      "name": "ENGINE L",
+      "role": "engine",
+      "pos": [
+        -3.4,
+        0.2,
+        14.2
+      ],
+      "r": 1.3,
+      "hp": 28
+    },
+    {
+      "id": "engR",
+      "name": "ENGINE R",
+      "role": "engine",
+      "pos": [
+        3.4,
+        0.2,
+        14.2
+      ],
+      "r": 1.3,
+      "hp": 28
+    },
+    {
+      "id": "power",
+      "name": "REACTOR",
+      "role": "power",
+      "pos": [
+        0,
+        0,
+        8.5
+      ],
+      "r": 1.8,
+      "hp": 60
+    },
+    {
+      "id": "bridge",
+      "name": "BRIDGE",
+      "role": "radar",
+      "pos": [
+        0,
+        1.9,
+        -12.5
+      ],
+      "r": 1.5,
+      "hp": 30
+    },
+    {
+      "id": "shield",
+      "name": "SHIELD GEN",
+      "role": "shield",
+      "pos": [
+        0,
+        -2.2,
+        2.0
+      ],
+      "r": 1.4,
+      "hp": 45
+    },
+    {
+      "id": "podL",
+      "name": "CARGO POD L",
+      "role": "bay",
+      "pos": [
+        -6.2,
+        0.3,
+        -1
+      ],
+      "r": 3.4,
+      "hp": 70
+    },
+    {
+      "id": "podR",
+      "name": "CARGO POD R",
+      "role": "bay",
+      "pos": [
+        6.2,
+        0.3,
+        -1
+      ],
+      "r": 3.4,
+      "hp": 70
+    },
+    {
+      "id": "boomL",
+      "name": "XFER BOOM L",
+      "role": "bay",
+      "pos": [
+        -8.3,
+        0,
+        -6.5
+      ],
+      "r": 1.1,
+      "hp": 35
+    },
+    {
+      "id": "boomR",
+      "name": "XFER BOOM R",
+      "role": "bay",
+      "pos": [
+        8.3,
+        0,
+        -6.5
+      ],
+      "r": 1.1,
+      "hp": 35
+    }
+  ],
+  "shield": {
+    "fore": 80,
+    "aft": 60
+  },
+  "armor": {
+    "type": "composite",
+    "rating": 0.3
+  },
+  "structure": 160,
+  "maxSpeed": 80,
+  "accel": 14,
+  "turn": 0.42,
+  "shieldRegen": 1.5,
+  "power": {
+    "plantMW": 60,
+    "capacitorMJ": 120
+  },
+  "sig": 2.0,
+  "aiSpeed": 65,
+  "flameColor": "#66c8ff",
+  "ai": {
+    "role": "shuttle",
+    "aggr": 0,
+    "skill": 3
+  }
+}
