@@ -19,7 +19,7 @@ function audioInit() {
     if (typeof samplesLoad === 'function') samplesLoad();
   } catch (e) { AUDIO.muted = true; }
 }
-['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; }));
+['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; if (typeof musicUnlock === 'function') musicUnlock(); }));
 function tone(f0, f1, dur, type = 'sine', vol = 0.2, delay = 0) {
   const C = AUDIO.ctx; if (!C) return;
   const o = C.createOscillator(), g = C.createGain(), t = C.currentTime + delay;

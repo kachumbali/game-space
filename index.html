@@ -370,7 +370,7 @@ function audioInit() {
     if (typeof samplesLoad === 'function') samplesLoad();
   } catch (e) { AUDIO.muted = true; }
 }
-['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; }));
+['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; if (typeof musicUnlock === 'function') musicUnlock(); }));
 function tone(f0, f1, dur, type = 'sine', vol = 0.2, delay = 0) {
   const C = AUDIO.ctx; if (!C) return;
   const o = C.createOscillator(), g = C.createGain(), t = C.currentTime + delay;
@@ -426,10 +426,33 @@ function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT
 // Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
 // under gameplay, bombast = full anthem for heavy fights. urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
 const MUSIC_FILES = { menu: 'audio/airy.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
-const MUS = { el: {}, want: null, started: false, combatT: 0, mood: null };
+const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, status: 'waiting for the first tap or key' };
+// Routing: over http(s) every track goes <audio> -> GainNode -> speakers. iOS ignores element.volume and only lets a media element play()
+// if that element itself was started inside a user gesture, so (a) volume and crossfades use the gain node, and (b) the first tap/key
+// starts every track silently and pauses the ones not wanted (musicUnlock). Over file:// a media-element source is silenced by the browser
+// (cross-origin taint), so there the old element.volume path stays.
+const musRouted = () => !!AUDIO.ctx && /^https?:$/.test(location.protocol);
 function musEl(k) {
-  if (!MUS.el[k]) { const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'win'; a.volume = 0; MUS.el[k] = a; }
+  if (!MUS.el[k]) {
+    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'win'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    if (musRouted()) {
+      try {
+        const g = AUDIO.ctx.createGain(); g.gain.value = 0;
+        AUDIO.ctx.createMediaElementSource(a).connect(g); g.connect(AUDIO.ctx.destination);
+        a.volume = 1; MUS.gain[k] = g;
+      } catch (e) { /* keep element.volume */ }
+    }
+  }
   return MUS.el[k];
+}
+function musSetVol(k, v) { MUS.vol[k] = v; if (MUS.gain[k]) MUS.gain[k].gain.value = v; else MUS.el[k].volume = clamp(v, 0, 1); }
+function musicUnlock() {          // call from inside a user gesture
+  if (!musRouted()) return;
+  for (const k in MUSIC_FILES) {
+    const a = musEl(k);
+    if (!a.paused) continue;
+    a.play().then(() => { if (MUS.want !== k) a.pause(); }).catch(() => { /* not fatal: musicTick retries the wanted track */ });
+  }
 }
 function sfxGain() { return AUDIO.muted ? 0 : 0.55 * AOPT.sfxVol; }
 function musicWant(k) { if (MUS.want !== k) { MUS.want = k; if (k === 'win') { const a = musEl(k); try { a.currentTime = 0; } catch (e) { /* not loaded yet */ } } } }
@@ -450,14 +473,17 @@ function musicTick(dtReal) {
   const on = AOPT.music && !AUDIO.muted;
   musicWant(on ? musicMood(dtReal) : null);
   MUS.mood = MUS.want;
+  if (!on) MUS.status = AUDIO.muted ? 'sound is muted (?mute or no audio support)' : 'off';
   for (const k in MUSIC_FILES) {
     if (k !== MUS.want && !MUS.el[k]) continue;
     const a = musEl(k), tv = k === MUS.want ? AOPT.musicVol : 0;
-    if (tv > 0 && a.paused) a.play().catch(() => { /* autoplay blocked or file missing: stay silent */ });
+    if (tv > 0 && a.paused) a.play().then(() => { if (k === MUS.want) MUS.status = 'playing: ' + k; }).catch(() => { MUS.status = 'blocked by the browser: tap the screen once more'; });
     const step = dtReal / 1.6;                         // ~1.6 s crossfade
-    a.volume = clamp(a.volume + clamp(tv - a.volume, -step, step), 0, 1);
-    if (tv === 0 && a.volume < 0.01 && !a.paused) a.pause();
+    const cur = MUS.vol[k] ?? 0;
+    musSetVol(k, clamp(cur + clamp(tv - cur, -step, step), 0, 1));
+    if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
+  if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;
 }
 // ---- sound samples layered under the procedural effects ----
 const SMP = { buf: {}, ready: false };
@@ -502,6 +528,7 @@ function toggleOpts(force) {
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
       + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
       + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
+      + `<div class="onote" id="o_mstat">Music: ${MUS.status}</div>`
       + `<div class="onote">Music files are in the audio/ folder next to index.html. On iPad the music volume slider may have no effect (iOS); use on/off.</div>`
       + `<button id="o_close">CLOSE <small>[O / ESC]</small></button><button id="o_cred">CREDITS</button></div>`;
     el.style.display = 'flex';
