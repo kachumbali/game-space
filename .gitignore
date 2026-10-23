@@ -4,6 +4,7 @@
 *.jpeg
 *.gif
 *.webp
+/tools/tests/touch_qa_shots/
 __pycache__/
 *.pyc
 .DS_Store

@@ -21,6 +21,7 @@ macOS test invocation (as used 2026-10-22): `cd tools/tests && GS_CHROMIUM="$HOM
 | `dock_t.py` | Tactical docking: approach + D -> auto-dock at the boom, glue while rearming at double the hovering trickle, auto-undock when full, manual undock, nothing repaired |
 | `p0_t.py` | P0 pass: real pause freezes the sim in real time (Esc / touch II), PD proximity flak intercepts torpedoes (4 of 4 vs the 0-of-7 baseline), same seed -> identical Math.random streams |
 | `suite1.py` | 10 URL variants load, no console errors |
+| `touch_qa_t.py` | Touch-emulated control/state checks at 844x390 and 390x844; records layout and screenshots in the ignored `touch_qa_shots/` folder. Expected QA failures are reported as a non-zero exit. |
 | `menu_t.py` | main menu at 1280x720 / 844x390 / 390x844 (screenshots to `$GS_SHOTS`), keyboard nav, skirmish setup + launch + win/loss debrief, `?sk=` URL form, endless respawn |
 | `music_t.py` | music: autoplay start on first input, mood per game state (patrol/combat/heavy in flight, menu on briefings, story in transits, win), correct track files, `?mute`, all audio files served |
 | `m2full.py` | mission 2 flow through all stages |
