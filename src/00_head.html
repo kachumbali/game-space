@@ -28,6 +28,12 @@
   #yard .yardstat{color:#ffd080;margin-top:8px}
   #yard .yarderror{min-height:16px;color:#ff8d7b;white-space:pre-wrap}
   body.yard #c{pointer-events:auto}
+  @media(max-width:700px){
+    #yard .yardrow select{width:auto;min-width:52px;flex:1}
+  }
+  @media(max-width:600px) and (orientation:portrait){
+    #yard .ypanel{top:auto;bottom:12px;left:12px;width:calc(100vw - 24px);max-height:42vh}
+  }
   html,body{margin:0;height:100%;background:#000;overflow:hidden;
     font-family:ui-monospace,Menlo,Consolas,monospace;color:#8fffd0;user-select:none;
     touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none}

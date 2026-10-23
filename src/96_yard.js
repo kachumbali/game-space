@@ -55,7 +55,8 @@ if (params.has('yard')) {
   const YARD_color = new THREE.Color();
   const YARD_material = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22 });
   const YARD_glowMaterial = new THREE.MeshBasicMaterial();
-  let YARD_def = null, YARD_dbEntry = null, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null, YARD_rebuildTimer = 0, YARD_dbTimer = 0, YARD_detailIdx = 2, YARD_lodDrop = 0;
+  let YARD_def = null, YARD_dbEntry = null, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null, YARD_pinchDistance = 0, YARD_rebuildTimer = 0, YARD_dbTimer = 0, YARD_detailIdx = 2, YARD_lodDrop = 0;
+  const YARD_pointers = new Map();
   const YARD_grid = new THREE.Group();
   const YARD_reference = new THREE.Group();
   const YARD_markerRoot = new THREE.Group();
@@ -82,9 +83,26 @@ if (params.has('yard')) {
     grid.material.opacity = 0.45;
     YARD_grid.add(grid);
     const ruler = [];
-    for (let x = -span / 2; x <= span / 2; x += 1) {
-      const major = x % 5 === 0;
+    const tick = Math.max(1, Math.ceil(span / 200));
+    for (let x = -span / 2; x <= span / 2; x += tick) {
+      const major = x % (tick * 5) === 0;
       ruler.push(new THREE.Vector3(x, 0.015, -span / 2), new THREE.Vector3(x, 0.015, -span / 2 + (major ? 0.75 : 0.35)));
+      if (major) {
+        const label = document.createElement('canvas');
+        label.width = 96;
+        label.height = 48;
+        const context = label.getContext('2d');
+        context.fillStyle = '#a3d9c5';
+        context.font = '24px ui-monospace, monospace';
+        context.textAlign = 'center';
+        context.fillText(`${x} m`, 48, 34);
+        const texture = new THREE.CanvasTexture(label);
+        const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true, depthTest: false }));
+        const labelSize = Math.max(1, span * 0.004);
+        sprite.position.set(x, 0.04, -span / 2 + labelSize * 1.4);
+        sprite.scale.set(labelSize * 2, labelSize, 1);
+        YARD_grid.add(sprite);
+      }
     }
     YARD_addLine(YARD_grid, ruler, 0x74bfa4, 0.8);
     scene.add(YARD_grid);
@@ -132,7 +150,10 @@ if (params.has('yard')) {
     for (const child of [...group.children]) {
       group.remove(child);
       child.geometry?.dispose();
-      for (const material of Array.isArray(child.material) ? child.material : [child.material]) material?.dispose();
+      for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
+        material?.map?.dispose();
+        material?.dispose();
+      }
     }
   }
 
@@ -188,11 +209,7 @@ if (params.has('yard')) {
         lo = prim.box.slice(0, 3); hi = prim.box.slice(3, 6);
       } else if (prim.t === 'text' && Array.isArray(prim.c)) {
         lo = prim.c; hi = prim.c;
-      } else if (prim.t === 'seg') {
-        const radius = Math.max(prim.ra || 0, prim.rb || 0);
-        lo = prim.a.map(value => value - radius); hi = prim.b.map(value => value + radius);
-        for (let axis = 0; axis < 3; axis++) if (lo[axis] > hi[axis]) [lo[axis], hi[axis]] = [hi[axis], lo[axis]];
-      } else if (prim.t === 'ell' || prim.t === 'tap') {
+      } else if (prim.t === 'seg' || prim.t === 'ell' || prim.t === 'tap') {
         const bounds = prepPrim(prim);
         lo = [bounds.cx - bounds.bx, bounds.cy - bounds.by, bounds.cz - bounds.bz];
         hi = [bounds.cx + bounds.bx, bounds.cy + bounds.by, bounds.cz + bounds.bz];
@@ -479,17 +496,39 @@ if (params.has('yard')) {
   YARD_group.add(YARD_model);
 
   YARD_canvas.addEventListener('pointerdown', event => {
-    if (event.target.closest('#yard')) return;
-    YARD_drag = { x: event.clientX, y: event.clientY, orbit: YARD_orbit, elevation: YARD_elevation };
-    YARD_canvas.setPointerCapture(event.pointerId);
+    YARD_pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (event.isTrusted) YARD_canvas.setPointerCapture(event.pointerId);
+    if (YARD_pointers.size >= 2) {
+      const [a, b] = [...YARD_pointers.values()];
+      YARD_pinchDistance = Math.hypot(a.x - b.x, a.y - b.y);
+      YARD_drag = null;
+    } else YARD_drag = { x: event.clientX, y: event.clientY, orbit: YARD_orbit, elevation: YARD_elevation };
   });
   YARD_canvas.addEventListener('pointermove', event => {
-    if (!YARD_drag) return;
-    YARD_orbit = YARD_drag.orbit - (event.clientX - YARD_drag.x) * 0.008;
-    YARD_elevation = Math.max(-1.35, Math.min(1.35, YARD_drag.elevation + (event.clientY - YARD_drag.y) * 0.006));
-    YARD_camera();
+    if (!YARD_pointers.has(event.pointerId)) return;
+    YARD_pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (YARD_pointers.size >= 2) {
+      const [a, b] = [...YARD_pointers.values()];
+      const nextDistance = Math.hypot(a.x - b.x, a.y - b.y);
+      if (YARD_pinchDistance > 0 && nextDistance > 0) YARD_distance = Math.max(2, Math.min(10000, YARD_distance * YARD_pinchDistance / nextDistance));
+      YARD_pinchDistance = nextDistance;
+      YARD_camera();
+    } else if (YARD_drag) {
+      YARD_orbit = YARD_drag.orbit - (event.clientX - YARD_drag.x) * 0.008;
+      YARD_elevation = Math.max(-1.35, Math.min(1.35, YARD_drag.elevation + (event.clientY - YARD_drag.y) * 0.006));
+      YARD_camera();
+    }
   });
-  YARD_canvas.addEventListener('pointerup', () => { YARD_drag = null; });
+  const YARD_endPointer = event => {
+    YARD_pointers.delete(event.pointerId);
+    YARD_pinchDistance = 0;
+    if (YARD_pointers.size === 1) {
+      const [pointer] = YARD_pointers.values();
+      YARD_drag = { ...pointer, orbit: YARD_orbit, elevation: YARD_elevation };
+    } else YARD_drag = null;
+  };
+  YARD_canvas.addEventListener('pointerup', YARD_endPointer);
+  YARD_canvas.addEventListener('pointercancel', YARD_endPointer);
   YARD_canvas.addEventListener('wheel', event => {
     YARD_distance = Math.max(2, Math.min(10000, YARD_distance * Math.exp(event.deltaY * 0.001)));
     YARD_camera();

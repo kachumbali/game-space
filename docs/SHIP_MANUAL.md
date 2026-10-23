@@ -112,3 +112,13 @@ Resolutions below 120 voxels (HUD icons) never get detail. Ships capped by `RES_
 - `{t:'text', c, face:'+x'|'-x'|'+y'|'-y', text, px, col}`: 3x5 pixel text (`px` = metres per pixel; skipped if under 0.9 voxel).
 - `noDetail: true` on a prim (no relief/greebles), `def.noDetail`, `def.noDetailZones:[{c,r}]`, `def.detail = {style, raise, greeb, accent...}`, `def.rustK` (FROGG rust strength). Engines and mounts are excluded from greebles automatically.
 Cost (headless CPU, ms; instances): Kestrel 12.3k at mid, 61k / 107k at detail 6 / 7 (was 55k / 94k); Gulper 191k / 195k (was 168k); build time per ship is under 2.1 s even for the Gulper (rasterisation was also made faster with tight prim bounds; the old Gulper took 2.7 s). Screenshots: `img/detail/sheet_d4.png`, `sheet_d7_before.png`, `sheet_d7_after.png`, `cmp_<ship>.png` (before | after).
+
+## 10. Shipyard workbench
+
+Open `index.html?yard` for a new blank model, or `index.html?yard=kestrel` to load a ship. The Shipyard reuses the runtime voxeliser; it is a separate visual/design mode, and normal gameplay URLs are unchanged.
+
+- Choose a ship or **NEW** from the picker. Drag to orbit, use the wheel to zoom, or pinch on touch. The grid has one-metre ticks; the cyan top-view outline is a 12.4 m Kestrel scale reference.
+- Edit the **PRIMS JS SOURCE** array as JSON-compatible JavaScript object literals (`tap`, `ell`, `seg`, `paint`, and `text` primitive objects). Edits rebuild after a short debounce. Parse or build errors appear below the editor and keep the last successfully built model. The editor uses expanded primitive objects rather than trying to reconstruct the helper expressions and palette names from the ship source.
+- The database-entry JSON editor validates weapon ids, mount/turret and engine component references, stores, armour/class coverage, positive component HP, and hex colours. Markers update from the edited entry. Invalid database data is reported inline and is not written to `data/db.json`.
+- Toggle component, mount, turret, and engine markers; the half-extents box; mirroring; voxel detail (`DETAIL_STEPS`); and LOD step reduction. Suggested `half` and `radius` values come from primitive bounds. **Apply suggested bounds** updates the JSON editor only; copy and paste the entry into `data/db.json` yourself if wanted.
+- **Copy prims JS** copies the current formatted object array, **Copy db entry (JSON)** copies the current entry, and **Save PNG sheet** downloads a labelled 900 × 540 3/4, top, side, and front contact sheet. The workbench does not write to source files or save images into the repository.
