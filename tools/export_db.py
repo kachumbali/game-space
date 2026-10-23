@@ -37,5 +37,5 @@ for name,rows in (('ships',d['rows']),('weapons',d['wrows'])):
         for k in r:
             if k not in keys: keys.append(k)
     with open(OUT+name+'.csv','w',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=keys); w.writeheader(); w.writerows(rows)
+        w=csv.DictWriter(f,fieldnames=keys,lineterminator='\n'); w.writeheader(); w.writerows(rows)
     print(name,len(rows),len(keys))

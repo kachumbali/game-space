@@ -9,10 +9,16 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Everything shares one module scope: functions hoist, but top-level `const/let` are in the TDZ until their
   part runs. Part N must not use a later part's `let/const` at load time (a past bug: `FS` declared in 90_hud
   but used by 80_input; fix = declare in `10_config.js`). Symptom: page never sets `window.__game`.
-- Source map: 00_head.html (shell/CSS) · 10_config · 12_audio · 13_music (mood/crossfade, options panel) · 14_samples (CC0
-  sample layer) · 15_credits · 16_db (embeds data/db.json) · 20_voxel · 30/31_ships · 32_scale · 40_scene ·
-  41_sky · 45_particles · 50_state · 55_ships · 60_weapons · 65_combat · 70_ai · 75_mission · 77_cine ·
-  80_input · 85_update · 90_hud · 95_main · 99_tail.html.
+- Source map (sorted build order): `src/00_head.html` (shell/CSS) · `10_config` · `12_audio` · `13_music`
+  (mood/crossfade, options panel) · `14_samples` (CC0 sample layer) · `15_credits` · `16_db` (embeds
+  `data/db.json`) · `20_voxel` · `30_ships_human` / `31_ships_frogg` · `32_scale` · `40_scene` · `41_sky` ·
+  `45_particles` · `50_state` · `55_ships` · `56_drones` · `58_playlog` · `60_weapons` · `61_beams` ·
+  `65_combat` · `70_ai` · `75_mission` · `76_menu` · `77_cine` · `78_coms` · `79_bullfrog` · `80_input` ·
+  `85_update` · `90_hud` · `95_main` · `99_tail.html`.
+- `data/db.json` is the source of truth for ship, weapon, armour, mass-class and armour-class data.
+  `tools/validate_db.py` checks it; `tools/export_db.py` generates `docs/data/*.csv`.
+- `tools/render_ships.py` renders individual ship views; `tools/render_pack.py` makes faction contact sheets.
+  Image output under `docs/img/` is git-ignored and must not be committed.
 
 ## Key conventions
 - Ships are data (`SHIPS`, schema in README/docs/SHIPS.md). Forward is -Z; models mirror about X. Change sizes

@@ -1,9 +1,8 @@
 # Weapons reference: specs, fits, doctrine, red-team analysis
 
 Status: live as of 2026-10-22 (realism pass, magazine rule, gun discipline, MD-9 mag, tactical yield dial all in).
-Source of truth: `WEAPONS` in `src/60_weapons.js` + the FROGG block in `src/79_bullfrog.js`; ship fits in
-`src/30_ships_human.js` / `src/31_ships_frogg.js`. The tables below were read out of the running build
-(`docs/data/weapons.csv` is the CSV export via `tools/tests/csv_t.py`). All rates and durations are sim-seconds
+Source of truth: `data/db.json` (`weapons` and `ships`). `docs/data/weapons.csv` is a generated view from
+`python3 tools/export_db.py`, not an authority or a manually edited table. All rates and durations are sim-seconds
 (real time = sim / `SIM_SPEED` 0.375). Internal ids (`spit`, `fang`, `tad`, ...) are historical and stable;
 the displayed names are the realistic ones.
 
@@ -51,8 +50,8 @@ is for. Full lore: `docs/LORE.md` weapon doctrine.
 | GA-9 ROTARY CANNON | proj kin | 2.8 | 25/s | 1100 | 1320 | 15% | - | 900 (36 s) | A-10-style, Halberd grp 2; AI fires it only inside 1300 m |
 | RG-90 RAILGUN | proj kin | 70 | 0.42/s | 2000 | 4400 | 60% | 12/shot | 100/mnt (~4 min) | class 2: best kinetic pierce in the game |
 | MD-55 MASS DRIVER (L) | proj kin | 60 | 0.45/s | 1800 | 2600 | 40% | 15/shot | 250/turret (~9 min) | class 2; bigOnly, noPD |
-| LS-2 TURRET LASER | beam en | 6/pulse | 4/s | - | 1600 | - | 12/pulse | reactor | peak x3 after 0.5 s acq |
-| LS-8 TURRET LASER (M) | beam en | 13/pulse | 3.6/s | - | 1800 | - | 26/pulse | reactor | peak x3 |
+| LS-2 TURRET LASER | beam en | 3/pulse | 4/s | - | 1600 | - | 12/pulse | reactor | peak x3 after 0.5 s acq |
+| LS-8 TURRET LASER (M) | beam en | 6.5/pulse | 3.6/s | - | 1800 | - | 26/pulse | reactor | peak x3 |
 | PD-30 POINT DEFENCE | proj kin | 1.3 | 13.3/s | 1100 | 900 | - | - | 1500/turret (~110 s) | Phalanx-style drum |
 
 **MK-90 MASS DRIVER (XL)**: 900 kin, 60% pierce, 3200 m instant ray, 5 s charge + 1.5 s lock (heading frozen),

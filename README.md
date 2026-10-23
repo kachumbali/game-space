@@ -79,8 +79,17 @@ Human: Kestrel (heavy fighter: cannon + MD-9 mag + HE; docs/SHIP_CLASSES.md for 
 number (`DETAIL_STEPS`), so detail scales up later.
 
 ## Source layout
-`00_head.html` shell/CSS · `10_config` · `12_audio` · `13_music` (music moods, options panel) · `14_samples` (CC0 sample layer) · `15_credits` · `20_voxel` voxelizer · `30/31_ships_*` · `32_scale` (ship scaling, fighter turn) · `40_scene` · `41_sky` (sky/planets/sun) · `45_particles` · `50_state` ·
-`55_ships` · `56_drones` (drone controller model, orders, ram) · `60_weapons` · `65_combat` · `70_ai` · `75_mission` · `76_menu` (main menu, skirmish) · `77_cine` (transit cutscenes) · `78_coms` (comms menu) · `79_bullfrog` · `80_input` · `85_update` · `90_hud` · `95_main`.
+The build concatenates `src/*` in sorted filename order: `00_head.html` (shell/CSS) · `10_config` · `12_audio` ·
+`13_music` (music moods, options panel) · `14_samples` (CC0 sample layer) · `15_credits` · `16_db` (embeds
+`data/db.json`) · `20_voxel` · `30_ships_human` / `31_ships_frogg` · `32_scale` · `40_scene` · `41_sky` ·
+`45_particles` · `50_state` · `55_ships` · `56_drones` · `58_playlog` · `60_weapons` · `61_beams` · `65_combat` ·
+`70_ai` · `75_mission` · `76_menu` · `77_cine` · `78_coms` · `79_bullfrog` · `80_input` · `85_update` · `90_hud` ·
+`95_main` · `99_tail.html`.
+
+Ship, weapon, armour, mass-class and armour-class data live in `data/db.json`; `src/16_db.js` embeds that data
+in the generated build. Run `python3 tools/validate_db.py` to validate the database. `python3 tools/export_db.py`
+regenerates the CSV views in `docs/data/`. `tools/render_ships.py` writes individual ship views and
+`python3 tools/render_pack.py` writes one faction contact sheet per faction under the git-ignored `docs/img/ships/`.
 
 ## Roadmap
 See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,

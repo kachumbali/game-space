@@ -1,6 +1,6 @@
 # FROGG Bullfrog: 600 m jump capital with a spine lance and a 36-fighter hangar (design proposal)
 
-Status: **implemented 2026-10-22 (first pass, section 11 lists every deviation from this design and the measured results); sections 1-10 are the original design text, partly superseded by section 11.** Owner decisions (binding, 2026-10-22): name Bullfrog, 600 m, jump-capable;
+Status: **implemented 2026-10-22 (first pass, section 11 lists deviations from this design and measured results); sections 1-10 are historical proposal text and may contain pre-database/pre-retune figures. For current ship and weapon values, use `data/db.json` and regenerated `docs/data/*.csv`.** Owner decisions (binding, 2026-10-22): name Bullfrog, 600 m, jump-capable;
 main weapon a super-heavy XL forward-fixed spine lance (whole ship aims); S-class point defence, ordinary S and M turrets, exactly 1 L turret
 (dorsal; **owner decision 2026-10-22: the carrier keeps a single lance, the ventral L2 was removed**); hangar for 36 fighters of mixed FROGG classes; **no FROGG drones** (neuro-slaved pilots, anti-AI); beating it must take luck,
 especially if the spine focuses a capital. Everything else below is my proposal with defaults.
@@ -54,7 +54,7 @@ real seconds = sim seconds / 0.375 (x 2.67). Speeds and turn rates in `SHIPS` ar
 | Gulper is authored at 66 m but `scaleShip(SHIPS.gulper, 146)` runs at load (`src/32_scale.js`); in game it is 146 m, structure 380, shield 200/160, composite 0.31, 4 `sting` turrets (R-4), 2 `rodg` penetrator drivers (R-12), 2 `lance` maser lances (M-7), 6 ST-2 torpedoes | `src/31_ships_frogg.js`, `src/32_scale.js`, `docs/data/ships.csv` | The brief's "66 m Gulper" is the authored size, not the flown size |
 | Exeter in code: 450 m, structure 1600, shield 900/800, shieldRegen 12 (starts 4 s after the last hit), composite 0.27, **4** laser turrets (`LS-2`) + 3 PD (not 3 lasers), 2 rails (70 kin, 60% pierce, 2.4 s), turn 0.08 (not 0.05), energy 2500/350, reactor 800 hp | `src/30_ships_human.js` | Used for all Exeter arithmetic |
 | Rule conflict: `AGENTS.md`, `docs/LORE.md`, `docs/SHIP_MANUAL.md` still say "ships under 500 m, only frigates jump" | docs | The owner decision for 600 m overrides; those files need a line when this is built (I was told to edit only this file) |
-| Stale data: `docs/data/weapons.csv` shows flaser 2.8, lance 2.4, Tadpole 150; code has 3.5, 3.0, 195 | `src/60_weapons.js` (`FMX` 1.3) | I use the code values |
+| Generated-data drift: the old `docs/data/weapons.csv` contained pre-tune flaser, lance and Tadpole figures | `data/db.json`; regenerate via `python3 tools/export_db.py` | Current values come from the database; the CSV is a generated view |
 
 ## 3. Armament
 
