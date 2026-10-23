@@ -28,4 +28,4 @@ Colours are `"#rrggbb"` strings and become ints at load (`src/16_db.js`, keys `c
 
 ## Next step (not started)
 
-Engineering power model: reactor output and per-subsystem draw as database fields, with `energyMax`/`energyRegen` derived from them. Back-fit first so every ship reproduces today's numbers, then adjust deliberately. Needs the owner's explicit exception to the "no new player-facing systems before hand-play" rule.
+See `docs/POWER.md` (step 1 done: `power` fields in the database).

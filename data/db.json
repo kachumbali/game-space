@@ -1,5 +1,5 @@
 {
-  "_about": "Single source of truth for ship, weapon and armour technical data. Embedded into index.html by build.py (src/16_db.js). Colours are \"#rrggbb\" strings (converted to ints at load for the keys listed in src/16_db.js). Geometry (prims) stays in src/3x_ships_*.js. Source values: scaling (32_scale.js) and the fighter turn/afterburner rules are applied on top at load.",
+  "_about": "Single source of truth for ship, weapon and armour technical data. Embedded into index.html by build.py (src/16_db.js). Colours are \"#rrggbb\" strings (converted to ints at load for the keys listed in src/16_db.js). Geometry (prims) stays in src/3x_ships_*.js. Source values: scaling (32_scale.js) and the fighter turn/afterburner rules are applied on top at load. Power: ships.<id>.power = {plantMW, capacitorMJ}; src/16_db.js derives energyRegen = plantMW / 3 (balanced 4/4/4 split gives each of the three buses one third) and energyMax = capacitorMJ.",
   "ships": {
     "kestrel": {
       "id": "kestrel",
@@ -45,6 +45,7 @@
       "accel": 75,
       "turn": 2.2,
       "shieldRegen": 1,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "sig": 1,
       "flameColor": "#66c8ff"
     },
@@ -102,10 +103,9 @@
       "accel": 6,
       "turn": 0.22,
       "shieldRegen": 6,
+      "power": {"plantMW": 300, "capacitorMJ": 600},
       "sig": 4,
-      "flameColor": "#66c8ff",
-      "energyMax": 600,
-      "energyRegen": 100
+      "flameColor": "#66c8ff"
     },
     "exeter": {
       "id": "exeter",
@@ -197,10 +197,9 @@
       "accel": 3,
       "turn": 0.08,
       "shieldRegen": 12,
+      "power": {"plantMW": 1050, "capacitorMJ": 2500},
       "sig": 8,
       "flameColor": "#66c8ff",
-      "energyMax": 2500,
-      "energyRegen": 350,
       "ai": {"role": "capital"}
     },
     "drone": {
@@ -237,6 +236,7 @@
       "accel": 120,
       "turn": 2.6,
       "shieldRegen": 0.5,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "sig": 0.4,
       "aiSpeed": 150,
       "flameColor": "#66c8ff",
@@ -285,10 +285,9 @@
       "accel": 2.5,
       "turn": 0.07,
       "shieldRegen": 8,
+      "power": {"plantMW": 900, "capacitorMJ": 2000},
       "sig": 10,
       "flameColor": "#66c8ff",
-      "energyMax": 2000,
-      "energyRegen": 300,
       "ai": {"role": "capital"}
     },
     "darter": {
@@ -328,6 +327,7 @@
       "accel": 90,
       "turn": 2.6,
       "sig": 0.8,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "fighter", "aggr": 1}
     },
@@ -370,6 +370,7 @@
       "accel": 65,
       "turn": 1.7,
       "sig": 1,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "fighter", "aggr": 0.8}
     },
@@ -412,6 +413,7 @@
       "accel": 50,
       "turn": 1.1,
       "sig": 1.3,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "gunship", "aggr": 0.6}
     },
@@ -454,6 +456,7 @@
       "accel": 40,
       "turn": 0.9,
       "sig": 1.4,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "bomber", "aggr": 0.3}
     },
@@ -500,6 +503,7 @@
       "accel": 50,
       "turn": 1.15,
       "sig": 1.3,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "fighter", "aggr": 0.9}
     },
@@ -550,13 +554,12 @@
       "shield": {"fore": 200, "aft": 160},
       "armor": {"type": "composite", "rating": 0.31},
       "structure": 380,
-      "energyMax": 400,
-      "energyRegen": 70,
       "maxSpeed": 34,
       "aiSpeed": 26,
       "accel": 6,
       "turn": 0.2,
       "sig": 4,
+      "power": {"plantMW": 210, "capacitorMJ": 400},
       "flameColor": "#30dcff",
       "ai": {"role": "corvette"}
     },
@@ -596,6 +599,7 @@
       "accel": 0.5,
       "turn": 0.03,
       "sig": 20,
+      "power": {"plantMW": 51, "capacitorMJ": 100},
       "flameColor": "#30dcff",
       "ai": {"role": "capital"}
     },
@@ -699,9 +703,8 @@
       "shield": {"fore": 2000, "aft": 1600},
       "armor": {"type": "hard", "rating": 0.3},
       "structure": 3000,
-      "energyMax": 3200,
-      "energyRegen": 320,
       "shieldRegen": 6,
+      "power": {"plantMW": 960, "capacitorMJ": 3200},
       "maxSpeed": 22,
       "aiSpeed": 14,
       "accel": 2,
