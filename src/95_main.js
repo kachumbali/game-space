@@ -1,11 +1,13 @@
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
-startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
-if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
-else if (params.has('sk')) startSkirmish(skFromParams());
-else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
-else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
+if (!params.has('yard')) {
+  startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
+  if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
+  else if (params.has('sk')) startSkirmish(skFromParams());
+  else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
+  else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
+}
 let last = performance.now();
 const FPS_ON = params.has('fps');   // owner P0 2026-10-22: ?fps = overlay + play-log frame times + a detail governor (opt-in; headless runs unaffected)
 let fpsAcc = 0, fpsN = 0, fpsT = 0, fpsEl = null;
@@ -31,10 +33,12 @@ function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
-  musicTick(dt);
-  if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
-  renderBolts(); renderBeams();
-  updateHud();
+  if (!params.has('yard')) {
+    musicTick(dt);
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
+    renderBolts(); renderBeams();
+    updateHud();
+  }
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
   requestAnimationFrame(frame);
 }
