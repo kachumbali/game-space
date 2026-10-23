@@ -9,21 +9,26 @@ if (params.has('yard')) {
     <h1>SHIPYARD / VOXEL WORKBENCH</h1>
     <label for="yard-ship">SHIP</label><select id="yard-ship"></select>
     <div class="yardrow"><label><input id="yard-grid" type="checkbox" checked> grid</label><span class="yardnote">drag to orbit · wheel to zoom · pinch on touch</span></div>
+    <label for="yard-prims">PRIMS JS SOURCE (plain object array accepted)</label>
+    <textarea id="yard-prims" spellcheck="false" aria-label="Ship prims JavaScript source"></textarea>
+    <div class="yardnote">Edit JSON-compatible primitive objects; supported types are tap, ell, seg, paint and text.</div>
+    <div id="yard-error" class="yarderror" role="alert" aria-live="polite"></div>
     <div id="yard-stat" class="yardstat"></div>
-    <div id="yard-error" role="alert"></div>
     <div class="yardnote" id="yard-reference">CYAN SILHOUETTE: KESTREL / 12.4 m</div>
   </section>`;
   document.body.appendChild(YARD_root);
 
   const YARD_select = document.getElementById('yard-ship');
+  const YARD_prims = document.getElementById('yard-prims');
   const YARD_stat = document.getElementById('yard-stat');
+  const YARD_error = document.getElementById('yard-error');
   const YARD_canvas = document.getElementById('c');
   const YARD_group = new THREE.Group();
   const YARD_model = new THREE.Group();
   const YARD_color = new THREE.Color();
   const YARD_material = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22 });
   const YARD_glowMaterial = new THREE.MeshBasicMaterial();
-  let YARD_def = null, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null;
+  let YARD_def = null, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null, YARD_rebuildTimer = 0;
   const YARD_grid = new THREE.Group();
   const YARD_reference = new THREE.Group();
   const YARD_palette = { engine: 0xff8a20, gun: 0xff3030, turret: 0xffe040, radar: 0x30e0ff, shield: 0x4080ff, radiator: 0xff40ff, power: 0xffffff };
@@ -37,7 +42,7 @@ if (params.has('yard')) {
   };
 
   function YARD_buildGrid(def) {
-    YARD_grid.clear();
+    YARD_emptyGroup(YARD_grid);
     const span = Math.max(40, Math.ceil(Math.max(def.half[0], def.half[2]) * 4 / 10) * 10);
     const grid = new THREE.GridHelper(span, span, 0x42685f, 0x243b38);
     grid.material.transparent = true;
@@ -53,7 +58,7 @@ if (params.has('yard')) {
   }
 
   function YARD_buildReference(def) {
-    YARD_reference.clear();
+    YARD_emptyGroup(YARD_reference);
     const ref = __game.SHIPS.kestrel, offset = Math.max(def.half[0], 4) + 4;
     const points = [
       [0, -6.2], [0.55, -3.4], [1.0, -1.2], [4.9, 1.7], [4.2, 2.8],
@@ -90,41 +95,58 @@ if (params.has('yard')) {
     YARD_meshes = [];
   }
 
-  function YARD_setDefinition(def) {
-    YARD_def = def;
-    YARD_clearModel();
+  function YARD_emptyGroup(group) {
+    for (const child of [...group.children]) {
+      group.remove(child);
+      child.geometry?.dispose();
+      for (const material of Array.isArray(child.material) ? child.material : [child.material]) material?.dispose();
+    }
+  }
+
+  function YARD_setDefinition(def, refit = false) {
     const t0 = performance.now();
     const idx = 2, res = Math.min(120, resFor(def, idx));
     const data = voxelize(def, res, idx);
     const body = [], glow = [];
+    const nextMeshes = [];
     for (const voxel of data.voxels) (voxel.g ? glow : body).push(voxel);
-    for (const [voxels, material, scale] of [[body, YARD_material, 1], [glow, YARD_glowMaterial, 1.03]]) {
-      if (!voxels.length) continue;
-      const mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(data.vs * scale, data.vs * scale, data.vs * scale), material, voxels.length);
-      const matrix = new THREE.Matrix4();
-      voxels.forEach((voxel, i) => {
-        matrix.makeTranslation(voxel.x, voxel.y, voxel.z);
-        mesh.setMatrixAt(i, matrix);
-        mesh.setColorAt(i, YARD_color.setRGB(voxel.cr, voxel.cg, voxel.cb));
-      });
-      mesh.frustumCulled = false;
-      YARD_model.add(mesh);
-      YARD_meshes.push(mesh);
+    try {
+      for (const [voxels, material, scale] of [[body, YARD_material, 1], [glow, YARD_glowMaterial, 1.03]]) {
+        if (!voxels.length) continue;
+        const mesh = new THREE.InstancedMesh(new THREE.BoxGeometry(data.vs * scale, data.vs * scale, data.vs * scale), material, voxels.length);
+        const matrix = new THREE.Matrix4();
+        voxels.forEach((voxel, i) => {
+          matrix.makeTranslation(voxel.x, voxel.y, voxel.z);
+          mesh.setMatrixAt(i, matrix);
+          mesh.setColorAt(i, YARD_color.setRGB(voxel.cr, voxel.cg, voxel.cb));
+        });
+        mesh.frustumCulled = false;
+        nextMeshes.push(mesh);
+      }
+    } catch (error) {
+      for (const mesh of nextMeshes) mesh.geometry.dispose();
+      throw error;
     }
+    YARD_clearModel();
+    YARD_def = def;
+    for (const mesh of nextMeshes) YARD_model.add(mesh);
+    YARD_meshes = nextMeshes;
     voxCache.delete(def.id + ':' + res + (data.tier ? ':t' + data.tier : ''));
     YARD_stat.textContent = `${def.name || def.id} · ${data.voxels.length.toLocaleString()} voxels · ${(performance.now() - t0).toFixed(0)} ms · ${def.length} m`;
     YARD_buildGrid(def);
     YARD_buildReference(def);
-    YARD_fit(def);
+    if (refit) YARD_fit(def);
   }
 
   function YARD_selectShip(id) {
     const original = __game.SHIPS[id];
-    const def = original ? { ...original, id: 'yard-' + id, prims: original.prims } : {
+    const def = original ? { ...original, id: 'yard-' + id, prims: JSON.parse(JSON.stringify(original.prims, (key, value) => key === '_' ? undefined : value)) } : {
       ...__game.SHIPS.kestrel, id: 'yard-new', name: 'NEW SHIP', prims: [], comps: [], mounts: [], turrets: [], engines: [],
     };
     YARD_model.rotation.set(0, 0, 0);
-    YARD_setDefinition(def);
+    YARD_prims.value = JSON.stringify(def.prims, (key, value) => key === '_' ? undefined : value, 2);
+    YARD_error.textContent = '';
+    YARD_setDefinition(def, true);
   }
 
   const YARD_options = Object.keys(__game.SHIPS).sort().map(id => `<option value="${id}">${id.toUpperCase()}</option>`);
@@ -133,6 +155,21 @@ if (params.has('yard')) {
   const YARD_requested = params.get('yard');
   YARD_select.value = YARD_requested && __game.SHIPS[YARD_requested.toLowerCase()] ? YARD_requested.toLowerCase() : 'kestrel';
   YARD_select.addEventListener('change', () => YARD_selectShip(YARD_select.value === '__new' ? '__new' : YARD_select.value));
+  YARD_prims.addEventListener('input', () => {
+    clearTimeout(YARD_rebuildTimer);
+    YARD_error.textContent = '';
+    YARD_rebuildTimer = setTimeout(() => {
+      try {
+        const prims = JSON.parse(YARD_prims.value);
+        if (!Array.isArray(prims)) throw new Error('Prims source must evaluate to an array.');
+        if (prims.some(prim => !prim || typeof prim !== 'object' || typeof prim.t !== 'string')) throw new Error('Every prim must be an object with a string t field.');
+        YARD_setDefinition({ ...YARD_def, prims });
+        YARD_error.textContent = '';
+      } catch (error) {
+        YARD_error.textContent = error instanceof Error ? error.message : String(error);
+      }
+    }, 400);
+  });
   document.getElementById('yard-grid').addEventListener('change', event => { YARD_grid.visible = event.target.checked; });
   YARD_selectShip(YARD_select.value);
   scene.add(YARD_group);
