@@ -64,7 +64,7 @@ const kestrelDetail = [
 ];
 
 SHIPS.kestrel = {
-  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'MULTIROLE FIGHTER',
+  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'HEAVY FIGHTER',   // owner reclassification 2026-10-22 (docs/SHIP_CLASSES.md)
   length: 12.4, half: [5.2, 2.2, 6.9], mirror: true, radius: 6.6, seam: [1.5, 1.1], eye: [0, 0.62, -2.5],
   prims: [
     // long chined fuselage: drooping chin nose into a wide flat wing-body

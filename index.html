@@ -1306,7 +1306,7 @@ const kestrelDetail = [
 ];
 
 SHIPS.kestrel = {
-  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'MULTIROLE FIGHTER',
+  id: 'kestrel', name: 'KESTREL', cls: 'fighter', fac: 'human', role: 'HEAVY FIGHTER',   // owner reclassification 2026-10-22 (docs/SHIP_CLASSES.md)
   length: 12.4, half: [5.2, 2.2, 6.9], mirror: true, radius: 6.6, seam: [1.5, 1.1], eye: [0, 0.62, -2.5],
   prims: [
     // long chined fuselage: drooping chin nose into a wide flat wing-body
@@ -3228,10 +3228,71 @@ function tenderTick(dt) {
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
-      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * dt);            // 40 rounds/s
-      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * dt);   // one missile/flare per 2 s
-      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt / 3); }  // one XL slug per 3 s
+      const m = (dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5;  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
+      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
+      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
+      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt * m / 3); }
     }
+  }
+}
+
+// ---- tactical docking (owner decision 2026-10-22): TIE-fighter-style rearm at a Tender ----
+// Approach a friendly tender within 500 m and press D: the ship auto-docks to a service-boom cradle, holds
+// position while ammo cassettes and missile racks go in, and undocks on D again or automatically when full.
+// Major-ship docking does not exist in tactical play - the strategic fleet tender's dockings are scripted
+// (docs/SHIP_CLASSES.md). Rearm is still not repair (AGENTS.md).
+const DOCK_R = 500, DOCK_PT = new THREE.Vector3(36, 2, -56);      // starboard service-boom cradle, tender-local
+let dock = null;
+function rearmFrac(s) {
+  let f = 1;
+  for (const k in s.ammoMax) f = Math.min(f, s.ammo[k] / s.ammoMax[k]);
+  for (const k in s.def.stores || {}) f = Math.min(f, s.stores[k] / s.def.stores[k]);
+  if (s.spine && isFinite(spineW(s).mag ?? Infinity)) f = Math.min(f, s.spine.mag / spineW(s).mag);
+  return f;
+}
+function dockTry() {
+  if (state !== 'play' || !player || !player.alive) return;
+  if (dock) {                                                     // undock: release with a push away along the boom
+    const t = dock.t;
+    dock = null;
+    player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
+    log('UNDOCKED', '#ffd24a'); sfx('click');
+    return;
+  }
+  let best = null, bd = DOCK_R;
+  for (const t of ships) {
+    if (!t.alive || !t.def.tender || t.team !== player.team) continue;
+    const d = player.group.position.distanceTo(t.group.position);
+    if (d < bd) { bd = d; best = t; }
+  }
+  if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
+  dock = { t: best, phase: 'approach', t0: time };
+  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
+}
+function dockTick(dt) {
+  if (!dock) return;
+  if (!dock.t.alive || dock.t.dying > 0) { dock = null; log('DOCK LOST - TENDER DESTROYED', '#ff5a4a'); return; }
+  const wpt = dock.t.group.localToWorld(DOCK_PT.clone());
+  if (dock.phase === 'approach') {
+    player.vel.multiplyScalar(Math.exp(-2.2 * dt));
+    player.group.position.lerp(wpt, 1 - Math.exp(-2.5 * dt));
+    player.group.quaternion.slerp(dock.t.group.quaternion, 1 - Math.exp(-2.5 * dt));
+    if (time - dock.t0 > 25) { dock = null; log('DOCKING ABORTED - TOO SLOW', '#ff5a4a'); return; }
+    if (player.group.position.distanceTo(wpt) < 8) {
+      dock.phase = 'docked'; player.vel.copy(dock.t.vel);
+      log('DOCKED - REARMING (D TO UNDOCK)', '#ffd24a');
+    }
+    return;
+  }
+  // docked: the tender has the ship - position and velocity are its, controls are suspended
+  player.group.position.copy(wpt);
+  player.vel.copy(dock.t.vel);
+  player.group.quaternion.slerp(dock.t.group.quaternion, 1 - Math.exp(-3 * dt));
+  if (rearmFrac(player) >= 0.999) {
+    const t = dock.t;
+    player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
+    dock = null;
+    log('REARM COMPLETE', '#ffd24a'); sfx('click');
   }
 }
 // ======================================================================
@@ -4543,6 +4604,7 @@ function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
     if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
+    if (dock && ((a === player && b === dock.t) || (b === player && a === dock.t))) continue;   // docking pair: the tender holds the ship in its booms (owner 2026-10-22)
     if (a.def.drone && a.dOrder === 'ram') { if (b.team !== a.team) droneRamCheck(a, b); continue; }   // ramming drones: see 56_drones.js (replaces the generic crash branch)
     const ma = MASS[a.def.cls] || 1, mb = MASS[b.def.cls] || 1;
     if (ma > mb) continue;                                  // a = the lighter body (equal masses are handled from both sides)
@@ -6349,6 +6411,7 @@ addEventListener('keydown', e => {
     case 'KeyY': targetCrosshair(); break;
     case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
+    case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
@@ -6636,7 +6699,7 @@ function update(dt) {
       s.vel.multiplyScalar(Math.exp(-0.2 * dt));
       s.group.rotateZ(0.06 * dt); s.group.rotateX(0.03 * dt);
     } else if (state === 'cine') cineDrive(s, dt);
-    else if (s === player) { if (state === 'play') updatePlayer(dt); }
+    else if (s === player) { if (state === 'play' && !dock) updatePlayer(dt); }   // while docking the dock autopilot owns the ship (owner 2026-10-22)
     else if (state !== 'brief') aiUpdate(s, dt);
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
@@ -6644,6 +6707,7 @@ function update(dt) {
     updateShieldsAndFx(s, dt);
   }
   collideShips(dt);
+  dockTick(dt);   // docking glue runs after the ship loop so it wins over flight controls
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
@@ -6932,6 +6996,8 @@ function updateWeaponPanel() {
   h += `<div class="${m(2) ? 'sel' : 'dim'}${low(p.ammo.he | 0, p.ammoMax.he)}">2 HE SHELLS ×${p.ammo.he | 0}</div>`;
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
+  if (dock) h += `<div class="sel">DOCKED - REARMING ${Math.round(rearmFrac(p) * 100)}% (D: UNDOCK)</div>`;
+  else { let tn = null, td = 500; for (const s of ships) { if (!s.alive || !s.def.tender || s.team !== p.team) continue; const d = s.group.position.distanceTo(p.group.position); if (d < td) { td = d; tn = s; } } if (tn) h += `<div class="dim">D: DOCK AT ${tn.def.name} (REARM)</div>`; }
   h += droneHudLine(p);
   const L = p.lock;
   const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :
@@ -7300,7 +7366,7 @@ globalThis.__game = {
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView,
-  launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
+  dockTry, get dock() { return dock; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
   get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },

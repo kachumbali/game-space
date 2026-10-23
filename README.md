@@ -31,9 +31,10 @@ screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 | Mouse (click to capture) / C | Stick; centre |
 | W / S, Shift | Throttle, afterburner |
 | Q / E | Roll |
-| Space / LMB | Guns (1 cannons, 2 lasers, 3 linked) |
+| Space / LMB | Guns (1 cannon + MD-9 mag, 2 HE shells, 3 linked) |
 | RMB / Enter, G | Fire missile, cycle missile type |
 | Z | Flares/chaff |
+| D | Dock at a friendly Tender within 500 m: auto-dock to a service boom, rearm while docked, D again to undock (owner 2026-10-22, docs/SHIP_CLASSES.md) |
 | T / Y | Next target / target nearest crosshair |
 | N | Cycle subsystem on target (pipper aims at it); touch: SUB |
 | K | Radar range 1.5 / 3 / 6 km |
@@ -69,7 +70,7 @@ Touch: floating stick, throttle slider, FIRE, MSL, FLARE, BOOST, roll L/R, VIEW,
   `?mute` silences everything. On iPad the music volume slider may not work (iOS ignores element volume).
 
 ## Ships
-Human: Kestrel (fighter: cannon + MD-9 mag + HE, mag is energy-budgeted), Halberd (corvette: rails + GA-9 rotary), Exeter (frigate, stock 48 drones), Tender (unarmed fleet resupply ship: rearms ammo, missiles and XL slugs within 600 m - never repairs), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (maser gunship), Toad
+Human: Kestrel (heavy fighter: cannon + MD-9 mag + HE; docs/SHIP_CLASSES.md for the full class inventory), Halberd (corvette: rails + GA-9 rotary), Exeter (frigate, stock 48 drones), Tender (unarmed fleet resupply ship: rearms ammo, missiles and XL slugs within 600 m - never repairs), Drone (6 m unmanned). FROGG: Darter (interceptor), Leaper, Spitter (maser gunship), Toad
 (torpedo bomber), Reaver (heavy), Gulper (corvette), **Bullfrog** (600 m jump capital: XL GX-1 charged lance with a telegraphed 6 s charge and 30 s cooldown, 1 L / 6 M / 18 S+PD turrets, 36-fighter hangar, no drones; explicit exception to the 500 m cap; docs/BULLFROG.md, src/79_bullfrog.js, tests `tools/tests/bullfrog_t.py`, `bullfrog_eng.py`), Hive Carrier (unarmed catalogue ship). Ships are data (`src/30_*`, `src/31_*`); voxel resolution is one
 number (`DETAIL_STEPS`), so detail scales up later.
 

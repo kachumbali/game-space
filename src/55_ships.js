@@ -156,9 +156,70 @@ function tenderTick(dt) {
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
-      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * dt);            // 40 rounds/s
-      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * dt);   // one missile/flare per 2 s
-      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt / 3); }  // one XL slug per 3 s
+      const m = (dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5;  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
+      for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
+      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
+      if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt * m / 3); }
     }
+  }
+}
+
+// ---- tactical docking (owner decision 2026-10-22): TIE-fighter-style rearm at a Tender ----
+// Approach a friendly tender within 500 m and press D: the ship auto-docks to a service-boom cradle, holds
+// position while ammo cassettes and missile racks go in, and undocks on D again or automatically when full.
+// Major-ship docking does not exist in tactical play - the strategic fleet tender's dockings are scripted
+// (docs/SHIP_CLASSES.md). Rearm is still not repair (AGENTS.md).
+const DOCK_R = 500, DOCK_PT = new THREE.Vector3(36, 2, -56);      // starboard service-boom cradle, tender-local
+let dock = null;
+function rearmFrac(s) {
+  let f = 1;
+  for (const k in s.ammoMax) f = Math.min(f, s.ammo[k] / s.ammoMax[k]);
+  for (const k in s.def.stores || {}) f = Math.min(f, s.stores[k] / s.def.stores[k]);
+  if (s.spine && isFinite(spineW(s).mag ?? Infinity)) f = Math.min(f, s.spine.mag / spineW(s).mag);
+  return f;
+}
+function dockTry() {
+  if (state !== 'play' || !player || !player.alive) return;
+  if (dock) {                                                     // undock: release with a push away along the boom
+    const t = dock.t;
+    dock = null;
+    player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
+    log('UNDOCKED', '#ffd24a'); sfx('click');
+    return;
+  }
+  let best = null, bd = DOCK_R;
+  for (const t of ships) {
+    if (!t.alive || !t.def.tender || t.team !== player.team) continue;
+    const d = player.group.position.distanceTo(t.group.position);
+    if (d < bd) { bd = d; best = t; }
+  }
+  if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
+  dock = { t: best, phase: 'approach', t0: time };
+  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
+}
+function dockTick(dt) {
+  if (!dock) return;
+  if (!dock.t.alive || dock.t.dying > 0) { dock = null; log('DOCK LOST - TENDER DESTROYED', '#ff5a4a'); return; }
+  const wpt = dock.t.group.localToWorld(DOCK_PT.clone());
+  if (dock.phase === 'approach') {
+    player.vel.multiplyScalar(Math.exp(-2.2 * dt));
+    player.group.position.lerp(wpt, 1 - Math.exp(-2.5 * dt));
+    player.group.quaternion.slerp(dock.t.group.quaternion, 1 - Math.exp(-2.5 * dt));
+    if (time - dock.t0 > 25) { dock = null; log('DOCKING ABORTED - TOO SLOW', '#ff5a4a'); return; }
+    if (player.group.position.distanceTo(wpt) < 8) {
+      dock.phase = 'docked'; player.vel.copy(dock.t.vel);
+      log('DOCKED - REARMING (D TO UNDOCK)', '#ffd24a');
+    }
+    return;
+  }
+  // docked: the tender has the ship - position and velocity are its, controls are suspended
+  player.group.position.copy(wpt);
+  player.vel.copy(dock.t.vel);
+  player.group.quaternion.slerp(dock.t.group.quaternion, 1 - Math.exp(-3 * dt));
+  if (rearmFrac(player) >= 0.999) {
+    const t = dock.t;
+    player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
+    dock = null;
+    log('REARM COMPLETE', '#ffd24a'); sfx('click');
   }
 }

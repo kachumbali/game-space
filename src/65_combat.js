@@ -246,6 +246,7 @@ function collideShips(dt) {
   for (let i = 0; i < ships.length; i++) for (let j = 0; j < ships.length; j++) {
     const a = ships[i], b = ships[j];
     if (i === j || !a.alive || !b.alive || a.dying || b.dying) continue;
+    if (dock && ((a === player && b === dock.t) || (b === player && a === dock.t))) continue;   // docking pair: the tender holds the ship in its booms (owner 2026-10-22)
     if (a.def.drone && a.dOrder === 'ram') { if (b.team !== a.team) droneRamCheck(a, b); continue; }   // ramming drones: see 56_drones.js (replaces the generic crash branch)
     const ma = MASS[a.def.cls] || 1, mb = MASS[b.def.cls] || 1;
     if (ma > mb) continue;                                  // a = the lighter body (equal masses are handled from both sides)

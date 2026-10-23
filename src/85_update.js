@@ -112,7 +112,7 @@ function update(dt) {
       s.vel.multiplyScalar(Math.exp(-0.2 * dt));
       s.group.rotateZ(0.06 * dt); s.group.rotateX(0.03 * dt);
     } else if (state === 'cine') cineDrive(s, dt);
-    else if (s === player) { if (state === 'play') updatePlayer(dt); }
+    else if (s === player) { if (state === 'play' && !dock) updatePlayer(dt); }   // while docking the dock autopilot owns the ship (owner 2026-10-22)
     else if (state !== 'brief') aiUpdate(s, dt);
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
@@ -120,6 +120,7 @@ function update(dt) {
     updateShieldsAndFx(s, dt);
   }
   collideShips(dt);
+  dockTick(dt);   // docking glue runs after the ship loop so it wins over flight controls
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
