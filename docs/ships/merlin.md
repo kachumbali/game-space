@@ -241,3 +241,10 @@ Voxel budget: below the Kestrel (smaller bounding volume); keep the detail tiers
 - **Speed vs Drone.** 175 m/s is inside the 15 percent band of the Drone's 190; if drones are used as wingmen of Merlins, a Merlin wingman may outrun the pack on cruise. AI cruise is separated by `aiSpeed` (drone 150 vs Merlin default 140).
 - **Magazine capacity is per-mount weapon data**: "no big magazine" is achieved by omission (no MD-9, no HE), not by a Merlin-specific ammunition number; if the cannon pool changes, the Merlin changes with it.
 - **Evidence quality.** All balance statements in (h) are hand arithmetic on db numbers plus the existing 20-run Kestrel cell; the Merlin has never been in the sim. The AI skill, `aggr` and the interception gap can move the results by more than the design margins above.
+
+## Owner decisions 2026-10-23
+- Q2 (dead energy channel): accepted. The ETS split stays; the Merlin has no energy weapons, so points can be shifted between shields and engines (the weapons share is effectively free; power step 2 must treat an unused weapons bus that way). Watch whether this makes the Merlin too tough in the T2 duel tests.
+- Q3 (interceptor AI): approved for ALL light fighters and interceptors (Merlin and the FROGG Darter): a minimal AI preference for bombers and inbound missiles. AI-only, no player-facing change; the Darter's existing balance cells must be re-measured afterwards.
+- Q4 (armour 0.30, reactor 15 hp): keep as written; measure reactor-kill frequency in T2.
+- Q5 (afterburner): global rules for now; review after a few rounds of measurement.
+- Q1 (gun fit): open, see the options given to the owner (2x MK-20 current; 1x GA-9 rotary; 2x MK-30 HE).
