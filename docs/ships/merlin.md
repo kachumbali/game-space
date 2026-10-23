@@ -247,4 +247,4 @@ Voxel budget: below the Kestrel (smaller bounding volume); keep the detail tiers
 - Q3 (interceptor AI): approved for ALL light fighters and interceptors (Merlin and the FROGG Darter): a minimal AI preference for bombers and inbound missiles. AI-only, no player-facing change; the Darter's existing balance cells must be re-measured afterwards.
 - Q4 (armour 0.30, reactor 15 hp): keep as written; measure reactor-kill frequency in T2.
 - Q5 (afterburner): global rules for now; review after a few rounds of measurement.
-- Q1 (gun fit): open, see the options given to the owner (2x MK-20 current; 1x GA-9 rotary; 2x MK-30 HE).
+- Q1 (gun fit): A, 2x MK-20 cannon (owner 2026-10-23); the GA-9 and MK-30 HE variants stay as later options (an HE variant is the natural interceptor sub-type).
