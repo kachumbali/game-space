@@ -3007,6 +3007,14 @@ function tenderTick(dt) {
       if (s.group.position.distanceTo(t.group.position) > R) continue;
       const m = (dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5;  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
       for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
+      for (const T of s.turrets) {
+        if (!Number.isFinite(T.ammo)) continue;
+        T.ammo = Math.min(T.w.ammo, T.ammo + 40 * m * dt);
+        if (T.dry && T.ammo > 0) {
+          T.dry = false;
+          if (!T.dead) for (const mat of T.mats) mat.color.multiplyScalar(1 / 0.55);
+        }
+      }
       for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
       if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt * m / 3); }
     }
