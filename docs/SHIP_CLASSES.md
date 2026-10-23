@@ -50,7 +50,9 @@ docking, sit still while cassettes and missile racks go in). Crew: 60-150. Human
 ships that cannot dock with it, and itself docks with the major ships - cruisers, carriers, dreadnoughts -
 **between missions or for the duration of a scripted mission segment only** (`docs/FLEET_LOGIC.md` scale).
 No tactical docking of major ships in-game: those dockings are scripted set-pieces, never live inputs.
-**Lore/planning only** - no stats yet. Crew: 5,000+.
+Human example: **HECLA** (`capital` engine class, 1,000 m). The strategic service, repair and major-ship
+docking rules remain campaign/script design; this change adds only its database record and voxel model.
+Crew: 6,400 (design placeholder).
 
 ## 2. Assignment of existing ships
 
@@ -61,6 +63,7 @@ No tactical docking of major ships in-game: those dockings are scripted set-piec
 | Halberd | human | corvette (escort) | corvette | ~25 | rails + GA-9 rotary + PD screen |
 | Exeter | human | frigate (combat) | frigate | ~200 | jump-capable, MK-90 XL, 48 drones |
 | Tender | human | frigate (logistics, tactical) | frigate | ~90 | in-battle rearm; fighters dock at its service booms |
+| HECLA | human | fleet tender (strategic) | capital | 6,400* | 1,000 m; campaign-buildable at a Tier III yard by owner decision; no menu entry |
 | Darter | FROGG | light fighter (interceptor) | fighter | 1 (neuro-slaved) | gun + 2 SK-1; the most ammo-fragile hull |
 | Leaper | FROGG | heavy fighter (multirole) | fighter | 1 | M-1 + M-2 mix |
 | Spitter | FROGG | heavy fighter (gunship) | fighter | 1 | M-6 heavy maser main |
@@ -83,8 +86,8 @@ running drones; FROGG pilots are neuro-slaved, so FROGG "crew" is one brain-stem
   (tail defence), HM-1 x3-4 racks, NK-1 capable, Kestrel-mag or nothing fixed; needs escort doctrine to work.
 - **A light fighter, one pilot** - proposed *Merlin*: the cheap screen; fit sketch: 2x MK-20, 2x SW-9, no mag, no
   HE; faster and flimsier than the Kestrel.
-- **A cruiser** (later) and the **strategic fleet tender** (huge; shuttles + scripted major-ship docking - see
-  class definition; design pass needed before any stats).
+- **A cruiser** (later). HECLA's strategic services and scripted major-ship docking still need campaign-layer
+  implementation; its current model/data entry does not provide those systems.
 
 **FROGG fleet:** numbers doctrine covers the fighter line (light/heavy/bomber all exist); the gaps are the same
 as the humans' at the top - cruiser, dreadnought (lore aesthetic already anticipates both), and their

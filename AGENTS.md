@@ -62,7 +62,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
   assembly from `makeTurret` plus a seat/housing prim on the hull. A mount or launch point floating on bare hull is a defect.
   `tools/tests/muzzle_t.py` (numbers + marker screenshots in `$GS_SHOTS/ships`) is the check.
 - Blueprint/plate generator scripts are in `tools/gen/` (moved 2026-10-22, not re-run since; see its README). Test scripts: `tools/tests/`.
-- Size cap for now: ships under 500 m (frigate), **with one explicit exception: the FROGG Bullfrog (600 m, `cls: 'capital'`, jump-capable; owner decision 2026-10-22, docs/BULLFROG.md, src/79_bullfrog.js)**. Only frigates and the Bullfrog jump; docking does not repair.
+- Size cap for now: ships at or under 1,000 m (owner decision 2026-10-23); frigates remain under 500 m. Only frigates, HECLA (1,000 m strategic tender) and the FROGG Bullfrog (600 m, `cls: 'capital'`) jump. Docking does not repair.
 
 ## Delivery
 After a change the owner expects the rebuilt `index.html` plus screenshots. Update README and docs when

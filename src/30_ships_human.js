@@ -364,6 +364,129 @@ SHIPS.exeter = {
   ],
 };
 
+// ---- HECLA strategic tender (1 km owner decision, scaled from the 4 km brief) -------------
+const HECLA_SCALE = 0.25;
+const hPos = p => p.map(v => v * HECLA_SCALE);
+const hTap = (c, hz, h0, h1, col, o = {}) =>
+  tap(hPos(c), hz * HECLA_SCALE, h0.map(v => v * HECLA_SCALE), h1.map(v => v * HECLA_SCALE), col, o);
+const hEll = (c, r, col, o = {}) => ell(hPos(c), r.map(v => v * HECLA_SCALE), col, o);
+const hSeg = (a, b, ra, rb, col, o = {}) =>
+  seg(hPos(a), hPos(b), ra * HECLA_SCALE, rb * HECLA_SCALE, col, o);
+
+SHIPS.hecla = {
+  ...DB.ships.hecla,
+  prims: [
+    // Armoured keel, bow citadel, command tower, and broad stern block.
+    hTap([0, 0, -25], 1675, [90, 75], [90, 75], E.grey, { sh: 'h', noMirror: true, seam: [20, 15] }),
+    hTap([0, -8, -1775], 175, [120, 105], [70, 65], E.grey2, { sh: 'd', noMirror: true }),
+    hTap([0, -4, -1975], 25, [70, 65], [48, 48], E.white, { sh: 'd', noMirror: true }),
+    hTap([0, 0, 1805], 155, [230, 110], [210, 105], E.grey2, { sh: 'h', noMirror: true }),
+    hTap([0, 0, 0], 180, [72, 58], [72, 58], E.panel, { sh: 'h', noMirror: true }),
+    hTap([0, 147, -1780], 38, [45, 30], [45, 30], E.grey2, { ax: 'y', sh: 'h', noMirror: true }),
+    hTap([0, 174, -1780], 18, [35, 26], [35, 26], E.white, { ax: 'y', sh: 'h', noMirror: true }),
+    hTap([0, 68, -1760], 22, [30, 26], [30, 26], E.panel, { ax: 'y', noMirror: true }),
+    hTap([0, 5, 1190], 55, [62, 52], [62, 52], E.grey2, { sh: 'h', noMirror: true }),
+
+    // Open slip frames: paired inner/outer rails and regularly spaced cross-arms.
+    ...[124, 554].flatMap(x => [150, -150].map(y =>
+      hTap([x, y, 0], 1400, [14, 14], [14, 14], E.grey, { sh: 'h' }))),
+    ...Array.from({ length: 15 }, (_, i) => -1400 + i * 200).flatMap(z => [
+      ...[150, -150].map(y =>
+        hTap([339, y, z], 229, [14, 14], [14, 14], E.grey2, { ax: 'x', sh: 'h' })),
+      ...[124, 554].map(x =>
+        hTap([x, 0, z], 164, [14, 14], [14, 14], E.grey2, { ax: 'y', sh: 'h' })),
+    ]),
+
+    // Amber docking clamps, one pair at each station on both slips.
+    ...[-900, -300, 300, 900].flatMap(z => [-55, 55].map(y =>
+      hTap([200, y, z], 110, [30, 30], [30, 30], E.amber, { ax: 'x', sh: 'h' }))),
+    ...[-900, -300, 300, 900].map(z =>
+      hTap([200, 0, z], 55, [18, 18], [18, 18], E.grey2, { ax: 'y', sh: 'h' })),
+
+    // Dorsal/ventral fighter hangars, with outboard-facing lit mouths.
+    ...[
+      [55, 90, -800], [55, -90, 800],
+    ].flatMap(([x, y, z]) => [
+      hTap([x, y, z], 80, [40, 15], [40, 15], E.grey2, { sh: 'h' }),
+      hTap([95, y, z], 42, [24, 7], [24, 7], E.dark, { sh: 'h' }),
+      hTap([103, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
+    ]),
+
+    // Shuttle gates at the four ends of each outer rail.
+    ...[-1450, 1450].flatMap(z => [-45, 45].map(y => [
+      hTap([527, y, z], 50, [52, 22], [52, 22], E.grey2, { sh: 'h' }),
+      hTap([568, y, z], 24, [12, 16], [12, 16], E.dark, { sh: 'h' }),
+      hTap([572, y, z], 20, [8, 12], [8, 12], E.glow, { sh: 'h', glow: true }),
+    ])).flat(),
+
+    // Four ventral corvette racks, each with three visible guide cradles.
+    ...[-430, -300, -170, 170, 300, 430].flatMap(z => [
+      hTap([60, -95, z], 36, [50, 20], [50, 20], E.panel, { sh: 'h' }),
+      hSeg([18, -112, z], [108, -112, z], 10, 10, E.grey2),
+      hSeg([24, -119, z], [94, -119, z], 4, 4, E.amber),
+    ]),
+
+    // Dorsal and ventral radiator plates around the aft machinery.
+    ...[120, -120].map(y =>
+      hTap([146, y, 1450], 75, [75, 6], [75, 6], E.white, { ax: 'y', sh: 'h' })),
+    ...[0, 1, 2, 3, 4, 5].map(i =>
+      hSeg([150, 65, 1380 + i * 28], [150, 175, 1380 + i * 28], 6, 6, i % 2 ? E.orange : E.grey2)),
+    ...[0, 1, 2, 3, 4, 5].map(i =>
+      hSeg([150, -65, 1380 + i * 28], [150, -175, 1380 + i * 28], 6, 6, i % 2 ? E.orange : E.grey2)),
+
+    // Ordnance containers on the spine; leave hangars and projector stations clear.
+    ...Array.from({ length: 40 }, (_, i) => -1560 + i * 80)
+      .filter(z => Math.abs(z + 800) > 140 && Math.abs(z - 800) > 140 &&
+        Math.abs(z + 1300) > 80 && Math.abs(z - 1150) > 80)
+      .map((z, i) =>
+        hTap([45, 88, z], 30, [15, 12.5], [15, 12.5], i % 2 ? E.orange : E.grey2, { sh: 'h' })),
+
+    // Raised pads and arrays are positioned from the database so all mounts remain represented.
+    ...DB.ships.hecla.turrets.flatMap(t => {
+      const side = Math.sign(t.pos[1] || 1);
+      const baseY = side * (Math.abs(t.pos[1]) > 40 ? 41 : 18.75);
+      const gap = Math.abs(t.pos[1] - baseY);
+      const pad = (t.cls === 'M' ? 12 : 15) * HECLA_SCALE;
+      return [
+        ...(gap > 0 ? [tap([t.pos[0], (t.pos[1] + baseY) / 2, t.pos[2]], gap / 2,
+          [4.5, 4.5], [4.5, 4.5], E.grey2, { ax: 'y', sh: 'h', noMirror: true })] : []),
+        tap(t.pos, pad, [pad, pad], [pad, pad],
+          t.w === 'laserM' ? E.panel : E.grey2, { sh: 'h', noMirror: true }),
+      ];
+    }),
+    ...DB.ships.hecla.comps.filter(c => c.role === 'shield' || c.role === 'radar').flatMap(c => {
+      const r = (c.role === 'shield' ? 10 : 13) * HECLA_SCALE;
+      const side = Math.sign(c.pos[1] || 1);
+      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 41 : 18.75);
+      const gap = Math.abs(c.pos[1] - baseY);
+      return [
+        ...(gap > 0 ? [tap([c.pos[0], (c.pos[1] + baseY) / 2, c.pos[2]], gap / 2,
+          [4.5, 4.5], [4.5, 4.5], E.grey2, { ax: 'y', sh: 'h', noMirror: true })] : []),
+        tap(c.pos, r, [r, 0.75], [r, 0.75],
+          c.role === 'shield' ? E.glow : E.white, { sh: 'h', noMirror: true }),
+      ];
+    }),
+    ...DB.ships.hecla.comps.filter(c => c.id.startsWith('shb')).map(c =>
+      tap(c.pos, 10, [9, 6], [9, 6], E.grey2, { sh: 'h', noMirror: true })),
+    ...DB.ships.hecla.comps.filter(c => c.role === 'radiator').map(c =>
+      tap(c.pos, 8, [4, 4], [4, 4], E.panel, { sh: 'h', noMirror: true })),
+
+    // Eight exhaust housings and visible blue nozzle faces, aligned to the engine records.
+    ...DB.ships.hecla.engines.flatMap(e => [
+      tap([e.pos[0], e.pos[1], e.pos[2] - 5.5], 6, [6, 6], [6, 6], E.noz, { sh: 'h', noMirror: true }),
+      tap([e.pos[0], e.pos[1], e.pos[2] - 1], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
+      ell([e.pos[0], e.pos[1], 499], [4, 4, 1], E.glow, { glow: true, noMirror: true }),
+    ]),
+
+    // Window strips and service lights keep the otherwise open frame legible.
+    ...[-1450, -1250, -1050, -250, 0, 250, 1050, 1250].flatMap(z => [
+      hTap([0, 77, z], 24, [32, 3], [32, 3], E.white, { sh: 'h', noMirror: true, glow: true }),
+      hTap([116, 154, z], 18, [4, 4], [4, 4], E.amber, { sh: 'h', glow: true }),
+    ]),
+    hTap([0, 184, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
+  ],
+};
+
 // ---- DRONE: unmanned 6 m wingman (docs/FLEET_LOGIC.md 9/9a). cls stays 'fighter' so fighter rules (fixed guns, PD priority, no big-ship death throes) apply;
 // `drone: true` switches on the drone AI/orders (56_drones.js). No pilot, no eject, no missiles, one light gun, small shield. Cheap voxel model (resMul).
 const D6 = { hull: 0xaab2bb, hull2: 0x8a929c, dark: 0x30363e, canopy: 0x2a9ad0, amber: 0xc79a3a };

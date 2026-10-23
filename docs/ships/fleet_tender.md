@@ -1,15 +1,21 @@
 # HECLA: the human strategic fleet tender (specification, no code, no geometry)
 
-Status: **design specification, 2026-10-23. Nothing is implemented, nothing was run in the game.** Companion data: `docs/ships/fleet_tender.db.json`
-(a drop-in value for `data/db.json` `ships.hecla`; it is not merged). `AGENTS.md` freezes new player-facing systems until the owner has hand-played
-the build on iPad; this ship adds none (no new input, section 1.3), but the code items in section 11 are not to be started before that freeze lifts.
+Status: the 4 km design below is the original 2026-10-23 proposal. Owner decisions superseded its envelope and several strategic assumptions; the 1 km geometry and database entry are now implemented in `src/30_ships_human.js` and `data/db.json`. The companion `fleet_tender.db.json` matches the implemented database record. The rest of the proposal remains design context, not implemented game behavior.
 
 Evidence tags: **[R]** read in the repo this session (file named). **[C]** my arithmetic, reproducible from the stated inputs; not a simulation.
 **[PH]** placeholder number of mine, derived from nothing external. **[M]** recollection, unverified. **[S]** sketch estimate: I rasterised the box
 layout of section 9 in a throwaway Python script (`numpy`), counted voxels with the exposed-face rule of `voxelize`; the real prims will differ.
-What I checked: the JSON parses, passes a copy of `tools/validate_db.py` and `tools/power_table.py` run on `data/db.json` plus this ship, every
-mount/turret/engine maps to a component, all x-offsets mirror, and every component sits within 8 m of the sketch hulls.
-What I did not check: any in-game behaviour, any frame rate, any build time.
+The 1 km model was tested in the Shipyard at all eight detail settings and spawned in a headless game. That does not verify real-device performance, campaign services, repair, scripted docking or real-device play.
+
+## Owner decisions and implementation boundary (2026-10-23)
+
+- Envelope: 1,000 m (`half [145, 50, 500]`, radius 520 m); geometry and spatial database fields are quarter-scale from the original 4 km sketch.
+- Power: one main reactor, retaining the original aggregate 6,000 hp. The owner rule is a 25% output floor while damaged and ship destruction at 0 hp; this task did not change the combat/power implementation.
+- Repair: strategic layer and scripted segments only; never live.
+- Acquisition: buildable at a Tier III yard. This is a design decision only; no yard or menu integration was added.
+- Voxel settings are measurement-driven: `resMul: 0.6`, `resCap: 240`, `noDetail: true`. The all-quality voxel counts and build timings are in section 3.1. Headless SwiftShader rendered-frame intervals were also recorded; they are not representative of device GPU performance.
+- The avoidance radius is now 654 m (`1.2 * 520 + 30`); an AI Darter approached from 700 m in the headless check. Avoidance within 654 m remains unchanged.
+- Open design point: behavior of a major ship berthed while HECLA is attacked (question 5 below).
 
 ## 0. Name, and how it relates to the tactical Tender
 
@@ -125,32 +131,25 @@ Hecla is authored at its in-game size, like the Bullfrog, so the JSON holds the 
 with one exception (Bullfrog); the Hive Carrier at 2.5 km is already loadable from the skirmish menu with a warning [R: 76_menu.js 20, 126], so the cap is
 already a convention, not a hard limit. Hecla needs an owner exception of the same kind.
 
-### 3.1 Render and collision limits, as the Hive Carrier meets them [R unless marked]
-- **Camera far plane 6,000 m** (`40_scene.js` 9), near 0.1, standard (not logarithmic) depth. Anything farther than 6 km from the camera is clipped: Hecla is entirely
-  visible only if its centre is within about 4 km (side-on); seen dead astern from 5 km the bow section is clipped. Depth resolution at 5 km is about 15 m
-  (`z^2 / (near x 2^24)`) [C], larger than a 10 m voxel: the 1.03x `glow` instances will z-fight with body voxels at range. Keep emissive voxels few.
-- **Distance LOD does nothing.** `lodTick` compares `radius / distance` with thresholds 0.02 / 0.008 / 0.0035 (normal) [10_config.js]. Hecla's ratio at the 6 km far plane
-  is 2,080 / 6,000 = 0.35, 17x the first threshold. It is always built at the device's detail step. The Hive Carrier is the same (ratio 0.22). Budget must therefore be set by `resMul`
-  and `resCap`, not by LOD.
-- **Voxel resolution**: `resFor = min(RES_CAP 420, def.resCap, round(DETAIL_STEPS[idx] x (length/12)^0.4 x resMul))`, voxel size = length / res.
+### 3.1 Render and collision limits
+- **Camera far plane 6,000 m** (`40_scene.js` 9), near 0.1, standard (not logarithmic) depth. Hecla's 1,000 m length fits within the view when centred up to about 5,500 m away side-on. Depth resolution at 5 km is about 15 m (`z^2 / (near x 2^24)`) [C], greater than the 4.17 m max-quality voxel; emissive detail may z-fight at range.
+- **Distance LOD has little effect.** `lodTick` compares `radius / distance` with thresholds 0.02 / 0.008 / 0.0035 (normal) [10_config.js]. Hecla's ratio at the 6 km far plane is 520 / 6,000 = 0.087, above the first threshold. Voxel budgets are controlled by `resMul`, `resCap`, and `noDetail`.
+- **Voxel resolution** uses `resFor = min(RES_CAP 420, def.resCap, round(DETAIL_STEPS[idx] x (length/12)^0.4 x resMul))`; measured counts below are from the Shipyard at each quality level. The model uses `resMul: 0.6`, `resCap: 240`, `noDetail: true`.
 
-| Ship | resMul / cap | Phone, tablet (idx 2) | Laptop (idx 4) | Desktop, max (idx 6, 7) |
-|---|---|---|---|---|
-| Hive Carrier [C] | 0.25 / 420 | res 135, voxel 18.5 m | 237, 10.5 m | 420 (capped), 6.0 m |
-| Bullfrog | 0.85 / 400 | 45.7k instances measured | 112.6k measured | 122.1k measured [R: MILESTONE_2.md] |
-| **Hecla** [C] | **0.35 / 400** | **res 229, voxel 17.5 m** | **400, 10.0 m** | **400, 10.0 m** |
+| Quality index | Detail step | Voxel instances | Shipyard voxel-build time |
+|---:|---:|---:|---:|
+| 0 | 24 | 1,264 | 3 ms |
+| 1 | 40 | 5,224 | 5 ms |
+| 2 | 64 | 17,310 | 11 ms |
+| 3 | 88 | 23,264 | 12 ms |
+| 4 | 112 | 23,264 | 11 ms |
+| 5 | 160 | 23,264 | 11 ms |
+| 6 | 224 | 23,264 | 11 ms |
+| 7 | 288 | 23,264 | 11 ms |
 
-- **Why resMul 0.35 and not the Hive's 0.25**: at 0.25 the tablet voxel is 24.5 m, about the width of a rail; a 28 m member would flicker in and out. At 0.35 the tablet
-  voxel (17.5 m) is 0.63 of the thinnest member. Cap 400 (the Bullfrog's value) holds laptop, desktop and max to the same 10 m grid: build time and memory stop growing.
-- **Instance estimate [S]**: 22k (tablet, phone), 73k (laptop and above) for the bare box layout of section 9. Plan for up to 35k and 120k once windows, hangar mouths and
-  container rows exist (+30 to 60%); that is the Bullfrog's band (45.7k / 112.6k / 122.1k). Grid size at the cap
-  is 117 x 41 x 401 = 1.9M cells [S], well under the Hive Carrier's 252 x 112 x 420 = 11.9M at its cap [C]. `noDetail: true` is set (section 9.4).
-- **Collision**: `collideShips` prefilters on `radius + 3` and then traces voxels [R: 65_combat.js 278]; an open frame is fine. Two consequences: (1) the radius sphere
-  (2,080 m) is much larger than the solid (4,000 x 1,160 x 400), so every ship within 2 km of the centre pays the voxel trace; (2) **AI avoidance uses the centre distance:
-  `avoidance()` steers any AI ship within `1.2 x radius + 30` = 2,526 m of a capital's centre away [R: 70_ai.js 154-163]**. Escorts and enemy fighters could not approach
-  Hecla's hull at all, and the bow (2,000 m from the centre) is inside that bubble. This must be fixed before Hecla is flown (section 11).
-- **Blast damage**: `blastAt` already measures from the hull for radius over 150 m (`hullGap`) [R: 60_weapons.js 294], so torpedoes at the ends are not wasted as the Bullfrog
-  document feared.
+The cap makes quality levels 3–7 share the same measured voxel count. In the latest headless SwiftShader run, 15 rendered-frame intervals were 383 ms median / 450 ms p95 in Shipyard and 150 ms median / 433 ms p95 in-game; these timings are not representative of device GPU performance.
+- **Collision**: `collideShips` prefilters on `radius + 3` and then traces voxels [R: 65_combat.js 278]. AI avoidance uses centre distance and remains unchanged: `1.2 x radius + 30` = 654 m [R: 70_ai.js 154-163]. A Darter AI advanced toward Hecla from 700 m in the headless test; this verifies approach outside the avoidance margin, not behavior inside it.
+- **Blast damage**: `blastAt` measures from the hull for radius over 150 m (`hullGap`) [R: 60_weapons.js 294].
 
 ## 4. Performance
 
@@ -391,12 +390,12 @@ Docs to update when it is built: `docs/SHIP_CLASSES.md` (class table, fleet tend
 | 8 | 52 turrets scan missiles and ships each frame (60_weapons.js `updateTurrets`) | profile; the Bullfrog has 25. Cluster PD scanning if it costs |
 | 9 | No hangar launch code for human hulls | only mission-start spawns |
 
-## 12. Open questions for the owner (real ones only)
-1. **Envelope.** Do human carriers and dreadnoughts reach 2 to 3 km (owner ladder) or stay near 1.5 km (`SHIP_MANUAL.md`)? It sets Hecla at 4,000 or 3,000 m and the slip window at 2,400 or 1,500 m. Also: will you grant a size-cap exception for an unarmed 4 km hull, as for the Bullfrog? (Voxel cost is identical either way.)
-2. **Reactor rule.** With several reactors, does a destroyed reactor kill the ship (today's engine), zero only its own share (my assumption), or kill the ship at some share lost? What does a reactor at 0 hp output: 0 or the 25% floor?
-3. **Repair authority.** Is repair a tender function (my reading of FLEET_LOGIC 8: "a tender, a base or a drydock") performed only on the strategic layer and in scripted segments, never live? That would give Hecla `repair: true` while the Tender and Exeter stay `false`.
-4. **One or many.** Is Hecla a single scenario-granted unit (loss is campaign-defining; my default) or buildable at a Tier III yard (900 S placeholder, 75 home-turns)? It decides how hard the loss table can bite.
-5. **Berthed ships under attack.** In a scripted segment with a major ship berthed, may Hecla be attacked? If yes, does the berthed ship fight, sit behind Hecla's shield and share its fate, or detach (my default: share the fate, survive at 50% on loss)?
+## 12. Owner decisions and remaining question
+1. **Envelope (decided).** HECLA is 1,000 m; the previous 3-4 km options are superseded.
+2. **Reactor (decided).** One 6,000 hp main reactor; damaged output has a 25% floor; destruction of the reactor destroys the ship.
+3. **Repair authority (decided).** Strategic and scripted only, never live.
+4. **Acquisition (decided).** Buildable at a Tier III yard. Cost and campaign integration remain unspecified.
+5. **Berthed ships under attack (open).** In a scripted segment with a major ship berthed, may HECLA be attacked? If yes, does the berthed ship fight, sit behind HECLA's shield and share its fate, or detach?
 
 ## 13. Risks
 - **Performance** (the one that matters). Unmeasured: the Hive Carrier has no recorded frame cost either [R: SHIP_MANUAL 6 "No performance test of the 2.5 km model in the sim yet"]. Instances 22k to 120k [S] come from a box sketch and could be 1.5x higher; GPU cost of about 1.2M triangles for the body alone at laptop and above (12 triangles per voxel box) on an iPad is unknown; two capitals in one scene (Hecla + Bullfrog) is about 250k instances. Mitigation: `resMul` is the single dial; 0.30 gives res 196 / 343 and voxels 20 / 11.7 m [C], at the cost of the frame members approaching one voxel.
