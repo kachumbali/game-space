@@ -15,3 +15,46 @@ jobs:
         with:
           name: index-html
           path: index.html
+  playwright:
+    runs-on: ubuntu-latest
+    needs: build-lint
+    timeout-minutes: 10
+    env:
+      GS_TEST_DIR: ${{ runner.temp }}/gs_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: index-html
+          path: .
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install Playwright, Chromium, and Three.js
+        run: |
+          python3 -m pip install playwright
+          python3 -m playwright install --with-deps chromium
+          npm install --prefix "$GS_TEST_DIR" three@0.170.0
+      - name: Run browser and regression tests
+        run: |
+          set -o pipefail
+          mkdir -p test-logs
+          run_logged() {
+            name="$1"
+            shift
+            echo "=== $name ==="
+            "$@" 2>&1 | tee "test-logs/$name.log"
+          }
+          run_logged build-lint python3 tools/tests/build_lint_t.py
+          run_logged db-validation python3 tools/validate_db.py
+          run_logged suite1 python3 tools/tests/suite1.py
+          run_logged p0 python3 tools/tests/p0_t.py
+          run_logged credits-briefing python3 tools/tests/cred_t.py
+          run_logged credits-options python3 tools/tests/cred_t2.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-test-logs
+          path: test-logs/
+          if-no-files-found: warn
