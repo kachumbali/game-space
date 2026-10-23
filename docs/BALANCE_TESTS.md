@@ -241,3 +241,8 @@ Reading (not tuning data):
 - Caveats as before: six runs, no variance estimate; q=low (bolt-vs-fighter hits do not land at this
   quality - fighter kills are missile/maser/turret-driven, same as the recorded set); rendering
   disabled, so the software renderer is irrelevant.
+engagement should be re-measured. S1 real pause and S2 touch parity are in (UX_REVIEW workplan status).
+
+## Exeter laser retune (owner decision 2026-10-23)
+
+Owner hand-play: Exeter vs Bullfrog ended in seconds, fighters included. Reproduced with `bullfrog_eng.py` (4 km start, Exeter alone): Bullfrog and 31 of 34 fighters dead at ~67 sim-s, Exeter 75% hull; with lasers disabled the Exeter dies at ~61 s; proximity flak off changes nothing. Cause: the 10 turret lasers (LS-2 + LS-8) at full damage. Retuned LS-2 dmg 6 -> 3 and LS-8 dmg 13 -> 6.5 (Halberd's LS-2 turrets are affected too). After: Exeter alone 1 win / 1 mutual / 2 losses in 4 runs (Bullfrog killed in 2); full fleet 10 km, 3/3 human wins, Exeter 90%. Small samples (not the 20-run standard); direction only.
