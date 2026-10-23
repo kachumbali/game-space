@@ -6,12 +6,23 @@ if (params.has('yard')) {
   const YARD_root = document.createElement('div');
   YARD_root.id = 'yard';
   YARD_root.innerHTML = `<section class="ypanel">
-    <h1>SHIPYARD / VOXEL WORKBENCH</h1>
+    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></header>
+    <div class="yard-controls" id="yard-controls">
     <label for="yard-ship">SHIP</label><select id="yard-ship"></select>
+    <div class="yardrow"><label for="yard-template">NEW FROM TEMPLATE</label><select id="yard-template"><option value="kestrel">Kestrel / fighter</option><option value="halberd">Halberd / corvette</option><option value="exeter">Exeter / frigate</option></select><button id="yard-new-template" type="button">New ship from template</button></div>
     <div class="yardrow"><label><input id="yard-grid" type="checkbox" checked> grid</label><span class="yardnote">drag to orbit · wheel to zoom · pinch on touch</span></div>
+    <div class="yardrow yardviews">
+      <button id="yard-frame" type="button">Frame ship</button>
+      <button id="yard-view-front" type="button">Front</button>
+      <button id="yard-view-side" type="button">Side</button>
+      <button id="yard-view-top" type="button">Top</button>
+      <button id="yard-view-quarter" type="button">3/4</button>
+    </div>
+    <div class="yardrow"><label><input id="yard-in-game-scale" type="checkbox"> preview at in-game scale</label></div>
+    <div id="yard-size" class="yardnote"></div>
     <label for="yard-prims">PRIMS JS SOURCE (plain object array accepted)</label>
     <textarea id="yard-prims" spellcheck="false" aria-label="Ship prims JavaScript source"></textarea>
-    <div class="yardnote">JSON-compatible primitive objects; types include tap, ell, seg, paint and text.</div>
+    <div class="yardnote">Plain object arrays or helper calls: tap, box, ell, seg, chain, ringSegs, rungs.</div>
     <div id="yard-error" class="yarderror" role="alert" aria-live="polite"></div>
     <label for="yard-db-entry">DATABASE ENTRY JSON</label>
     <textarea id="yard-db-entry" spellcheck="false" aria-label="Ship database entry JSON"></textarea>
@@ -31,6 +42,7 @@ if (params.has('yard')) {
     <div id="yard-bounds" class="yardnote"></div>
     <button id="yard-apply-bounds" type="button">Apply suggested bounds</button>
     <div class="yardrow yardexports">
+      <select id="yard-prims-format" aria-label="Prims export format"><option value="helpers">Helper-call syntax</option><option value="json">Plain JSON objects</option></select>
       <button id="yard-copy-prims" type="button">Copy prims JS</button>
       <button id="yard-copy-db" type="button">Copy db entry (JSON)</button>
       <button id="yard-save-sheet" type="button">Save PNG sheet</button>
@@ -38,6 +50,7 @@ if (params.has('yard')) {
     <div id="yard-export-status" class="yardnote" role="status" aria-live="polite"></div>
     <div id="yard-stat" class="yardstat"></div>
     <div class="yardnote" id="yard-reference">CYAN SILHOUETTE: KESTREL / 12.4 m</div>
+    </div>
   </section>`;
   document.body.appendChild(YARD_root);
 
@@ -55,7 +68,7 @@ if (params.has('yard')) {
   const YARD_color = new THREE.Color();
   const YARD_material = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22 });
   const YARD_glowMaterial = new THREE.MeshBasicMaterial();
-  let YARD_def = null, YARD_dbEntry = null, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null, YARD_pinchDistance = 0, YARD_rebuildTimer = 0, YARD_dbTimer = 0, YARD_detailIdx = 2, YARD_lodDrop = 0;
+  let YARD_def = null, YARD_dbEntry = null, YARD_sourceShipId = null, YARD_gameScale = 1, YARD_meshes = [], YARD_orbit = 0.55, YARD_elevation = 0.32, YARD_distance = 1, YARD_drag = null, YARD_pinchDistance = 0, YARD_rebuildTimer = 0, YARD_dbTimer = 0, YARD_detailIdx = 2, YARD_lodDrop = 0;
   const YARD_pointers = new Map();
   const YARD_grid = new THREE.Group();
   const YARD_reference = new THREE.Group();
@@ -75,9 +88,13 @@ if (params.has('yard')) {
     return line;
   };
 
-  function YARD_buildGrid(def) {
+  function YARD_displayScale() {
+    return document.getElementById('yard-in-game-scale').checked ? YARD_gameScale : 1;
+  }
+
+  function YARD_buildGrid(def, scale = 1) {
     YARD_emptyGroup(YARD_grid);
-    const span = Math.max(40, Math.ceil(Math.max(def.half[0], def.half[2]) * 4 / 10) * 10);
+    const span = Math.max(40, Math.ceil(Math.max(def.half[0], def.half[2]) * scale * 4 / 10) * 10);
     const grid = new THREE.GridHelper(span, span, 0x42685f, 0x243b38);
     grid.material.transparent = true;
     grid.material.opacity = 0.45;
@@ -108,9 +125,9 @@ if (params.has('yard')) {
     scene.add(YARD_grid);
   }
 
-  function YARD_buildReference(def) {
+  function YARD_buildReference(def, scale = 1) {
     YARD_emptyGroup(YARD_reference);
-    const ref = __game.SHIPS.kestrel, offset = Math.max(def.half[0], 4) + 4;
+    const ref = __game.SHIPS.kestrel, offset = Math.max(def.half[0] * scale, 4) + 4;
     const points = [
       [0, -6.2], [0.55, -3.4], [1.0, -1.2], [4.9, 1.7], [4.2, 2.8],
       [1.2, 1.8], [0.55, 3.0], [0.65, 5.7], [0, 6.2], [-0.65, 5.7],
@@ -122,8 +139,11 @@ if (params.has('yard')) {
   }
 
   function YARD_fit(def) {
-    const radius = Math.max(def.radius || 0, ...def.half);
-    YARD_distance = Math.max(radius * 2.5, 20);
+    const scale = YARD_displayScale();
+    const radius = Math.max(def.radius || 0, Math.hypot(...def.half)) * scale;
+    const verticalHalfFov = THREE.MathUtils.degToRad(42 / 2);
+    const horizontalHalfFov = Math.atan(Math.tan(verticalHalfFov) * Math.max(0.1, camera.aspect));
+    YARD_distance = Math.max(radius / Math.sin(Math.min(verticalHalfFov, horizontalHalfFov)) * 1.12, 20);
     YARD_camera();
   }
 
@@ -192,10 +212,15 @@ if (params.has('yard')) {
     YARD_def = def;
     for (const mesh of nextMeshes) YARD_model.add(mesh);
     YARD_meshes = nextMeshes;
+    const displayScale = YARD_displayScale();
+    YARD_model.scale.setScalar(displayScale);
     voxCache.delete(def.id + ':' + res + (data.tier ? ':t' + data.tier : ''));
-    YARD_stat.textContent = `${def.name || def.id} · ${data.voxels.length.toLocaleString()} voxels · ${(performance.now() - t0).toFixed(0)} ms · ${def.length} m`;
-    YARD_buildGrid(def);
-    YARD_buildReference(def);
+    const gameLength = def.length * YARD_gameScale;
+    const preview = document.getElementById('yard-in-game-scale').checked ? 'in-game' : 'authored';
+    document.getElementById('yard-size').textContent = `Authored: ${def.length} m · in game: ${gameLength} m · preview: ${preview} (${displayScale}×)`;
+    YARD_stat.textContent = `${def.name || def.id} · ${data.voxels.length.toLocaleString()} voxels · ${(performance.now() - t0).toFixed(0)} ms · ${def.length} m authored / ${gameLength} m in game`;
+    YARD_buildGrid(def, displayScale);
+    YARD_buildReference(def, displayScale);
     YARD_buildExtents(def);
     YARD_bounds.textContent = `Suggested half: ${YARD_suggestBounds(def.prims).half.map(value => value.toFixed(1)).join(', ')} m · radius ${YARD_suggestBounds(def.prims).radius.toFixed(1)} m`;
     if (refit) YARD_fit(def);
@@ -270,6 +295,8 @@ if (params.has('yard')) {
 
   function YARD_validateEntry(entry) {
     const errors = [], comps = new Set((entry.comps || []).map(comp => comp.id));
+    if (typeof entry.id !== 'string' || !/^[a-z][a-z0-9_]*$/.test(entry.id)) errors.push('id must use lowercase letters, numbers, and underscores, starting with a letter');
+    else if (Object.hasOwn(DB.ships, entry.id) && entry.id !== YARD_sourceShipId) errors.push(`id ${entry.id} already exists`);
     for (const kind of ['mounts', 'turrets']) for (const mount of entry[kind] || []) {
       if (!DB.weapons[mount.w]) errors.push(`${kind}: unknown weapon ${mount.w}`);
       if (!comps.has(mount.comp)) errors.push(`${kind}: weapon ${mount.w} mounted on missing component ${mount.comp}`);
@@ -301,7 +328,7 @@ if (params.has('yard')) {
       YARD_dbError.textContent = errors.length ? errors.map(error => '• ' + error).join('\n') : 'Database entry valid.';
       document.getElementById('yard-mirror').checked = !!entry.mirror;
       const nextDef = { ...YARD_def, ...entry, id: YARD_def.id, prims: YARD_def.prims };
-      if (nextDef.mirror !== YARD_def.mirror || JSON.stringify(nextDef.half) !== JSON.stringify(YARD_def.half)) YARD_setDefinition(nextDef);
+      if (nextDef.mirror !== YARD_def.mirror || nextDef.length !== YARD_def.length || JSON.stringify(nextDef.half) !== JSON.stringify(YARD_def.half)) YARD_setDefinition(nextDef);
       else YARD_def = nextDef;
     } catch (error) {
       YARD_dbError.textContent = error instanceof Error ? error.message : String(error);
@@ -309,15 +336,220 @@ if (params.has('yard')) {
   }
 
   function YARD_loadEntry(id) {
+    YARD_sourceShipId = id === '__new' ? null : id;
     const entry = id === '__new' ? { ...YARD_colorStrings(DB.ships.kestrel), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(DB.ships[id]);
     YARD_dbEditor.value = JSON.stringify(entry, null, 2);
     YARD_dbChange();
   }
 
-  function YARD_primsExport() {
-    const prims = JSON.parse(YARD_prims.value);
-    if (!Array.isArray(prims)) throw new Error('Prims source must be an array.');
-    return JSON.stringify(prims, (key, value) => key === '_' ? undefined : value, 2);
+  function YARD_cloneAuthoredShip(id) {
+    const runtime = __game.SHIPS[id];
+    const def = JSON.parse(JSON.stringify(runtime, (key, value) => key === '_' ? undefined : value));
+    const authoredLength = DB.ships[id]?.length;
+    if (authoredLength > 0 && def.length !== authoredLength) scaleShip(def, authoredLength);
+    return def;
+  }
+
+  function YARD_newFromTemplate(id) {
+    const template = YARD_cloneAuthoredShip(id);
+    template.id = 'yard-new-' + id;
+    template.name = 'NEW SHIP';
+    template.comps = [];
+    template.mounts = [];
+    template.turrets = [];
+    template.engines = [];
+    template.stores = {};
+    YARD_sourceShipId = null;
+    YARD_gameScale = 1;
+    YARD_select.value = '__new';
+    YARD_model.rotation.set(0, 0, 0);
+    YARD_prims.value = JSON.stringify(template.prims, (key, value) => key === '_' ? undefined : value, 2);
+    YARD_error.textContent = '';
+    YARD_setDefinition(template, true);
+    const entry = {
+      id: '',
+      name: '',
+      fac: DB.ships[id].fac,
+      cls: DB.ships[id].cls,
+      length: DB.ships[id].length,
+      half: [...DB.ships[id].half],
+      radius: DB.ships[id].radius,
+      mirror: !!DB.ships[id].mirror,
+      armor: { ...DB.ships[id].armor },
+      comps: [],
+      mounts: [],
+      turrets: [],
+      engines: [],
+      stores: {},
+    };
+    YARD_dbEditor.value = JSON.stringify(entry, null, 2);
+    YARD_dbChange();
+  }
+
+  function YARD_parsePrims(source) {
+    const tokens = [];
+    for (let i = 0; i < source.length;) {
+      const ch = source[i];
+      if (/\s/.test(ch)) { i++; continue; }
+      if (source.startsWith('//', i)) {
+        i = source.indexOf('\n', i);
+        if (i < 0) break;
+        continue;
+      }
+      if (source.startsWith('/*', i)) {
+        const end = source.indexOf('*/', i + 2);
+        if (end < 0) throw new Error('Unclosed comment in prims source.');
+        i = end + 2;
+        continue;
+      }
+      if (ch === '"' || ch === "'") {
+        const quote = ch;
+        let value = '';
+        i++;
+        while (i < source.length && source[i] !== quote) {
+          if (source[i] !== '\\') { value += source[i++]; continue; }
+          i++;
+          if (i >= source.length) throw new Error('Unclosed string in prims source.');
+          const escaped = source[i++];
+          const escapes = { n: '\n', r: '\r', t: '\t', b: '\b', f: '\f', v: '\v', '0': '\0' };
+          if (escaped === 'u' || escaped === 'x') {
+            const count = escaped === 'u' ? 4 : 2, hex = source.slice(i, i + count);
+            if (!new RegExp(`^[0-9a-fA-F]{${count}}$`).test(hex)) throw new Error('Invalid escaped character in prims source.');
+            value += String.fromCharCode(parseInt(hex, 16));
+            i += count;
+          } else value += Object.hasOwn(escapes, escaped) ? escapes[escaped] : escaped;
+        }
+        if (source[i] !== quote) throw new Error('Unclosed string in prims source.');
+        i++;
+        tokens.push({ type: 'literal', value });
+        continue;
+      }
+      const number = source.slice(i).match(/^(?:0[xX][\da-fA-F]+|(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?)/);
+      if (number) {
+        const value = Number(number[0]);
+        if (!Number.isFinite(value)) throw new Error('Non-finite number in prims source.');
+        tokens.push({ type: 'literal', value });
+        i += number[0].length;
+        continue;
+      }
+      const identifier = source.slice(i).match(/^[A-Za-z_$][\w$]*/);
+      if (identifier) {
+        tokens.push({ type: 'identifier', value: identifier[0] });
+        i += identifier[0].length;
+        continue;
+      }
+      if (source.startsWith('...', i)) { tokens.push({ value: '...' }); i += 3; continue; }
+      if ('[]{}(),:+-'.includes(ch)) { tokens.push({ value: ch }); i++; continue; }
+      throw new Error(`Unsupported token "${ch}" in prims source.`);
+    }
+    let at = 0;
+    const peek = () => tokens[at]?.value;
+    const take = expected => {
+      const token = tokens[at++];
+      if (!token || (expected !== undefined && token.value !== expected)) throw new Error(`Expected ${expected || 'a value'} in prims source.`);
+      return token;
+    };
+    const helpers = { tap, box, ell, seg, chain, ringSegs, rungs };
+    function value() {
+      if (peek() === '-') { take('-'); const number = value(); if (typeof number !== 'number') throw new Error('Unary minus requires a number.'); return -number; }
+      if (peek() === '+') { take('+'); const number = value(); if (typeof number !== 'number') throw new Error('Unary plus requires a number.'); return number; }
+      if (peek() === '[') {
+        take('[');
+        const result = [];
+        while (peek() !== ']') {
+          if (at >= tokens.length) throw new Error('Unclosed array in prims source.');
+          const spread = peek() === '...';
+          if (spread) take('...');
+          const item = value();
+          if (spread) {
+            if (!Array.isArray(item)) throw new Error('Spread values must be arrays.');
+            result.push(...item);
+          } else result.push(item);
+          if (peek() !== ',') break;
+          take(',');
+          if (peek() === ']') break;
+        }
+        take(']');
+        return result;
+      }
+      if (peek() === '{') {
+        take('{');
+        const result = {};
+        while (peek() !== '}') {
+          if (at >= tokens.length) throw new Error('Unclosed object in prims source.');
+          const key = take();
+          if (key.type !== 'identifier' && key.type !== 'literal') throw new Error('Object keys must be names or strings.');
+          take(':');
+          result[key.value] = value();
+          if (peek() !== ',') break;
+          take(',');
+          if (peek() === '}') break;
+        }
+        take('}');
+        return result;
+      }
+      const token = take();
+      if (token.type === 'literal') return token.value;
+      if (token.type !== 'identifier') throw new Error('Expected a literal or helper call in prims source.');
+      if (token.value === 'true') return true;
+      if (token.value === 'false') return false;
+      if (token.value === 'null') return null;
+      if (token.value === 'undefined') return undefined;
+      const helper = Object.hasOwn(helpers, token.value) ? helpers[token.value] : null;
+      if (!helper) throw new Error(`Unknown helper ${token.value}.`);
+      take('(');
+      const args = [];
+      while (peek() !== ')') {
+        if (at >= tokens.length) throw new Error(`Unclosed ${token.value}() call.`);
+        args.push(value());
+        if (peek() !== ',') break;
+        take(',');
+        if (peek() === ')') break;
+      }
+      take(')');
+      return helper(...args);
+    }
+    const prims = value();
+    if (at !== tokens.length) throw new Error('Unexpected extra input after prims array.');
+    if (!Array.isArray(prims)) throw new Error('Prims source must evaluate to an array.');
+    if (prims.some(prim => !prim || typeof prim !== 'object' || typeof prim.t !== 'string')) throw new Error('Every prim must be an object with a string t field.');
+    return prims;
+  }
+
+  function YARD_primJsValue(value, key = '') {
+    if (value === undefined) return 'undefined';
+    if (key === 'col' && Number.isInteger(value)) return `0x${value.toString(16).padStart(6, '0')}`;
+    return JSON.stringify(value);
+  }
+
+  function YARD_primHelper(prim) {
+    const options = { ...prim };
+    delete options._;
+    delete options.t;
+    if (prim.t === 'tap') {
+      for (const key of ['c', 'hz', 'h0', 'h1', 'col']) delete options[key];
+      const sameSize = JSON.stringify(prim.h0) === JSON.stringify(prim.h1);
+      if (sameSize && (prim.sh === undefined || prim.sh === 'r') && !(prim.sweep || prim.sweepY)) {
+        delete options.sh; delete options.sweep; delete options.sweepY;
+        return `box(${JSON.stringify(prim.c)}, ${JSON.stringify([prim.h0[0], prim.h0[1], prim.hz])}, ${YARD_primJsValue(prim.col, 'col')}${Object.keys(options).length ? ', ' + JSON.stringify(options) : ''})`;
+      }
+      return `tap(${JSON.stringify(prim.c)}, ${JSON.stringify(prim.hz)}, ${JSON.stringify(prim.h0)}, ${JSON.stringify(prim.h1)}, ${YARD_primJsValue(prim.col, 'col')}${Object.keys(options).length ? ', ' + JSON.stringify(options) : ''})`;
+    }
+    if (prim.t === 'ell') {
+      for (const key of ['c', 'r', 'col']) delete options[key];
+      return `ell(${JSON.stringify(prim.c)}, ${JSON.stringify(prim.r)}, ${YARD_primJsValue(prim.col, 'col')}${Object.keys(options).length ? ', ' + JSON.stringify(options) : ''})`;
+    }
+    if (prim.t === 'seg') {
+      for (const key of ['a', 'b', 'ra', 'rb', 'col']) delete options[key];
+      return `seg(${JSON.stringify(prim.a)}, ${JSON.stringify(prim.b)}, ${JSON.stringify(prim.ra)}, ${JSON.stringify(prim.rb)}, ${YARD_primJsValue(prim.col, 'col')}${Object.keys(options).length ? ', ' + JSON.stringify(options) : ''})`;
+    }
+    return JSON.stringify(prim);
+  }
+
+  function YARD_primsExport(format = document.getElementById('yard-prims-format').value) {
+    const prims = YARD_parsePrims(YARD_prims.value);
+    if (format === 'json') return JSON.stringify(prims, (key, value) => key === '_' ? undefined : value, 2);
+    return '[\n' + prims.map(prim => '  ' + YARD_primHelper(prim) + ',').join('\n') + '\n]';
   }
 
   function YARD_dbExport() {
@@ -365,7 +597,7 @@ if (params.has('yard')) {
       const context = sheet.getContext('2d');
       if (!context) throw new Error('Could not create a 2D canvas for the export sheet.');
       const originalFov = camera.fov, originalBackground = scene.backgroundIntensity;
-      const radius = Math.max(YARD_def.radius || 0, Math.hypot(...YARD_def.half));
+      const radius = Math.max(YARD_def.radius || 0, Math.hypot(...YARD_def.half)) * YARD_displayScale();
       const distance = Math.max(radius * 4.2, 25);
       const views = [
         { label: '3/4', az: 35, el: 22, up: [0, 1, 0] },
@@ -421,8 +653,9 @@ if (params.has('yard')) {
 
   function YARD_selectShip(id) {
     const original = __game.SHIPS[id];
-    const def = original ? { ...original, id: 'yard-' + id, prims: JSON.parse(JSON.stringify(original.prims, (key, value) => key === '_' ? undefined : value)) } : {
-      ...__game.SHIPS.kestrel, id: 'yard-new', name: 'NEW SHIP', prims: [], comps: [], mounts: [], turrets: [], engines: [],
+    YARD_gameScale = original && DB.ships[id]?.length ? original.length / DB.ships[id].length : 1;
+    const def = original ? { ...YARD_cloneAuthoredShip(id), id: 'yard-' + id } : {
+      ...YARD_cloneAuthoredShip('kestrel'), id: 'yard-new', name: 'NEW SHIP', prims: [], comps: [], mounts: [], turrets: [], engines: [],
     };
     YARD_model.rotation.set(0, 0, 0);
     YARD_prims.value = JSON.stringify(def.prims, (key, value) => key === '_' ? undefined : value, 2);
@@ -443,14 +676,20 @@ if (params.has('yard')) {
   const YARD_requested = params.get('yard');
   YARD_select.value = YARD_requested && __game.SHIPS[YARD_requested.toLowerCase()] ? YARD_requested.toLowerCase() : 'kestrel';
   YARD_select.addEventListener('change', () => YARD_selectShip(YARD_select.value === '__new' ? '__new' : YARD_select.value));
+  document.getElementById('yard-new-template').addEventListener('click', () => YARD_newFromTemplate(document.getElementById('yard-template').value));
+  document.getElementById('yard-panel-toggle').addEventListener('click', event => {
+    const panel = event.currentTarget.closest('.ypanel');
+    const expanded = event.currentTarget.getAttribute('aria-expanded') === 'true';
+    event.currentTarget.setAttribute('aria-expanded', String(!expanded));
+    event.currentTarget.textContent = expanded ? 'Expand' : 'Collapse';
+    panel.classList.toggle('collapsed', expanded);
+  });
   YARD_prims.addEventListener('input', () => {
     clearTimeout(YARD_rebuildTimer);
     YARD_error.textContent = '';
     YARD_rebuildTimer = setTimeout(() => {
       try {
-        const prims = JSON.parse(YARD_prims.value);
-        if (!Array.isArray(prims)) throw new Error('Prims source must evaluate to an array.');
-        if (prims.some(prim => !prim || typeof prim !== 'object' || typeof prim.t !== 'string')) throw new Error('Every prim must be an object with a string t field.');
+        const prims = YARD_parsePrims(YARD_prims.value);
         YARD_setDefinition({ ...YARD_def, prims });
         YARD_error.textContent = '';
       } catch (error) {
@@ -491,6 +730,20 @@ if (params.has('yard')) {
   document.getElementById('yard-copy-db').addEventListener('click', () => YARD_copyAction('db'));
   document.getElementById('yard-save-sheet').addEventListener('click', YARD_saveSheet);
   document.getElementById('yard-grid').addEventListener('change', event => { YARD_grid.visible = event.target.checked; });
+  document.getElementById('yard-in-game-scale').addEventListener('change', () => {
+    const scale = YARD_displayScale();
+    YARD_model.scale.setScalar(scale);
+    YARD_buildGrid(YARD_def, scale);
+    YARD_grid.visible = document.getElementById('yard-grid').checked;
+    YARD_buildReference(YARD_def, scale);
+    document.getElementById('yard-size').textContent = `Authored: ${YARD_def.length} m · in game: ${YARD_def.length * YARD_gameScale} m · preview: ${document.getElementById('yard-in-game-scale').checked ? 'in-game' : 'authored'} (${scale}×)`;
+    YARD_fit(YARD_def);
+  });
+  document.getElementById('yard-frame').addEventListener('click', () => YARD_fit(YARD_def));
+  document.getElementById('yard-view-front').addEventListener('click', () => { YARD_orbit = Math.PI; YARD_elevation = 0; YARD_fit(YARD_def); });
+  document.getElementById('yard-view-side').addEventListener('click', () => { YARD_orbit = Math.PI / 2; YARD_elevation = 0; YARD_fit(YARD_def); });
+  document.getElementById('yard-view-top').addEventListener('click', () => { YARD_orbit = 0; YARD_elevation = 1.52; YARD_fit(YARD_def); });
+  document.getElementById('yard-view-quarter').addEventListener('click', () => { YARD_orbit = 0.55; YARD_elevation = 0.32; YARD_fit(YARD_def); });
   YARD_selectShip(YARD_select.value);
   scene.add(YARD_group);
   YARD_group.add(YARD_model);

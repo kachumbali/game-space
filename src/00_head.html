@@ -11,7 +11,11 @@
   #yard *{box-sizing:border-box}
   #yard .ypanel{position:absolute;top:12px;left:12px;width:min(355px,calc(100vw - 24px));max-height:calc(100vh - 24px);overflow:auto;
     padding:12px;background:rgba(4,12,16,.91);border:1px solid #31505c;box-shadow:0 8px 30px #0009;pointer-events:auto}
+  #yard .yardhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
   #yard h1{margin:0 0 8px;color:#d8fff0;font-size:16px;letter-spacing:2px}
+  #yard .yardhead button{flex:none}
+  #yard .ypanel.collapsed{width:auto;max-height:none;padding:8px}
+  #yard .ypanel.collapsed .yard-controls{display:none}
   #yard label{display:block;margin:8px 0 3px;color:#83b8a5}
   #yard select,#yard textarea,#yard button{width:100%;font:inherit;color:#c8fff0;background:#0b201d;border:1px solid #315c4d;padding:6px}
   #yard textarea{height:280px;resize:vertical;white-space:pre;font-size:11px;tab-size:2;user-select:text}
@@ -21,7 +25,10 @@
   #yard button:hover{border-color:#ffd080}
   #yard .yardrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   #yard .yardexports{margin-top:8px}
-  #yard .yardexports button{flex:1;min-width:96px;font-size:10px;padding:6px 4px}
+  #yard .yardexports button,#yard .yardexports select{flex:1;min-width:96px;font-size:10px;padding:6px 4px}
+  #yard .yardviews button{flex:1;min-width:62px}
+  #yard #yard-template{flex:1;min-width:135px;width:auto}
+  #yard #yard-new-template{flex:1;min-width:140px}
   #yard-export-status{min-height:15px}
   #yard .yardrow label{display:inline-flex;align-items:center;gap:4px;margin:6px 0}
   #yard .yardrow input{accent-color:#83eac1}
