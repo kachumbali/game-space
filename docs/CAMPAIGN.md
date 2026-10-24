@@ -1,6 +1,6 @@
 # Campaign draft: "THE SEVERED NODE" (5 missions)
 
-Status: DRAFT, uncommitted, written 2026-10-24 for owner review. Nothing here is implemented. Tags: **[NEW]** = invention not stated in lore; **[NEEDS CODE]** = needs an engine change; **[UNTESTED]** = uses a ship/feature that exists in code but has not been flown in a mission script.
+Status: m01/m02 shipped; **m03-m05 implemented 2026-10-24 on branch `campaign`** (per the "Minimal implementation outline" below: per-ship player loadout, debriefWin/debriefLose in `showDebrief`, live countdown lines for hold objectives, anchor-name lose strings, `bullfrog`/`hivecarrier` in `SCORE`, and the optional `oasis` look). [NEEDS CODE] items 1, 2, 3, 4, 5 are done; items 6-8 are done or covered by `tools/tests/campaign_t.py`. Not hand-played; m05 balance numbers are unverified beyond headless bot runs. Tags: **[NEW]** = invention not stated in lore; **[NEEDS CODE]** = needs an engine change; **[UNTESTED]** = uses a ship/feature that exists in code but has not been flown in a mission script.
 
 Sources used: `docs/LORE.md`, `docs/LORE_HISTORY.md`, `docs/LORE_FACTIONS.md`, `docs/LORE_FROGG.md`, `docs/SHIPS.md`, `src/75_mission.js`, `src/77_cine.js` (areas/transits), `src/41_sky.js` (LOOKS). Owner's Mac `Lore/` folder (15 `gemini-code-*.txt/.md` files) is the raw version of the adopted lore; the adopted `docs/LORE_*.md` files take precedence where they differ (Halberd = 128 m corvette, jump threshold about 450 m).
 

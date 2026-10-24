@@ -69,6 +69,15 @@ const LOOKS = {
     moons: [{ dir: [0.35, 0.55, -0.75], R: 70, col: [0.62, 0.58, 0.5], seed: 5 }, { dir: [0.97, -0.12, -0.2], R: 42, col: [0.45, 0.4, 0.4], seed: 11 }],
     flare: 1,
   },
+  // THE ANCHORAGE (campaign m05, "a node in the dark"): deep space, no planet, dense green/cyan nebulae, cold distant sun
+  oasis: {
+    sun: [-0.3, 0.6, 0.75], sunCol: [0.75, 0.95, 0.9], light: 0xcfe8e0, fill: 0x3c5a58, hemi: [0x8aae9a, 0x22384a],
+    base: [0.004, 0.008, 0.009], seed: 47.3, starK: 1.4,
+    neb: { a: [0.02, 0.16, 0.12], b: [0.0, 0.08, 0.16], c: [0.10, 0.03, 0.14], v: [2.0, 0.45, 0.80, 1.1] },
+    mw: { n: [-0.2, 0.9, 0.35], c: [0.5, -0.3, -0.8], i: 1.2 },
+    planet: null, moons: [],
+    flare: 0.8,
+  },
 };
 
 // ---------------------------------------------------------------------------------------------- sky bake

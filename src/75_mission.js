@@ -159,6 +159,214 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
   ],
 });
 
+// ---- campaign mission 3: THE SEVERED NODE (docs/CAMPAIGN.md) ------------------------------------------
+MISSIONS.push({
+  id: 'm03', look: 'reed', title: 'THE SEVERED NODE', subtitle: 'Hold the Bog Relay while the Exeter pulls the tug logs',
+  grades: [6200, 5400, 4600, 3600],
+  briefing:
+`Task Group Eagle, now with the frigate EXETER, has a dead Vanderbilt-Astra security tug on the Bog Relay scope. Its transponder is silent but its data core is warm. Exeter's recovery team needs about four minutes at the hulk; the FROGG pickets that stripped the tug have not left. Hold the relay, then escort the Exeter to the outpost jump point, where a Gulper has been reported. Do not fire on the tug. Intelligence will not say what is on its logs. ROE: weapons free on FROGG contacts.`,
+  debriefWin: 'Logs recovered, 9.4 minutes of telemetry tagged Oasis-9 in VAC corporate format. The Exeter\'s captain has sealed them. For the record the tug\'s crew died to FROGG lasers, not to an accident. Eagle flight is not to discuss what was on the core.',
+  debriefLose: 'Relay lost, logs lost. The Hive keeps moving.',
+  areas: {
+    ao2: { name: 'BOG RELAY', look: 'ao2', arrive: 'Drives down. Bog Relay, deep space, no planet cover. Contacts on the scope soon.' },
+    ao3: { name: 'OUTPOST APPROACH', look: 'ao3', arrive: 'Drives down at the outpost jump point. Gas giant on the starboard side. The Gulper is out there.' },
+  },
+  setup: {
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    fleet: [{ ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [-520, -40, 160] }],
+    player: { pos: [140, 20, 260], speed: 60 },
+    wingmen: [
+      { pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [190, 26, 290] },
+      { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [100, 10, 300] },
+    ],
+  },
+  stages: [
+    { when: { t: 3 }, do: [
+      { comm: ['CONTROL', 'Task Group Eagle formed, and the Exeter is with us. Autopilot to NAV 2, Bog Relay. Recovery team to stand by.'] },
+      { obj: ['o0', 'Autopilot to NAV 2: Bog Relay', 'open'] },
+      { transit: { to: 'NAV 2 · BOG RELAY', dur: 28, area: 'ao2', lines: [
+        [3, 'HAWK', 'A Vanderbilt-Astra tug, dead out here? Nobody strips a tug and leaves it warm, Echo.'],
+        [10, 'SPARROW', 'Sir, what is a corporation tug doing at a dark relay?'],
+        [16, 'HAWK', 'Not our question to ask, Sparrow. Ours is the picket screen around it.'],
+        [23, 'CONTROL', 'Dropping out of cruise in five. Arm up, all fighters.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o0', null, 'done'] },
+      { obj: ['o1', 'Destroy the FROGG pickets', 'open'] },
+      { comm: ['CONTROL', 'Contacts! The pickets that stripped the tug, bearing zero-one-five. They have seen us.'] },
+      { spawn: { grp: 'A', ships: [['leaper', 4], ['darter', 2]], bearing: [0.15, 0.05, -1], dist: 2300, spread: 240 } },
+    ] },
+    { when: { dead: 'A', delay: 3 }, do: [
+      { obj: ['o1', null, 'done'] },
+      { comm: ['CONTROL', 'Pickets down. The Exeter is going alongside the hulk. Recovery team needs four minutes at the data core. Hold them off, Eagle.'] },
+      { obj: ['o2', 'Hold the relay while the Exeter recovers the logs', 'open', 240] },
+    ] },
+    { when: { after: 60 }, do: [
+      { comm: ['CONTROL', 'More contacts, port side, heavy signatures: torpedo bombers. They are going for the Exeter.'] },
+      { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 1], ['darter', 2]], bearing: [-1, 0.05, -0.2], dist: 2800, spread: 260 } },
+    ] },
+    { when: { after: 90 }, do: [
+      { comm: ['HAWK', 'Second wave, off the bow: Reavers. Stay between them and the Exeter, Echo.'] },
+      { spawn: { grp: 'C', ships: [['reaver', 3], ['leaper', 2]], bearing: [0.6, 0.05, -0.8], dist: 2600, spread: 220 } },
+    ] },
+    { when: { after: 90, dead: 'C', delay: 3 }, do: [
+      { obj: ['o2', 'Hold the relay while the Exeter recovers the logs', 'done'] },
+      { comm: ['CONTROL', 'Data core aboard and sealed. The Exeter is clear to pull. Autopilot to NAV 3, the outpost jump point.'] },
+      { obj: ['o3', 'Autopilot to NAV 3: Outpost', 'open'] },
+      { transit: { to: 'NAV 3 · OUTPOST APPROACH', dur: 30, area: 'ao3', lines: [
+        [3, 'CONTROL', 'Long-range sweep puts a FROGG corvette at the jump point. Gulper class, with a full screen.'],
+        [11, 'SPARROW', 'Four minutes of logs and now a Gulper. This relay gets better and better.'],
+        [16, 'HAWK', 'Steady, Sparrow. One corvette is one corvette.'],
+        [25, 'CONTROL', 'Drop-out in five. Weapons free on arrival.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o3', null, 'done'] },
+      { obj: ['o4', 'Destroy the FROGG corvette GULPER and its screen', 'open'] },
+      { comm: ['CONTROL', 'There it is. GULPER, with a heavy escort screen. Burn through, then engines and lash cannons.'] },
+      { spawn: { grp: 'D', ships: [['gulper', 1], ['reaver', 2], ['spitter', 2], ['darter', 3]], bearing: [0.2, 0.05, -1], dist: 2600, spread: 200 } },
+    ] },
+    { when: { dead: 'D', delay: 4 }, do: [
+      { obj: ['o4', null, 'done'] },
+      { comm: ['CONTROL', 'Jump point clear and the logs are aboard. Bring the task group home, Eagle flight.'] },
+      { end: 'win' },
+    ] },
+  ],
+});
+
+// ---- campaign mission 4: SHORT LEASH (docs/CAMPAIGN.md) -----------------------------------------------
+MISSIONS.push({
+  id: 'm04', look: 'ao3', title: 'SHORT LEASH', subtitle: 'Defend the Exeter through her jump window',
+  grades: [4200, 3400, 2600, 1800],
+  briefing:
+`The Exeter has two jump cycles left before Fold stress forces a refit, and the second leaves in six minutes. Until then she sits at the outpost with her drive hot and her screen thin. The Merlin has no armour to speak of and no magazine to waste; use speed and stay inside her point-defence envelope. FROGG strike groups are inbound in three waves. Fighters that stray beyond 1.5 km are on their own. If the Exeter dies, so does the way home.`,
+  debriefWin: 'Exeter cleared the Fold with two squadrons docked: yours and the Halberd\'s. The Gulper came late, which tells us the Hive reads our jump windows. Merlin flights are staying in the rotation.',
+  debriefLose: 'The Exeter is gone. Everything outside her bay is marooned. Eagle flight\'s logs end here.',
+  setup: {
+    anchor: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    fleet: [{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [-380, -20, 140] }],
+    player: { ship: 'merlin', pos: [160, 30, 420], speed: 60 },
+    wingmen: [
+      { pilot: 'hawk', ship: 'merlin', callsign: 'HAWK', pos: [210, 36, 470] },
+      { pilot: 'sparrow', ship: 'merlin', callsign: 'SPARROW', pos: [110, 18, 480] },
+    ],
+  },
+  stages: [
+    { when: { t: 4 }, do: [
+      { comm: ['CONTROL', 'Exeter CIC to Eagle flight. Drive is hot, jump window opens in six minutes. Hold the screen until then.'] },
+      { obj: ['o1', 'Defend the Exeter until her jump drive is ready', 'open', 360] },
+    ] },
+    { when: { after: 4 }, do: [
+      { comm: ['CONTROL', 'Contacts! First FROGG strike group inbound. Intercept and kill them on the approach.'] },
+      { spawn: { grp: 'A', ships: [['darter', 4], ['leaper', 3]], bearing: [0.15, 0.05, -1], dist: 2300, spread: 240 } },
+    ] },
+    { when: { after: 56 }, do: [
+      { comm: ['CONTROL', 'Drive spool at four minutes. Keep the bombers off her flanks.'] },
+    ] },
+    { when: { after: 56 }, do: [
+      { comm: ['CONTROL', 'Second wave: torpedo bombers with a gunship escort. They want the Exeter. All fighters on them.'] },
+      { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 2], ['reaver', 2]], bearing: [-1, 0.05, -0.2], dist: 2800, spread: 260 } },
+    ] },
+    { when: { after: 64 }, do: [
+      { comm: ['HAWK', 'Three minutes on the drive. Stay inside the point-defence envelope, Echo. The Merlin does not tank anything.'] },
+    ] },
+    { when: { after: 76 }, do: [
+      { jumpIn: true },
+      { comm: ['CONTROL', 'Jump flash, long range! A Gulper with a strike escort. That is the third wave, all ships engage.'] },
+      { spawn: { grp: 'C', ships: [['reaver', 3], ['spitter', 3], ['toad', 2], ['gulper', 1]], bearing: [-0.2, 0.1, 1], dist: 2600, spread: 180, jump: true } },
+    ] },
+    { when: { after: 44 }, do: [
+      { comm: ['CONTROL', 'One minute on the drive. Hold the line, Eagle.'] },
+    ] },
+    { when: { after: 60 }, do: [
+      { obj: ['o1', 'Defend the Exeter until her jump drive is ready', 'done'] },
+      { comm: ['CONTROL', 'Drive is spooled and the window is open. Exeter is jumping. Well flown, Eagle flight.'] },
+      { end: 'win' },
+    ] },
+  ],
+});
+
+// ---- campaign mission 5: THE SPINE (docs/CAMPAIGN.md) -------------------------------------------------
+MISSIONS.push({
+  id: 'm05', look: 'reed', title: 'THE SPINE', subtitle: 'Kill the Bullfrog before the vanguard jumps',
+  grades: [8300, 7200, 6000, 4500],
+  briefing:
+`The Hive vanguard has stopped. A Bullfrog, a spine carrier six hundred metres long, is bringing its hangar online in the lee of the outpost, and every analyst agrees it is waiting for something to catch up. We cannot meet that something. We can meet the Bullfrog. Exeter will carry the heavy fire, but she cannot approach until the screen is broken. Fight through the outpost lane, jump to the anchorage, strip the Bullfrog's escorts, then kill the spine. This is the whole of the task group's strength. Do not expect a second pass.`,
+  debriefWin: 'The spine is broken and the Bullfrog\'s hangar went with it. Sensors report a second jump flash at 40 km: a hive carrier, two to three kilometres long, with no escort yet. We have taken one node out of a migration, not ended it. Whatever severed the first node at Oasis-9 is still pulling the rest this way.',
+  debriefLose: 'The Bullfrog completed its jump. The vanguard is through. Eagle flight is not coming home.',
+  areas: {
+    ao3: { name: 'OUTPOST LANE', look: 'ao3', arrive: 'Drives down in the outpost lane. The FROGG screen is between us and the anchorage.' },
+    oasis: { name: 'THE ANCHORAGE', look: 'oasis', arrive: 'Drives down at the anchorage. No beacons, no planets: a node in the dark. The Bullfrog is here.' },
+  },
+  setup: {
+    anchor: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    fleet: [
+      { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [-380, -20, 140] },
+      { ship: 'halberd', id: 'talon', callsign: 'CSS TALON', pos: [420, -30, -180] },
+    ],
+    player: { pos: [140, 20, 260], speed: 60 },
+    wingmen: [
+      { pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [190, 26, 290] },
+      { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [100, 10, 300] },
+    ],
+  },
+  stages: [
+    { when: { t: 3 }, do: [
+      { comm: ['CONTROL', 'Task Group Eagle formed. This is the whole of our strength. Autopilot to NAV 3, the outpost lane.'] },
+      { obj: ['o0', 'Autopilot to NAV 3: Outpost lane', 'open'] },
+      { transit: { to: 'NAV 3 · OUTPOST LANE', dur: 30, area: 'ao3', lines: [
+        [3, 'HAWK', 'A spine carrier with its hangar hot. Whatever it is waiting for, Echo, we are not staying to meet it.'],
+        [11, 'SPARROW', 'Six hundred metres. That is five Halberds, nose to tail.'],
+        [16, 'HAWK', 'Then do not get in front of its lance, Sparrow.'],
+        [25, 'CONTROL', 'Drop-out in five. Break their forward screen, then we jump to the anchorage.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o0', null, 'done'] },
+      { obj: ['o1', 'Break the outpost lane screen', 'open'] },
+      { comm: ['CONTROL', 'Contacts! FROGG forward screen, and a Gulper in the van. Clear the lane.'] },
+      { spawn: { grp: 'A', ships: [['leaper', 4], ['darter', 3], ['spitter', 2], ['gulper', 1]], bearing: [0.2, 0.05, -1], dist: 2600, spread: 220 } },
+    ] },
+    { when: { dead: 'A', delay: 4 }, do: [
+      { obj: ['o1', null, 'done'] },
+      { comm: ['CONTROL', 'Lane clear. The Exeter cannot approach until the anchorage is quiet. Jump when ready, Echo.'] },
+      { obj: ['o2', 'Autopilot to the anchorage', 'open'] },
+      { transit: { to: 'THE ANCHORAGE', dur: 34, area: 'oasis', lines: [
+        [3, 'CONTROL', 'The anchorage is a dark node off every chart. No cover for them either.'],
+        [12, 'SPARROW', 'Sir, the scope is empty. I mean completely empty.'],
+        [18, 'HAWK', 'It is not empty, Sparrow. It is quiet. There is a difference.'],
+        [28, 'CONTROL', 'Drop-out in five. The Bullfrog and its escorts are waiting.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['o2', null, 'done'] },
+      { obj: ['o3', 'Clear the Bullfrog\'s fighter wing', 'open'] },
+      { comm: ['CONTROL', 'The hangar is launching. Clear the fighter wing before we go for the spine.'] },
+      { spawn: { grp: 'B1', ships: [['darter', 4], ['reaver', 3], ['toad', 2]], bearing: [-0.6, 0.05, -0.8], dist: 2600, spread: 260 } },
+    ] },
+    { when: { after: 60 }, do: [
+      { comm: ['CONTROL', 'Second launch from the hangar. Keep them off the Exeter.'] },
+      { spawn: { grp: 'B2', ships: [['reaver', 3], ['spitter', 3], ['leaper', 2]], bearing: [0.8, 0.05, -0.6], dist: 2600, spread: 260 } },
+    ] },
+    { when: { dead: 'B2', delay: 4 }, do: [
+      { obj: ['o3', null, 'done'] },
+      { jumpIn: true },
+      { comm: ['CONTROL', 'There it is. BULLFROG, spine carrier, with two Gulpers as escort. All ships: weapons free. Kill the spine.'] },
+      { obj: ['o4', 'Destroy the BULLFROG spine carrier', 'open'] },
+      { spawn: { grp: 'C', ships: [['bullfrog', 1], ['gulper', 2]], bearing: [-0.2, 0.1, 1], dist: 3200, spread: 400, jump: true } },
+    ] },
+    { when: { dead: 'C', delay: 4 }, do: [
+      { obj: ['o4', null, 'done'] },
+      { spawn: { grp: 'D', ships: [['hivecarrier', 1]], bearing: [-0.4, 0.15, 0.9], dist: 40000, spread: 0, jump: true } },
+      { comm: ['CONTROL', 'Spine carrier destroyed. Sensors... second jump flash at forty kilometres. A hive carrier. Do not engage. Recover all fighters.'] },
+    ] },
+    { when: { after: 6 }, do: [
+      { end: 'win' },
+    ] },
+  ],
+});
+
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } }
@@ -175,7 +383,7 @@ function startMission(M, seg) {
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
-  const p = makeShip('kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
+  const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
@@ -212,7 +420,13 @@ function runActions(list) {
   const S = game.mstate;
   for (const a of list) {
     if (a.comm) comm(a.comm[0], a.comm[1]);
-    if (a.obj && (a.obj[1] || objectives.some(o => o.id === a.obj[0]))) objective(a.obj[0], a.obj[1], a.obj[2]);
+    if (a.obj) {
+      if (a.obj[1] || objectives.some(o => o.id === a.obj[0])) objective(a.obj[0], a.obj[1], a.obj[2]);
+      if (a.obj[3] !== undefined) {                  // {obj:[id, text, 'open', N]}: "hold N seconds" -> live countdown line
+        const o = objectives.find(x => x.id === a.obj[0]);
+        if (o) { o.base = o.text; o.holdEnd = S.t + a.obj[3]; }
+      }
+    }
     if (a.jumpIn) { sfx('jump'); }
     if (a.transit) startTransit(a.transit);
     if (a.spawn) spawnGroup(a.spawn);
@@ -258,6 +472,10 @@ function missionUpdate(dt) {
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
+  for (const o of objectives) if (o.holdEnd !== undefined && o.state === 'open') {   // live countdown for hold objectives
+    const rem = Math.max(0, Math.ceil(o.holdEnd - S.t));
+    o.text = `${o.base} · ${Math.floor(rem / 60)}:${String(rem % 60).padStart(2, '0')}`;
+  }
   const st = M.stages[S.stage];
   if (st && condMet(st.when, S)) {
     const tr0 = S.stage > 0 && st.do.find(a => a.transit);
@@ -268,7 +486,7 @@ function missionUpdate(dt) {
     if (tr) game.seg = { stage: S.stage, area: tr.transit.area, t: S.t };     // checkpoint: arrival in the new area
     runActions(st.do);
   }
-  if (game.anchor && !game.anchor.alive) { comm('CONTROL', 'Halberd is lost. All ships, abort. Abort.'); objective('o1', null, 'failed'); endMission('lose', 'THE HALBERD WAS DESTROYED'); }
+  if (game.anchor && !game.anchor.alive) { const an = anchorName(game.anchor); comm('CONTROL', `${an} is lost. All ships, abort. Abort.`); objective('o1', null, 'failed'); endMission('lose', `THE ${an} WAS DESTROYED`); }
   if (state === 'dead') endMission('lose', 'ECHO DOWN');
   // optional chatter: missile warnings
   if (player && player.alive) {
@@ -320,7 +538,8 @@ function onTorpLaunch(s) { if (game.mission && s.team === 1) comm('CONTROL', 'To
 function onCompDestroyed() { }
 
 // ---- scoring + overlays -----------------------------------------------------------------------------
-const SCORE = { darter: 100, leaper: 100, spitter: 150, toad: 200, reaver: 200, gulper: 800 };
+const SCORE = { darter: 100, leaper: 100, spitter: 150, toad: 200, reaver: 200, gulper: 800, bullfrog: 2500, hivecarrier: 5000 };
+function anchorName(a) { return (a && a.callsign ? a.callsign.replace(/^CSS\s*/, '') : 'FLAGSHIP'); }
 function missionStats() {
   let score = 0, n = 0;
   for (const k in killLog) { score += (SCORE[k] || 100) * killLog[k]; n += killLog[k]; }
@@ -335,11 +554,16 @@ function missionStats() {
 }
 function showBriefing(M) {
   const el = $id('brief');
+  const ship = M.setup.player.ship || 'kestrel';
+  const LOADOUTS = {   // per-ship briefing loadout block (weapons/stores from data/db.json)
+    kestrel: '<div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div>',
+    merlin: '<div>2× MK-20 cannon</div><div>2× SW-9 Swift (IR)</div><div>12× flares/chaff</div>',
+  };
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
-    <div><div class="sub">LOADOUT · KESTREL</div><div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div></div></div>
+    <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
@@ -357,8 +581,9 @@ function showDebrief() {
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
+    ${(S.result === 'win' ? M.debriefWin : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : M.debriefLose}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
-    <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>Halberd hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
+    <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}</div></div>
     <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';

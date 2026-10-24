@@ -71,7 +71,7 @@ function openMenu(view) {
 function showMainMenu() {
   menuView = 'main';
   const items = [
-    ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad, Reedbed'],
+    ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad to The Spine'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
     ['options', 'OPTIONS', 'Audio, device preset, LOD [O]'],

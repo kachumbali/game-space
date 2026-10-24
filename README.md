@@ -27,6 +27,17 @@ between them with cinematic cameras (flyby, orbit, chase, bow, arrival); SPACE /
 then torpedo bombers. NAV 3 FROGG outpost: Gulper (146 m) with Reaver/Spitter/Darter screen. Pick missions on the briefing
 screen or with `?m=2`. Sim speed defaults to 37.5% (`?speed=1` for full).
 
+## Missions 3-5 (campaign, docs/CAMPAIGN.md)
+Mission 3 THE SEVERED NODE (`?m=3`): the frigate EXETER (450 m) joins the group at Bog Relay to pull the logs of a dead
+Vanderbilt-Astra tug. Hold the relay for 4 minutes (the objective line counts down) while two waves jump the pickets, then
+escort her to the outpost jump point and kill the Gulper screen. Mission 4 SHORT LEASH (`?m=4`): first Merlin sortie (light
+fighter, 2× cannon, 2× Swift, 12 flares; the briefing loadout follows the ship). The Exeter is the anchor: defend her for
+six minutes (countdown line) through three waves; win on the timer. Mission 5 THE SPINE (`?m=5`): fight through the outpost
+lane, jump to the anchorage (new `oasis` look), clear the Bullfrog's hangar launches, kill the 600 m BULLFROG and its two
+Gulper escorts; a hive carrier flashes in at 40 km as the epilogue. Hold objectives show a live countdown in the objectives
+HUD; per-mission debrief text comes from docs/CAMPAIGN.md; the lose/debrief strings name the anchor ship (HALBERD or EXETER).
+Verified headless (`tools/tests/campaign_t.py`); not hand-played.
+
 ## Controls (desktop)
 | Input | Action |
 |---|---|
