@@ -219,7 +219,7 @@ lost; fuel dead = no refuel and no jump tank. These are soft kills that leave th
 ## 6. Armament
 
 ### 6.1 Fit and why it is mostly unarmed
-No fixed mounts, no missiles, no spine. **40 PD-30 (`pd`, cls S) and 12 LS-8 (`laserM`, cls M)** only; all weapons are existing ids [R: db.json weapons].
+No fixed mounts, no missiles, no spine. **40 PD-30 (`pd`, cls S) and 6 LS-8 (`laserM`, cls M)** only (owner 2026-10-24: 12 killed a Kestrel in ~25 s and a Merlin in ~5 s; the 6 ventral LS07-LS12 were removed from db.json, the 6 dorsal LS01-LS06 remain); all weapons are existing ids [R: db.json weapons].
 
 Why: (1) the class is a base, and an armed 4 km hull would be driven by `capitalAI` as a gunship (it closes to about 1,100 m of its target and fires mains inside about 1,300 m) [R: 70_ai.js 367-375]; (2) offensive
 weight belongs to the Exeter and carrier it services; (3) humans lean on layered PD [R: LORE.md weapon doctrine]; (4) it must stay a protect-object: a tender that wins fights removes the reason to escort it.

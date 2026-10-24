@@ -320,13 +320,7 @@
         {"w": "laserM", "cls": "M", "pos": [-138.5, 44.5, -25.0], "comp": "LS03", "side": 1},
         {"w": "laserM", "cls": "M", "pos": [138.5, 44.5, -25.0], "comp": "LS04", "side": 1},
         {"w": "laserM", "cls": "M", "pos": [-17.5, 20.75, 325.0], "comp": "LS05", "side": 1},
-        {"w": "laserM", "cls": "M", "pos": [17.5, 20.75, 325.0], "comp": "LS06", "side": 1},
-        {"w": "laserM", "cls": "M", "pos": [-17.5, -20.75, -175.0], "comp": "LS07", "side": -1},
-        {"w": "laserM", "cls": "M", "pos": [17.5, -20.75, -175.0], "comp": "LS08", "side": -1},
-        {"w": "laserM", "cls": "M", "pos": [-138.5, -44.5, 125.0], "comp": "LS09", "side": -1},
-        {"w": "laserM", "cls": "M", "pos": [138.5, -44.5, 125.0], "comp": "LS10", "side": -1},
-        {"w": "laserM", "cls": "M", "pos": [-17.5, -20.75, 362.5], "comp": "LS11", "side": -1},
-        {"w": "laserM", "cls": "M", "pos": [17.5, -20.75, 362.5], "comp": "LS12", "side": -1}
+        {"w": "laserM", "cls": "M", "pos": [17.5, 20.75, 325.0], "comp": "LS06", "side": 1}
       ],
       "stores": {"shuttle": 24, "flare": 0},
       "comps": [
@@ -421,13 +415,7 @@
         {"id": "LS03", "name": "LS-8 LASER 03", "role": "turret", "pos": [-138.5, 44.5, -25.0], "r": 1.5, "hp": 90},
         {"id": "LS04", "name": "LS-8 LASER 04", "role": "turret", "pos": [138.5, 44.5, -25.0], "r": 1.5, "hp": 90},
         {"id": "LS05", "name": "LS-8 LASER 05", "role": "turret", "pos": [-17.5, 20.75, 325.0], "r": 1.5, "hp": 90},
-        {"id": "LS06", "name": "LS-8 LASER 06", "role": "turret", "pos": [17.5, 20.75, 325.0], "r": 1.5, "hp": 90},
-        {"id": "LS07", "name": "LS-8 LASER 07", "role": "turret", "pos": [-17.5, -20.75, -175.0], "r": 1.5, "hp": 90},
-        {"id": "LS08", "name": "LS-8 LASER 08", "role": "turret", "pos": [17.5, -20.75, -175.0], "r": 1.5, "hp": 90},
-        {"id": "LS09", "name": "LS-8 LASER 09", "role": "turret", "pos": [-138.5, -44.5, 125.0], "r": 1.5, "hp": 90},
-        {"id": "LS10", "name": "LS-8 LASER 10", "role": "turret", "pos": [138.5, -44.5, 125.0], "r": 1.5, "hp": 90},
-        {"id": "LS11", "name": "LS-8 LASER 11", "role": "turret", "pos": [-17.5, -20.75, 362.5], "r": 1.5, "hp": 90},
-        {"id": "LS12", "name": "LS-8 LASER 12", "role": "turret", "pos": [17.5, -20.75, 362.5], "r": 1.5, "hp": 90}
+        {"id": "LS06", "name": "LS-8 LASER 06", "role": "turret", "pos": [17.5, 20.75, 325.0], "r": 1.5, "hp": 90}
       ],
       "shield": {"fore": 8000, "aft": 6500},
       "armor": {"type": "composite", "rating": 0.3},
