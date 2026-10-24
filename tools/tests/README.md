@@ -8,7 +8,8 @@ macOS test invocation (as used 2026-10-22): `cd tools/tests && GS_CHROMIUM="$HOM
 
 | Script | What it checks |
 |---|---|
-| `balance_sweep.py --scenario all --seeds 1-20 --batch-size 1` | seeded AI-vs-AI skirmish sweep for the current balance report; direct `update(0.05)` stepping, 180 sim-second cap, incremental raw JSON output |
+| `balance_sweep.py --scenario sweep2 --seeds 1-30 --batch-size 1` | sweep-2 scenarios G-M; seeded AI-vs-AI, direct `update(0.05)` stepping, one page at a time, 180 s cap except the 300 s C cap rerun, incremental raw JSON output |
+| `balance_sweep.py --scenario all --seeds 1-20 --batch-size 1` | all saved balance scenarios, including original A-F; use a scenario name to run one cell |
 | `drone_t.py` | drones: launch/limits, each order, ram on a Halberd, PD vs drones, controller death (8 scenarios, one page each) |
 | `bullfrog_t.py [warn spine exeter friendly arcs pd hangar inst blast]` | Bullfrog (docs/BULLFROG.md): spine timeline, HUD warning, Exeter hit count, friendly-line refusal, turret arcs, PD vs missiles, hangar cadence/cap/bay loss, voxel instances and LOD, missile blast reach |
 | `bullfrog_eng.py SEED [LIMIT] [RANGE] [DT]` | owner acceptance engagement: Exeter + 12 Kestrels + 2 Halberds vs Bullfrog + hangar at 10 km (no rendering, about 10-30 s wall per run); results in docs/BALANCE_TESTS.md |

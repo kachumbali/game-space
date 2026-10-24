@@ -386,6 +386,7 @@ def main() -> int:
     parser.add_argument("--limit", type=float, default=None, help="override scenario simulation-time cap in seconds")
     parser.add_argument("--range", type=float, default=None, help="override the scenario's default separation in metres")
     parser.add_argument("--output", type=Path, default=None, help="raw JSON output path")
+    parser.add_argument("--resume", action="store_true", help="continue missing seeds in an existing output file")
     args = parser.parse_args()
     selected = list(SCENARIOS) if args.scenario == "all" else (
         SWEEP2_SCENARIOS if args.scenario == "sweep2" else [args.scenario]
@@ -413,6 +414,20 @@ def main() -> int:
         "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
         "scenarios": {},
     }
+    if args.resume:
+        if not output.exists():
+            parser.error("--resume requires an existing --output file")
+        prior = json.loads(output.read_text())
+        parent_sha = subprocess.check_output(
+            ["git", "-C", REPO, "rev-parse", "HEAD^"], text=True
+        ).strip()
+        if (prior.get("source_commit") not in (source_sha, parent_sha)
+                or prior.get("seed_range") != args.seeds
+                or prior.get("time_cap_sim_seconds") != (args.limit or 180)):
+            parser.error("existing output does not match this source, seed range, or time cap")
+        data = prior
+        if source_sha != prior["source_commit"]:
+            data.setdefault("resume_commits", []).append(source_sha)
 
     def save():
         output.write_text(json.dumps(data, indent=2) + "\n")
@@ -422,18 +437,28 @@ def main() -> int:
             spec = SCENARIOS[scenario_id]
             scenario_range = args.range if args.range is not None else spec.get("range", 2000)
             scenario_limit = args.limit if args.limit is not None else spec.get("limit", 180)
-            cell = {
-                "name": spec["name"], "initial_separation_m": scenario_range,
-                "time_cap_sim_seconds": scenario_limit,
-                "enemy_skill": spec.get("enemy_skill", 3),
-                "hecla_laser_turrets": spec.get("hecla_laser_turrets"),
-                "results": [],
-            }
-            data["scenarios"][scenario_id] = cell
+            cell = data["scenarios"].get(scenario_id) if args.resume else None
+            if cell is None:
+                cell = {
+                    "name": spec["name"], "initial_separation_m": scenario_range,
+                    "time_cap_sim_seconds": scenario_limit,
+                    "enemy_skill": spec.get("enemy_skill", 3),
+                    "hecla_laser_turrets": spec.get("hecla_laser_turrets"),
+                    "results": [],
+                }
+                data["scenarios"][scenario_id] = cell
+            elif (cell["name"] != spec["name"]
+                  or cell["initial_separation_m"] != scenario_range
+                  or cell["time_cap_sim_seconds"] != scenario_limit):
+                raise RuntimeError(f"existing output scenario {scenario_id} does not match this run")
+            completed_seeds = {result["seed"] for result in cell["results"]}
+            missing_seeds = [seed for seed in args.seeds if seed not in completed_seeds]
+            if not missing_seeds:
+                continue
             save()
             with Runner() as runner:
-                for batch_start in range(0, len(args.seeds), args.batch_size):
-                    batch = args.seeds[batch_start:batch_start + args.batch_size]
+                for batch_start in range(0, len(missing_seeds), args.batch_size):
+                    batch = missing_seeds[batch_start:batch_start + args.batch_size]
                     for seed in batch:
                         q = {
                             "sk": ",".join(f"{kind}:{count}" for kind, count in spec["rows"]),
