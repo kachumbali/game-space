@@ -275,6 +275,54 @@ SHIPS.halberd = {
 // Inspiration: angular grey/white wedge hull, dorsal slab, outboard engine pods on pylons, folded radiator panels,
 // PD turret clusters. Owner brief 2026-10-21. Catalogue model: not used in missions yet.
 const E = { white: 0xd8dce0, grey: 0x9aa2ab, grey2: 0x7d858f, dark: 0x262b31, panel: 0x4a525c, amber: 0xc79a3a, noz: 0x2a2d33, glow: 0x7fd0ff, orange: 0xd9772b };
+SHIPS.tern = {
+  ...DB.ships.tern,
+  prims: [
+    // Narrow spine and raised bridge dome
+    tap([0, 0, 0.5], 13.5, [2.0, 1.65], [2.2, 1.8], E.grey, { sh: 'h' }),
+    tap([0, -1.25, -1], 13, [1.45, 0.5], [1.55, 0.5], E.dark, { sh: 'h' }),
+    tap([0, 0.45, -8], 4, [1.8, 1.5], [2, 1.5], E.grey2, { sh: 'h' }),
+    tap([0, 1.9, -13], 2.4, [1.7, 1.25], [1.5, 1.1], E.white, { sh: 'h' }),
+    ell([0, 2.45, -13.4], [1.25, 0.5, 0.85], E.panel),
+    ell([0, 2.3, -14.05], [0.75, 0.2, 0.12], E.glow, { glow: true }),
+    // Six container sections per pod, linked back to the spine by paired pylons
+    ...[-8.5, -5.5, -2.5, 0.5, 3.5, 6.5].map((z, i) =>
+      tap([6.2, 0.3, z], 1.4, [1.75, 1.65], [1.75, 1.65], i % 2 ? E.orange : E.grey2, { sh: 'h' })),
+    ...[-6, 4].flatMap(z => [
+      seg([2.0, 0.85, z], [4.5, 0.85, z], 0.28, 0.24, E.grey),
+      seg([2.0, -0.55, z], [4.5, -0.55, z], 0.24, 0.2, E.panel),
+    ]),
+    ...[-8.5, -5.5, -2.5, 0.5, 3.5, 6.5].map(z =>
+      ell([8.0, 1.05, z], [0.16, 0.14, 0.22], E.amber, { glow: true, glowF: 1.4 })),
+    // Dorsal racks hold two rows of three static SD-4 silhouettes
+    ...[-6, 0, 6].flatMap(z => [
+      tap([2.6, 2.8, z], 2.45, [0.62, 0.48], [0.62, 0.48], E.white, { sh: 'h' }),
+      tap([2.6, 2.8, z - 2.05], 0.35, [0.34, 0.3], [0.34, 0.3], E.dark, { sh: 'e' }),
+      seg([1.7, 3.9, z - 2.65], [3.5, 3.9, z - 2.65], 0.08, 0.08, E.dark),
+      seg([1.7, 3.9, z + 2.65], [3.5, 3.9, z + 2.65], 0.08, 0.08, E.dark),
+      seg([1.7, 3.9, z - 2.65], [1.7, 3.35, z - 2.65], 0.08, 0.08, E.dark),
+      seg([3.5, 3.9, z - 2.65], [3.5, 3.35, z - 2.65], 0.08, 0.08, E.dark),
+    ]),
+    // Stowed transfer booms and hose reels
+    seg([8.3, 0.05, -6.5], [8.3, 0.05, -1], 0.24, 0.2, E.dark),
+    seg([8.3, 0.05, -6.1], [8.3, 0.05, -2.3], 0.1, 0.1, E.grey),
+    tap([8.3, 0.05, -6.5], 0.45, [0.4, 0.38], [0.4, 0.38], E.amber, { sh: 'h' }),
+    ell([6.2, 1.75, -8.25], [0.65, 0.3, 0.55], E.panel),
+    ...ringSegs(6.2, 1.75, -8.65, -7.9, 0.58, 8, 0.08, E.dark),
+    // Reactor hatch and ventral shield projector
+    tap([0, 2.05, 8.5], 0.8, [0.9, 0.28], [0.9, 0.28], E.panel, { sh: 'h' }),
+    ell([0, -2.25, 2], [0.75, 0.28, 0.75], E.glow, { glow: true }),
+    // Three aft nozzles aligned with the database engine positions
+    tap([0, 0, 14.8], 2.7, [1.8, 1.6], [1.8, 1.6], E.grey2, { sh: 'h' }),
+    tap([0, 0, 16.25], 0.9, [0.95, 0.85], [0.95, 0.85], E.noz, { sh: 'e' }),
+    ell([0, 0, 17.05], [0.72, 0.72, 0.18], E.glow, { glow: true }),
+    tap([3.4, 0.2, 15.8], 1.35, [0.88, 0.82], [0.92, 0.86], E.noz, { sh: 'e' }),
+    ell([3.4, 0.2, 16.85], [0.65, 0.62, 0.16], E.glow, { glow: true }),
+    // Port and starboard navigation lights
+    ell([-8.45, 0.3, 7.65], [0.15, 0.15, 0.15], 0x30ff60, { glow: true, noMirror: true }),
+    ell([8.45, 0.3, 7.65], [0.15, 0.15, 0.15], 0xff3030, { glow: true, noMirror: true }),
+  ],
+};
 const eTur = (x, y, z, dy = 1) => [                       // turret seat only: the barrels are the real turret meshes (makeTurret, cls S/M)
   tap([x, y, z], 5, [6, 2.4], [6, 2.4], E.grey2, { sh: 'h' }),
 ];

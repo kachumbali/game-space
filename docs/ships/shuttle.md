@@ -1,8 +1,9 @@
 # TERN: human resupply shuttle (db id `tern`; file name `shuttle`)
 
-Status: specification, 2026-10-23. Nothing here is implemented; no existing file was touched. Companion data:
-`docs/ships/shuttle.db.json` (a drop-in value for `data/db.json` `ships.tern`; checked by copying `db.json`
-elsewhere, inserting it and running `tools/validate_db.py` and `tools/power_table.py`: 14 ships, OK). All numbers
+Status: specification, 2026-10-23; hull and database entry implemented on `ship-tern` (2026-10-24). The
+`tools/tests/tern_t.py` smoke test passes; the Shipyard reports 14,424 instances at mid detail. Shuttle transfer
+and mission-route behavior are not implemented. Companion data:
+`docs/ships/shuttle.db.json` is the drop-in value for `data/db.json` `ships.tern`. All numbers
 are first guesses with a stated reason; none is measured. Per `AGENTS.md`, balance claims need >= 20 seeded runs,
 and a new player-facing system waits for the owner's iPad hand-play; section (h) says what that means here.
 
@@ -11,11 +12,11 @@ and a new player-facing system waits for the owner's iPad hand-play; section (h)
 - **Name: TERN.** Bird lineage kept (Kestrel, Merlin, Harrier, Bittern), and it is a bird that ferries food to
   others, which is what the hull does. Rejected: *Pelican* (the Halo dropship is the first association; the owner
   will see it), *Puffin* (apt, a bill full of fish, but it reads comic on a HUD), *Albatross* (a long-range
-  hauler, wrong scale). Not used anywhere in `src/`, `docs/` or `data/`.
-- **Live AI unit, not scripted only, but staged.** Stage 0 (no behaviour code): the Tern exists as a hull and
-  appears in scripted mission segments as set dressing. Stage 1: the AI rearm loop in section (a). Reasons and the
-  code list are in (a); the gate is that two defects in the existing rearm path must be fixed first.
-- Engine class `fighter` with a new flag `shuttle: true`, the same device `drone: true` uses (section (d)).
+  hauler, wrong scale). The implementation uses the ship ID `tern`.
+- **V1 is scripted-route only; no live shuttle AI** (owner decision, 2026-10-24). This branch adds only the hull
+  and database entry; mission integration remains separate.
+- **Fungible ammunition pool** (owner decision, 2026-10-24): use one `cargo.ammo` counter, not per-type cassettes.
+- **Engine class `fighter` with `shuttle: true`** (owner decision, 2026-10-24); do not add a fifth class.
 - Unarmed, no point defence, 12 flares of its own (section (f)).
 
 ## (a) Role and doctrine
@@ -129,7 +130,7 @@ Halberd 128 m (authored 64 m, scaled x2 by `32_scale.js`), Tender 200 m.
 | `half` | `[9.0, 5.0, 17.5]` | x: pod centre 6.2 plus half pod 1.8 plus stowed boom 1.0. y: dorsal drone rack and bridge dome. z: half length plus nozzles |
 | `radius` | 18 | `radius / half-diagonal` for Kestrel is 0.74, Tender 0.95; half-diagonal here is 20.3, so 18 (0.89) keeps it an easy hit target, which is intended |
 | `seam` | `[2.0, 1.5]` | between the Kestrel (1.5, 1.1) and Halberd (3.2, 2.4) |
-| `resMul` | 0.8 | `resFor` multiplies by (length/12)^0.4 = 1.52 over a Kestrel already; 0.8 keeps it well under the Halberd's about 35k instances. **Voxel cost unmeasured** (instance count is the first thing to check once geometry exists) |
+| `resMul` | 0.8 | `resFor` multiplies by (length/12)^0.4 = 1.52 over a Kestrel already; 0.8 keeps it well under the Halberd's about 35k instances. **Measured at 14,424 instances at Shipyard mid detail.** |
 | `eye` | `[0, 1.9, -13.2]` | forward of the bridge dome, for debug flight and ship sheets |
 | Cargo | `ammo 3600, ir 8, rf 4, torp 2, flare 48, drone 6, slug 4` | table in (a) |
 
@@ -277,15 +278,17 @@ belongs to the Tender's family, not the Kestrel's warm grey, which is what makes
    to work at all. This is the biggest value question.
 2. **Turret-drum rearm:** is it intended that PD drums are refilled by a tender (WEAPONS.md says yes, the code says
    no)? Without it, the Tern's main customers have nothing to rearm.
-3. **Cargo model:** fungible `ammo` pool or per-type cassettes (rotary, MK-30, PD, MD-55 separately)? The fungible
-   pool is simple and wrong in detail; per-type multiplies the data and the manifest UI.
-4. **Class:** is `cls: 'fighter'` plus `shuttle: true` acceptable (cheap, same device as the Drone), or should
-   `cls` gain a fifth value? The fifth value touches every `cls ===` test (about 20 sites).
-5. **Scripted vs live first:** accept the staged approach (hull and scripted use first, AI loop behind `?shuttle`
-   after hand-play), or skip scripted use?
+3. **Resolved (2026-10-24):** cargo ammunition is one fungible `ammo` pool.
+4. **Resolved (2026-10-24):** use `cls: 'fighter'` plus `shuttle: true`; no new class.
+5. **Resolved (2026-10-24):** v1 follows a scripted route and has no live shuttle AI.
 
 Risks: (1) the demand rates and the `pickTarget` blind spot make the loss-rate figures unreliable until measured;
 (2) shared transfer code (`tenderTick` refactor) can regress `dock_t.py` and `magazine_t.py`: run both; (3) standoff
 station-keeping against a manoeuvring Halberd may be fiddly and `Tern` may spend more time aborting than delivering;
-(4) `bay` component effects are new code with no precedent; (5) voxel count of a 34 m hull is unmeasured; (6) all
-speeds, rates and hp are first guesses with no hand-play.
+(4) `bay` component effects are new code with no precedent; (5) instance counts vary by selected detail and have
+not been measured on a device; (6) all speeds, rates and hp are first guesses with no hand-play.
+
+Engine integration status: `shuttle`, `cargo`, and `xfer` are stored in the database but not consumed by the engine.
+The `bay` component role currently supplies only damage modifiers; cargo loss on pod damage and transfer-rate
+effects from boom damage are not implemented. No mission route or resupply behavior is added by the hull-only
+implementation.
