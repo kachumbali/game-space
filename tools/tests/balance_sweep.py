@@ -427,7 +427,9 @@ def main() -> int:
             parser.error("existing output does not match this source, seed range, or time cap")
         data = prior
         if source_sha != prior["source_commit"]:
-            data.setdefault("resume_commits", []).append(source_sha)
+            resumes = data.setdefault("resume_commits", [])
+            if source_sha not in resumes:
+                resumes.append(source_sha)
 
     def save():
         output.write_text(json.dumps(data, indent=2) + "\n")
@@ -456,10 +458,10 @@ def main() -> int:
             if not missing_seeds:
                 continue
             save()
-            with Runner() as runner:
-                for batch_start in range(0, len(missing_seeds), args.batch_size):
-                    batch = missing_seeds[batch_start:batch_start + args.batch_size]
-                    for seed in batch:
+            for batch_start in range(0, len(missing_seeds), args.batch_size):
+                batch = missing_seeds[batch_start:batch_start + args.batch_size]
+                for seed in batch:
+                    with Runner() as runner:
                         q = {
                             "sk": ",".join(f"{kind}:{count}" for kind, count in spec["rows"]),
                             "sk_ship": spec["player_ship"], "sk_wship": spec["wship"],
@@ -485,11 +487,11 @@ def main() -> int:
                             result["console_errors"] = runner.errs[err_start:]
                         finally:
                             page.context.close()
-                        cell["results"].append(result)
-                        cell["summary"] = summarize(cell["results"])
-                        save()
-                        print(f"{scenario_id} seed={seed} winner={result['winner']} t={result['sim_time']:.2f}s "
-                              f"losses={result['human']['losses']}/{result['frogg']['losses']}", flush=True)
+                    cell["results"].append(result)
+                    cell["summary"] = summarize(cell["results"])
+                    save()
+                    print(f"{scenario_id} seed={seed} winner={result['winner']} t={result['sim_time']:.2f}s "
+                          f"losses={result['human']['losses']}/{result['frogg']['losses']}", flush=True)
             cell["summary"] = summarize(cell["results"])
             save()
     except Exception as exc:
