@@ -234,14 +234,35 @@ function spawnGroup(sp) {
   if (sp.jump) sfx('jump');
 }
 
+// ---- "ready to jump" prompt: shown once an area is cleared; X (or a tap on the box) starts the transit ----
+let jumpEl = null;
+function showJumpPrompt(to) {
+  if (!jumpEl) {
+    jumpEl = document.createElement('div'); jumpEl.id = 'jumpPrompt';
+    jumpEl.style.cssText = 'position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:8;padding:14px 22px;text-align:center;font:600 15px/1.5 monospace;letter-spacing:.08em;color:#bff;background:rgba(5,25,35,.82);border:1px solid #4cf;border-radius:6px;display:none;cursor:pointer;touch-action:manipulation';
+    jumpEl.onclick = () => jumpConfirm();
+    document.body.appendChild(jumpEl);
+  }
+  const key = isTouch ? 'TAP HERE' : 'PRESS X';
+  jumpEl.innerHTML = `AREA CLEAR<br><span style="color:#fff">${to}</span><br><span style="color:#9fd">${key} TO BEGIN JUMP</span>`;
+  if (jumpEl.style.display !== 'block') { jumpEl.style.display = 'block'; comm('CONTROL', 'Area is clear. Say when, Echo, and the fleet will jump.'); }
+}
+function hideJumpPrompt() { if (jumpEl) jumpEl.style.display = 'none'; }
+function jumpConfirm() { const S = game.mstate; if (S && jumpEl && jumpEl.style.display === 'block') S.jumpGo = true; }
+addEventListener('keydown', e => { if (e.code === 'KeyX' && !e.repeat) jumpConfirm(); });
+
 function missionUpdate(dt) {
   const M = game.mission, S = game.mstate;
+  if (!M || !S || S.ended) hideJumpPrompt();
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
   const st = M.stages[S.stage];
   if (st && condMet(st.when, S)) {
+    const tr0 = S.stage > 0 && st.do.find(a => a.transit);
+    if (tr0 && !S.jumpGo) { showJumpPrompt(tr0.transit.to); return; }     // objectives done: the player starts the jump to the next AO (owner 2026-10-24)
+    hideJumpPrompt(); S.jumpGo = false;
     S.stage++; S.stageT = 0;
     const tr = st.do.find(a => a.transit);
     if (tr) game.seg = { stage: S.stage, area: tr.transit.area, t: S.t };     // checkpoint: arrival in the new area
