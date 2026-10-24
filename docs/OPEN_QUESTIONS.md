@@ -36,6 +36,8 @@ Each item has my default; if you do not decide, the default is what I build. "Ev
 24. Save policy: export/import, seed stored?
 25. Objections I raised that you have not answered: territory versus migratory hive (O2), nuke "elixir problem" (O3), whether pilot choice has consequences (O4), drone economics until jamming rules exist (O5).
 
+29. **Capital-ship lasers delete whole fighter wings (owner play-test 2026-10-24).** A frigate or cruiser (Exeter class) clears an enemy wing in seconds with its lasers. Sweep evidence: Exeter + escorts kill a median ~30 FROGG per Bullfrog fight (docs/BALANCE_REPORT_2.md J); Hecla with 12 / 4 laserM kills 3 Kestrels in ~25 s / ~50 s and 3 Merlins in ~5 s (M); now 6 on Hecla. Candidate levers (none applied, owner to decide): lower beam focus ramp or peak against fighter-sized targets, longer retarget time and slower slew for LS-8 turrets, per-turret target spreading, lower fire rate vs small targets, fewer turrets. Re-measure with tools/tests/balance_sweep.py after any change.
+
 ## D. Project and tooling
 26. **Verification gaps.** Real-device performance (iPad, phone, laptop at high detail), phone readability, damage feel are unverified.
 27. **GitHub / publishing / licences.** The repo is private; GitHub Pages from a private repo needs a paid plan, so sharing means making it public. `docs/CREDITS.md` lists all licences (all CC0 audio and MIT three.js verified 2026-10-22); the FROGG reference image `docs/img/frogg_reference_art.jpg` has unknown provenance and should be confirmed or removed before the repo goes public. Tag `milestone-1` exists locally only (push was rejected); GitHub Pages is not enabled (needs your approval).
