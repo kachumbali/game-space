@@ -24,6 +24,7 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import urlencode
 
+from playwright.sync_api import Error as PlaywrightError, TimeoutError as PlaywrightTimeoutError
 from lib import Runner, REPO
 
 
@@ -418,10 +419,19 @@ def main() -> int:
         if not output.exists():
             parser.error("--resume requires an existing --output file")
         prior = json.loads(output.read_text())
-        parent_sha = subprocess.check_output(
-            ["git", "-C", REPO, "rev-parse", "HEAD^"], text=True
-        ).strip()
-        if (prior.get("source_commit") not in (source_sha, parent_sha)
+        prior_sha = prior.get("source_commit")
+        same_game_source = False
+        is_ancestor = False
+        if prior_sha:
+            same_game_source = subprocess.run(
+                ["git", "-C", REPO, "diff", "--quiet", prior_sha, source_sha, "--", "src", "data/db.json", "build.py"],
+                check=False,
+            ).returncode == 0
+            is_ancestor = subprocess.run(
+                ["git", "-C", REPO, "merge-base", "--is-ancestor", prior_sha, source_sha],
+                check=False,
+            ).returncode == 0
+        if (not is_ancestor or not same_game_source
                 or prior.get("seed_range") != args.seeds
                 or prior.get("time_cap_sim_seconds") != (args.limit or 180)):
             parser.error("existing output does not match this source, seed range, or time cap")
@@ -461,32 +471,40 @@ def main() -> int:
             for batch_start in range(0, len(missing_seeds), args.batch_size):
                 batch = missing_seeds[batch_start:batch_start + args.batch_size]
                 for seed in batch:
-                    with Runner() as runner:
-                        q = {
-                            "sk": ",".join(f"{kind}:{count}" for kind, count in spec["rows"]),
-                            "sk_ship": spec["player_ship"], "sk_wship": spec["wship"],
-                            "sk_wing": str(spec["wing"]), "sk_skill": str(spec.get("enemy_skill", 3)), "seed": str(seed),
-                            "sk_range": str(scenario_range), "q": "low",
-                        }
-                        if "ally" in spec:
-                            q["sk_ally"] = spec["ally"]
-                        if "hecla_laser_turrets" in spec:
-                            q["sk_hecla_lasers"] = str(spec["hecla_laser_turrets"])
-                        err_start = len(runner.errs)
-                        page = runner.page(
-                            640, 360, "?" + urlencode(q),
-                            init_script="window.requestAnimationFrame=()=>0;" + HECLA_INIT_SCRIPT,
-                        )
+                    for attempt in range(3):
                         try:
-                            page.wait_for_function("window.__game?.game?.mode==='skirmish'", timeout=120000)
-                            setup = page.evaluate(SETUP_JS, [spec, seed, scenario_range, scenario_limit])
-                            if not setup.get("ready"):
-                                raise RuntimeError(f"setup failed for {scenario_id} seed {seed}: {setup}")
-                            result = page.evaluate(RUN_JS, [spec, seed, scenario_range, scenario_limit])
-                            result.update({"scenario": scenario_id, "seed": seed})
-                            result["console_errors"] = runner.errs[err_start:]
-                        finally:
-                            page.context.close()
+                            with Runner() as runner:
+                                q = {
+                                    "sk": ",".join(f"{kind}:{count}" for kind, count in spec["rows"]),
+                                    "sk_ship": spec["player_ship"], "sk_wship": spec["wship"],
+                                    "sk_wing": str(spec["wing"]), "sk_skill": str(spec.get("enemy_skill", 3)), "seed": str(seed),
+                                    "sk_range": str(scenario_range), "q": "low",
+                                }
+                                if "ally" in spec:
+                                    q["sk_ally"] = spec["ally"]
+                                if "hecla_laser_turrets" in spec:
+                                    q["sk_hecla_lasers"] = str(spec["hecla_laser_turrets"])
+                                err_start = len(runner.errs)
+                                page = runner.page(
+                                    640, 360, "?" + urlencode(q),
+                                    init_script="window.requestAnimationFrame=()=>0;" + HECLA_INIT_SCRIPT,
+                                )
+                                try:
+                                    page.wait_for_function("window.__game?.game?.mode==='skirmish'", timeout=120000)
+                                    setup = page.evaluate(SETUP_JS, [spec, seed, scenario_range, scenario_limit])
+                                    if not setup.get("ready"):
+                                        raise RuntimeError(f"setup failed for {scenario_id} seed {seed}: {setup}")
+                                    result = page.evaluate(RUN_JS, [spec, seed, scenario_range, scenario_limit])
+                                    result.update({"scenario": scenario_id, "seed": seed})
+                                    result["console_errors"] = runner.errs[err_start:]
+                                finally:
+                                    page.context.close()
+                            break
+                        except PlaywrightError as exc:
+                            retryable = isinstance(exc, PlaywrightTimeoutError) or "TargetClosedError" in str(exc)
+                            if not retryable or attempt == 2:
+                                raise
+                            print(f"RETRY {scenario_id} seed={seed} attempt={attempt + 2}: {exc}", flush=True)
                     cell["results"].append(result)
                     cell["summary"] = summarize(cell["results"])
                     save()
