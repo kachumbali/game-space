@@ -501,7 +501,11 @@ def main() -> int:
                                     page.context.close()
                             break
                         except PlaywrightError as exc:
-                            retryable = isinstance(exc, PlaywrightTimeoutError) or "TargetClosedError" in str(exc)
+                            retryable = (
+                                isinstance(exc, PlaywrightTimeoutError)
+                                or type(exc).__name__ == "TargetClosedError"
+                                or "TargetClosedError" in str(exc)
+                            )
                             if not retryable or attempt == 2:
                                 raise
                             print(f"RETRY {scenario_id} seed={seed} attempt={attempt + 2}: {exc}", flush=True)
