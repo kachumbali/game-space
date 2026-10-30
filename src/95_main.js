@@ -5,6 +5,7 @@ if (!params.has('yard')) {
   startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
   if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
   else if (params.has('sk')) startSkirmish(skFromParams());
+  else if (params.has('sv')) startSurvival(svFromParams());
   else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
   else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
 }
@@ -35,7 +36,7 @@ function frame(t) {
   last = t;
   if (!params.has('yard')) {
     musicTick(dt);
-    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
     updateHud();
   }
@@ -46,12 +47,14 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
+  get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
+  version: GAME_VERSION, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
-  get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
+  get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
 Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu

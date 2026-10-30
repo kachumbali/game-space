@@ -66,25 +66,28 @@ function launchLock() { if (!isTouch) lockPointer(); touchStarted = true; audioI
 // back to the backdrop world + main menu (used by the restart dialog, briefing and debriefs)
 function openMenu(view) {
   startMission(lastMission());          // builds the backdrop world, shows the briefing; the menu then replaces it
-  if (view === 'skirmish') showSkirmishSetup(); else showMainMenu();
+  if (view === 'skirmish') showSkirmishSetup(); else if (view === 'survival') showSurvivalSetup(); else showMainMenu();
 }
 function showMainMenu() {
   menuView = 'main';
   const items = [
     ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad to The Spine'],
+    ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
     ['options', 'OPTIONS', 'Audio, device preset, LOD [O]'],
     ['credits', 'CREDITS', 'Third-party items and licences'],
   ];
-  menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
+  const rk = careerRank(careerGet().xp);
+  menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT · ${rk.name}</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
     <div class="mlist">${items.map(([a, t, d]) => `<button class="mi" data-a="${a}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
-    <div class="dim keys">UP / DOWN select · ENTER confirm · O options</div>`, 'main');
+    <div class="dim keys">UP / DOWN select · ENTER confirm · O options · v${GAME_VERSION}</div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
 function menuAct(a) {
   if (a === 'campaign') showMissionList();
+  else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }
   else if (a === 'options') toggleOpts(true);

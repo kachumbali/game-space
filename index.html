@@ -67,6 +67,7 @@
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
   #dmg{display:block;margin-top:4px;opacity:.95}
+  #wingstrip{font-size:10px;line-height:1.35;margin-top:4px;text-shadow:0 0 4px #000;white-space:pre}body.phone #wingstrip{font-size:8px}body.cine #wingstrip{display:none}
   #radar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:224px;height:224px;z-index:5}
   #tgt{position:fixed;left:50%;top:10px;transform:translateX(-50%);font-size:11px;line-height:1.45;
     text-align:center;white-space:pre;color:#ffb0a0;text-shadow:0 0 4px #000;z-index:4;min-width:240px}
@@ -285,7 +286,7 @@
 <div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
 <div id="pauseOv">PAUSED<br><span>ESC TO RESUME</span></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div><div class="legend"><b>v0.2 feel:</b> white ticks round the reticle = your shots landed (blue shield, grey armour, orange subsystem, red kill); a red arc round the reticle = fire coming from that side; CHAIN x2+ multiplies kill score, keep killing inside the timer. <b>Salvage pods</b> (diamonds on the radar and HUD): fly through them, S shield · R hull · M missiles · A ammo · O overdrive; nothing to press, touch the same. <b>Gauntlet</b> (main menu): after each wave press 1 / 2 / 3 (touch: tap a card) to take a perk; the AI ignores all of this. Difficulty is on the mission briefing; mouse sensitivity and invert are in OPTIONS (O).</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -457,7 +458,7 @@ function sfx(name, dist = 0, vol = 1) {
 //  but the music volume slider may not). Sound samples (CC0) are embedded in 14_samples.js and layered under the procedural SFX.
 //  Options (O key / button): music on/off, music volume, effects volume, sample layer on/off. Saved in localStorage (try/catch).
 // ======================================================================
-const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true };
+const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
 // Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
@@ -557,11 +558,13 @@ function toggleOpts(force) {
   if (open) {
     document.exitPointerLock?.();
     const row = (id, label, inner) => `<div class="orow"><label for="${id}">${label}</label>${inner}</div>`;
-    el.innerHTML = `<div class="panel"><h2>OPTIONS</h2>`
+    el.innerHTML = `<div class="panel"><h2>OPTIONS <small>v${GAME_VERSION}</small></h2>`
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
+      + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
       + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
       + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
@@ -573,6 +576,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
+    $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);
     $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
@@ -589,6 +594,7 @@ const SAMPLE_DATA = {"expl1": "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAA
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
+const GAME_VERSION = '0.2.0';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
@@ -627,7 +633,7 @@ function showCredits(force) {
   if (!open) { el.style.display = 'none'; return; }
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const lnk = s => esc(s).replace(/(https?:\/\/[^\s)]+)/g, u => { const m = u.match(/^(.*?)([.,;]*)$/); return `<a href="${m[1]}" target="_blank" rel="noopener">${m[1]}</a>${m[2]}`; });
-  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()}<br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
+  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()} <small>v${GAME_VERSION}</small><br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
     + CREDITS.map(([sec, rows]) => `<div class="csec">${sec}</div>` + rows.map(([a, b]) => `<div class="crow"><b>${esc(a)}</b><span>${lnk(b)}</span></div>`).join('')).join('')
     + `<div class="onote">CC0 means the author dedicated the work to the public domain; credit is not required but given. Full text: https://creativecommons.org/publicdomain/zero/1.0/ and https://opensource.org/license/mit. The same list is in docs/CREDITS.md.</div></div>`
     + `<button id="c_close">CLOSE <small>[ESC]</small></button></div>`;
@@ -2980,13 +2986,13 @@ function powerShift(s, to) {                     // +1 point to `to`, taken from
   s.pw[o[0]]--; s.pw[to]++; return true;
 }
 const powerReset = s => { s.pw = { w: 4, s: 4, e: 4 }; };
-const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e'));
-const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e'));
+const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e')) * (s.mod?.speed ?? 1);
+const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e')) * (s.mod?.turn ?? 1);
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 // ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
 function abTick(s, want, dt) {
-  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e');
+  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1);
   if (!mx) { s.ab = false; return false; }
   const on = want && !s.abLock && s.abFuel > 0;
   if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
@@ -3172,7 +3178,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, drones: [], droneKills: 0, dronesLost: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, mod: {}, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -3250,6 +3256,7 @@ function clearWorld() {
   ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
   for (const k in killLog) delete killLog[k];
   shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;
+  juiceReset(); lootClear();
   stick.x = stick.y = 0;
 }
 
@@ -3750,7 +3757,7 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
   if (sp) _w2.add(_w3.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(2 * sp)).normalize();
   const pos = wpos.clone();
   bolts.push({
-    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg, dt: w.dt,
+    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg * (owner.mod?.dmg ?? 1), dt: w.dt,
     vel: _w2.clone().multiplyScalar(w.v).addScaledVector(s.vel, 0.9),
   });
 }
@@ -3791,10 +3798,11 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
-  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1);
+  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
+  hitSrc = s; hitKind = 'beam';
   applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
@@ -3815,8 +3823,8 @@ function fireMount(s, m) {
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
-  if (w.energy) s.energy -= w.energy;
-  m.cool = w.cd / (0.6 + 0.4 * powerMul(s));
+  if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
+  m.cool = w.cd / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -3851,7 +3859,7 @@ function lockUpdate(s, dt) {
   const radarOk = w.seeker !== 'rf' || compFactor(s, 'radar') > 0.01;
   const ok = d < w.range && ang < w.lockCone * sizeAdj && radarOk;
   L.d = d; L.ang = ang;
-  if (ok) L.p = Math.min(1, L.p + dt / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
+  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
   else L.p = Math.max(0, L.p - dt * 1.5);
   L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < w.range ? 'seek' : 'range'));
 }
@@ -3956,7 +3964,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     }
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
-    applyHit(s, lp, w.dmg * f, s.group.localToWorld(lp.clone()), 'exp');
+    hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
+    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp');
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
@@ -4240,6 +4249,7 @@ function updateBolts(dt) {
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
+      hitSrc = b.owner; hitKind = 'gun';
       applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
@@ -4436,6 +4446,303 @@ function renderBeams() {
 const beamStat = { n: 0 };
 const _c1 = new THREE.Color();
 // ======================================================================
+//  FEEL PACK (v0.2, owner request 2026-10-30; UX_REVIEW R6, R7, R5):
+//  hitmarkers (shield / armour / hull / subsystem / kill), directional damage arcs round the reticle, kill banners with a chain
+//  multiplier, style bonuses (missile kill, point blank, ace), hit-stop on kills, medals, and the sounds that go with them.
+//  Everything is event driven: weapon code sets hitSrc / hitKind just before applyHit, applyHit (65_combat) reports the outcome
+//  to juiceHit, destroy() reports kills to juiceKill, compEvent() subsystem kills to juiceComp. Nothing here changes damage.
+//  Touch: nothing to bind (it is all feedback). AI: the AI ignores it. Help line: the legend under the key map (00_head.html).
+//  No floating damage numbers on purpose (docs/UX_REVIEW.md: wrong genre register).
+// ======================================================================
+let hitSrc = null, hitKind = null;                    // who is shooting, with what class of weapon ('gun' | 'beam' | 'missile' | 'nuke')
+const killHooks = [];                                 // other parts register fn(ship, killedByPlayer) at load time (loot drops, survival perks)
+const FUN = {
+  chainWindow: 6,                                     // sim seconds between kills that keep a chain alive (about 16 s real time at 37.5% sim speed)
+  chainMax: 4,                                        // score multiplier cap; multiplier = 1 + 0.5 per extra kill in the chain
+  hitStopKill: 0.05, hitStopBig: 0.16,                // real seconds the sim crawls after a kill / a capital kill
+  pointBlank: 150,                                    // m: a fighter killed this close gets the POINT BLANK style bonus
+};
+const juice = {};
+function juiceReset() {
+  Object.assign(juice, {
+    marks: [], arcs: [], banners: [],
+    chain: 0, chainT: 0, bestChain: 0, mult: 1,
+    score: 0, bonus: 0, kills: 0, missileKills: 0, subKills: 0, capKills: 0, aceKills: 0, hullHits: 0, friendlyLost: 0, hadWing: false,
+    hitStop: 0, tickT: -9, scoreMul: 1,
+  });
+}
+juiceReset();
+const CHAIN_NAMES = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'QUAD KILL', 'RAMPAGE', 'RAMPAGE', 'UNSTOPPABLE', 'UNSTOPPABLE'];
+
+// ---- sounds (same synth as the rest of the game) ----------------------------------------------------------
+SFX.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
+SFX.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
+SFX.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
+SFX.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
+SFX.pickup = () => { tone(700, 1400, 0.10, 'sine', 0.14); tone(1050, 2100, 0.12, 'sine', 0.1, 0.06); };
+SFX.perk = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.01, 0.18, 'triangle', 0.14, i * 0.07));
+SFX.wave = () => { tone(110, 90, 0.5, 'sawtooth', 0.2); tone(165, 140, 0.5, 'sawtooth', 0.12, 0.1); };
+SFX.ace = () => { tone(220, 110, 0.6, 'sawtooth', 0.22); tone(233, 117, 0.6, 'sawtooth', 0.18, 0.05); };
+
+// ---- event entry points -----------------------------------------------------------------------------------
+const _jv = new THREE.Vector3(), _jq = new THREE.Quaternion();
+function hitAngle(from) {                             // screen angle (canvas, radians, y down) of a world point seen from the camera; behind us = bottom
+  _jv.copy(from).sub(camera.position);
+  _jv.applyQuaternion(_jq.copy(camera.quaternion).invert());
+  if (Math.hypot(_jv.x, _jv.y) < Math.abs(_jv.z) * 0.15 && _jv.z > 0) return Math.PI / 2;
+  return Math.atan2(-_jv.y, _jv.x);
+}
+function juiceHit(s, src, out, dmg, wp) {
+  const p = player; if (!p) return;
+  if (s === p) {                                      // we were hit: where from
+    const from = src && src.group ? src.group.position : wp;
+    juice.arcs.push({ t: time, ang: hitAngle(from), out, big: clamp(dmg / 14, 0.35, 1) });
+    if (juice.arcs.length > 8) juice.arcs.shift();
+    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
+    return;
+  }
+  if (src === p && s.team !== p.team && out !== 'kill') {   // our shot landed
+    const kind = out === 'comp' ? 'sub' : out;
+    juice.marks.push({ t: time, kind });
+    if (juice.marks.length > 6) juice.marks.shift();
+    if (time - juice.tickT > 0.05) { juice.tickT = time; sfx(out === 'shield' ? 'hitshield' : 'hitmark', 0, 0.8); }
+  }
+}
+function juiceComp(s, c, st) {                        // a subsystem of someone else's ship was destroyed by us
+  if (st !== 2 || !player || s.team === player.team || hitSrc !== player) return;
+  juice.subKills++; juice.score += 40; juice.bonus += 40;
+  juice.marks.push({ t: time, kind: 'sub' });
+  juice.banners.push({ t: time, text: c.name + ' DESTROYED', sub: '+40', col: '#ffb060', big: false });
+  sfx('subkill', 0, 0.9);
+}
+function juiceKill(s) {
+  const p = player;
+  if (s.team !== 1) { if (p && s !== p && s.team === p.team && !s.def.drone) juice.friendlyLost++; if (s === p) juice.chain = 0; return; }
+  const killer = s.lastAttacker;
+  const mine = !!p && (killer === p || (killer && killer.ctrl === p));
+  for (const f of killHooks) f(s, mine);
+  if (!mine) return;
+  const big = s.def.cls !== 'fighter';
+  juice.kills++; if (big) juice.capKills++;
+  juice.chain = (time < juice.chainT ? juice.chain : 0) + 1;
+  juice.chainT = time + FUN.chainWindow * (p.mod?.chainT ?? 1);
+  juice.bestChain = Math.max(juice.bestChain, juice.chain);
+  const mult = Math.min(FUN.chainMax, 1 + 0.5 * (juice.chain - 1));
+  juice.mult = mult;
+  const base = ((typeof SCORE !== 'undefined' && SCORE[s.def.id]) || 100) * (s.ace ? 5 : 1);
+  const tags = []; let extra = 0;
+  if (s.lastKind === 'missile' || s.lastKind === 'nuke') { extra += base * 0.5; tags.push('MISSILE'); juice.missileKills++; }
+  if (s.ace) { tags.push('ACE DOWN'); juice.aceKills++; }
+  if (!big && p.group.position.distanceTo(s.group.position) < FUN.pointBlank) { extra += base * 0.25; tags.push('POINT BLANK'); }
+  const gain = Math.round((base + extra) * mult * (p.mod?.score ?? 1) * juice.scoreMul);
+  juice.score += gain; juice.bonus += Math.max(0, gain - Math.round(base));
+  if (CHAIN_NAMES[Math.min(juice.chain, 8)]) tags.unshift(CHAIN_NAMES[Math.min(juice.chain, 8)]);
+  juice.banners.push({ t: time, text: `+${gain}  ${s.ace ? s.callsign : s.def.name.replace('FROGG ', '')}`, sub: tags.join(' · '), col: s.ace ? '#ffd24a' : big ? '#ff9a5a' : '#c8fff0', big: big || s.ace });
+  if (juice.banners.length > 4) juice.banners.shift();
+  juice.marks.push({ t: time, kind: 'kill' });
+  sfx(s.ace ? 'ace' : 'kill', 0, 1);
+  juice.hitStop = Math.max(juice.hitStop, big ? FUN.hitStopBig : FUN.hitStopKill);
+  if (big) shake = Math.min(1, shake + 0.45);
+}
+killHooks.length = 0;
+function juiceTick(dt) {
+  if (!juice.hadWing && player && ships.some(s => s.team === player.team && s !== player && s.def.cls === 'fighter' && !s.def.drone)) juice.hadWing = true;
+  if (juice.chain && time > juice.chainT) { juice.chain = 0; juice.mult = 1; }
+  const keep = (a, life) => { while (a.length && time - a[0].t > life) a.shift(); };
+  keep(juice.marks, 0.4); keep(juice.arcs, 1.1); keep(juice.banners, 2.2);
+}
+// medals for a debrief; stats = {acc, shots}; returns [[name, why]]
+function juiceMedals(acc, shots, kills) {
+  const m = [], j = juice;
+  if (j.kills >= 5) m.push(['ACE', j.kills + ' kills this sortie']);
+  if (j.bestChain >= 5) m.push(['CHAIN MASTER', 'chain of ' + j.bestChain]);
+  if (shots >= 40 && acc >= 35) m.push(['SHARPSHOOTER', acc + '% on ' + shots + ' shots']);
+  if (j.hullHits === 0 && j.kills >= 3) m.push(['UNTOUCHED', 'no hull damage']);
+  if (j.missileKills >= 3) m.push(['MISSILE MASTER', j.missileKills + ' missile kills']);
+  if (j.subKills >= 3) m.push(['SURGEON', j.subKills + ' subsystems taken out']);
+  if (j.capKills >= 1) m.push(['CAPITAL BREAKER', j.capKills + ' capital ship' + (j.capKills > 1 ? 's' : '')]);
+  if (j.aceKills >= 1) m.push(['ACE HUNTER', j.aceKills + ' enemy ace' + (j.aceKills > 1 ? 's' : '')]);
+  if (j.hadWing && j.friendlyLost === 0 && kills > 0) m.push(['WING LEADER', 'no wingman lost']);
+  return m;
+}
+function juiceDebriefHtml(acc, shots, kills) {
+  const medals = juiceMedals(acc, shots, kills);
+  return `<div class="sub">STYLE</div><div>Style bonus <b>+${juice.bonus}</b></div><div>Best chain <b>${juice.bestChain}</b></div>`
+    + (medals.length ? medals.map(([n, w]) => `<div class="medal"><b>${n}</b> <span class="dim">${w}</span></div>`).join('') : '<div class="dim">no medals this time</div>');
+}
+
+// ---- drawing (called from drawOverlay, 90_hud.js) ---------------------------------------------------------
+function drawJuice(c, p, cx, cy) {
+  const f = FS || 1;
+  // directional damage arcs: the red segment sits on the side the fire came from
+  const R = Math.min(ovW, ovH) * 0.2;
+  for (const a of juice.arcs) {
+    const age = time - a.t, k = 1 - age / 1.1; if (k <= 0) continue;
+    c.strokeStyle = a.out === 'shield' ? `rgba(90,200,255,${0.8 * k})` : `rgba(255,60,40,${0.95 * k})`;
+    c.lineWidth = (5 + 9 * a.big) * f; c.lineCap = 'round';
+    c.beginPath(); c.arc(cx, cy, R, a.ang - 0.38, a.ang + 0.38); c.stroke();
+  }
+  c.lineCap = 'butt';
+  // hitmarkers: four ticks round the reticle
+  for (const m of juice.marks) {
+    const age = time - m.t, k = 1 - age / 0.4; if (k <= 0) continue;
+    const big = m.kind === 'kill', r0 = (big ? 16 : 14) + (1 - k) * (big ? 22 : 8), len = (big ? 12 : 7) * f;
+    c.strokeStyle = m.kind === 'kill' ? `rgba(255,70,50,${k})` : m.kind === 'sub' ? `rgba(255,170,60,${k})` : m.kind === 'shield' ? `rgba(110,210,255,${k})` : m.kind === 'armor' ? `rgba(200,210,215,${k})` : `rgba(255,255,255,${k})`;
+    c.lineWidth = (big ? 3.5 : 2.5) * f;
+    c.beginPath();
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { c.moveTo(cx + sx * r0, cy + sy * r0); c.lineTo(cx + sx * (r0 + len), cy + sy * (r0 + len)); }
+    c.stroke();
+  }
+  // chain readout and kill banners ABOVE the reticle (the space below it belongs to the power widget and the radar); newest nearest the reticle
+  c.textAlign = 'center';
+  let y = cy - 62 * f;
+  if (juice.chain >= 2 && time < juice.chainT) {
+    const left = clamp((juice.chainT - time) / (FUN.chainWindow * (p.mod?.chainT ?? 1)), 0, 1);
+    c.font = `bold ${Math.round(15 * f)}px monospace`; c.fillStyle = '#ffd24a';
+    c.fillText(`CHAIN x${juice.chain}   SCORE x${juice.mult.toFixed(1)}`, cx, y);
+    c.fillStyle = 'rgba(255,210,74,.25)'; c.fillRect(cx - 60 * f, y + 5 * f, 120 * f, 3 * f);
+    c.fillStyle = '#ffd24a'; c.fillRect(cx - 60 * f, y + 5 * f, 120 * f * left, 3 * f);
+    y -= 26 * f;
+  }
+  for (let i = juice.banners.length - 1; i >= 0; i--) {
+    const b = juice.banners[i], age = time - b.t, k = clamp(1 - (age - 1.2) / 1.0, 0, 1); if (k <= 0) continue;
+    c.globalAlpha = k;
+    c.font = `${b.big ? 'bold ' : ''}${Math.round((b.big ? 17 : 13) * f)}px monospace`; c.fillStyle = b.col;
+    c.fillText(b.text, cx, y);
+    if (b.sub) { c.font = `${Math.round(10 * f)}px monospace`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(b.sub, cx, y + 12 * f); }
+    y -= (b.sub ? 34 : 22) * f; c.globalAlpha = 1;
+  }
+  c.textAlign = 'left';
+}
+// ======================================================================
+//  SALVAGE PODS (v0.2): enemy kills drop glowing pods; fly through one to use it. Five kinds:
+//    SHD shield cells (+60% of max)      REP hull patch (+22% structure, damaged subsystems +35% of max)
+//    MSL missile reload (+1 of each, one over the stock)   AMO ammunition + capacitor refill
+//    OVR overdrive (12 s: +35% fire rate, +20% damage, free energy, +5% speed)  <- rare
+//  Why: a dogfight that only drains you is a loss you postpone; pods give a reason to keep flying, and a reason to take a risk.
+//  Drop rule: fighters 22% (a pity timer forces one every 5th kill), capital ships 3 pods, aces always; the type is weighted by what
+//  the pilot is short of. Pods inside the magnet radius drift to the pilot. Only the player collects (AI default: ignore). Touch: pods are
+//  collected by flying through them, so there is nothing to bind. Radar shows them as diamonds; the overlay marks them within 2.5 km.
+//  ship.mod is rebuilt by recalcMods(s) from s.modBase (perks, difficulty) times the live buffs (overdrive).
+// ======================================================================
+const LOOT = {
+  SHD: { name: 'SHIELD CELL', col: 0x4ac8ff, hex: '#4ac8ff', letter: 'S' },
+  REP: { name: 'HULL PATCH', col: 0x6bff8a, hex: '#6bff8a', letter: 'R' },
+  MSL: { name: 'MISSILE RELOAD', col: 0xffa040, hex: '#ffa040', letter: 'M' },
+  AMO: { name: 'AMMO + CAPACITOR', col: 0xffe45a, hex: '#ffe45a', letter: 'A' },
+  OVR: { name: 'OVERDRIVE', col: 0xff5af0, hex: '#ff5af0', letter: 'O' },
+};
+const LOOT_CFG = { life: 34, collectR: 30, magnetR: 130, dropFighter: 0.22, pity: 5, overdriveT: 12, maxPods: 14 };
+const lootPods = [];
+const lootState = { dry: 0 };
+const _lg = new THREE.OctahedronGeometry(1, 0), _lh = new THREE.SphereGeometry(1, 10, 8);
+
+function recalcMods(s) {                              // s.mod = s.modBase x live buffs (every key multiplies; missing = 1)
+  const out = {}, add = o => { if (o) for (const k in o) out[k] = (out[k] ?? 1) * o[k]; };
+  add(s.modBase);
+  if (s.buffs) for (const k in s.buffs) if (s.buffs[k].until > time) add(s.buffs[k].mod);
+  s.mod = out;
+}
+function lootSpawn(pos, type, vel) {
+  if (lootPods.length >= LOOT_CFG.maxPods) { const o = lootPods.shift(); lootRemove(o); }
+  const L = LOOT[type], g = new THREE.Group();
+  const core = new THREE.Mesh(_lg, new THREE.MeshBasicMaterial({ color: new THREE.Color(L.col).multiplyScalar(2.6) }));
+  core.scale.set(3.4, 5, 3.4);
+  const halo = new THREE.Mesh(_lh, new THREE.MeshBasicMaterial({ color: L.col, transparent: true, opacity: 0.22, depthWrite: false, blending: THREE.AdditiveBlending }));
+  halo.scale.setScalar(13);
+  g.add(core); g.add(halo); g.position.copy(pos); scene.add(g);
+  const o = { type, pos: g.position, vel: (vel || new THREE.Vector3()).clone().multiplyScalar(0.25), born: time, g, core, halo, col: L.hex };
+  lootPods.push(o);
+  return o;
+}
+function lootRemove(o) { scene.remove(o.g); o.core.material.dispose(); o.halo.material.dispose(); }
+function lootClear() { for (const o of lootPods) lootRemove(o); lootPods.length = 0; lootState.dry = 0; }
+function lootPick(p) {                                // weighted by what the pilot is short of
+  const sh = (p.shield.fore + p.shield.aft) / Math.max(1, p.def.shield.fore + p.def.shield.aft);
+  const hull = p.structure / p.def.structure;
+  let ms = 1, mn = 0; for (const k in p.def.stores || {}) if (k !== 'flare' && k !== 'drone' && p.def.stores[k] > 0) { ms += p.stores[k] / p.def.stores[k]; mn++; }
+  const msl = mn ? (ms - 1) / mn : 1;
+  let am = 1; for (const k in p.ammoMax) am = Math.min(am, p.ammo[k] / p.ammoMax[k]);
+  const w = { SHD: 0.5 + 2.5 * (1 - sh), REP: 0.4 + 3 * (1 - hull), MSL: 0.4 + 2 * (1 - msl), AMO: 0.4 + 2.2 * (1 - am), OVR: 0.35 + (juice.chain >= 3 ? 0.4 : 0) };
+  let t = 0; for (const k in w) t += w[k];
+  let r = Math.random() * t; for (const k in w) { r -= w[k]; if (r <= 0) return k; }
+  return 'SHD';
+}
+function lootOnKill(s, mine) {
+  const p = player; if (!p || !p.alive || (game.mode === 'mission' && s.team !== 1)) return;
+  if (s.team !== 1 || p.group.position.distanceTo(s.group.position) > 2200) return;
+  const big = s.def.cls !== 'fighter';
+  let n = 0;
+  if (big) n = 3; else if (s.ace) n = 2; else { lootState.dry++; if (Math.random() < LOOT_CFG.dropFighter * (p.mod?.drop ?? 1) || lootState.dry >= LOOT_CFG.pity) n = 1; }
+  if (!n) return;
+  lootState.dry = 0;
+  const used = new Set();
+  for (let i = 0; i < n; i++) {
+    let t = s.ace && i === 0 ? 'OVR' : lootPick(p); if (used.has(t) && n > 1) t = lootPick(p); used.add(t);
+    const off = new THREE.Vector3().randomDirection().multiplyScalar(i ? 28 : 0);
+    lootSpawn(s.group.position.clone().add(off), t, s.vel);
+  }
+}
+killHooks.push(lootOnKill);
+
+function lootApply(p, type) {
+  const d = p.def; let msg = LOOT[type].name;
+  if (type === 'SHD') { for (const f of ['fore', 'aft']) p.shield[f] = Math.min(d.shield[f] * (p.mod?.shieldCap ?? 1), p.shield[f] + d.shield[f] * 0.6); }
+  else if (type === 'REP') {
+    p.structure = Math.min(d.structure, p.structure + d.structure * 0.22);
+    for (const c of p.comps) if (c.hp > 0 && c.hp < c.max) c.hp = Math.min(c.max, c.hp + c.max * 0.35);
+  } else if (type === 'MSL') {
+    for (const k in d.stores || {}) if (k !== 'flare' && k !== 'drone' && d.stores[k] > 0) p.stores[k] = Math.min(d.stores[k] + 1, (p.stores[k] | 0) + 1);
+    if (d.stores && d.stores.flare) p.stores.flare = Math.min(d.stores.flare, (p.stores.flare | 0) + 6);
+  } else if (type === 'AMO') {
+    for (const k in p.ammoMax) p.ammo[k] = p.ammoMax[k];
+    for (const T of p.turrets || []) if (Number.isFinite(T.ammo)) T.ammo = T.w.ammo;
+    p.energy = p.energyMax || 100;
+  } else if (type === 'OVR') {
+    (p.buffs ||= {}).ovr = { until: time + LOOT_CFG.overdriveT, mod: { rof: 1.35, dmg: 1.2, eff: 0.02, speed: 1.05 } };
+    recalcMods(p); msg += ` ${LOOT_CFG.overdriveT}s`;
+  }
+  juice.banners.push({ t: time, text: '+ ' + msg, sub: '', col: LOOT[type].hex, big: false });
+  sfx('pickup', 0, 1);
+  if (typeof lootHooks !== 'undefined') for (const f of lootHooks) f(type);
+}
+const lootHooks = [];
+const _lp = new THREE.Vector3();
+function lootTick(dt) {
+  const p = player;
+  if (p && p.buffs) { let changed = false; for (const k in p.buffs) if (p.buffs[k].until <= time) { delete p.buffs[k]; changed = true; } if (changed) recalcMods(p); }
+  for (let i = lootPods.length - 1; i >= 0; i--) {
+    const o = lootPods[i], age = time - o.born;
+    o.pos.addScaledVector(o.vel, dt); o.vel.multiplyScalar(Math.exp(-0.6 * dt));
+    o.core.rotation.y += dt * 2.2; o.core.rotation.x += dt * 0.7;
+    o.halo.scale.setScalar(13 * (1 + 0.12 * Math.sin(time * 5 + i)));
+    const left = LOOT_CFG.life - age;
+    o.g.visible = left > 6 || Math.floor(time * 6) % 2 === 0;       // blinks for the last 6 s
+    if (left <= 0) { lootRemove(o); lootPods.splice(i, 1); continue; }
+    if (!p || !p.alive || state !== 'play') continue;
+    const d = o.pos.distanceTo(p.group.position), mr = LOOT_CFG.magnetR * (p.mod?.magnet ?? 1);
+    if (d < mr) {                                     // magnet: closer = faster
+      const sp = (50 + (mr - d) * 1.4) * dt;
+      o.pos.addScaledVector(_lp.copy(p.group.position).sub(o.pos).normalize(), Math.min(d, sp));
+    }
+    if (d < LOOT_CFG.collectR) { lootApply(p, o.type); lootRemove(o); lootPods.splice(i, 1); }
+  }
+}
+// overlay markers: a diamond with the pod letter and the distance, within 2.5 km
+function drawLoot(c, p) {
+  const f = FS || 1;
+  for (const o of lootPods) {
+    const d = o.pos.distanceTo(p.group.position); if (d > 2500 || !o.g.visible) continue;
+    const q = project(o.pos); if (!q.front || q.x < 20 || q.x > ovW - 20 || q.y < 20 || q.y > ovH - 20) continue;
+    const z = 8 * f, L = LOOT[o.type];
+    c.strokeStyle = o.col; c.fillStyle = o.col; c.lineWidth = 2 * f;
+    c.beginPath(); c.moveTo(q.x, q.y - z); c.lineTo(q.x + z, q.y); c.lineTo(q.x, q.y + z); c.lineTo(q.x - z, q.y); c.closePath(); c.stroke();
+    c.font = `bold ${Math.round(10 * f)}px monospace`; c.textAlign = 'center'; c.fillText(L.letter, q.x, q.y + 3.5 * f);
+    c.font = `${Math.round(9 * f)}px monospace`; c.fillText(d.toFixed(0), q.x, q.y + z + 11 * f);
+  }
+  c.textAlign = 'left';
+}
+// ======================================================================
 //  COMBAT & DAMAGE — shields -> armour -> structure (typed damage), components, voxel chipping, death
 // ======================================================================
 const _v = new THREE.Vector3();
@@ -4456,8 +4763,18 @@ const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, r
 const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+// applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through);
+  if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
+  hitSrc = null; hitKind = null;
+  return out;
+}
+// returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
+  if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
+  let outcome = 'hull';
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
@@ -4472,7 +4789,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     s.shield[facing] -= a; d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
-    if (d + pdmg <= 0.01) return;
+    outcome = 'shield';
+    if (d + pdmg <= 0.01) return outcome;
   }
   // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
   if (d > 0.01) {
@@ -4491,7 +4809,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
       const after = compState(ex);
       if (after > before) compEvent(s, ex, after);
       if (s === player || s === target) hitMark(s, ex);
-      if (d <= 0.01) return;
+      outcome = 'comp';
+      if (d <= 0.01) return outcome;
     }
   }
   // armour: type profile x ship rating, soft size threshold, ablative rate cap; spall goes to a nearby component on breach
@@ -4514,7 +4833,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     spall = absorbed * AR.spall;
     chip(s, lp, 0, 0.9 + 0.05 * Math.min(absorbed, 20), false);
     sparksAt(wp, 4, 11);
-    if (d + pdmg <= 0.01) return;
+    if (outcome !== 'comp') outcome = 'armor';
+    if (d + pdmg <= 0.01) return outcome;
   }
   d = (d + pdmg) * X[2];
   // armour breached: hull damage + internal hit
@@ -4536,10 +4856,13 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
   if (s.structure <= 0 || (pw && pw.hp <= 0)) {
     if (!s.deathCause) s.deathCause = { dtype, overkill: Math.max(0, -s.structure) / s.def.structure, reactor: !!(pw && pw.hp <= 0) };   // decides whether the pilot got out
     killShip(s);
+    return 'kill';
   }
+  return outcome === 'shield' || outcome === 'armor' ? 'hull' : outcome;
 }
 
 function compEvent(s, c, st) {
+  juiceComp(s, c, st);
   const mine = s === player, tgt = s === target;
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
@@ -4588,6 +4911,7 @@ function destroy(s) {
   sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
   if (s.team === 1) { kills++; killLog[s.def.id] = (killLog[s.def.id] || 0) + 1; log(`${s.def.name} DESTROYED`, '#9dff7a'); }
   if (s === player) { state = 'dead'; log('HULL BREACH', '#ff4a3a'); }
+  juiceKill(s);
   if (typeof onShipDestroyed === 'function') onShipDestroyed(s);
 }
 
@@ -5118,6 +5442,428 @@ function capitalAI(s, dt) {
   }
 }
 // ======================================================================
+//  GAUNTLET (survival mode, v0.2) + difficulty + career rank.
+//  The loop: fight a wave -> a wave director builds the next one (events, aces, bosses every 5th) -> after each clear pick 1 of 3 perks ->
+//  go again until you die. Score = kills x chain multiplier x difficulty x mutators, banked per run, best per difficulty saved.
+//  Everything numeric below is a first guess, not balanced by seeded runs (AGENTS.md: balance claims need >= 20 seeded runs).
+//  Feature-freeze conditions (AGENTS.md): touch = setup buttons and tappable perk cards, nothing else to bind; AI default = the AI ignores
+//  perks and pods, wingmen simply fly; help line = the legend under the key map (00_head.html).
+//  Part 74 calls other parts only at run time (menuShell, spawnShip, comm ...), so there are no load-time dependencies on later parts.
+// ======================================================================
+const DIFFS = {
+  easy:   { name: 'EASY',   skill: -1, count: 0.7,  take: 0.7,  score: 0.8,  blurb: 'fewer, softer enemies; you take 30% less damage' },
+  normal: { name: 'NORMAL', skill: 0,  count: 1,    take: 1,    score: 1,    blurb: 'the designed tuning' },
+  hard:   { name: 'HARD',   skill: 1,  count: 1.25, take: 1.2,  score: 1.25, blurb: 'more and better pilots; you take 20% more damage' },
+  ace:    { name: 'ACE',    skill: 2,  count: 1.5,  take: 1.4,  score: 1.6,  blurb: 'a crowd of aces; you take 40% more damage' },
+};
+let diffName = 'normal';
+try { const d = localStorage.getItem('gs_diff'); if (DIFFS[d]) diffName = d; } catch (e) { /* storage unavailable */ }
+const diffCfg = () => DIFFS[diffName] || DIFFS.normal;
+function diffSet(n) { if (!DIFFS[n]) return; diffName = n; try { localStorage.setItem('gs_diff', n); } catch (e) { /* ignore */ } }
+
+const MUTATORS = {
+  glass:  { name: 'GLASS',   score: 1.3, desc: 'every ship has about half the hull and shields, you take +50% damage' },
+  swarm:  { name: 'SWARM',   score: 1.2, desc: '1.8x as many enemies, each 40% softer' },
+  aces:   { name: 'ACES',    score: 1.5, desc: 'every enemy pilot is skill 5' },
+  scarce: { name: 'SCARCE',  score: 1.3, desc: 'half your missiles and flares, 40% fewer pods' },
+  newton: { name: 'NEWTON',  score: 1.6, desc: 'Newtonian flight for everyone' },
+};
+const SV_ACE_NAMES = ['CROAKER', 'MIREWARDEN', 'GLIMMERBACK', 'SKULLFLOP', 'BLIGHTTONGUE', 'NIGHTHOP', 'VEXFANG', 'DREDGESPAWN', 'SLUDGEMAW', 'THORNTOAD'];
+const SV_TAUNTS = ['Hss. Fresh meat for the brood.', 'Your wing will sing when it burns.', 'Little flyer. Little light. Mine.', 'The pond remembers every hull you broke.', 'Run. It makes the hunt sweeter.', 'I have eaten better pilots than you.'];
+
+const PERKS = [
+  { id: 'hot',    name: 'HOT ROUNDS',        k: 'H', w: 10,  max: 4, desc: 'Weapon damage +15%.', mod: { dmg: 1.15 } },
+  { id: 'trig',   name: 'HAIR TRIGGER',      k: 'T', w: 10,  max: 4, desc: 'Fire rate +18%.', mod: { rof: 1.18 } },
+  { id: 'cap',    name: 'FAST CAPACITORS',   k: 'C', w: 9,   max: 4, desc: 'Capacitor recharge +35%, shots cost 15% less energy.', mod: { energy: 1.35, eff: 0.85 } },
+  { id: 'shd',    name: 'SHIELD HARMONICS',  k: 'S', w: 9,   max: 4, desc: 'Shield recharge +40%, capacity +20%.', mod: { shield: 1.4, shieldCap: 1.2 }, once: p => { for (const f of ['fore', 'aft']) p.shield[f] = p.def.shield[f] * (p.mod.shieldCap ?? 1); } },
+  { id: 'arm',    name: 'REACTIVE ARMOUR',   k: 'A', w: 6,   max: 3, desc: 'Damage taken -12%.', mod: { take: 0.88 } },
+  { id: 'lung',   name: 'LONG LUNGS',        k: 'L', w: 8,   max: 3, desc: 'Afterburner pool +40%.', mod: { ab: 1.4 } },
+  { id: 'frame',  name: 'LIGHTER FRAME',     k: 'F', w: 8,   max: 3, desc: 'Speed +7%, turn rate +10%.', mod: { speed: 1.07, turn: 1.1 } },
+  { id: 'seek',   name: 'SEEKER UPGRADE',    k: 'K', w: 6,   max: 3, desc: 'Missile lock 45% faster; +1 of each missile now.', mod: { lock: 1.45 }, once: p => { for (const k in p.def.stores || {}) if (k !== 'flare' && k !== 'drone' && p.def.stores[k] > 0) p.stores[k] = Math.min(p.def.stores[k] + 2, (p.stores[k] | 0) + 1); } },
+  { id: 'salv',   name: 'SALVAGE TECH',      k: 'V', w: 6,   max: 3, desc: 'Pods fly to you from 60% further; 30% more drops.', mod: { magnet: 1.6, drop: 1.3 } },
+  { id: 'repair', name: 'FIELD REPAIRS',     k: 'R', w: 6,   max: 3, desc: 'Every kill repairs 3% hull.' },
+  { id: 'chainx', name: 'CHAIN REACTION',    k: 'X', w: 5,   max: 3, desc: 'Kills detonate: 70 m blast, 18 damage per level.' },
+  { id: 'flare',  name: 'FLARE FOUNTAIN',    k: 'Z', w: 7,   max: 2, desc: '+12 flares; they pop automatically when a missile closes in.', once: p => { p.stores.flare = (p.stores.flare | 0) + 12; } },
+  { id: 'bounty', name: 'BOUNTY HUNTER',     k: 'B', w: 6,   max: 3, desc: 'Score +25%.', mod: { score: 1.25 } },
+  { id: 'links',  name: 'CHAIN LINKS',       k: 'N', w: 7,   max: 2, desc: 'Chain timer +50%.', mod: { chainT: 1.5 } },
+  { id: 'wing',   name: 'CALL IN SUPPORT',   k: 'W', w: 2.5, max: 2, desc: 'A Kestrel wingman joins you now.', once: () => svAddWing() },
+  { id: 'glass',  name: 'GLASS CANNON',      k: 'G', w: 2.5, max: 2, desc: 'Damage +40%, damage taken +25%.', mod: { dmg: 1.4, take: 1.25 } },
+  { id: 'wind',   name: 'SECOND WIND',       k: 'Y', w: 2,   max: 1, desc: 'Once per run: at 18% hull you are restored to 60% hull and full shields.' },
+];
+const perkRarity = pk => (pk.w >= 8 ? 'COMMON' : pk.w >= 5 ? 'UNCOMMON' : 'RARE');
+
+// ---- config, persistence --------------------------------------------------------------------------------------
+const SV_DEFAULT = { diff: 'normal', wing: 0, mut: [], daily: false, seed: 0, look: 'lilypad' };
+let svCfg = { ...SV_DEFAULT };
+try { const j = JSON.parse(localStorage.getItem('gs_sv') || 'null'); if (j) svCfg = svNorm(j); } catch (e) { /* storage unavailable */ }
+function svNorm(c) {
+  const o = { ...SV_DEFAULT, ...c };
+  if (!DIFFS[o.diff]) o.diff = 'normal';
+  o.wing = clamp(o.wing | 0, 0, 2); o.mut = (o.mut || []).filter(k => MUTATORS[k]); o.daily = !!o.daily; o.seed = o.seed | 0;
+  if (typeof LOOKS !== 'undefined' && !LOOKS[o.look]) o.look = 'lilypad';
+  return o;
+}
+function svSave() { try { localStorage.setItem('gs_sv', JSON.stringify(svCfg)); } catch (e) { /* ignore */ } }
+const todaySeed = () => { const d = new Date(); return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate(); };
+function mulberry(seed) { let s = (seed >>> 0) || 1; return () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function svBest() { try { return JSON.parse(localStorage.getItem('gs_svbest') || '{}'); } catch (e) { return {}; } }
+function svBestSave(key, score, wave) {
+  const b = svBest(), o = b[key] || { score: 0, wave: 0 }; let nb = false;
+  if (score > o.score) { o.score = score; nb = true; } if (wave > o.wave) o.wave = wave;
+  b[key] = o; try { localStorage.setItem('gs_svbest', JSON.stringify(b)); } catch (e) { /* ignore */ }
+  return nb;
+}
+const RANKS = [['CADET', 0], ['ENSIGN', 150], ['LIEUTENANT', 500], ['LT. COMMANDER', 1200], ['COMMANDER', 2400], ['CAPTAIN', 4500], ['COMMODORE', 8000], ['ADMIRAL', 14000]];
+function careerGet() { try { return { xp: 0, runs: 0, kills: 0, ...JSON.parse(localStorage.getItem('gs_career') || '{}') }; } catch (e) { return { xp: 0, runs: 0, kills: 0 }; } }
+function careerAdd(xp, kills) {
+  const c = careerGet(); c.xp += Math.round(xp); c.runs += 1; c.kills += kills | 0;
+  try { localStorage.setItem('gs_career', JSON.stringify(c)); } catch (e) { /* ignore */ }
+  return c;
+}
+function careerRank(xp) { let r = RANKS[0][0], next = RANKS[1][1], i = 0; for (let k = 0; k < RANKS.length; k++) if (xp >= RANKS[k][1]) { r = RANKS[k][0]; i = k; next = RANKS[k + 1] ? RANKS[k + 1][1] : null; } return { name: r, level: i, next }; }
+
+// ---- styles and overlay elements (injected, no edits to the shell) --------------------------------------------------
+let svBannerEl = null, svDraftEl = null;
+{
+  const st = document.createElement('style');
+  st.textContent = `
+  #svbanner{position:fixed;left:50%;top:22%;transform:translateX(-50%);z-index:6;text-align:center;pointer-events:none;text-shadow:0 0 10px #000;opacity:0;transition:opacity .5s}
+  #svbanner.on{opacity:1}#svbanner b{display:block;font-size:34px;letter-spacing:6px;color:#ffd24a}#svbanner span{display:block;font-size:13px;letter-spacing:3px;color:#c8fff0;margin-top:4px}
+  body.phone #svbanner b{font-size:22px}body.phone #svbanner span{font-size:10px}
+  #svdraft{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:9;display:none;width:min(94vw,700px);box-sizing:border-box;padding:14px 16px;border-radius:10px;background:rgba(2,8,6,.55);box-shadow:0 0 0 100vmax rgba(0,0,0,.5);text-align:center;text-shadow:0 0 6px #000}
+  #svdraft .svh{font-size:13px;letter-spacing:3px;color:#ffd24a;margin-bottom:10px}
+  #svdraft .svc{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  #svdraft .svcard{width:200px;flex:0 1 200px;min-height:150px;padding:10px 12px;background:rgba(5,16,12,.92);border:1px solid #3a8a6c;border-radius:6px;color:#cfe;font:inherit;cursor:pointer;text-align:left;position:relative}
+  #svdraft .svcard:hover,#svdraft .svcard:focus{border-color:#ffd24a;background:rgba(30,40,12,.95)}
+  #svdraft .svcard i{position:absolute;right:10px;top:8px;font-style:normal;color:#ffd24a;opacity:.8;font-size:11px}
+  #svdraft .svcard b{display:block;font-size:14px;color:#d8fff0;letter-spacing:1px;margin-bottom:2px}
+  #svdraft .svcard em{display:block;font-style:normal;font-size:10px;letter-spacing:2px;margin-bottom:6px}
+  #svdraft .svcard em.COMMON{color:#8fd8c0}#svdraft .svcard em.UNCOMMON{color:#6ac8ff}#svdraft .svcard em.RARE{color:#ff9af0}
+  #svdraft .svcard p{margin:0;font-size:12px;line-height:1.4;color:#cfe}#svdraft .svcard small{display:block;margin-top:8px;opacity:.6;font-size:10px}
+  #svdraft .svf{margin-top:10px;font-size:11px;opacity:.7}
+  body.phone #svdraft{padding:8px 10px}body.phone #svdraft .svc{flex-wrap:nowrap;gap:6px}body.phone #svdraft .svcard{width:auto;flex:1 1 0;min-height:96px;padding:6px 7px}body.phone #svdraft .svcard b{font-size:10px}body.phone #svdraft .svcard p{font-size:9px}body.phone #svdraft .svh{font-size:10px}
+  body.cine #svbanner,body.cine #svdraft{display:none!important}
+  .mut{display:inline-flex;flex-direction:column;align-items:flex-start;margin:3px 6px 3px 0;padding:5px 9px;border:1px solid #3a6;border-radius:4px;background:#0c2a22;color:#cfe;font:inherit;cursor:pointer;font-size:12px;text-align:left}
+  .mut.on{border-color:#ffd24a;background:#2a2a0c;color:#ffd24a}.mut small{opacity:.7;font-size:10px;max-width:220px}
+  .medal{margin:2px 0}.medal b{color:#ffd24a}
+  `;
+  document.head.appendChild(st);
+  svBannerEl = document.createElement('div'); svBannerEl.id = 'svbanner'; document.body.appendChild(svBannerEl);
+  svDraftEl = document.createElement('div'); svDraftEl.id = 'svdraft'; document.body.appendChild(svDraftEl);
+}
+let svBannerT = 0;
+function svBanner(big, small) { svBannerEl.innerHTML = `<b>${big}</b><span>${small || ''}</span>`; svBannerEl.classList.add('on'); svBannerT = 3.4; }
+
+// ---- run state ---------------------------------------------------------------------------------------------------
+let sv = null;                                         // the live run (also game.sv); null outside survival
+const svPerkN = id => (sv && sv.perks[id]) || 0;
+function svRecalc() {                                  // difficulty + mutators + perks -> player.modBase -> player.mod
+  const p = player; if (!p || !sv) return;
+  const D = DIFFS[sv.cfg.diff], mb = {};
+  const mul = (k, v) => { mb[k] = (mb[k] ?? 1) * v; };
+  mul('take', D.take);
+  if (sv.mut.glass) mul('take', 1.5);
+  if (sv.mut.scarce) mul('drop', 0.6);
+  for (const pk of PERKS) { const n = svPerkN(pk.id); if (n && pk.mod) for (const k in pk.mod) mul(k, Math.pow(pk.mod[k], n)); }
+  p.modBase = mb; recalcMods(p);
+}
+function svAddWing() {
+  if (!player) return;
+  const n = ships.filter(s => s.team === 0 && s !== player && s.def.cls === 'fighter' && !s.def.drone).length;
+  if (n >= 4) return;
+  const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(player.group.quaternion);
+  const w = makeShip('kestrel', 0, player.group.position.clone().addScaledVector(pf, -90).add(new THREE.Vector3((n % 2 ? 1 : -1) * 50, 10 * n, 0)), new THREE.Quaternion(), { callsign: 'WING' + (n + 1), ai: 'fighter', skill: 4, fm: flightMode });
+  w.vel.copy(player.vel);
+  juice.hadWing = true;
+}
+function svPerkOffers(n) {
+  const R = sv.rng, pool = PERKS.filter(pk => svPerkN(pk.id) < pk.max && !(pk.id === 'wing' && ships.filter(s => s.team === 0 && s !== player && s.def.cls === 'fighter' && !s.def.drone).length >= 4));
+  const out = [];
+  while (out.length < 3 && pool.length) {
+    let tot = 0; const ws = pool.map(pk => { const w = pk.w * (perkRarity(pk) === 'RARE' ? 1 + n * 0.05 : 1); tot += w; return w; });
+    let r = R() * tot, i = 0; for (; i < pool.length - 1; i++) { r -= ws[i]; if (r <= 0) break; }
+    out.push(pool.splice(i, 1)[0]);
+  }
+  return out;
+}
+function svApplyPerk(pk) {
+  sv.perks[pk.id] = (sv.perks[pk.id] || 0) + 1; sv.picks.push(pk.id);
+  svRecalc();
+  if (pk.once && player && player.alive) pk.once(player);
+  log('PERK: ' + pk.name, '#ffd24a');
+}
+// kill hooks for perks that act on kills
+let svReact = false;
+killHooks.push((s, mine) => {
+  if (!sv || !mine || !player || !player.alive) return;
+  const rp = svPerkN('repair');
+  if (rp) { const p = player; p.structure = Math.min(p.def.structure, p.structure + p.def.structure * 0.03 * rp); }
+  const cx = svPerkN('chainx');
+  if (cx && !svReact) {
+    svReact = true;
+    const pos = s.group.position, dmg = 18 * cx;
+    flashAt(pos, 16, 0.35); sparksAt(pos, 30, 40);
+    for (const e of ships) {
+      if (e === s || !e.alive || e.dying || e.team !== 1 || e.group.position.distanceTo(pos) > 70 + e.def.radius) continue;
+      const lp = e.group.worldToLocal(pos.clone()); lp.clampLength(0, Math.max(1, e.def.radius * 0.5));
+      e.lastAttacker = player; hitSrc = player; hitKind = 'missile';
+      applyHit(e, lp, dmg, e.group.localToWorld(lp.clone()), 'exp');
+    }
+    svReact = false;
+  }
+});
+
+// ---- the wave director ------------------------------------------------------------------------------------------
+const SV_TUNE = { b0: 1.6, b1: 1.1, s0: 1, sStep: 3 };       // wave budget = (b0 + b1 n) x difficulty x swarm (fighter units); pilot skill = s0 + n/sStep + difficulty. First guess; see docs/FUN_UPDATE.md for what was measured
+const SV_POOL = [['darter', 1.0, 1], ['leaper', 1.2, 1], ['spitter', 1.8, 2], ['toad', 2.0, 3], ['reaver', 2.6, 4]];   // kind, budget cost, first wave
+function svCompose(n) {
+  const R = sv.rng, D = DIFFS[sv.cfg.diff], M = sv.mut, pick = a => a[Math.floor(R() * a.length)];
+  const cm = D.count * (M.swarm ? 1.8 : 1);
+  let B = (SV_TUNE.b0 + SV_TUNE.b1 * n) * cm;
+  const rows = [], add = (k, c, o) => { c = Math.round(c); if (c > 0) rows.push({ kind: k, count: c, ...(o || {}) }); };
+  let name = '', sub = '', ambush = false, elite = false;
+  if (n % 5 === 0) {
+    const tier = n / 5;
+    if (tier === 1) { add('gulper', 1); add('reaver', 2); name = 'BOSS: GULPER'; sub = 'a corvette and its escort'; B *= 0.45; }
+    else if (tier === 2) { add('gulper', 2); name = 'BOSS: TWIN GULPERS'; sub = 'two corvettes, keep moving'; B *= 0.45; }
+    else { add('bullfrog', Math.min(2, tier - 2)); if (tier >= 4) add('gulper', 2); name = 'BOSS: BULLFROG'; sub = 'the spine lance: do not fly in a straight line'; B *= 0.3; }
+  } else if (n >= 3 && R() < 0.42) {
+    const ev = pick(['AMBUSH', 'SWARM', 'BOMBERS', 'ELITE']);
+    name = ev;
+    if (ev === 'AMBUSH') { ambush = true; sub = 'they are behind you'; B *= 0.8; }
+    else if (ev === 'SWARM') { add('darter', B / 0.7, { soft: 0.6 }); sub = 'many, and fragile'; B = 0; }
+    else if (ev === 'BOMBERS') { add('toad', Math.max(2, Math.ceil(n / 3) * cm), {}); sub = 'torpedo bombers, flares ready'; B *= 0.4; }
+    else { elite = true; sub = 'fewer, and every one a veteran'; B *= 0.6; }
+  }
+  const pool = SV_POOL.filter(x => n >= x[2]);
+  const bag = {};
+  while (B > 0.9) {
+    const fit = pool.filter(x => x[1] <= B + 0.3); if (!fit.length) break;
+    const w = fit.map(x => 1 / x[1] + 0.15 * (n >= 6 ? x[1] : 0)), tot = w.reduce((a, b) => a + b, 0);
+    let r = R() * tot, i = 0; for (; i < fit.length - 1; i++) { r -= w[i]; if (r <= 0) break; }
+    bag[fit[i][0]] = (bag[fit[i][0]] || 0) + 1; B -= fit[i][1];
+  }
+  for (const k in bag) add(k, bag[k]);
+  // an ace now and then (never on a wave that already has a capital boss before wave 10)
+  const bossy = n % 5 === 0 && n < 10;
+  const aceP = n >= 3 && !bossy ? clamp(0.25 + 0.05 * n, 0, 0.75) : 0;
+  const ace = R() < aceP ? { kind: pick(['leaper', 'spitter', 'reaver']), name: SV_ACE_NAMES[sv.aceN % SV_ACE_NAMES.length] + (sv.aceN >= SV_ACE_NAMES.length ? '-' + (1 + Math.floor(sv.aceN / SV_ACE_NAMES.length)) : '') } : null;
+  if (!name) name = n === 1 ? 'FIRST CONTACT' : '';
+  return { rows, name, sub, ambush, elite, ace };
+}
+function svSkill(n) { return clamp(SV_TUNE.s0 + Math.floor(n / SV_TUNE.sStep) + DIFFS[sv.cfg.diff].skill + (sv.mut.aces ? 5 : 0), 1, 5); }
+function svSpawnWave(n) {
+  const spec = svCompose(n), R = sv.rng, p = player;
+  const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
+  const rnd = () => new THREE.Vector3(R() - 0.5, (R() - 0.5) * 0.6, R() - 0.5);
+  let idx = 0;
+  const skill = spec.elite ? 5 : svSkill(n);
+  const place = (def, i) => {
+    const big = def.cls !== 'fighter';
+    const dir = spec.ambush && !big ? pf.clone().multiplyScalar(-1).addScaledVector(rnd(), 0.5).normalize() : rnd().multiplyScalar(0.9).addScaledVector(pf, 0.7).normalize();
+    const dist = spec.ambush && !big ? 650 + R() * 350 : (big ? 2600 + def.radius * 0.6 : 1700 + R() * 700);
+    return p.group.position.clone().addScaledVector(dir, dist).add(rnd().multiplyScalar(i * 8));
+  };
+  const spawnOne = (kind, o) => {
+    const def = SHIPS[kind], e = spawnShip(kind, 1, place(def, idx++), p.group.position, { grp: 'SV', skill: o.skill ?? skill, fm: flightMode, ai: def.cls !== 'fighter' && kind !== 'gulper' && def.ai?.role !== 'lancer' ? 'capital' : undefined });
+    if (kind === 'gulper') { const bf = ships.find(x => x.team === 1 && x.ai.role === 'lancer'); if (bf) e.ai.escort = bf; }
+    let take = 1;
+    if (o.soft) take /= o.soft;
+    if (sv.mut.swarm && def.cls === 'fighter') take /= 0.6;
+    if (sv.mut.glass) take /= 0.55;
+    if (o.ace) take /= 1.8;
+    if (take !== 1) e.mod.take = take;
+    if (o.ace) { e.ace = true; e.callsign = o.name; }
+    return e;
+  };
+  for (const row of spec.rows) for (let i = 0; i < row.count; i++) spawnOne(row.kind, row);
+  if (spec.ace) { const a = spawnOne(spec.ace.kind, { ace: true, name: spec.ace.name, skill: 5 }); sv.aceN++; sfx('ace', 0, 1); comm(spec.ace.name, SV_TAUNTS[Math.floor(R() * SV_TAUNTS.length)], '#c8ff40'); a.ace = true; }
+  sv.waveSpec = spec;
+  if (n % 5 === 0) {                                   // boss waves come with a supply drop: shields, missiles, hull (the proxy pilot died in 15/20 first-boss runs without it)
+    ['SHD', 'MSL', 'REP'].forEach((t, i) => lootSpawn(p.group.position.clone().add(new THREE.Vector3((i - 1) * 70, 12, -150)), t, p.vel));
+    log('SUPPLY DROP: shields, missiles, hull', '#6bff8a');
+  }
+  const total = ships.filter(s => s.team === 1 && s.alive).length;
+  const subline = [spec.sub, spec.ace ? `ace ${spec.ace.name} among them` : '', `${total} contacts`].filter(Boolean).join(' · ');
+  svBanner(`WAVE ${n}${spec.name ? ' · ' + spec.name : ''}`, subline);
+  sfx('wave', 0, 1);
+  if (n > 1 && (n - 1) % 3 === 0) { const keys = Object.keys(LOOKS), look = keys[(n / 3 | 0) % keys.length]; if (look) applyLook(look); }
+}
+
+// ---- run lifecycle ----------------------------------------------------------------------------------------------
+function startSurvival(cfgIn) {
+  const cfg = svNorm(cfgIn || svCfg);
+  menuView = null; $id('brief').style.display = 'none';
+  if (cine) cancelTransit();
+  document.body.classList.remove('cine'); cine = null;
+  plogReset('survival');
+  clearWorld();
+  comms.length = 0; objectives.length = 0;
+  game.mode = 'survival'; game.mission = null; game.mstate = null; game.anchor = null; game.seg = null; game.sk = null; game.skS = null;
+  const seed = cfg.daily ? todaySeed() : (cfg.seed || ((Math.random() * 4294967295) >>> 0));
+  const mut = {}; for (const k of cfg.mut) mut[k] = true;
+  sv = game.sv = { cfg, seed, rng: mulberry(seed), n: 0, phase: 'fight', t: 0, tPhase: 0, perks: {}, picks: [], mut, aceN: 0, over: false, overT: 0, shown: false, windUsed: false, flareT: 0, waveT0: 0, kills0: 0, hull0: 0, noHit: true, draft: null, fleeT: 0 };
+  applyLook(cfg.look);
+  wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : 'arcade';
+  const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  p.shots = 0; p.hitsLanded = 0;
+  const D = DIFFS[cfg.diff];
+  juice.scoreMul = D.score * cfg.mut.reduce((a, k) => a * MUTATORS[k].score, 1);
+  if (mut.scarce) { for (const k in p.stores) p.stores[k] = Math.ceil(p.stores[k] / 2); }
+  svRecalc();
+  const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
+  for (let i = 0; i < cfg.wing; i++) makeShip('kestrel', 0, p.group.position.clone().addScaledVector(pf, -80).add(new THREE.Vector3((i - (cfg.wing - 1) / 2) * 60, (i % 2) * 25, 0)), new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: 3, fm: flightMode });
+  for (const s of ships) if (s !== p) s.vel.copy(p.vel);
+  log(`GAUNTLET · ${D.name}${cfg.mut.length ? ' · ' + cfg.mut.map(k => MUTATORS[k].name).join('+') : ''} · seed ${seed}`, '#ffd080');
+  svNextWave();
+  return game;
+}
+function svNextWave() {
+  sv.n++; wave = sv.n; sv.phase = 'fight'; sv.tPhase = 0; sv.waveT0 = time; sv.kills0 = kills; sv.hull0 = player ? player.hullHits || 0 : 0; sv.hitMark = juice.hullHits;
+  svSpawnWave(sv.n);
+}
+function svWaveClear() {
+  const n = sv.n, p = player;
+  const dur = time - sv.waveT0, clean = juice.hullHits === sv.hitMark;
+  const bonus = Math.round((100 * n + Math.max(0, 90 - dur) * 2 + (clean ? 250 : 0)) * juice.scoreMul);
+  juice.score += bonus; juice.bonus += bonus;
+  juice.banners.push({ t: time, text: `WAVE ${n} CLEAR  +${bonus}`, sub: clean ? 'NO HULL DAMAGE +250' : '', col: '#ffd24a', big: true });
+  for (const f of ['fore', 'aft']) p.shield[f] = Math.max(p.shield[f], p.def.shield[f] * (p.mod.shieldCap ?? 1));       // shields come back between waves
+  p.structure = Math.min(p.def.structure, p.structure + p.def.structure * 0.1);
+  for (const c of p.comps) if (c.hp > 0) c.hp = Math.min(c.max, c.hp + c.max * 0.15);
+  for (let i = 0; i < 2; i++) lootSpawn(p.group.position.clone().add(new THREE.Vector3((i ? 1 : -1) * 60, 10, -120)), lootPick(p), p.vel);
+  sv.phase = 'draft'; sv.tPhase = 0;
+  sv.draft = { offers: svPerkOffers(n), t: 18 };
+  svShowDraft();
+  sfx('perk', 0, 1);
+}
+function svShowDraft() {
+  const d = sv.draft; if (!d) return;
+  svDraftEl.innerHTML = `<div class="svh">WAVE ${sv.n} CLEARED · CHOOSE A PERK · <span id="svt">${Math.ceil(d.t)}</span> s</div><div class="svc">`
+    + d.offers.map((pk, i) => `<button class="svcard" data-i="${i}"><i>${i + 1}</i><b>${pk.name}</b><em class="${perkRarity(pk)}">${perkRarity(pk)}</em><p>${pk.desc}</p><small>${svPerkN(pk.id) ? 'owned x' + svPerkN(pk.id) + ' -> x' + (svPerkN(pk.id) + 1) : 'new'}</small></button>`).join('')
+    + `</div><div class="svf">${isTouch ? 'tap a card' : 'press 1 / 2 / 3 or click'} · the first card is taken when the timer ends</div>`;
+  svDraftEl.style.display = 'block';
+  svDraftEl.querySelectorAll('.svcard').forEach(b => { b.onclick = e => { e.stopPropagation(); svPick(+b.dataset.i); }; b.onpointerdown = e => e.stopPropagation(); });   // desktop keeps pointer lock: keys 1/2/3; touch taps the cards
+}
+function svPick(i) {
+  if (!sv || sv.phase !== 'draft' || !sv.draft) return;
+  const pk = sv.draft.offers[i] || sv.draft.offers[0];
+  svApplyPerk(pk); sfx('perk', 0, 1);
+  svDraftEl.style.display = 'none'; sv.draft = null;
+  sv.phase = 'break'; sv.tPhase = 0;
+}
+addEventListener('keydown', e => {                     // perk draft keys: 1 / 2 / 3 (captured so they do not change the fire group)
+  if (!sv || sv.phase !== 'draft' || !sv.draft || optsOpen || rdlgOpen) return;
+  const m = /^(Digit|Numpad)([1-3])$/.exec(e.code);
+  if (!m) return;
+  svPick(+m[2] - 1); e.preventDefault(); e.stopImmediatePropagation();
+}, true);
+
+function survivalUpdate(dt) {
+  if (!sv) return;
+  if (svBannerT > 0) { svBannerT -= dt; if (svBannerT <= 0) svBannerEl.classList.remove('on'); }
+  if (sv.over) { sv.overT += dt; if (sv.overT > 2.6 && !sv.shown) { sv.shown = true; svShowDebrief(); } return; }
+  sv.t += dt; sv.tPhase += dt;
+  if (state === 'dead') { svEnd(); return; }
+  if (state !== 'play') return;
+  const p = player; if (!p || !p.alive) return;
+  // perks that act over time
+  if (svPerkN('wind') && !sv.windUsed && p.structure < p.def.structure * 0.18) {
+    sv.windUsed = true; p.structure = p.def.structure * 0.6;
+    for (const f of ['fore', 'aft']) p.shield[f] = p.def.shield[f] * (p.mod.shieldCap ?? 1);
+    for (const c of p.comps) if (c.hp > 0) c.hp = Math.max(c.hp, c.max * 0.4);
+    (p.buffs ||= {}).wind = { until: time + 2.5, mod: { take: 0.001 } }; recalcMods(p);
+    juice.banners.push({ t: time, text: 'SECOND WIND', sub: 'hull restored', col: '#ff9af0', big: true }); sfx('perk', 0, 1);
+  }
+  if (svPerkN('flare') && warnState.incoming.length && time - sv.flareT > 0.9 && (p.stores.flare | 0) > 0 && p.cmCool <= 0) {
+    const m = warnState.incoming[0]; if (m && m.pos.distanceTo(p.group.position) < 380) { deployCM(p); sv.flareT = time; }
+  }
+  if (sv.phase === 'fight') {
+    const foes = ships.filter(s => s.team === 1 && s.alive);
+    // a crippled enemy that fled far away is dropped (no anchor in this mode to do it for us)
+    let gone = 0;
+    for (const s of foes) if (s.ai.mode === 'flee' && s.group.position.distanceTo(p.group.position) > 3200) { s.ai.fleeT = (s.ai.fleeT || 0) + dt; if (s.ai.fleeT > 6) { s.alive = false; gone++; } }
+    if (!foes.length || foes.length === gone) svWaveClear();
+  } else if (sv.phase === 'draft') {
+    sv.draft.t -= dt;
+    const el = $id('svt'); if (el) el.textContent = Math.max(0, Math.ceil(sv.draft.t));
+    if (sv.draft.t <= 0) svPick(0);
+  } else if (sv.phase === 'break') {
+    if (sv.tPhase > 3.5) svNextWave();
+  }
+}
+function svEnd() {
+  if (sv.over) return;
+  sv.over = true; sv.overT = 0; sv.phase = 'over';
+  svDraftEl.style.display = 'none'; svBannerEl.classList.remove('on');
+}
+function svHudLine(enemies) {
+  const perks = Object.keys(sv.perks).map(id => { const pk = PERKS.find(x => x.id === id); return pk.k + (sv.perks[id] > 1 ? sv.perks[id] : ''); }).join(' ');
+  return `WAVE ${sv.n}  SCORE ${juice.score}  KILLS ${kills}  FROGGS ${enemies}` + (perks ? `\nPERKS ${perks}` : '');
+}
+function svShowDebrief() {
+  const c = sv.cfg, D = DIFFS[c.diff], p = player;
+  const key = (c.daily ? 'daily' + sv.seed : 'run') + ':' + c.diff;
+  const newBest = svBestSave(key, juice.score, sv.n);
+  const best = svBest()[key] || { score: juice.score, wave: sv.n };
+  const acc = p && p.shots ? Math.round(100 * (p.hitsLanded || 0) / p.shots) : 0;
+  const before = careerGet(), rb = careerRank(before.xp);
+  const gain = juice.score / 10 + sv.n * 15, after = careerAdd(gain, kills), ra = careerRank(after.xp);
+  const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>x ${killLog[k]}</b></div>`).join('') || '<div class="dim">none</div>';
+  const perks = Object.keys(sv.perks).map(id => { const pk = PERKS.find(x => x.id === id); return `<div>${pk.name} <b>x${sv.perks[id]}</b></div>`; }).join('') || '<div class="dim">none</div>';
+  menuShell(`<div class="sub">GAUNTLET · ${D.name}${c.mut.length ? ' · ' + c.mut.map(k => MUTATORS[k].name).join(' + ') : ''}${c.daily ? ' · DAILY ' + sv.seed : ' · seed ' + sv.seed}</div>
+    <h1 class="bad">DOWN ON WAVE ${sv.n}</h1><h2>${newBest ? 'NEW BEST SCORE' : 'best: ' + best.score + ' (wave ' + best.wave + ')'}</h2>
+    <div class="cols"><div><div class="sub">RUN</div><div>Score <b>${juice.score}</b></div><div>Kills <b>${kills}</b></div><div>Time <b>${Math.floor(sv.t / 60)}:${String(Math.floor(sv.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${acc}%</b></div>
+      <div class="sub">PERKS</div>${perks}</div>
+    <div><div class="sub">KILLS</div>${rows}${juiceDebriefHtml(acc, p ? p.shots || 0 : 0, kills)}
+      <div class="sub">CAREER</div><div>+${Math.round(gain)} XP · <b>${ra.name}</b>${ra.level > rb.level ? ' <span class="ok">PROMOTED</span>' : ''}</div></div></div>
+    <div class="btns"><button id="sv_re" data-f="re">RETRY</button><button class="alt" id="sv_set">SETUP</button><button class="alt" id="sv_menu">MAIN MENU</button></div>`, 'sk');
+  menuView = 'debrief';
+  $id('sv_re').onclick = () => { startSurvival(sv.cfg); launchLock(); };
+  $id('sv_set').onclick = () => { svCfg = svNorm(sv.cfg); openMenu('survival'); };
+  $id('sv_menu').onclick = () => openMenu();
+  menuFocus('#sv_re');
+}
+
+// ---- setup screen ----------------------------------------------------------------------------------------------
+function showSurvivalSetup(focus) {
+  menuView = 'survival';
+  const c = svCfg, b = svBest();
+  const cur = b['run:' + c.diff], dly = b['daily' + todaySeed() + ':' + c.diff];
+  const career = careerGet(), rk = careerRank(career.xp);
+  menuShell(`<div class="sub">GAUNTLET · SURVIVAL</div><h1>HOW LONG CAN YOU HOLD?</h1>
+    <h2>Waves of FROGGs, aces and bosses. After each wave pick a perk. Chain kills for score. Salvage pods keep you flying.</h2>
+    <div class="skg"><div>
+      <div class="sub">DIFFICULTY</div><div class="skrow">${skSeg('diff', Object.keys(DIFFS).map(k => [DIFFS[k].name, k]), c.diff)}</div><div class="dim">${DIFFS[c.diff].blurb} · score x${DIFFS[c.diff].score}</div>
+      <div class="sub">WINGMEN (HUMAN, AI)</div><div class="skrow">${skSeg('wing', [[0, 0], [1, 1], [2, 2]], c.wing)}</div>
+      <div class="sub">RUN</div><div class="skrow">${skSeg('daily', [['RANDOM', false], ['DAILY ' + todaySeed(), true]], c.daily)}</div>
+      <div class="dim">${c.daily ? 'The same waves and perk offers for everyone today.' : 'A new random seed every run.'}</div>
+    </div><div>
+      <div class="sub">MUTATORS (each raises the score multiplier)</div>
+      <div>${Object.keys(MUTATORS).map(k => `<button class="mut ${c.mut.includes(k) ? 'on' : ''}" data-f="mut-${k}" data-mut="${k}"><b>${MUTATORS[k].name} x${MUTATORS[k].score}</b><small>${MUTATORS[k].desc}</small></button>`).join('')}</div>
+      <div class="sub">RECORDS</div><div>Best (${DIFFS[c.diff].name}): ${cur ? '<b>' + cur.score + '</b> · wave ' + cur.wave : '<span class="dim">no run yet</span>'}</div>
+      <div>Daily best: ${dly ? '<b>' + dly.score + '</b> · wave ' + dly.wave : '<span class="dim">not played today</span>'}</div>
+      <div>Career: <b>${rk.name}</b> · ${career.xp} XP${rk.next ? ' / ' + rk.next : ''} · ${career.runs} run${career.runs === 1 ? '' : 's'}</div>
+    </div></div>
+    <div class="btns stick"><button data-f="go" id="sv_go">LAUNCH</button><button class="alt" data-f="back" id="sv_back">BACK</button></div>`, 'sk');
+  const el = $id('brief');
+  const redo = f => { svSave(); showSurvivalSetup(f); };
+  el.querySelectorAll('.seg button').forEach(b => { b.onclick = () => { const v = b.dataset.v; svCfg[b.dataset.k] = v === 'true' ? true : v === 'false' ? false : (isNaN(+v) ? v : +v); redo(b.dataset.f); }; });
+  el.querySelectorAll('[data-mut]').forEach(b => { b.onclick = () => { const k = b.dataset.mut, i = svCfg.mut.indexOf(k); if (i >= 0) svCfg.mut.splice(i, 1); else svCfg.mut.push(k); redo(b.dataset.f); }; });
+  $id('sv_back').onclick = showMainMenu;
+  $id('sv_go').onclick = () => { svSave(); menuLeave(); startSurvival(svCfg); launchLock(); };
+  menuFocus(focus ? `[data-f="${focus}"]` : '#sv_go');
+}
+addEventListener('keydown', e => {                     // setup screen: Esc = back, R swallowed (the main listener swallows R for every menu view)
+  if (menuView !== 'survival' || optsOpen || credOpen || e.ctrlKey || e.metaKey) return;
+  if (e.code === 'Escape') { showMainMenu(); e.preventDefault(); e.stopImmediatePropagation(); }
+}, true);
+// ?sv=1 starts a run at load (tests): &sv_diff=hard &sv_wing=1 &sv_mut=glass,swarm &sv_seed=123 &sv_daily=1
+function svFromParams() {
+  const g = (k, d) => params.has(k) ? params.get(k) : d;
+  return svNorm({ diff: g('sv_diff', 'normal'), wing: +g('sv_wing', 0), mut: g('sv_mut', '').split(',').filter(Boolean), seed: +g('sv_seed', 0), daily: params.has('sv_daily') });
+}
+// ======================================================================
 //  MISSIONS — data-driven (JSON-like) scripts + tiny interpreter, comms, objectives, debrief, persistent crew
 //  Persistent crew state is the seed for the later "crews with memory" / LLM dialogue layer (see docs/VISION.md):
 //  every pilot is a record that outlives a sortie (kills, status, notes) and can be fed to a dialogue model.
@@ -5503,6 +6249,7 @@ function startMission(M, seg) {
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
   const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
+  p.modBase = { take: diffCfg().take }; recalcMods(p);
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
@@ -5551,6 +6298,8 @@ function runActions(list) {
     if (a.spawn) spawnGroup(a.spawn);
     if (a.end) endMission(a.end);
   }
+  const ob = list.find(a => a.obj && a.obj[2] === 'open' && a.obj[1] && a.obj[3] === undefined), spw = list.find(a => a.spawn);
+  if (ob && spw) { const o = objectives.find(x => x.id === ob.obj[0]); if (o) { o.grp = spw.spawn.grp; o.total = ships.filter(s => s.grp === o.grp && s.alive).length; } }
 }
 function spawnGroup(sp) {
   const S = game.mstate, anchor = game.anchor.group.position;
@@ -5558,10 +6307,11 @@ function spawnGroup(sp) {
   const dir = bearingVec(sp.bearing);
   const side = new THREE.Vector3().crossVectors(dir, new THREE.Vector3(0, 1, 0)).normalize();
   let n = 0;
-  for (const [kind, count] of sp.ships) for (let i = 0; i < count; i++, n++) {
+  const D = diffCfg();
+  for (const [kind, count0] of sp.ships) for (let i = 0, count = SHIPS[kind].cls === 'fighter' ? Math.max(1, Math.round(count0 * D.count)) : count0; i < count; i++, n++) {   // difficulty scales fighter counts (normal = as authored)
     const pos = anchor.clone().addScaledVector(dir, sp.dist + (kind === 'gulper' ? 0 : n * 40))
       .addScaledVector(side, (Math.random() - 0.5) * sp.spread * 2).add(new THREE.Vector3(0, (Math.random() - 0.5) * sp.spread, 0));
-    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), { grp: sp.grp });
+    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), D.skill ? { grp: sp.grp, skill: clamp((SHIPS[kind].ai?.skill ?? 3) + D.skill, 1, 5) } : { grp: sp.grp });
     if (sp.jump) { flashAt(pos, e.def.radius * 2.2, 0.8); }
   }
   if (sp.jump) sfx('jump');
@@ -5586,6 +6336,7 @@ addEventListener('keydown', e => { if (e.code === 'KeyX' && !e.repeat) jumpConfi
 
 function missionUpdate(dt) {
   const M = game.mission, S = game.mstate;
+  if (M && S && !S.ended) tipsTick(M, S);
   if (!M || !S || S.ended) hideJumpPrompt();
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
@@ -5683,9 +6434,11 @@ function showBriefing(M) {
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
+    <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
+  el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
@@ -5696,6 +6449,8 @@ function showBriefing(M) {
 function showDebrief() {
   const S = game.mstate, st = missionStats(), M = game.mission;
   const el = $id('brief');
+  if (!S.careerDone) { S.careerDone = true; const rb = careerRank(careerGet().xp), ca = careerAdd((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4), kills), ra = careerRank(ca.xp); S.careerTxt = `+${Math.round((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4))} XP · <b>${ra.name}</b>${ra.level > rb.level ? ' <span class="ok">PROMOTED</span>' : ''} · difficulty ${diffCfg().name}`; }
+  const career = S.careerTxt;
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>× ${killLog[k]}</b> <span class="dim">${(SCORE[k] || 100) * killLog[k]}</span></div>`).join('') || '<div class="dim">none</div>';
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
@@ -5703,7 +6458,7 @@ function showDebrief() {
     ${(S.result === 'win' ? M.debriefWin : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : M.debriefLose}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
-    <div><div class="sub">WING</div>${crew}</div></div>
+    <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>
     <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
@@ -5711,6 +6466,24 @@ function showDebrief() {
   if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
+}
+
+// ---- onboarding beats (UX_REVIEW S5/R4): four short CONTROL lines in mission 1, first launch only (localStorage gs_tips), touch wording on touch.
+// ?tips forces them. No tutorial mission, no new UI: they ride the existing comm feed, timed around the first wave.
+const TIPS_M1 = [
+  [2.5, 'Throttle: W / S to speed up and slow down, SHIFT is the afterburner (it runs dry, watch the AB gauge).', 'Throttle: drag the slider on the right, BOOST is the afterburner (it runs dry).'],
+  [9, 'Guns: SPACE or the left mouse button. Lead the target: aim at the small ring ahead of it.', 'Guns: hold FIRE. Aim at the small ring ahead of the target, not at the target.'],
+  [17, 'Missiles: T picks the nearest bogey, keep it inside the dashed ring until the tone goes solid, then ENTER or the right mouse button.', 'Missiles: TGT picks the nearest bogey, keep it in the dashed ring until the lock chip says LOCKED, then MSL.'],
+  [27, 'Missile on your tail: Z drops flares. IR missiles fall for flares, radar missiles for chaff. Press J any time to give your wingmen orders.', 'Missile on your tail: FLARE drops decoys. COMMS gives your wingmen orders.'],
+];
+function tipsTick(M, S) {
+  if (M.id !== 'm01' || state !== 'play') return;
+  let done = {}; try { done = JSON.parse(localStorage.getItem('gs_tips') || '{}'); } catch (e) { /* storage unavailable */ }
+  if (done.m01 && !params.has('tips')) return;
+  S.tipN = S.tipN || 0;
+  const t = TIPS_M1[S.tipN];
+  if (t && S.t >= t[0]) { comm('CONTROL', isTouch ? t[2] : t[1], '#9adcff'); S.tipN++; }
+  if (S.tipN >= TIPS_M1.length) { done.m01 = true; try { localStorage.setItem('gs_tips', JSON.stringify(done)); } catch (e) { /* ignore */ } }
 }
 // ======================================================================
 //  MAIN MENU + SKIRMISH (quick-test mode)
@@ -5780,25 +6553,28 @@ function launchLock() { if (!isTouch) lockPointer(); touchStarted = true; audioI
 // back to the backdrop world + main menu (used by the restart dialog, briefing and debriefs)
 function openMenu(view) {
   startMission(lastMission());          // builds the backdrop world, shows the briefing; the menu then replaces it
-  if (view === 'skirmish') showSkirmishSetup(); else showMainMenu();
+  if (view === 'skirmish') showSkirmishSetup(); else if (view === 'survival') showSurvivalSetup(); else showMainMenu();
 }
 function showMainMenu() {
   menuView = 'main';
   const items = [
     ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad to The Spine'],
+    ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
     ['options', 'OPTIONS', 'Audio, device preset, LOD [O]'],
     ['credits', 'CREDITS', 'Third-party items and licences'],
   ];
-  menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
+  const rk = careerRank(careerGet().xp);
+  menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT · ${rk.name}</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
     <div class="mlist">${items.map(([a, t, d]) => `<button class="mi" data-a="${a}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
-    <div class="dim keys">UP / DOWN select · ENTER confirm · O options</div>`, 'main');
+    <div class="dim keys">UP / DOWN select · ENTER confirm · O options · v${GAME_VERSION}</div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
 function menuAct(a) {
   if (a === 'campaign') showMissionList();
+  else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }
   else if (a === 'options') toggleOpts(true);
@@ -6420,7 +7196,7 @@ function spineFire(s) {
     const wp = best.group.localToWorld(bestLocal.clone()), fr = best.team === s.team;
     rec.str0 = Math.round(best.structure); rec.sh0 = Math.round(best.shield.fore + best.shield.aft);
     if (!fr) { best.lastAttacker = s; } else if (best === player) friendlyNote(s, best);
-    applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
+    hitSrc = s; hitKind = 'beam'; applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
     if (best.alive && best.vox && best.def.cls !== 'fighter') { chip(best, bestLocal, 5, 10, false); flashAt(wp, 40, 0.6); sparksAt(wp, 60, 40); fireAt(wp, 20, 14); }
     rec.str1 = Math.round(best.structure); rec.dead = !best.alive || best.dying > 0;
     if (best === player) shake = 1;
@@ -6791,8 +7567,8 @@ addEventListener('mouseup', e => { mouseFire = mouseFire && !rdlgOpen; if (e.but
 addEventListener('mousemove', e => {
   if (rdlgOpen) return;
   if (document.pointerLockElement !== canvas) return;
-  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
-  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
+  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003 * AOPT.sens));
+  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003 * AOPT.sens * (AOPT.invY ? -1 : 1)));
 });
 
 // ---- touch controls (phones/tablets) ----
@@ -6915,16 +7691,16 @@ setPhone();
 let rdlgOpen = false;
 function askRestart() {
   if (rdlgOpen) return;
-  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M, sk = game.mode === 'skirmish';
+  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M, sk = game.mode === 'skirmish', sur = game.mode === 'survival';
   rdlgOpen = true; document.exitPointerLock?.();
   const seg = mission && game.seg;
   el.innerHTML = `<div class="panel"><h2>RESTART?</h2>` + (mission
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
-    : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
+    : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : sur ? 'GAUNTLET' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
   const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
   $id('rd0').onclick = close;
-  $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else resetGame(); };
+  $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else if (sur) { startSurvival(sv.cfg); launchLock(); } else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };
   const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(true); keys.clear(); restoreCrew(); startMission(M, seg); };
   el._keys = ev => {
@@ -6973,12 +7749,12 @@ function updatePlayer(dt) {
 function updateShieldsAndFx(s, dt) {
   const sg = compFactor(s, 'shield');
   for (const f of ['fore', 'aft']) {
-    const cap = s.def.shield[f] * sg;
+    const cap = s.def.shield[f] * sg * (s.mod?.shieldCap ?? 1);
     if (s.shield[f] > cap) s.shield[f] = cap;
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
-      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's'));
+      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -7060,7 +7836,7 @@ function update(dt) {
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  lodTick(dt); comsTick(dt);
+  lodTick(dt); comsTick(dt); juiceTick(dt); lootTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
@@ -7083,6 +7859,7 @@ function update(dt) {
   updateWarnings(dt);
   if (game.mission) missionUpdate(dt);
   if (game.mode === 'skirmish') skirmishUpdate(dt);
+  else if (game.mode === 'survival') survivalUpdate(dt);
 
   for (const d of debris) {
     d.life += dt;
@@ -7311,7 +8088,7 @@ function updateLog() {
 }
 let lastObj = '', lastComm = '';
 function updateObjComm() {
-  const h = objectives.length ? '<div style="opacity:.6;letter-spacing:2px">OBJECTIVES</div>' + objectives.map(o => `<div class="${o.state}">${o.state === 'done' ? '✔' : o.state === 'failed' ? '✘' : '▸'} ${o.text}</div>`).join('') : '';
+  const h = objectives.length ? '<div style="opacity:.6;letter-spacing:2px">OBJECTIVES</div>' + objectives.map(o => `<div class="${o.state}">${o.state === 'done' ? '✔' : o.state === 'failed' ? '✘' : '▸'} ${o.text}${o.grp && o.state === 'open' ? ` [${Math.max(0, o.total - ships.filter(s => s.alive && s.grp === o.grp).length)}/${o.total}]` : ''}</div>`).join('') : '';
   if (h !== lastObj) { objEl.innerHTML = h; lastObj = h; }
   const live = comms.filter(c => time - c.t < 9);
   const hc = live.map(c => `<div style="opacity:${clamp(9 - (time - c.t), 0, 1)}"><b style="color:${c.color}">${c.from}:</b>${c.text}</div>`).join('');
@@ -7451,6 +8228,8 @@ function drawOverlay(alive) {
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
   if (flightMode === 'newton') drawVectors(c, p, cx, cy);
+  drawJuice(c, p, cx, cy);
+  drawLoot(c, p);
   // seeker cone of the selected missile
   const wid = selectedMissile(p), L = p.lock;
   if (wid) {
@@ -7472,9 +8251,9 @@ function drawOverlay(alive) {
     if (s === target) continue;
     if (pr.front && pr.x > -50 && pr.x < ovW + 50 && pr.y > -50 && pr.y < ovH + 50) {
       if (hostile) {
-        c.strokeStyle = 'rgba(255,90,90,.75)'; c.lineWidth = 1.5; c.beginPath();
+        c.strokeStyle = s.ace ? 'rgba(255,210,74,.95)' : 'rgba(255,90,90,.75)'; c.lineWidth = s.ace ? 2.5 : 1.5; c.beginPath();
         c.moveTo(pr.x, pr.y - size); c.lineTo(pr.x + size, pr.y); c.lineTo(pr.x, pr.y + size); c.lineTo(pr.x - size, pr.y); c.closePath(); c.stroke();
-        if (size > 14 || d < 1500) { c.fillStyle = 'rgba(255,140,140,.85)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
+        if (size > 14 || d < 1500) { c.fillStyle = s.ace ? '#ffd24a' : 'rgba(255,140,140,.85)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${s.ace ? '★ ' + s.callsign : s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
       } else {
         bracketBox(c, pr.x, pr.y, Math.max(8, size), 'rgba(106,200,255,.7)', 1.5);
         c.fillStyle = 'rgba(140,215,255,.9)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left';
@@ -7595,11 +8374,12 @@ function drawRadar(alive) {
         const sy = syBase - clamp(_rel.y / range, -1, 1) * R * 0.38;
         if (rf <= 0.5 && Math.random() < 0.3) return;
         const behind = _rel.z > 0;
-        const col = kind === 'msl' ? (hostile ? '#ff3a2a' : '#ffd24a') : hostile ? '#ff5a5a' : '#6ac8ff';
+        const col = kind === 'pod' ? label : kind === 'msl' ? (hostile ? '#ff3a2a' : '#ffd24a') : hostile ? '#ff5a5a' : '#6ac8ff';
         c.globalAlpha = off ? 0.55 : 1;
         if (!off) { c.strokeStyle = hostile ? 'rgba(255,90,90,.45)' : 'rgba(106,200,255,.45)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(sx, syBase); c.lineTo(sx, sy); c.stroke(); }
         c.fillStyle = col; c.strokeStyle = col; c.lineWidth = 2.5;
         if (kind === 'msl') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy + 5); c.lineTo(sx - 5, sy + 5); c.closePath(); c.fill(); }
+        else if (kind === 'pod') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy); c.lineTo(sx, sy + 6); c.lineTo(sx - 5, sy); c.closePath(); c.fill(); }
         else if (kind === 'cap') { const z = 8; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
         else { const z = kind === 'big' ? 6 : 5; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
         if (isT) {
@@ -7614,6 +8394,7 @@ function drawRadar(alive) {
         draw(s.group.position, s.def.cls !== 'fighter' ? 'cap' : (s.def.ai?.role === 'bomber' || s.def.id === 'reaver' || s.def.id === 'spitter') ? 'big' : 'fgt', hostile, s === target);
       }
       for (const m of missiles) if (!m.dead) draw(m.pos, 'msl', m.team !== p.team && m.target === p);
+      for (const o of lootPods) draw(o.pos, 'pod', false, false, o.col);
     }
   }
   c.fillStyle = '#8fffd0'; c.beginPath(); c.moveTo(cx, cy - 9); c.lineTo(cx + 7, cy + 7); c.lineTo(cx - 7, cy + 7); c.closePath(); c.fill();
@@ -7628,7 +8409,7 @@ function updateHud() {
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
-    (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
+    (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
 
@@ -7670,7 +8451,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip();
   // warnings
   let w = '';
   if (alive) {
@@ -7692,6 +8473,18 @@ function updateEts(p, alive) {
   const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
   if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
 }
+
+// ---- wing strip (UX_REVIEW R10): hull of the friendly fighters at a glance, under the damage map
+const wingEl = document.createElement('div'); wingEl.id = 'wingstrip'; document.getElementById('hud').appendChild(wingEl);
+let lastWing = '';
+function updateWingStrip() {
+  const p = player; let h = '';
+  if (p && p.alive && state !== 'brief') {
+    const w = ships.filter(s => s.alive && !s.dying && s.team === p.team && s !== p && s.def.cls === 'fighter' && !s.def.drone).slice(0, 4);
+    h = w.map(s => { const r = clamp(s.structure / s.def.structure, 0, 1), n = Math.ceil(r * 5); return `<div style="color:${hpCol(r)}">${(s.callsign || s.def.name).slice(0, 8).padEnd(8)} ${'▮'.repeat(n)}${'▯'.repeat(5 - n)} ${Math.round(r * 100)}%${s.ai.order ? ' <span style="opacity:.7">' + s.ai.order.type.toUpperCase().slice(0, 4) + '</span>' : ''}${s.ai.hold ? ' HOLD' : ''}</div>`; }).join('');
+  }
+  if (h !== lastWing) { wingEl.innerHTML = h; lastWing = h; }
+}
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
@@ -7699,6 +8492,7 @@ if (!params.has('yard')) {
   startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
   if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
   else if (params.has('sk')) startSkirmish(skFromParams());
+  else if (params.has('sv')) startSurvival(svFromParams());
   else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
   else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
 }
@@ -7729,7 +8523,7 @@ function frame(t) {
   last = t;
   if (!params.has('yard')) {
     musicTick(dt);
-    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
     updateHud();
   }
@@ -7740,12 +8534,14 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
+  get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
+  version: GAME_VERSION, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
-  get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
+  get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
 Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu

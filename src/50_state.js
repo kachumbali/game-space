@@ -20,13 +20,13 @@ function powerShift(s, to) {                     // +1 point to `to`, taken from
   s.pw[o[0]]--; s.pw[to]++; return true;
 }
 const powerReset = s => { s.pw = { w: 4, s: 4, e: 4 }; };
-const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e'));
-const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e'));
+const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e')) * (s.mod?.speed ?? 1);
+const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e')) * (s.mod?.turn ?? 1);
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 // ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
 function abTick(s, want, dt) {
-  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e');
+  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1);
   if (!mx) { s.ab = false; return false; }
   const on = want && !s.abLock && s.abFuel > 0;
   if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }

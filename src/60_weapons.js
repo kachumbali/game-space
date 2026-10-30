@@ -98,7 +98,7 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
   if (sp) _w2.add(_w3.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(2 * sp)).normalize();
   const pos = wpos.clone();
   bolts.push({
-    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg, dt: w.dt,
+    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg * (owner.mod?.dmg ?? 1), dt: w.dt,
     vel: _w2.clone().multiplyScalar(w.v).addScaledVector(s.vel, 0.9),
   });
 }
@@ -139,10 +139,11 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
-  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1);
+  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
+  hitSrc = s; hitKind = 'beam';
   applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
@@ -163,8 +164,8 @@ function fireMount(s, m) {
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
-  if (w.energy) s.energy -= w.energy;
-  m.cool = w.cd / (0.6 + 0.4 * powerMul(s));
+  if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
+  m.cool = w.cd / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -199,7 +200,7 @@ function lockUpdate(s, dt) {
   const radarOk = w.seeker !== 'rf' || compFactor(s, 'radar') > 0.01;
   const ok = d < w.range && ang < w.lockCone * sizeAdj && radarOk;
   L.d = d; L.ang = ang;
-  if (ok) L.p = Math.min(1, L.p + dt / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
+  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
   else L.p = Math.max(0, L.p - dt * 1.5);
   L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < w.range ? 'seek' : 'range'));
 }
@@ -304,7 +305,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     }
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
-    applyHit(s, lp, w.dmg * f, s.group.localToWorld(lp.clone()), 'exp');
+    hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
+    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp');
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
@@ -588,6 +590,7 @@ function updateBolts(dt) {
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
+      hitSrc = b.owner; hitKind = 'gun';
       applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }

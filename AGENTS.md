@@ -12,8 +12,8 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Source map (sorted build order): `src/00_head.html` (shell/CSS) · `10_config` · `12_audio` · `13_music`
   (mood/crossfade, options panel) · `14_samples` (CC0 sample layer) · `15_credits` · `16_db` (embeds
   `data/db.json`) · `20_voxel` · `30_ships_human` / `31_ships_frogg` · `32_scale` · `40_scene` · `41_sky` ·
-  `45_particles` · `50_state` · `55_ships` · `56_drones` · `58_playlog` · `60_weapons` · `61_beams` ·
-  `65_combat` · `70_ai` · `75_mission` · `76_menu` · `77_cine` · `78_coms` · `79_bullfrog` · `80_input` ·
+  `45_particles` · `50_state` · `55_ships` · `56_drones` · `58_playlog` · `60_weapons` · `61_beams` · `62_juice` (hitmarkers, arcs, chain, medals) · `63_loot` (salvage pods) ·
+  `65_combat` · `70_ai` · `74_survival` (Gauntlet, perks, difficulty, career) · `75_mission` · `76_menu` · `77_cine` · `78_coms` · `79_bullfrog` · `80_input` ·
   `85_update` · `90_hud` · `95_main` · `99_tail.html`.
 - `data/db.json` is the source of truth for ship, weapon, armour, mass-class and armour-class data.
   `tools/validate_db.py` checks it; `tools/export_db.py` generates `docs/data/*.csv`.
@@ -45,6 +45,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 
 ## Git
 - **Work in branches** (owner rule 2026-10-22): commit work in progress to a feature branch; merge to main when green. Never let two agents edit the same working tree.
+- **v0.2 note (2026-10-30): the owner lifted the freeze for the fun update** (docs/FUN_UPDATE.md), which met the three conditions below. The rule still stands for anything else.
 - **New player-facing systems are frozen until the owner has hand-played the build on iPad** (owner rule 2026-10-22: power, afterburner, magazines, energy budgets, comms, drones, docking, the nuke dial all shipped with zero hand-play data). Any new player-facing system needs, in the same commit: a touch binding, an AI default so it can be ignored, and a line in the help overlay.
 - **Balance claims need seeded runs**: `?seed=` makes the whole sim deterministic (mulberry32, 10_config). Duel cells quote >= 20 runs or do not claim an even point.
 - Commit small, push to `origin main` (https://github.com/kachumbali/game-space). Do not force push. End each

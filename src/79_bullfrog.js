@@ -102,7 +102,7 @@ function spineFire(s) {
     const wp = best.group.localToWorld(bestLocal.clone()), fr = best.team === s.team;
     rec.str0 = Math.round(best.structure); rec.sh0 = Math.round(best.shield.fore + best.shield.aft);
     if (!fr) { best.lastAttacker = s; } else if (best === player) friendlyNote(s, best);
-    applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
+    hitSrc = s; hitKind = 'beam'; applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
     if (best.alive && best.vox && best.def.cls !== 'fighter') { chip(best, bestLocal, 5, 10, false); flashAt(wp, 40, 0.6); sparksAt(wp, 60, 40); fireAt(wp, 20, 14); }
     rec.str1 = Math.round(best.structure); rec.dead = !best.alive || best.dying > 0;
     if (best === player) shake = 1;

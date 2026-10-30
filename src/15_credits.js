@@ -2,6 +2,7 @@
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
+const GAME_VERSION = '0.2.0';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
@@ -40,7 +41,7 @@ function showCredits(force) {
   if (!open) { el.style.display = 'none'; return; }
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const lnk = s => esc(s).replace(/(https?:\/\/[^\s)]+)/g, u => { const m = u.match(/^(.*?)([.,;]*)$/); return `<a href="${m[1]}" target="_blank" rel="noopener">${m[1]}</a>${m[2]}`; });
-  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()}<br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
+  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()} <small>v${GAME_VERSION}</small><br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
     + CREDITS.map(([sec, rows]) => `<div class="csec">${sec}</div>` + rows.map(([a, b]) => `<div class="crow"><b>${esc(a)}</b><span>${lnk(b)}</span></div>`).join('')).join('')
     + `<div class="onote">CC0 means the author dedicated the work to the public domain; credit is not required but given. Full text: https://creativecommons.org/publicdomain/zero/1.0/ and https://opensource.org/license/mit. The same list is in docs/CREDITS.md.</div></div>`
     + `<button id="c_close">CLOSE <small>[ESC]</small></button></div>`;

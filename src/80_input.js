@@ -105,8 +105,8 @@ addEventListener('mouseup', e => { mouseFire = mouseFire && !rdlgOpen; if (e.but
 addEventListener('mousemove', e => {
   if (rdlgOpen) return;
   if (document.pointerLockElement !== canvas) return;
-  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
-  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
+  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003 * AOPT.sens));
+  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003 * AOPT.sens * (AOPT.invY ? -1 : 1)));
 });
 
 // ---- touch controls (phones/tablets) ----
@@ -229,16 +229,16 @@ setPhone();
 let rdlgOpen = false;
 function askRestart() {
   if (rdlgOpen) return;
-  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M, sk = game.mode === 'skirmish';
+  const el = $id('rdlg'), M = game.mission, mission = game.mode === 'mission' && M, sk = game.mode === 'skirmish', sur = game.mode === 'survival';
   rdlgOpen = true; document.exitPointerLock?.();
   const seg = mission && game.seg;
   el.innerHTML = `<div class="panel"><h2>RESTART?</h2>` + (mission
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
-    : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
+    : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : sur ? 'GAUNTLET' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
   const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
   $id('rd0').onclick = close;
-  $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else resetGame(); };
+  $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else if (sur) { startSurvival(sv.cfg); launchLock(); } else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };
   const r2 = $id('rd2'); if (r2) r2.onclick = () => { close(true); keys.clear(); restoreCrew(); startMission(M, seg); };
   el._keys = ev => {

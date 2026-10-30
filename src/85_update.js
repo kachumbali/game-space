@@ -37,12 +37,12 @@ function updatePlayer(dt) {
 function updateShieldsAndFx(s, dt) {
   const sg = compFactor(s, 'shield');
   for (const f of ['fore', 'aft']) {
-    const cap = s.def.shield[f] * sg;
+    const cap = s.def.shield[f] * sg * (s.mod?.shieldCap ?? 1);
     if (s.shield[f] > cap) s.shield[f] = cap;
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
-      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's'));
+      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -124,7 +124,7 @@ function update(dt) {
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  lodTick(dt); comsTick(dt);
+  lodTick(dt); comsTick(dt); juiceTick(dt); lootTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
@@ -147,6 +147,7 @@ function update(dt) {
   updateWarnings(dt);
   if (game.mission) missionUpdate(dt);
   if (game.mode === 'skirmish') skirmishUpdate(dt);
+  else if (game.mode === 'survival') survivalUpdate(dt);
 
   for (const d of debris) {
     d.life += dt;
