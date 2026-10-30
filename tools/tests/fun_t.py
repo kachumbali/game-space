@@ -83,6 +83,106 @@ def loot(R):
     print('LOOT', 'OK' if ok else 'FAIL', 'errs', R.errs[:3]); pg.close()
     return bool(ok)
 
+CLEAR = """(P)=>{const g=__game;let n=0;while(g.ships.some(s=>s.team===1&&s.alive)&&n<400){g.ships.filter(s=>s.team===1&&s.alive&&!s.dying).forEach(e=>{e.lastAttacker=P;g.killShip(e)});g.update(0.05);n++}return n}"""
+
+def survival(R):
+    ok = True
+    pg = R.page(1280, 720, '?sv=1&sv_seed=42&q=low'); pg.wait_for_timeout(1500)
+    pg.evaluate("()=>{__paused=true}")
+    r = pg.evaluate("""()=>{const g=__game,P=g.player,out={};
+      out.mode=g.game.mode;out.n=g.sv.n;out.enemies=g.ships.filter(s=>s.team===1&&s.alive).length;out.kinds=[...new Set(g.ships.filter(s=>s.team===1).map(s=>s.def.id))];
+      out.hud=(document.getElementById('hudtxt').textContent.match(/WAVE \\d+/)||[''])[0];g.updateHud();out.hud=(document.getElementById('hudtxt').textContent.match(/WAVE \\d+/)||[''])[0];
+      return out}""")
+    print(' start', r); ok = ok and r['mode'] == 'survival' and r['n'] == 1 and r['enemies'] >= 3 and r['hud'] == 'WAVE 1'
+    # clear wave 1 -> draft with 3 offers, 2 pods, score banked
+    r = pg.evaluate("(" + CLEAR + ")(__game.player)")
+    r = pg.evaluate("""()=>{const g=__game;return {phase:g.sv.phase,offers:g.sv.draft&&g.sv.draft.offers.map(o=>o.id),pods:g.lootPods.length,score:g.juice.score,draftShown:getComputedStyle(document.getElementById('svdraft')).display}}""")
+    print(' cleared', r); ok = ok and r['phase'] == 'draft' and len(r['offers']) == 3 and r['pods'] >= 2 and r['score'] > 0 and r['draftShown'] == 'block'
+    pg.screenshot(path='/tmp/gs_shots/fun_draft.png')
+    # a real keypress picks card 1 (digit keys must not change the fire group)
+    pg.keyboard.press('Digit1'); pg.wait_for_timeout(200)
+    r = pg.evaluate("""()=>{const g=__game;return {phase:g.sv.phase,picked:g.sv.picks,fireMask:g.player.fireMask,shown:getComputedStyle(document.getElementById('svdraft')).display}}""")
+    print(' picked', r); ok = ok and r['phase'] == 'break' and len(r['picked']) == 1 and r['shown'] == 'none'
+    r = pg.evaluate("""()=>{const g=__game;for(let i=0;i<90;i++)g.update(0.05);return {n:g.sv.n,phase:g.sv.phase,enemies:g.ships.filter(s=>s.team===1&&s.alive).length}}""")
+    print(' next wave', r); ok = ok and r['n'] == 2 and r['phase'] == 'fight' and r['enemies'] >= 3
+    # perk effects: HOT ROUNDS multiplies bolt damage, GLASS CANNON also raises damage taken
+    r = pg.evaluate("""()=>{const g=__game,P=g.player;const hot=g.PERKS.find(x=>x.id==='hot'),gl=g.PERKS.find(x=>x.id==='glass');
+      const before=P.mod.dmg??1;g.sv.perks.hot=0;g.sv.phase='draft';g.sv.draft={offers:[hot],t:5};g.svPick(0);const after=P.mod.dmg;
+      g.sv.phase='draft';g.sv.draft={offers:[gl],t:5};g.svPick(0);return {before,after,glass:[P.mod.dmg,P.mod.take]}}""")
+    print(' perks', r); ok = ok and abs(r['after'] - 1.15) < 0.01 and abs(r['glass'][0] - 1.15 * 1.4) < 0.02 and r['glass'][1] > 1.2
+    # walk the director through waves 2..11: boss waves, aces, no errors
+    r = pg.evaluate("""(CLEARSRC)=>{const g=__game,P=g.player,out={waves:[],aces:0,boss:{}};const clear=eval(CLEARSRC);
+      for(let w=0;w<10;w++){
+        const foes=g.ships.filter(s=>s.team===1&&s.alive);out.aces+=foes.filter(s=>s.ace).length;
+        out.waves.push([g.sv.n,foes.length,[...new Set(foes.map(s=>s.def.id))].join('+')]);
+        if(g.sv.n%5===0)out.boss[g.sv.n]=[...new Set(foes.map(s=>s.def.id))];
+        clear(P);if(g.sv.phase==='draft')g.svPick(0);for(let i=0;i<80&&g.sv.phase!=='fight';i++)g.update(0.05);
+        P.structure=P.def.structure;P.shield.fore=P.def.shield.fore;P.shield.aft=P.def.shield.aft;
+      }return out}""", CLEAR)
+    print(' waves', r['waves']); print(' aces', r['aces'], 'bosses', r['boss'])
+    ok = ok and r['aces'] >= 1 and 'gulper' in (r['boss'].get('5') or []) and 'bullfrog' not in (r['boss'].get('5') or []) and '10' in r['boss']
+    print(' errs', R.errs[:3]); ok = ok and not R.errs
+    # death -> debrief, best saved
+    r = pg.evaluate("""()=>{const g=__game,P=g.player;g.hitSrc=null;g.applyHit(P,new g.THREE.Vector3(0,0,-1),99999,P.group.position.clone(),'kin');for(let i=0;i<140;i++)g.update(0.05);
+      return {over:g.sv.over,shown:g.sv.shown,html:document.getElementById('brief').textContent.slice(0,90),best:localStorage.getItem('gs_svbest'),career:localStorage.getItem('gs_career')}}""")
+    print(' death', r); ok = ok and r['over'] and r['shown'] and 'DOWN ON WAVE' in r['html'] and r['best'] and r['career']
+    pg.screenshot(path='/tmp/gs_shots/fun_sv_debrief.png'); pg.close()
+    # determinism: the same seed gives the same director plan
+    plans = []
+    for _ in range(2):
+        pg = R.page(640, 360, '?sv=1&sv_seed=777&q=low'); pg.wait_for_timeout(800)
+        plans.append(pg.evaluate("""()=>{const g=__game;const out=[];for(let w=2;w<=12;w++){g.sv.n=w-1;const sp=g.svCompose(w);out.push(w+':'+sp.name+':'+sp.rows.map(r=>r.kind+r.count).join(',')+':'+(sp.ace?sp.ace.name:''))}return out.join('|')}"""))
+        pg.close()
+    print(' determinism', plans[0] == plans[1], plans[0][:120]); ok = ok and plans[0] == plans[1]
+    # mutators and difficulty reach the player
+    pg = R.page(640, 360, '?sv=1&sv_diff=ace&sv_mut=glass,newton,scarce&q=low'); pg.wait_for_timeout(800)
+    r = pg.evaluate("""()=>{const g=__game,P=g.player;return {take:+P.mod.take.toFixed(2),fm:g.game&&0,scoreMul:+g.juice.scoreMul.toFixed(2),drop:P.mod.drop}}""")
+    print(' ace+glass', r); ok = ok and abs(r['take'] - 1.4 * 1.5) < 0.02 and abs(r['scoreMul'] - 1.6 * 1.3 * 1.6 * 1.3) < 0.02; pg.close()
+    # menu flow: main menu -> GAUNTLET setup -> launch
+    for w, h, tag, touch in ((1280, 720, 'desk', False), (844, 390, 'phone', True)):
+        pg = R.page(w, h, '?touch&q=low' if touch else '?q=low', touch=touch); pg.wait_for_timeout(1500)
+        if touch: pg.screenshot(path=f'/tmp/gs_shots/fun_menu_{tag}.png')
+        pg.click('.mi[data-a="survival"]'); pg.wait_for_timeout(400); pg.screenshot(path=f'/tmp/gs_shots/fun_sv_setup_{tag}.png')
+        pg.click('[data-mut="swarm"]'); pg.wait_for_timeout(300)
+        pg.click('#sv_go'); pg.wait_for_timeout(1500)
+        r = pg.evaluate("()=>({mode:__game.game.mode,mut:Object.keys(__game.sv.mut),n:__game.sv.n})")
+        print(' menu', tag, r); ok = ok and r['mode'] == 'survival' and 'swarm' in r['mut']
+        if tag == 'phone':
+            pg.evaluate("()=>{const g=__game;__paused=true;g.ships.filter(s=>s.team===1).forEach(e=>{e.lastAttacker=g.player;g.killShip(e)});for(let i=0;i<80;i++)g.update(0.05);g.updateHud()}"); pg.wait_for_timeout(300)
+            pg.screenshot(path='/tmp/gs_shots/fun_draft_phone.png')
+        pg.close()
+    print('SURVIVAL', 'OK' if ok else 'FAIL', 'errs', R.errs[:3])
+    return ok
+
+def missions(R):
+    ok = True
+    ctx = R.b.new_context(viewport={'width': 1280, 'height': 720}); pg = ctx.new_page()
+    pg.on('console', lambda m: R.errs.append((m.type, m.text)) if m.type == 'error' and '404' not in m.text else None)
+    pg.on('pageerror', lambda e: R.errs.append(('pageerror', str(e))))
+    pg.goto('http://localhost:' + PORT + '/index.html?m=1&q=low', timeout=120000); pg.wait_for_function('window.__game!==undefined', timeout=120000); pg.wait_for_timeout(800)
+    r = pg.evaluate("()=>({btns:[...document.querySelectorAll('[data-d]')].map(b=>b.dataset.d),cur:[...document.querySelectorAll('[data-d].on')].map(b=>b.dataset.d)})")
+    print(' briefing selector', r); ok = ok and r['btns'] == ['easy', 'normal', 'hard', 'ace'] and r['cur'] == ['normal']
+    pg.click('[data-d="hard"]'); pg.wait_for_timeout(1500)
+    pg.click('#bgo'); pg.wait_for_timeout(300)
+    r = pg.evaluate("""()=>{const g=__game;__paused=true;for(let i=0;i<110;i++)g.update(0.05);const P=g.player,foes=g.ships.filter(s=>s.team===1&&s.alive);
+      g.updateHud();return {n:foes.length,skills:[...new Set(foes.map(s=>s.skill))],take:+P.mod.take.toFixed(2),obj:document.getElementById('objs').textContent.replace(/\\s+/g,' ').slice(0,120),wing:document.getElementById('wingstrip').textContent.replace(/\\s+/g,' '),
+      comms:[...document.getElementById('comm').children].map(c=>c.textContent.slice(0,40))}}""")
+    print(' hard m1', r); ok = ok and r['n'] == 7 and r['skills'] == [4] and abs(r['take'] - 1.2) < 0.01 and '[0/7]' in r['obj'] and 'HAWK' in r['wing'] and 'SPARROW' in r['wing']
+    # tips: four lines in order, once; after the mission they are remembered
+    r = pg.evaluate("""()=>{const g=__game;for(let i=0;i<700;i++)g.update(0.05);return {tipN:g.game.mstate.tipN,tips:localStorage.getItem('gs_tips')}}""")
+    print(' tips', r); ok = ok and r['tipN'] == 4 and r['tips'] and 'm01' in r['tips']
+    r = pg.evaluate("""()=>{const g=__game;g.ships.filter(s=>s.team===1).forEach(e=>{e.lastAttacker=g.player;g.killShip(e)});for(let i=0;i<120;i++)g.update(0.05);g.endMission('win','test');for(let i=0;i<80;i++)g.update(0.05);
+      return {html:document.getElementById('brief').textContent.replace(/\\s+/g,' ').slice(0,600),career:localStorage.getItem('gs_career')}}""")
+    print(' debrief', r['html'][:200], '|', r['career']); ok = ok and 'MISSION ACCOMPLISHED' in r['html'] and 'STYLE' in r['html'] and 'CAREER' in r['html'] and r['career']
+    pg.screenshot(path='/tmp/gs_shots/fun_debrief_mission.png')
+    # second launch: tips are not repeated
+    pg.evaluate("()=>{localStorage.setItem('gs_diff','normal')}"); pg.reload(); pg.wait_for_function('window.__game!==undefined', timeout=120000); pg.wait_for_timeout(600)
+    pg.evaluate("()=>{document.getElementById('bgo')&&document.getElementById('bgo').click()}"); pg.wait_for_timeout(200)
+    r = pg.evaluate("()=>{const g=__game;__paused=true;for(let i=0;i<700;i++)g.update(0.05);return {tipN:g.game.mstate.tipN||0}}")
+    print(' tips repeat', r); ok = ok and r['tipN'] == 0
+    pg.close(); ctx.close()
+    print('MISSIONS', 'OK' if ok else 'FAIL', 'errs', R.errs[:3]); return ok and not R.errs
+
 with Runner() as R:
     ok = True
     for name in which:

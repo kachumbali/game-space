@@ -384,6 +384,7 @@ function startMission(M, seg) {
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
   const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
+  p.modBase = { take: diffCfg().take }; recalcMods(p);
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
@@ -432,6 +433,8 @@ function runActions(list) {
     if (a.spawn) spawnGroup(a.spawn);
     if (a.end) endMission(a.end);
   }
+  const ob = list.find(a => a.obj && a.obj[2] === 'open' && a.obj[1] && a.obj[3] === undefined), spw = list.find(a => a.spawn);
+  if (ob && spw) { const o = objectives.find(x => x.id === ob.obj[0]); if (o) { o.grp = spw.spawn.grp; o.total = ships.filter(s => s.grp === o.grp && s.alive).length; } }
 }
 function spawnGroup(sp) {
   const S = game.mstate, anchor = game.anchor.group.position;
@@ -439,10 +442,11 @@ function spawnGroup(sp) {
   const dir = bearingVec(sp.bearing);
   const side = new THREE.Vector3().crossVectors(dir, new THREE.Vector3(0, 1, 0)).normalize();
   let n = 0;
-  for (const [kind, count] of sp.ships) for (let i = 0; i < count; i++, n++) {
+  const D = diffCfg();
+  for (const [kind, count0] of sp.ships) for (let i = 0, count = SHIPS[kind].cls === 'fighter' ? Math.max(1, Math.round(count0 * D.count)) : count0; i < count; i++, n++) {   // difficulty scales fighter counts (normal = as authored)
     const pos = anchor.clone().addScaledVector(dir, sp.dist + (kind === 'gulper' ? 0 : n * 40))
       .addScaledVector(side, (Math.random() - 0.5) * sp.spread * 2).add(new THREE.Vector3(0, (Math.random() - 0.5) * sp.spread, 0));
-    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), { grp: sp.grp });
+    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), D.skill ? { grp: sp.grp, skill: clamp((SHIPS[kind].ai?.skill ?? 3) + D.skill, 1, 5) } : { grp: sp.grp });
     if (sp.jump) { flashAt(pos, e.def.radius * 2.2, 0.8); }
   }
   if (sp.jump) sfx('jump');
@@ -467,6 +471,7 @@ addEventListener('keydown', e => { if (e.code === 'KeyX' && !e.repeat) jumpConfi
 
 function missionUpdate(dt) {
   const M = game.mission, S = game.mstate;
+  if (M && S && !S.ended) tipsTick(M, S);
   if (!M || !S || S.ended) hideJumpPrompt();
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
@@ -564,9 +569,11 @@ function showBriefing(M) {
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
+    <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
+  el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
@@ -577,6 +584,8 @@ function showBriefing(M) {
 function showDebrief() {
   const S = game.mstate, st = missionStats(), M = game.mission;
   const el = $id('brief');
+  if (!S.careerDone) { S.careerDone = true; const rb = careerRank(careerGet().xp), ca = careerAdd((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4), kills), ra = careerRank(ca.xp); S.careerTxt = `+${Math.round((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4))} XP · <b>${ra.name}</b>${ra.level > rb.level ? ' <span class="ok">PROMOTED</span>' : ''} · difficulty ${diffCfg().name}`; }
+  const career = S.careerTxt;
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>× ${killLog[k]}</b> <span class="dim">${(SCORE[k] || 100) * killLog[k]}</span></div>`).join('') || '<div class="dim">none</div>';
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
@@ -584,7 +593,7 @@ function showDebrief() {
     ${(S.result === 'win' ? M.debriefWin : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : M.debriefLose}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
-    <div><div class="sub">WING</div>${crew}</div></div>
+    <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>
     <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
@@ -592,4 +601,22 @@ function showDebrief() {
   if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
+}
+
+// ---- onboarding beats (UX_REVIEW S5/R4): four short CONTROL lines in mission 1, first launch only (localStorage gs_tips), touch wording on touch.
+// ?tips forces them. No tutorial mission, no new UI: they ride the existing comm feed, timed around the first wave.
+const TIPS_M1 = [
+  [2.5, 'Throttle: W / S to speed up and slow down, SHIFT is the afterburner (it runs dry, watch the AB gauge).', 'Throttle: drag the slider on the right, BOOST is the afterburner (it runs dry).'],
+  [9, 'Guns: SPACE or the left mouse button. Lead the target: aim at the small ring ahead of it.', 'Guns: hold FIRE. Aim at the small ring ahead of the target, not at the target.'],
+  [17, 'Missiles: T picks the nearest bogey, keep it inside the dashed ring until the tone goes solid, then ENTER or the right mouse button.', 'Missiles: TGT picks the nearest bogey, keep it in the dashed ring until the lock chip says LOCKED, then MSL.'],
+  [27, 'Missile on your tail: Z drops flares. IR missiles fall for flares, radar missiles for chaff. Press J any time to give your wingmen orders.', 'Missile on your tail: FLARE drops decoys. COMMS gives your wingmen orders.'],
+];
+function tipsTick(M, S) {
+  if (M.id !== 'm01' || state !== 'play') return;
+  let done = {}; try { done = JSON.parse(localStorage.getItem('gs_tips') || '{}'); } catch (e) { /* storage unavailable */ }
+  if (done.m01 && !params.has('tips')) return;
+  S.tipN = S.tipN || 0;
+  const t = TIPS_M1[S.tipN];
+  if (t && S.t >= t[0]) { comm('CONTROL', isTouch ? t[2] : t[1], '#9adcff'); S.tipN++; }
+  if (S.tipN >= TIPS_M1.length) { done.m01 = true; try { localStorage.setItem('gs_tips', JSON.stringify(done)); } catch (e) { /* ignore */ } }
 }

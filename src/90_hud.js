@@ -169,7 +169,7 @@ function updateLog() {
 }
 let lastObj = '', lastComm = '';
 function updateObjComm() {
-  const h = objectives.length ? '<div style="opacity:.6;letter-spacing:2px">OBJECTIVES</div>' + objectives.map(o => `<div class="${o.state}">${o.state === 'done' ? '✔' : o.state === 'failed' ? '✘' : '▸'} ${o.text}</div>`).join('') : '';
+  const h = objectives.length ? '<div style="opacity:.6;letter-spacing:2px">OBJECTIVES</div>' + objectives.map(o => `<div class="${o.state}">${o.state === 'done' ? '✔' : o.state === 'failed' ? '✘' : '▸'} ${o.text}${o.grp && o.state === 'open' ? ` [${Math.max(0, o.total - ships.filter(s => s.alive && s.grp === o.grp).length)}/${o.total}]` : ''}</div>`).join('') : '';
   if (h !== lastObj) { objEl.innerHTML = h; lastObj = h; }
   const live = comms.filter(c => time - c.t < 9);
   const hc = live.map(c => `<div style="opacity:${clamp(9 - (time - c.t), 0, 1)}"><b style="color:${c.color}">${c.from}:</b>${c.text}</div>`).join('');
@@ -332,9 +332,9 @@ function drawOverlay(alive) {
     if (s === target) continue;
     if (pr.front && pr.x > -50 && pr.x < ovW + 50 && pr.y > -50 && pr.y < ovH + 50) {
       if (hostile) {
-        c.strokeStyle = 'rgba(255,90,90,.75)'; c.lineWidth = 1.5; c.beginPath();
+        c.strokeStyle = s.ace ? 'rgba(255,210,74,.95)' : 'rgba(255,90,90,.75)'; c.lineWidth = s.ace ? 2.5 : 1.5; c.beginPath();
         c.moveTo(pr.x, pr.y - size); c.lineTo(pr.x + size, pr.y); c.lineTo(pr.x, pr.y + size); c.lineTo(pr.x - size, pr.y); c.closePath(); c.stroke();
-        if (size > 14 || d < 1500) { c.fillStyle = 'rgba(255,140,140,.85)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
+        if (size > 14 || d < 1500) { c.fillStyle = s.ace ? '#ffd24a' : 'rgba(255,140,140,.85)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left'; c.fillText(`${s.ace ? '★ ' + s.callsign : s.def.name.replace('FROGG ', '')} ${d.toFixed(0)}`, pr.x + size + 4, pr.y + 3); }
       } else {
         bracketBox(c, pr.x, pr.y, Math.max(8, size), 'rgba(106,200,255,.7)', 1.5);
         c.fillStyle = 'rgba(140,215,255,.9)'; c.font = `${Math.round(10 * FS)}px monospace`; c.textAlign = 'left';
@@ -490,7 +490,7 @@ function updateHud() {
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
-    (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
+    (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
   hitEl.style.opacity = hitFlash;
 
@@ -532,7 +532,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip();
   // warnings
   let w = '';
   if (alive) {
@@ -553,4 +553,16 @@ function updateEts(p, alive) {
   const row = k => `<div class="er" data-pw="${k}"><b>${{ w: 'WPN', s: 'SHD', e: 'ENG' }[k]}</b><i>${Array.from({ length: 12 }, (_, n) => `<s class="${n < p.pw[k] ? 'on' : ''}"></s>`).join('')}</i><span>${p.pw[k]}</span></div>`;
   const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
   if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
+}
+
+// ---- wing strip (UX_REVIEW R10): hull of the friendly fighters at a glance, under the damage map
+const wingEl = document.createElement('div'); wingEl.id = 'wingstrip'; document.getElementById('hud').appendChild(wingEl);
+let lastWing = '';
+function updateWingStrip() {
+  const p = player; let h = '';
+  if (p && p.alive && state !== 'brief') {
+    const w = ships.filter(s => s.alive && !s.dying && s.team === p.team && s !== p && s.def.cls === 'fighter' && !s.def.drone).slice(0, 4);
+    h = w.map(s => { const r = clamp(s.structure / s.def.structure, 0, 1), n = Math.ceil(r * 5); return `<div style="color:${hpCol(r)}">${(s.callsign || s.def.name).slice(0, 8).padEnd(8)} ${'▮'.repeat(n)}${'▯'.repeat(5 - n)} ${Math.round(r * 100)}%${s.ai.order ? ' <span style="opacity:.7">' + s.ai.order.type.toUpperCase().slice(0, 4) + '</span>' : ''}${s.ai.hold ? ' HOLD' : ''}</div>`; }).join('');
+  }
+  if (h !== lastWing) { wingEl.innerHTML = h; lastWing = h; }
 }
