@@ -86,7 +86,7 @@ function clearWorld() {
   ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
   for (const k in killLog) delete killLog[k];
   shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;
-  juiceReset();
+  juiceReset(); lootClear();
   stick.x = stick.y = 0;
 }
 

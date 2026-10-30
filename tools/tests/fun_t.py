@@ -47,6 +47,42 @@ def shot(R):
         pg.wait_for_timeout(300); pg.screenshot(path=f'/tmp/gs_shots/fun_feel_{tag}.png'); pg.close()
     return True
 
+def loot(R):
+    pg = R.page(1280, 720, '?free&go&q=low'); pg.wait_for_timeout(1500)
+    r = pg.evaluate("""()=>{const g=__game,T=g.THREE,P=g.player,J=g.juice;__paused=true;
+      g.ships.filter(s=>s!==P).forEach(s=>s.alive=false);const out={};
+      const f=new T.Vector3(0,0,-1).applyQuaternion(P.group.quaternion);
+      const mk=(id,d)=>{const e=g.spawnShip(id,1,P.group.position.clone().addScaledVector(f,d),null,{skill:1});e.vel.set(0,0,0);e.ai.hold=true;return e};
+      // 1. drops: the pity timer forces one within 5 fighter kills
+      g.lootState.dry=0;let kills=0;
+      while(g.lootPods.length===0&&kills<8){const e=mk('darter',400);e.lastAttacker=P;g.killShip(e);kills++}
+      out.killsToDrop=kills;out.pods=g.lootPods.length;out.type=g.lootPods[0]&&g.lootPods[0].type;
+      // 2. magnet: a pod 100 m away moves closer without us moving
+      g.lootPods.forEach(o=>o.g.visible=true);
+      const o=g.lootSpawn(P.group.position.clone().addScaledVector(f,-100),'SHD');P.vel.set(0,0,0);
+      const d0=o.pos.distanceTo(P.group.position);for(let i=0;i<6;i++)g.lootTick(0.05);out.magnet=[Math.round(d0),Math.round(o.pos.distanceTo(P.group.position))];
+      g.lootPods.length&&g.lootPods.slice().forEach(()=>{});
+      // 3. effects, one by one (pods are placed on top of the pilot)
+      const put=t=>{g.lootSpawn(P.group.position.clone(),t);g.lootTick(0.016)};
+      P.shield.fore=0;P.shield.aft=0;put('SHD');out.shd=Math.round(P.shield.fore+P.shield.aft)+'/'+(P.def.shield.fore+P.def.shield.aft);
+      P.structure=P.def.structure*0.5;P.comps[0].hp=P.comps[0].max*0.4;put('REP');out.rep=[+(P.structure/P.def.structure).toFixed(2),+(P.comps[0].hp/P.comps[0].max).toFixed(2)];
+      const mk0=g.selectedMissile(P);P.stores[mk0]=0;put('MSL');out.msl=P.stores[mk0];
+      for(const k in P.ammoMax)P.ammo[k]=0;P.energy=0;put('AMO');out.amo=Object.keys(P.ammoMax).every(k=>P.ammo[k]===P.ammoMax[k])&&P.energy===(P.energyMax||100);
+      put('OVR');out.ovr=[P.mod.rof,P.mod.dmg];
+      // 4. the damage multiplier reaches a real bolt
+      P.ammo.cannon=600;P.mounts.forEach(m=>m.cool=0);g.fireGuns(P,1);const b=g.bolts.find(x=>x.owner===P);out.boltDmg=b&&+b.dmg.toFixed(2);out.cannonBase=g.WEAPONS.cannon.dmg;
+      g.lootClear();for(let i=0;i<300;i++)g.update(0.05);                    // overdrive expires after 12 s
+      out.ovrAfter=[P.mod.rof,P.mod.dmg];
+      // 5. pods time out
+      const o2=g.lootSpawn(P.group.position.clone().addScaledVector(f,-3000),'AMO');for(let i=0;i<800;i++)g.update(0.05);out.timedOut=!g.lootPods.includes(o2);
+      return out}""")
+    for k, v in r.items(): print(' ', k, v)
+    ok = r['killsToDrop'] <= 6 and r['pods'] >= 1 and r['magnet'][1] < r['magnet'][0] - 5 and r['shd'].split('/')[0] != '0' \
+        and r['rep'][0] > 0.6 and r['rep'][1] > 0.4 and r['msl'] >= 1 and r['amo'] and r['ovr'][0] > 1.3 and abs(r['boltDmg'] / r['cannonBase'] - 1.2) < 0.05 \
+        and r['ovrAfter'][0] in (None, 1) and r['timedOut']
+    print('LOOT', 'OK' if ok else 'FAIL', 'errs', R.errs[:3]); pg.close()
+    return bool(ok)
+
 with Runner() as R:
     ok = True
     for name in which:

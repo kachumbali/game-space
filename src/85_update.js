@@ -124,7 +124,7 @@ function update(dt) {
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  lodTick(dt); comsTick(dt); juiceTick(dt);
+  lodTick(dt); comsTick(dt); juiceTick(dt); lootTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
