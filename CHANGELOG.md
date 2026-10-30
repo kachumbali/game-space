@@ -2,6 +2,14 @@
 
 Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
 
+## 0.2.2: pause menu with exit (2026-10-30)
+Owner request: the ESC pause menu must also offer exit mission / back to menu.
+- **ESC (touch: the II button, now visible top-left; RAD moved beside it) opens a PAUSE MENU:** RESUME, RESTART..., OPTIONS, and EXIT MISSION / EXIT SKIRMISH /
+  END RUN (Gauntlet: ends the run with its debrief, score kept) / EXIT TO MENU (free flight). Exit needs a second click within 4 s (progress is lost).
+  Exiting a mission restores the wing's roster. Arrow keys/Enter work on the buttons; Space, Z etc. do nothing while paused.
+- Losing the mouse lock (the browser's own Esc) pauses automatically; the Esc of that same key press is ignored. Test: `tools/tests/pause_t.py`.
+- Not verified: hand-play feel; phone placement checked at 844x390 only.
+
 ## 0.2.1: SIM flight option (2026-10-30)
 Owner request: "I would like it to still fly sim like TIE Fighter, at least as an option." Arcade stays the default.
 - **Flight models are now ARCADE / SIM (TIE) / NEWTONIAN** (F cycles; also OPTIONS, the mission briefing, the skirmish setup; the choice is remembered).

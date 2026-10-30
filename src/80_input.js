@@ -73,7 +73,7 @@ addEventListener('keydown', e => {
     case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
-    case 'Escape': pauseToggle(); break;   // S1: real pause (Esc exits pointer lock; Esc again resumes)
+    case 'Escape': if (performance.now() - pmAutoT > 300) pauseToggle(); break;      // a pause that the lost mouse lock just caused must not be undone by the same Esc   // S1: real pause (Esc exits pointer lock; Esc again resumes)
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
@@ -96,7 +96,7 @@ addEventListener('keyup', e => keys.delete(e.code));
 addEventListener('contextmenu', e => e.preventDefault());
 msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode === 'free') resetGame(); });
 addEventListener('mousedown', e => {
-  if (isTouch || rdlgOpen) return;
+  if (isTouch || rdlgOpen || userPause) return;           // paused: the pause menu owns the mouse
   if (state === 'brief' || $id('brief').style.display === 'flex') return;
   if (document.pointerLockElement !== canvas) { lockPointer(); return; }
   if (e.button === 0) mouseFire = true;
@@ -238,7 +238,7 @@ function askRestart() {
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
     : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : sur ? 'GAUNTLET' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
-  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
+  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play' && !userPause) lockPointer(); };
   $id('rd0').onclick = close;
   $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else if (sur) { startSurvival(sv.cfg); launchLock(); } else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };
