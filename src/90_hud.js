@@ -267,7 +267,7 @@ const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3(), _vv = new THREE.Vec
 // Newtonian flight: transparent vector projections (the nose and the velocity no longer agree, so show where we are really going).
 // prograde (ring + three prongs) / retrograde (ring + X) of our velocity, a faint line from the nose to prograde with the drift angle,
 // and, with a target, the same pair for the velocity RELATIVE to it (cyan): prograde = where we drift relative to it, retrograde = burn toward it to match speed.
-function drawVectors(c, p, cx, cy) {
+function drawVectors(c, p, cx, cy, velOnly) {
   const f = _vv.set(0, 0, -1).applyQuaternion(p.group.quaternion).clone();
   const mark = (v, col, label, retro) => {
     const sp = v.length(); if (sp < 1.5) return;
@@ -288,6 +288,7 @@ function drawVectors(c, p, cx, cy) {
     c.restore();
   };
   mark(p.vel, '#8fffd0', 'VEL', false);
+  if (velOnly) return;                                  // SIM: only the velocity marker (it trails the nose in a hard turn)
   mark(_rel.copy(p.vel).negate(), '#8fffd0', 'RETRO', true);
   if (target && target.alive) {
     const rv = p.vel.clone().sub(target.vel);
@@ -309,6 +310,7 @@ function drawOverlay(alive) {
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
   if (flightMode === 'newton') drawVectors(c, p, cx, cy);
+  else if (flightMode === 'sim') drawVectors(c, p, cx, cy, true);
   drawJuice(c, p, cx, cy);
   drawLoot(c, p);
   // seeker cone of the selected missile

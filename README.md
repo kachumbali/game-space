@@ -129,6 +129,11 @@ The player's damage schematic (top left) shows WC2-style zones instead of dots: 
 ## Milestone 2
 See `docs/MILESTONE_2.md` for the state of the game, how to work on it locally, what is verified, known problems and next steps.
 
+## Flight models (v0.2.1)
+F cycles **ARCADE** (default) / **SIM (TIE style)** / **NEWTONIAN**; also in OPTIONS, on every mission briefing and in the skirmish setup. SIM: speed follows the throttle at real
+acceleration, the velocity marker trails the nose in a hard turn, no drift once it catches up. BACKSPACE (touch: double-tap the throttle slider) matches the target's speed.
+OPTIONS has "sim purist" (no hit markers, banners, pods or hit-stop). Tunables: `SIMF` in `src/50_state.js`. Test: `tools/tests/sim_t.py`.
+
 ## v0.2: the fun update (2026-10-30)
 See `docs/FUN_UPDATE.md` (diagnosis, design, tunables, what was and was not verified, what to try first) and `CHANGELOG.md`.
 Hitmarkers, damage arcs, kill chains and medals; salvage pods; **GAUNTLET** survival mode (waves, aces, bosses, perks, mutators, daily seed, career rank);

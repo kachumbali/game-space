@@ -2,7 +2,7 @@
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
-const GAME_VERSION = '0.2.0';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
+const GAME_VERSION = '0.2.1';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [

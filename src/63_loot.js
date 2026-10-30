@@ -53,6 +53,7 @@ function lootPick(p) {                                // weighted by what the pi
   return 'SHD';
 }
 function lootOnKill(s, mine) {
+  if (AOPT.purist) return;                               // sim purist: no pods
   const p = player; if (!p || !p.alive || (game.mode === 'mission' && s.team !== 1)) return;
   if (s.team !== 1 || p.group.position.distanceTo(s.group.position) > 2200) return;
   const big = s.def.cls !== 'fighter';

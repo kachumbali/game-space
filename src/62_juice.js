@@ -47,14 +47,15 @@ function hitAngle(from) {                             // screen angle (canvas, r
 }
 function juiceHit(s, src, out, dmg, wp) {
   const p = player; if (!p) return;
-  if (s === p) {                                      // we were hit: where from
+  if (s === p) {
+    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
+    if (AOPT.purist) return;                                      // we were hit: where from
     const from = src && src.group ? src.group.position : wp;
     juice.arcs.push({ t: time, ang: hitAngle(from), out, big: clamp(dmg / 14, 0.35, 1) });
     if (juice.arcs.length > 8) juice.arcs.shift();
-    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
     return;
   }
-  if (src === p && s.team !== p.team && out !== 'kill') {   // our shot landed
+  if (src === p && s.team !== p.team && out !== 'kill' && !AOPT.purist) {   // our shot landed
     const kind = out === 'comp' ? 'sub' : out;
     juice.marks.push({ t: time, kind });
     if (juice.marks.length > 6) juice.marks.shift();
@@ -64,6 +65,7 @@ function juiceHit(s, src, out, dmg, wp) {
 function juiceComp(s, c, st) {                        // a subsystem of someone else's ship was destroyed by us
   if (st !== 2 || !player || s.team === player.team || hitSrc !== player) return;
   juice.subKills++; juice.score += 40; juice.bonus += 40;
+  if (AOPT.purist) return;
   juice.marks.push({ t: time, kind: 'sub' });
   juice.banners.push({ t: time, text: c.name + ' DESTROYED', sub: '+40', col: '#ffb060', big: false });
   sfx('subkill', 0, 0.9);
@@ -89,6 +91,7 @@ function juiceKill(s) {
   if (!big && p.group.position.distanceTo(s.group.position) < FUN.pointBlank) { extra += base * 0.25; tags.push('POINT BLANK'); }
   const gain = Math.round((base + extra) * mult * (p.mod?.score ?? 1) * juice.scoreMul);
   juice.score += gain; juice.bonus += Math.max(0, gain - Math.round(base));
+  if (AOPT.purist) return;                               // sim purist: the score is still kept for the debrief, nothing is shown or heard
   if (CHAIN_NAMES[Math.min(juice.chain, 8)]) tags.unshift(CHAIN_NAMES[Math.min(juice.chain, 8)]);
   juice.banners.push({ t: time, text: `+${gain}  ${s.ace ? s.callsign : s.def.name.replace('FROGG ', '')}`, sub: tags.join(' · '), col: s.ace ? '#ffd24a' : big ? '#ff9a5a' : '#c8fff0', big: big || s.ace });
   if (juice.banners.length > 4) juice.banners.shift();
@@ -126,6 +129,7 @@ function juiceDebriefHtml(acc, shots, kills) {
 
 // ---- drawing (called from drawOverlay, 90_hud.js) ---------------------------------------------------------
 function drawJuice(c, p, cx, cy) {
+  if (AOPT.purist) return;
   const f = FS || 1;
   // directional damage arcs: the red segment sits on the side the fire came from
   const R = Math.min(ovW, ovH) * 0.2;

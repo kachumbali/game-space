@@ -48,7 +48,7 @@ requestAnimationFrame(frame);
 // test / debug seam
 globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
-  version: GAME_VERSION, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
+  version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },

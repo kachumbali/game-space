@@ -41,3 +41,4 @@ Some older scripts may still reference session-specific files; fix paths when yo
 
 | `fun_t.py [feel\|shot\|loot\|survival\|missions]` | v0.2 fun update: hitmarkers/arcs/chain/medals, pods, Gauntlet end to end, mission difficulty/tips/counters (screenshots in /tmp/gs_shots) |
 | `sv_calib.py N RUNS [SK] [WING]` | Gauntlet wave N vs an AI proxy pilot, seeded, Wilson interval; direction not truth |
+| `sim_t.py` | SIM (TIE) flight option: throttle response, skid, match speed, F cycle and persistence, AI follows, purist, option/briefing/skirmish UI |

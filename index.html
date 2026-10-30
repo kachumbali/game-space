@@ -256,7 +256,8 @@
 #cred .crow{display:flex;flex-direction:column;margin:4px 0}#cred .crow span{color:#9bb}#cred a{color:#8cf;word-break:break-all}
 #cred button{margin-top:12px;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}#cred button:hover{background:#164a38}
 #opts{display:none;position:fixed;inset:0;z-index:61;background:rgba(0,0,10,.72);align-items:center;justify-content:center;font-family:monospace;color:#cfe}
-#opts .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;width:min(440px,92vw)}
+#opts .panel{background:#07101c;border:1px solid #3a6;padding:22px 28px;width:min(440px,92vw);max-height:92vh;overflow-y:auto;box-sizing:border-box}
+body.phone #opts .panel{padding:12px 16px;font-size:12px}body.phone #opts .orow{margin:6px 0}
 #opts h2{margin:0 0 14px;font-size:16px;letter-spacing:2px;text-align:center}.orow{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:10px 0}
 .orow input[type=range]{width:55%}.orow select{background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;padding:4px}.onote{font-size:11px;opacity:.7;margin:12px 0}#opts button+button{margin-top:8px}#opts button{display:block;width:100%;padding:10px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;cursor:pointer}
 </style>
@@ -286,7 +287,7 @@
 <div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
 <div id="pauseOv">PAUSED<br><span>ESC TO RESUME</span></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div><div class="legend"><b>v0.2 feel:</b> white ticks round the reticle = your shots landed (blue shield, grey armour, orange subsystem, red kill); a red arc round the reticle = fire coming from that side; CHAIN x2+ multiplies kill score, keep killing inside the timer. <b>Salvage pods</b> (diamonds on the radar and HUD): fly through them, S shield · R hull · M missiles · A ammo · O overdrive; nothing to press, touch the same. <b>Gauntlet</b> (main menu): after each wave press 1 / 2 / 3 (touch: tap a card) to take a perk; the AI ignores all of this. Difficulty is on the mission briefing; mouse sensitivity and invert are in OPTIONS (O).</div></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div><div class="legend"><b>v0.2 feel:</b> white ticks round the reticle = your shots landed (blue shield, grey armour, orange subsystem, red kill); a red arc round the reticle = fire coming from that side; CHAIN x2+ multiplies kill score, keep killing inside the timer. <b>Salvage pods</b> (diamonds on the radar and HUD): fly through them, S shield · R hull · M missiles · A ammo · O overdrive; nothing to press, touch the same. <b>Gauntlet</b> (main menu): after each wave press 1 / 2 / 3 (touch: tap a card) to take a perk; the AI ignores all of this. <b>Flight:</b> F cycles ARCADE / SIM (TIE Fighter style: speed follows the throttle at real acceleration, the velocity marker trails the nose in a hard turn) / NEWTONIAN; BACKSPACE (touch: double-tap the throttle slider) matches the target's speed; OPTIONS has "sim purist" to switch off markers, banners, pods and hit-stop. Difficulty is on the mission briefing; mouse sensitivity and invert are in OPTIONS (O).</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -458,7 +459,7 @@ function sfx(name, dist = 0, vol = 1) {
 //  but the music volume slider may not). Sound samples (CC0) are embedded in 14_samples.js and layered under the procedural SFX.
 //  Options (O key / button): music on/off, music volume, effects volume, sample layer on/off. Saved in localStorage (try/catch).
 // ======================================================================
-const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false };
+const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false, purist: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
 // Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
@@ -563,6 +564,8 @@ function toggleOpts(force) {
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_fm', 'Flight model [F]', `<select id="o_fm">${FM_ORDER.map(k => `<option value="${k}" ${flightMode === k ? 'selected' : ''}>${FM_NAMES[k]}</option>`).join('')}</select>`)
+      + row('o_pur', 'Sim purist (no hit markers, kill banners, pods or hit-stop)', `<input type="checkbox" id="o_pur" ${AOPT.purist ? 'checked' : ''}>`)
       + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
       + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
@@ -576,6 +579,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_fm').onchange = e => fmSet(e.target.value);
+    $id('o_pur').onchange = e => { AOPT.purist = e.target.checked; aoptSave(); };
     $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
     $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);
@@ -594,7 +599,7 @@ const SAMPLE_DATA = {"expl1": "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAA
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
-const GAME_VERSION = '0.2.0';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
+const GAME_VERSION = '0.2.1';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
@@ -3001,14 +3006,31 @@ function abTick(s, want, dt) {
   s.ab = on; return on;
 }
 
-const _fwd = new THREE.Vector3();
-const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
+const _fwd = new THREE.Vector3(), _simD = new THREE.Vector3(), _simQ = new THREE.Quaternion(), _simI = new THREE.Quaternion();
+const SIMF = { slew: 2.2, capital: 0.35, decel: 1.5 };      // SIM model: velocity-vector slew (rad per sim-second, fighters), capital-ship factor, braking vs accelerating
+const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : s.fm === 'sim' ? flightModels.sim : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
+  },
+  // SIM (TIE Fighter style, owner request 2026-10-30): throttle sets a wanted speed, but speed changes at the ship's real acceleration (so a throttle
+  // slam takes seconds, not a third of one), and the velocity VECTOR trails the nose at a limited slew rate: a hard turn at speed skids a little before
+  // the ship is flying where it points. No drift once it catches up, no strafing, no coasting at zero throttle (speed always follows the throttle).
+  sim(s, cmd, dt) {
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const ab = abTick(s, !!cmd.ab, dt), fighter = s.def.cls === 'fighter';
+    const want = s.def.maxSpeed * speedMul(s) * (ab ? s.def.abSpd : 1) * cmd.throttle;
+    const a = (s.def.accel || 40) * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const sp = s.vel.length();
+    const v = Math.max(0, sp + clamp(want - sp, -a * SIMF.decel * dt, a * dt));
+    if (sp < 2) { s.vel.copy(_fwd).multiplyScalar(v); return; }
+    _simD.copy(s.vel).divideScalar(sp);
+    const ang = _simD.angleTo(_fwd), k = (fighter ? SIMF.slew : SIMF.slew * SIMF.capital) * dt;
+    if (ang > 1e-4) { _simQ.setFromUnitVectors(_simD, _fwd); _simI.identity().slerp(_simQ, Math.min(1, k / ang)); _simD.applyQuaternion(_simI).normalize(); }
+    s.vel.copy(_simD).multiplyScalar(v);
   },
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
@@ -3030,7 +3052,24 @@ const flightModels = {
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };
-let flightMode = 'arcade';
+// flight model preference (F key, OPTIONS, mission briefing): ARCADE (default), SIM (TIE style), NEWTONIAN. Persisted; skirmish setup overrides per run.
+const FM_ORDER = ['arcade', 'sim', 'newton'], FM_NAMES = { arcade: 'ARCADE', sim: 'SIM (TIE)', newton: 'NEWTONIAN' };
+function fmLoad() { try { const v = localStorage.getItem('gs_fm'); if (FM_ORDER.includes(v)) return v; } catch (e) { /* storage unavailable */ } return 'arcade'; }
+let flightMode = fmLoad();
+function fmSet(name, quiet) {
+  if (!FM_ORDER.includes(name)) return;
+  flightMode = name;
+  try { localStorage.setItem('gs_fm', name); } catch (e) { /* ignore */ }
+  for (const s of ships) if (s !== player) s.fm = name === 'sim' ? 'sim' : (s.fm === 'sim' ? 'arcade' : s.fm);     // AI flies the same rules in SIM; Newtonian AI stays opt-in (skirmish)
+  if (!quiet) log('FLIGHT MODEL: ' + FM_NAMES[name], '#9adcff');
+}
+// match the target's speed (TIE Fighter: BACKSPACE): sets the throttle so the speed gauge reads the target's speed; not in Newtonian (no throttle there)
+function matchSpeed(p) {
+  const t = target;
+  if (!p || !p.alive || !t || !t.alive || flightMode === 'newton') { log(flightMode === 'newton' ? 'NO THROTTLE IN NEWTONIAN' : 'NO TARGET TO MATCH', '#ff5a4a'); return; }
+  p.throttle = clamp(t.vel.length() / Math.max(1, p.def.maxSpeed * speedMul(p)), 0, 1);
+  log(`MATCHING ${t.vel.length().toFixed(0)} m/s`, '#9adcff'); sfx('click');
+}
 
 // ======================================================================
 //  WORLD STATE
@@ -3178,7 +3217,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, drones: [], droneKills: 0, dronesLost: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, mod: {}, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || (flightMode === 'sim' ? 'sim' : 'arcade'), pw: { w: 4, s: 4, e: 4 }, mod: {}, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -4494,14 +4533,15 @@ function hitAngle(from) {                             // screen angle (canvas, r
 }
 function juiceHit(s, src, out, dmg, wp) {
   const p = player; if (!p) return;
-  if (s === p) {                                      // we were hit: where from
+  if (s === p) {
+    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
+    if (AOPT.purist) return;                                      // we were hit: where from
     const from = src && src.group ? src.group.position : wp;
     juice.arcs.push({ t: time, ang: hitAngle(from), out, big: clamp(dmg / 14, 0.35, 1) });
     if (juice.arcs.length > 8) juice.arcs.shift();
-    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
     return;
   }
-  if (src === p && s.team !== p.team && out !== 'kill') {   // our shot landed
+  if (src === p && s.team !== p.team && out !== 'kill' && !AOPT.purist) {   // our shot landed
     const kind = out === 'comp' ? 'sub' : out;
     juice.marks.push({ t: time, kind });
     if (juice.marks.length > 6) juice.marks.shift();
@@ -4511,6 +4551,7 @@ function juiceHit(s, src, out, dmg, wp) {
 function juiceComp(s, c, st) {                        // a subsystem of someone else's ship was destroyed by us
   if (st !== 2 || !player || s.team === player.team || hitSrc !== player) return;
   juice.subKills++; juice.score += 40; juice.bonus += 40;
+  if (AOPT.purist) return;
   juice.marks.push({ t: time, kind: 'sub' });
   juice.banners.push({ t: time, text: c.name + ' DESTROYED', sub: '+40', col: '#ffb060', big: false });
   sfx('subkill', 0, 0.9);
@@ -4536,6 +4577,7 @@ function juiceKill(s) {
   if (!big && p.group.position.distanceTo(s.group.position) < FUN.pointBlank) { extra += base * 0.25; tags.push('POINT BLANK'); }
   const gain = Math.round((base + extra) * mult * (p.mod?.score ?? 1) * juice.scoreMul);
   juice.score += gain; juice.bonus += Math.max(0, gain - Math.round(base));
+  if (AOPT.purist) return;                               // sim purist: the score is still kept for the debrief, nothing is shown or heard
   if (CHAIN_NAMES[Math.min(juice.chain, 8)]) tags.unshift(CHAIN_NAMES[Math.min(juice.chain, 8)]);
   juice.banners.push({ t: time, text: `+${gain}  ${s.ace ? s.callsign : s.def.name.replace('FROGG ', '')}`, sub: tags.join(' · '), col: s.ace ? '#ffd24a' : big ? '#ff9a5a' : '#c8fff0', big: big || s.ace });
   if (juice.banners.length > 4) juice.banners.shift();
@@ -4573,6 +4615,7 @@ function juiceDebriefHtml(acc, shots, kills) {
 
 // ---- drawing (called from drawOverlay, 90_hud.js) ---------------------------------------------------------
 function drawJuice(c, p, cx, cy) {
+  if (AOPT.purist) return;
   const f = FS || 1;
   // directional damage arcs: the red segment sits on the side the fire came from
   const R = Math.min(ovW, ovH) * 0.2;
@@ -4669,6 +4712,7 @@ function lootPick(p) {                                // weighted by what the pi
   return 'SHD';
 }
 function lootOnKill(s, mine) {
+  if (AOPT.purist) return;                               // sim purist: no pods
   const p = player; if (!p || !p.alive || (game.mode === 'mission' && s.team !== 1)) return;
   if (s.team !== 1 || p.group.position.distanceTo(s.group.position) > 2200) return;
   const big = s.def.cls !== 'fighter';
@@ -5704,7 +5748,7 @@ function startSurvival(cfgIn) {
   const mut = {}; for (const k of cfg.mut) mut[k] = true;
   sv = game.sv = { cfg, seed, rng: mulberry(seed), n: 0, phase: 'fight', t: 0, tPhase: 0, perks: {}, picks: [], mut, aceN: 0, over: false, overT: 0, shown: false, windUsed: false, flareT: 0, waveT0: 0, kills0: 0, hull0: 0, noHit: true, draft: null, fleeT: 0 };
   applyLook(cfg.look);
-  wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : 'arcade';
+  wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : fmLoad();
   const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
   p.shots = 0; p.hitsLanded = 0;
   const D = DIFFS[cfg.diff];
@@ -6435,9 +6479,11 @@ function showBriefing(M) {
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
+    <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
+  el.querySelectorAll('[data-fm]').forEach(b => { b.onclick = () => { fmSet(b.dataset.fm, true); showBriefing(M); }; });
   el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
@@ -6519,7 +6565,7 @@ function skNorm(c) {
   o.wing = clamp(o.wing | 0, 0, 3); o.skill = clamp(o.skill | 0 || 3, 1, 5); o.wskill = clamp(o.wskill | 0 || 3, 1, 5);
   if (!SHIPS[o.ship] || !SK_PLAYER.some(x => x[0] === o.ship)) o.ship = 'kestrel';
   if (!SHIPS[o.wship] || !SK_PLAYER.some(x => x[0] === o.wship)) o.wship = 'kestrel';
-  o.fm = o.fm === 'newton' ? 'newton' : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
+  o.fm = ['newton', 'sim'].includes(o.fm) ? o.fm : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
   o.range = clamp(+o.range || 2000, 300, 12000); if (!LOOKS[o.look]) o.look = 'lilypad';
   o.ally = ['halberd', 'exeter'].includes(o.ally) ? o.ally : 'none';
   return o;
@@ -6635,7 +6681,7 @@ function showSkirmishSetup(focus) {
       ${cap && !heavy ? '<div class="skwarn lo">Corvette and frigate models are heavy to voxelise (Halberd ~35k, Gulper ~78k instances); loading takes a moment.</div>' : ''}
     </div><div>
       <div class="sub">ENEMY SKILL (1 ROOKIE - 5 ACE)</div><div class="skrow">${skSeg('skill', [1, 2, 3, 4, 5].map(v => [v, v]), c.skill)}</div>
-      <div class="sub">FRIENDLY FLIGHT MODEL</div><div class="skrow">${skSeg('fm', [['ARCADE', 'arcade'], ['NEWTON', 'newton']], c.fm)}</div>
+      <div class="sub">FRIENDLY FLIGHT MODEL</div><div class="skrow">${skSeg('fm', [['ARCADE', 'arcade'], ['SIM (TIE)', 'sim'], ['NEWTON', 'newton']], c.fm)}</div>
       <div class="sub">ENEMY MISSILES</div><div class="skrow">${skSeg('missiles', [['ON', true], ['OFF', false]], c.missiles)}</div>
       <div class="sub">ENDLESS RESPAWN</div><div class="skrow">${skSeg('respawn', [['ON', true], ['OFF', false]], c.respawn)}</div>
       <div class="sub">STARTING RANGE</div><div class="skrow">${skSeg('range', SK_RANGES.map(([l, v]) => [`${l} ${v / 1000 < 1 ? v + ' m' : v / 1000 + ' km'}`, v]), c.range)}</div>
@@ -7524,7 +7570,8 @@ addEventListener('keydown', e => {
   if (!player) return;
   switch (e.code) {
     case 'KeyV': setView(view === 'cockpit' ? 'chase' : 'cockpit'); break;
-    case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
+    case 'KeyF': fmSet(FM_ORDER[(FM_ORDER.indexOf(flightMode) + 1) % FM_ORDER.length]); break;
+    case 'Backspace': matchSpeed(player); e.preventDefault(); break;
     case 'KeyC': stick.x = stick.y = 0; break;
     case 'KeyJ': comsToggle(); break;
     case 'KeyL': plogDownload(); break;
@@ -7623,7 +7670,8 @@ if (isTouch) {
     const r = thr.getBoundingClientRect();
     if (player) player.throttle = clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
   };
-  thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); setThr(e); });
+  let lastThrTap = 0;                                  // double-tap the throttle slider = match the target's speed (touch binding for BACKSPACE)
+  thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); const now = performance.now(); if (now - lastThrTap < 320) matchSpeed(player); else setThr(e); lastThrTap = now; });
   thr.addEventListener('pointermove', e => { if (e.buttons || e.pressure > 0) setThr(e); });
   addEventListener('pointerdown', () => { touchStarted = true; });
 }
@@ -8186,7 +8234,7 @@ const _sp = new THREE.Vector3(), _sp2 = new THREE.Vector3(), _vv = new THREE.Vec
 // Newtonian flight: transparent vector projections (the nose and the velocity no longer agree, so show where we are really going).
 // prograde (ring + three prongs) / retrograde (ring + X) of our velocity, a faint line from the nose to prograde with the drift angle,
 // and, with a target, the same pair for the velocity RELATIVE to it (cyan): prograde = where we drift relative to it, retrograde = burn toward it to match speed.
-function drawVectors(c, p, cx, cy) {
+function drawVectors(c, p, cx, cy, velOnly) {
   const f = _vv.set(0, 0, -1).applyQuaternion(p.group.quaternion).clone();
   const mark = (v, col, label, retro) => {
     const sp = v.length(); if (sp < 1.5) return;
@@ -8207,6 +8255,7 @@ function drawVectors(c, p, cx, cy) {
     c.restore();
   };
   mark(p.vel, '#8fffd0', 'VEL', false);
+  if (velOnly) return;                                  // SIM: only the velocity marker (it trails the nose in a hard turn)
   mark(_rel.copy(p.vel).negate(), '#8fffd0', 'RETRO', true);
   if (target && target.alive) {
     const rv = p.vel.clone().sub(target.vel);
@@ -8228,6 +8277,7 @@ function drawOverlay(alive) {
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
   if (flightMode === 'newton') drawVectors(c, p, cx, cy);
+  else if (flightMode === 'sim') drawVectors(c, p, cx, cy, true);
   drawJuice(c, p, cx, cy);
   drawLoot(c, p);
   // seeker cone of the selected missile
@@ -8535,7 +8585,7 @@ requestAnimationFrame(frame);
 // test / debug seam
 globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
-  version: GAME_VERSION, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
+  version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
