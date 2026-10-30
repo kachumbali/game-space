@@ -261,7 +261,7 @@ function startSurvival(cfgIn) {
   const mut = {}; for (const k of cfg.mut) mut[k] = true;
   sv = game.sv = { cfg, seed, rng: mulberry(seed), n: 0, phase: 'fight', t: 0, tPhase: 0, perks: {}, picks: [], mut, aceN: 0, over: false, overT: 0, shown: false, windUsed: false, flareT: 0, waveT0: 0, kills0: 0, hull0: 0, noHit: true, draft: null, fleeT: 0 };
   applyLook(cfg.look);
-  wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : 'arcade';
+  wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : fmLoad();
   const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
   p.shots = 0; p.hitsLanded = 0;
   const D = DIFFS[cfg.diff];

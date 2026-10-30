@@ -62,7 +62,8 @@ addEventListener('keydown', e => {
   if (!player) return;
   switch (e.code) {
     case 'KeyV': setView(view === 'cockpit' ? 'chase' : 'cockpit'); break;
-    case 'KeyF': flightMode = flightMode === 'arcade' ? 'newton' : 'arcade'; break;
+    case 'KeyF': fmSet(FM_ORDER[(FM_ORDER.indexOf(flightMode) + 1) % FM_ORDER.length]); break;
+    case 'Backspace': matchSpeed(player); e.preventDefault(); break;
     case 'KeyC': stick.x = stick.y = 0; break;
     case 'KeyJ': comsToggle(); break;
     case 'KeyL': plogDownload(); break;
@@ -161,7 +162,8 @@ if (isTouch) {
     const r = thr.getBoundingClientRect();
     if (player) player.throttle = clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
   };
-  thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); setThr(e); });
+  let lastThrTap = 0;                                  // double-tap the throttle slider = match the target's speed (touch binding for BACKSPACE)
+  thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); const now = performance.now(); if (now - lastThrTap < 320) matchSpeed(player); else setThr(e); lastThrTap = now; });
   thr.addEventListener('pointermove', e => { if (e.buttons || e.pressure > 0) setThr(e); });
   addEventListener('pointerdown', () => { touchStarted = true; });
 }

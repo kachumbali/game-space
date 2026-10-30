@@ -32,7 +32,7 @@ function skNorm(c) {
   o.wing = clamp(o.wing | 0, 0, 3); o.skill = clamp(o.skill | 0 || 3, 1, 5); o.wskill = clamp(o.wskill | 0 || 3, 1, 5);
   if (!SHIPS[o.ship] || !SK_PLAYER.some(x => x[0] === o.ship)) o.ship = 'kestrel';
   if (!SHIPS[o.wship] || !SK_PLAYER.some(x => x[0] === o.wship)) o.wship = 'kestrel';
-  o.fm = o.fm === 'newton' ? 'newton' : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
+  o.fm = ['newton', 'sim'].includes(o.fm) ? o.fm : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
   o.range = clamp(+o.range || 2000, 300, 12000); if (!LOOKS[o.look]) o.look = 'lilypad';
   o.ally = ['halberd', 'exeter'].includes(o.ally) ? o.ally : 'none';
   return o;
@@ -148,7 +148,7 @@ function showSkirmishSetup(focus) {
       ${cap && !heavy ? '<div class="skwarn lo">Corvette and frigate models are heavy to voxelise (Halberd ~35k, Gulper ~78k instances); loading takes a moment.</div>' : ''}
     </div><div>
       <div class="sub">ENEMY SKILL (1 ROOKIE - 5 ACE)</div><div class="skrow">${skSeg('skill', [1, 2, 3, 4, 5].map(v => [v, v]), c.skill)}</div>
-      <div class="sub">FRIENDLY FLIGHT MODEL</div><div class="skrow">${skSeg('fm', [['ARCADE', 'arcade'], ['NEWTON', 'newton']], c.fm)}</div>
+      <div class="sub">FRIENDLY FLIGHT MODEL</div><div class="skrow">${skSeg('fm', [['ARCADE', 'arcade'], ['SIM (TIE)', 'sim'], ['NEWTON', 'newton']], c.fm)}</div>
       <div class="sub">ENEMY MISSILES</div><div class="skrow">${skSeg('missiles', [['ON', true], ['OFF', false]], c.missiles)}</div>
       <div class="sub">ENDLESS RESPAWN</div><div class="skrow">${skSeg('respawn', [['ON', true], ['OFF', false]], c.respawn)}</div>
       <div class="sub">STARTING RANGE</div><div class="skrow">${skSeg('range', SK_RANGES.map(([l, v]) => [`${l} ${v / 1000 < 1 ? v + ' m' : v / 1000 + ' km'}`, v]), c.range)}</div>

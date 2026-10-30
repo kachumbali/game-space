@@ -35,14 +35,31 @@ function abTick(s, want, dt) {
   s.ab = on; return on;
 }
 
-const _fwd = new THREE.Vector3();
-const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : flightModels.arcade)(s, cmd, dt);
+const _fwd = new THREE.Vector3(), _simD = new THREE.Vector3(), _simQ = new THREE.Quaternion(), _simI = new THREE.Quaternion();
+const SIMF = { slew: 2.2, capital: 0.35, decel: 1.5 };      // SIM model: velocity-vector slew (rad per sim-second, fighters), capital-ship factor, braking vs accelerating
+const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : s.fm === 'sim' ? flightModels.sim : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
     const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
+  },
+  // SIM (TIE Fighter style, owner request 2026-10-30): throttle sets a wanted speed, but speed changes at the ship's real acceleration (so a throttle
+  // slam takes seconds, not a third of one), and the velocity VECTOR trails the nose at a limited slew rate: a hard turn at speed skids a little before
+  // the ship is flying where it points. No drift once it catches up, no strafing, no coasting at zero throttle (speed always follows the throttle).
+  sim(s, cmd, dt) {
+    _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
+    const ab = abTick(s, !!cmd.ab, dt), fighter = s.def.cls === 'fighter';
+    const want = s.def.maxSpeed * speedMul(s) * (ab ? s.def.abSpd : 1) * cmd.throttle;
+    const a = (s.def.accel || 40) * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const sp = s.vel.length();
+    const v = Math.max(0, sp + clamp(want - sp, -a * SIMF.decel * dt, a * dt));
+    if (sp < 2) { s.vel.copy(_fwd).multiplyScalar(v); return; }
+    _simD.copy(s.vel).divideScalar(sp);
+    const ang = _simD.angleTo(_fwd), k = (fighter ? SIMF.slew : SIMF.slew * SIMF.capital) * dt;
+    if (ang > 1e-4) { _simQ.setFromUnitVectors(_simD, _fwd); _simI.identity().slerp(_simQ, Math.min(1, k / ang)); _simD.applyQuaternion(_simI).normalize(); }
+    s.vel.copy(_simD).multiplyScalar(v);
   },
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
@@ -64,7 +81,24 @@ const flightModels = {
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };
-let flightMode = 'arcade';
+// flight model preference (F key, OPTIONS, mission briefing): ARCADE (default), SIM (TIE style), NEWTONIAN. Persisted; skirmish setup overrides per run.
+const FM_ORDER = ['arcade', 'sim', 'newton'], FM_NAMES = { arcade: 'ARCADE', sim: 'SIM (TIE)', newton: 'NEWTONIAN' };
+function fmLoad() { try { const v = localStorage.getItem('gs_fm'); if (FM_ORDER.includes(v)) return v; } catch (e) { /* storage unavailable */ } return 'arcade'; }
+let flightMode = fmLoad();
+function fmSet(name, quiet) {
+  if (!FM_ORDER.includes(name)) return;
+  flightMode = name;
+  try { localStorage.setItem('gs_fm', name); } catch (e) { /* ignore */ }
+  for (const s of ships) if (s !== player) s.fm = name === 'sim' ? 'sim' : (s.fm === 'sim' ? 'arcade' : s.fm);     // AI flies the same rules in SIM; Newtonian AI stays opt-in (skirmish)
+  if (!quiet) log('FLIGHT MODEL: ' + FM_NAMES[name], '#9adcff');
+}
+// match the target's speed (TIE Fighter: BACKSPACE): sets the throttle so the speed gauge reads the target's speed; not in Newtonian (no throttle there)
+function matchSpeed(p) {
+  const t = target;
+  if (!p || !p.alive || !t || !t.alive || flightMode === 'newton') { log(flightMode === 'newton' ? 'NO THROTTLE IN NEWTONIAN' : 'NO TARGET TO MATCH', '#ff5a4a'); return; }
+  p.throttle = clamp(t.vel.length() / Math.max(1, p.def.maxSpeed * speedMul(p)), 0, 1);
+  log(`MATCHING ${t.vel.length().toFixed(0)} m/s`, '#9adcff'); sfx('click');
+}
 
 // ======================================================================
 //  WORLD STATE

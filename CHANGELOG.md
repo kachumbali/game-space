@@ -2,6 +2,17 @@
 
 Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
 
+## 0.2.1: SIM flight option (2026-10-30)
+Owner request: "I would like it to still fly sim like TIE Fighter, at least as an option." Arcade stays the default.
+- **Flight models are now ARCADE / SIM (TIE) / NEWTONIAN** (F cycles; also OPTIONS, the mission briefing, the skirmish setup; the choice is remembered).
+  SIM: speed follows the throttle at the ship's real acceleration (a throttle slam takes seconds, braking is 1.5x quicker than accelerating), and the velocity
+  vector trails the nose at 2.2 rad per sim-second, so a hard turn at speed skids briefly before the ship flies where it points (90 degrees: 52 degrees of
+  skid after 0.3 s, caught up by 0.7 s). No strafing, no coasting. The AI flies the same rules while SIM is on. HUD shows the VEL marker in SIM.
+- **Match target speed:** BACKSPACE (touch: double-tap the throttle slider), arcade and SIM.
+- **Sim purist** (OPTIONS): hides hit markers, damage arcs, kill banners and chain readout, and turns off pods and hit-stop; the score is still counted for the debrief.
+- OPTIONS panel scrolls on small screens (it had outgrown a 390 px phone). Test: `tools/tests/sim_t.py`.
+- Not verified: how SIM feels (the 2.2 rad/s slew and the acceleration are first guesses, tunable in `SIMF`), SIM balance against the AI (only a finite-run dogfight check).
+
 ## 0.2.0: the fun update (2026-10-30)
 Owner request 2026-10-30: "make it a LOT more fun and awesome", after reading Simon Willison's account of doing exactly that to a vibe-coded
 game. Diagnosis, design, tunables, risks and what to play first: `docs/FUN_UPDATE.md`. The owner lifted the feature freeze for this pass; the

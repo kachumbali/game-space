@@ -4,7 +4,7 @@
 //  but the music volume slider may not). Sound samples (CC0) are embedded in 14_samples.js and layered under the procedural SFX.
 //  Options (O key / button): music on/off, music volume, effects volume, sample layer on/off. Saved in localStorage (try/catch).
 // ======================================================================
-const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false };
+const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false, purist: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
 // Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
@@ -109,6 +109,8 @@ function toggleOpts(force) {
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_fm', 'Flight model [F]', `<select id="o_fm">${FM_ORDER.map(k => `<option value="${k}" ${flightMode === k ? 'selected' : ''}>${FM_NAMES[k]}</option>`).join('')}</select>`)
+      + row('o_pur', 'Sim purist (no hit markers, kill banners, pods or hit-stop)', `<input type="checkbox" id="o_pur" ${AOPT.purist ? 'checked' : ''}>`)
       + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
       + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
@@ -122,6 +124,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_fm').onchange = e => fmSet(e.target.value);
+    $id('o_pur').onchange = e => { AOPT.purist = e.target.checked; aoptSave(); };
     $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
     $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);
