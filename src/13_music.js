@@ -104,7 +104,7 @@ function toggleOpts(force) {
   if (open) {
     document.exitPointerLock?.();
     const row = (id, label, inner) => `<div class="orow"><label for="${id}">${label}</label>${inner}</div>`;
-    el.innerHTML = `<div class="panel"><h2>OPTIONS</h2>`
+    el.innerHTML = `<div class="panel"><h2>OPTIONS <small>v${GAME_VERSION}</small></h2>`
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)

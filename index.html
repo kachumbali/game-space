@@ -557,7 +557,7 @@ function toggleOpts(force) {
   if (open) {
     document.exitPointerLock?.();
     const row = (id, label, inner) => `<div class="orow"><label for="${id}">${label}</label>${inner}</div>`;
-    el.innerHTML = `<div class="panel"><h2>OPTIONS</h2>`
+    el.innerHTML = `<div class="panel"><h2>OPTIONS <small>v${GAME_VERSION}</small></h2>`
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
@@ -589,6 +589,7 @@ const SAMPLE_DATA = {"expl1": "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAA
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
+const GAME_VERSION = '0.2.0';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
@@ -627,7 +628,7 @@ function showCredits(force) {
   if (!open) { el.style.display = 'none'; return; }
   const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const lnk = s => esc(s).replace(/(https?:\/\/[^\s)]+)/g, u => { const m = u.match(/^(.*?)([.,;]*)$/); return `<a href="${m[1]}" target="_blank" rel="noopener">${m[1]}</a>${m[2]}`; });
-  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()}<br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
+  el.innerHTML = `<div class="panel"><h2>${GAME_TITLE.toUpperCase()} <small>v${GAME_VERSION}</small><br><small>CREDITS AND LICENCES</small></h2><div class="cbody">`
     + CREDITS.map(([sec, rows]) => `<div class="csec">${sec}</div>` + rows.map(([a, b]) => `<div class="crow"><b>${esc(a)}</b><span>${lnk(b)}</span></div>`).join('')).join('')
     + `<div class="onote">CC0 means the author dedicated the work to the public domain; credit is not required but given. Full text: https://creativecommons.org/publicdomain/zero/1.0/ and https://opensource.org/license/mit. The same list is in docs/CREDITS.md.</div></div>`
     + `<button id="c_close">CLOSE <small>[ESC]</small></button></div>`;
@@ -5793,7 +5794,7 @@ function showMainMenu() {
   ];
   menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
     <div class="mlist">${items.map(([a, t, d]) => `<button class="mi" data-a="${a}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
-    <div class="dim keys">UP / DOWN select · ENTER confirm · O options</div>`, 'main');
+    <div class="dim keys">UP / DOWN select · ENTER confirm · O options · v${GAME_VERSION}</div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
@@ -7740,6 +7741,7 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
+  version: GAME_VERSION,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },

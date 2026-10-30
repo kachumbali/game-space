@@ -79,7 +79,7 @@ function showMainMenu() {
   ];
   menuShell(`<div class="sub">COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${GAME_TITLE.toUpperCase()}</h1><h2>Voxel space combat against the FROGGs</h2>
     <div class="mlist">${items.map(([a, t, d]) => `<button class="mi" data-a="${a}"><b>${t}</b><span>${d}</span></button>`).join('')}</div>
-    <div class="dim keys">UP / DOWN select · ENTER confirm · O options</div>`, 'main');
+    <div class="dim keys">UP / DOWN select · ENTER confirm · O options · v${GAME_VERSION}</div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
