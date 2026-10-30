@@ -93,8 +93,13 @@
     text-shadow:0 0 8px #000;z-index:6;pointer-events:none;letter-spacing:2px;text-align:center}
   #msg{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:9;
     font-size:20px;text-align:center;background:rgba(0,0,0,.4);white-space:pre-line}
-  #pauseOv{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;display:none;text-align:center;font-size:26px;letter-spacing:6px;color:#d8fff0;background:rgba(5,12,10,.82);border:1px solid #2b4a40;border-radius:8px;padding:26px 44px}
-#pauseOv span{display:block;margin-top:10px;font-size:12px;letter-spacing:2px;color:#6f9488}
+  #pauseOv{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:40;display:none;text-align:center;min-width:300px;max-width:92vw;color:#d8fff0;background:rgba(5,12,10,.9);border:1px solid #2b4a40;border-radius:8px;padding:22px 28px;box-shadow:0 0 0 100vmax rgba(0,0,0,.45)}
+#pauseOv .pt{font-size:24px;letter-spacing:6px}#pauseOv .ps{margin:6px 0 14px;font-size:11px;letter-spacing:2px;color:#6f9488}
+#pauseOv .pbtns button{display:block;width:100%;margin:7px 0;padding:11px 12px;background:#0c2a22;color:#cfe;border:1px solid #3a6;font:inherit;font-size:14px;letter-spacing:2px;cursor:pointer;border-radius:3px}
+#pauseOv .pbtns button:hover,#pauseOv .pbtns button:focus{background:#164a38;border-color:#ffd24a;outline:none}
+#pauseOv .pbtns button.warn{border-color:#a55;color:#ffb0a0}#pauseOv .pbtns button.arm{background:#4a1410;border-color:#ff5a4a;color:#fff}
+#pauseOv small{opacity:.6;margin-left:6px;font-size:10px;letter-spacing:1px}
+body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{font-size:18px}body.phone #pauseOv .pbtns button{padding:8px;margin:5px 0;font-size:12px}
 #help{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:12px;line-height:1.6;background:rgba(5,12,10,.88);
     border:1px solid #3a6a58;padding:16px 22px;z-index:8;white-space:pre;display:none}
   #brief{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:10;background:rgba(2,6,8,.62)}
@@ -182,6 +187,9 @@
   #bview{right:14px;top:92px;width:50px;height:50px;font-size:10px}
   #btgt{right:14px;top:30px;width:50px;height:50px;font-size:10px}
   #bytgt{right:14px;top:148px;width:50px;height:50px;font-size:10px}
+  #bpause,#brad{top:8px;width:44px;height:44px;font-size:11px;transform-origin:0 0}
+  #bpause{left:8px;border-color:#ffd24a;color:#ffd24a}
+  #brad{left:60px}
   #bsub{right:70px;top:30px;width:44px;height:44px;font-size:10px;transform-origin:100% 0}
   #thr{position:fixed;right:14px;bottom:30px;width:44px;height:160px;z-index:7;
     border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
@@ -286,8 +294,8 @@ body.phone #opts .panel{padding:12px 16px;font-size:12px}body.phone #opts .orow{
 <div id="te"><div class="t">PLS <span id="te1">0</span>%</div><div class="bar"><i id="tef"></i><u style="bottom:25%"></u><u style="bottom:50%"></u><u style="bottom:75%"></u></div><div class="l">NRG</div><div class="v"><span id="tev">0</span> AB <span id="teab">0</span>%</div></div>
 <div id="ets"></div>
 <div id="rgl" class="rgs"></div><div id="rgr" class="rgs"></div>
-<div id="pauseOv">PAUSED<br><span>ESC TO RESUME</span></div>
-<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause. Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div><div class="legend"><b>v0.2 feel:</b> white ticks round the reticle = your shots landed (blue shield, grey armour, orange subsystem, red kill); a red arc round the reticle = fire coming from that side; CHAIN x2+ multiplies kill score, keep killing inside the timer. <b>Salvage pods</b> (diamonds on the radar and HUD): fly through them, S shield · R hull · M missiles · A ammo · O overdrive; nothing to press, touch the same. <b>Gauntlet</b> (main menu): after each wave press 1 / 2 / 3 (touch: tap a card) to take a perk; the AI ignores all of this. <b>Flight:</b> F cycles ARCADE / SIM (TIE Fighter style: speed follows the throttle at real acceleration, the velocity marker trails the nose in a hard turn) / NEWTONIAN; BACKSPACE (touch: double-tap the throttle slider) matches the target's speed; OPTIONS has "sim purist" to switch off markers, banners, pods and hit-stop. Difficulty is on the mission briefing; mouse sensitivity and invert are in OPTIONS (O).</div></div>
+<div id="pauseOv"></div>
+<div id="help"><h3>KEY MAP</h3><div class="kb"><div class="r"><div class="k w "><b>1</b><span>CANNON</span></div><div class="k w "><b>2</b><span>PLASMA</span></div><div class="k w "><b>3</b><span>LINKED</span></div><div class="k f "><b>4</b><span>POWER +WEAPONS</span></div><div class="k f "><b>5</b><span>POWER +SHIELDS</span></div><div class="k f "><b>6</b><span>POWER +ENGINES</span></div><div class="k f "><b>7</b><span>POWER BALANCE</span></div><div class="k s "><b>ESC</b><span>PAUSE MENU</span></div><div class="k x"></div><div class="k s "><b>-</b><span>VOXEL DETAIL -</span></div><div class="k s "><b>=</b><span>VOXEL DETAIL +</span></div><div class="k s "><b>[</b><span>PIXEL SIZE -</span></div><div class="k s "><b>]</b><span>PIXEL SIZE +</span></div></div><div class="r"><div class="k f "><b>Q</b><span>ROLL LEFT</span></div><div class="k f "><b>W</b><span>THROTTLE UP</span></div><div class="k f "><b>E</b><span>ROLL RIGHT</span></div><div class="k s "><b>R</b><span>RESTART (FREE)</span></div><div class="k t "><b>T</b><span>NEXT TARGET</span></div><div class="k t "><b>Y</b><span>TARGET AT CROSSHAIR</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k s "><b>P</b><span>GRAPHICS PRESET</span></div><div class="k s "><b>L</b><span>SAVE PLAY LOG</span></div><div class="k s "><b>O</b><span>AUDIO OPTIONS</span></div><div class="k s "><b>R</b><span>RESTART (ASKS)</span></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k x"></div><div class="k f "><b>S</b><span>THROTTLE DOWN</span></div><div class="k x"></div><div class="k f "><b>F</b><span>FLIGHT MODEL ARCADE / NEWTON</span></div><div class="k w "><b>G</b><span>MISSILE TYPE</span></div><div class="k s "><b>H</b><span>THIS KEY MAP</span></div><div class="k x"></div><div class="k t "><b>K</b><span>RADAR RANGE</span></div><div class="k t "><b>J</b><span>COMMS MENU</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k f w2"><b>SHIFT</b><span>AFTERBURNER</span></div><div class="k w "><b>Z</b><span>FLARES + CHAFF</span></div><div class="k f "><b>X</b><span>BRAKE (NEWTON)</span></div><div class="k f "><b>C</b><span>CENTRE STICK</span></div><div class="k s "><b>V</b><span>VIEW COCKPIT / CHASE</span></div><div class="k s "><b>B</b><span>BLOOM</span></div><div class="k t "><b>N</b><span>CYCLE SUBSYSTEM</span></div><div class="k s "><b>M</b><span>MUTE</span></div><div class="k x"></div><div class="k x"></div><div class="k x"></div><div class="k x"></div></div><div class="r"><div class="k w sp"><b>SPACE</b><span>FIRE GUNS</span></div><div class="k w w3"><b>ENTER</b><span>LAUNCH MISSILE</span></div><div class="k f w3"><b>ARROWS</b><span>PITCH / YAW</span></div><div class="k f w3"><b>MOUSE</b><span>STICK (CLICK TO CAPTURE)</span></div><div class="k w w3"><b>LMB / RMB</b><span>GUNS / MISSILE</span></div></div></div><div class="legend"><i style="background:#3a8a6c"></i>flight<i style="background:#9a6a2c"></i>weapons<i style="background:#2c7a9a"></i>targeting<i style="background:#5a5a7a"></i>systems / display</div><div class="legend">TOUCH: FIRE guns, MSL launch, FLARE countermeasures, BOOST afterburner, TGT / AIM-T target, SUB subsystem, WPN weapon select, VIEW camera, &#8630;/&#8631; roll, RAD radar range, II pause menu (resume, restart, options, exit mission / back to menu; releasing the mouse also pauses). Dock at a friendly TENDER with D / the II-adjacent DOCK when in range.</div><div class="legend">Lock: keep the target inside the pipper ring until the tone goes solid. IR seekers are fooled by flares, radar missiles by chaff. Throttle gauge: right of the radar (yellow tick = actual speed). Power (4/5/6/7): 12 points over weapons / shields / engines; engines also size the afterburner pool. Newtonian mode (F) adds velocity / retrograde / relative-velocity markers. Graphics: P cycles low / mid / high / ultra, O has device presets and distance LOD; add ?q=high or ?q=ultra to the URL for antialiasing and a larger sky.</div><div class="legend"><b>v0.2 feel:</b> white ticks round the reticle = your shots landed (blue shield, grey armour, orange subsystem, red kill); a red arc round the reticle = fire coming from that side; CHAIN x2+ multiplies kill score, keep killing inside the timer. <b>Salvage pods</b> (diamonds on the radar and HUD): fly through them, S shield · R hull · M missiles · A ammo · O overdrive; nothing to press, touch the same. <b>Gauntlet</b> (main menu): after each wave press 1 / 2 / 3 (touch: tap a card) to take a perk; the AI ignores all of this. <b>Flight:</b> F cycles ARCADE / SIM (TIE Fighter style: speed follows the throttle at real acceleration, the velocity marker trails the nose in a hard turn) / NEWTONIAN; BACKSPACE (touch: double-tap the throttle slider) matches the target's speed; OPTIONS has "sim purist" to switch off markers, banners, pods and hit-stop. Difficulty is on the mission briefing; mouse sensitivity and invert are in OPTIONS (O).</div></div>
 <div id="touch">
   <div id="stickzone"></div><div id="stickbase"></div><div id="stickknob"></div>
   <div class="tbtn" id="bfire">FIRE</div>
@@ -587,7 +595,7 @@ function toggleOpts(force) {
     $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
-  } else { el.style.display = 'none'; if (!isTouch && state === 'play') lockPointer(); }
+  } else { el.style.display = 'none'; if (!isTouch && state === 'play' && !userPause) lockPointer(); }
 }
 addEventListener('keydown', e => {
   if (e.code === 'KeyO' && !e.ctrlKey && !e.metaKey && !e.repeat) { toggleOpts(); e.preventDefault(); e.stopImmediatePropagation(); }
@@ -599,7 +607,7 @@ const SAMPLE_DATA = {"expl1": "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAA
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
-const GAME_VERSION = '0.2.1';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
+const GAME_VERSION = '0.2.2';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
@@ -5856,7 +5864,7 @@ function svShowDebrief() {
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>x ${killLog[k]}</b></div>`).join('') || '<div class="dim">none</div>';
   const perks = Object.keys(sv.perks).map(id => { const pk = PERKS.find(x => x.id === id); return `<div>${pk.name} <b>x${sv.perks[id]}</b></div>`; }).join('') || '<div class="dim">none</div>';
   menuShell(`<div class="sub">GAUNTLET · ${D.name}${c.mut.length ? ' · ' + c.mut.map(k => MUTATORS[k].name).join(' + ') : ''}${c.daily ? ' · DAILY ' + sv.seed : ' · seed ' + sv.seed}</div>
-    <h1 class="bad">DOWN ON WAVE ${sv.n}</h1><h2>${newBest ? 'NEW BEST SCORE' : 'best: ' + best.score + ' (wave ' + best.wave + ')'}</h2>
+    <h1 class="${sv.quit ? '' : 'bad'}">${sv.quit ? 'RUN ENDED ON WAVE ' : 'DOWN ON WAVE '}${sv.n}</h1><h2>${newBest ? 'NEW BEST SCORE' : 'best: ' + best.score + ' (wave ' + best.wave + ')'}</h2>
     <div class="cols"><div><div class="sub">RUN</div><div>Score <b>${juice.score}</b></div><div>Kills <b>${kills}</b></div><div>Time <b>${Math.floor(sv.t / 60)}:${String(Math.floor(sv.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${acc}%</b></div>
       <div class="sub">PERKS</div>${perks}</div>
     <div><div class="sub">KILLS</div>${rows}${juiceDebriefHtml(acc, p ? p.shots || 0 : 0, kills)}
@@ -7581,7 +7589,7 @@ addEventListener('keydown', e => {
     case 'KeyN': cycleSub(); break;
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
-    case 'Escape': pauseToggle(); break;   // S1: real pause (Esc exits pointer lock; Esc again resumes)
+    case 'Escape': if (performance.now() - pmAutoT > 300) pauseToggle(); break;      // a pause that the lost mouse lock just caused must not be undone by the same Esc   // S1: real pause (Esc exits pointer lock; Esc again resumes)
     case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
     case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
@@ -7604,7 +7612,7 @@ addEventListener('keyup', e => keys.delete(e.code));
 addEventListener('contextmenu', e => e.preventDefault());
 msg.addEventListener('pointerdown', () => { if (state === 'dead' && game.mode === 'free') resetGame(); });
 addEventListener('mousedown', e => {
-  if (isTouch || rdlgOpen) return;
+  if (isTouch || rdlgOpen || userPause) return;           // paused: the pause menu owns the mouse
   if (state === 'brief' || $id('brief').style.display === 'flex') return;
   if (document.pointerLockElement !== canvas) { lockPointer(); return; }
   if (e.button === 0) mouseFire = true;
@@ -7746,7 +7754,7 @@ function askRestart() {
     ? `<button id="rd1">RESTART MISSION <small>[M]</small></button>${seg ? '<button id="rd2">RESTART THIS SEGMENT <small>[S]</small></button>' : ''}`
     : `<button id="rd1">RESTART ${sk ? 'SKIRMISH' : sur ? 'GAUNTLET' : 'FREE FLIGHT'} <small>[M]</small></button>`) + `<button class="alt" id="rd3">MAIN MENU</button><button class="alt" id="rd0">CANCEL <small>[ESC]</small></button></div>`;
   el.style.display = 'flex';
-  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play') lockPointer(); };
+  const close = (noLock) => { el.style.display = 'none'; rdlgOpen = false; window.removeEventListener('keydown', el._keys, true); if (noLock !== true && !isTouch && state === 'play' && !userPause) lockPointer(); };
   $id('rd0').onclick = close;
   $id('rd1').onclick = () => { close(true); keys.clear(); restoreCrew(); if (mission) startMission(M); else if (sk) startSkirmish(game.sk); else if (sur) { startSurvival(sv.cfg); launchLock(); } else resetGame(); };
   $id('rd3').onclick = () => { close(true); keys.clear(); openMenu(); };
@@ -8451,7 +8459,7 @@ function drawRadar(alive) {
 }
 
 function updateHud() {
-  const po = $id('pauseOv'); if (po) po.style.display = userPause && state === 'play' ? 'block' : 'none';   // S1
+  const po = $id('pauseOv'); if (po) { const on = userPause && state === 'play'; po.style.display = on ? 'block' : 'none'; if (on) pauseMenuRefresh(); }   // S1
   const p = player, alive = !!(p && p.alive);
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
@@ -8465,7 +8473,7 @@ function updateHud() {
 
   const briefing = $id('brief').style.display === 'flex';
   const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
-  const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none');
+  const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none' && !userPause);
   msg.style.display = showMsg ? 'flex' : 'none';
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
@@ -8561,12 +8569,51 @@ function fpsTick(ms, dt) {
     fpsAcc = fpsN = fpsT = 0;
   }
 }
-function pauseToggle() {   // S1: pause/resume in flight (Esc or the touch II button); dialogs keep their own gating
+// ---- pause menu (v0.2.2): Esc, losing mouse capture, or the touch II button open it. RESUME / RESTART / OPTIONS / EXIT (confirm; Gauntlet banks the score).
+let pmArm = 0, pmAutoT = 0;                                         // performance.now() of the first EXIT click; a second click within 4 s confirms
+function pauseToggle(force) {   // S1: pause/resume in flight; dialogs keep their own gating
   if (state !== 'play' || rdlgOpen || optsOpen) return;
-  userPause = !userPause;
+  userPause = force !== undefined ? force : !userPause;
+  pmArm = 0;
   log(userPause ? 'PAUSED' : 'RESUMED', '#ffd24a');
   sfx('click');
+  if (userPause) document.exitPointerLock?.(); else if (!isTouch) lockPointer();       // resume re-takes the mouse; if the browser refuses, "click to take controls" shows
 }
+const pmEl = $id('pauseOv');
+pmEl.innerHTML = `<div class="pt">PAUSED</div><div class="ps" id="pm_sub"></div><div class="pbtns"><button id="pm_res">RESUME <small>[ESC]</small></button><button id="pm_rst">RESTART... <small>[R]</small></button><button id="pm_opt">OPTIONS <small>[O]</small></button><button id="pm_exit" class="warn"></button></div>`;
+const pmExitLabel = () => (game.mode === 'mission' ? 'EXIT MISSION' : game.mode === 'skirmish' ? 'EXIT SKIRMISH' : game.mode === 'survival' ? 'END RUN' : 'EXIT TO MENU');
+function pauseMenuRefresh() {
+  const armed = pmArm && performance.now() - pmArm < 4000;
+  if (!armed) pmArm = 0;
+  const sub = game.mode === 'mission' && game.mission ? game.mission.title : game.mode === 'survival' && sv ? 'GAUNTLET · WAVE ' + sv.n : game.mode === 'skirmish' ? 'SKIRMISH' : 'FREE FLIGHT';
+  if ($id('pm_sub').textContent !== sub) $id('pm_sub').textContent = sub;
+  const lab = armed ? (game.mode === 'survival' ? 'CONFIRM: END RUN (score is kept)' : 'CONFIRM: ' + pmExitLabel() + ' (progress is lost)') : pmExitLabel() + ' / MAIN MENU';
+  const b = $id('pm_exit'); if (b.textContent !== lab) b.textContent = lab;
+  b.classList.toggle('arm', !!armed);
+}
+function pauseExit() {                                   // leave the current run for the main menu (Gauntlet: end the run, bank the score, show the debrief)
+  userPause = false; keys.clear(); pmArm = 0; pmEl.style.display = 'none';
+  if (game.mode === 'survival' && sv && !sv.over) { sv.quit = true; svEnd(); sv.overT = 99; return; }
+  if (game.mode === 'mission') restoreCrew();           // an abandoned sortie costs the wing nothing (same as a restart)
+  openMenu();
+}
+$id('pm_res').onclick = () => pauseToggle(false);
+$id('pm_rst').onclick = () => askRestart();
+$id('pm_opt').onclick = () => toggleOpts(true);
+$id('pm_exit').onclick = () => { if (pmArm && performance.now() - pmArm < 4000) pauseExit(); else { pmArm = performance.now(); pauseMenuRefresh(); } };
+document.addEventListener('pointerlockchange', () => {   // the mouse was released in flight (Esc, alt-tab): that is a pause, not a lock-out
+  if (isTouch || document.pointerLockElement === canvas) return;
+  if (state === 'play' && !userPause && !rdlgOpen && !optsOpen && !credOpen) { userPause = true; pmArm = 0; pmAutoT = performance.now(); log('PAUSED', '#ffd24a'); }
+});
+addEventListener('keydown', e => {                       // pause menu: arrows move the focus, Enter presses; everything else is ignored while paused except Esc, R and O
+  if (!userPause || state !== 'play' || rdlgOpen || optsOpen || e.ctrlKey || e.metaKey) return;
+  const L = [...pmEl.querySelectorAll('button')], i = L.indexOf(document.activeElement);
+  if (e.code === 'ArrowDown') L[(i + 1) % L.length].focus();
+  else if (e.code === 'ArrowUp') L[(i - 1 + L.length) % L.length].focus();
+  else if (e.code === 'Enter' || e.code === 'NumpadEnter') (i >= 0 ? L[i] : L[0]).click();
+  else if (e.code === 'Escape' || e.code === 'KeyR' || e.code === 'KeyO') return;     // handled by their own listeners
+  e.preventDefault(); e.stopImmediatePropagation();
+}, true);
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
   if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
@@ -8589,7 +8636,7 @@ globalThis.__game = {
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
-  dockTry, get dock() { return dock; }, pauseToggle, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
+  dockTry, get dock() { return dock; }, pauseToggle, pauseExit, pauseMenuRefresh, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
   get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },

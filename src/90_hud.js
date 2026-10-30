@@ -484,7 +484,7 @@ function drawRadar(alive) {
 }
 
 function updateHud() {
-  const po = $id('pauseOv'); if (po) po.style.display = userPause && state === 'play' ? 'block' : 'none';   // S1
+  const po = $id('pauseOv'); if (po) { const on = userPause && state === 'play'; po.style.display = on ? 'block' : 'none'; if (on) pauseMenuRefresh(); }   // S1
   const p = player, alive = !!(p && p.alive);
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
@@ -498,7 +498,7 @@ function updateHud() {
 
   const briefing = $id('brief').style.display === 'flex';
   const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
-  const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none');
+  const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none' && !userPause);
   msg.style.display = showMsg ? 'flex' : 'none';
   if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';

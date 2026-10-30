@@ -369,7 +369,7 @@ function svShowDebrief() {
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>x ${killLog[k]}</b></div>`).join('') || '<div class="dim">none</div>';
   const perks = Object.keys(sv.perks).map(id => { const pk = PERKS.find(x => x.id === id); return `<div>${pk.name} <b>x${sv.perks[id]}</b></div>`; }).join('') || '<div class="dim">none</div>';
   menuShell(`<div class="sub">GAUNTLET · ${D.name}${c.mut.length ? ' · ' + c.mut.map(k => MUTATORS[k].name).join(' + ') : ''}${c.daily ? ' · DAILY ' + sv.seed : ' · seed ' + sv.seed}</div>
-    <h1 class="bad">DOWN ON WAVE ${sv.n}</h1><h2>${newBest ? 'NEW BEST SCORE' : 'best: ' + best.score + ' (wave ' + best.wave + ')'}</h2>
+    <h1 class="${sv.quit ? '' : 'bad'}">${sv.quit ? 'RUN ENDED ON WAVE ' : 'DOWN ON WAVE '}${sv.n}</h1><h2>${newBest ? 'NEW BEST SCORE' : 'best: ' + best.score + ' (wave ' + best.wave + ')'}</h2>
     <div class="cols"><div><div class="sub">RUN</div><div>Score <b>${juice.score}</b></div><div>Kills <b>${kills}</b></div><div>Time <b>${Math.floor(sv.t / 60)}:${String(Math.floor(sv.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${acc}%</b></div>
       <div class="sub">PERKS</div>${perks}</div>
     <div><div class="sub">KILLS</div>${rows}${juiceDebriefHtml(acc, p ? p.shots || 0 : 0, kills)}
