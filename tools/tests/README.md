@@ -38,3 +38,6 @@ macOS test invocation (as used 2026-10-22): `cd tools/tests && GS_CHROMIUM="$HOM
 | `cred_t.py`, `cred_t2.py` | credits screen from briefing and from the options panel |
 | `scen.py`, `plog_t.py`, `rdlg_t.py`, `beam_t.py`, `csv_t.py`, `render_t.py`, `view_t.py`, `tune_t.py`, `armor_t.py` | older scenarios: flight models, play log, restart dialog, beams, CSV check, renders |
 Some older scripts may still reference session-specific files; fix paths when you hit one.
+
+| `fun_t.py [feel\|shot\|loot\|survival\|missions]` | v0.2 fun update: hitmarkers/arcs/chain/medals, pods, Gauntlet end to end, mission difficulty/tips/counters (screenshots in /tmp/gs_shots) |
+| `sv_calib.py N RUNS [SK] [WING]` | Gauntlet wave N vs an AI proxy pilot, seeded, Wilson interval; direction not truth |

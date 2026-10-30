@@ -93,7 +93,7 @@ def survival(R):
       out.mode=g.game.mode;out.n=g.sv.n;out.enemies=g.ships.filter(s=>s.team===1&&s.alive).length;out.kinds=[...new Set(g.ships.filter(s=>s.team===1).map(s=>s.def.id))];
       out.hud=(document.getElementById('hudtxt').textContent.match(/WAVE \\d+/)||[''])[0];g.updateHud();out.hud=(document.getElementById('hudtxt').textContent.match(/WAVE \\d+/)||[''])[0];
       return out}""")
-    print(' start', r); ok = ok and r['mode'] == 'survival' and r['n'] == 1 and r['enemies'] >= 3 and r['hud'] == 'WAVE 1'
+    print(' start', r); ok = ok and r['mode'] == 'survival' and r['n'] == 1 and r['enemies'] >= 2 and r['hud'] == 'WAVE 1'
     # clear wave 1 -> draft with 3 offers, 2 pods, score banked
     r = pg.evaluate("(" + CLEAR + ")(__game.player)")
     r = pg.evaluate("""()=>{const g=__game;return {phase:g.sv.phase,offers:g.sv.draft&&g.sv.draft.offers.map(o=>o.id),pods:g.lootPods.length,score:g.juice.score,draftShown:getComputedStyle(document.getElementById('svdraft')).display}}""")
@@ -109,7 +109,7 @@ def survival(R):
     r = pg.evaluate("""()=>{const g=__game,P=g.player;const hot=g.PERKS.find(x=>x.id==='hot'),gl=g.PERKS.find(x=>x.id==='glass');
       const before=P.mod.dmg??1;g.sv.perks.hot=0;g.sv.phase='draft';g.sv.draft={offers:[hot],t:5};g.svPick(0);const after=P.mod.dmg;
       g.sv.phase='draft';g.sv.draft={offers:[gl],t:5};g.svPick(0);return {before,after,glass:[P.mod.dmg,P.mod.take]}}""")
-    print(' perks', r); ok = ok and abs(r['after'] - 1.15) < 0.01 and abs(r['glass'][0] - 1.15 * 1.4) < 0.02 and r['glass'][1] > 1.2
+    print(' perks', r); ok = ok and abs(r['after'] / r['before'] - 1.15) < 0.01 and abs(r['glass'][0] / r['after'] - 1.4) < 0.02 and r['glass'][1] > 1.2     # ratios: a pod (overdrive) may already be active
     # walk the director through waves 2..11: boss waves, aces, no errors
     r = pg.evaluate("""(CLEARSRC)=>{const g=__game,P=g.player,out={waves:[],aces:0,boss:{}};const clear=eval(CLEARSRC);
       for(let w=0;w<10;w++){

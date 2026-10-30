@@ -236,6 +236,10 @@ function svSpawnWave(n) {
   for (const row of spec.rows) for (let i = 0; i < row.count; i++) spawnOne(row.kind, row);
   if (spec.ace) { const a = spawnOne(spec.ace.kind, { ace: true, name: spec.ace.name, skill: 5 }); sv.aceN++; sfx('ace', 0, 1); comm(spec.ace.name, SV_TAUNTS[Math.floor(R() * SV_TAUNTS.length)], '#c8ff40'); a.ace = true; }
   sv.waveSpec = spec;
+  if (n % 5 === 0) {                                   // boss waves come with a supply drop: shields, missiles, hull (the proxy pilot died in 15/20 first-boss runs without it)
+    ['SHD', 'MSL', 'REP'].forEach((t, i) => lootSpawn(p.group.position.clone().add(new THREE.Vector3((i - 1) * 70, 12, -150)), t, p.vel));
+    log('SUPPLY DROP: shields, missiles, hull', '#6bff8a');
+  }
   const total = ships.filter(s => s.team === 1 && s.alive).length;
   const subline = [spec.sub, spec.ace ? `ace ${spec.ace.name} among them` : '', `${total} contacts`].filter(Boolean).join(' · ');
   svBanner(`WAVE ${n}${spec.name ? ' · ' + spec.name : ''}`, subline);

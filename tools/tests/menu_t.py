@@ -15,7 +15,7 @@ SIZES = [(1280, 720, False, 'desk'), (844, 390, True, 'land'), (390, 844, True, 
 for w, h, touch, tag in SIZES:
     with Runner() as R:
         pg = R.page(w, h, '?touch' if touch else '', touch=touch); pg.wait_for_timeout(1500)
-        check(f'{tag} menu visible', pg.evaluate(VIS, 'brief') == 'flex' and pg.locator('.mi').count() == 5, pg.evaluate("()=>[...document.querySelectorAll('.mi b')].map(b=>b.textContent)"))
+        check(f'{tag} menu visible', pg.evaluate(VIS, 'brief') == 'flex' and pg.locator('.mi').count() == 6, pg.evaluate("()=>[...document.querySelectorAll('.mi b')].map(b=>b.textContent)"))
         f = pg.evaluate(FIT)
         check(f'{tag} main fits', f['bot'] <= f['vh'] + 1 and f['top'] >= -1 and f['sw'] <= f['cw'] + 1, f)
         pg.screenshot(path=f'{SH}/menu_{tag}_main.png')
@@ -33,8 +33,9 @@ with Runner() as R:
     pg = R.page(1280, 720, ''); pg.wait_for_timeout(1500)
     foc = "()=>document.activeElement.dataset.a"
     check('first item focused', pg.evaluate(foc) == 'campaign', pg.evaluate(foc))
+    pg.keyboard.press('ArrowDown'); check('down -> gauntlet (v0.2 entry)', pg.evaluate(foc) == 'survival')
     pg.keyboard.press('ArrowDown'); check('down -> skirmish', pg.evaluate(foc) == 'skirmish')
-    pg.keyboard.press('ArrowUp'); pg.keyboard.press('ArrowUp'); check('wraps up -> credits', pg.evaluate(foc) == 'credits')
+    pg.keyboard.press('ArrowUp'); pg.keyboard.press('ArrowUp'); pg.keyboard.press('ArrowUp'); check('wraps up -> credits', pg.evaluate(foc) == 'credits')
     pg.keyboard.press('ArrowDown'); pg.keyboard.press('Enter'); pg.wait_for_timeout(300)
     check('enter opens mission list', pg.locator('.mi[data-a=m0]').count() == 1)
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)

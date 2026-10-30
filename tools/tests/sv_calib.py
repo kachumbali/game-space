@@ -13,13 +13,13 @@ JS = """([N,seed,SK,WING])=>{const g=__game,T=g.THREE;__paused=true;
   let t=0;while(t<300&&me.some(s=>s.alive)&&foes.some(s=>s.alive)){g.update(0.05);t+=0.05}
   const hull=me[0].alive?me[0].structure/me[0].def.structure:0;
   return {win:foes.every(s=>!s.alive)&&me[0].alive,t:Math.round(t),hull:+hull.toFixed(2),n:foes.length,skill}}"""
-wins = 0; hulls = []; ts = []; info = None
+wins = 0; deaths = 0; hulls = []; ts = []; info = None
 with Runner() as R:
     for seed in range(1, RUNS + 1):
         pg = R.page(320, 180, f'?sv=1&sv_seed={seed}&seed={seed}&q=low'); pg.wait_for_timeout(500)
         r = pg.evaluate(JS, [N, seed, SK, WING]); pg.close()
-        wins += r['win']; hulls.append(r['hull']); ts.append(r['t']); info = r
+        wins += r['win']; deaths += (r['hull'] == 0); hulls.append(r['hull']); ts.append(r['t']); info = r
         print(seed, r, flush=True)
 import math
 p = wins / RUNS; z = 1.96; den = 1 + z * z / RUNS; c = (p + z * z / (2 * RUNS)) / den; h = z * math.sqrt(p * (1 - p) / RUNS + z * z / (4 * RUNS * RUNS)) / den
-print(f'WAVE {N} enemies~{info["n"]} skill {info["skill"]} proxy skill {SK} wing {WING}: wins {wins}/{RUNS} = {p:.2f} (Wilson 95% {max(0,c-h):.2f}-{min(1,c+h):.2f}), mean hull left {sum(hulls)/len(hulls):.2f}, mean t {sum(ts)/len(ts):.0f}s')
+print(f'WAVE {N} enemies~{info["n"]} skill {info["skill"]} proxy skill {SK} wing {WING}: pilot died {deaths}/{RUNS}; clean wins {wins}/{RUNS} = {p:.2f} (Wilson 95% {max(0,c-h):.2f}-{min(1,c+h):.2f}), mean hull left {sum(hulls)/len(hulls):.2f}, mean t {sum(ts)/len(ts):.0f}s')

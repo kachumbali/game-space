@@ -128,3 +128,9 @@ The player's damage schematic (top left) shows WC2-style zones instead of dots: 
 
 ## Milestone 2
 See `docs/MILESTONE_2.md` for the state of the game, how to work on it locally, what is verified, known problems and next steps.
+
+## v0.2: the fun update (2026-10-30)
+See `docs/FUN_UPDATE.md` (diagnosis, design, tunables, what was and was not verified, what to try first) and `CHANGELOG.md`.
+Hitmarkers, damage arcs, kill chains and medals; salvage pods; **GAUNTLET** survival mode (waves, aces, bosses, perks, mutators, daily seed, career rank);
+difficulty on every briefing; wing strip, objective counters, onboarding tips. URL flags: `?sv=1&sv_seed=42&sv_diff=hard&sv_wing=1&sv_mut=glass,swarm&sv_daily=1`, `?tips`.
+Tests: `tools/tests/fun_t.py [feel|shot|loot|survival|missions]`, `tools/tests/sv_calib.py N RUNS` (wave calibration with an AI proxy pilot).
