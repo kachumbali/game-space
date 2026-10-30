@@ -105,8 +105,8 @@ addEventListener('mouseup', e => { mouseFire = mouseFire && !rdlgOpen; if (e.but
 addEventListener('mousemove', e => {
   if (rdlgOpen) return;
   if (document.pointerLockElement !== canvas) return;
-  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
-  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
+  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003 * AOPT.sens));
+  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003 * AOPT.sens * (AOPT.invY ? -1 : 1)));
 });
 
 // ---- touch controls (phones/tablets) ----

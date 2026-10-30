@@ -457,7 +457,7 @@ function sfx(name, dist = 0, vol = 1) {
 //  but the music volume slider may not). Sound samples (CC0) are embedded in 14_samples.js and layered under the procedural SFX.
 //  Options (O key / button): music on/off, music volume, effects volume, sample layer on/off. Saved in localStorage (try/catch).
 // ======================================================================
-const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true };
+const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
 // Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
@@ -562,6 +562,8 @@ function toggleOpts(force) {
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
+      + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
+      + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
       + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
       + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
@@ -573,6 +575,8 @@ function toggleOpts(force) {
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
+    $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
+    $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);
     $id('o_lod').onchange = e => setLod(e.target.value);
     $id('o_close').onclick = () => toggleOpts(false);
@@ -2981,13 +2985,13 @@ function powerShift(s, to) {                     // +1 point to `to`, taken from
   s.pw[o[0]]--; s.pw[to]++; return true;
 }
 const powerReset = s => { s.pw = { w: 4, s: 4, e: 4 }; };
-const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e'));
-const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e'));
+const speedMul = s => (0.3 + 0.7 * compFactor(s, 'engine')) * (0.8 + 0.2 * pwF(s, 'e')) * (s.mod?.speed ?? 1);
+const turnMul = s => (0.45 + 0.55 * compFactor(s, 'engine')) * (0.9 + 0.1 * pwF(s, 'e')) * (s.mod?.turn ?? 1);
 const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 // ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
 function abTick(s, want, dt) {
-  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e');
+  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1);
   if (!mx) { s.ab = false; return false; }
   const on = want && !s.abLock && s.abFuel > 0;
   if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
@@ -3173,7 +3177,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     comps: def.comps.map(c => ({ ...c, max: c.hp })), dmgEvents: [],
     lastHit: -99, alive: true, dying: 0, dyT: 0, vox: null, flames: [], shieldFx: null, hitCool: 0, cmCool: 0,
     target: null, lastAttacker: null, kills: 0, drones: [], droneKills: 0, dronesLost: 0, dmgTaken: 0, spawnT: time,
-    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
+    fm: opts.fm || 'arcade', pw: { w: 4, s: 4, e: 4 }, mod: {}, abFuel: def.abMax || 0, abLock: false, ab: false, blindUntil: 0, energy: def.energyMax || 100, energyMax: def.energyMax || 100, skill: clamp(Math.round(opts.skill ?? def.ai?.skill ?? 3), 1, 5),
     ai: { role: opts.ai || def.ai?.role || 'fighter', aggr: def.ai?.aggr ?? 0.8, mode: 'attack', t: 0, aim: new THREE.Vector3(), tgtT: 0, mslT: 8 + Math.random() * 10, cmT: 0, evadeT: 0, dir: Math.random() < 0.5 ? 1 : -1 },
   };
   if (pos) s.group.position.copy(pos);
@@ -3251,6 +3255,7 @@ function clearWorld() {
   ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
   for (const k in killLog) delete killLog[k];
   shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;
+  juiceReset();
   stick.x = stick.y = 0;
 }
 
@@ -3751,7 +3756,7 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
   if (sp) _w2.add(_w3.set(Math.random() - 0.5, Math.random() - 0.5, Math.random() - 0.5).multiplyScalar(2 * sp)).normalize();
   const pos = wpos.clone();
   bolts.push({
-    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg, dt: w.dt,
+    wid, w, team: s.team, owner, pos, prev: pos.clone(), life: w.life, dmg: w.dmg * (owner.mod?.dmg ?? 1), dt: w.dt,
     vel: _w2.clone().multiplyScalar(w.v).addScaledVector(s.vel, 0.9),
   });
 }
@@ -3792,10 +3797,11 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
-  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1);
+  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
   if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
+  hitSrc = s; hitKind = 'beam';
   applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
@@ -3816,8 +3822,8 @@ function fireMount(s, m) {
   if (w.ammo) s.ammo[m.w]--;
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
-  if (w.energy) s.energy -= w.energy;
-  m.cool = w.cd / (0.6 + 0.4 * powerMul(s));
+  if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
+  m.cool = w.cd / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -3852,7 +3858,7 @@ function lockUpdate(s, dt) {
   const radarOk = w.seeker !== 'rf' || compFactor(s, 'radar') > 0.01;
   const ok = d < w.range && ang < w.lockCone * sizeAdj && radarOk;
   L.d = d; L.ang = ang;
-  if (ok) L.p = Math.min(1, L.p + dt / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
+  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
   else L.p = Math.max(0, L.p - dt * 1.5);
   L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < w.range ? 'seek' : 'range'));
 }
@@ -3957,7 +3963,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     }
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
-    applyHit(s, lp, w.dmg * f, s.group.localToWorld(lp.clone()), 'exp');
+    hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
+    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp');
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
@@ -4241,6 +4248,7 @@ function updateBolts(dt) {
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
+      hitSrc = b.owner; hitKind = 'gun';
       applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
@@ -4437,6 +4445,175 @@ function renderBeams() {
 const beamStat = { n: 0 };
 const _c1 = new THREE.Color();
 // ======================================================================
+//  FEEL PACK (v0.2, owner request 2026-10-30; UX_REVIEW R6, R7, R5):
+//  hitmarkers (shield / armour / hull / subsystem / kill), directional damage arcs round the reticle, kill banners with a chain
+//  multiplier, style bonuses (missile kill, point blank, ace), hit-stop on kills, medals, and the sounds that go with them.
+//  Everything is event driven: weapon code sets hitSrc / hitKind just before applyHit, applyHit (65_combat) reports the outcome
+//  to juiceHit, destroy() reports kills to juiceKill, compEvent() subsystem kills to juiceComp. Nothing here changes damage.
+//  Touch: nothing to bind (it is all feedback). AI: the AI ignores it. Help line: the legend under the key map (00_head.html).
+//  No floating damage numbers on purpose (docs/UX_REVIEW.md: wrong genre register).
+// ======================================================================
+let hitSrc = null, hitKind = null;                    // who is shooting, with what class of weapon ('gun' | 'beam' | 'missile' | 'nuke')
+const killHooks = [];                                 // other parts register fn(ship, killedByPlayer) at load time (loot drops, survival perks)
+const FUN = {
+  chainWindow: 6,                                     // sim seconds between kills that keep a chain alive (about 16 s real time at 37.5% sim speed)
+  chainMax: 4,                                        // score multiplier cap; multiplier = 1 + 0.5 per extra kill in the chain
+  hitStopKill: 0.05, hitStopBig: 0.16,                // real seconds the sim crawls after a kill / a capital kill
+  pointBlank: 150,                                    // m: a fighter killed this close gets the POINT BLANK style bonus
+};
+const juice = {};
+function juiceReset() {
+  Object.assign(juice, {
+    marks: [], arcs: [], banners: [],
+    chain: 0, chainT: 0, bestChain: 0, mult: 1,
+    score: 0, bonus: 0, kills: 0, missileKills: 0, subKills: 0, capKills: 0, aceKills: 0, hullHits: 0, friendlyLost: 0, hadWing: false,
+    hitStop: 0, tickT: -9, scoreMul: 1,
+  });
+}
+juiceReset();
+const CHAIN_NAMES = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'QUAD KILL', 'RAMPAGE', 'RAMPAGE', 'UNSTOPPABLE', 'UNSTOPPABLE'];
+
+// ---- sounds (same synth as the rest of the game) ----------------------------------------------------------
+SFX.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
+SFX.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
+SFX.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
+SFX.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
+SFX.pickup = () => { tone(700, 1400, 0.10, 'sine', 0.14); tone(1050, 2100, 0.12, 'sine', 0.1, 0.06); };
+SFX.perk = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.01, 0.18, 'triangle', 0.14, i * 0.07));
+SFX.wave = () => { tone(110, 90, 0.5, 'sawtooth', 0.2); tone(165, 140, 0.5, 'sawtooth', 0.12, 0.1); };
+SFX.ace = () => { tone(220, 110, 0.6, 'sawtooth', 0.22); tone(233, 117, 0.6, 'sawtooth', 0.18, 0.05); };
+
+// ---- event entry points -----------------------------------------------------------------------------------
+const _jv = new THREE.Vector3(), _jq = new THREE.Quaternion();
+function hitAngle(from) {                             // screen angle (canvas, radians, y down) of a world point seen from the camera; behind us = bottom
+  _jv.copy(from).sub(camera.position);
+  _jv.applyQuaternion(_jq.copy(camera.quaternion).invert());
+  if (Math.hypot(_jv.x, _jv.y) < Math.abs(_jv.z) * 0.15 && _jv.z > 0) return Math.PI / 2;
+  return Math.atan2(-_jv.y, _jv.x);
+}
+function juiceHit(s, src, out, dmg, wp) {
+  const p = player; if (!p) return;
+  if (s === p) {                                      // we were hit: where from
+    const from = src && src.group ? src.group.position : wp;
+    juice.arcs.push({ t: time, ang: hitAngle(from), out, big: clamp(dmg / 14, 0.35, 1) });
+    if (juice.arcs.length > 8) juice.arcs.shift();
+    if (out === 'hull' || out === 'comp' || out === 'kill') juice.hullHits++;
+    return;
+  }
+  if (src === p && s.team !== p.team && out !== 'kill') {   // our shot landed
+    const kind = out === 'comp' ? 'sub' : out;
+    juice.marks.push({ t: time, kind });
+    if (juice.marks.length > 6) juice.marks.shift();
+    if (time - juice.tickT > 0.05) { juice.tickT = time; sfx(out === 'shield' ? 'hitshield' : 'hitmark', 0, 0.8); }
+  }
+}
+function juiceComp(s, c, st) {                        // a subsystem of someone else's ship was destroyed by us
+  if (st !== 2 || !player || s.team === player.team || hitSrc !== player) return;
+  juice.subKills++; juice.score += 40; juice.bonus += 40;
+  juice.marks.push({ t: time, kind: 'sub' });
+  juice.banners.push({ t: time, text: c.name + ' DESTROYED', sub: '+40', col: '#ffb060', big: false });
+  sfx('subkill', 0, 0.9);
+}
+function juiceKill(s) {
+  const p = player;
+  if (s.team !== 1) { if (p && s !== p && s.team === p.team && !s.def.drone) juice.friendlyLost++; if (s === p) juice.chain = 0; return; }
+  const killer = s.lastAttacker;
+  const mine = !!p && (killer === p || (killer && killer.ctrl === p));
+  for (const f of killHooks) f(s, mine);
+  if (!mine) return;
+  const big = s.def.cls !== 'fighter';
+  juice.kills++; if (big) juice.capKills++;
+  juice.chain = (time < juice.chainT ? juice.chain : 0) + 1;
+  juice.chainT = time + FUN.chainWindow * (p.mod?.chainT ?? 1);
+  juice.bestChain = Math.max(juice.bestChain, juice.chain);
+  const mult = Math.min(FUN.chainMax, 1 + 0.5 * (juice.chain - 1));
+  juice.mult = mult;
+  const base = ((typeof SCORE !== 'undefined' && SCORE[s.def.id]) || 100) * (s.ace ? 5 : 1);
+  const tags = []; let extra = 0;
+  if (s.lastKind === 'missile' || s.lastKind === 'nuke') { extra += base * 0.5; tags.push('MISSILE'); juice.missileKills++; }
+  if (s.ace) { tags.push('ACE DOWN'); juice.aceKills++; }
+  if (!big && p.group.position.distanceTo(s.group.position) < FUN.pointBlank) { extra += base * 0.25; tags.push('POINT BLANK'); }
+  const gain = Math.round((base + extra) * mult * (p.mod?.score ?? 1) * juice.scoreMul);
+  juice.score += gain; juice.bonus += Math.max(0, gain - Math.round(base));
+  if (CHAIN_NAMES[Math.min(juice.chain, 8)]) tags.unshift(CHAIN_NAMES[Math.min(juice.chain, 8)]);
+  juice.banners.push({ t: time, text: `+${gain}  ${s.ace ? s.callsign : s.def.name.replace('FROGG ', '')}`, sub: tags.join(' · '), col: s.ace ? '#ffd24a' : big ? '#ff9a5a' : '#c8fff0', big: big || s.ace });
+  if (juice.banners.length > 4) juice.banners.shift();
+  juice.marks.push({ t: time, kind: 'kill' });
+  sfx(s.ace ? 'ace' : 'kill', 0, 1);
+  juice.hitStop = Math.max(juice.hitStop, big ? FUN.hitStopBig : FUN.hitStopKill);
+  if (big) shake = Math.min(1, shake + 0.45);
+}
+killHooks.length = 0;
+function juiceTick(dt) {
+  if (!juice.hadWing && player && ships.some(s => s.team === player.team && s !== player && s.def.cls === 'fighter' && !s.def.drone)) juice.hadWing = true;
+  if (juice.chain && time > juice.chainT) { juice.chain = 0; juice.mult = 1; }
+  const keep = (a, life) => { while (a.length && time - a[0].t > life) a.shift(); };
+  keep(juice.marks, 0.4); keep(juice.arcs, 1.1); keep(juice.banners, 2.2);
+}
+// medals for a debrief; stats = {acc, shots}; returns [[name, why]]
+function juiceMedals(acc, shots, kills) {
+  const m = [], j = juice;
+  if (j.kills >= 5) m.push(['ACE', j.kills + ' kills this sortie']);
+  if (j.bestChain >= 5) m.push(['CHAIN MASTER', 'chain of ' + j.bestChain]);
+  if (shots >= 40 && acc >= 35) m.push(['SHARPSHOOTER', acc + '% on ' + shots + ' shots']);
+  if (j.hullHits === 0 && j.kills >= 3) m.push(['UNTOUCHED', 'no hull damage']);
+  if (j.missileKills >= 3) m.push(['MISSILE MASTER', j.missileKills + ' missile kills']);
+  if (j.subKills >= 3) m.push(['SURGEON', j.subKills + ' subsystems taken out']);
+  if (j.capKills >= 1) m.push(['CAPITAL BREAKER', j.capKills + ' capital ship' + (j.capKills > 1 ? 's' : '')]);
+  if (j.aceKills >= 1) m.push(['ACE HUNTER', j.aceKills + ' enemy ace' + (j.aceKills > 1 ? 's' : '')]);
+  if (j.hadWing && j.friendlyLost === 0 && kills > 0) m.push(['WING LEADER', 'no wingman lost']);
+  return m;
+}
+function juiceDebriefHtml(acc, shots, kills) {
+  const medals = juiceMedals(acc, shots, kills);
+  return `<div class="sub">STYLE</div><div>Style bonus <b>+${juice.bonus}</b></div><div>Best chain <b>${juice.bestChain}</b></div>`
+    + (medals.length ? medals.map(([n, w]) => `<div class="medal"><b>${n}</b> <span class="dim">${w}</span></div>`).join('') : '<div class="dim">no medals this time</div>');
+}
+
+// ---- drawing (called from drawOverlay, 90_hud.js) ---------------------------------------------------------
+function drawJuice(c, p, cx, cy) {
+  const f = FS || 1;
+  // directional damage arcs: the red segment sits on the side the fire came from
+  const R = Math.min(ovW, ovH) * 0.2;
+  for (const a of juice.arcs) {
+    const age = time - a.t, k = 1 - age / 1.1; if (k <= 0) continue;
+    c.strokeStyle = a.out === 'shield' ? `rgba(90,200,255,${0.8 * k})` : `rgba(255,60,40,${0.95 * k})`;
+    c.lineWidth = (5 + 9 * a.big) * f; c.lineCap = 'round';
+    c.beginPath(); c.arc(cx, cy, R, a.ang - 0.38, a.ang + 0.38); c.stroke();
+  }
+  c.lineCap = 'butt';
+  // hitmarkers: four ticks round the reticle
+  for (const m of juice.marks) {
+    const age = time - m.t, k = 1 - age / 0.4; if (k <= 0) continue;
+    const big = m.kind === 'kill', r0 = (big ? 16 : 14) + (1 - k) * (big ? 22 : 8), len = (big ? 12 : 7) * f;
+    c.strokeStyle = m.kind === 'kill' ? `rgba(255,70,50,${k})` : m.kind === 'sub' ? `rgba(255,170,60,${k})` : m.kind === 'shield' ? `rgba(110,210,255,${k})` : m.kind === 'armor' ? `rgba(200,210,215,${k})` : `rgba(255,255,255,${k})`;
+    c.lineWidth = (big ? 3.5 : 2.5) * f;
+    c.beginPath();
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) { c.moveTo(cx + sx * r0, cy + sy * r0); c.lineTo(cx + sx * (r0 + len), cy + sy * (r0 + len)); }
+    c.stroke();
+  }
+  // chain readout and kill banners ABOVE the reticle (the space below it belongs to the power widget and the radar); newest nearest the reticle
+  c.textAlign = 'center';
+  let y = cy - 62 * f;
+  if (juice.chain >= 2 && time < juice.chainT) {
+    const left = clamp((juice.chainT - time) / (FUN.chainWindow * (p.mod?.chainT ?? 1)), 0, 1);
+    c.font = `bold ${Math.round(15 * f)}px monospace`; c.fillStyle = '#ffd24a';
+    c.fillText(`CHAIN x${juice.chain}   SCORE x${juice.mult.toFixed(1)}`, cx, y);
+    c.fillStyle = 'rgba(255,210,74,.25)'; c.fillRect(cx - 60 * f, y + 5 * f, 120 * f, 3 * f);
+    c.fillStyle = '#ffd24a'; c.fillRect(cx - 60 * f, y + 5 * f, 120 * f * left, 3 * f);
+    y -= 26 * f;
+  }
+  for (let i = juice.banners.length - 1; i >= 0; i--) {
+    const b = juice.banners[i], age = time - b.t, k = clamp(1 - (age - 1.2) / 1.0, 0, 1); if (k <= 0) continue;
+    c.globalAlpha = k;
+    c.font = `${b.big ? 'bold ' : ''}${Math.round((b.big ? 17 : 13) * f)}px monospace`; c.fillStyle = b.col;
+    c.fillText(b.text, cx, y);
+    if (b.sub) { c.font = `${Math.round(10 * f)}px monospace`; c.fillStyle = 'rgba(255,255,255,.75)'; c.fillText(b.sub, cx, y + 12 * f); }
+    y -= (b.sub ? 34 : 22) * f; c.globalAlpha = 1;
+  }
+  c.textAlign = 'left';
+}
+// ======================================================================
 //  COMBAT & DAMAGE — shields -> armour -> structure (typed damage), components, voxel chipping, death
 // ======================================================================
 const _v = new THREE.Vector3();
@@ -4457,8 +4634,18 @@ const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, r
 const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+// applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through);
+  if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
+  hitSrc = null; hitKind = null;
+  return out;
+}
+// returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
+  if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
+  let outcome = 'hull';
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
@@ -4473,7 +4660,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     s.shield[facing] -= a; d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
-    if (d + pdmg <= 0.01) return;
+    outcome = 'shield';
+    if (d + pdmg <= 0.01) return outcome;
   }
   // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
   if (d > 0.01) {
@@ -4492,7 +4680,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
       const after = compState(ex);
       if (after > before) compEvent(s, ex, after);
       if (s === player || s === target) hitMark(s, ex);
-      if (d <= 0.01) return;
+      outcome = 'comp';
+      if (d <= 0.01) return outcome;
     }
   }
   // armour: type profile x ship rating, soft size threshold, ablative rate cap; spall goes to a nearby component on breach
@@ -4515,7 +4704,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     spall = absorbed * AR.spall;
     chip(s, lp, 0, 0.9 + 0.05 * Math.min(absorbed, 20), false);
     sparksAt(wp, 4, 11);
-    if (d + pdmg <= 0.01) return;
+    if (outcome !== 'comp') outcome = 'armor';
+    if (d + pdmg <= 0.01) return outcome;
   }
   d = (d + pdmg) * X[2];
   // armour breached: hull damage + internal hit
@@ -4537,10 +4727,13 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
   if (s.structure <= 0 || (pw && pw.hp <= 0)) {
     if (!s.deathCause) s.deathCause = { dtype, overkill: Math.max(0, -s.structure) / s.def.structure, reactor: !!(pw && pw.hp <= 0) };   // decides whether the pilot got out
     killShip(s);
+    return 'kill';
   }
+  return outcome === 'shield' || outcome === 'armor' ? 'hull' : outcome;
 }
 
 function compEvent(s, c, st) {
+  juiceComp(s, c, st);
   const mine = s === player, tgt = s === target;
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
@@ -4589,6 +4782,7 @@ function destroy(s) {
   sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
   if (s.team === 1) { kills++; killLog[s.def.id] = (killLog[s.def.id] || 0) + 1; log(`${s.def.name} DESTROYED`, '#9dff7a'); }
   if (s === player) { state = 'dead'; log('HULL BREACH', '#ff4a3a'); }
+  juiceKill(s);
   if (typeof onShipDestroyed === 'function') onShipDestroyed(s);
 }
 
@@ -6421,7 +6615,7 @@ function spineFire(s) {
     const wp = best.group.localToWorld(bestLocal.clone()), fr = best.team === s.team;
     rec.str0 = Math.round(best.structure); rec.sh0 = Math.round(best.shield.fore + best.shield.aft);
     if (!fr) { best.lastAttacker = s; } else if (best === player) friendlyNote(s, best);
-    applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
+    hitSrc = s; hitKind = 'beam'; applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
     if (best.alive && best.vox && best.def.cls !== 'fighter') { chip(best, bestLocal, 5, 10, false); flashAt(wp, 40, 0.6); sparksAt(wp, 60, 40); fireAt(wp, 20, 14); }
     rec.str1 = Math.round(best.structure); rec.dead = !best.alive || best.dying > 0;
     if (best === player) shake = 1;
@@ -6792,8 +6986,8 @@ addEventListener('mouseup', e => { mouseFire = mouseFire && !rdlgOpen; if (e.but
 addEventListener('mousemove', e => {
   if (rdlgOpen) return;
   if (document.pointerLockElement !== canvas) return;
-  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003));
-  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003));
+  stick.x = Math.max(-1, Math.min(1, stick.x + e.movementX * 0.003 * AOPT.sens));
+  stick.y = Math.max(-1, Math.min(1, stick.y + e.movementY * 0.003 * AOPT.sens * (AOPT.invY ? -1 : 1)));
 });
 
 // ---- touch controls (phones/tablets) ----
@@ -6974,12 +7168,12 @@ function updatePlayer(dt) {
 function updateShieldsAndFx(s, dt) {
   const sg = compFactor(s, 'shield');
   for (const f of ['fore', 'aft']) {
-    const cap = s.def.shield[f] * sg;
+    const cap = s.def.shield[f] * sg * (s.mod?.shieldCap ?? 1);
     if (s.shield[f] > cap) s.shield[f] = cap;
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
-      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's'));
+      s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -7061,7 +7255,7 @@ function update(dt) {
   tenderTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
-  lodTick(dt); comsTick(dt);
+  lodTick(dt); comsTick(dt); juiceTick(dt);
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
@@ -7452,6 +7646,7 @@ function drawOverlay(alive) {
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
   if (flightMode === 'newton') drawVectors(c, p, cx, cy);
+  drawJuice(c, p, cx, cy);
   // seeker cone of the selected missile
   const wid = selectedMissile(p), L = p.lock;
   if (wid) {
@@ -7730,7 +7925,7 @@ function frame(t) {
   last = t;
   if (!params.has('yard')) {
     musicTick(dt);
-    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) update(dt * (state === 'cine' ? 1 : SIM_SPEED));   // S1: userPause freezes the sim for real
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
     updateHud();
   }
@@ -7741,13 +7936,14 @@ requestAnimationFrame(frame);
 
 // test / debug seam
 globalThis.__game = {
-  version: GAME_VERSION,
+  get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
+  version: GAME_VERSION, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, get skCfg() { return skCfg; }, get skState() { return game.skS; },
   nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
-  get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
+  get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
 Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu

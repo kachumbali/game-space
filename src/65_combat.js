@@ -19,8 +19,18 @@ const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, r
 const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+// applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through);
+  if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
+  hitSrc = null; hitKind = null;
+  return out;
+}
+// returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
+  if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
+  let outcome = 'hull';
   s.lastHit = time;
   s.hitsTaken = (s.hitsTaken || 0) + 1;
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
@@ -35,7 +45,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     s.shield[facing] -= a; d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
-    if (d + pdmg <= 0.01) return;
+    outcome = 'shield';
+    if (d + pdmg <= 0.01) return outcome;
   }
   // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
   if (d > 0.01) {
@@ -54,7 +65,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
       const after = compState(ex);
       if (after > before) compEvent(s, ex, after);
       if (s === player || s === target) hitMark(s, ex);
-      if (d <= 0.01) return;
+      outcome = 'comp';
+      if (d <= 0.01) return outcome;
     }
   }
   // armour: type profile x ship rating, soft size threshold, ablative rate cap; spall goes to a nearby component on breach
@@ -77,7 +89,8 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
     spall = absorbed * AR.spall;
     chip(s, lp, 0, 0.9 + 0.05 * Math.min(absorbed, 20), false);
     sparksAt(wp, 4, 11);
-    if (d + pdmg <= 0.01) return;
+    if (outcome !== 'comp') outcome = 'armor';
+    if (d + pdmg <= 0.01) return outcome;
   }
   d = (d + pdmg) * X[2];
   // armour breached: hull damage + internal hit
@@ -99,10 +112,13 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) { 
   if (s.structure <= 0 || (pw && pw.hp <= 0)) {
     if (!s.deathCause) s.deathCause = { dtype, overkill: Math.max(0, -s.structure) / s.def.structure, reactor: !!(pw && pw.hp <= 0) };   // decides whether the pilot got out
     killShip(s);
+    return 'kill';
   }
+  return outcome === 'shield' || outcome === 'armor' ? 'hull' : outcome;
 }
 
 function compEvent(s, c, st) {
+  juiceComp(s, c, st);
   const mine = s === player, tgt = s === target;
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
@@ -151,6 +167,7 @@ function destroy(s) {
   sfx('boom', s === player ? 0 : s.group.position.distanceTo(camera.position), s.def.cls === 'fighter' ? 1 : 2.2);
   if (s.team === 1) { kills++; killLog[s.def.id] = (killLog[s.def.id] || 0) + 1; log(`${s.def.name} DESTROYED`, '#9dff7a'); }
   if (s === player) { state = 'dead'; log('HULL BREACH', '#ff4a3a'); }
+  juiceKill(s);
   if (typeof onShipDestroyed === 'function') onShipDestroyed(s);
 }
 

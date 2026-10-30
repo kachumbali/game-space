@@ -309,6 +309,7 @@ function drawOverlay(alive) {
   c.moveTo(cx, cy - 24); c.lineTo(cx, cy - 17); c.moveTo(cx, cy + 17); c.lineTo(cx, cy + 24); c.stroke();
   c.fillStyle = 'rgba(143,255,208,.9)'; c.fillRect(cx - 1.5, cy - 1.5, 3, 3);
   if (flightMode === 'newton') drawVectors(c, p, cx, cy);
+  drawJuice(c, p, cx, cy);
   // seeker cone of the selected missile
   const wid = selectedMissile(p), L = p.lock;
   if (wid) {
