@@ -67,7 +67,7 @@ function initArmament(s) {
   s.ammo = {};
   s.ammoMax = {};
   for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) { s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; s.ammoMax[m.w] = (s.ammoMax[m.w] || 0) + w.ammo; } }
-  s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = 0;
+  s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = def.ai?.role === 'bomber' && 'torp' in (def.stores || {}) ? Math.max(0, MSL_ORDER.filter(id => id in (def.stores || {})).indexOf('torp')) : 0;   // a bomber starts with its torpedo selected
   s.bfocus = { tgt: null, t: 0, last: -9 };
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
   s.cm = 0;
