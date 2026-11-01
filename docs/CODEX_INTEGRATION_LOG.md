@@ -254,3 +254,17 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   after that geometry change and could render as detached floating fragments.
   Halberd visible hardware now follows a direct-support rule: every mass either
   intersects the primary hull or a structural member that does.
+
+## Shipyard energy-budget audit — 2026-11-01
+
+- The Shipyard is no longer only a geometry/database workbench: its editable
+  hull entry now receives a live, data-backed weapons-power audit. It calculates
+  the balanced ETS weapons bus from reactor plant output, sums every installed
+  energy-costed fixed mount and turret at continuous fire, and reports either
+  sustained headroom or capacitor endurance under a deficit. Charged spinal
+  weapons remain separately reported bursts instead of being falsely treated as
+  continuous load.
+- The readout is intentionally an engineering constraint rather than a fake
+  complete shipbuilder. Heat, mass, volume, shield and drive demands have not
+  yet been authored as data, so the audit says exactly what it can and cannot
+  validate. It updates while editing and never writes to source files.

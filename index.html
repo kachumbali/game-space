@@ -35,6 +35,10 @@
   #yard .yardrow input{accent-color:#83eac1}
   #yard .yardnote{color:#80a99a;font-size:10px}
   #yard .yardstat{color:#ffd080;margin-top:8px}
+  #yard .yardpower{margin:8px 0 4px;padding:7px;border:1px solid #315c4d;background:#071714;color:#b8ead8;font-size:10px;line-height:1.45;white-space:pre-line}
+  #yard .yardpower.ok{border-color:#3c9272;color:#b8ffe0}
+  #yard .yardpower.warn{border-color:#b58a3b;color:#ffe0a0}
+  #yard .yardpower.bad{border-color:#b34b43;color:#ffb0a0}
   #yard .yarderror{min-height:16px;color:#ff8d7b;white-space:pre-wrap}
   body.yard #c{pointer-events:auto}
   @media(max-width:700px){
@@ -9607,6 +9611,7 @@ if (params.has('yard')) {
     <label for="yard-db-entry">DATABASE ENTRY JSON</label>
     <textarea id="yard-db-entry" spellcheck="false" aria-label="Ship database entry JSON"></textarea>
     <div id="yard-db-error" class="yarderror" role="alert" aria-live="polite"></div>
+    <div id="yard-power" class="yardpower" role="status" aria-live="polite"></div>
     <div class="yardrow">
       <label><input id="yard-comp-markers" type="checkbox"> comps</label>
       <label><input id="yard-mount-markers" type="checkbox"> mounts</label>
@@ -9640,6 +9645,7 @@ if (params.has('yard')) {
   const YARD_stat = document.getElementById('yard-stat');
   const YARD_error = document.getElementById('yard-error');
   const YARD_dbError = document.getElementById('yard-db-error');
+  const YARD_power = document.getElementById('yard-power');
   const YARD_bounds = document.getElementById('yard-bounds');
   const YARD_exportStatus = document.getElementById('yard-export-status');
   const YARD_canvas = document.getElementById('c');
@@ -9900,6 +9906,45 @@ if (params.has('yard')) {
     return errors;
   }
 
+  // This deliberately uses the same conservative calculation as
+  // tools/power_table.py: all energy-costed direct mounts and turrets firing
+  // together against the balanced (4/4/4) weapons bus. It is a design audit,
+  // not a second hidden combat model. Charged spine weapons remain a separate
+  // capacitor event because their cooldown/charge cycle is not continuous fire.
+  function YARD_powerAudit(entry) {
+    const plant = entry.power?.plantMW, cap = entry.power?.capacitorMJ;
+    if (!Number.isFinite(plant) || plant <= 0 || !Number.isFinite(cap) || cap < 0) {
+      return { tone: 'bad', text: 'ENERGY BUDGET · INCOMPLETE\nAdd power.plantMW and power.capacitorMJ to audit this hull.' };
+    }
+    const rows = [];
+    let draw = 0, spineBurst = 0;
+    for (const [kind, fits] of [['FIXED', entry.mounts || []], ['TURRET', entry.turrets || []]]) for (const fit of fits) {
+      const w = DB.weapons[fit.w];
+      if (!w) continue;
+      if (w.kind === 'spine') { spineBurst += w.energy || 0; continue; }
+      if (!Number.isFinite(w.energy) || w.energy <= 0 || !Number.isFinite(w.cd) || w.cd <= 0) continue;
+      const d = w.energy / w.cd;
+      draw += d;
+      rows.push(`${kind} ${w.name}: ${d.toFixed(1)} MW`);
+    }
+    const bus = plant / POWER_BUSES;
+    const delta = draw - bus;
+    const parts = ['ENERGY BUDGET · WEAPONS BUS (balanced ETS 4/4/4)', `Plant ${plant.toFixed(0)} MW · weapons bus ${bus.toFixed(1)} MW · capacitor ${cap.toFixed(0)} MJ`, `Continuous weapon draw ${draw.toFixed(1)} MW`];
+    if (!draw) parts.push('STATUS: NO CONTINUOUS ENERGY WEAPON DRAW.');
+    else if (delta <= 0) parts.push(`STATUS: SUSTAINED · ${(bus / draw * 100).toFixed(0)}% bus headroom.`);
+    else parts.push(`STATUS: CAPACITOR-BUFFERED · deficit ${delta.toFixed(1)} MW · empty after ${(cap / delta).toFixed(1)} sim s (${(cap / delta / SIM_SPEED).toFixed(0)} real s) of uninterrupted fire.`);
+    if (spineBurst) parts.push(`SPINE EVENT: ${spineBurst.toFixed(0)} MJ charge excluded from continuous draw; check its charge cycle separately.`);
+    if (rows.length) parts.push('LOADS: ' + rows.join(' · '));
+    parts.push('Audit is advisory: it assumes every listed energy weapon fires continuously; it does not invent shield, drive, heat, mass, or volume costs.');
+    return { tone: !draw || delta <= 0 ? 'ok' : 'warn', text: parts.join('\n') };
+  }
+
+  function YARD_updatePowerAudit(entry) {
+    const audit = YARD_powerAudit(entry);
+    YARD_power.className = 'yardpower ' + audit.tone;
+    YARD_power.textContent = audit.text;
+  }
+
   function YARD_dbChange(text = YARD_dbEditor.value) {
     try {
       const entry = JSON.parse(text);
@@ -9908,12 +9953,15 @@ if (params.has('yard')) {
       YARD_buildMarkers(entry);
       const errors = YARD_validateEntry(entry);
       YARD_dbError.textContent = errors.length ? errors.map(error => '• ' + error).join('\n') : 'Database entry valid.';
+      YARD_updatePowerAudit(entry);
       document.getElementById('yard-mirror').checked = !!entry.mirror;
       const nextDef = { ...YARD_def, ...entry, id: YARD_def.id, prims: YARD_def.prims };
       if (nextDef.mirror !== YARD_def.mirror || nextDef.length !== YARD_def.length || JSON.stringify(nextDef.half) !== JSON.stringify(YARD_def.half)) YARD_setDefinition(nextDef);
       else YARD_def = nextDef;
     } catch (error) {
       YARD_dbError.textContent = error instanceof Error ? error.message : String(error);
+      YARD_power.className = 'yardpower bad';
+      YARD_power.textContent = 'ENERGY BUDGET · WAITING FOR VALID DATABASE JSON';
     }
   }
 
