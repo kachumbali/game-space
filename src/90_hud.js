@@ -207,6 +207,8 @@ function updateWeaponPanel() {
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
   if (dock) h += `<div class="sel">DOCKED - REARMING ${Math.round(rearmFrac(p) * 100)}% (D: UNDOCK)</div>`;
   else { let tn = null, td = 500; for (const s of ships) { if (!s.alive || !s.def.tender || s.team !== p.team) continue; const d = s.group.position.distanceTo(p.group.position); if (d < td) { td = d; tn = s; } } if (tn) h += `<div class="dim">D: DOCK AT ${tn.def.name} (REARM)</div>`; }
+  const pdT = (p.turrets || []).filter(T => Number.isFinite(T.ammoMax) && T.w.kind !== 'beam');
+  if (pdT.length) { const fr = pdT.reduce((a, T) => a + T.ammo, 0) / pdT.reduce((a, T) => a + T.ammoMax, 0); h += `<div class="${fr <= 0.05 ? 'bad' : 'dim'}">PD ×${pdT.length} ${Math.round(fr * 100)}%</div>`; }
   h += droneHudLine(p);
   const L = p.lock;
   const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :

@@ -462,7 +462,7 @@ function makeTurret(s, t) {
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], ammo: w.ammo || Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
@@ -540,9 +540,10 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0) {
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy)) {
       T.cool = T.w.cd;
       T.ammo--;
+      if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
       if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks
       const mp = turretMuzzle(T, new THREE.Vector3());
       T.fired++; T.lastErr = err;
