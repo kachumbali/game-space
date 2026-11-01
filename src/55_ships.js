@@ -161,7 +161,7 @@ function tenderTick(dt) {
       for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
       for (const T of s.turrets) {
         if (!Number.isFinite(T.ammo)) continue;
-        T.ammo = Math.min(T.w.ammo, T.ammo + 40 * m * dt);
+        T.ammo = Math.min(T.ammoMax, T.ammo + 40 * m * dt);
         if (T.dry && T.ammo > 0) {
           T.dry = false;
           if (!T.dead) for (const mat of T.mats) mat.color.multiplyScalar(1 / 0.55);

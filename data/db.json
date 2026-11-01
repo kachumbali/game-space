@@ -342,8 +342,8 @@
         {"w": "torp", "pos": [-3.0, -2.45, -5.2], "comp": "rackL", "grp": 3, "store": "torp"}
       ],
       "turrets": [
-        {"w": "pd", "pos": [0, 1.85, 5.6], "comp": "tur1", "side": 1},
-        {"w": "pd", "pos": [0, -1.85, 5.0], "comp": "tur2", "side": -1}
+        {"w": "pd", "pos": [0, 1.85, 5.6], "comp": "tur1", "side": 1, "ammo": 300},
+        {"w": "pd", "pos": [0, -1.85, 5.0], "comp": "tur2", "side": -1, "ammo": 300}
       ],
       "stores": {"ir": 2, "torp": 4, "flare": 32},
       "launch": [3.0, -2.45, -5.2],
@@ -1417,6 +1417,7 @@
       "track": 4.5,
       "turret": true,
       "ammo": 1500,
+      "energy": 3.0,
       "flak": 6
     },
     "flaser": {

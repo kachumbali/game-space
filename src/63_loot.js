@@ -81,7 +81,7 @@ function lootApply(p, type) {
     if (d.stores && d.stores.flare) p.stores.flare = Math.min(d.stores.flare, (p.stores.flare | 0) + 6);
   } else if (type === 'AMO') {
     for (const k in p.ammoMax) p.ammo[k] = p.ammoMax[k];
-    for (const T of p.turrets || []) if (Number.isFinite(T.ammo)) T.ammo = T.w.ammo;
+    for (const T of p.turrets || []) if (Number.isFinite(T.ammo)) T.ammo = T.ammoMax;
     p.energy = p.energyMax || 100;
   } else if (type === 'OVR') {
     (p.buffs ||= {}).ovr = { until: time + LOOT_CFG.overdriveT, mod: { rof: 1.35, dmg: 1.2, eff: 0.02, speed: 1.05 } };
