@@ -10,6 +10,7 @@ const CREDITS = [
     ['Engine, ships, missions, game systems, procedural sound, most documentation', 'Claude (Anthropic)'],
     ['Later development passes (weapons, capital ships, magazines, balance and UX review) and documentation, from 2026-10-22', 'Mistral Vibe (Mistral AI)'],
     ['Lore proposals (history, factions, FROGG species) and the combat music loops', 'Google Gemini, adapted and integrated by the team'],
+    ['Intro-test painted cutscene art', 'Original images generated with OpenAI image generation under the owner\'s direction; provenance and asset list: docs/ART_CREDITS.md.'],
     ['AI-assisted work', 'Code, text and music were produced with AI tools under the owner\'s direction. The legal status of AI-generated work varies by jurisdiction.'],
   ]],
   ['ENGINE', [
@@ -25,7 +26,7 @@ const CREDITS = [
     ['"Warp Engine Engage Sound" by bart', 'CC0 1.0. https://opengameart.org/content/warp-engine-engage-sound (jump drive, first 5 s)'],
   ]],
   ['ORIGINAL WORK', [
-    ['Ships, weapons, effects', 'All ship models are built in code from voxel primitives. Most sound effects are synthesised live with the Web Audio API. No bitmap textures, fonts or video are used.'],
+    ['Ships, weapons, effects', 'All ship models are built in code from voxel primitives. Most sound effects are synthesised live with the Web Audio API. No fonts or video are bundled; the intro-test scene uses original painted WebP art recorded in docs/ART_CREDITS.md.'],
     ['Setting and story', 'The Colonial Defence Force, Eagle Flight, the FROGGs and all characters are original to this project; the history, factions and FROGG species were drafted with Google Gemini and adapted.'],
   ]],
   ['INSPIRATION ONLY', [

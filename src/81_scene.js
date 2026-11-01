@@ -1,12 +1,14 @@
 // ======================================================================
-//  SCENE PLAYER (WC2-style pixel-art cutscene engine)
-//  Drives 320x200 timeline events: backgrounds, titles, scaling sprites,
+//  SCENE PLAYER (space-combat cutscene engine)
+//  Drives a 320x200 logical timeline at a high-resolution render scale:
+//  painted backgrounds, titles, scaling sprites,
 //  talking heads with blinking and phoneme lip-sync, typewriter dialogue.
 //  Reference: docs/INTRO_TEST_SPEC.md
 // ======================================================================
 
 const SCENE_CANVAS_W = 320;
 const SCENE_CANVAS_H = 200;
+const SCENE_RENDER_SCALE = 4;
 
 let sceneState = {
   active: false,
@@ -21,7 +23,7 @@ let sceneState = {
   bgCutStatic: 0,
   title: null,
   sprites: [],
-  heads: {}, // { imani: { meta, base, eyes: {}, mouth: {} } }
+  heads: {}, // { imani: { meta, portrait, base, eyes: {}, mouth: {} } }
   activeHeads: {}, // { left: { charId, eyeState, mouthShape, blinkT, blinkPhase } }
   dialogue: null, // { who, fullText, currentText, cps, timer, charIdx, done, waitT }
   images: {},
@@ -34,18 +36,16 @@ const INTRO_TEST_SCENE = {
   id: "intro_test",
   size: [320, 200],
   events: [
-    { t: 0.0, do: "bg", img: "bg_space.png", fade: 0.8 },
+    { t: 0.0, do: "bg", img: "painted/bg_space.webp", fade: 0.8 },
     { t: 0.5, do: "title", text: "CLAUDE SPACE COMMANDER", sub: "TEST SEQUENCE", dur: 3.0 },
-    { t: 4.0, do: "sprite", id: "k1", img: "ship_kestrel.png", from: { x: 40, y: 120, scale: 0.3 }, to: { x: 230, y: 80, scale: 1.6 }, dur: 4.0, ease: "in" },
-    { t: 4.0, do: "sprite", id: "h1", img: "ship_halberd.png", from: { x: 260, y: 40, scale: 0.5 }, to: { x: 90, y: 60, scale: 0.9 }, dur: 6.0, ease: "inout" },
-    { t: 10.0, do: "bg", img: "bg_briefing.png", cut: "static" },
+    { t: 10.0, do: "bg", img: "painted/bg_briefing.webp", cut: "static" },
     { t: 10.2, do: "head", id: "imani", char: "imani", pos: "left" },
     { t: 10.5, do: "say", who: "imani", text: "Eagle flight, this is not a drill. Unknown contacts at the Lily relay.", cps: 28 },
     { t: 16.0, do: "head", id: "hawk", char: "hawk", pos: "right" },
     { t: 16.2, do: "say", who: "hawk", text: "Unknown how, Commander?", cps: 28 },
     { t: 19.0, do: "say", who: "imani", text: "They are not answering our hails.", cps: 28 },
     { t: 23.0, do: "say", who: "meow", text: "Then we go and say hello.", cps: 28, mouth: null },
-    { t: 27.0, do: "bg", img: "bg_space.png", cut: "static" },
+    { t: 27.0, do: "bg", img: "painted/bg_space.webp", cut: "static" },
     { t: 28.0, do: "end" }
   ]
 };
@@ -113,6 +113,9 @@ async function preloadSceneAssets(sceneData) {
 
   for (const c of chars) {
     sceneState.heads[c] = { meta: { name: c.toUpperCase(), voiceBlip: 240, blink: { min: 2, max: 5 } }, eyes: {}, mouth: {} };
+    // High-resolution painted portrait cards are optional.  The original 64px
+    // layered heads remain a functional fallback for scenes that need lip-sync.
+    if (c !== 'meow') promises.push(loadSceneImage(base + 'painted/' + c + '.webp').then(img => { sceneState.heads[c].portrait = img; }));
     promises.push(loadSceneImage(base + 'heads/' + c + '/base.png').then(img => { sceneState.heads[c].base = img; }));
     for (const e of eyes) {
       const k = e.replace('.png', '').replace('eyes_', '');
@@ -132,9 +135,9 @@ function initSceneDOM() {
   if (!wrap) {
     wrap = document.createElement('div');
     wrap.id = 'sceneWrap';
-    wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:90;background:#000;align-items:center;justify-content:center;image-rendering:pixelated;';
+    wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:90;background:#000;align-items:center;justify-content:center;';
     wrap.innerHTML = `
-      <canvas id="sceneCv" width="320" height="200" style="width:min(100vw, 160vh);height:min(62.5vw, 100vh);image-rendering:pixelated;image-rendering:crisp-edges;box-shadow:0 0 50px rgba(0,0,0,0.9);cursor:pointer;"></canvas>
+      <canvas id="sceneCv" width="${SCENE_CANVAS_W * SCENE_RENDER_SCALE}" height="${SCENE_CANVAS_H * SCENE_RENDER_SCALE}" style="width:min(100vw, 160vh);height:min(62.5vw, 100vh);box-shadow:0 0 50px rgba(0,0,0,0.9);cursor:pointer;"></canvas>
       <button id="sceneSkip" style="position:absolute;top:16px;right:20px;z-index:95;background:rgba(8,16,24,0.88);color:#7fe0b0;border:1px solid #31505c;font:12px monospace;padding:6px 14px;cursor:pointer;letter-spacing:1px;">SKIP [ESC]</button>
     `;
     document.body.appendChild(wrap);
@@ -371,36 +374,35 @@ function renderSceneFrame() {
   const cv = document.getElementById('sceneCv');
   if (!cv) return;
   const ctx = cv.getContext('2d');
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+
+  // Background art gets every physical pixel; the authored scene coordinates,
+  // UI, and fallback sprites retain the compact 320x200 logical grid below.
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
 
   // Clear
   ctx.fillStyle = '#000000';
-  ctx.fillRect(0, 0, SCENE_CANVAS_W, SCENE_CANVAS_H);
+  ctx.fillRect(0, 0, cv.width, cv.height);
 
   // Background
   if (sceneState.bgImg) {
     if (sceneState.bgFade < 1.0) {
       ctx.globalAlpha = sceneState.bgFade;
-      ctx.drawImage(sceneState.bgImg, 0, 0, SCENE_CANVAS_W, SCENE_CANVAS_H);
+      ctx.drawImage(sceneState.bgImg, 0, 0, cv.width, cv.height);
       ctx.globalAlpha = 1.0;
     } else {
-      ctx.drawImage(sceneState.bgImg, 0, 0, SCENE_CANVAS_W, SCENE_CANVAS_H);
+      ctx.drawImage(sceneState.bgImg, 0, 0, cv.width, cv.height);
     }
   }
 
   // Static burst cut effect
   if (sceneState.bgCutStatic > 0) {
-    const imgData = ctx.createImageData(SCENE_CANVAS_W, SCENE_CANVAS_H);
-    const buf = imgData.data;
-    for (let i = 0; i < buf.length; i += 4) {
-      const v = (Math.random() * 255) | 0;
-      buf[i] = v > 180 ? 220 : 20;
-      buf[i + 1] = v > 150 ? 240 : 24;
-      buf[i + 2] = v > 120 ? 255 : 36;
-      buf[i + 3] = 255;
-    }
-    ctx.putImageData(imgData, 0, 0);
+    ctx.fillStyle = 'rgba(205, 240, 255, 0.82)';
+    ctx.fillRect(0, 0, cv.width, cv.height);
   }
+
+  ctx.setTransform(SCENE_RENDER_SCALE, 0, 0, SCENE_RENDER_SCALE, 0, 0);
 
   // Moving Sprites (Kestrel, Halberd)
   for (const sp of sceneState.sprites) {
@@ -424,8 +426,20 @@ function renderSceneFrame() {
     const headRes = sceneState.heads[h.charId];
     if (!headRes) continue;
 
-    const hx = pos === 'left' ? 24 : pos === 'right' ? 232 : 128;
-    const hy = 44;
+    const hx = pos === 'left' ? 8 : pos === 'right' ? 216 : 112;
+    const hy = 5;
+
+    if (headRes.portrait) {
+      ctx.save();
+      ctx.fillStyle = 'rgba(4, 12, 18, 0.84)';
+      ctx.fillRect(hx - 2, hy - 2, 100, 132);
+      ctx.drawImage(headRes.portrait, hx, hy, 96, 128);
+      ctx.strokeStyle = '#c48a28';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(hx - 1.5, hy - 1.5, 99, 131);
+      ctx.restore();
+      continue;
+    }
 
     // Head base
     if (headRes.base) ctx.drawImage(headRes.base, hx, hy);
