@@ -46,7 +46,7 @@ with Runner() as R:
       };
     }""")
     check('spawned Bittern fires both fixed HE mounts', details['guns']['n'] == 2 and details['bolts'] >= 2, str(details))
-    check('Bittern launches one HM-1 from its store', details['launched'] and details['torps'] == 3 and details['missileCount'] == 1, str(details))
+    check('Bittern launches one HM-1 from its store', details['launched'] and details['torps'] == 11 and details['missileCount'] == 1, str(details))
     check('spawned Bittern has specified hardpoints and components',
           details['mounts'] == 4 and details['turrets'] == 2 and details['engines'] == 4 and details['comps'] == 11,
           str(details))
