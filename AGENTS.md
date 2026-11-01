@@ -1,6 +1,6 @@
 # AGENTS.md: working on game-space (working title: Claude Space Commander)
 
-Read this before editing. Owner: Jonas; he tests builds on iPad/phone/desktop and iterates. Tone: sober,
+Read this before editing. Owner: kachumbali; he tests builds on iPad/phone/desktop and iterates. Tone: sober,
 critical, evidence-weighted, no flattery; state what was and was not verified.
 
 ## Build and run

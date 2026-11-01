@@ -192,7 +192,7 @@ function startSkirmish(cfgIn) {
   game.skS = { t: 0, ended: false, endT: 0, result: null, why: '', respawnT: -1, shown: false, spawned: 0 };
   applyLook(cfg.look);
   wave = 0; state = 'play'; flightMode = cfg.fm;
-  const p = makeShip(cfg.ship, 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  const p = makeShip(cfg.ship, 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   p.shots = 0; p.hitsLanded = 0;
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
   for (let i = 0; i < cfg.wing; i++) {
@@ -227,7 +227,7 @@ function skirmishUpdate(dt) {
   const S = game.skS; if (!S) return;
   if (S.ended) { S.endT += dt; if (S.endT > (S.result === 'win' ? 3 : 2.5) && !S.shown) { S.shown = true; showSkirmishDebrief(); } return; }
   S.t += dt;
-  if (state === 'dead') return skEnd('lose', 'ECHO DOWN');
+  if (state === 'dead') return skEnd('lose', 'MEOW DOWN');
   if (state !== 'play') return;
   if (ships.some(s => s.team === 1 && s.alive)) { S.respawnT = -1; return; }
   if (game.sk.respawn) { if (S.respawnT < 0) S.respawnT = 3; S.respawnT -= dt; if (S.respawnT <= 0) { S.respawnT = -1; skSpawnForce(); log(`WAVE ${wave}`, '#ffd080'); } }

@@ -7,7 +7,7 @@ Every licence below was re-read from its source page on **2026-10-22**.
 ## Who made what (AI tools and people)
 | Contributor | Role |
 |---|---|
-| Jonas Koll | Design and direction, all owner decisions |
+| kachumbali | Design and direction, all owner decisions |
 | Claude (Anthropic) | Engine, ships, missions, game systems, procedural sound, most documentation (git trailer `Co-Authored-By: Claude ...`) |
 | Mistral Vibe (Mistral AI) | Later development passes from 2026-10-22: weapons and capital ships, magazines, balance and UX review, documentation (trailer `Co-Authored-By: Mistral Vibe ...`) |
 | Google Gemini | Lore proposals (history, factions, FROGG species; raw text in `docs/prototypes/lore-gemini/`) and the two combat music loops (composed with Gemini code tools) |

@@ -2,6 +2,9 @@
 
 Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
 
+## 0.3.0 (in progress): Armoury, plan in docs/PLAN_V03.md
+- M0 opsec: the owner's real name is gone from code and docs (handle `kachumbali`); the player pilot is Lt. Tom Cat, callsign MEOW; `tools/check_opsec.py` runs in CI.
+
 ## 0.2.3: Tern and Bittern selectable (2026-11-01)
 - Skirmish setup (and `?sk_ship=`) now offers BITTERN (torpedo bomber) and TERN (unarmed resupply shuttle) as your ship; the Bittern can also be a wingman. Mission briefings show their loadouts.
 - Test: flown in skirmish headless (Bittern fires, Tern flies unarmed); menu_t 0 failures. Not hand-played.

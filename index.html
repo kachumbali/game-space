@@ -607,11 +607,11 @@ const SAMPLE_DATA = {"expl1": "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAA
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
-const GAME_VERSION = '0.2.3';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
+const GAME_VERSION = '0.3.0-dev';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
-    ['Design and direction', 'Jonas Koll'],
+    ['Design and direction', 'kachumbali'],
     ['Engine, ships, missions, game systems, procedural sound, most documentation', 'Claude (Anthropic)'],
     ['Later development passes (weapons, capital ships, magazines, balance and UX review) and documentation, from 2026-10-22', 'Mistral Vibe (Mistral AI)'],
     ['Lore proposals (history, factions, FROGG species) and the combat music loops', 'Google Gemini, adapted and integrated by the team'],
@@ -3312,7 +3312,7 @@ function resetGame() {
   plogReset("free");
   clearWorld();
   game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
-  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   benchSetup();
   spawnWave();
 }
@@ -5757,7 +5757,7 @@ function startSurvival(cfgIn) {
   sv = game.sv = { cfg, seed, rng: mulberry(seed), n: 0, phase: 'fight', t: 0, tPhase: 0, perks: {}, picks: [], mut, aceN: 0, over: false, overT: 0, shown: false, windUsed: false, flareT: 0, waveT0: 0, kills0: 0, hull0: 0, noHit: true, draft: null, fleeT: 0 };
   applyLook(cfg.look);
   wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : fmLoad();
-  const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   p.shots = 0; p.hitsLanded = 0;
   const D = DIFFS[cfg.diff];
   juice.scoreMul = D.score * cfg.mut.reduce((a, k) => a * MUTATORS[k].score, 1);
@@ -5925,7 +5925,7 @@ const $id = id => document.getElementById(id);
 
 // ---- persistent crew ----------------------------------------------------------------------------------
 const PILOT_DEFS = {
-  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight', skill: 3 },
+  player: { name: 'Lt. Tom Cat', callsign: 'MEOW', trait: 'new to Eagle flight', skill: 3 },
   hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons', skill: 4 },
   sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous', skill: 2 },
 };
@@ -5963,7 +5963,7 @@ const MISSIONS = [{
 
 Intelligence expects a FROGG raiding party: fast fighters first to strip our screen, then torpedo bombers for the Halberd, then, if they find us soft, an escort corvette of their own.
 
-Eagle flight (ECHO, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
+Eagle flight (MEOW, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
 
 ROE: weapons free. Missiles are scarce, fly the guns first.`,
   objectivesAtStart: [],
@@ -6300,7 +6300,7 @@ function startMission(M, seg) {
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
-  const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
+  const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player', pilot: 'player' });
   p.modBase = { take: diffCfg().take }; recalcMods(p);
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
@@ -6409,7 +6409,7 @@ function missionUpdate(dt) {
     runActions(st.do);
   }
   if (game.anchor && !game.anchor.alive) { const an = anchorName(game.anchor); comm('CONTROL', `${an} is lost. All ships, abort. Abort.`); objective('o1', null, 'failed'); endMission('lose', `THE ${an} WAS DESTROYED`); }
-  if (state === 'dead') endMission('lose', 'ECHO DOWN');
+  if (state === 'dead') endMission('lose', 'MEOW DOWN');
   // optional chatter: missile warnings
   if (player && player.alive) {
     if (warnState.incoming.length && time - (S.lastMslCall || -99) > 9) {
@@ -6735,7 +6735,7 @@ function startSkirmish(cfgIn) {
   game.skS = { t: 0, ended: false, endT: 0, result: null, why: '', respawnT: -1, shown: false, spawned: 0 };
   applyLook(cfg.look);
   wave = 0; state = 'play'; flightMode = cfg.fm;
-  const p = makeShip(cfg.ship, 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  const p = makeShip(cfg.ship, 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   p.shots = 0; p.hitsLanded = 0;
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
   for (let i = 0; i < cfg.wing; i++) {
@@ -6770,7 +6770,7 @@ function skirmishUpdate(dt) {
   const S = game.skS; if (!S) return;
   if (S.ended) { S.endT += dt; if (S.endT > (S.result === 'win' ? 3 : 2.5) && !S.shown) { S.shown = true; showSkirmishDebrief(); } return; }
   S.t += dt;
-  if (state === 'dead') return skEnd('lose', 'ECHO DOWN');
+  if (state === 'dead') return skEnd('lose', 'MEOW DOWN');
   if (state !== 'play') return;
   if (ships.some(s => s.team === 1 && s.alive)) { S.respawnT = -1; return; }
   if (game.sk.respawn) { if (S.respawnT < 0) S.respawnT = 3; S.respawnT -= dt; if (S.respawnT <= 0) { S.respawnT = -1; skSpawnForce(); log(`WAVE ${wave}`, '#ffd080'); } }

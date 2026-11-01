@@ -143,7 +143,7 @@ def m5_win(R):
     check('m5 debrief shows CAMPAIGN win text', 'MISSION ACCOMPLISHED' in t and 'The spine is broken' in t, t[:80])
     check('m5 no console errors', not R.errs, str(R.errs[:3]))
 
-# ---- lose paths: anchor destroyed / ECHO down -----------------------------------------------------------
+# ---- lose paths: anchor destroyed / MEOW down -----------------------------------------------------------
 def lose(R, m, anchor_name, snippet, has_transit):
     pg = newpage(R, f'?go&m={m}&nobloom')
     if has_transit: step(pg, 100); skip_transit(pg)
@@ -160,7 +160,7 @@ def lose(R, m, anchor_name, snippet, has_transit):
     else: step(pg, 60)
     pg.evaluate("()=>__game.destroy(__game.player)")
     i = wait_end(pg, 30)
-    check(f'm{m} player loss -> lose', i['ended'] and i['result'] == 'lose' and i['why'] == 'ECHO DOWN', str(i)[:160])
+    check(f'm{m} player loss -> lose', i['ended'] and i['result'] == 'lose' and i['why'] == 'MEOW DOWN', str(i)[:160])
     step(pg, 100)
     t = brief_txt(pg)
     check(f'm{m} player-loss debrief text', 'MISSION FAILED' in t and snippet in t, t[:80])

@@ -95,7 +95,7 @@ function resetGame() {
   plogReset("free");
   clearWorld();
   game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
-  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player' });
+  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   benchSetup();
   spawnWave();
 }

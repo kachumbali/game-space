@@ -88,8 +88,8 @@ In-game assignment (the current `SHIPS` roster, `src/30_ships_human.js`):
 Raw-proposal deviations: the proposal called the two-seat heavy fighter "Halberd";
 that name is our corvette, so the heavy fighter became the **Falchion** (owner
 decision 2026-10-22; WC-style weapon name). The proposal's corvette names
-(Watchkeeper, Vanguard-C) are dropped. The player character is Lt. J. Koll,
-callsign ECHO, of Eagle flight (HAWK, SPARROW) - `src/75_mission.js`.
+(Watchkeeper, Vanguard-C) are dropped. The player character is Lt. Tom Cat,
+callsign MEOW, of Eagle flight (HAWK, SPARROW) - `src/75_mission.js`.
 
 ## 5. Ejection, survival pods and SAR (human only)
 
