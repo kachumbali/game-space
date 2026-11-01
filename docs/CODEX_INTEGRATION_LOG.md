@@ -279,3 +279,15 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   tracking turret rigs. Halberd's two laser rigs now use a compact visual scale
   matched to their embedded voxel seats; their weapon class, tracking and
   combat values are unchanged.
+
+## Ordnance-manifest and drone-wingman contract — 2026-11-01
+
+- Recorded fixed physical ordnance stations: S missiles for drones/fighters,
+  M missiles for fighters and heavy fighters, L torpedoes only for bombers and
+  dedicated strike craft, and XL cells/spinal ordnance for capital hulls.
+  Current briefings show fixed stores; a constrained station-selection screen
+  is the next implementation step rather than an already-shipped feature.
+- Audited the existing generic human drone and specified it as the future
+  **KITE-6 Loyal Wingman**: a 6 m expendable scout/interceptor with DR-2,
+  two S-class Swift rails, datalink mast, finite campaign inventory and no
+  torpedo capability. Existing drone orders/control limits provide its base.
