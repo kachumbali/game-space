@@ -127,3 +127,16 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   the locally installed Chrome did not complete or write either table during
   the available execution window. The checked-in CSV files were therefore left
   untouched; no claim of a G4 data refresh is made.
+
+## Campaign, roster, and nuclear review — 2026-11-01
+
+- Added `docs/CAMPAIGN_RETREAT.md`, the previously missing Long Retreat arc:
+  four mission-ready drafts with an intel ladder, existing-engine fallback
+  paths, and explicit tags where convoy/evacuation systems must be implemented
+  before the narrative claim becomes real.
+- Added `docs/ROSTER_IMPLEMENTATION.md`, separating present database hulls,
+  data-only marks, and planned Falchion/SAR/liner/destroyer work.
+- Added `docs/NUCLEAR_IMPLEMENTATION_AUDIT.md`. The current NK-1 is a
+  free-flight test-bench burst only; it does not implement the safer campaign
+  nuclear system specified in `docs/NUKES.md` (release authority, arming,
+  intercept behaviour, Exeter cells, campaign stock, or dedicated tests).
