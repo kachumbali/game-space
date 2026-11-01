@@ -12,7 +12,7 @@ Goal: fix the combat numbers and fill the human roster **before** building the c
 - **No real names or email addresses in the repo (O).** Handle: `kachumbali`.
 
 ## Status (2026-11-01)
-Done and merged: M0 opsec, M1 harness and baseline (docs/BALANCE_BASELINE.md, docs/BALANCE_TARGETS.md PROPOSED), M5 subsystem effects (docs/SUBSYSTEM_EFFECTS.md), central db `tuning` section with the `?db=` override, Marks schema (docs/MARKS_SCHEMA.md, `kestrel_2` scaffolding), weapon panel built from mounts, PD turret energy. Also merged: Gemini G1 (Marks II-IV for Kestrel, Merlin, Bittern, Tern, torpedoes, fighter missiles; numbers unmeasured), M2 weapons by size (docs/WEAPONS_M2.md). Next: M3 missiles and torpedoes, M4 roster (agents running), scene player for the intro test.
+Done and merged: M0 opsec, M1 harness and baseline (docs/BALANCE_BASELINE.md, docs/BALANCE_TARGETS.md PROPOSED), M5 subsystem effects (docs/SUBSYSTEM_EFFECTS.md), central db `tuning` section with the `?db=` override, Marks schema (docs/MARKS_SCHEMA.md, `kestrel_2` scaffolding), weapon panel built from mounts, PD turret energy. Also merged: Gemini G1 (Marks II-IV for Kestrel, Merlin, Bittern, Tern, torpedoes, fighter missiles; numbers unmeasured), M2 weapons by size (docs/WEAPONS_M2.md). M3 missiles and torpedoes with tandem warheads (docs/MISSILES_M3.md), M4 roster (Falchion, SAR cutter, Argosy, Claymore). Next: owner hand-play and tuning via ?db=, scene player for the intro test, campaign engine pieces.
 
 ## M0. Opsec
 - Credits, AGENTS.md, ORCHESTRATION, CREDITS, MILESTONE_2, COPILOT_BRIEFS: the owner's real name becomes `kachumbali`.
