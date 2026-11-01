@@ -39,10 +39,10 @@ function updateShieldsAndFx(s, dt) {
   for (const f of ['fore', 'aft']) {
     const cap = s.def.shield[f] * sg * (s.mod?.shieldCap ?? 1);
     if (s.shield[f] > cap) s.shield[f] = cap;
-    if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
+    if (s.def.shieldRegen && time - s.lastHit > TUNE.regen.shieldDelay && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
+  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || TUNE.regen.energyDefault) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);

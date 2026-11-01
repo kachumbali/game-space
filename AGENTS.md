@@ -16,7 +16,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
   `65_combat` · `70_ai` · `74_survival` (Gauntlet, perks, difficulty, career) · `75_mission` · `76_menu` · `77_cine` · `78_coms` · `79_bullfrog` · `80_input` ·
   `85_update` · `90_hud` · `95_main` · `99_tail.html`.
 - `data/db.json` is the source of truth for ship, weapon, armour, mass-class and armour-class data.
-  `tools/validate_db.py` checks it; `tools/export_db.py` generates `docs/data/*.csv`.
+  `tools/validate_db.py` checks it (incl. marks and the tuning section); `tools/export_db.py` generates `docs/data/*.csv`.
 - `tools/render_ships.py` renders individual ship views; `tools/render_pack.py` makes faction contact sheets.
   Image output under `docs/img/` is git-ignored and must not be committed.
 
@@ -41,6 +41,9 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 ## Ship database (owner decision 2026-10-23)
 - **`data/db.json` is the single source of truth for every ship, weapon, armour profile, mass class and armour class multiplier.** Edit the numbers there, not in `src/30/31_ships_*.js` or `60_weapons.js` (those keep only geometry: `prims`). `build.py` embeds the JSON via `src/16_db.js`. Details: `docs/DATABASE.md`.
 - After editing: `python3 build.py && python3 tools/validate_db.py`. Design comments from the old source live under `notes` in the JSON.
+- **Combat constants live in `db.tuning`** (damage-type multipliers, hit split, beam focus floor, flak, regen, missile steering, nuke, crash, fighter/afterburner rules), read via `TUNE` (`src/16_db.js`). Do not hard-code a new balance number in `src/*`.
+- **Iterate without rebuilding (dev override):** (1) `python3 -m http.server 8000` in the repo root; (2) open `http://localhost:8000/index.html?db=data/db.json&free&go`; (3) edit `data/db.json`, reload. `?db=` is awaited at the top of `16_db.js`; the published file still embeds the db. Details: `docs/DATABASE.md`.
+- **Marks** (ship/weapon variants `kestrel_2` = `base` + `mods`) are resolved at load; schema in `docs/MARKS_SCHEMA.md`, checked by `tools/validate_db.py`.
 - `docs/data/*.csv` are generated views (`tools/export_db.py`), never edited by hand.
 
 ## Git

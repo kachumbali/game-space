@@ -15,8 +15,8 @@ function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 :
 
 // reach multiplier of a subsystem's radius within which a hull impact damages it directly
 // parts that stick out of the hull can be hit directly through the armour (reach = radius x factor); SOFT = extra damage taken
-const EXPOSED = { turret: 1.6, gun: 1.6, engine: 2.2, radar: 1.5, shield: 1.3, radiator: 1.8, bay: 1.4 };
-const SOFT = { radar: 1.5, radiator: 1.3, shield: 1.2, bay: 1.2 };
+const EXPOSED = TUNE.exposed;
+const SOFT = TUNE.soft;
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
@@ -58,9 +58,9 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
       if (dist < reach && dist < ed) { ed = dist; ex = c; }
     }
     if (ex) {
-      const before = compState(ex), dc = d * 0.55 * X[2] * (SOFT[ex.role] || 1);
-      ex.hp -= dc; if (!through) d -= d * 0.55;
-      s.structure -= dc * 0.1;
+      const before = compState(ex), dc = d * TUNE.hit.exposedShare * X[2] * (SOFT[ex.role] || 1);
+      ex.hp -= dc; if (!through) d -= d * TUNE.hit.exposedShare;
+      s.structure -= dc * TUNE.hit.exposedStructShare;
       sparksAt(wp, 5, 14); fireAt(wp, 1, 3);
       const after = compState(ex);
       if (after > before) compEvent(s, ex, after);
@@ -74,7 +74,7 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   let spall = 0;
   if (AR && d > 0.01) {
     const din = d;
-    let stop = Math.min(0.92, def.armor.rating * AR.prof[dtype]);
+    let stop = Math.min(TUNE.hit.armorStopCap, def.armor.rating * AR.prof[dtype]);
     const th = AR.thresh * (ARMOR_THRESH_CLS[def.cls] || 1);
     if (th > 0 && din < th) stop += (1 - stop) * (1 - (din / th) * (din / th));
     let absorbed = din * stop;
@@ -82,7 +82,7 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
       const R = AR.rate * def.structure, bk = (s.abl ||= {})[side] ||= { v: 0, t: time };
       bk.v = Math.max(0, bk.v - R * (time - bk.t)); bk.t = time;
       bk.v += absorbed;
-      const cap = R * 1.5;
+      const cap = R * TUNE.hit.armorBurstSec;
       if (bk.v > cap) { absorbed -= bk.v - cap; bk.v = cap; }
     }
     d = din - absorbed;
@@ -100,11 +100,11 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   for (const c of s.comps) {
     if (c.hp <= 0) continue;
     const dist = _cp.set(c.pos[0], c.pos[1], c.pos[2]).distanceTo(lp);
-    if (dist < c.r * 2.2 + 0.8 && dist < bd) { bd = dist; best = c; }
+    if (dist < c.r * TUNE.hit.internalReachMul + TUNE.hit.internalReachAdd && dist < bd) { bd = dist; best = c; }
   }
   if (best) {
     const before = compState(best);
-    best.hp -= (through ? d * 0.4 : d * 0.7) + spall; s.structure -= through ? d : d * 0.3;
+    best.hp -= (through ? d * TUNE.hit.throughCompShare : d * TUNE.hit.compShare) + spall; s.structure -= through ? d : d * TUNE.hit.structShareWhenComp;
     const after = compState(best);
     if (after > before) compEvent(s, best, after);
   } else s.structure -= d;
@@ -265,7 +265,7 @@ function solidAtWorld(s, wp) {
 
 // ---- ship / ship collisions: crash damage for every class, friend or foe -------------------------------
 // Mass classes are placeholders. Damage to each body = base(speed) x size factor x its share of the impact (the lighter ship takes more).
-const MASS = { fighter: 1, corvette: 25, frigate: 150, capital: 2000 };
+const MASS = DB.mass;
 // the lighter body is tested at its extremities (nose, tail, wing tips, top, bottom, centre) and at where the centre was half a step ago,
 // not only at its centre, so a wing or nose that enters the other hull counts as a crash
 const _cpl = [[0, 0, 0], [0, 0, -1], [0, 0, 1], [1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0]];
@@ -300,8 +300,8 @@ function collideShips(dt) {
     a.hitCool = 0.6;
     const n = a.group.position.clone().sub(b.group.position); if (n.lengthSq() < 1e-6) n.set(0, 1, 0); n.normalize();
     const mu = ma * mb / (ma + mb);
-    const base = (2 + sp * 0.22) * (1 + 0.35 * Math.sqrt(mu));
-    const cap = 60 * (1 + 0.6 * Math.sqrt(mu));
+    const CR = TUNE.crash, base = (CR.base + sp * CR.perSpeed) * (1 + CR.massK * Math.sqrt(mu));
+    const cap = CR.cap * (1 + CR.capK * Math.sqrt(mu));
     const dmgA = Math.min(cap, base * 2 * mb / (ma + mb)), dmgB = Math.min(cap, base * 2 * ma / (ma + mb));
     const wpA = cp.clone();
     const lpA = a.group.worldToLocal(cp.clone());
