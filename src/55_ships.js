@@ -157,7 +157,7 @@ function tenderTick(dt) {
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
-      const m = (dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5;  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
+      const m = ((dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5) * subEff(t, 'bay', 'service');   // M5: damaged service bays slow the rearm, dead ones stop it  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
       for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
       for (const T of s.turrets) {
         if (!Number.isFinite(T.ammo)) continue;
@@ -203,12 +203,14 @@ function dockTry() {
     if (d < bd) { bd = d; best = t; }
   }
   if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
+  if (subEff(best, 'bay', 'service') <= 0) { log('TENDER BAYS DESTROYED - NO DOCKING', '#ff5a4a'); return; }
   dock = { t: best, phase: 'approach', t0: time };
   log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
 }
 function dockTick(dt) {
   if (!dock) return;
   if (!dock.t.alive || dock.t.dying > 0) { dock = null; log('DOCK LOST - TENDER DESTROYED', '#ff5a4a'); return; }
+  if (subEff(dock.t, 'bay', 'service') <= 0) { dock = null; log('DOCK LOST - TENDER BAYS DESTROYED', '#ff5a4a'); return; }
   const wpt = dock.t.group.localToWorld(DOCK_PT.clone());
   if (dock.phase === 'approach') {
     player.vel.multiplyScalar(Math.exp(-2.2 * dt));

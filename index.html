@@ -67,6 +67,7 @@
     background:radial-gradient(ellipse at center,rgba(255,40,20,0) 40%,rgba(255,40,20,.55) 100%)}
   #hud{position:fixed;left:14px;top:10px;font-size:12px;line-height:1.45;text-shadow:0 0 4px #000;white-space:pre;z-index:4}
   #dmg{display:block;margin-top:4px;opacity:.95}
+  #subsys{font-size:10px;line-height:1.3;margin-top:3px;text-shadow:0 0 4px #000;white-space:pre}body.phone #subsys{font-size:8px;white-space:normal;max-width:84px}body.cine #subsys{display:none}
   #wingstrip{font-size:10px;line-height:1.35;margin-top:4px;text-shadow:0 0 4px #000;white-space:pre}body.phone #wingstrip{font-size:8px}body.cine #wingstrip{display:none}
   #radar{position:fixed;left:50%;bottom:10px;transform:translateX(-50%);width:224px;height:224px;z-index:5}
   #tgt{position:fixed;left:50%;top:10px;transform:translateX(-50%);font-size:11px;line-height:1.45;
@@ -3005,11 +3006,12 @@ const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 // ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
 function abTick(s, want, dt) {
-  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1);
-  if (!mx) { s.ab = false; return false; }
+  const d = s.def, mx = abMaxOf(s);
+  if (!d.abMax) { s.ab = false; return false; }
+  if (s.abFuel > mx) s.abFuel = mx;                    // a damaged engine shrinks the pool
   const on = want && !s.abLock && s.abFuel > 0;
   if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
-  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * dt);
+  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * subEff(s, 'engine', 'abRegen') * dt);
   if (s.abLock && s.abFuel > mx * 0.25) s.abLock = false;
   s.ab = on; return on;
 }
@@ -3021,7 +3023,7 @@ const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
+    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? abSpdOf(s) : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },
   // SIM (TIE Fighter style, owner request 2026-10-30): throttle sets a wanted speed, but speed changes at the ship's real acceleration (so a throttle
@@ -3030,8 +3032,8 @@ const flightModels = {
   sim(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt), fighter = s.def.cls === 'fighter';
-    const want = s.def.maxSpeed * speedMul(s) * (ab ? s.def.abSpd : 1) * cmd.throttle;
-    const a = (s.def.accel || 40) * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const want = s.def.maxSpeed * speedMul(s) * (ab ? abSpdOf(s) : 1) * cmd.throttle;
+    const a = (s.def.accel || 40) * speedMul(s) * (ab ? abAccOf(s) : 1);
     const sp = s.vel.length();
     const v = Math.max(0, sp + clamp(want - sp, -a * SIMF.decel * dt, a * dt));
     if (sp < 2) { s.vel.copy(_fwd).multiplyScalar(v); return; }
@@ -3043,20 +3045,20 @@ const flightModels = {
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
-    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
+    const a = s.def.accel * speedMul(s) * (ab ? abAccOf(s) : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? abSpdOf(s) : 1);
     const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
     s.vel.addScaledVector(_fwd, thrust * a * dt);
-    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
+    const cap = s.def.maxSpeed * 2.2 * (ab ? abSpdOf(s) / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const a = s.def.accel * speedMul(s) * (ab ? abAccOf(s) : 1);
     s.vel.addScaledVector(_fwd, cmd.thrust * a * dt);
     if (cmd.brake) s.vel.multiplyScalar(Math.exp(-1.8 * dt));
-    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
+    const cap = s.def.maxSpeed * 2.2 * (ab ? abSpdOf(s) / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };
@@ -3214,6 +3216,72 @@ function chip(s, lp, r, sr, replay) {
         [c.r * 1.4, c.g * 1.4, c.b * 1.4, 1], [c.r * 0.5, c.g * 0.5, c.b * 0.5, 0]);
     }
   }
+}
+// ======================================================================
+//  SUBSYSTEM EFFECTS (v0.3 M5)  -  what a damaged / destroyed component does to the ship. Table: docs/SUBSYSTEM_EFFECTS.md
+//  Grades follow compState(): 0 ok, 1 damaged (<= 50% hp), 2 destroyed. Every row is [ok, damaged, destroyed]. The grade of a role is the MEAN
+//  grade of its components (two engines, one dead = 1.0), linearly interpolated between the rows. All effects live in shared functions
+//  (lockUpdate, abTick, fireMount, updateTurrets, updateShieldsAndFx, tenderTick), so AI ships obey them exactly like the player.
+//  Older continuous effects (engine speed/turn, shield cap/regen, powerMul, gun gating) stay in 50_state / 65_combat and are listed in the doc.
+// ======================================================================
+const SUBSYS = {
+  radar:    { lockRange: [1, 0.65, 0.35], lockTime: [1, 1.5, 2.6], sensor: [1, 0.6, 0] },   // sensor = share of the 6 km radar range; 0 = scope offline (RF seekers need a live radar)
+  engine:   { abPool: [1, 0.7, 0.35], abBoost: [1, 0.75, 0.4], abRegen: [1, 0.7, 0.4] },     // afterburner pool, boost (top speed and accel gain), refill rate
+  power:    { energyCap: [1, 0.8, 0.6] },                                                    // capacitor size (regen and shield regen: powerMul; destroyed reactor = ship lost)
+  radiator: { energyRegen: [1, 0.85, 0.65] },                                                // heat-limited capacitor refill
+  gun:      { cd: [1, 1.35, 1.35] },                                                         // per mount: cooldown multiplier (destroyed gates the mount)
+  turret:   { cd: [1, 1.4, 1.4], track: [1, 0.6, 0.6] },                                     // per turret: cooldown and slew-rate multipliers (destroyed = dead turret)
+  bay:      { service: [1, 0.5, 0] },                                                        // tender rearm rate and dock clearance (0 = no docking)
+};
+const SENSOR_MAX = 6000;                          // longest radar range setting (RADAR_RANGES), the reach a healthy scope shows
+const subGrade = (arr, m) => { const i = Math.min(1, Math.floor(m)); return arr[i] + (arr[i + 1] - arr[i]) * (m - i); };
+function subMean(s, role) {
+  if (role === 'radar' && s.blindUntil > time) return 2;                       // nuclear flash blinds sensors
+  let n = 0, t = 0;
+  for (const c of s.comps) if (c.role === role) { n++; t += compState(c); }
+  return n ? t / n : 0;
+}
+const subEff = (s, role, key) => subGrade(SUBSYS[role][key], subMean(s, role));
+const compEff = (c, role, key) => (c ? subGrade(SUBSYS[role][key], compState(c)) : 1);
+const abMaxOf = s => (s.def.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1) * subEff(s, 'engine', 'abPool');
+const abSpdOf = s => 1 + (s.def.abSpd - 1) * subEff(s, 'engine', 'abBoost');
+const abAccOf = s => 1 + (s.def.abAcc - 1) * subEff(s, 'engine', 'abBoost');
+const energyCapOf = s => (s.energyMax || 100) * subEff(s, 'power', 'energyCap');
+// contacts further away than this are not shown by a damaged scope (Infinity = healthy; a dead scope keeps the old 1200 m visual range)
+function sensorLimit(s) { const e = subEff(s, 'radar', 'sensor'); return e >= 0.999 ? Infinity : Math.max(1200, SENSOR_MAX * e); }
+
+// ---- HUD cues: one short line per degraded role ("RADAR DAMAGED - LOCK RANGE 65%, LOCK TIME x1.5") ----
+const subPct = v => Math.round(v * 100) + '%';
+const SUB_NAMES = { radar: 'RADAR', engine: 'ENGINES', power: 'POWER', radiator: 'RADIATORS', gun: 'GUNS', turret: 'TURRETS', bay: 'BAYS', shield: 'SHIELDS', dock: 'DOCK' };
+const SUB_SHORT = { radar: 'RDR', engine: 'ENG', power: 'PWR', radiator: 'RAD', gun: 'GUN', turret: 'TUR', bay: 'BAY', shield: 'SHD', dock: 'DCK' };
+function subWorst(s, role, key, low) {            // the worst single component's multiplier (guns and turrets act per component)
+  let w = 1;
+  for (const c of s.comps) if (c.role === role) { const v = compEff(c, role, key); w = low ? Math.min(w, v) : Math.max(w, v); }
+  return w;
+}
+const SUB_FX = {                                  // role -> effect labels for its cue (first two go into the flash line)
+  radar: s => [`LOCK RANGE ${subPct(subEff(s, 'radar', 'lockRange'))}`, `LOCK TIME x${subEff(s, 'radar', 'lockTime').toFixed(1)}`, subEff(s, 'radar', 'sensor') <= 0 ? 'SCOPE OFF' : `SCOPE ${subPct(subEff(s, 'radar', 'sensor'))}`],
+  engine: s => { const f = compFactor(s, 'engine'); return [`SPEED ${subPct(0.3 + 0.7 * f)}`, `TURN ${subPct(0.45 + 0.55 * f)}`, `BOOST ${subPct(subEff(s, 'engine', 'abPool') * subEff(s, 'engine', 'abBoost'))}`]; },
+  power: s => [`ENERGY CAP ${subPct(subEff(s, 'power', 'energyCap'))}`, `RECHARGE ${subPct(powerMul(s))}`],
+  radiator: s => [`RECHARGE ${subPct(subEff(s, 'radiator', 'energyRegen'))}`],
+  gun: s => [`FIRE RATE ${subPct(1 / subWorst(s, 'gun', 'cd'))}`],
+  turret: s => [`FIRE RATE ${subPct(1 / subWorst(s, 'turret', 'cd'))}`, `TRACK ${subPct(subWorst(s, 'turret', 'track', true))}`],
+  bay: s => [`SERVICE ${subPct(subEff(s, 'bay', 'service'))}`],
+  shield: s => [`SHIELD CAP ${subPct(compFactor(s, 'shield'))}`],
+};
+const subCue = (s, role) => (SUB_FX[role] ? SUB_FX[role](s) : []);
+function subCueText(s, c, st) { const fx = subCue(s, c.role); return `${c.name} ${st === 2 ? 'DESTROYED' : 'DAMAGED'}` + (fx.length ? ' - ' + fx.slice(0, 2).join(', ') : ''); }
+// degraded roles of ship s, worst first: [{ role, st (1 damaged, 2 all destroyed), n, bad, m (mean grade), fx }]
+function subDegraded(s) {
+  const out = [];
+  for (const role of Object.keys(SUB_FX)) {
+    let n = 0, bad = 0, dead = 0;
+    for (const c of s.comps) if (c.role === role) { n++; const k = compState(c); if (k) bad++; if (k === 2) dead++; }
+    if (s.blindUntil > time && role === 'radar') { n = Math.max(n, 1); bad = Math.max(bad, 1); dead = n; }
+    if (!n || !bad) continue;
+    out.push({ role, st: dead === n ? 2 : 1, n, bad, m: subMean(s, role), fx: subCue(s, role) });
+  }
+  return out.sort((a, b) => b.m - a.m);
 }
 // ---- ships ------------------------------------------------------------
 function makeShip(defId, team, pos, quat, opts = {}) {
@@ -3374,7 +3442,7 @@ function tenderTick(dt) {
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
-      const m = (dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5;  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
+      const m = ((dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5) * subEff(t, 'bay', 'service');   // M5: damaged service bays slow the rearm, dead ones stop it  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
       for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
       for (const T of s.turrets) {
         if (!Number.isFinite(T.ammo)) continue;
@@ -3420,12 +3488,14 @@ function dockTry() {
     if (d < bd) { bd = d; best = t; }
   }
   if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
+  if (subEff(best, 'bay', 'service') <= 0) { log('TENDER BAYS DESTROYED - NO DOCKING', '#ff5a4a'); return; }
   dock = { t: best, phase: 'approach', t0: time };
   log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
 }
 function dockTick(dt) {
   if (!dock) return;
   if (!dock.t.alive || dock.t.dying > 0) { dock = null; log('DOCK LOST - TENDER DESTROYED', '#ff5a4a'); return; }
+  if (subEff(dock.t, 'bay', 'service') <= 0) { dock = null; log('DOCK LOST - TENDER BAYS DESTROYED', '#ff5a4a'); return; }
   const wpt = dock.t.group.localToWorld(DOCK_PT.clone());
   if (dock.phase === 'approach') {
     player.vel.multiplyScalar(Math.exp(-2.2 * dt));
@@ -3871,7 +3941,7 @@ function fireMount(s, m) {
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
   if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
-  m.cool = w.cd / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
+  m.cool = w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -3904,11 +3974,12 @@ function lockUpdate(s, dt) {
   const ang = _w2.angleTo(_w1.normalize());
   const sizeAdj = t.def.cls === 'fighter' ? 1 : 1.9;
   const radarOk = w.seeker !== 'rf' || compFactor(s, 'radar') > 0.01;
-  const ok = d < w.range && ang < w.lockCone * sizeAdj && radarOk;
+  const rng = w.range * subEff(s, 'radar', 'lockRange');                       // M5: a damaged radar shortens the lock range and slows the tone
+  const ok = d < rng && ang < w.lockCone * sizeAdj && radarOk;
   L.d = d; L.ang = ang;
-  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
+  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (subEff(s, 'radar', 'lockTime') * w.lockTime / Math.max(1, t.def.sig * 0.7)));
   else L.p = Math.max(0, L.p - dt * 1.5);
-  L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < w.range ? 'seek' : 'range'));
+  L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < rng ? 'seek' : 'range'));
 }
 
 // ---- missiles -----------------------------------------------------------------------------------------
@@ -4189,6 +4260,7 @@ function updateTurrets(s, dt) {
       continue;
     }
     T.cool -= dt; T.thinkT -= dt;
+    const tcd = compEff(comp, 'turret', 'cd'), ttr = compEff(comp, 'turret', 'track');      // M5: a damaged turret fires slower and slews slower
     const tp = T.head.getWorldPosition(_w1.clone());
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
@@ -4228,7 +4300,7 @@ function updateTurrets(s, dt) {
     // base is fixed; the head tracks (convert to head-local: parent group may be flipped for ventral mounts)
     const parentInv = T.group.quaternion.clone().invert();
     want.premultiply(parentInv);
-    T.head.quaternion.rotateTowards(want, T.w.track * dt);
+    T.head.quaternion.rotateTowards(want, T.w.track * ttr * dt);
     // aim error
     const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(T.head.quaternion).applyQuaternion(T.group.quaternion).applyQuaternion(sg.quaternion);
     const err = fwd.angleTo(_w3);
@@ -4239,7 +4311,7 @@ function updateTurrets(s, dt) {
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
-          T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
+          T.cool = T.w.cd * tcd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
           fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
           T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
@@ -4247,7 +4319,7 @@ function updateTurrets(s, dt) {
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy)) {
-      T.cool = T.w.cd;
+      T.cool = T.w.cd * tcd;
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
       if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks
@@ -4919,7 +4991,7 @@ function compEvent(s, c, st) {
   const mine = s === player, tgt = s === target;
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
-    log(`${who}${c.name} ${st === 2 ? 'DESTROYED' : 'DAMAGED'}`, mine ? (st === 2 ? '#ff5a4a' : '#ffd24a') : '#ffb080');
+    log(`${who}${subCueText(s, c, st)}`, mine ? (st === 2 ? '#ff5a4a' : '#ffd24a') : '#ffb080');
     if (mine && st === 2) sfx('alarm');
   }
   if (st === 2 && s.vox) {
@@ -7814,7 +7886,7 @@ function updateShieldsAndFx(s, dt) {
     if (s.def.shieldRegen && time - s.lastHit > 4 && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }
-  s.energy = Math.min(s.energyMax || 100, s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * dt);
+  s.energy = Math.min(energyCapOf(s), s.energy + (s.def.energyRegen || 17) * powerMul(s) * pwF(s, 'w') * (s.mod?.energy ?? 1) * subEff(s, 'radiator', 'energyRegen') * dt);
   if (s.shieldFx && s.shieldFx.material.opacity > 0) s.shieldFx.material.opacity = Math.max(0, s.shieldFx.material.opacity - dt * 1.2);
   // smoke / fire from damaged components
   s.group.updateMatrixWorld(true);
@@ -8313,7 +8385,7 @@ function drawOverlay(alive) {
     if (!s.alive || s === p) continue;
     const d = s.group.position.distanceTo(p.group.position);
     const hostile = s.team !== p.team;
-    if (!radarOk && d > 1200) continue;
+    if (d > sensorLimit(p)) continue;                   // M5: a damaged scope loses distant contacts (dead scope: 1200 m)
     const pr = project(s.group.position);
     const col = hostile ? '#ff5a5a' : '#6ac8ff';
     const size = clamp(s.def.radius * 2 / (d * TAN_HALF * 2) * ovH * 0.55, 7, 160);
@@ -8433,6 +8505,7 @@ function drawRadar(alive) {
       const draw = (wp, kind, hostile, isT, label) => {
         _rel.copy(wp).sub(p.group.position).applyQuaternion(_inv);
         const dxz = Math.hypot(_rel.x, _rel.z), dist = _rel.length();
+        if (dist > sensorLimit(p)) return;
         const off = dist > range;
         const k = Math.min(1, dxz / range);
         let jit = rf <= 0.5 ? 16 : 0;
@@ -8476,7 +8549,7 @@ function updateHud() {
   const S = game.mstate;
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
-    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
@@ -8491,7 +8564,7 @@ function updateHud() {
   if (isTouch && alive) {
     document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
     document.querySelector('#ten>i').style.height = clamp(p.energy / (p.energyMax || 100), 0, 1) * 100 + '%';
-    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0;
     const bt = `BOOST<br>${ab}`; if (bb._t !== bt) { bb.innerHTML = bt; bb._t = bt; }
     bb.style.opacity = p.abLock ? .45 : 1;
   }
@@ -8503,11 +8576,11 @@ function updateHud() {
     $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
     $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
     $id('tgab').classList.toggle('on', !!(alive && p.ab));
-    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 'AB';
+    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / abMaxOf(p)) : 'AB';
     const ef = alive ? clamp(p.energy / (p.energyMax || 100), 0, 1) : 0;
     $id('te1').textContent = Math.round(ef * 100); $id('tef').style.height = ef * 100 + '%';
     $id('tef').style.background = ef < 0.25 ? 'rgba(255,90,74,.7)' : ef < 0.5 ? 'rgba(255,210,74,.65)' : 'rgba(143,255,208,.55)';
-    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0;
     $id('tgv').textContent = Math.round(sp);
   }
 
@@ -8520,7 +8593,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip(); updateSubsysCue();
   // warnings
   let w = '';
   if (alive) {
@@ -8541,6 +8614,20 @@ function updateEts(p, alive) {
   const row = k => `<div class="er" data-pw="${k}"><b>${{ w: 'WPN', s: 'SHD', e: 'ENG' }[k]}</b><i>${Array.from({ length: 12 }, (_, n) => `<s class="${n < p.pw[k] ? 'on' : ''}"></s>`).join('')}</i><span>${p.pw[k]}</span></div>`;
   const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
   if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
+}
+
+// ---- subsystem status cue (M5): one line per degraded system under the damage map; the phone shows a single line of tags (details come as a log flash)
+const subEl = document.createElement('div'); subEl.id = 'subsys'; document.getElementById('hud').appendChild(subEl);
+let lastSub = '';
+function updateSubsysCue() {
+  const p = player; let h = '';
+  if (p && p.alive && state !== 'brief') {
+    const dg = subDegraded(p);
+    const col = d => (d.st === 2 ? '#ff5a4a' : '#ffd24a');
+    if (document.body.classList.contains('phone')) h = dg.length ? dg.map(d => `<span style="color:${col(d)}">${SUB_SHORT[d.role]}${d.st === 2 ? '!' : ''}</span>`).join(' ') : '';
+    else h = dg.slice(0, 4).map(d => `<div style="color:${col(d)}">${SUB_SHORT[d.role]} ${d.st === 2 ? 'OUT' : 'DMG'} ${d.fx.slice(0, 2).join(' ')}</div>`).join('');
+  }
+  if (h !== lastSub) { subEl.innerHTML = h; lastSub = h; }
 }
 
 // ---- wing strip (UX_REVIEW R10): hull of the friendly fighters at a glance, under the damage map
@@ -8652,7 +8739,7 @@ globalThis.__game = {
   get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
-Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
+Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSYS, subEff, compEff, subMean, subDegraded, sensorLimit, abMaxOf, energyCapOf, updateTurrets, tenderTick, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 if (params.has('yard')) {
   document.body.classList.add('yard');
   scene.backgroundIntensity = 0.42;

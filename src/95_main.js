@@ -96,4 +96,4 @@ globalThis.__game = {
   get time() { return time; }, get player() { return player; }, get debris() { return debris; }, get kills() { return kills; }, get killLog() { return killLog; },
   get wave() { return wave; }, get target() { return target; }, set target(v) { target = v; manualTarget = true; },
 };
-Object.assign(globalThis.__game, { beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
+Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSYS, subEff, compEff, subMean, subDegraded, sensorLimit, abMaxOf, energyCapOf, updateTurrets, tenderTick, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu

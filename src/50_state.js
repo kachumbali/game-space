@@ -26,11 +26,12 @@ const powerMul = s => 0.5 + 0.5 * compFactor(s, 'power');
 
 // ---- afterburner pool: drains while burning, refills otherwise; empty = locked out until 25% ----
 function abTick(s, want, dt) {
-  const d = s.def, mx = (d.abMax || 0) * pwF(s, 'e') * (s.mod?.ab ?? 1);
-  if (!mx) { s.ab = false; return false; }
+  const d = s.def, mx = abMaxOf(s);
+  if (!d.abMax) { s.ab = false; return false; }
+  if (s.abFuel > mx) s.abFuel = mx;                    // a damaged engine shrinks the pool
   const on = want && !s.abLock && s.abFuel > 0;
   if (on) { s.abFuel = Math.max(0, s.abFuel - dt); if (s.abFuel <= 0) s.abLock = true; }
-  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * dt);
+  else s.abFuel = Math.min(mx, s.abFuel + d.abRegen * pwF(s, 'e') * subEff(s, 'engine', 'abRegen') * dt);
   if (s.abLock && s.abFuel > mx * 0.25) s.abLock = false;
   s.ab = on; return on;
 }
@@ -42,7 +43,7 @@ const flightModels = {
   arcade(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
+    const target = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? abSpdOf(s) : 1);
     s.vel.lerp(_fwd.multiplyScalar(target), 1 - Math.exp(-(s.def.cls === 'fighter' ? 3 : 0.5) * dt));
   },
   // SIM (TIE Fighter style, owner request 2026-10-30): throttle sets a wanted speed, but speed changes at the ship's real acceleration (so a throttle
@@ -51,8 +52,8 @@ const flightModels = {
   sim(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt), fighter = s.def.cls === 'fighter';
-    const want = s.def.maxSpeed * speedMul(s) * (ab ? s.def.abSpd : 1) * cmd.throttle;
-    const a = (s.def.accel || 40) * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const want = s.def.maxSpeed * speedMul(s) * (ab ? abSpdOf(s) : 1) * cmd.throttle;
+    const a = (s.def.accel || 40) * speedMul(s) * (ab ? abAccOf(s) : 1);
     const sp = s.vel.length();
     const v = Math.max(0, sp + clamp(want - sp, -a * SIMF.decel * dt, a * dt));
     if (sp < 2) { s.vel.copy(_fwd).multiplyScalar(v); return; }
@@ -64,20 +65,20 @@ const flightModels = {
   newtonAI(s, cmd, dt) {            // AI under Newtonian rules: thrust along the nose toward a wanted forward speed, no velocity vectoring
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
-    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? s.def.abSpd : 1);
+    const a = s.def.accel * speedMul(s) * (ab ? abAccOf(s) : 1);
+    const want = s.def.maxSpeed * speedMul(s) * cmd.throttle * (ab ? abSpdOf(s) : 1);
     const thrust = Math.max(-0.5, Math.min(1, (want - s.vel.dot(_fwd)) / (a * 0.6)));
     s.vel.addScaledVector(_fwd, thrust * a * dt);
-    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
+    const cap = s.def.maxSpeed * 2.2 * (ab ? abSpdOf(s) / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
   newton(s, cmd, dt) {
     _fwd.set(0, 0, -1).applyQuaternion(s.group.quaternion);
     const ab = abTick(s, !!cmd.ab, dt);
-    const a = s.def.accel * speedMul(s) * (ab ? s.def.abAcc : 1);
+    const a = s.def.accel * speedMul(s) * (ab ? abAccOf(s) : 1);
     s.vel.addScaledVector(_fwd, cmd.thrust * a * dt);
     if (cmd.brake) s.vel.multiplyScalar(Math.exp(-1.8 * dt));
-    const cap = s.def.maxSpeed * 2.2 * (ab ? s.def.abSpd / 1.8 : 1);
+    const cap = s.def.maxSpeed * 2.2 * (ab ? abSpdOf(s) / 1.8 : 1);
     if (s.vel.length() > cap) s.vel.setLength(cap);
   },
 };

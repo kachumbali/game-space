@@ -165,7 +165,7 @@ function fireMount(s, m) {
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
   if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
-  m.cool = w.cd / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
+  m.cool = w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -198,11 +198,12 @@ function lockUpdate(s, dt) {
   const ang = _w2.angleTo(_w1.normalize());
   const sizeAdj = t.def.cls === 'fighter' ? 1 : 1.9;
   const radarOk = w.seeker !== 'rf' || compFactor(s, 'radar') > 0.01;
-  const ok = d < w.range && ang < w.lockCone * sizeAdj && radarOk;
+  const rng = w.range * subEff(s, 'radar', 'lockRange');                       // M5: a damaged radar shortens the lock range and slows the tone
+  const ok = d < rng && ang < w.lockCone * sizeAdj && radarOk;
   L.d = d; L.ang = ang;
-  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (w.lockTime / Math.max(1, t.def.sig * 0.7)));
+  if (ok) L.p = Math.min(1, L.p + dt * (s.mod?.lock ?? 1) / (subEff(s, 'radar', 'lockTime') * w.lockTime / Math.max(1, t.def.sig * 0.7)));
   else L.p = Math.max(0, L.p - dt * 1.5);
-  L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < w.range ? 'seek' : 'range'));
+  L.state = L.p >= 1 ? 'locked' : (ok ? 'locking' : (d < rng ? 'seek' : 'range'));
 }
 
 // ---- missiles -----------------------------------------------------------------------------------------
@@ -483,6 +484,7 @@ function updateTurrets(s, dt) {
       continue;
     }
     T.cool -= dt; T.thinkT -= dt;
+    const tcd = compEff(comp, 'turret', 'cd'), ttr = compEff(comp, 'turret', 'track');      // M5: a damaged turret fires slower and slews slower
     const tp = T.head.getWorldPosition(_w1.clone());
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
@@ -522,7 +524,7 @@ function updateTurrets(s, dt) {
     // base is fixed; the head tracks (convert to head-local: parent group may be flipped for ventral mounts)
     const parentInv = T.group.quaternion.clone().invert();
     want.premultiply(parentInv);
-    T.head.quaternion.rotateTowards(want, T.w.track * dt);
+    T.head.quaternion.rotateTowards(want, T.w.track * ttr * dt);
     // aim error
     const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(T.head.quaternion).applyQuaternion(T.group.quaternion).applyQuaternion(sg.quaternion);
     const err = fwd.angleTo(_w3);
@@ -533,7 +535,7 @@ function updateTurrets(s, dt) {
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
-          T.cool = T.w.cd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
+          T.cool = T.w.cd * tcd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
           fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
           T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
@@ -541,7 +543,7 @@ function updateTurrets(s, dt) {
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy)) {
-      T.cool = T.w.cd;
+      T.cool = T.w.cd * tcd;
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
       if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks
