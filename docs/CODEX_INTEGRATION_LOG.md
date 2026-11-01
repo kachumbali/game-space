@@ -101,3 +101,6 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   rounds and a seven-second pause between waves. The timing lives with each
   torpedo in `data/db.json`, so later measurement can tune it without changing
   the AI routine.
+- Extended `tools/tests/bullfrog_t.py` with M3 assertions for bow impacts on
+  both corvettes and for the tandem shield drain, penetration, and exposed-window
+  state. The test still needs a working Playwright/Chromium run on this machine.
