@@ -72,3 +72,40 @@ All mark multipliers adhere strictly to the `0.75..1.20` band, with each step fe
 - `python3 build.py`: `built index.html from 37 parts, 735 KB, 813 top-level names checked`.
 - `python3 tools/check_opsec.py`: `opsec OK` (0 real names, 0 personal emails).
 - `compile_applet`: `Build succeeded - the applet is compiled`.
+
+---
+
+## Intro Test Cutscene Animation (`docs/INTRO_TEST_SPEC.md`)
+
+Implemented the full suite of pixel-art assets and scene definition for the 35-second cutscene test sequence:
+
+### 1. Generated Assets (`assets/scenes/intro_test/`)
+- `bg_space.png`: 320x200 pixel-art space background with dithered cyan/blue nebula and curved planetary atmosphere limb. (12 colours)
+- `bg_briefing.png`: 320x200 carrier briefing room with riveted teal/slate steel bulkheads, amber hazard stripes, vertical structural struts, and holographic table display. (17 colours)
+- `ship_kestrel.png`: 96x48 side/three-quarter pixel sprite of Kestrel heavy fighter with cockpit canopy, swept wings, and afterburner plume. (12 colours)
+- `ship_halberd.png`: 160x56 side-profile sprite of 128m Halberd escort corvette with bridge tower, railgun sponson, PD housings, and dual engine exhaust. (12 colours)
+- `ui_frame.png`: 320x200 CRT/HUD bracket overlay frame. (3 colours)
+
+### 2. Character Talking Heads (64x64, Flat Skin Base + Overlays)
+All heads have flat skin where eyes and mouth go on `base.png`, plus exact-fit overlays:
+- **`imani`** (Cdr. Imani, carrier commander):
+  - `base.png` (navy uniform, amber collar bar, silver-grey hair)
+  - `eyes_open.png`, `eyes_half.png`, `eyes_closed.png`
+  - `mouth_rest.png`, `mouth_A.png`, `mouth_E.png`, `mouth_O.png`, `mouth_MB.png`, `mouth_FV.png`
+  - `head.json` (blink interval 2.0..5.0, voiceBlip 220)
+- **`hawk`** (Lt. Maya Okafor, flight lead):
+  - `base.png` (charcoal flight suit, amber stripe, eyebrow scar, short hair)
+  - `eyes_open.png`, `eyes_half.png`, `eyes_closed.png`
+  - `mouth_rest.png`, `mouth_A.png`, `mouth_E.png`, `mouth_O.png`, `mouth_MB.png`, `mouth_FV.png`
+  - `head.json` (blink interval 2.0..5.0, voiceBlip 310)
+- **`meow`** (Lt. Tom Cat, player pilot):
+  - `base.png` (charcoal flight suit, amber collar, focused pilot head)
+  - `eyes_open.png`, `eyes_half.png`, `eyes_closed.png`
+  - `mouth_rest.png`, `mouth_A.png`, `mouth_E.png`, `mouth_O.png`, `mouth_MB.png`, `mouth_FV.png`
+  - `head.json` (blink interval 2.0..5.0, voiceBlip 260)
+
+### 3. Timeline & Validation Tools
+- `scene.json`: Formatted 13-event timeline exactly per Section 3 of `docs/INTRO_TEST_SPEC.md`.
+- `tools/make_atlas.py`: Validation script that inspects dimensions, colour counts (all <= 32 colours), head JSONs, and generates `heads_test_sheet.png` (448x192) showing all 7 mouth/eye combinations layered over each character base.
+- Verification: `python3 tools/make_atlas.py` exits 0 with `ALL ASSETS VALIDATED SUCCESSFULLY! 0 ERRORS.`
+

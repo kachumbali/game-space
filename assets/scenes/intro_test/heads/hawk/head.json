@@ -1,0 +1,25 @@
+{
+  "name": "HAWK",
+  "size": [
+    64,
+    64
+  ],
+  "eyes": {
+    "open": "eyes_open.png",
+    "half": "eyes_half.png",
+    "closed": "eyes_closed.png"
+  },
+  "mouth": {
+    "rest": "mouth_rest.png",
+    "A": "mouth_A.png",
+    "E": "mouth_E.png",
+    "O": "mouth_O.png",
+    "MB": "mouth_MB.png",
+    "FV": "mouth_FV.png"
+  },
+  "blink": {
+    "min": 2.0,
+    "max": 5.0
+  },
+  "voiceBlip": 310
+}
