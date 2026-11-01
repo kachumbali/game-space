@@ -3,6 +3,7 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
 
 ## 0.3.0 (in progress): Armoury, plan in docs/PLAN_V03.md
+- Merged: M1 balance harness + baseline (`tools/tests/ttk_matrix.py`), M5 subsystem damage effects (`src/51_subsys.js`), `?db=data/db.json` runtime override + `tuning` section, Marks I-IV schema (scaffolding only: `kestrel_2`).
 - M0 opsec: the owner's real name is gone from code and docs (handle `kachumbali`); the player pilot is Lt. Tom Cat, callsign MEOW; `tools/check_opsec.py` runs in CI.
 
 - Fix (owner report: Bittern turrets fired for free): kinetic PD now costs capacitor energy per round (`weapons.pd.energy`, 3.0) on top of its drum, every projectile turret with an `energy` value is charged the same way, per-turret drum size is settable in the ship's turret entry (Bittern 300 rounds), and the weapon panel shows `PD xN %`. Retuning of the numbers belongs to M2.

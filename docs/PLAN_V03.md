@@ -11,6 +11,9 @@ Goal: fix the combat numbers and fill the human roster **before** building the c
 - **Balance claims need >= 20 seeded runs** (AGENTS.md). Branch per milestone, merge to `main` when green, no force push.
 - **No real names or email addresses in the repo (O).** Handle: `kachumbali`.
 
+## Status (2026-11-01)
+Done and merged: M0 opsec, M1 harness and baseline (docs/BALANCE_BASELINE.md, docs/BALANCE_TARGETS.md PROPOSED), M5 subsystem effects (docs/SUBSYSTEM_EFFECTS.md), central db `tuning` section with the `?db=` override, Marks schema (docs/MARKS_SCHEMA.md, `kestrel_2` scaffolding), weapon panel built from mounts, PD turret energy. Next: M2 weapons by size, M3 missiles and torpedoes (numbers from the baseline), M4 roster and marks.
+
 ## M0. Opsec
 - Credits, AGENTS.md, ORCHESTRATION, CREDITS, MILESTONE_2, COPILOT_BRIEFS: the owner's real name becomes `kachumbali`.
 - Player pilot: **Lt. Tom Cat, callsign MEOW** (O; replaces the old real-name pilot and the callsign ECHO everywhere in code, tests and docs).
