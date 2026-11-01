@@ -118,3 +118,12 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   VAC, VBC, and CDF production variants, future hulls, and weapon families.
   It is deliberately text-only: no M4 ship, weapon, database id, stat, or
   mission has been implemented or balanced by this pass.
+
+## G4 generated-table status — 2026-11-01
+
+- `tools/export_db.py` intentionally reads the live game through the shared
+  Playwright runner before writing `docs/data/ships.csv` and `weapons.csv`.
+  The supplied Chromium aborts during launch in this environment. A retry with
+  the locally installed Chrome did not complete or write either table during
+  the available execution window. The checked-in CSV files were therefore left
+  untouched; no claim of a G4 data refresh is made.
