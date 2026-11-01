@@ -112,7 +112,7 @@ def m4_win(R):
     check('m4 debrief shows CAMPAIGN win text + exeter hull line', 'MISSION ACCOMPLISHED' in t and 'Exeter cleared the Fold' in t and 'EXETER HULL' in t.upper(), t[:100])
     pg.evaluate("()=>__game.startMission(__game.MISSIONS[3])")     # briefing screen: per-ship loadout
     t = brief_txt(pg)
-    check('m4 briefing loadout names MERLIN', 'LOADOUT · MERLIN' in t and '12× flares/chaff' in t, t[:120])
+    check('m4 briefing loadout names MERLIN', 'LOADOUT · MERLIN' in t and '12× FLARES / CHAFF' in t.upper(), t[:120])
     check('m4 no console errors', not R.errs, str(R.errs[:3]))
 
 # ---- mission 5: THE SPINE (bullfrog + hivecarrier never flown from a mission script before) -------------
