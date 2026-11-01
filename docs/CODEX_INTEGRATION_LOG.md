@@ -161,3 +161,12 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   actions. Build, source syntax, database, and privacy checks pass. Browser
   interaction still needs a manual pass because the automated launcher is not
   currently usable in this environment.
+
+## Halberd spearhead visual pass — 2026-11-01
+
+- Rebuilt the CSS *Halberd* visual geometry around a coherent spearhead escort
+  silhouette: continuous armoured keel, lance bow, low protected bridge,
+  swept radiator/PD planes, and a unified three-nacelle aft frame.
+- Retained every database-defined subsystem, weapon, turret, and engine
+  position. This is a geometry-only pass: no collision extents, gameplay
+  statistics, balance values, or mission scripting changed.
