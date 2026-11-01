@@ -7,6 +7,8 @@ Versions are named from the state of `main`. Commit trailers and tool history: d
 
 - Fix (owner report: Bittern turrets fired for free): kinetic PD now costs capacitor energy per round (`weapons.pd.energy`, 3.0) on top of its drum, every projectile turret with an `energy` value is charged the same way, per-turret drum size is settable in the ship's turret entry (Bittern 300 rounds), and the weapon panel shows `PD xN %`. Retuning of the numbers belongs to M2.
 
+- Fix: the weapon panel is built from the ship's own gun mounts (it was hard-coded for the Kestrel, so the Bittern showed a cannon and MD-9 mag it does not have); the Bittern now starts with its torpedo selected.
+
 ## 0.2.3: Tern and Bittern selectable (2026-11-01)
 - Skirmish setup (and `?sk_ship=`) now offers BITTERN (torpedo bomber) and TERN (unarmed resupply shuttle) as your ship; the Bittern can also be a wingman. Mission briefings show their loadouts.
 - Test: flown in skirmish headless (Bittern fires, Tern flies unarmed); menu_t 0 failures. Not hand-played.
