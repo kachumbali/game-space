@@ -7,9 +7,10 @@
 const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false, purist: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
-// Combat tracks are the two GM-MIDI loops commissioned 2026-10-22 (tools/gen/music): dogfight = low tension bed
-// under gameplay, bombast = full anthem for heavy fights. urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
-const MUSIC_FILES = { menu: 'audio/airy.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
+// The menu cue and combat tracks are original GM-MIDI loops (tools/gen/music). The menu remains opt-in:
+// musicUnlock is called only inside the existing first pointer/key gesture, as required by browser audio policies.
+// urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
+const MUSIC_FILES = { menu: 'audio/menu-frontier.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
 const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, status: 'waiting for the first tap or key' };
 // Routing: over http(s) every track goes <audio> -> GainNode -> speakers. iOS ignores element.volume and only lets a media element play()
 // if that element itself was started inside a user gesture, so (a) volume and crossfades use the gain node, and (b) the first tap/key

@@ -19,6 +19,7 @@ const CREDITS = [
   ['MUSIC', [
     ['"Dark Sci-Fi Audio Pack" by SRG774', 'CC0 1.0 Universal. https://opengameart.org/content/dark-sci-fi-audio-pack. Tracks airy, sector, victory, transmission (and the fallback combat tracks urgent, pulse), re-encoded to 96 kbps MP3.'],
     ['Combat loops (dogfight, bombast)', 'Composed for this game with the Google Gemini code tools (owner-commissioned, 2026-10-22; generators in tools/gen/music). GM MIDI rendered offline with FluidSynth and the GeneralUser GS soundfont by S. Christian Collins (GeneralUser GS License v2.0: free for private and commercial music use). Rendered files remain ours; the soundfont is not shipped.'],
+    ['"Frontier Overture" (menu)', 'Original project score, 2026-11-01. Hand-written MIDI generator and sample-free additive-synthesis renderer in tools/gen/music; an original D-minor cue with no sampled material or melody from existing games.'],
   ]],
   ['SOUND SAMPLES', [
     ['"Space Sound Effects" by messersm', 'CC0 1.0. https://opengameart.org/content/space-sound-effects (explosions, laser bolts)'],
