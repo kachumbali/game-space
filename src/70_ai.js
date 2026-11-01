@@ -344,6 +344,7 @@ function bomberAI(s, dt) {
 
 function capitalAI(s, dt) {
   if (s.ai.role === 'lancer') return lancerAI(s, dt);
+  if (s.def.ai?.passive) { aiFly(s, { throttle: s.hold ? 0.05 : 0.2 }, dt); return; }   // unarmed transport (liner): holds a slow course, never closes on a target
   if (s.ai.escort && escortAI(s, dt)) return;
   const ai = s.ai, t = s.target, ep = s.group.position;
   // XL main (Exeter mass driver): the same charge/lock/cool machine as the FROGG spine, driven from the normal capital loop
