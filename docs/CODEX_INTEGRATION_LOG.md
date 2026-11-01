@@ -97,3 +97,7 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
 - Validation passed: build, database schema, source syntax, and opsec. No seeded
   TTK result is claimed yet; the new M3 mechanics require the 20-seed harness
   before changing warhead damage or publishing target hit counts.
+- Bomber AI now fires torpedoes in three-round salvos: 0.65 seconds between
+  rounds and a seven-second pause between waves. The timing lives with each
+  torpedo in `data/db.json`, so later measurement can tune it without changing
+  the AI routine.
