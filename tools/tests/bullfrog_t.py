@@ -60,6 +60,21 @@ def t_exeter(R):
     check('Exeter survives 3 hits without shield regen, dies on hit 4', n0==4, f'died on hit {n0}')
     check('Exeter with regen (384/cycle) survives 4, dies on hit 4..5 (spec: 5th)', n1 in (4,5), f'died on hit {n1}')
 
+def t_xl_filter(R):
+    """M2 rule: an XL spine passes through a fighter and hits the capital behind it."""
+    pg=R.page(320,180,'?free&n=0&q=low')
+    r=pg.evaluate(js('''
+      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});
+      const f=g.spawnShip('kestrel',0,V(0,0,-850),V(0,0,0),{});
+      const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
+      freeze(bf);freeze(f);freeze(ex);g.update(0.05);
+      const f0=f.structure+f.shield.fore+f.shield.aft, e0=ex.structure+ex.shield.fore+ex.shield.aft;
+      const rec=__bf.spineFire(bf);
+      return {hit:rec.hit,fighterDamage:Math.round(f0-(f.structure+f.shield.fore+f.shield.aft)),capitalDamage:Math.round(e0-(ex.structure+ex.shield.fore+ex.shield.aft))};'''))
+    print(json.dumps(r))
+    check('XL spine ignores a fighter in its line of fire', r['fighterDamage']==0, str(r))
+    check('XL spine continues to the capital behind the fighter', r['hit']=='exeter' and r['capitalDamage']>0, str(r))
+
 def t_friendly(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
@@ -253,7 +268,7 @@ def t_warn(R):
     check('warnState.spine set while charging at a friendly', len(r['kinds'])>0, str(r['kinds']))
     check('HUD text during the lock', 'SPINE' in txt, repr(txt))
 
-SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast,'m3':t_m3}
+SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'xl_filter':t_xl_filter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast,'m3':t_m3}
 if __name__=='__main__':
     names=sys.argv[1:] or list(SC)
     with Runner() as R:
