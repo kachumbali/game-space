@@ -8,7 +8,7 @@ This is a local-only integration branch for the Gemini handoff. It was created f
 
 ## Imported handoff
 
-Source: `/Users/jonaskoll/Downloads/game-space-nov-1-2026-4-37-40-pm/`, especially
+Source: the downloaded Gemini handoff folder, especially
 `docs/gemini-dev.patch` and `docs/GEMINI_LOG.md`.
 
 The patch applied as three commits:
@@ -66,7 +66,7 @@ Before merging, rerun:
 
 ```text
 NPM_CONFIG_CACHE=/tmp/gs_npm_cache GS_PORT=8861 GS_TEST_DIR=/tmp/gs_scene_test \
-GS_CHROMIUM="/Users/jonaskoll/Library/Caches/ms-playwright/chromium-1243/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing" \
+GS_CHROMIUM="/path/to/Chrome for Testing" \
 python3 tools/tests/scene_t.py
 ```
 
@@ -83,3 +83,17 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
 - The imported cutscene player is a new player-facing system and needs the normal
   desktop/iPad visual review before merge.
 - G2 is a draft document, not implemented campaign scripting.
+
+## M3 foundation pass — 2026-11-01
+
+- Fixed the bow-on missile defect: blast distance now falls back to the nearest
+  hull voxel for any affected ship, rather than only long hulls. This covers the
+  Halberd and Gulper cases recorded in `docs/BALANCE_BASELINE.md`.
+- Added a data-driven `tandem` warhead profile to the human HM-1 and FROGG ST-2
+  torpedoes. On a direct hit, the precursor drains the impacted fore/aft shield
+  facet, produces a flash, then applies the configured armour/shield-bypassing
+  portion of the main charge. The initial profile is 55% shield-facet drain,
+  35% pierce, and a three-second exposed window.
+- Validation passed: build, database schema, source syntax, and opsec. No seeded
+  TTK result is claimed yet; the new M3 mechanics require the 20-seed harness
+  before changing warhead damage or publishing target hit counts.

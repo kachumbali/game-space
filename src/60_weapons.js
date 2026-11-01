@@ -284,6 +284,25 @@ function hullGap(s, pos, maxD) {
   }
   return best;
 }
+// Tandem torpedoes use a small precursor charge to collapse the shield facet
+// they strike, then send the main charge through the opening. The piercing share
+// is deliberately data-driven: M3 tuning can change the warhead without another
+// combat-code change.
+function tandemStrike(s, lp, w) {
+  const t = w.tandem;
+  if (!t) return 0;
+  const facing = lp.z < 0 ? 'fore' : 'aft';
+  const before = s.shield[facing];
+  const drain = Math.min(before, (s.def.shield[facing] || 0) * t.shieldDrain);
+  if (drain > 0) {
+    s.shield[facing] -= drain;
+    shieldFlash(s, lp, facing);
+    flashAt(s.group.localToWorld(lp.clone()), Math.max(4, w.blast * 0.45), 0.2);
+    s.tandemUntil = Math.max(s.tandemUntil || 0, time + (t.window || 3));
+    if (s === player) log('SHIELD FACET COLLAPSED', '#ffb040');
+  }
+  return t.pierce || 0;
+}
 function blastAt(pos, w, team, owner, direct, skip) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
@@ -294,7 +313,10 @@ function blastAt(pos, w, team, owner, direct, skip) {
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
     let surf = Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);
-    if (surf > w.blast && s.def.radius > 150 && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // long hulls (Exeter, Bullfrog, Hive Carrier): measure from the hull, not a 0.62 R sphere around the centre
+    // A missile can impact any voxel, not just a sphere based on the hull centre.
+    // This matters most for the Halberd/Gulper nose: their scaled hull extends
+    // beyond the old 0.62R approximation, causing a bow-on missile to do no damage.
+    if (surf > w.blast && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);
     if (surf > w.blast) continue;
     const f = (direct === s ? 1 : Math.max(TUNE.missile.blastFloor, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
@@ -308,7 +330,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp');
+    const pierce = direct === s ? tandemStrike(s, lp, w) : 0;
+    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
