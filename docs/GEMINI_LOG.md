@@ -108,4 +108,3 @@ All heads have flat skin where eyes and mouth go on `base.png`, plus exact-fit o
 - `scene.json`: Formatted 13-event timeline exactly per Section 3 of `docs/INTRO_TEST_SPEC.md`.
 - `tools/make_atlas.py`: Validation script that inspects dimensions, colour counts (all <= 32 colours), head JSONs, and generates `heads_test_sheet.png` (448x192) showing all 7 mouth/eye combinations layered over each character base.
 - Verification: `python3 tools/make_atlas.py` exits 0 with `ALL ASSETS VALIDATED SUCCESSFULLY! 0 ERRORS.`
-

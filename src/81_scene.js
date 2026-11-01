@@ -95,7 +95,9 @@ function loadSceneImage(url) {
 }
 
 async function preloadSceneAssets(sceneData) {
-  const base = '/assets/scenes/' + sceneData.id + '/';
+  // Keep this relative to index.html: GitHub Pages serves the game from
+  // /game-space/, not the web server root.
+  const base = 'assets/scenes/' + sceneData.id + '/';
   const promises = [];
 
   // Backgrounds & Sprites
@@ -181,7 +183,7 @@ async function startScene(sceneId = 'intro_test') {
 
   let sceneData = INTRO_TEST_SCENE;
   try {
-    const res = await fetch('/assets/scenes/' + sceneId + '/scene.json');
+    const res = await fetch('assets/scenes/' + sceneId + '/scene.json');
     if (res.ok) sceneData = await res.json();
   } catch (e) {
     console.warn('Using embedded scene data:', e);
@@ -240,7 +242,7 @@ function sceneTick(now) {
 }
 
 function handleSceneEvent(ev) {
-  const base = '/assets/scenes/' + sceneState.id + '/';
+  const base = 'assets/scenes/' + sceneState.id + '/';
   if (ev.do === 'bg') {
     sceneState.bgImg = sceneState.images[base + ev.img] || null;
     if (ev.cut === 'static') {
@@ -272,7 +274,6 @@ function handleSceneEvent(ev) {
       blinkPhase: 0,
     };
   } else if (ev.do === 'say') {
-    const headObj = Object.values(sceneState.activeHeads).find(h => h.charId === ev.who);
     sceneState.dialogue = {
       who: ev.who,
       fullText: ev.text,
@@ -346,7 +347,6 @@ function updateSceneElements(dt) {
       d.charIdx = Math.min(d.fullText.length, charsTarget);
       d.currentText = d.fullText.slice(0, d.charIdx);
       const ch = d.fullText[d.charIdx - 1];
-      
       // Update mouth phoneme on speaking head
       const speakerHead = Object.values(sceneState.activeHeads).find(h => h.charId === d.who);
       if (speakerHead) {
