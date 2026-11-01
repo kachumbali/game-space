@@ -149,3 +149,15 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   non-fighter hull behind the fighter. Added `bullfrog_t.py xl_filter` for the
   regression. Syntax, privacy, and generated-build checks pass; the browser
   test itself awaits a working Playwright launcher.
+
+## Prologue campaign integration — 2026-11-01
+
+- Implemented the four drafted *Uncharted Vanguard* missions as a separate
+  selectable campaign (`p01`–`p04`) rather than appending them after the main
+  five-mission finale. The campaign menu now chooses an arc first, then a
+  mission; briefing shortcuts and Next Mission remain scoped to that arc.
+- Direct local testing path: `?campaign=prologue&m=1` (then add `&go` to
+  launch). The mission scripts use existing spawn, objective, comm, and end
+  actions. Build, source syntax, database, and privacy checks pass. Browser
+  interaction still needs a manual pass because the automated launcher is not
+  currently usable in this environment.

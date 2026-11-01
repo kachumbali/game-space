@@ -1,6 +1,10 @@
 # Campaign Draft: "PROLOGUE: UNCHARTED VANGUARD" (4 missions)
 
-Status: Drafted for implementation and review under Task G2 (`docs/GEMINI_WORKPLAN.md`).
+Status: **implemented locally 2026-11-01 as a four-mission selectable campaign**
+(`p01` through `p04`) alongside the existing *The Severed Node* campaign.
+The scripted stages use only existing mission actions. Campaign selector/menu
+flow and Next Mission sequencing are implemented; balance and human playtesting
+remain outstanding.
 Style: Matches `docs/CAMPAIGN.md`.
 Conventions: Uses only existing ship classes, existing objective mechanics, and adheres to adopted lore (`docs/LORE.md`, `docs/LORE_FACTIONS.md`, `docs/LORE_HISTORY.md`).
 Tags: **[NEW]** = narrative invention consistent with lore; **[NEEDS CODE]** = requires an engine feature or script hook; **[UNTESTED]** = uses existing ships/weapons in an unverified scenario.

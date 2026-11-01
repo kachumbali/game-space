@@ -73,7 +73,7 @@ function showMainMenu() {
   menuView = 'main';
   const items = [
     ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
-    ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad to The Spine'],
+    ['campaign', 'CAMPAIGNS', 'Uncharted Vanguard, then The Severed Node'],
     ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
@@ -89,19 +89,31 @@ function showMainMenu() {
 }
 function menuAct(a) {
   if (a === 'intro') { menuLeave(); startScene('intro_test'); }
-  else if (a === 'campaign') showMissionList();
+  else if (a === 'campaign') showCampaignList();
   else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }
   else if (a === 'options') toggleOpts(true);
   else if (a === 'credits') showCredits(true);
   else if (a === 'back') showMainMenu();
-  else if (a.startsWith('m')) { menuLeave(); startMission(MISSIONS[+a.slice(1)]); }
+  else if (a.startsWith('campaign:')) showMissionList(CAMPAIGNS.find(c => c.id === a.slice(9)));
+  else if (a.startsWith('mission:')) {
+    const [, cid, i] = a.split(':'); const c = CAMPAIGNS.find(x => x.id === cid);
+    if (c && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
+  }
 }
-function showMissionList() {
+function showCampaignList() {
   menuView = 'missions';
-  menuShell(`<div class="sub">CAMPAIGN</div><h1>SELECT MISSION</h1><h2>Opens the briefing</h2>
-    <div class="mlist">${MISSIONS.map((m, i) => `<button class="mi" data-a="m${i}"><b>${i + 1}. ${m.title}</b><span>${m.subtitle}</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
+  menuShell(`<div class="sub">CAMPAIGNS</div><h1>SELECT CAMPAIGN</h1><h2>Choose a story arc</h2>
+    <div class="mlist">${CAMPAIGNS.map(c => `<button class="mi" data-a="campaign:${c.id}"><b>${c.title}</b><span>${c.subtitle} · ${c.missions.length} missions</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
+  $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
+  menuFocus();
+}
+function showMissionList(campaign) {
+  const c = campaign || CAMPAIGNS[1];
+  menuView = 'missions';
+  menuShell(`<div class="sub">CAMPAIGN · ${c.title}</div><h1>SELECT MISSION</h1><h2>Opens the briefing</h2>
+    <div class="mlist">${c.missions.map((m, i) => `<button class="mi" data-a="mission:${c.id}:${i}"><b>${i + 1}. ${m.title}</b><span>${m.subtitle}</span></button>`).join('')}<button class="mi alt" data-a="campaign"><b>BACK TO CAMPAIGNS</b></button></div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
