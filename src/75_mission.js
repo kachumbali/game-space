@@ -461,6 +461,7 @@ function startMission(M, seg) {
   if (cine) cancelTransit();
   plogReset(M.title);
   clearWorld();
+  lootClear();                                          // never carry free-flight pickups into a campaign sortie
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
   applyLook(M.look || 'lilypad'); cine = null; document.body.classList.remove('cine');

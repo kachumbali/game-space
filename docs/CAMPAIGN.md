@@ -14,6 +14,10 @@ Player: Lt. Tom Cat, MEOW (`PILOT_DEFS.player`). Wing: HAWK (Lt. Maya Okafor, fl
 
 Difficulty scale: 1 tutorial-ish, 2 sweep, 3 two-area with corvette, 4 defend-the-capital under time pressure on the light ship, 5 finale vs capital ship.
 
+## Campaign-mode rule: no arcade rewards
+
+Campaign sorties are military operations, not score attacks. They never spawn salvage or pickup drops, Overdrive, temporary combat buffs, survival perks, chain multipliers, score bonuses, or arcade kill banners. A kill can still be recorded for the debrief and pilot history, while mission scripting, rearm/docking, and authored support calls remain the only ways to change a ship's resources or combat readiness. This is enforced at mission start and in the loot and combat-reward paths; free flight and Gauntlet remain separate arcade-capable modes.
+
 ---
 
 ## Mission 1: OPERATION LILYPAD (difficulty 1) - REUSE existing `m01`

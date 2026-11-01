@@ -64,6 +64,9 @@ function juiceHit(s, src, out, dmg, wp) {
 }
 function juiceComp(s, c, st) {                        // a subsystem of someone else's ship was destroyed by us
   if (st !== 2 || !player || s.team === player.team || hitSrc !== player) return;
+  // Campaign sorties are military operations, not score attacks. Component
+  // kills still affect the target; they simply do not create arcade rewards.
+  if (game.mode === 'mission') return;
   juice.subKills++; juice.score += 40; juice.bonus += 40;
   if (AOPT.purist) return;
   juice.marks.push({ t: time, kind: 'sub' });
@@ -79,6 +82,9 @@ function juiceKill(s) {
   if (!mine) return;
   const big = s.def.cls !== 'fighter';
   juice.kills++; if (big) juice.capKills++;
+  // Keep a factual sortie kill count for the debrief, but never turn a
+  // campaign mission into a chain/score/buff loop.
+  if (game.mode === 'mission') { juice.chain = 0; juice.mult = 1; return; }
   juice.chain = (time < juice.chainT ? juice.chain : 0) + 1;
   juice.chainT = time + FUN.chainWindow * (p.mod?.chainT ?? 1);
   juice.bestChain = Math.max(juice.bestChain, juice.chain);

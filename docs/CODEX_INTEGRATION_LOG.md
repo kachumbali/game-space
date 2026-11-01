@@ -238,3 +238,15 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   thermal damage, Composite is general-purpose. Levels use normal resolved
   data variants when campaign rewards activate them; no hidden loadout screen
   or untested automatic stat change was added.
+
+## Campaign realism guard and Halberd refinement — 2026-11-01
+
+- Made the no-arcade campaign rule explicit in the campaign and design-path
+  documents. Mission start clears any residual free-flight drops; the reward
+  paths now reject loot, Overdrive, temporary buffs, score bonuses, component
+  score, chains, and kill banners during campaign sorties. A factual kill count
+  remains available for a debrief without becoming a combat reward loop.
+- Reworked the Halberd's forward rail assembly into a recessed, low dorsal
+  spine with lower barrels and matching database mount/component positions.
+  Replaced the oversized sheet radiator that read as a midship wall in the
+  voxel bay with compact, hull-rooted radiator booms and support struts.

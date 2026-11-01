@@ -55,7 +55,7 @@ time), power plant (energy and recharge), wings and thrusters (roll and handling
 ## After v0.3
 Campaigns: human prologue (about 4 missions: customs inspection, blockade, ambush, the FROGG shock), then "The Long Retreat" (evacuation, unknown
 enemy that becomes known, transports with jump spool, scarce nukes), then the existing five missions as the following campaign. Campaign mode
-has no arcade pods, perks or chain score (those stay in free flight and Gauntlet); a support ship call replaces them.
+has no arcade drops, pods, Overdrive, temporary buffs, perks, chain multipliers, score bonuses, or kill-reward banners. Those stay in free flight and Gauntlet; campaign logistics use scripted rearm/docking and support calls instead.
 
 ### Campaign navigation rhythm (owner direction 2026-11-01)
 

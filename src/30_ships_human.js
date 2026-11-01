@@ -270,11 +270,11 @@ const hTur = (x, y, z, dy = 1) => [                              // armoured tur
 ];
 const halberdDetail = [
   ...hTur(2.6, 1.85, -12), ...hTur(-2.6, 1.85, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
-  // railgun: coil rings, capacitor blocks, muzzle shroud
-  ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 3.9, z], 0.12, [1.65, 0.78], [1.65, 0.78], H.panel, { sh: 'e', lod: 2 })),
-  ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 3.9, z - 0.3], 0.05, [1.7, 0.85], [1.7, 0.85], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
-  tap([0, 3.9, -30.2], 0.7, [1.8, 0.85], [1.8, 0.85], H.dark, { sh: 'h', lod: 2 }),
-  tap([0, 3.7, -4], 2.0, [1.6, 0.5], [1.9, 0.6], 0x6e7782, { sh: 'h', lod: 2 }),
+  // Railgun detail sits inside the low dorsal spine; nothing is an unsupported tower.
+  ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 2.75, z], 0.12, [1.32, 0.38], [1.32, 0.38], H.panel, { sh: 'e', lod: 2 })),
+  ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 2.75, z - 0.3], 0.05, [1.37, 0.43], [1.37, 0.43], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
+  tap([0, 2.75, -30.2], 0.7, [1.42, 0.42], [1.42, 0.42], H.dark, { sh: 'h', lod: 2 }),
+  tap([0, 2.6, -4], 2.0, [1.32, 0.32], [1.52, 0.4], 0x6e7782, { sh: 'h', lod: 2 }),
   // VLS lattice (tier 1 paint), dorsal armour seams and a ventral sensor strake
   ...paintGrid(-1.2, 3.0, 12.6, 5, 9, 0.5, 0.55, 0.36, 0.38, 0x16191d, { mix: 0.9 }),
   // hangar door frame with amber guide lights, boarding hatch rows
@@ -307,17 +307,17 @@ SHIPS.halberd = {
     // a recognisable silhouette at low detail instead of a pile of hull blocks.
     tap([0, -0.05, 1.5], 21.5, [2.55, 1.85], [3.65, 2.7], H.hull, { sh: 'h', seam: [2.2, 3.0] }), // armoured keel
     tap([0, -0.15, -25.2], 7.2, [0.32, 0.38], [2.65, 1.85], 0x9aa1aa, { sh: 'd', sweepY: 0.08 }), // lance bow
-    tap([0, 1.9, -8], 13.5, [1.55, 0.45], [2.35, 0.65], H.hull2, { sh: 'h' }),                    // raised weapon spine
+    tap([0, 1.35, -8], 13.5, [1.55, 0.38], [2.25, 0.52], H.hull2, { sh: 'h' }),                  // low, integrated weapon spine
     tap([0, -1.9, 2.5], 18.5, [1.85, 0.38], [2.85, 0.52], H.dark, { sh: 'h' }),                    // continuous ventral keel
     tap([0, 0, -9], 0.72, [3.0, 2.25], [3.0, 2.25], H.navy, { sh: 'h' }),                         // fleet recognition band
     tap([0, 0, 8], 0.62, [3.4, 2.5], [3.4, 2.5], H.navy, { sh: 'h' }),
     tap([0, 0.15, -21], 0.38, [2.25, 1.65], [2.25, 1.65], H.orange, { sh: 'h' }),
-    // spinal railgun: physical cradle, twin barrels and a visibly armoured muzzle.
-    tap([0, 3.25, -3], 7.8, [1.45, 0.72], [1.9, 0.86], 0x6e7782, { sh: 'h' }),
-    seg([0.9, 3.9, -8], [0.9, 3.9, -30.5], 0.5, 0.42, H.dark),
-    seg([-0.9, 3.9, -8], [-0.9, 3.9, -30.5], 0.5, 0.42, H.dark),
-    tap([0, 3.9, -16], 0.3, [1.5, 0.75], [1.5, 0.75], H.panel, { sh: 'e' }),
-    tap([0, 3.9, -24], 0.3, [1.4, 0.7], [1.4, 0.7], H.panel, { sh: 'e' }),
+    // Spinal railgun: recessed into the dorsal spine, a continuous naval assembly.
+    tap([0, 2.35, -3], 7.8, [1.22, 0.38], [1.5, 0.5], 0x6e7782, { sh: 'h' }),
+    seg([0.7, 2.95, -8], [0.7, 2.95, -30.5], 0.34, 0.29, H.dark, { noMirror: true }),
+    seg([-0.7, 2.95, -8], [-0.7, 2.95, -30.5], 0.34, 0.29, H.dark, { noMirror: true }),
+    tap([0, 2.95, -16], 0.3, [1.16, 0.38], [1.16, 0.38], H.panel, { sh: 'e' }),
+    tap([0, 2.95, -24], 0.3, [1.08, 0.35], [1.08, 0.35], H.panel, { sh: 'e' }),
     // GA-9 rotary cannon (ventral nose, owner 2026-10-22): cradle + barrel cluster + muzzle disc
     tap([0, -2.3, -27], 2.6, [1.2, 1.2], [1.0, 1.0], 0x6e7782, { sh: 'h' }),
     seg([0, -2.3, -29], [0, -2.3, -30.4], 0.55, 0.45, H.dark),
@@ -329,15 +329,16 @@ SHIPS.halberd = {
     seg([0, 6.1, 11.5], [0, 9.5, 11.5], 0.2, 0.1, 0x7a838d),
     ell([0, 9.65, 11.5], [1.45, 0.18, 1.45], 0x9aa1aa),
     seg([1.55, 5.9, 12], [3.4, 8.4, 13.3], 0.1, 0.05, 0x7a838d),
-    // VLS rack, side bay and the swept radiator/PD planes.
+    // VLS rack, side bay and compact, supported radiator booms.
     tap([0, 2.45, 15.5], 2.45, [1.55, 0.32], [1.55, 0.32], H.panel, { sh: 'h', dots: { col: H.amber, p: 0.04 } }),
     tap([3.15, -0.15, -1.5], 4.3, [0.28, 1.12], [0.28, 1.12], 0x16191d, { dots: { col: H.amber, p: 0.14 } }), // service bay
     tap([3.0, 1.12, 7.0], 2.75, [0.14, 0.14], [0.14, 0.14], H.orange),
-    tap([9.0, 0.6, 11.5], 5.55, [6.5, 0.15], [2.1, 0.1], H.white, { ax: 'x', sweep: -0.42, seam: [1.4, 2.1] }), // radiator wing
-    tap([9.1, 0.68, 11.7], 5.4, [0.2, 0.19], [0.2, 0.12], H.orange, { ax: 'x', sweep: -0.42 }),
+    seg([3.0, 0.55, 11.5], [8.2, 0.62, 11.5], 0.42, 0.34, H.panel),
+    tap([8.0, 0.62, 11.5], 2.55, [1.85, 0.12], [1.35, 0.1], H.white, { ax: 'x', sweep: -0.12, seam: [0.6, 0.9] }), // compact radiator boom
+    tap([8.1, 0.73, 11.55], 2.45, [1.72, 0.06], [1.26, 0.05], H.orange, { ax: 'x', sweep: -0.12 }),
     seg([3.0, 0.55, 9.2], [7.0, 0.62, 10.6], 0.34, 0.26, H.panel),
     seg([3.0, 0.45, 15.0], [7.0, 0.62, 13.7], 0.28, 0.22, H.panel),
-    ell([14.35, 0.65, 10.0], [0.3, 0.24, 0.48], H.amber, { glow: true, glowF: 1.2 }), // wing-tip PD sensor
+    ell([10.65, 0.65, 10.9], [0.3, 0.24, 0.48], H.amber, { glow: true, glowF: 1.2 }), // boom-tip PD sensor
     // three engine nacelles are enclosed in a single aft frame, matching the database engine positions.
     tap([0, 0, 25.5], 4.4, [3.45, 2.65], [4.25, 3.05], 0x4d5560, { sh: 'h' }),
     tap([3.9, 0, 26.2], 3.35, [1.35, 1.25], [1.55, 1.45], H.hull2, { sh: 'h' }),
