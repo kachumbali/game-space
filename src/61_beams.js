@@ -103,10 +103,10 @@ function beamInit() {
 function beamsClear() { beamRec.clear(); if (beamPool) for (const k in beamPool) { beamPool[k].geo.instanceCount = 0; } }
 
 // One shot. key = the firing mount/turret; src/dst = { obj, local } (world point = obj.localToWorld(local)) or dst = { world }.
-function beamNote(key, s, w, src, dst, live, prog, shield) {
+function beamNote(key, s, w, src, dst, live, prog, shield, chg = 1) {
   let r = beamRec.get(key);
   if (!r) { r = { s: null, w: null, src: { obj: null, local: new THREE.Vector3() }, dstObj: null, dstLocal: new THREE.Vector3(), dstWorld: new THREE.Vector3(), hit: false }; beamRec.set(key, r); }
-  r.s = s; r.w = w; r.t = time; r.live = live; r.prog = prog; r.shield = shield;
+  r.s = s; r.w = w; r.t = time; r.live = live; r.prog = prog; r.shield = shield; r.chg = chg;
   r.src.obj = src.obj; r.src.local.copy(src.local);
   r.hit = !!dst.obj;
   if (dst.obj) { r.dstObj = dst.obj; r.dstLocal.copy(dst.local); r.dstShip = dst.ship; } else { r.dstObj = null; r.dstWorld.copy(dst.world); r.dstShip = null; }
@@ -146,6 +146,16 @@ function renderBeams() {
     for (const r of _bList) {
       const w = r.w, ph = Math.min(1, r.age / w.cd);
       let I, wc, wg;
+      if (r.chg < 1) {                                                                        // M2 charge-up: emitter glow only, growing and brightening; no ribbon, no impact yet
+        const c = r.chg, fl = 0.8 + 0.2 * Math.sin(T * 2.3 + n * 1.3);
+        _bC.setHex(r.col);
+        const i = n++;
+        let g = P.glow; g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aP.setXYZW(i, 0.01, 2.4, 2.6, 0.0); g.at.aCol.setXYZW(i, 0, 0, 0, 0);
+        g = P.core; g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aB.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aP.setXYZW(i, 0.01, 5.0, 1.2, 0.25); g.at.aCol.setXYZW(i, 0, 0, 0, 0);
+        g = P.muz; g.at.aA.setXYZ(i, r.a.x, r.a.y, r.a.z); g.at.aP.setXYZW(i, r.bw * (1.2 + 5 * c * c), 0, 4.5, 0); g.at.aCol.setXYZW(i, _bC.r, _bC.g, _bC.b, (0.3 + 1.5 * c) * fl);
+        P.imp.at.aCol.setW(i, 0);
+        continue;
+      }
       if (r.live) {
         const fl = 0.86 + 0.14 * Math.sin(T * 1.7 + n * 2.1) * Math.sin(T * 0.63 + n);       // fast flicker
         I = (1 - 0.35 * ph) * fl;                                                             // pulse: bright at the shot, easing toward the next

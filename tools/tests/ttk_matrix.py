@@ -319,7 +319,7 @@ def report(args):
       'missiles: launched one at a time from a locked Kestrel, the next only after the previous resolved (shield regen between them is real); XL: `spineFire` on an Exeter / Bullfrog with the 30 s cooldown run between shots (time = charge + (n-1) x cooldown). '
       'The pipeline is the game\'s own (`applyHit`: shield, armour with class threshold, structure, DMGX, EXPOSED parts, pierce, beam focus). '
       '`pdOnly` / `bigOnly` AI target filters are lifted for the run (doctrine, not damage). Gun cells are capped at %d sim-s; a cell that does not die shows `>cap s (pool damage %%) est T`, where est = linear extrapolation t / fraction and `immune` means under 1%% of the shield+structure pool in the run.\n' % 120)
-    P('Cell entries marked `(k/n)` killed in k of n seeds only. Tracking: turret `track` field, rad/s converted to deg/s (head slew rate; the ship-relative lead is already perfect); missile `turn`, rad/s at full speed; fixed guns have no tracking of their own (the pilot or ship turns them).\n')
+    P('Cell entries marked `(k/n)` killed in k of n seeds only. Tracking: turret `slew` (deg/s) or the older `track` (rad/s, converted) (head slew rate; the ship-relative lead is already perfect); missile `turn`, rad/s at full speed; fixed guns have no tracking of their own (the pilot or ship turns them).\n')
 
     # weapon table
     P('## Weapon reference (from db.json)\n')
@@ -331,7 +331,7 @@ def report(args):
         if w.get('cd') and m != 'spine': rate = f'{1/w["cd"]:.2f}' if w['cd'] > 0.2 else f'{1/w["cd"]:.1f}'
         if m == 'spine': rate = f'1 / {w["cd"]:.0f} s (+{w["charge"]:.0f} s charge)'
         rng = w.get('range') or (round(w['v'] * w['life']) if w.get('v') and w.get('life') else '')
-        trk = f'{math.degrees(w["track"]):.0f}' if w.get('track') else ('-' if m != 'msl' else '')
+        trk = f'{w["slew"]:.0f}' if w.get('slew') else f'{math.degrees(w["track"]):.0f}' if w.get('track') else ('-' if m != 'msl' else '')
         trn = f'{math.degrees(w["turn"]):.0f}' if w.get('turn') else ''
         dm = w.get('dmg', '')
         if isinstance(dm, float): dm = round(dm, 1)

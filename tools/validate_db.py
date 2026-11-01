@@ -65,7 +65,7 @@ W, S, A = db['weapons'], db['ships'], db['armor']
 S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only when mark errors were reported above)
 
 # ---- tuning: every section the game reads must exist ----
-for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai'):
+for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret'):
     if not isinstance(db.get('tuning', {}).get(k), dict): err(f'tuning.{k} missing')
 
 # ---- ships and weapons (resolved) ----

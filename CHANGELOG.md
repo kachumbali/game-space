@@ -4,6 +4,7 @@ Versions are named from the state of `main`. Commit trailers and tool history: d
 
 ## 0.3.0 (in progress): Armoury, plan in docs/PLAN_V03.md
 - Bittern carries 12 torpedoes (owner decision: it is the torpedo bomber). Key **U** (touch: **TUR**) makes your turrets hold fire to save energy and drum rounds; the weapon panel shows `PD ... HOLD (U)`. AI turrets are unaffected. Test: `tools/tests/turret_hold_t.py`.
+- M2 weapons by size (docs/WEAPONS_M2.md): capital beams get a charge-up telegraph (emitter glow plus rising whine), slower turret slew (`slew` deg/s in db) and a slower damage ramp; S turrets (pd, thorn, sting) hit fighters about 3x harder but barely scratch corvettes and capitals (`vsCls`), missile defence damage unchanged (`dmgMsl`); M/L turrets retuned (acidT, mdl); the XL spines cannot target or hit fighters (`hitFighters` false); kinetic PD costs 0.45 capacitor per shot and leaves a reserve for guns and lasers (`tuning.turret`); a turret engages whoever is targeting its own ship first.
 - Merged: M1 balance harness + baseline (`tools/tests/ttk_matrix.py`), M5 subsystem damage effects (`src/51_subsys.js`), `?db=data/db.json` runtime override + `tuning` section, Marks I-IV schema (scaffolding only: `kestrel_2`).
 - M0 opsec: the owner's real name is gone from code and docs (handle `kachumbali`); the player pilot is Lt. Tom Cat, callsign MEOW; `tools/check_opsec.py` runs in CI.
 
