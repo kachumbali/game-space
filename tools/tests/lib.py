@@ -10,6 +10,7 @@ def prep():
     if not os.path.isdir(SP+'/node_modules/three'):
         subprocess.run(['npm','install','--prefix',SP,'three@0.170.0'],check=True,stdout=subprocess.DEVNULL)
     if not os.path.exists(SP+'/audio') and os.path.isdir(REPO+'/audio'): os.symlink(REPO+'/audio',SP+'/audio')
+    if not os.path.exists(SP+'/data') and os.path.isdir(REPO+'/data'): os.symlink(REPO+'/data',SP+'/data')     # lets ?db=data/db.json (dev override) work
     src=open(REPO+'/index.html').read()
     src=src.replace('https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js','/node_modules/three/build/three.module.js')
     src=src.replace('https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/','/node_modules/three/examples/jsm/')

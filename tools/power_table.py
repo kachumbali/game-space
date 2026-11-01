@@ -6,7 +6,9 @@ Sustained = plant share on the weapons bus (plantMW / 3, balanced split) / peak 
 the rest do not draw yet."""
 import json, os, sys
 SIM = 0.375
-db = json.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'db.json')))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import dbmarks
+db = dbmarks.resolve(dbmarks.load())      # variants (marks) resolved into complete defs
 W = db['weapons']
 rows = []
 for sid, s in db['ships'].items():

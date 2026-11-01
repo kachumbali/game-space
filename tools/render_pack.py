@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools" / "tests"))
+sys.path.insert(0, str(REPO / "tools"))
 
 SETUP = """(id)=>{const g=__game,T=g.THREE;__paused=true;
  if(window.__e){g.scene.remove(window.__e.group);window.__e.alive=false;}
@@ -135,7 +136,8 @@ def main():
 
     from lib import Runner
 
-    database = json.loads((REPO / "data" / "db.json").read_text())
+    import dbmarks
+    database = dbmarks.resolve(json.loads((REPO / "data" / "db.json").read_text()))
     ships = database["ships"]
     weapons = database["weapons"]
     factions = {}

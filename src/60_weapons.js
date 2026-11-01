@@ -2,7 +2,7 @@
 //  WEAPONS — ballistic + energy guns, guided missiles, torpedoes, countermeasures, turrets
 //  Damage types: kin (kinetic) / en (energy, plasma, acid) / exp (blast). Each hits shield / armour / structure differently.
 // ======================================================================
-const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1], nuke: [1.0, 1.0, 1.0] };   // [shield, (armour column retired: see ARMOR), structure]
+const DMGX = TUNE.dmgx;   // [shield, (armour column retired: see ARMOR), structure]
 
 // ---- ARMOUR (FS2-style damage transform, never depletes) ----
 // A ship carries { type, rating }: rating = average fraction of damage stopped; the type's profile redistributes it by damage type.
@@ -13,7 +13,7 @@ const DMGX = { kin: [0.7, 1.0, 1.0], en: [1.25, 1.0, 1.0], exp: [1.0, 1.0, 1.1],
 // Whipple (spaced) plating is documented in docs/ARMOR.md but not implemented yet.
 const ARMOR = DB.armor;
 // ---- friendly damage (owner request 2026-10-21): own-team bolts and blasts hurt, at a reduced multiplier ----
-const FF = { bolt: 0.5, blast: 0.5 };
+const FF = TUNE.ff;
 const _ff = new THREE.Vector3(), _fw = new THREE.Vector3();
 function friendlyInLine(s, maxD = 700) {           // AI holds fire when a friendly ship sits in its gun line
   _fw.set(0, 0, -1).applyQuaternion(s.group.quaternion);
@@ -108,11 +108,12 @@ function spawnBolt(s, wid, wpos, dirW, spreadMul = 1, owner = s) {
 const playerTrack = { last: -99, prog: 0, live: false, by: null };
 function beamFocus(F, w, tgt) {
   if (!F || !w.acq) return 1;
-  const gap = w.gap || Math.max(0.25, w.cd * 2.5);
+  const gap = w.gap || Math.max(TUNE.beam.gapMin, w.cd * TUNE.beam.gapCdMul);
   if (F.tgt !== tgt || time - F.last > gap) { F.tgt = tgt; F.t = 0; } else F.t += time - F.last;
   F.last = time;
   if (F.t < w.acq) return 0;
-  return 0.25 + ((w.peak || 1) - 0.25) * Math.min(1, (F.t - w.acq) / w.ramp);
+  const fl = TUNE.beam.focusFloor;
+  return fl + ((w.peak || 1) - fl) * Math.min(1, (F.t - w.acq) / w.ramp);
 }
 function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   const end = wp.clone().addScaledVector(dirW, w.range);
@@ -252,13 +253,13 @@ function steerMissile(m, dt) {
     const tv = m.target.vel;
     _w1.copy(tp).sub(m.pos);
     const d = _w1.length();
-    const tgo = d / Math.max(80, sp);
-    _w2.copy(tp).addScaledVector(tv, Math.min(tgo, 3)).sub(m.pos).normalize();
+    const tgo = d / Math.max(TUNE.missile.steerMinSpeed, sp);
+    _w2.copy(tp).addScaledVector(tv, Math.min(tgo, TUNE.missile.leadMax)).sub(m.pos).normalize();
     const ang = m.dir.angleTo(_w2);
-    if (ang > w.seekCone) { m.lostT += dt; if (m.lostT > 0.25) m.target = null; }      // seeker gimbal limit
+    if (ang > w.seekCone) { m.lostT += dt; if (m.lostT > TUNE.missile.lostSec) m.target = null; }      // seeker gimbal limit
     else {
       m.lostT = 0;
-      const maxTurn = w.turn * dt * (0.4 + 0.6 * Math.min(1, sp / w.vmax));
+      const maxTurn = w.turn * dt * (TUNE.missile.turnFloor + (1 - TUNE.missile.turnFloor) * Math.min(1, sp / w.vmax));
       if (ang <= maxTurn) m.dir.copy(_w2); else m.dir.lerp(_w2, maxTurn / ang).normalize();
     }
   }
@@ -292,10 +293,10 @@ function blastAt(pos, w, team, owner, direct, skip) {
     const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
-    let surf = Math.max(0, dc - s.def.radius * 0.62);
+    let surf = Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);
     if (surf > w.blast && s.def.radius > 150 && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // long hulls (Exeter, Bullfrog, Hive Carrier): measure from the hull, not a 0.62 R sphere around the centre
     if (surf > w.blast) continue;
-    const f = (direct === s ? 1 : Math.max(0.2, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
+    const f = (direct === s ? 1 : Math.max(TUNE.missile.blastFloor, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
     // pull the contact point onto the hull
     const dir = lp.clone().negate().normalize();
@@ -316,7 +317,7 @@ function blastAt(pos, w, team, owner, direct, skip) {
 // ---- nuclear burst (first cut, placeholder numbers; docs/CAPITAL_COMBAT.md) ------------------------------------
 // X-ray fluence F = 0.8 * yield / (4 pi r^2) in J/cm2 (1 kT = 4.18e12 J): hull damage as a fraction of the class kill fluence (hardening is a guess);
 // crew dose from neutrons/gamma (80 Gy at 900 m for 1 kT, 1/r^2), reduced by shields up to NUKE.shieldCut; flash blinds radar and PD optics for a while.
-const NUKE = { kill: { fighter: 1500, corvette: 2500, frigate: 4000, capital: 8000 }, crewDead: 30, shieldCut: 0.5, blindF: 0.04 };
+const NUKE = TUNE.nuke;
 function nukeAt(pos, kt, owner) {
   flashAt(pos, 90, 1.6); sparksAt(pos, 120, 80); fireAt(pos, 30, 30); sfx('boom', pos.distanceTo(camera.position), 3);
   const rep = [];
@@ -567,10 +568,10 @@ function updateBolts(dt) {
     // proximity-burst flak: anything inside `w.flak` of the shell's path detonates it
     for (const m of missiles) {
       if (m.dead || m.team === b.team) continue;
-      const R = b.w.flak || 1.6;
+      const R = b.w.flak || TUNE.flak.defaultRadius;
       _w4.copy(m.pos).addScaledVector(m.vel, dt);   // where the missile will be by the end of this step
       if (segSeg(b.prev, b.pos, m.pos, _w4) > R) continue;
-      m.hp -= b.dmg * (b.w.big ? 10 : 1);
+      m.hp -= b.dmg * (b.w.big ? TUNE.flak.bigMul : 1);
       b.life = 0;
       if (b.w.flak) {   // proximity burst: every missile inside the flak radius takes the hit
         flashAt(b.pos, 5, 0.2); sparksAt(b.pos, 8, 6);

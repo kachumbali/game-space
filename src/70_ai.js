@@ -128,7 +128,7 @@ function leadPoint(s, t, speed) {
   const tt = d / Math.max(50, speed);
   return _ao.copy(t.group.position).addScaledVector(rel, tt).addScaledVector(s.vel, 0);
 }
-const AI_TUNE = { tolMul: 1, rngMul: 0.55 };
+const AI_TUNE = TUNE.ai;
 function primaryRange(s) {
   let r = 0;
   for (const m of s.mounts) { const w = WEAPONS[m.w]; if (!m.store) r = Math.max(r, w.kind === 'beam' ? w.range * 0.8 : w.v * w.life * AI_TUNE.rngMul); }
