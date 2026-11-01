@@ -1,3 +1,5 @@
+> **Superseded 2026-11-01 (owner direction):** the tandem model in this document (`tandem.pen` / `tandem.holeT`) was replaced by the Codex line (`tandem.shieldDrain` / `pierce` / `window`, timed salvos via `salvo`). `m3_missile_t.py` was removed with it; coverage of the new model is in `bullfrog_t.py` and the missile/torpedo tests listed in `docs/CODEX_INTEGRATION_LOG.md`. Kept for history.
+
 # Missiles and torpedoes (v0.3 M3)
 
 Status: implemented on branch `v0.3-m3-missiles`; numbers measured with the ceiling rig (below), not by hand play. All times and counts are headless-SwiftShader sim results; see "What was not measured".
