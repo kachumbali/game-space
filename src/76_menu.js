@@ -19,7 +19,8 @@ const SK_PRESETS = [
   { id: 'bullfrog2', name: 'BULLFROG + 2 GULPER', rows: [['bullfrog', 1], ['gulper', 2]], warn: true },
   { id: 'hive', name: 'HIVE CARRIER (UNARMED)', rows: [['hivecarrier', 1]], warn: true },
 ];
-const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['merlin', 'MERLIN (light fighter)']];   // skirmish: your ship and your wingmen's ship
+const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['merlin', 'MERLIN (light fighter)'], ['bittern', 'BITTERN (torpedo bomber)'], ['tern', 'TERN (unarmed resupply shuttle)']];
+const SK_WING = SK_PLAYER.filter(x => x[0] !== 'tern');   // the shuttle has no weapons, so it is not offered as a wingman   // skirmish: your ship and your wingmen's ship
 const SK_RANGES = [['CLOSE', 800], ['MEDIUM', 2000], ['FAR', 4000], ['VERY FAR', 10000]];
 const SK_DEFAULT = { ship: 'kestrel', wship: 'kestrel', wing: 0, rows: [['leaper', 2]], skill: 3, wskill: 3, fm: 'arcade', missiles: true, respawn: false, range: 2000, look: 'lilypad', ally: 'none' };
 let skCfg = { ...SK_DEFAULT, rows: SK_DEFAULT.rows.map(r => [...r]) };
@@ -31,13 +32,13 @@ function skNorm(c) {
   if (!o.rows.length) o.rows = SK_DEFAULT.rows.map(r => [...r]);
   o.wing = clamp(o.wing | 0, 0, 3); o.skill = clamp(o.skill | 0 || 3, 1, 5); o.wskill = clamp(o.wskill | 0 || 3, 1, 5);
   if (!SHIPS[o.ship] || !SK_PLAYER.some(x => x[0] === o.ship)) o.ship = 'kestrel';
-  if (!SHIPS[o.wship] || !SK_PLAYER.some(x => x[0] === o.wship)) o.wship = 'kestrel';
+  if (!SHIPS[o.wship] || !SK_WING.some(x => x[0] === o.wship)) o.wship = 'kestrel';
   o.fm = ['newton', 'sim'].includes(o.fm) ? o.fm : 'arcade'; o.missiles = !!o.missiles; o.respawn = !!o.respawn;
   o.range = clamp(+o.range || 2000, 300, 12000); if (!LOOKS[o.look]) o.look = 'lilypad';
   o.ally = ['halberd', 'exeter'].includes(o.ally) ? o.ally : 'none';
   return o;
 }
-// URL form: ?sk=darter:3,leaper:2&sk_skill=3&sk_wing=2  (also sk_ship=kestrel|merlin, sk_wship=kestrel|merlin, sk_wskill, sk_fm, sk_msl=0|1, sk_respawn=1, sk_range, sk_look, sk_ally)
+// URL form: ?sk=darter:3,leaper:2&sk_skill=3&sk_wing=2  (also sk_ship=kestrel|merlin|bittern|tern, sk_wship=kestrel|merlin|bittern, sk_wskill, sk_fm, sk_msl=0|1, sk_respawn=1, sk_range, sk_look, sk_ally)
 function skFromParams() {
   const rows = (params.get('sk') || '').split(',').map(s => s.trim()).filter(Boolean).map(s => { const [t, n] = s.split(':'); return [t, n === undefined ? 1 : parseInt(n) || 1]; });
   const g = (k, d) => params.has(k) ? params.get(k) : d;
@@ -138,7 +139,7 @@ function showSkirmishSetup(focus) {
     <div class="skg"><div>
       <div class="sub">YOUR SHIP</div><div class="skrow"><select data-f="ship" id="sk_ship">${SK_PLAYER.map(([k, n]) => `<option value="${k}" ${k === c.ship ? 'selected' : ''}>${n}</option>`).join('')}</select></div>
       <div class="sub">WINGMEN (HUMAN, AI)</div><div class="skrow">${skSeg('wing', [[0, 0], [1, 1], [2, 2], [3, 3]], c.wing)}</div>
-      <div class="sub">WINGMEN'S SHIP</div><div class="skrow">${skSeg('wship', SK_PLAYER.map(([k, n]) => [n.split(' ')[0], k]), c.wship)}</div>
+      <div class="sub">WINGMEN'S SHIP</div><div class="skrow">${skSeg('wship', SK_WING.map(([k, n]) => [n.split(' ')[0], k]), c.wship)}</div>
       <div class="sub">ESCORT CAPITAL (YOUR SIDE)</div><div class="skrow">${skSeg('ally', [['NONE', 'none'], ['HALBERD', 'halberd'], ['EXETER', 'exeter']], c.ally)}</div>
       <div class="sub">ENEMY FORCE · ${total} SHIP${total === 1 ? '' : 'S'}</div>
       <div class="skrow pre">${SK_PRESETS.map(p => `<button data-f="pre-${p.id}" data-pre="${p.id}">${p.name}</button>`).join('')}</div>
