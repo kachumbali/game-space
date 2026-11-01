@@ -123,22 +123,26 @@ window.__rig = (() => {
     w.pdOnly = saved.pdOnly; w.bigOnly = saved.bigOnly;
     wipe(); return res;
   }
-  function runMissile(wid, tid, side) {
-    const w = WP[wid]; park(); wipe();
+  function runMissile(wid, tid, side, salvo, gap, jit) {
+    // salvo > 1: that many missiles are launched `gap` s apart (one lock, as a bomber would), then the rig waits for all of them to resolve before the next salvo
+    const w = WP[wid]; park(); wipe(); salvo = salvo || 1; gap = gap || 0.9;
     const d = Math.min(SH[tid].radius + 700, 0.8 * w.range + SH[tid].radius), t = mkTarget(tid, d, side), s = mkShooter('kestrel');
     s.mounts = []; s.turrets = []; s.stores = { [wid]: 999 };
     let now = 0, n = 0, hits = 0; const per = [];
     while (n < 60 && !gone(t) && now < 900) {
-      s.lock = { tgt: t, wid, p: 1, state: 'locked', d, ang: 0 };
-      const before = pool(t);
-      if (!g.launchMissile(s, wid)) break;
-      n++;
-      const m = g.missiles[g.missiles.length - 1];
+      const before = pool(t), ms = [];
+      for (let k = 0; k < salvo && n < 60; k++) {
+        if (jit) jitter(t);      // same re-drawn position / aspect as the gun rig, so seeds differ (default: the fixed head-on / broadside geometry of the baseline)
+        s.lock = { tgt: t, wid, p: 1, state: 'locked', d, ang: 0 };
+        if (!g.launchMissile(s, wid)) break;
+        n++; ms.push(g.missiles[g.missiles.length - 1]);
+        if (k < salvo - 1) { for (let u = 0; u < Math.round(gap / 0.025); u++) { g.update(0.025); now += 0.025; } }
+      }
+      if (!ms.length) break;
       let guard = 0;
-      while (!m.dead && guard < 2400) { g.update(0.025); now += 0.025; guard++; }
+      while (ms.some(m => !m.dead) && guard < 2400) { g.update(0.025); now += 0.025; guard++; }
       const dealt = Math.max(0, before - Math.max(0, pool(t))); per.push(+dealt.toFixed(1));
       if (dealt > 0) hits++;
-      // let the blast settle one tick so a dying flag is visible
       g.update(0.025); now += 0.025;
     }
     const dead = gone(t);
@@ -165,9 +169,9 @@ window.__rig = (() => {
     const res = { killed: gone(t), ttk: gone(t) ? +(C + (n - 1) * w.cd).toFixed(1) : null, t: +now.toFixed(1), shots: n, hits, energy: n * w.energy, frac: +Math.max(0, 1 - Math.max(0, pool(t)) / pool0(t)).toFixed(4), per: per.slice(0, 8), d: Math.round(d) };
     wipe(); return res;
   }
-  function cell(wid, tid, aspect) {
+  function cell(wid, tid, aspect, salvo, jit) {
     const m = WP[wid].kind === 'msl' ? 'msl' : WP[wid].kind === 'spine' ? 'spine' : WP[wid].turret ? 'turret' : 'mount';
-    return m === 'msl' ? runMissile(wid, tid, aspect === 'side') : m === 'spine' ? runSpine(wid, tid) : m === 'turret' ? runTurret(wid, tid) : runMount(wid, tid);
+    return m === 'msl' ? runMissile(wid, tid, aspect === 'side', salvo || 1, 0.9, jit) : m === 'spine' ? runSpine(wid, tid) : m === 'turret' ? runTurret(wid, tid) : runMount(wid, tid);
   }
   // ---- capital beam duel: AI Kestrel (skill 3) flies at a capital -----------------------------------------------------
   function duel(capId, variant, seed) {
@@ -197,24 +201,29 @@ window.__rig = (() => {
       hits: k.hitsTaken || 0, hull: +(k.structure / k.def.structure).toFixed(2), capAlive: cap.alive, nBeam, d0: Math.round(d0), kind: k.lastKind || null };
     g.state = 'cine'; wipe(); return res;
   }
-  return { cell, duel, CAP };
+  const reseed = n => { let a = n >>> 0 || 1; Math.random = function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
+  return { cell, duel, CAP, reseed };
 })();
 """
 
 # ------------------------------------------------------------------------------------------------ drivers
-def run_ceiling_seed(seed, cells, R):
-    pg = R.page(320, 180, f'?free&n=0&wing=0&seed={seed}&q=low')
-    pg.wait_for_timeout(500)
-    pg.evaluate('()=>{__paused=true}')
-    pg.evaluate(RIG)
+def run_ceiling_seed(seed, cells, R, salvo=1, jit=False, pg=None):
+    own = pg is None
+    if own:
+        pg = R.page(320, 180, f'?free&n=0&wing=0&seed={seed}&q=low')
+        pg.wait_for_timeout(500)
+        pg.evaluate('()=>{__paused=true}')
+        pg.evaluate(RIG)
+    else:
+        pg.evaluate('s=>__rig.reseed(s)', seed)      # --inpage: one page load for all seeds, the PRNG is re-seeded between them (same mulberry32)
     out = {}
     for wid, tid in cells:
         for asp in (['head', 'side'] if (wmode(wid) == 'msl' and tid not in FIGHTERS) else ['head']):
             t0 = time.time()
-            r = pg.evaluate('([w,t,a])=>__rig.cell(w,t,a)', [wid, tid, asp])
-            out[f'{wid}|{tid}' + ('|side' if asp == 'side' else '')] = r
+            r = pg.evaluate('([w,t,a,n,j])=>__rig.cell(w,t,a,n,j)', [wid, tid, asp, salvo if wmode(wid) == 'msl' else 1, jit])
+            out[f'{wid}|{tid}' + ('|side' if asp == 'side' else '') + (f'|salvo{salvo}' if salvo > 1 and wmode(wid) == 'msl' else '')] = r
             print(f'seed {seed} {wid:10s} {tid:9s} {asp:4s} killed={r["killed"]} ttk={r["ttk"]} shots={r["shots"]} frac={r["frac"]} ({time.time()-t0:.1f}s)', flush=True)
-    pg.close()
+    if own: pg.close()
     return out
 
 def run_capbeam_seed(seed, caps, variants, R):
@@ -236,10 +245,14 @@ def child(args):
     from lib import Runner
     res = {}
     with Runner() as R:
+        pg0 = None
+        if args.inpage and args.mode == 'ceiling':
+            pg0 = R.page(320, 180, f'?free&n=0&wing=0&seed={args.seed_list[0]}&q=low'); pg0.wait_for_timeout(500)
+            pg0.evaluate('()=>{__paused=true}'); pg0.evaluate(RIG)
         for seed in args.seed_list:
             if args.mode == 'ceiling':
                 cells = [(w, t) for w in args.weapons for t in args.targets]
-                res[str(seed)] = run_ceiling_seed(seed, cells, R)
+                res[str(seed)] = run_ceiling_seed(seed, cells, R, args.salvo, args.jitter, pg0)
             else:
                 res[str(seed)] = run_capbeam_seed(seed, args.caps, args.variants, R)
             json.dump(res, open(args.out, 'w'))
@@ -259,7 +272,7 @@ def spawn_jobs(args, seeds):
         if not os.path.exists(nm) and os.path.isdir('/tmp/gs_test/node_modules'): os.symlink('/tmp/gs_test/node_modules', nm)
         part = f'{args.out}.part{i}'
         cmd = [sys.executable, os.path.abspath(__file__), args.mode, '--child', '--seed-list', ','.join(map(str, ch)), '--out', part,
-               '--weapons', ','.join(args.weapons), '--targets', ','.join(args.targets), '--caps', ','.join(args.caps), '--variants', ','.join(args.variants)]
+               '--salvo', str(args.salvo), *(['--jitter'] if args.jitter else []), *(['--inpage'] if args.inpage else []), '--weapons', ','.join(args.weapons), '--targets', ','.join(args.targets), '--caps', ','.join(args.caps), '--variants', ','.join(args.variants)]
         procs.append((subprocess.Popen(cmd, env=env), part))
     for p, _ in procs: p.wait()
     merged = {}
@@ -443,6 +456,9 @@ def main():
     ap.add_argument('--caps', default='halberd,exeter,gulper')
     ap.add_argument('--variants', default='full,beams')
     ap.add_argument('--out', default='/tmp/ttk_out.json')
+    ap.add_argument('--salvo', type=int, default=1, help='ceiling: missiles per salvo (launched 0.9 s apart), keys get a |salvoN suffix')
+    ap.add_argument('--jitter', action='store_true', help='ceiling missiles: re-draw target position / aspect before every launch (seeds then differ)')
+    ap.add_argument('--inpage', action='store_true', help='ceiling: load the page once and re-seed Math.random between seeds (a page load costs minutes on a loaded machine)')
     ap.add_argument('--child', action='store_true')
     ap.add_argument('--seed-list', default='')
     ap.add_argument('--ceiling'); ap.add_argument('--capbeam')

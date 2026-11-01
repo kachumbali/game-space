@@ -313,6 +313,15 @@ function fighterAI(s, dt) {
   missileLogic(s, dt, ['ir', 'rf', 'tick']);
 }
 
+// How many more torpedoes a capital-class target needs, given what is already in flight at it (tuning.ai.torpFrac = share of the full shield+structure pool one torpedo takes).
+// Bombers and corvettes stop launching when the salvo in the air already covers that: twelve at one corvette is a waste of the stores.
+function torpsStillNeeded(s, t) {
+  const p0 = t.def.structure + t.def.shield.fore + t.def.shield.aft;
+  const rem = Math.max(0, t.structure) + Math.max(0, t.shield.fore) + Math.max(0, t.shield.aft);
+  const fr = TUNE.ai.torpFrac[t.def.cls] ?? 0.1;
+  const flying = missiles.reduce((n, m) => n + (!m.dead && m.w.torp && m.team === s.team && m.target === t ? 1 : 0), 0);
+  return Math.ceil(rem / p0 / fr) - flying;
+}
 function bomberAI(s, dt) {
   const ai = s.ai, t = s.target, ep = s.group.position;
   if (!t) return fighterAI(s, dt);
@@ -322,14 +331,20 @@ function bomberAI(s, dt) {
   let aim = _pt, thr = 1;
   if (ai.mode === 'attack') ai.mode = 'run';
   if (ai.inc && ai.incD < 520 && ai.incD > 70 && ai.cmT <= 0 && s.stores.flare > 0) { deployCM(s); ai.cmT = 1; }
+  const breakAway = () => { ai.mode = 'egress'; ai.t = 6; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(500).add(new THREE.Vector3().randomDirection().multiplyScalar(150)).add(ep); };
   if (ai.mode === 'run') {
     aim.copy(t.group.position);
-    if (dist < t.def.radius * 0.5 + 220 || s.stores.tad + (s.stores.torp | 0) <= 0) { ai.mode = 'egress'; ai.t = 6; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(500).add(new THREE.Vector3().randomDirection().multiplyScalar(150)).add(ep); }
-    // torpedo release
+    if (dist < t.def.radius * 0.5 + 220 || s.stores.tad + (s.stores.torp | 0) <= 0) breakAway();
+    // torpedo release: a salvo of tuning.ai.torpSalvo at the one lock (torpGapT apart), then break away and reload; nothing is launched that the salvo already in flight covers
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
     s.sel = missileIds(s).indexOf(wid);
     lockUpdate(s, dt);
-    if (s.lock.state === 'locked' && ai.mslT <= 0 && dist < WEAPONS[wid].range * 0.8) { launchMissile(s, wid); ai.mslT = 1.6; log(s.def.fac === 'frogg' ? 'FROGG TORPEDO LAUNCH' : '', '#ff8a5a'); if (typeof onTorpLaunch === 'function') onTorpLaunch(s); }
+    if (s.lock.state === 'locked' && ai.mslT <= 0 && dist < WEAPONS[wid].range * 0.8 && torpsStillNeeded(s, t) > 0) {
+      launchMissile(s, wid); log(s.def.fac === 'frogg' ? 'FROGG TORPEDO LAUNCH' : '', '#ff8a5a'); if (typeof onTorpLaunch === 'function') onTorpLaunch(s);
+      ai.salvoN = (ai.salvoN || 0) + 1;
+      if (ai.salvoN >= TUNE.ai.torpSalvo) { ai.salvoN = 0; ai.mslT = TUNE.ai.torpReload + Math.random() * 6; breakAway(); ai.t = Math.max(ai.t, ai.mslT - 5); }      // stay out while the tubes reload
+      else { ai.mslT = TUNE.ai.torpGapT; s.lock.p = 1; }
+    }
   } else {           // egress
     aim.copy(ai.aimB); if (ai.t <= 0) ai.mode = (s.stores.tad > 0) ? 'run' : 'attack';
   }
@@ -376,6 +391,6 @@ function capitalAI(s, dt) {
   // torpedoes at capital targets
   if (s.stores.tad > 0 || s.stores.torp > 0) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
-    if (isCapital(t)) { s.sel = missileIds(s).indexOf(wid); lockUpdate(s, dt); if (s.lock.state === 'locked' && ai.mslT <= 0) { launchMissile(s, wid); ai.mslT = 5; } }
+    if (isCapital(t)) { s.sel = missileIds(s).indexOf(wid); lockUpdate(s, dt); if (s.lock.state === 'locked' && ai.mslT <= 0 && torpsStillNeeded(s, t) > 0) { launchMissile(s, wid); ai.mslT = 5; } }
   }
 }

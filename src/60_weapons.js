@@ -293,8 +293,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
-    let surf = Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);
-    if (surf > w.blast && s.def.radius > 150 && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // long hulls (Exeter, Bullfrog, Hive Carrier): measure from the hull, not a 0.62 R sphere around the centre
+    let surf = direct === s ? 0 : Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);      // a missile that struck this hull is AT the hull: full effect whatever the approach aspect
+    if (surf > w.blast && s.def.radius > TUNE.missile.hullGapR && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // larger hulls (corvettes and up): measure from the hull, not a 0.62 R sphere around the centre
     if (surf > w.blast) continue;
     const f = (direct === s ? 1 : Math.max(TUNE.missile.blastFloor, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
@@ -308,11 +308,24 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp');
+    const td = w.tandem;      // tandem warhead (torpedoes): the precursor collapses the facet's shield, the main charge goes through
+    const facet = lp.z < 0 ? 'fore' : 'aft';
+    applyHit(s, lp, w.dmg * (td || w.nuclear ? 1 : TUNE.missile.dmgCls[s.def.cls] ?? 1) * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', (w.pierce || 0) * (TUNE.missile.pierceCls[s.def.cls] ?? 1), !!td, td && !fr ? td.pen : 0);      // tandem main charge: wrecks the part it touches AND goes on into the hull (through), so the aspect of the hit matters little      // fragmentation pierce: lethal to small craft, little use against a big hull
+    if (td && !fr && s.alive && !s.dying && f >= 0.4) tandemHole(s, facet, td.holeT * f, s.group.localToWorld(lp.clone()));
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
   }
+}
+// the precursor charge of a tandem warhead: the facet's shield collapses and stays down for holeT seconds (visible flash; HUD line when it is the player's)
+function tandemHole(s, facet, holeT, wp) {
+  (s.shHole ||= {})[facet] = Math.max(s.shHole[facet] || 0, time + holeT);
+  s.shield[facet] = 0;
+  flashAt(wp, 14, 0.55, 0x9fd8ff);
+  sparksAt(wp, 30, 26, [0.5, 1.2, 3, 1]);
+  if (s.shieldFx) { s.shieldFx.material.color.setRGB(0.6, 0.85, 1); s.shieldFx.material.opacity = 0.5; }
+  if (s === player) log(`SHIELD ${facet.toUpperCase()} COLLAPSED`, '#6ad0ff');
+  else if (s === target) log(`TARGET SHIELD ${facet.toUpperCase()} DOWN`, '#8fd8ff');
 }
 // ---- nuclear burst (first cut, placeholder numbers; docs/CAPITAL_COMBAT.md) ------------------------------------
 // X-ray fluence F = 0.8 * yield / (4 pi r^2) in J/cm2 (1 kT = 4.18e12 J): hull damage as a fraction of the class kill fluence (hardening is a guess);
@@ -347,11 +360,11 @@ function nukeAt(pos, kt, owner) {
   nukeLog.push({ t: time, kt, rep });
 }
 const nukeLog = [];
-function killMissile(m, blast) {
+function killMissile(m, blast, direct = null) {
   if (m.dead) return;
   m.dead = true;
   if (blast && m.w.nuclear) nukeAt(m.pos, (m.owner && m.owner.nukeKt) || m.w.yield, m.owner);   // per-ship yield dial (owner 2026-10-22)
-  else if (blast) blastAt(m.pos, m.w, m.team, m.owner, null);
+  else if (blast) blastAt(m.pos, m.w, m.team, m.owner, direct);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
 }
 function updateMissiles(dt) {
@@ -376,14 +389,13 @@ function updateMissiles(dt) {
       const dc = s.group.position.distanceTo(m.pos);
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
-      if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true); blastDirect(m, s); break; }
+      if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true, s); break; }
       if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
   missiles = missiles.filter(m => !m.dead);
 }
-function blastDirect() { /* direct hits are handled by blastAt's distance falloff (full damage at the hull) */ }
 
 // ---- countermeasures ----------------------------------------------------------------------------------
 function deployCM(s) {
@@ -421,8 +433,8 @@ function updateDecoys(dt) {
 
 // ---- flashes (missile blasts etc.) ---------------------------------------------------------------------
 const flashGeo = new THREE.SphereGeometry(1, 12, 9);
-function flashAt(pos, size, dur) {
-  const m = new THREE.Mesh(flashGeo, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffb050).multiplyScalar(3), transparent: true, depthWrite: false }));
+function flashAt(pos, size, dur, col = 0xffb050) {
+  const m = new THREE.Mesh(flashGeo, new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(3), transparent: true, depthWrite: false }));
   m.position.copy(pos); m.scale.setScalar(size * 0.3); scene.add(m);
   flashes.push({ m, t: 0, dur, size });
 }

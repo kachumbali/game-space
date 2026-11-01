@@ -43,6 +43,7 @@ Python tools use `tools/dbmarks.py` (same algorithm): `validate_db.py`, `power_t
 
 - Each step is about +8-12% **in the mark's own lane**, with a small cost elsewhere (no strictly dominating mark).
 - Torpedoes: +8-12% range per mark, slightly better speed (`vmax`) and durability against PD (`hp`). Note that `range` is the lock range; the flight reach is `life`/`vmax`/`burn`, so scale `life` with `range`.
+  Marks are base + deltas (no chain), so the step compounds with the mark number: Mark II range x1.08-1.12, III x1.17-1.25, IV x1.26-1.40 (the validator checks `LANE^k`, and widens the 0.75-1.20 band to `1.12^k` for the same reason). Tandem torpedoes (`tandem.pen`, `tandem.holeT`) take `add` deltas and must not lower them. `torp_2`..`torp_4` are real entries (docs/MISSILES_M3.md); no ship stores them yet.
 
 `tools/validate_db.py` (also in CI): base exists and is not a variant; only the known entry keys; mark is II-IV, unique per base, id `<base>_<n>`; name suffix;
 each op well formed and the path exists with a number at the end; no forbidden keys; every `mul` inside **0.75-1.20** (error); **warning** if no delta is an own-lane

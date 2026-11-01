@@ -20,14 +20,15 @@ const SOFT = TUNE.soft;
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {
-  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through);
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
   if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
   hitSrc = null; hitKind = null;
   return out;
 }
 // returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
-function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+// shPen (tandem warhead): that share of the hit skips the shield but still meets the armour; a collapsed facet (s.shHole) has no shield at all until it closes
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
   if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
   let outcome = 'hull';
@@ -40,14 +41,17 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
   let d = dmg;
   const pdmg = dmg * pierce; d -= pdmg;      // piercing share ignores shields and armour
-  if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0) {
+  const holed = s.shHole && s.shHole[facing] > time;
+  const byp = holed ? 0 : d * shPen; if (!holed) d -= byp;      // tandem bypass: skips the shield only (a collapsed facet has no shield to skip)
+  if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed) {
     const raw = d * X[0], a = Math.min(s.shield[facing], raw);
-    s.shield[facing] -= a; d *= 1 - a / raw;
+    s.shield[facing] -= a; if (raw > 0) d *= 1 - a / raw;
     shieldFlash(s, lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
     outcome = 'shield';
-    if (d + pdmg <= 0.01) return outcome;
+    if (d + pdmg + byp <= 0.01) return outcome;
   }
+  d += byp;
   // exposed subsystems (turrets, guns, engines) can be hit directly through the armour plating
   if (d > 0.01) {
     let ex = null, ed = 1e9;

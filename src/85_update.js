@@ -39,6 +39,7 @@ function updateShieldsAndFx(s, dt) {
   for (const f of ['fore', 'aft']) {
     const cap = s.def.shield[f] * sg * (s.mod?.shieldCap ?? 1);
     if (s.shield[f] > cap) s.shield[f] = cap;
+    if (s.shHole && s.shHole[f] > time) { s.shield[f] = 0; continue; }      // tandem-warhead hole: the facet stays down until it closes
     if (s.def.shieldRegen && time - s.lastHit > TUNE.regen.shieldDelay && s.shield[f] < cap)
       s.shield[f] = Math.min(cap, s.shield[f] + s.def.shieldRegen * dt * sg * powerMul(s) * pwF(s, 's') * (s.mod?.shield ?? 1));
   }

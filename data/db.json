@@ -1555,7 +1555,8 @@
       "turn": 3.4,
       "burn": 6.5,
       "life": 9,
-      "dmg": 26,
+      "dmg": 210,
+      "pierce": 0.75,
       "blast": 10,
       "fuze": 6,
       "lockCone": 0.22,
@@ -1579,7 +1580,8 @@
       "turn": 2.7,
       "burn": 9,
       "life": 12,
-      "dmg": 34,
+      "dmg": 240,
+      "pierce": 0.75,
       "blast": 11,
       "fuze": 7,
       "lockCone": 0.55,
@@ -1603,7 +1605,7 @@
       "turn": 0.9,
       "burn": 16,
       "life": 22,
-      "dmg": 170,
+      "dmg": 280,
       "blast": 30,
       "fuze": 12,
       "lockCone": 0.45,
@@ -1616,7 +1618,32 @@
       "color": "#c8c8c0",
       "flame": "#ffc070",
       "size": 2.2,
-      "torp": true
+      "torp": true,
+      "tandem": {"pen": 0.6, "holeT": 3}
+    },
+    "torp_2": {
+      "base": "torp", "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1}, "life": {"mul": 1.1}, "vmax": {"mul": 1.03}, "hp": {"mul": 1.1},
+        "tandem.pen": {"add": 0.05}, "tandem.holeT": {"add": 0.25},
+        "lockTime": {"add": 0.1}, "turn": {"mul": 0.96}
+      }
+    },
+    "torp_3": {
+      "base": "torp", "mark": "III",
+      "mods": {
+        "range": {"mul": 1.21}, "life": {"mul": 1.21}, "vmax": {"mul": 1.06}, "hp": {"mul": 1.21},
+        "tandem.pen": {"add": 0.1}, "tandem.holeT": {"add": 0.5},
+        "lockTime": {"add": 0.2}, "turn": {"mul": 0.92}
+      }
+    },
+    "torp_4": {
+      "base": "torp", "mark": "IV",
+      "mods": {
+        "range": {"mul": 1.33}, "life": {"mul": 1.33}, "vmax": {"mul": 1.09}, "hp": {"mul": 1.33},
+        "tandem.pen": {"add": 0.15}, "tandem.holeT": {"add": 0.75},
+        "lockTime": {"add": 0.3}, "turn": {"mul": 0.88}
+      }
     },
     "tick": {
       "kind": "msl",
@@ -1628,7 +1655,8 @@
       "turn": 4.2,
       "burn": 7,
       "life": 9,
-      "dmg": 31.200000000000003,
+      "dmg": 228,
+      "pierce": 0.75,
       "blast": 9,
       "fuze": 6,
       "lockCone": 0.28,
@@ -1680,7 +1708,7 @@
       "turn": 1.1,
       "burn": 18,
       "life": 26,
-      "dmg": 195,
+      "dmg": 310,
       "blast": 28,
       "fuze": 12,
       "lockCone": 0.5,
@@ -1694,7 +1722,8 @@
       "flame": "#b4ff40",
       "size": 2,
       "torp": true,
-      "frogg": true
+      "frogg": true,
+      "tandem": {"pen": 0.6, "holeT": 3}
     },
     "flare": {
       "kind": "cm",
@@ -1817,7 +1846,7 @@
     "beam": { "focusFloor": 0.25, "gapMin": 0.25, "gapCdMul": 2.5 },
     "flak": { "defaultRadius": 1.6, "bigMul": 10 },
     "regen": { "shieldDelay": 4, "energyDefault": 17 },
-    "missile": { "steerMinSpeed": 80, "leadMax": 3, "lostSec": 0.25, "turnFloor": 0.4, "blastFloor": 0.2, "hullRef": 0.62 },
+    "missile": { "steerMinSpeed": 80, "leadMax": 3, "lostSec": 0.25, "turnFloor": 0.4, "blastFloor": 0.2, "hullRef": 0.62, "hullGapR": 30, "pierceCls": { "fighter": 1, "corvette": 0.25, "frigate": 0.08, "capital": 0.05 }, "dmgCls": { "fighter": 1, "corvette": 0.45, "frigate": 0.25, "capital": 0.15 } },
     "nuke": { "kill": { "fighter": 1500, "corvette": 2500, "frigate": 4000, "capital": 8000 }, "crewDead": 30, "shieldCut": 0.5, "blindF": 0.04 },
     "crash": { "base": 2, "perSpeed": 0.22, "massK": 0.35, "cap": 60, "capK": 0.6 },
     "fighter": { "turnMul": 2.85, "froggTurnMul": 1.5, "froggAccelMul": 1.3 },
@@ -1825,7 +1854,7 @@
       "human": { "max": 20, "regen": 0.8, "spd": 1.8, "acc": 2.2 },
       "frogg": { "max": 36, "regen": 1.6, "spd": 2.1, "acc": 2.6 }
     },
-    "ai": { "tolMul": 1, "rngMul": 0.55 }
+    "ai": { "tolMul": 1, "rngMul": 0.55, "torpSalvo": 3, "torpGapT": 0.9, "torpReload": 14, "torpFrac": { "corvette": 0.3, "frigate": 0.13, "capital": 0.07 } }
   },
   "mass": {
     "fighter": 1,
