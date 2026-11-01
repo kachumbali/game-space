@@ -140,3 +140,12 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   free-flight test-bench burst only; it does not implement the safer campaign
   nuclear system specified in `docs/NUKES.md` (release authority, arming,
   intercept behaviour, Exeter cells, campaign stock, or dedicated tests).
+
+## M2 XL fighter exclusion — 2026-11-01
+
+- Closed a rules gap found during the ship/turret review: `spineFire` now
+  physically ignores fighter hulls, so player-driven and scripted XL shots
+  cannot kill them even when perfectly aligned. The beam continues to a valid
+  non-fighter hull behind the fighter. Added `bullfrog_t.py xl_filter` for the
+  regression. Syntax, privacy, and generated-build checks pass; the browser
+  test itself awaits a working Playwright launcher.
