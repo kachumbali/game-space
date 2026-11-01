@@ -197,3 +197,44 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   bridge. Added the hull structural-integrity rule to `AGENTS.md`: major masses
   must show a continuous supporting path to the hull in top, side, and 3/4
   views, and geometry beyond collision extents must be fixed deliberately.
+
+## Bomber, torpedo-corvette, marks and campaign rhythm — 2026-11-01
+
+- Rebuilt the Bittern's bomber read around an armoured cockpit cage and recessed
+  3-by-4 HM-1 cassette bays. The visual now accounts for its 12-torpedo load.
+- Reworked the FROGG Toad into a 22 m, 12-ST-2 armoured bomber with four rooted
+  cassette launchers. It is comparable to Bittern in payload, shields, power,
+  and survivability while remaining less agile than a fighter.
+- Converted Gulper into a torpedo corvette: four physical nine-round ST-2
+  cassettes, 36 total rounds, explicit launcher components, and rotating launch
+  mouths. Its core escort weapons and four PD turrets remain intact.
+- Added a visual-improvement path and a campaign technology-progression contract;
+  the latter distinguishes weapon/system Marks I-IV from Armour Levels I-IV and
+  records hard/kinetic, ablative/beam, and composite armour roles.
+- Added short voiced NAV transits to Operation Lilypad between its three combat
+  contacts. The mission engine already supported these transits; this applies
+  the established pattern rather than adding a new player-facing control.
+
+## Fixed direct-fire weapon Marks — 2026-11-01
+
+- Added Marks II-IV for every fixed, non-turret direct-fire gun and beam across
+  both factions, including the two XL spinal weapons. Each mark is an alternate
+  operational lane with a cost: II strike/reach, III velocity/reach or beam
+  output, IV rate of fire.
+- Recorded the S/M/L/XL engineering taxonomy in player-facing weapon and
+  progression documentation. Existing barrels, emitters, and spinal geometry
+  are retained; a stat mark never silently changes an assembly's physical size.
+- Database validation after the additions: 29 ships, 86 weapons, 69 marks, 3
+  armour types.
+
+## Campaign technology taxonomy — 2026-11-01
+
+- Added `docs/TECHNOLOGY_PROGRESSION.md`, the design contract for campaign
+  refits: S/M/L/XL physical weapon classes; Mark II-IV lanes for turrets,
+  shields, engines, reactors and radiators; and the separate Armour Level I-IV
+  nomenclature.
+- Armour types are now described consistently for players and implementers:
+  Kinetic / Hard counters projectile and rail damage, Ablative counters beam and
+  thermal damage, Composite is general-purpose. Levels use normal resolved
+  data variants when campaign rewards activate them; no hidden loadout screen
+  or untested automatic stat change was added.

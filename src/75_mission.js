@@ -49,6 +49,10 @@ Intelligence expects a FROGG raiding party: fast fighters first to strip our scr
 Eagle flight (MEOW, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
 
 ROE: weapons free. Missiles are scarce, fly the guns first.`,
+  areas: {
+    screen: { name: 'STARBOARD SCREEN', look: 'lilypad', arrive: 'Cruise complete. Starboard screen, clear of the convoy. New contacts are resolving.' },
+    wake: { name: 'RELAY WAKE', look: 'lilypad', arrive: 'Cruise complete. Back at the relay wake. CIC reports a close jump flash.' },
+  },
   objectivesAtStart: [],
   setup: {
     anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
@@ -67,13 +71,33 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
     { when: { after: 2 }, do: [{ comm: ['HAWK', 'Eagle two, copy. Guns first, save the Swifts for the hard cases. Stay on my wing, Echo.'] }] },
     { when: { dead: 'A', delay: 3 }, do: [
       { obj: ['o1', null, 'done'] },
-      { comm: ['CONTROL', 'Strike wave down. Wait, new contacts, starboard side, heavy signatures. Torpedo bombers with a gunship escort. They are going for the Halberd.'] },
+      { comm: ['CONTROL', 'Strike wave down. Sweep is clear here; move the screen to the starboard approach. Autopilot is taking the flight.'] },
+      { obj: ['oNav1', 'Autopilot to the starboard screen', 'open'] },
+      { transit: { to: 'NAV 1 · STARBOARD SCREEN', dur: 22, area: 'screen', lines: [
+        [3, 'HAWK', 'Formation is clean. Check your missile count, Echo.'],
+        [9, 'SPARROW', 'Quiet again. I hate the quiet after a fight.'],
+        [16, 'CONTROL', 'Heavy signatures resolving ahead. Arm up in five.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['oNav1', null, 'done'] },
+      { comm: ['CONTROL', 'Torpedo bombers with a gunship escort. They are going for the Halberd.'] },
       { obj: ['o2', 'Stop the torpedo bombers before they launch', 'open'] },
       { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 1], ['leaper', 1]], bearing: [1, 0.05, -0.1], dist: 2900, spread: 260 } },
     ] },
     { when: { dead: 'B', delay: 3 }, do: [
       { obj: ['o2', null, 'done'] },
-      { comm: ['HAWK', 'That is the lot, I think... no. Jump flash, dead astern. Oh, that is a big one.'] },
+      { comm: ['HAWK', 'That is the lot, I think... Form up. CIC wants us back over the relay wake.'] },
+      { obj: ['oNav2', 'Autopilot to the relay wake', 'open'] },
+      { transit: { to: 'NAV 2 · RELAY WAKE', dur: 22, area: 'wake', lines: [
+        [3, 'SPARROW', 'The Halberd is still there. That is good, right?'],
+        [10, 'HAWK', 'It is good until something follows us home. Stay sharp.'],
+        [16, 'CONTROL', 'Jump distortion building at the relay. All fighters, weapons hot.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['oNav2', null, 'done'] },
+      { comm: ['HAWK', 'Jump flash, dead astern. Oh, that is a big one.'] },
       { jumpIn: true },
       { obj: ['o3', 'Destroy the FROGG corvette', 'open'] },
       { spawn: { grp: 'C', ships: [['gulper', 1], ['reaver', 2], ['darter', 2]], bearing: [-0.2, 0.1, 1], dist: 1900, spread: 120, jump: true } },

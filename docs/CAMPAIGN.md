@@ -22,10 +22,10 @@ Difficulty scale: 1 tutorial-ish, 2 sweep, 3 two-area with corvette, 4 defend-th
 - Player ship: Kestrel. Wing: HAWK + SPARROW, Kestrel.
 - Allies: CSS HALBERD (anchor, vital, 128 m corvette).
 - Briefing: keep existing text verbatim (src/75_mission.js `m01.briefing`).
-- Objectives (all existing): o1 destroy the strike wave; o2 stop torpedo bombers; o3 destroy the FROGG corvette. Chain: group A, B, C via `when.dead`, C is a jump-in.
+- Objectives: o1 destroy the strike wave; **NAV 1 transit** to the starboard screen; o2 stop torpedo bombers; **NAV 2 transit** back to the relay wake; o3 destroy the FROGG corvette. The two short, voiced transits give the player a rearm/check-in beat and move the next fight to a new operational position. Group C remains a jump-in.
 - Enemies (existing): A = 3 leaper + 2 darter; B = 2 toad + 1 spitter + 1 leaper; C = 1 gulper + 2 reaver + 2 darter (jump-in).
 - Win: group C dead. Lose: Halberd destroyed, or MEOW destroyed.
-- Length: about 6-8 min.
+- Length: about 7-9 min, including roughly 44 seconds of voiced NAV transit.
 - Debrief (win): "Lily relay held. The convoy jumped on schedule. Intelligence notes the Gulper was not escorting anything: it was looking for the relay itself. The Hive is moving along this lane." Debrief (lose): "Halberd lost with the convoy still spooling. The relay is gone and so is the lane."
 
 ## Mission 2: OPERATION REEDBED (difficulty 2) - REUSE existing `m02`

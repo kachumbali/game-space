@@ -190,6 +190,11 @@ SHIPS.bittern = {
     ell([0, 1.62, -6.0], [0.9, 0.72, 2.35], K.canopy),
     ...[-7.5, -6.0, -4.5].map(z => tap([0, 2.22, z], 0.045, [0.9, 0.05], [0.85, 0.05], K.dark, { sh: 'e', lod: 2 })),
     seg([0, 2.34, -8.2], [0, 2.34, -3.8], 0.035, 0.035, K.dark, { lod: 2 }),
+    // Armoured cockpit cage: protection is visibly tied into the forward hull,
+    // rather than a glass bubble floating over the bomber's pressure spine.
+    seg([1.15, 0.82, -8.05], [1.15, 1.9, -4.0], 0.11, 0.08, K.panel),
+    seg([1.15, 0.82, -8.05], [0.35, 2.26, -6.0], 0.1, 0.06, K.panel),
+    seg([1.15, 1.9, -4.0], [0.35, 2.26, -6.0], 0.1, 0.06, K.panel),
     // Broad constant-chord wings with white leading edges and amber tips
     tap([5.35, 0.02, 2.5], 7.3, [0.28, 6.0], [0.24, 2.5], K.hull2, { ax: 'x', sweep: 0.08, seam: [2.2, 1.6] }),
     tap([5.15, 0.2, -3.05], 7.1, [0.09, 0.24], [0.08, 0.2], K.white, { ax: 'x', sweep: 0.08 }),
@@ -211,7 +216,8 @@ SHIPS.bittern = {
       ...[-9.35, -9.85, -10.35].map(z => tap([x, -0.8, z], 0.06, [0.2, 0.2], [0.2, 0.2], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
       tap([x, -0.8, -10.68], 0.13, [0.19, 0.19], [0.19, 0.19], H.nozzle, { sh: 'e', noMirror: true }),
     ]),
-    // Four pale HM-1 bodies on paired belly cradles; all four mouths align at launch z
+    // Recessed 3-by-4 HM-1 cassette bays: visible front rounds, armoured rails,
+    // and maintenance doors make the 12-round bomber load credible.
     ...[-3.4, -2.6, 2.6, 3.4].flatMap(x => [
       seg([x, -2.45, -5.18], [x, -2.45, 0.48], 0.3, 0.3, 0xc8c8c0, { noMirror: true }),
       seg([x, -2.45, -5.2], [x, -2.45, -4.45], 0.04, 0.28, 0xd04a3a, { noMirror: true }),
@@ -221,6 +227,10 @@ SHIPS.bittern = {
       seg([x, -1.85, 1.95], [x, -2.12, 1.95], 0.14, 0.12, K.dark, { noMirror: true }),
       seg([x, -1.9, -5.2], [x, -1.9, 1.95], 0.12, 0.1, K.hull3, { noMirror: true }),
     ]),
+    ...[-3.4, -2.6, 2.6, 3.4].flatMap(x => [-3.0, -1.25, 0.5].flatMap(z => [
+      tap([x, -1.86, z], 0.42, [0.34, 0.2], [0.34, 0.2], K.panel, { sh: 'e', noMirror: true, lod: 2 }),
+      seg([x, -2.08, z - 0.25], [x, -2.08, z - 0.82], 0.16, 0.12, 0xc8c8c0, { noMirror: true, lod: 2 }),
+    ])),
     // Dorsal and ventral PD turret seats (the barrels are built by makeTurret)
     tap([0, 1.63, 5.6], 0.52, [1.25, 0.55], [1.25, 0.55], K.dark, { sh: 'e' }),
     tap([0, 1.86, 5.6], 0.28, [1.05, 0.32], [1.05, 0.32], K.hull3, { sh: 'e' }),

@@ -4633,15 +4633,15 @@
       "cls": "fighter",
       "fac": "frogg",
       "role": "TORPEDO BOMBER",
-      "length": 19,
+      "length": 22,
       "half": [
-        8.8,
-        3.6,
-        10.4
+        10,
+        4.2,
+        12
       ],
       "mirror": true,
       "rustK": 0.4,
-      "radius": 11,
+      "radius": 14,
       "engines": [
         {
           "pos": [
@@ -4683,27 +4683,16 @@
           "comp": "gunL",
           "grp": 1
         },
-        {
-          "w": "tad",
-          "pos": [
-            0,
-            -2.2,
-            -2.9
-          ],
-          "comp": "rack",
-          "grp": 3,
-          "store": "tad"
-        }
+        { "w": "tad", "pos": [3.2, -2.0, -4.7], "comp": "rackRF", "grp": 3, "store": "tad" },
+        { "w": "tad", "pos": [-3.2, -2.0, -4.7], "comp": "rackLF", "grp": 3, "store": "tad" },
+        { "w": "tad", "pos": [3.2, -2.0, 0.6], "comp": "rackRA", "grp": 4, "store": "tad" },
+        { "w": "tad", "pos": [-3.2, -2.0, 0.6], "comp": "rackLA", "grp": 4, "store": "tad" }
       ],
       "stores": {
-        "tad": 3,
+        "tad": 12,
         "flare": 16
       },
-      "launch": [
-        0,
-        -2.1,
-        -3.3
-      ],
+      "launches": [[3.2, -2.0, -6.4], [-3.2, -2.0, -6.4], [3.2, -2.0, -1.1], [-3.2, -2.0, -1.1]],
       "comps": [
         {
           "id": "engL",
@@ -4754,17 +4743,20 @@
           "hp": 8
         },
         {
-          "id": "rack",
-          "name": "TORP RACK",
+          "id": "rackRF",
+          "name": "TORP RACK RF",
           "role": "gun",
           "pos": [
-            0,
+            3.2,
             -2,
-            1.5
+            -3.8
           ],
-          "r": 1.6,
-          "hp": 20
+          "r": 1.4,
+          "hp": 24
         },
+        { "id": "rackLF", "name": "TORP RACK LF", "role": "gun", "pos": [-3.2, -2, -3.8], "r": 1.4, "hp": 24 },
+        { "id": "rackRA", "name": "TORP RACK RA", "role": "gun", "pos": [3.2, -2, 1.5], "r": 1.4, "hp": 24 },
+        { "id": "rackLA", "name": "TORP RACK LA", "role": "gun", "pos": [-3.2, -2, 1.5], "r": 1.4, "hp": 24 },
         {
           "id": "shield",
           "name": "SHIELD",
@@ -4791,22 +4783,22 @@
         }
       ],
       "shield": {
-        "fore": 26,
-        "aft": 22
+        "fore": 90,
+        "aft": 80
       },
       "armor": {
         "type": "composite",
         "rating": 0.45
       },
-      "structure": 55,
-      "maxSpeed": 78,
-      "aiSpeed": 58,
-      "accel": 40,
-      "turn": 0.9,
-      "sig": 1.4,
+      "structure": 130,
+      "maxSpeed": 82,
+      "aiSpeed": 60,
+      "accel": 34,
+      "turn": 0.78,
+      "sig": 2.1,
       "power": {
-        "plantMW": 51,
-        "capacitorMJ": 100
+        "plantMW": 105,
+        "capacitorMJ": 220
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -5129,7 +5121,11 @@
           ],
           "comp": "lashL",
           "grp": 2
-        }
+        },
+        { "w": "tad", "pos": [7.2, -5.8, -15], "comp": "torpRF", "grp": 3, "store": "tad" },
+        { "w": "tad", "pos": [-7.2, -5.8, -15], "comp": "torpLF", "grp": 3, "store": "tad" },
+        { "w": "tad", "pos": [7.2, -5.8, -3], "comp": "torpRA", "grp": 4, "store": "tad" },
+        { "w": "tad", "pos": [-7.2, -5.8, -3], "comp": "torpLA", "grp": 4, "store": "tad" }
       ],
       "turrets": [
         {
@@ -5174,14 +5170,10 @@
         }
       ],
       "stores": {
-        "tad": 6,
+        "tad": 36,
         "flare": 0
       },
-      "launch": [
-        0,
-        -6.4,
-        -8.6
-      ],
+      "launches": [[7.2, -5.8, -18.8], [-7.2, -5.8, -18.8], [7.2, -5.8, -6.8], [-7.2, -5.8, -6.8]],
       "comps": [
         {
           "id": "engL",
@@ -5231,6 +5223,10 @@
           "r": 2.4,
           "hp": 70
         },
+        { "id": "torpRF", "name": "TORPEDO CASSETTE RF", "role": "gun", "pos": [7.2, -5.8, -15], "r": 2.3, "hp": 54 },
+        { "id": "torpLF", "name": "TORPEDO CASSETTE LF", "role": "gun", "pos": [-7.2, -5.8, -15], "r": 2.3, "hp": 54 },
+        { "id": "torpRA", "name": "TORPEDO CASSETTE RA", "role": "gun", "pos": [7.2, -5.8, -3], "r": 2.3, "hp": 54 },
+        { "id": "torpLA", "name": "TORPEDO CASSETTE LA", "role": "gun", "pos": [-7.2, -5.8, -3], "r": 2.3, "hp": 54 },
         {
           "id": "tur1",
           "name": "STING 1",
@@ -7381,7 +7377,73 @@
           "mul": 0.95
         }
       }
-    }
+    },
+    "cannon_2": { "base": "cannon", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "cannon_3": { "base": "cannon", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "cannon_4": { "base": "cannon", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "he_2": { "base": "he", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "he_3": { "base": "he", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "he_4": { "base": "he", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "dgun_2": { "base": "dgun", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "dgun_3": { "base": "dgun", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "dgun_4": { "base": "dgun", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "fang_2": { "base": "fang", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "fang_3": { "base": "fang", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "fang_4": { "base": "fang", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "rotary_2": { "base": "rotary", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "rotary_3": { "base": "rotary", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "rotary_4": { "base": "rotary", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "fmag_2": { "base": "fmag", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "fmag_3": { "base": "fmag", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "fmag_4": { "base": "fmag", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "rail_2": { "base": "rail", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "rail_3": { "base": "rail", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "rail_4": { "base": "rail", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "rodg_2": { "base": "rodg", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "rodg_3": { "base": "rodg", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "rodg_4": { "base": "rodg", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "spit_2": { "base": "spit", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "spit_3": { "base": "spit", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "spit_4": { "base": "spit", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "spitcannon_2": { "base": "spitcannon", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "spitcannon_3": { "base": "spitcannon", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "spitcannon_4": { "base": "spitcannon", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "flaser_2": { "base": "flaser", "mark": "II", "mods": { "range": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "flaser_3": { "base": "flaser", "mark": "III", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.1 } } },
+    "flaser_4": { "base": "flaser", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "lance_2": { "base": "lance", "mark": "II", "mods": { "range": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "lance_3": { "base": "lance", "mark": "III", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.1 } } },
+    "lance_4": { "base": "lance", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "mdxl_2": { "base": "mdxl", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "mdxl_3": { "base": "mdxl", "mark": "III", "mods": { "range": { "mul": 1.1 }, "charge": { "mul": 1.1 }, "mag": { "mul": 0.9 } } },
+    "mdxl_4": { "base": "mdxl", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "spine_2": { "base": "spine", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "spine_3": { "base": "spine", "mark": "III", "mods": { "range": { "mul": 1.1 }, "charge": { "mul": 1.1 }, "lockT": { "mul": 1.1 } } },
+    "spine_4": { "base": "spine", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "laser_2": { "base": "laser", "mark": "II", "mods": { "range": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "laser_3": { "base": "laser", "mark": "III", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.1 } } },
+    "laser_4": { "base": "laser", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "pd_2": { "base": "pd", "mark": "II", "mods": { "range": { "mul": 1.1 }, "ammo": { "mul": 0.92 } } },
+    "pd_3": { "base": "pd", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "pd_4": { "base": "pd", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "ammo": { "mul": 0.9 } } },
+    "laserM_2": { "base": "laserM", "mark": "II", "mods": { "range": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "laserM_3": { "base": "laserM", "mark": "III", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.1 } } },
+    "laserM_4": { "base": "laserM", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "mdl_2": { "base": "mdl", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "mdl_3": { "base": "mdl", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "mdl_4": { "base": "mdl", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "sting_2": { "base": "sting", "mark": "II", "mods": { "range": { "mul": 1.1 }, "ammo": { "mul": 0.92 } } },
+    "sting_3": { "base": "sting", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "sting_4": { "base": "sting", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "ammo": { "mul": 0.9 } } },
+    "lanceL_2": { "base": "lanceL", "mark": "II", "mods": { "range": { "mul": 1.1 }, "energy": { "mul": 1.08 } } },
+    "lanceL_3": { "base": "lanceL", "mark": "III", "mods": { "dmg": { "mul": 1.1 }, "energy": { "mul": 1.1 } } },
+    "lanceL_4": { "base": "lanceL", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "energy": { "mul": 1.06 } } },
+    "acidT_2": { "base": "acidT", "mark": "II", "mods": { "dmg": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "acidT_3": { "base": "acidT", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "cd": { "mul": 1.05 } } },
+    "acidT_4": { "base": "acidT", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 } } },
+    "thorn_2": { "base": "thorn", "mark": "II", "mods": { "range": { "mul": 1.1 }, "ammo": { "mul": 0.92 } } },
+    "thorn_3": { "base": "thorn", "mark": "III", "mods": { "v": { "mul": 1.1 }, "life": { "mul": 1.1 }, "ammo": { "mul": 0.9 } } },
+    "thorn_4": { "base": "thorn", "mark": "IV", "mods": { "cd": { "mul": 0.9 }, "dmg": { "mul": 0.95 }, "ammo": { "mul": 0.9 } } }
   },
   "armor": {
     "ablative": {

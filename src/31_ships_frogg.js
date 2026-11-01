@@ -245,8 +245,13 @@ SHIPS.toad = {
     ell([0, 1.5, 0.6], [1.0, 0.4, 3.2], N.dk, nSt(0.24)),
     ell([0, 0.0, -6.2], [2.3, 1.4, 2.5], N.dk, nSt(0.32)),
     ...nEye(1.35, 0.4, -8.4, 1.7),
-    nPod([0, -1.9, 0.8], [2.2, 1.2, 4.2], N.dk2, 0.3),                                     // torpedo pod cluster
-    nPod([2.6, -1.4, 2.6], [1.3, 0.9, 2.4], N.dk2, 0.26),
+    // Four armoured torpedo cassettes are rooted in a continuous belly cradle;
+    // their forward mouths match the data launch points rather than floating pods.
+    nPod([0, -1.9, 0.8], [3.9, 1.35, 6.2], N.dk2, 0.3),
+    nPod([3.25, -2.0, -2.4], [1.3, 0.95, 2.7], N.dk2, 0.26),
+    nPod([3.25, -2.0, 2.9], [1.3, 0.95, 2.7], N.dk2, 0.26),
+    seg([3.25, -2.0, -4.9], [3.25, -2.0, -6.4], 0.42, 0.3, N.bl),
+    seg([3.25, -2.0, 0.4], [3.25, -2.0, -1.1], 0.42, 0.3, N.bl),
     nPod([2.3, -0.9, -2.4], [0.9, 0.7, 1.4], N.dk2, 0.26),
     nSpike([0, 1.8, -1.2], [0, 3.1, 2.4], 0.3), nSpike([0, 1.6, 1.8], [0, 2.7, 5.6], 0.24),
     nBlade([2.6, 0.2, 0.8], [8.4, -0.2, 8.8], 0.45), nBlade([2.4, -0.6, 2.4], [6.2, -0.8, 9.6], 0.32),
@@ -297,9 +302,15 @@ SHIPS.gulper = {
     seg([3.0, 1.2, -28.5], [3.0, 1.2, -33.0], 0.9, 0.7, N.bl, { rust: N.ru, lod: 2 }),
     ell([3.0, 1.2, -33.2], [0.75, 0.75, 0.4], N.cy, { glow: true, glowF: 1.4, lod: 2 }),
     nPod([5.2, 1.0, -22], [2.2, 1.6, 3.6], N.dk2, 0.22), nPod([7.4, -1.6, -14], [2.0, 1.4, 3.0], N.dk2, 0.22),
-    // ventral drum (supply/launch bay)
+    // Ventral magazine trunk and four paired nine-round torpedo cassettes.
     seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, edge: N.ed, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),
     ell([0, -6.4, 21], [3.6, 3.4, 2.0], N.dk2, nSt(0.7, 0)),
+    nPod([7.2, -5.8, -15], [2.1, 1.5, 4.4], N.dk2, 0.3),
+    nPod([7.2, -5.8, -3], [2.1, 1.5, 4.4], N.dk2, 0.3),
+    seg([7.2, -5.8, -18.2], [7.2, -5.8, -19.0], 0.62, 0.5, N.bl),
+    seg([7.2, -5.8, -6.2], [7.2, -5.8, -7.0], 0.62, 0.5, N.bl),
+    seg([4.4, -5.6, -15], [6.1, -5.7, -15], 0.48, 0.48, N.dk2),
+    seg([4.4, -5.6, -3], [6.1, -5.7, -3], 0.48, 0.48, N.dk2),
     // dorsal crest of spikes
     ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
     // sting turret bases

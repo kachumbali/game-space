@@ -56,3 +56,8 @@ time), power plant (energy and recharge), wings and thrusters (roll and handling
 Campaigns: human prologue (about 4 missions: customs inspection, blockade, ambush, the FROGG shock), then "The Long Retreat" (evacuation, unknown
 enemy that becomes known, transports with jump spool, scarce nukes), then the existing five missions as the following campaign. Campaign mode
 has no arcade pods, perks or chain score (those stay in free flight and Gauntlet); a support ship call replaces them.
+
+### Campaign navigation rhythm (owner direction 2026-11-01)
+
+- Multi-contact missions should use short, voiced NAV transits between distinct areas of operation instead of immediately spawning every new wave on top of the player. A transit is a tactical reset: formation check, loadout/ammunition awareness, mission update, and a visible change of location.
+- Keep transits purposeful and brief (about 20-30 seconds) and reserve stationary defence missions for continuous pressure. `m01` now uses two NAV transits; `m02`, `m03`, and `m05` already use the same engine path. New campaign scripts should follow this pattern where the fiction changes operating area.

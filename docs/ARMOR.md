@@ -3,6 +3,10 @@
 Status: implemented 2026-10-21 (placeholder numbers). Owner decisions: one armour type per ship for now; armour is an
 FS2-style damage transform that never depletes; `thresh` and `rate` included; Whipple (spaced) plating later but documented here.
 
+Campaign refits use **Armour Level I-IV** (rather than Marks) while retaining
+one selected armour type per hull. See `docs/TECHNOLOGY_PROGRESSION.md` for the
+level benefits, mandatory manoeuvre costs, and physical modelling rules.
+
 ## 1. Sources of the design
 - **FreeSpace 2 (FS2 Open source, ideas only):** damage goes shield -> subsystems -> hull armour -> hull. Armour is a table of
   arithmetic steps per damage type applied to incoming damage, not a pool; shields have their own armour type and a
@@ -20,7 +24,7 @@ armour_fore / (armour_fore + structure)); the type's profile redistributes it by
 | Type | Profile (kin / en / exp) | thresh | rate | spall | Idea |
 |---|---|---|---|---|---|
 | ABLATIVE | 0.5 / 1.5 / 1.0 | 0 | 0.6 x structure per second, burst capacity 1.5 s | 0.04 | burns away under energy fire; sustained fire beats the rate cap and passes through |
-| HARD | 1.4 / 0.4 / 1.0 | 6 | none | 0.30 | stops kinetics; shrugs off small hits; breach throws spall into internals |
+| KINETIC / HARD | 1.4 / 0.4 / 1.0 | 6 | none | 0.30 | stops kinetics; shrugs off small hits; breach throws spall into internals |
 | COMPOSITE | 1.0 / 1.0 / 1.0 | 3 | none | 0.12 | all-round |
 
 - `thresh` is scaled by ship class (fighter 0.25, corvette 1, frigate 1.5, capital 2). A hit smaller than the scaled threshold is

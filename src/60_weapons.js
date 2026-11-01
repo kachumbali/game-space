@@ -228,9 +228,10 @@ function launchMissile(s, wid) {
   const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;
   s.stores[wid]--;
   s.group.updateMatrixWorld(true);
-  const side = (s.launchAlt = -(s.launchAlt || 1));
   const half = s.def.half;
-  const lp = s.def.launch ? [side * Math.abs(s.def.launch[0]), s.def.launch[1], s.def.launch[2]] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const points = s.def.launches?.length ? s.def.launches : s.def.launch ? [s.def.launch] : null;
+  const side = (s.launchAlt = -(s.launchAlt || 1));
+  const lp = points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
