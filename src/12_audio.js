@@ -42,6 +42,7 @@ const SFX = {
   spit: () => { tone(330, 110, 0.18, 'sine', 0.2); noiseBurst(0.12, 0.12, 900, 200, 'lowpass'); },
   spitbig: () => { tone(200, 55, 0.4, 'sine', 0.32); noiseBurst(0.35, 0.22, 1200, 150, 'lowpass'); },
   rail: () => { tone(120, 28, 0.6, 'sine', 0.5); noiseBurst(0.5, 0.35, 5000, 200, 'highpass'); },
+  beamcharge: () => { tone(180, 1500, 0.6, 'sawtooth', 0.1); tone(90, 750, 0.6, 'sine', 0.12); },       // M2: capital beam charge-up whine (rises over about 0.6 s)
   lash: () => { tone(260, 50, 0.7, 'sawtooth', 0.22); noiseBurst(0.6, 0.3, 2000, 120, 'lowpass'); },
   pd: () => noiseBurst(0.025, 0.1, 4000, 2000, 'bandpass'),
   msl: () => { noiseBurst(0.7, 0.3, 500, 2800, 'bandpass', 0.8); tone(180, 90, 0.5, 'triangle', 0.15); },

@@ -1337,9 +1337,9 @@
     "mdl": {
       "kind": "proj",
       "name": "MD-55 MASS DRIVER (L)",
-      "cd": 2.2,
+      "cd": 1.0,
       "v": 1800,
-      "dmg": 60,
+      "dmg": 85,
       "dt": "kin",
       "life": 1.6,
       "spread": 0.0008,
@@ -1355,7 +1355,8 @@
       "noPD": true,
       "bigOnly": true,
       "ammo": 250,
-      "energy": 15
+      "energy": 15,
+      "slew": 25
     },
     "mdxl": {
       "kind": "spine",
@@ -1376,7 +1377,8 @@
       "color": "#cfe8ff",
       "sfx": "rail",
       "warnName": "MASS DRIVER",
-      "mag": 100
+      "mag": 100,
+      "hitFighters": false
     },
     "laser": {
       "kind": "beam",
@@ -1389,11 +1391,13 @@
       "color": "#ff5040",
       "sfx": "pulse",
       "acq": 0.5,
-      "ramp": 0.8,
+      "ramp": 2.5,
       "peak": 3,
       "track": 2.2,
       "turret": true,
-      "bw": 1
+      "bw": 1,
+      "slew": 45,
+      "charge": 0.5
     },
     "laserM": {
       "kind": "beam",
@@ -1406,18 +1410,20 @@
       "color": "#ff6030",
       "sfx": "pulse",
       "acq": 0.6,
-      "ramp": 0.8,
+      "ramp": 3.0,
       "peak": 3,
       "track": 1.8,
       "turret": true,
-      "bw": 1.6
+      "bw": 1.6,
+      "slew": 35,
+      "charge": 0.6
     },
     "pd": {
       "kind": "proj",
       "name": "PD-30 POINT DEFENCE",
       "cd": 0.075,
       "v": 1100,
-      "dmg": 1.3,
+      "dmg": 4.3,
       "dt": "kin",
       "life": 0.85,
       "spread": 0.012,
@@ -1429,8 +1435,10 @@
       "track": 4.5,
       "turret": true,
       "ammo": 1500,
-      "energy": 3.0,
-      "flak": 6
+      "energy": 0.45,
+      "flak": 6,
+      "vsCls": {"corvette": 0.3, "frigate": 0.25, "capital": 0.25},
+      "dmgMsl": 1.3
     },
     "flaser": {
       "kind": "beam",
@@ -1459,10 +1467,11 @@
       "color": "#35e8ff",
       "sfx": "pulse",
       "frogg": true,
-      "acq": 0.8,
-      "ramp": 1,
+      "acq": 1.0,
+      "ramp": 5,
       "peak": 3,
-      "bw": 2
+      "bw": 2,
+      "charge": 0.6
     },
     "fang": {
       "kind": "proj",
@@ -1532,7 +1541,7 @@
       "name": "R-4 AUTOCANNON TURRET (S)",
       "cd": 0.09,
       "v": 900,
-      "dmg": 1.5,
+      "dmg": 3.9,
       "dt": "en",
       "life": 0.9,
       "spread": 0.012,
@@ -1543,7 +1552,9 @@
       "range": 800,
       "track": 3.6,
       "turret": true,
-      "ammo": 800
+      "ammo": 800,
+      "vsCls": {"corvette": 0.3, "frigate": 0.25, "capital": 0.25},
+      "dmgMsl": 1.5
     },
     "ir": {
       "kind": "msl",
@@ -1719,7 +1730,8 @@
       "color": "#35e8ff",
       "sfx": "lash",
       "warnName": "LANCE",
-      "frogg": true
+      "frogg": true,
+      "hitFighters": false
     },
     "lanceL": {
       "kind": "beam",
@@ -1732,20 +1744,22 @@
       "color": "#35e8ff",
       "sfx": "pulse",
       "frogg": true,
-      "acq": 0.6,
-      "ramp": 1,
-      "peak": 3,
+      "acq": 0.8,
+      "ramp": 4.5,
+      "peak": 2.6,
       "track": 0.9,
       "turret": true,
       "bw": 4,
-      "bigOnly": true
+      "bigOnly": true,
+      "slew": 20,
+      "charge": 0.8
     },
     "acidT": {
       "kind": "proj",
       "name": "M-6T MASER TURRET (M)",
-      "cd": 1.3,
+      "cd": 0.75,
       "v": 430,
-      "dmg": 24,
+      "dmg": 40,
       "dt": "en",
       "life": 3,
       "spread": 0.002,
@@ -1757,14 +1771,15 @@
       "range": 1250,
       "track": 1.6,
       "turret": true,
-      "noPD": true
+      "noPD": true,
+      "slew": 40
     },
     "thorn": {
       "kind": "proj",
       "name": "R-5 PD TURRET (S)",
       "cd": 0.07,
       "v": 1150,
-      "dmg": 1.2,
+      "dmg": 3.5,
       "dt": "en",
       "life": 0.8,
       "spread": 0.011,
@@ -1777,7 +1792,9 @@
       "turret": true,
       "pdOnly": true,
       "ammo": 1000,
-      "flak": 5
+      "flak": 5,
+      "vsCls": {"corvette": 0.3, "frigate": 0.25, "capital": 0.25},
+      "dmgMsl": 1.2
     }
   },
   "armor": {
@@ -1825,7 +1842,9 @@
       "human": { "max": 20, "regen": 0.8, "spd": 1.8, "acc": 2.2 },
       "frogg": { "max": 36, "regen": 1.6, "spd": 2.1, "acc": 2.6 }
     },
-    "ai": { "tolMul": 1, "rngMul": 0.55 }
+    "ai": { "tolMul": 1, "rngMul": 0.55 },
+    "turret": { "reserveShip": 0.25, "reserveMsl": 0.05, "attackerBias": 0.5 },
+    "turretNote": "M2: kinetic PD stops firing when the capacitor is below reserveShip (ships) / reserveMsl (missiles) x energyMax; a turret scores a ship that is targeting its own ship x attackerBias (lower = first)"
   },
   "mass": {
     "fighter": 1,

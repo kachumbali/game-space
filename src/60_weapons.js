@@ -109,7 +109,7 @@ const playerTrack = { last: -99, prog: 0, live: false, by: null };
 function beamFocus(F, w, tgt) {
   if (!F || !w.acq) return 1;
   const gap = w.gap || Math.max(TUNE.beam.gapMin, w.cd * TUNE.beam.gapCdMul);
-  if (F.tgt !== tgt || time - F.last > gap) { F.tgt = tgt; F.t = 0; } else F.t += time - F.last;
+  if (F.tgt !== tgt || time - F.last > gap) { F.tgt = tgt; F.t = -(w.charge || 0); F.chgSnd = false; } else F.t += time - F.last;     // M2: a new (or re-acquired) target starts with a charge-up (F.t < 0): no tracking beam, no damage
   F.last = time;
   if (F.t < w.acq) return 0;
   const fl = TUNE.beam.focusFloor;
@@ -127,6 +127,7 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   }
   const len = bestS ? bestD : w.range;
   const mult = bestS ? beamFocus(F, w, bestS) : 0;            // no contact: the focus is not advanced, it decays by the gap rule
+  if (bestS && F && w.charge && F.t < 0 && !F.chgSnd) { F.chgSnd = true; sfx('beamcharge', s === player ? 0 : wp.distanceTo(camera.position), 0.9); }      // audible spool at the start of the charge-up
   const bcol = new THREE.Color(w.color || 0xff5040);
   const live = !w.acq || mult > 0, k = live ? 3 : 0.7;            // a tracking beam is drawn thin and dim, a damaging beam bright
   const bc = [bcol.r * k, bcol.g * k, bcol.b * k, 1];
@@ -134,10 +135,11 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   const shieldUp = !!bestS && (bestS.shield.fore > 0 || bestS.shield.aft > 0);
   beamNote(key || F || s, s, w, { obj: srcObj || s.group, local: srcLocal || s.group.worldToLocal(wp.clone()) },
     bestS ? { obj: bestS.group, local: bestHit, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
-    live || (!!F && F.t >= w.acq && time - F.last < 1.2), w.acq ? Math.min(1, (F ? F.t : 0) / w.acq) : 1, shieldUp);      // a focused beam that just missed is still drawn as a firing beam
+    live || (!!F && F.t >= w.acq && time - F.last < 1.2), w.acq ? clamp((F ? F.t : 0) / w.acq, 0, 1) : 1, shieldUp,
+    F && w.charge && F.t < 0 ? 1 + F.t / w.charge : 1);      // a focused beam that just missed is still drawn as a firing beam
   if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
   const fr = bestS.team === s.team;
-  if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? Math.min(1, F.t / w.acq) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
+  if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? clamp(F.t / w.acq, 0, 1) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
   const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
@@ -504,7 +506,8 @@ function updateTurrets(s, dt) {
           const d = e.group.position.distanceTo(tp);
           if ((T.w.pdOnly && d > 300) || (T.w.bigOnly && e.def.cls === 'fighter' && d > 900)) continue;      // Bullfrog roles: thorn = missiles (ships only inside 300 m), heavy lance = big targets
           const pr = T.w.noPD ? (e.def.cls === 'fighter' && e.def.ai?.role !== 'bomber' ? d * 3 : d) : beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
-          if (d < T.w.range && pr < bs) { bs = pr; best = e; }
+          const prA = e.target === s ? pr * TUNE.turret.attackerBias : pr;           // M2 gunner doctrine: whoever is shooting at this ship comes first (a bomber's gunner engages the fighter on its six)
+          if (d < T.w.range && prA < bs) { bs = prA; best = e; }
         }
       }
       T.tgt = best;
@@ -526,7 +529,7 @@ function updateTurrets(s, dt) {
     // base is fixed; the head tracks (convert to head-local: parent group may be flipped for ventral mounts)
     const parentInv = T.group.quaternion.clone().invert();
     want.premultiply(parentInv);
-    T.head.quaternion.rotateTowards(want, T.w.track * ttr * dt);
+    T.head.quaternion.rotateTowards(want, (T.w.slew ? T.w.slew * Math.PI / 180 : T.w.track) * ttr * dt);       // M2: `slew` (deg/s) is the one number per weapon class; `track` (rad/s) is the older spelling
     // aim error
     const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(T.head.quaternion).applyQuaternion(T.group.quaternion).applyQuaternion(sg.quaternion);
     const err = fwd.angleTo(_w3);
@@ -544,7 +547,7 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy)) {
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
       T.cool = T.w.cd * tcd;
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
@@ -572,13 +575,14 @@ function updateBolts(dt) {
       const R = b.w.flak || TUNE.flak.defaultRadius;
       _w4.copy(m.pos).addScaledVector(m.vel, dt);   // where the missile will be by the end of this step
       if (segSeg(b.prev, b.pos, m.pos, _w4) > R) continue;
-      m.hp -= b.dmg * (b.w.big ? TUNE.flak.bigMul : 1);
+      const md = b.w.dmgMsl != null ? b.dmg * b.w.dmgMsl / b.w.dmg : b.dmg;       // M2: S turrets hit fighters harder than before, missile defence is unchanged (`dmgMsl` = the old per-shell damage)
+      m.hp -= md * (b.w.big ? TUNE.flak.bigMul : 1);
       b.life = 0;
       if (b.w.flak) {   // proximity burst: every missile inside the flak radius takes the hit
         flashAt(b.pos, 5, 0.2); sparksAt(b.pos, 8, 6);
         for (const o of missiles) {
           if (o.dead || o === m || o.team === b.team) continue;
-          if (o.pos.distanceTo(b.pos) <= b.w.flak) { o.hp -= b.dmg; if (o.hp <= 0) killMissile(o, o.w.torp ? true : false); }
+          if (o.pos.distanceTo(b.pos) <= b.w.flak) { o.hp -= md; if (o.hp <= 0) killMissile(o, o.w.torp ? true : false); }
         }
       }
       if (m.hp <= 0) killMissile(m, m.w.torp ? true : false);
@@ -594,9 +598,10 @@ function updateBolts(dt) {
       const wp = s.group.localToWorld(hit.clone());
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
-      plogBoltHit(b, s, b.dmg * (fr ? FF.bolt : 1), fr);
+      const hd = b.dmg * (fr ? FF.bolt : 1) * (b.w.vsCls?.[s.def.cls] ?? 1);      // M2: `vsCls` = per-target-class damage multiplier (light PD shells barely scratch corvettes and capitals)
+      plogBoltHit(b, s, hd, fr);
       hitSrc = b.owner; hitKind = 'gun';
-      applyHit(s, hit, b.dmg * (fr ? FF.bolt : 1), wp, b.dt, b.w.pierce || 0);
+      applyHit(s, hit, hd, wp, b.dt, b.w.pierce || 0);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
       sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);

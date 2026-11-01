@@ -79,6 +79,7 @@ function spineFire(s) {
     if (!o.alive || o === s || o.dying) continue;
     if (!segSphere(_bfm, _be, o.group.position, o.def.radius + W.bw)) continue;
     if (o.def.cls === 'fighter') {
+      if (!W.hitFighters) continue;                                      // M2: the discharge cannot be aimed at, and does not register on, anything fighter-sized (db `hitFighters`)
       _bv.copy(o.group.position).sub(_bfm);
       const along = _bv.dot(_bf);
       if (along < 0 || along > W.range) continue;
@@ -123,6 +124,7 @@ function spineStep(s, dt) {
     const t = sp.tgt;
     sp.t += dt;
     if (!t || !t.alive || t.dying) { sp.st = 'cool'; sp.cd = W.fizzleCd ?? BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'target gone', t: +time.toFixed(1) }); }
+    else if (t.def.cls === 'fighter' && !W.hitFighters) { sp.st = 'cool'; sp.cd = W.fizzleCd ?? BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'no fire-control solution on a fighter', t: +time.toFixed(1) }); }      // M2: the aim loop cannot follow a fighter, whatever the AI picked
     else if (sp.st === 'charge') {
       const rem = Math.max(0, sp.C - sp.t);
       aim = sp.aimPt.copy(t.group.position).addScaledVector(_bv.copy(t.vel).sub(s.vel), Math.min(8, rem));
