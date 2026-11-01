@@ -122,7 +122,7 @@ function compEvent(s, c, st) {
   const mine = s === player, tgt = s === target;
   if (mine || tgt) {
     const who = mine ? '' : 'TARGET ';
-    log(`${who}${c.name} ${st === 2 ? 'DESTROYED' : 'DAMAGED'}`, mine ? (st === 2 ? '#ff5a4a' : '#ffd24a') : '#ffb080');
+    log(`${who}${subCueText(s, c, st)}`, mine ? (st === 2 ? '#ff5a4a' : '#ffd24a') : '#ffb080');
     if (mine && st === 2) sfx('alarm');
   }
   if (st === 2 && s.vox) {

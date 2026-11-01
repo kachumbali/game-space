@@ -327,7 +327,7 @@ function drawOverlay(alive) {
     if (!s.alive || s === p) continue;
     const d = s.group.position.distanceTo(p.group.position);
     const hostile = s.team !== p.team;
-    if (!radarOk && d > 1200) continue;
+    if (d > sensorLimit(p)) continue;                   // M5: a damaged scope loses distant contacts (dead scope: 1200 m)
     const pr = project(s.group.position);
     const col = hostile ? '#ff5a5a' : '#6ac8ff';
     const size = clamp(s.def.radius * 2 / (d * TAN_HALF * 2) * ovH * 0.55, 7, 160);
@@ -447,6 +447,7 @@ function drawRadar(alive) {
       const draw = (wp, kind, hostile, isT, label) => {
         _rel.copy(wp).sub(p.group.position).applyQuaternion(_inv);
         const dxz = Math.hypot(_rel.x, _rel.z), dist = _rel.length();
+        if (dist > sensorLimit(p)) return;
         const off = dist > range;
         const k = Math.min(1, dxz / range);
         let jit = rf <= 0.5 ? 16 : 0;
@@ -490,7 +491,7 @@ function updateHud() {
   const S = game.mstate;
   hudTxt.textContent =
     (alive ? `SHD F${Math.round(p.shield.fore)} A${Math.round(p.shield.aft)}  ARM ${ARMOR[p.def.armor.type].name}  HULL ${Math.round(100 * Math.max(0, p.structure) / p.def.structure)}%\n` : '') +
-    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
+    `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
   drawDamage();
@@ -505,7 +506,7 @@ function updateHud() {
   if (isTouch && alive) {
     document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';
     document.querySelector('#ten>i').style.height = clamp(p.energy / (p.energyMax || 100), 0, 1) * 100 + '%';
-    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    const bb = $id('bboost'), ab = p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0;
     const bt = `BOOST<br>${ab}`; if (bb._t !== bt) { bb.innerHTML = bt; bb._t = bt; }
     bb.style.opacity = p.abLock ? .45 : 1;
   }
@@ -517,11 +518,11 @@ function updateHud() {
     $id('tgf').style.height = (nw ? 0 : p.throttle * 100) + '%';
     $id('tgs').style.bottom = Math.min(100, 100 * sp / mx) + '%';
     $id('tgab').classList.toggle('on', !!(alive && p.ab));
-    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 'AB';
+    $id('tgab').textContent = alive && p.def.abMax ? 'AB ' + Math.round(100 * p.abFuel / abMaxOf(p)) : 'AB';
     const ef = alive ? clamp(p.energy / (p.energyMax || 100), 0, 1) : 0;
     $id('te1').textContent = Math.round(ef * 100); $id('tef').style.height = ef * 100 + '%';
     $id('tef').style.background = ef < 0.25 ? 'rgba(255,90,74,.7)' : ef < 0.5 ? 'rgba(255,210,74,.65)' : 'rgba(143,255,208,.55)';
-    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / (p.def.abMax * pwF(p, 'e'))) : 0;
+    $id('tev').textContent = ''; $id('teab').textContent = alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0;
     $id('tgv').textContent = Math.round(sp);
   }
 
@@ -534,7 +535,7 @@ function updateHud() {
     closure = -_rel.copy(target.vel).sub(p.vel).dot(_hf.copy(target.group.position).sub(p.group.position).normalize());
   }
   updateTargetPanel(nd, closure);
-  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip();
+  updateLog(); updateObjComm(); updateWeaponPanel(); updateRadarSide(); updateWingStrip(); updateSubsysCue();
   // warnings
   let w = '';
   if (alive) {
@@ -555,6 +556,20 @@ function updateEts(p, alive) {
   const row = k => `<div class="er" data-pw="${k}"><b>${{ w: 'WPN', s: 'SHD', e: 'ENG' }[k]}</b><i>${Array.from({ length: 12 }, (_, n) => `<s class="${n < p.pw[k] ? 'on' : ''}"></s>`).join('')}</i><span>${p.pw[k]}</span></div>`;
   const h = `<div class="et" data-pw="=">POWER ${isTouch ? '(TAP = BALANCE)' : '4 5 6 / 7 = BALANCE'}</div>` + PW_KEYS.map(row).join('');
   if (h !== lastEts) { etsEl.innerHTML = h; lastEts = h; }
+}
+
+// ---- subsystem status cue (M5): one line per degraded system under the damage map; the phone shows a single line of tags (details come as a log flash)
+const subEl = document.createElement('div'); subEl.id = 'subsys'; document.getElementById('hud').appendChild(subEl);
+let lastSub = '';
+function updateSubsysCue() {
+  const p = player; let h = '';
+  if (p && p.alive && state !== 'brief') {
+    const dg = subDegraded(p);
+    const col = d => (d.st === 2 ? '#ff5a4a' : '#ffd24a');
+    if (document.body.classList.contains('phone')) h = dg.length ? dg.map(d => `<span style="color:${col(d)}">${SUB_SHORT[d.role]}${d.st === 2 ? '!' : ''}</span>`).join(' ') : '';
+    else h = dg.slice(0, 4).map(d => `<div style="color:${col(d)}">${SUB_SHORT[d.role]} ${d.st === 2 ? 'OUT' : 'DMG'} ${d.fx.slice(0, 2).join(' ')}</div>`).join('');
+  }
+  if (h !== lastSub) { subEl.innerHTML = h; lastSub = h; }
 }
 
 // ---- wing strip (UX_REVIEW R10): hull of the friendly fighters at a glance, under the damage map
