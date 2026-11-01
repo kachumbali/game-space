@@ -111,3 +111,10 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   `briefingLoadout(shipId)`, which derives fixed mounts, turrets, ordnance, and
   countermeasures from the loaded database. This removes stale references to the
   retired plasma bolter and correctly reports the Bittern's twelve torpedoes.
+
+## G6 roster naming — 2026-11-01
+
+- Added `docs/ROSTER_NAMES.md`: a lore-consistent naming catalogue for ECU,
+  VAC, VBC, and CDF production variants, future hulls, and weapon families.
+  It is deliberately text-only: no M4 ship, weapon, database id, stat, or
+  mission has been implemented or balanced by this pass.
