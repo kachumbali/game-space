@@ -1,0 +1,20 @@
+{
+  "id": "intro_test",
+  "size": [320, 200],
+  "music": null,
+  "events": [
+    {"t": 0.0,  "do": "bg",     "img": "bg_space.png", "fade": 0.8},
+    {"t": 0.5,  "do": "title",  "text": "CLAUDE SPACE COMMANDER", "sub": "TEST SEQUENCE", "dur": 3.0},
+    {"t": 4.0,  "do": "sprite", "id": "k1", "img": "ship_kestrel.png", "from": {"x": 40,  "y": 120, "scale": 0.3}, "to": {"x": 230, "y": 80, "scale": 1.6}, "dur": 4.0, "ease": "in"},
+    {"t": 4.0,  "do": "sprite", "id": "h1", "img": "ship_halberd.png", "from": {"x": 260, "y": 40,  "scale": 0.5}, "to": {"x": 90,  "y": 60, "scale": 0.9}, "dur": 6.0, "ease": "inout"},
+    {"t": 10.0, "do": "bg",     "img": "bg_briefing.png", "cut": "static"},
+    {"t": 10.2, "do": "head",   "id": "imani", "char": "imani", "pos": "left"},
+    {"t": 10.5, "do": "say",    "who": "imani", "text": "Eagle flight, this is not a drill. Unknown contacts at the Lily relay.", "cps": 28},
+    {"t": 16.0, "do": "head",   "id": "hawk",  "char": "hawk", "pos": "right"},
+    {"t": 16.2, "do": "say",    "who": "hawk",  "text": "Unknown how, Commander?", "cps": 28},
+    {"t": 19.0, "do": "say",    "who": "imani", "text": "They are not answering our hails.", "cps": 28},
+    {"t": 23.0, "do": "say",    "who": "meow",  "text": "Then we go and say hello.", "cps": 28, "mouth": null},
+    {"t": 27.0, "do": "bg",     "img": "bg_space.png", "cut": "static"},
+    {"t": 28.0, "do": "end"}
+  ]
+}
