@@ -72,6 +72,7 @@ function openMenu(view) {
 function showMainMenu() {
   menuView = 'main';
   const items = [
+    ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
     ['campaign', 'CAMPAIGN / MISSIONS', 'Briefed sorties: Lilypad to The Spine'],
     ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
@@ -87,7 +88,8 @@ function showMainMenu() {
   menuFocus();
 }
 function menuAct(a) {
-  if (a === 'campaign') showMissionList();
+  if (a === 'intro') { menuLeave(); startScene('intro_test'); }
+  else if (a === 'campaign') showMissionList();
   else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }

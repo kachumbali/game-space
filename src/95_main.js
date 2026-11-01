@@ -2,12 +2,16 @@
 //  MAIN LOOP
 // ======================================================================
 if (!params.has('yard')) {
-  startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
-  if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
-  else if (params.has('sk')) startSkirmish(skFromParams());
-  else if (params.has('sv')) startSurvival(svFromParams());
-  else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
-  else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
+  if (params.has('scene')) {
+    startScene(params.get('scene') || 'intro_test');
+  } else {
+    startMission(MISSIONS[Math.max(0, Math.min(MISSIONS.length - 1, (parseInt(params.get('m')) || MISSIONS.length) - 1))]);
+    if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
+    else if (params.has('sk')) startSkirmish(skFromParams());
+    else if (params.has('sv')) startSurvival(svFromParams());
+    else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
+    else if (!params.has('m')) showMainMenu();          // ?m=N still opens that mission's briefing directly
+  }
 }
 let last = performance.now();
 const FPS_ON = params.has('fps');   // owner P0 2026-10-22: ?fps = overlay + play-log frame times + a detail governor (opt-in; headless runs unaffected)
