@@ -31,7 +31,11 @@ Only the frigate class and up have jump drives (docs/FLEET_LOGIC.md section 8). 
 |---|---|---|---|---|---|
 | Kestrel | human | fighter | multirole fighter | 12.4 m | 150 m/s |
 | Bittern | human | fighter | torpedo bomber (URL-only: `?sk=bittern:2`) | 22 m | 90 m/s |
+| Falchion | human | fighter | two-seat heavy fighter (skirmish player / wingman) | 19.5 m | 118 m/s |
+| SAR cutter | human | fighter (shuttle) | unarmed rescue ship (skirmish player only) | 32 m | 95 m/s |
 | Halberd | human | corvette | escort / mothership | 128 m | 28 m/s |
+| Claymore | human | capital | destroyer (skirmish escort capital) | 600 m | 28 m/s |
+| Argosy | human | frigate | unarmed evacuation liner (skirmish escort capital) | 450 m | 16 m/s |
 | Darter | FROGG | fighter | interceptor | 9.5 m | 165 m/s |
 | Leaper | FROGG | fighter | line fighter | 13.6 m | 120 m/s |
 | Spitter | FROGG | fighter (gunship role) | maser gunship | 16 m | 90 m/s |

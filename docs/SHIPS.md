@@ -78,3 +78,14 @@ Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells wit
 - **New weapon**: `rotary` GA-9 ROTARY CANNON (A-10-style, Halberd grp 2, ventral nose): 25 rps, 2.8 kin + 15% pierce per round, 900-rd magazine = 36 s of fire - the magazine IS the weapon. The AI fires it only inside 1300 m (its reach); capitalAI now fires both mount groups up close and group 1 at range - this also woke the Gulper's grp-2 maser lances, which had never fired under AI.
 - **TENDER** (new ship, unarmed, 200 m): rearm service via `tenderTick` (55_ships.js) - friendly ships within `serviceR` 600 m regain fixed-mount ammo and finite turret drums at 20 rds/s; live `D` docking doubles this to 40 rds/s. Proximity service adds a missile or flare every 4 s and an XL slug every 6 s; docked service adds one every 2 s and 3 s, respectively. Binding rule kept: **rearm is not repair** - no structure, component or shield restoration. Visible cargo: container rows and service booms; 24-fighter / 4-corvette dock capacity.
 - Tests: `tools/tests/magazine_t.py` (11 checks), `tools/tests/tender_pd_t.py` (seeded proximity and docked PD-drum rates).
+
+## v0.3 M4 roster (2026-11-01; all numbers in data/db.json, balance unverified)
+
+| Ship | Class | Length m | Structure | Shield f/a | Speed m/s | Weapons | Notes |
+|---|---|---|---|---|---|---|---|
+| Falchion | heavy fighter, crew 2 (pilot + AI weapons specialist) | 19.5 | 110 | 80/70 | 118 | 2x MK-20 (grp 1), 2x MD-9 (grp 2), 3x PD-30 turrets; 6 SW-9, 2 LN-3, 2 HM-1, 32 flares, 2 drones (limit 2) | player + wingman |
+| SAR cutter | utility, crew 3 | 32 | 150 | 70/60 | 95 | none; 24 flares | pod bay and grapple winch (`bay` comps), `sar` data for the campaign |
+| Argosy | evacuation liner (refit), unarmed | 450 | 2000 | 1100/1000 | 16 | 6x PD-30 turrets; 24 flares | `jump: true`, `ai.role transport`, `ai.passive` (holds a slow course; capitalAI branch); jump coils modelled, spool left to the campaign engine |
+| Claymore | destroyer | 600 | 2400 | 1400/1200 | 28 | 2x RG-90 (bow), 4x MD-55 (L), 8x LS-8 (M), 8x PD-30 (S), 2 torpedo pods (8x HM-1) | `jump: true`, cls capital |
+
+**Jump decision:** docs/LORE_HISTORY.md section 3 makes the threshold hull size (frigate class, about 450 m, "and larger"), so the 600 m Claymore is jump-capable. Owner may veto (set `jump: false`). The Falchion and SAR cutter cannot jump (dock first). The optional VBC/VAC retrofits were not built (faction names and the lane scheme are pending, no mark system).

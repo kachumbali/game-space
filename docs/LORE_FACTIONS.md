@@ -80,7 +80,7 @@ In-game assignment (the current `SHIPS` roster, `src/30_ships_human.js`):
 | Class | Ship | Faction flavour |
 |---|---|---|
 | Fighter | **Kestrel** (12.4 m, 1 slaved SD-4) | CDF/UTDF standard line fighter |
-| Heavy fighter (planned, not built yet) | **Falchion** (~18 m, 2 crew, 2 slaved SD-4) | CDF strike craft |
+| Heavy fighter (built v0.3 M4) | **Falchion** (~18 m, 2 crew, 2 slaved SD-4) | CDF strike craft |
 | Corvette | **Halberd** (128 m, PD-30 screen) | CDF escort; docks in a frigate's magnetic cradle to jump |
 | Frigate | **Exeter** (450 m, jump-capable) | CDF task-force flagship: 48 stored SD-4 drones, docks 12 fighters/drones + 2 corvettes; 2 rail mounts, 4 LS-2 laser turrets, 3 PD turrets (`src/30_ships_human.js`) |
 | Drone | **SD-4 Sentry** (6 m; in-code `drone`, single DR-2 mag cannon) | VBC-designed, built under licence everywhere; 2 missile hardpoints are in the design brief (`docs/FLEET_LOGIC.md` section 9) but not implemented |
