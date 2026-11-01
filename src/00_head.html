@@ -14,6 +14,7 @@
   #yard .yardhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
   #yard h1{margin:0 0 8px;color:#d8fff0;font-size:16px;letter-spacing:2px}
   #yard .yardhead button{flex:none}
+  #yard .yardhead-actions{display:flex;gap:5px;align-items:center}
   #yard .ypanel.collapsed{width:auto;max-height:none;padding:8px}
   #yard .ypanel.collapsed .yard-controls{display:none}
   #yard label{display:block;margin:8px 0 3px;color:#83b8a5}
@@ -34,6 +35,10 @@
   #yard .yardrow input{accent-color:#83eac1}
   #yard .yardnote{color:#80a99a;font-size:10px}
   #yard .yardstat{color:#ffd080;margin-top:8px}
+  #yard .yardpower{margin:8px 0 4px;padding:7px;border:1px solid #315c4d;background:#071714;color:#b8ead8;font-size:10px;line-height:1.45;white-space:pre-line}
+  #yard .yardpower.ok{border-color:#3c9272;color:#b8ffe0}
+  #yard .yardpower.warn{border-color:#b58a3b;color:#ffe0a0}
+  #yard .yardpower.bad{border-color:#b34b43;color:#ffb0a0}
   #yard .yarderror{min-height:16px;color:#ff8d7b;white-space:pre-wrap}
   body.yard #c{pointer-events:auto}
   @media(max-width:700px){
@@ -124,6 +129,21 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #brief button:focus,#brief select:focus{outline:none;border-color:#ffd24a;color:#ffd24a}
   #brief button.mi:focus{background:#17614a}
   #brief .menu.sk{width:min(820px,96vw)}
+  #brief .menu.yard-menu{width:min(960px,96vw)}
+  #brief .yardcatalog{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(0,1.28fr);gap:14px;margin-top:10px}
+  #brief .yardroster{display:flex;flex-direction:column;gap:4px;max-height:52vh;overflow:auto;padding-right:3px}
+  #brief .yardship{padding:7px 9px;text-align:left;font-size:12px;letter-spacing:1px}
+  #brief .yardship small{display:block;opacity:.65;font-size:9px;margin-top:2px}
+  #brief .yardship.on{border-color:#ffd24a;background:#17614a;color:#ffd24a}
+  #brief .yarddetail{border:1px solid #3a6a58;background:rgba(7,25,20,.78);padding:12px;min-width:0}
+  #brief .yarddetail h2{margin:2px 0 8px;color:#ffd24a;font-size:17px}
+  #brief .yardstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:8px 0 12px}
+  #brief .yardstats div{border:1px solid #254b3d;padding:5px;font-size:12px;color:#d8f7e9}
+  #brief .yardstats span{display:block;color:#82b7a2;font-size:9px;letter-spacing:1px;margin-bottom:2px}
+  #brief .yardreadout{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px;line-height:1.45}
+  #brief .yardreadout .sub{margin-top:2px}
+  #brief .yardreadout ul{padding-left:17px;margin:3px 0 8px}.yardreadout li{margin:2px 0}
+  #brief .yardlaunch{margin-top:8px}
   #brief .menu h1{font-size:22px}
   #brief .skg{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;margin-top:8px}
   #brief .skrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 8px}
@@ -136,6 +156,7 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #brief .skwarn{margin:4px 0;padding:6px 8px;border:1px solid #ff8a5a;color:#ffb090;font-size:11px}#brief .skwarn.lo{border-color:#3a6a58;color:#8fcdb8}
   #brief .btns.stick{position:sticky;bottom:-18px;background:rgba(6,16,14,.97);padding:10px 0 4px;margin-bottom:-4px}
   @media (max-width:700px){#brief .skg{grid-template-columns:1fr}}
+  @media (max-width:700px){#brief .yardcatalog{grid-template-columns:1fr}.yardroster{max-height:180px;display:grid;grid-template-columns:1fr 1fr}.yardstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-height:520px),(max-width:520px){
     #brief .panel{padding:10px 14px;font-size:12px}#brief .menu h1{font-size:17px;letter-spacing:2px}#brief h2{margin-bottom:4px}
     #brief .mlist{gap:5px;margin:8px 0 4px}#brief .mi{padding:6px 12px;font-size:13px}#brief .mi span{display:none}

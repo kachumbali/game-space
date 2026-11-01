@@ -39,6 +39,15 @@ ammo-heavy** (chemical guns and rails carry; energy is support and PD). FROGG pr
 reactors recharge; human firepower is heavier per engagement but sorties end dry - which is what the Tender
 is for. Full lore: `docs/LORE.md` weapon doctrine.
 
+### Marks and size classes
+
+Mark I is the base weapon. Every fixed direct-fire gun and beam now has Marks
+II-IV; they keep the same physical mount but offer campaign alternatives rather
+than a universally superior replacement. The shared engineering vocabulary is
+S (light fighter), M (heavy fighter/corvette), L (capital direct-fire), and XL
+(spinal capital weapon). See `docs/MARKS_SCHEMA.md` and
+`docs/TECHNOLOGY_PROGRESSION.md` for lane/cost rules and campaign unlock use.
+
 ## 2. Human weapons
 
 | Weapon | Kind | Dmg/shot | ROF | Vel | Range | Pierce | Energy | Magazine | Notes |
@@ -90,7 +99,7 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | HM-1 HAMMER | 170 | 30 | 2000 | 7 | IR | mixed | Kestrel x1 |
 | NK-1 TAC WARHEAD | fluence model | - | 2200 | 5 | IR | mixed | standard load 0.5 kT; dial 0.1-10 kT (`?nukeKt=`); strategic 100 kT-10 MT is lore-only (`docs/NUKES.md`) |
 | SK-1 IR MISSILE | 31.2 (x1.3 FROGG bonus) | 9 | 2200 | 1 | IR (wetware) | flare 0.3 | all FROGG fighters |
-| ST-2 TORPEDO | 195 (x1.3) | 28 | 2600 | 8 | IR (wetware) | 0.05 flare | Toad 3, Gulper 6, Bullfrog 16 |
+| ST-2 TORPEDO | 195 (x1.3) | 28 | 2600 | 8 | IR (wetware) | 0.05 flare | Toad 12, Gulper 36 (four 9-round cassettes), Bullfrog 16 |
 
 ## 5. Fits and doctrine
 
@@ -104,9 +113,9 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | Darter | 2x R-9 | - | 2 SK-1 |
 | Leaper | 2x M-1, 2x M-2 | - | 2 SK-1 |
 | Spitter | 1x M-6, 2x R-9 | - | 4 SK-1 |
-| Toad | 2x R-9, torpedo rack | - | 3 ST-2 |
+| Toad | 2x R-9, 4x armoured torpedo cassette | - | 12 ST-2 |
 | Reaver | 2x M-1, 2x R-9, 2x M-2 | - | 6 SK-1 |
-| Gulper | 2x R-12 (grp 1); 2x M-7 (grp 2) | 4x R-4 | 6 ST-2 |
+| Gulper | 2x R-12 (grp 1); 2x M-7 (grp 2); 4x ST-2 cassette launcher | 4x R-4 | 36 ST-2 |
 | Bullfrog | GX-1 XL; 16 ST-2 tubes | 1x M-8, 6x M-6T, 10x R-4, 8x R-5 | 36-fighter hangar |
 | Hive Carrier | unarmed (catalogue) | - | - |
 

@@ -1,7 +1,9 @@
-# Marks I-IV: schema (scaffolding, no balance values yet)
+# Marks I-IV: schema
 
-Plan: `docs/PLAN_V03.md` M4. This document fixes **how** a mark is written in `data/db.json`; the actual Mark II-IV numbers come later and need
-seeded runs (AGENTS.md). Nothing here changes balance: the only variant in the db, `kestrel_2`, is labelled `scaffolding` and uses placeholder numbers.
+Plan: `docs/PLAN_V03.md` M4. This document fixes **how** a mark is written in `data/db.json`; values require seeded runs before they are called balanced.
+The current database has fighter/bomber, missile/torpedo, and fixed
+direct-fire gun/beam marks. The full campaign technology contract, including
+system marks and Armour Levels, is in `docs/TECHNOLOGY_PROGRESSION.md`.
 
 ## Decision
 
@@ -15,6 +17,11 @@ A mark is its own db entry with **its own id** and a **base + deltas** body, in 
 Why ids (`kestrel_2`) instead of `variants` nested inside the base: every lookup in the game is by id (`SHIPS[id]`, `WEAPONS[id]`, skirmish `SK_PLAYER`,
 `sk_ship=`, mission rosters, stores, mounts), so a variant that is a normal id needs no new plumbing. Mark I is the base itself (no `_1` entry).
 Ids are `<base>_<n>` with n = 2, 3, 4 for II, III, IV (the validator enforces it).
+
+Armour is deliberately named **Armour Level I-IV**, not a mark. Its variants use
+the same resolver and id pattern but must modify `armor.rating` with a movement
+or capacity cost; changing armour *type* is a doctrine refit, not an automatic
+level increase.
 
 | field | meaning |
 |---|---|
@@ -61,3 +68,13 @@ Other places that pick by id (mission rosters, AI squads) work the same way. Vox
 
 `ships.kestrel_2` = engine lane +10% (`maxSpeed`, `accel`), cost -5% structure and shields. Placeholder, to be replaced when M4 sets real marks.
 Tests: `tools/tests/db_override_t.py` (resolution, weapon + ship mark, validator accept/reject cases).
+
+## Fixed direct-fire weapon lanes
+
+Every non-turret direct-fire gun and beam has Marks II-IV. They are campaign-fit
+alternatives, not a linear stack: II is strike/reach at a cycle or energy cost;
+III is velocity/reach or beam-output at a magazine or energy cost; IV is faster
+cycling at a modest per-shot/energy cost. They retain their existing physical
+mount and use the campaign taxonomy in `docs/TECHNOLOGY_PROGRESSION.md`: S
+(light fighter), M (heavy fighter/corvette), L (capital direct fire), XL
+(spinal capital weapon).

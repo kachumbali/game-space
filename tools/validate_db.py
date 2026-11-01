@@ -58,8 +58,8 @@ for kind in ('ships', 'weapons'):
         if kind == 'weapons' and b.get('torp'):      # owner rule: torpedoes get +8-12% range per mark, slightly better speed and durability against PD
             r = mods.get('range', {}).get('mul')
             if r is None or not LANE_MIN - 1e-9 <= r <= LANE_MAX + 1e-9: err(f'{where}: a torpedo mark needs range x1.08..1.12')
-            td0, td = b.get('tandem'), (mods.get('tandem.pen'), mods.get('tandem.holeT'))
-            if td0 and any(x is not None and x.get('add', x.get('mul', 1) - 1) < 0 for x in td): err(f'{where}: a torpedo mark must not lower the tandem pen / holeT')
+            td0, td = b.get('tandem'), (mods.get('tandem.shieldDrain'), mods.get('tandem.pierce'), mods.get('tandem.window'))
+            if td0 and any(x is not None and x.get('add', x.get('mul', 1) - 1) < 0 for x in td): err(f'{where}: a torpedo mark must not lower the tandem shieldDrain / pierce / window')
             for k in ('vmax', 'hp'):
                 if mods.get(k, {}).get('mul', 1) < 1: err(f'{where}: torpedo marks must not lower {k}')
 db = dbmarks.resolve(raw) if not errs else raw
@@ -86,13 +86,14 @@ for sid, s in S.items():
     if s['cls'] not in db['mass'] or s['cls'] not in db['armorThreshCls']: err(f'{sid}: class {s["cls"]} missing from mass/armorThreshCls')
     for c in s.get('comps', []):
         if c['hp'] <= 0: err(f'{sid}.{c["id"]}: hp <= 0')
-for wid, w in W.items():      # tandem warhead: pen = share of the hit that skips the shield, holeT = seconds the struck facet stays down (owner 2026-11-01: about 2-4 s)
+for wid, w in W.items():      # tandem warhead (Codex schema 2026-11-01): shieldDrain = share of the facet shield removed by the precursor, pierce = share of the main charge that bypasses it, window = seconds the facet stays weakened
     t = w.get('tandem')
     if t is None: continue
     if not w.get('torp'): err(f'{wid}: tandem only on torpedoes')
-    if not (isinstance(t.get('pen'), (int, float)) and 0 < t['pen'] <= 0.95): err(f'{wid}.tandem.pen must be in (0, 0.95]')
-    if not (isinstance(t.get('holeT'), (int, float)) and 1 <= t['holeT'] <= 5): err(f'{wid}.tandem.holeT must be 1..5 s')
-    if w.get('mark') and not (2 <= t.get('holeT', 0) <= 4.2): warn(f'{wid}: holeT outside the 2-4 s window')
+    if not (isinstance(t.get('shieldDrain'), (int, float)) and 0 < t['shieldDrain'] <= 1): err(f'{wid}.tandem.shieldDrain must be in (0, 1]')
+    if not (isinstance(t.get('window'), (int, float)) and 1 <= t['window'] <= 5): err(f'{wid}.tandem.window must be 1..5 s')
+    if not (isinstance(t.get('pierce'), (int, float)) and 0 <= t['pierce'] <= 0.95): err(f'{wid}.tandem.pierce must be in [0, 0.95]')
+    if w.get('mark') and not (2 <= t.get('window', 0) <= 4.2): warn(f'{wid}: window outside the 2-4 s range')
 for wid, w in W.items():
     if w.get('kind') == 'msl' and 'pierce' in w and not 0 <= w['pierce'] <= 0.9: err(f'{wid}.pierce must be 0..0.9')
 def hexes(o, p):

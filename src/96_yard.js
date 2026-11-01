@@ -6,7 +6,7 @@ if (params.has('yard')) {
   const YARD_root = document.createElement('div');
   YARD_root.id = 'yard';
   YARD_root.innerHTML = `<section class="ypanel">
-    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></header>
+    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><div class="yardhead-actions"><button id="yard-menu-exit" type="button">Main menu</button><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></div></header>
     <div class="yard-controls" id="yard-controls">
     <label for="yard-ship">SHIP</label><select id="yard-ship"></select>
     <div class="yardrow"><label for="yard-template">NEW FROM TEMPLATE</label><select id="yard-template"><option value="kestrel">Kestrel / fighter</option><option value="halberd">Halberd / corvette</option><option value="exeter">Exeter / frigate</option></select><button id="yard-new-template" type="button">New ship from template</button></div>
@@ -27,11 +27,12 @@ if (params.has('yard')) {
     <label for="yard-db-entry">DATABASE ENTRY JSON</label>
     <textarea id="yard-db-entry" spellcheck="false" aria-label="Ship database entry JSON"></textarea>
     <div id="yard-db-error" class="yarderror" role="alert" aria-live="polite"></div>
+    <div id="yard-power" class="yardpower" role="status" aria-live="polite"></div>
     <div class="yardrow">
-      <label><input id="yard-comp-markers" type="checkbox" checked> comps</label>
-      <label><input id="yard-mount-markers" type="checkbox" checked> mounts</label>
-      <label><input id="yard-turret-markers" type="checkbox" checked> turrets</label>
-      <label><input id="yard-engine-markers" type="checkbox" checked> engines</label>
+      <label><input id="yard-comp-markers" type="checkbox"> comps</label>
+      <label><input id="yard-mount-markers" type="checkbox"> mounts</label>
+      <label><input id="yard-turret-markers" type="checkbox"> turrets</label>
+      <label><input id="yard-engine-markers" type="checkbox"> engines</label>
       <label><input id="yard-extents-toggle" type="checkbox"> extents box</label>
     </div>
     <div class="yardrow">
@@ -60,6 +61,7 @@ if (params.has('yard')) {
   const YARD_stat = document.getElementById('yard-stat');
   const YARD_error = document.getElementById('yard-error');
   const YARD_dbError = document.getElementById('yard-db-error');
+  const YARD_power = document.getElementById('yard-power');
   const YARD_bounds = document.getElementById('yard-bounds');
   const YARD_exportStatus = document.getElementById('yard-export-status');
   const YARD_canvas = document.getElementById('c');
@@ -77,7 +79,7 @@ if (params.has('yard')) {
   const YARD_extents = new THREE.Group();
   const YARD_palette = { engine: 0xff8a20, gun: 0xff3030, turret: 0xffe040, radar: 0x30e0ff, shield: 0x4080ff, radiator: 0xff40ff, power: 0xffffff };
   YARD_model.add(YARD_markerRoot);
-  for (const group of Object.values(YARD_markerGroups)) YARD_markerRoot.add(group);
+  for (const group of Object.values(YARD_markerGroups)) { group.visible = false; YARD_markerRoot.add(group); }
   YARD_model.add(YARD_extents);
 
   const YARD_addLine = (group, points, color, opacity = 1) => {
@@ -169,11 +171,13 @@ if (params.has('yard')) {
   function YARD_emptyGroup(group) {
     for (const child of [...group.children]) {
       group.remove(child);
-      child.geometry?.dispose();
-      for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
-        material?.map?.dispose();
-        material?.dispose();
-      }
+      child.traverse(node => {
+        node.geometry?.dispose();
+        for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+          material?.map?.dispose();
+          material?.dispose();
+        }
+      });
     }
   }
 
@@ -318,6 +322,45 @@ if (params.has('yard')) {
     return errors;
   }
 
+  // This deliberately uses the same conservative calculation as
+  // tools/power_table.py: all energy-costed direct mounts and turrets firing
+  // together against the balanced (4/4/4) weapons bus. It is a design audit,
+  // not a second hidden combat model. Charged spine weapons remain a separate
+  // capacitor event because their cooldown/charge cycle is not continuous fire.
+  function YARD_powerAudit(entry) {
+    const plant = entry.power?.plantMW, cap = entry.power?.capacitorMJ;
+    if (!Number.isFinite(plant) || plant <= 0 || !Number.isFinite(cap) || cap < 0) {
+      return { tone: 'bad', text: 'ENERGY BUDGET · INCOMPLETE\nAdd power.plantMW and power.capacitorMJ to audit this hull.' };
+    }
+    const rows = [];
+    let draw = 0, spineBurst = 0;
+    for (const [kind, fits] of [['FIXED', entry.mounts || []], ['TURRET', entry.turrets || []]]) for (const fit of fits) {
+      const w = DB.weapons[fit.w];
+      if (!w) continue;
+      if (w.kind === 'spine') { spineBurst += w.energy || 0; continue; }
+      if (!Number.isFinite(w.energy) || w.energy <= 0 || !Number.isFinite(w.cd) || w.cd <= 0) continue;
+      const d = w.energy / w.cd;
+      draw += d;
+      rows.push(`${kind} ${w.name}: ${d.toFixed(1)} MW`);
+    }
+    const bus = plant / POWER_BUSES;
+    const delta = draw - bus;
+    const parts = ['ENERGY BUDGET · WEAPONS BUS (balanced ETS 4/4/4)', `Plant ${plant.toFixed(0)} MW · weapons bus ${bus.toFixed(1)} MW · capacitor ${cap.toFixed(0)} MJ`, `Continuous weapon draw ${draw.toFixed(1)} MW`];
+    if (!draw) parts.push('STATUS: NO CONTINUOUS ENERGY WEAPON DRAW.');
+    else if (delta <= 0) parts.push(`STATUS: SUSTAINED · ${(bus / draw * 100).toFixed(0)}% bus headroom.`);
+    else parts.push(`STATUS: CAPACITOR-BUFFERED · deficit ${delta.toFixed(1)} MW · empty after ${(cap / delta).toFixed(1)} sim s (${(cap / delta / SIM_SPEED).toFixed(0)} real s) of uninterrupted fire.`);
+    if (spineBurst) parts.push(`SPINE EVENT: ${spineBurst.toFixed(0)} MJ charge excluded from continuous draw; check its charge cycle separately.`);
+    if (rows.length) parts.push('LOADS: ' + rows.join(' · '));
+    parts.push('Audit is advisory: it assumes every listed energy weapon fires continuously; it does not invent shield, drive, heat, mass, or volume costs.');
+    return { tone: !draw || delta <= 0 ? 'ok' : 'warn', text: parts.join('\n') };
+  }
+
+  function YARD_updatePowerAudit(entry) {
+    const audit = YARD_powerAudit(entry);
+    YARD_power.className = 'yardpower ' + audit.tone;
+    YARD_power.textContent = audit.text;
+  }
+
   function YARD_dbChange(text = YARD_dbEditor.value) {
     try {
       const entry = JSON.parse(text);
@@ -326,18 +369,26 @@ if (params.has('yard')) {
       YARD_buildMarkers(entry);
       const errors = YARD_validateEntry(entry);
       YARD_dbError.textContent = errors.length ? errors.map(error => '• ' + error).join('\n') : 'Database entry valid.';
+      YARD_updatePowerAudit(entry);
       document.getElementById('yard-mirror').checked = !!entry.mirror;
       const nextDef = { ...YARD_def, ...entry, id: YARD_def.id, prims: YARD_def.prims };
       if (nextDef.mirror !== YARD_def.mirror || nextDef.length !== YARD_def.length || JSON.stringify(nextDef.half) !== JSON.stringify(YARD_def.half)) YARD_setDefinition(nextDef);
       else YARD_def = nextDef;
     } catch (error) {
       YARD_dbError.textContent = error instanceof Error ? error.message : String(error);
+      YARD_power.className = 'yardpower bad';
+      YARD_power.textContent = 'ENERGY BUDGET · WAITING FOR VALID DATABASE JSON';
     }
   }
 
   function YARD_loadEntry(id) {
     YARD_sourceShipId = id === '__new' ? null : id;
-    const entry = id === '__new' ? { ...YARD_colorStrings(DB.ships.kestrel), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(DB.ships[id]);
+    // Runtime scaling shares nested database arrays with the live ship table.
+    // Take an authored-scale clone instead of those potentially scaled nested
+    // values, or diagnostics will float at twice their correct coordinates.
+    const source = YARD_cloneAuthoredShip(id === '__new' ? 'kestrel' : id);
+    const { prims, ...entrySource } = source;
+    const entry = id === '__new' ? { ...YARD_colorStrings(entrySource), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(entrySource);
     YARD_dbEditor.value = JSON.stringify(entry, null, 2);
     YARD_dbChange();
   }
@@ -677,6 +728,7 @@ if (params.has('yard')) {
   YARD_select.value = YARD_requested && __game.SHIPS[YARD_requested.toLowerCase()] ? YARD_requested.toLowerCase() : 'kestrel';
   YARD_select.addEventListener('change', () => YARD_selectShip(YARD_select.value === '__new' ? '__new' : YARD_select.value));
   document.getElementById('yard-new-template').addEventListener('click', () => YARD_newFromTemplate(document.getElementById('yard-template').value));
+  document.getElementById('yard-menu-exit').addEventListener('click', () => { location.href = location.pathname; });
   document.getElementById('yard-panel-toggle').addEventListener('click', event => {
     const panel = event.currentTarget.closest('.ypanel');
     const expanded = event.currentTarget.getAttribute('aria-expanded') === 'true';

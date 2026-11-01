@@ -77,22 +77,18 @@ function spineFire(s) {
   let best = null, bestD = 1e9, bestLocal = null;
   for (const o of ships) {
     if (!o.alive || o === s || o.dying) continue;
+    // XL weapons are capital killers by role. This must be a physical hit
+    // filter, not merely an AI choice: player or scripted spine fire must
+    // pass through a fighter and retain a capital target behind it.
+    if (o.def.cls === 'fighter') continue;
     if (!segSphere(_bfm, _be, o.group.position, o.def.radius + W.bw)) continue;
-    if (o.def.cls === 'fighter') {
-      if (!W.hitFighters) continue;                                      // M2: the discharge cannot be aimed at, and does not register on, anything fighter-sized (db `hitFighters`)
-      _bv.copy(o.group.position).sub(_bfm);
-      const along = _bv.dot(_bf);
-      if (along < 0 || along > W.range) continue;
-      if (_bv.addScaledVector(_bf, -along).length() < W.bw / 2 + 0.5 * o.def.radius && along < bestD) { bestD = along; best = o; bestLocal = new THREE.Vector3(); }
-    } else {
-      for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) {
-        const a = _bw.copy(_bfm).addScaledVector(_br, ox * W.bw * 0.4).addScaledVector(_bu, oy * W.bw * 0.4);
-        const b = _bv.copy(a).addScaledVector(_bf, W.range);
-        const h = traceShip(o, a, b);
-        if (!h) continue;
-        const d = o.group.localToWorld(h.clone()).sub(_bfm).dot(_bf);
-        if (d < bestD) { bestD = d; best = o; bestLocal = h; }
-      }
+    for (const [ox, oy] of [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const a = _bw.copy(_bfm).addScaledVector(_br, ox * W.bw * 0.4).addScaledVector(_bu, oy * W.bw * 0.4);
+      const b = _bv.copy(a).addScaledVector(_bf, W.range);
+      const h = traceShip(o, a, b);
+      if (!h) continue;
+      const d = o.group.localToWorld(h.clone()).sub(_bfm).dot(_bf);
+      if (d < bestD) { bestD = d; best = o; bestLocal = h; }
     }
   }
   const fx = spineFxGet(s);

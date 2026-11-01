@@ -60,6 +60,21 @@ def t_exeter(R):
     check('Exeter survives 3 hits without shield regen, dies on hit 4', n0==4, f'died on hit {n0}')
     check('Exeter with regen (384/cycle) survives 4, dies on hit 4..5 (spec: 5th)', n1 in (4,5), f'died on hit {n1}')
 
+def t_xl_filter(R):
+    """M2 rule: an XL spine passes through a fighter and hits the capital behind it."""
+    pg=R.page(320,180,'?free&n=0&q=low')
+    r=pg.evaluate(js('''
+      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});
+      const f=g.spawnShip('kestrel',0,V(0,0,-850),V(0,0,0),{});
+      const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
+      freeze(bf);freeze(f);freeze(ex);g.update(0.05);
+      const f0=f.structure+f.shield.fore+f.shield.aft, e0=ex.structure+ex.shield.fore+ex.shield.aft;
+      const rec=__bf.spineFire(bf);
+      return {hit:rec.hit,fighterDamage:Math.round(f0-(f.structure+f.shield.fore+f.shield.aft)),capitalDamage:Math.round(e0-(ex.structure+ex.shield.fore+ex.shield.aft))};'''))
+    print(json.dumps(r))
+    check('XL spine ignores a fighter in its line of fire', r['fighterDamage']==0, str(r))
+    check('XL spine continues to the capital behind the fighter', r['hit']=='exeter' and r['capitalDamage']>0, str(r))
+
 def t_friendly(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
@@ -196,7 +211,7 @@ def t_blast(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
       const o={};
-      for(const id of ['bullfrog','exeter','halberd']){
+      for(const id of ['bullfrog','exeter','halberd','gulper']){
         const bf=g.spawnShip(id,1,V(0,0,0),V(0,0,-3000),{});bf.ai.role='capital';freeze(bf);bf.turrets.length=0;g.update(0.05);
         const hz=bf.def.half[2],res=[];
         for(const f of [0,0.45,0.8,0.97]){   // blast right at the hull surface along the axis, f x half-length from the centre toward the bow
@@ -219,7 +234,23 @@ def t_blast(R):
     # blasts on the hull surface of an outer third must hurt (the bug: gate used a 0.62 R sphere around the centre)
     for id,hz in (('bullfrog',300),('exeter',230)):
         check(f'{id}: blast at 97% of half-length (outer hull) deals damage', r[id][3]['dmg']>0, json.dumps(r[id]))
-    check('halberd (small hull) behaviour: damage at the prow', r['halberd'][3]['dmg']>=0, json.dumps(r['halberd']))
+    # M3: scaled corvette noses used to sit outside the old centre-sphere blast
+    # approximation. A bow impact must now produce real damage for both hulls.
+    for id in ('halberd','gulper'):
+        check(f'{id}: blast at the prow deals damage', r[id][3]['dmg']>0, json.dumps(r[id]))
+
+def t_m3(R):
+    pg=R.page(320,180,'?free&n=0&q=low')
+    r=pg.evaluate(js('''
+      const ex=g.spawnShip('exeter',1,V(0,0,0),V(0,0,-3000),{});freeze(ex);ex.turrets.length=0;g.update(0.05);
+      const before={sh:ex.shield.fore,str:ex.structure};
+      const pos=ex.group.position.clone().add(V(0,0,-ex.def.half[2]*0.97));
+      __bf.blastAt(pos,g.WEAPONS.torp,0,g.player,ex);
+      return {before,after:{sh:ex.shield.fore,str:ex.structure},window:ex.tandemUntil-g.time};'''))
+    print(json.dumps(r))
+    check('tandem precursor drains the struck shield facet', r['after']['sh'] <= r['before']['sh'] * 0.45, str(r))
+    check('tandem main charge reaches structure', r['after']['str'] < r['before']['str'], str(r))
+    check('tandem exposure window is active', r['window'] > 2.8, str(r))
 
 def t_warn(R):
     """HUD warning: the spine charges at an Exeter on the player's side (kind 'ally'); read warnState and the #warn element during the lock."""
@@ -237,7 +268,7 @@ def t_warn(R):
     check('warnState.spine set while charging at a friendly', len(r['kinds'])>0, str(r['kinds']))
     check('HUD text during the lock', 'SPINE' in txt, repr(txt))
 
-SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast}
+SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'xl_filter':t_xl_filter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast,'m3':t_m3}
 if __name__=='__main__':
     names=sys.argv[1:] or list(SC)
     with Runner() as R:

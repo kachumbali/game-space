@@ -1,6 +1,10 @@
 # Campaign Draft: "PROLOGUE: UNCHARTED VANGUARD" (4 missions)
 
-Status: Drafted for implementation and review under Task G2 (`docs/GEMINI_WORKPLAN.md`).
+Status: **implemented locally 2026-11-01 as a four-mission selectable campaign**
+(`p01` through `p04`) alongside the existing *The Severed Node* campaign.
+The scripted stages use only existing mission actions. Campaign selector/menu
+flow and Next Mission sequencing are implemented; balance and human playtesting
+remain outstanding.
 Style: Matches `docs/CAMPAIGN.md`.
 Conventions: Uses only existing ship classes, existing objective mechanics, and adheres to adopted lore (`docs/LORE.md`, `docs/LORE_FACTIONS.md`, `docs/LORE_HISTORY.md`).
 Tags: **[NEW]** = narrative invention consistent with lore; **[NEEDS CODE]** = requires an engine feature or script hook; **[UNTESTED]** = uses existing ships/weapons in an unverified scenario.
@@ -28,9 +32,9 @@ The four prologue sorties chart Eagle Flight's journey from a routine frontier c
 - **Allies:** CSS HALBERD (`anchor`, vital, 128 m escort corvette).
 - **Briefing:**
   `Eagle Flight, CDF Halberd CIC. We have an unauthorized transit beacon in Corridor 7-A. A heavy resupply shuttle, transponder registered to an unregistered dummy holding in VAC colonial space, has bypassed the orbital customs checkpoint at Hollow 14.`
-  
+
   `Standard procedure: close within scan range and demand their registry seals. Intelligence warns the shuttle has hired private security—surplus light interceptors operating under false transponders. If they illuminate you with fire control radar, you are cleared weapons free.`
-  
+
   `Protect the Halberd. Ground the smugglers. Do not let the transport jump.`
 - **Setup:**
   - `anchor`: `{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }`
@@ -75,9 +79,9 @@ The four prologue sorties chart Eagle Flight's journey from a routine frontier c
 - **Allies:** CSS HALBERD (`anchor`, vital, 128 m escort corvette).
 - **Briefing:**
   `Colonial supply lines through the Siderite belt have been severed. A coalition of corporate privateers and rogue militia has blockaded Relay Beta with heavy fighters and combat drones, seizing ore shipments and starving the local spun habitats.`
-  
+
   `The CSS Halberd will jump into the sector to draw their primary defensive batteries. Eagle Flight will deploy ahead to punch through the perimeter screen, eliminate their drone controllers, and break the blockade before enemy reinforcements can mass on our flank.`
-  
+
   `Expect modified Kestrel fighters and autonomous VBC-pattern drones. Keep your speed high and watch for cross-covering mass drivers.`
 - **Setup:**
   - `anchor`: `{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }`
@@ -120,9 +124,9 @@ The four prologue sorties chart Eagle Flight's journey from a routine frontier c
 - **Allies:** CSS HALBERD (`anchor`, vital, 128 m escort corvette).
 - **Briefing:**
   `Three hours ago, a distress transponder was tripped inside Sector Alpha-9—a cluster of strip-mined nickel-iron asteroids abandoned twenty years ago. The beacon matches a lost colonial survey craft.`
-  
+
   `The Halberd has dropped out of transit to coordinate rescue. However, ambient iron dust and residual radiation are degrading our sensor suite. If this is a real crew in distress, we recover them; if it is a trap, we break teeth.`
-  
+
   `Fly tight escort on the Halberd. Keep your countermeasures primed.`
 - **Setup:**
   - `anchor`: `{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }`
@@ -164,9 +168,9 @@ The four prologue sorties chart Eagle Flight's journey from a routine frontier c
 - **Allies:** CSS HALBERD (`anchor`, vital, 128 m escort corvette).
 - **Briefing:**
   `Halberd has arrived at the outer picket of the Lily Relay. Three automated listening posts on the perimeter went silent thirty minutes ago without sending distress packets.`
-  
+
   `Long-range passive arrays are reporting anomalies never seen in human space: biological thermal blooms, hull geometries that show no seams or welds, and radio signals that sound like cellular pulse chatter rather than digital encryption.`
-  
+
   `Eagle Flight is on point. Maintain extreme vigilance. If you encounter non-human craft, do not attempt comms: gather telemetry, protect the Halberd, and survive.`
 - **Setup:**
   - `anchor`: `{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }`

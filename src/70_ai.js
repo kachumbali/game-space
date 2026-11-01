@@ -339,11 +339,15 @@ function bomberAI(s, dt) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
     s.sel = missileIds(s).indexOf(wid);
     lockUpdate(s, dt);
-    if (s.lock.state === 'locked' && ai.mslT <= 0 && dist < WEAPONS[wid].range * 0.8 && torpsStillNeeded(s, t) > 0) {
-      launchMissile(s, wid); log(s.def.fac === 'frogg' ? 'FROGG TORPEDO LAUNCH' : '', '#ff8a5a'); if (typeof onTorpLaunch === 'function') onTorpLaunch(s);
-      ai.salvoN = (ai.salvoN || 0) + 1;
-      if (ai.salvoN >= TUNE.ai.torpSalvo) { ai.salvoN = 0; ai.mslT = TUNE.ai.torpReload + Math.random() * 6; breakAway(); ai.t = Math.max(ai.t, ai.mslT - 5); }      // stay out while the tubes reload
-      else { ai.mslT = TUNE.ai.torpGapT; s.lock.p = 1; }
+    if (s.lock.state === 'locked' && ai.mslT <= 0 && dist < WEAPONS[wid].range * 0.8 && launchMissile(s, wid)) {
+      // A bomber attacks in deliberate three-round waves instead of feeding all
+      // twelve torpedoes into point defence as one continuous stream.
+      const salvo = WEAPONS[wid].salvo || { count: 3, interval: 0.65, rest: 7 };
+      ai.torpShots = (ai.torpShots || 0) + 1;
+      if (ai.torpShots < salvo.count && s.stores[wid] > 0) ai.mslT = salvo.interval;
+      else { ai.torpShots = 0; ai.mslT = salvo.rest; }
+      log(s.def.fac === 'frogg' ? 'FROGG TORPEDO SALVO' : 'TORPEDO SALVO', '#ff8a5a');
+      if (typeof onTorpLaunch === 'function') onTorpLaunch(s);
     }
   } else {           // egress
     aim.copy(ai.aimB); if (ai.t <= 0) ai.mode = (s.stores.tad > 0) ? 'run' : 'attack';

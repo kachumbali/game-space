@@ -230,9 +230,10 @@ function launchMissile(s, wid) {
   const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;
   s.stores[wid]--;
   s.group.updateMatrixWorld(true);
-  const side = (s.launchAlt = -(s.launchAlt || 1));
   const half = s.def.half;
-  const lp = s.def.launch ? [side * Math.abs(s.def.launch[0]), s.def.launch[1], s.def.launch[2]] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const points = s.def.launches?.length ? s.def.launches : s.def.launch ? [s.def.launch] : null;
+  const side = (s.launchAlt = -(s.launchAlt || 1));
+  const lp = points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
@@ -286,6 +287,25 @@ function hullGap(s, pos, maxD) {
   }
   return best;
 }
+// Tandem torpedoes use a small precursor charge to collapse the shield facet
+// they strike, then send the main charge through the opening. The piercing share
+// is deliberately data-driven: M3 tuning can change the warhead without another
+// combat-code change.
+function tandemStrike(s, lp, w) {
+  const t = w.tandem;
+  if (!t) return 0;
+  const facing = lp.z < 0 ? 'fore' : 'aft';
+  const before = s.shield[facing];
+  const drain = Math.min(before, (s.def.shield[facing] || 0) * t.shieldDrain);
+  if (drain > 0) {
+    s.shield[facing] -= drain;
+    shieldFlash(s, lp, facing);
+    flashAt(s.group.localToWorld(lp.clone()), Math.max(4, w.blast * 0.45), 0.2);
+    s.tandemUntil = Math.max(s.tandemUntil || 0, time + (t.window || 3));
+    if (s === player) log('SHIELD FACET COLLAPSED', '#ffb040');
+  }
+  return t.pierce || 0;
+}
 function blastAt(pos, w, team, owner, direct, skip) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
@@ -295,8 +315,11 @@ function blastAt(pos, w, team, owner, direct, skip) {
     const fr = s.team === team;
     s.group.updateMatrixWorld(true);
     const dc = s.group.position.distanceTo(pos);
-    let surf = direct === s ? 0 : Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);      // a missile that struck this hull is AT the hull: full effect whatever the approach aspect
-    if (surf > w.blast && s.def.radius > TUNE.missile.hullGapR && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);      // larger hulls (corvettes and up): measure from the hull, not a 0.62 R sphere around the centre
+    let surf = Math.max(0, dc - s.def.radius * TUNE.missile.hullRef);
+    // A missile can impact any voxel, not just a sphere based on the hull centre.
+    // This matters most for the Halberd/Gulper nose: their scaled hull extends
+    // beyond the old 0.62R approximation, causing a bow-on missile to do no damage.
+    if (surf > w.blast && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);
     if (surf > w.blast) continue;
     const f = (direct === s ? 1 : Math.max(TUNE.missile.blastFloor, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
@@ -310,10 +333,8 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    const td = w.tandem;      // tandem warhead (torpedoes): the precursor collapses the facet's shield, the main charge goes through
-    const facet = lp.z < 0 ? 'fore' : 'aft';
-    applyHit(s, lp, w.dmg * (td || w.nuclear ? 1 : TUNE.missile.dmgCls[s.def.cls] ?? 1) * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', (w.pierce || 0) * (TUNE.missile.pierceCls[s.def.cls] ?? 1), !!td, td && !fr ? td.pen : 0);      // tandem main charge: wrecks the part it touches AND goes on into the hull (through), so the aspect of the hit matters little      // fragmentation pierce: lethal to small craft, little use against a big hull
-    if (td && !fr && s.alive && !s.dying && f >= 0.4) tandemHole(s, facet, td.holeT * f, s.group.localToWorld(lp.clone()));
+    const pierce = direct === s ? tandemStrike(s, lp, w) : 0;
+    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
@@ -455,7 +476,12 @@ const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
 function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'sting') ? 'S' : 'M'); }
 function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
 function makeTurret(s, t) {
-  const w = WEAPONS[t.w], cls = turretCls(t), D = turretDia(s, t), bl = (TUR_BARREL[cls] || 1.5) * D;
+  const w = WEAPONS[t.w], cls = turretCls(t);
+  // Gameplay class still controls tracking and weapon role.  Some authored
+  // hulls have a compact embedded housing, so their live rotating rig must
+  // fit that seat instead of becoming a second, oversized ship feature.
+  const visualScale = Number.isFinite(t.visualScale) ? clamp(t.visualScale, 0.35, 1) : 1;
+  const D = turretDia(s, t) * visualScale, bl = (TUR_BARREL[cls] || 1.5) * D;
   const g = new THREE.Group();
   const fr = s.def.fac === 'frogg';
   const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });

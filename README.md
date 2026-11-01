@@ -8,6 +8,12 @@ The playable build is the single file `index.html` (Three.js from a CDN). Source
 Open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.server`. Phones work: touch controls
 appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS, SKIRMISH, FREE FLIGHT, OPTIONS, CREDITS; arrow keys + Enter or click/tap). Missions open the briefing; the restart dialog (R) and briefing have a MAIN MENU button.
 
+The intended product modes are distinct: **Free Flight** is the sandbox,
+**Skirmish** is the configurable one-off fight, **Scripted Campaign** is the
+authored persistent-crew story, and **Strategy / Dynamic Campaign** is the
+future optional turn-based war layer. The latter is documented but not yet
+playable; it will generate its own battles without changing the scripted route.
+
 **Skirmish** (menu SKIRMISH): quick test fight. Choose wingmen (0-3), an optional friendly Halberd/Exeter, the enemy force as rows of ship + count (presets: Waves 1/2/3/5, Heavy, Gulper, vs Halberd, vs Exeter, BULLFROG, BULLFROG + 2 GULPER, Hive Carrier (unarmed catalogue ship)), enemy skill 1-5, friendly flight model, enemy missiles on/off, endless respawn, starting range (800 m / 2 km / 4 km / 10 km) and environment look. The fight ends with a debrief (kills, time, accuracy, damage) and RESTART / SETUP / MAIN MENU. Corvettes and frigates are heavy to voxelise; the 2.5 km Hive Carrier is the heaviest (warning in the UI, not tested on real hardware). Setup is remembered in localStorage `gs_sk`.
 
 URL flags: `?go` skip menu and briefing · `?m=N` skip the menu, open mission N's briefing · `?free` free flight · `?sk=darter:3,leaper:2` skirmish (with `&sk_skill=1..5 &sk_wing=0..3 &sk_wskill &sk_fm=newton &sk_msl=0 &sk_respawn=1 &sk_range=800 &sk_look=reed &sk_ally=halberd|exeter`; `__game.startSkirmish(cfg)` takes the same as an object) · `?newcrew` reset crew record · `?touch` force touch UI ·

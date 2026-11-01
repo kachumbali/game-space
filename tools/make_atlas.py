@@ -13,7 +13,7 @@ def read_png(path):
         data = f.read()
     if data[:8] != b'\x89PNG\r\n\x1a\n':
         raise ValueError(f"Not a PNG: {path}")
-    
+
     idx = 8
     width = height = None
     idat_parts = []
@@ -87,7 +87,7 @@ def main():
     head_chars = ['imani', 'hawk', 'meow']
     head_files = ['base.png', 'eyes_open.png', 'eyes_half.png', 'eyes_closed.png',
                   'mouth_rest.png', 'mouth_A.png', 'mouth_E.png', 'mouth_O.png', 'mouth_MB.png', 'mouth_FV.png']
-    
+
     for c in head_chars:
         for hf in head_files:
             specs[f'{root}/heads/{c}/{hf}'] = (64, 64)

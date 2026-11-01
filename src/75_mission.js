@@ -49,6 +49,10 @@ Intelligence expects a FROGG raiding party: fast fighters first to strip our scr
 Eagle flight (MEOW, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
 
 ROE: weapons free. Missiles are scarce, fly the guns first.`,
+  areas: {
+    screen: { name: 'STARBOARD SCREEN', look: 'lilypad', arrive: 'Cruise complete. Starboard screen, clear of the convoy. New contacts are resolving.' },
+    wake: { name: 'RELAY WAKE', look: 'lilypad', arrive: 'Cruise complete. Back at the relay wake. CIC reports a close jump flash.' },
+  },
   objectivesAtStart: [],
   setup: {
     anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
@@ -67,13 +71,33 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
     { when: { after: 2 }, do: [{ comm: ['HAWK', 'Eagle two, copy. Guns first, save the Swifts for the hard cases. Stay on my wing, Echo.'] }] },
     { when: { dead: 'A', delay: 3 }, do: [
       { obj: ['o1', null, 'done'] },
-      { comm: ['CONTROL', 'Strike wave down. Wait, new contacts, starboard side, heavy signatures. Torpedo bombers with a gunship escort. They are going for the Halberd.'] },
+      { comm: ['CONTROL', 'Strike wave down. Sweep is clear here; move the screen to the starboard approach. Autopilot is taking the flight.'] },
+      { obj: ['oNav1', 'Autopilot to the starboard screen', 'open'] },
+      { transit: { to: 'NAV 1 · STARBOARD SCREEN', dur: 22, area: 'screen', lines: [
+        [3, 'HAWK', 'Formation is clean. Check your missile count, Echo.'],
+        [9, 'SPARROW', 'Quiet again. I hate the quiet after a fight.'],
+        [16, 'CONTROL', 'Heavy signatures resolving ahead. Arm up in five.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['oNav1', null, 'done'] },
+      { comm: ['CONTROL', 'Torpedo bombers with a gunship escort. They are going for the Halberd.'] },
       { obj: ['o2', 'Stop the torpedo bombers before they launch', 'open'] },
       { spawn: { grp: 'B', ships: [['toad', 2], ['spitter', 1], ['leaper', 1]], bearing: [1, 0.05, -0.1], dist: 2900, spread: 260 } },
     ] },
     { when: { dead: 'B', delay: 3 }, do: [
       { obj: ['o2', null, 'done'] },
-      { comm: ['HAWK', 'That is the lot, I think... no. Jump flash, dead astern. Oh, that is a big one.'] },
+      { comm: ['HAWK', 'That is the lot, I think... Form up. CIC wants us back over the relay wake.'] },
+      { obj: ['oNav2', 'Autopilot to the relay wake', 'open'] },
+      { transit: { to: 'NAV 2 · RELAY WAKE', dur: 22, area: 'wake', lines: [
+        [3, 'SPARROW', 'The Halberd is still there. That is good, right?'],
+        [10, 'HAWK', 'It is good until something follows us home. Stay sharp.'],
+        [16, 'CONTROL', 'Jump distortion building at the relay. All fighters, weapons hot.'],
+      ] } },
+    ] },
+    { when: { after: 3 }, do: [
+      { obj: ['oNav2', null, 'done'] },
+      { comm: ['HAWK', 'Jump flash, dead astern. Oh, that is a big one.'] },
       { jumpIn: true },
       { obj: ['o3', 'Destroy the FROGG corvette', 'open'] },
       { spawn: { grp: 'C', ships: [['gulper', 1], ['reaver', 2], ['darter', 2]], bearing: [-0.2, 0.1, 1], dist: 1900, spread: 120, jump: true } },
@@ -367,6 +391,68 @@ MISSIONS.push({
   ],
 });
 
+// ---- prologue: UNCHARTED VANGUARD (docs/CAMPAIGN_PROLOGUE.md) -----------------------------------------
+// Kept as its own list so the menu and NEXT MISSION never put its pre-invasion
+// story after the main campaign finale.
+const PROLOGUE_MISSIONS = [
+  {
+    id: 'p01', look: 'reed', title: 'CONTRABAND SUN', subtitle: 'Stop an unregistered shuttle at Hollow 14', grades: [1500, 1250, 1000, 750],
+    briefing: `A resupply shuttle with false registry seals has bypassed the customs checkpoint at Hollow 14. It has hired private escorts and is refusing inspection. Protect the HALBERD, break the escort, and stop the transport before it jumps.`,
+    debriefWin: 'Smuggler flight neutralized. Salvage crews recovered sealed biological containment canisters marked Project Nursery / Oasis-9. Vanderbilt-Astra legal has already sealed the report.',
+    debriefLose: 'The rogue transport escaped into deep space. Its cargo and the trail behind it are lost.',
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [80,15,100], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [110,20,130] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [50,10,130] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort fighters', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',2]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p1a', null, 'done'] }, { comm: ['CONTROL', 'Escorts down. The Tern is making an emergency jump run. Stop it.'] }, { obj: ['p1b', 'Destroy the rogue transport TERN', 'open'] }, { spawn: { grp: 'B', ships: [['tern',1]], bearing: [0.1,0,-1], dist: 1800, spread: 50 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p1b', null, 'done'] }, { comm: ['SPARROW', 'Control, those pods were not ore.'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'p02', look: 'reed', title: 'THE CHOKEPOINT', subtitle: 'Break the privateer blockade at Relay Beta', grades: [2400, 2000, 1600, 1200],
+    briefing: `Privateers have blockaded Relay Beta, cutting supply traffic to the spun habitats. The HALBERD will draw their attention while Eagle Flight breaks their pickets, drone screen, and strike detachment.`,
+    debriefWin: 'Relay Beta is open again. Captured traffic records show the privateers were paid in Vanderbilt-Astra bearer bonds to keep CDF patrols away from the rim.',
+    debriefLose: 'The blockade holds. The outer habitats remain isolated.',
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [90,20,110], speed: 65 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,25,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ obj: ['p2a', 'Destroy the blockade picket wave', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',3],['kestrel',1]], bearing: [0.2,0.05,-1], dist: 2800, spread: 240 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p2a', null, 'done'] }, { comm: ['CONTROL', 'Combat drones are lifting from the depot. Intercept them before they reach the HALBERD.'] }, { obj: ['p2b', 'Destroy the autonomous drone wave', 'open'] }, { spawn: { grp: 'B', ships: [['drone',4],['merlin',2]], bearing: [-0.4,0.1,-1], dist: 2400, spread: 260 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p2b', null, 'done'] }, { obj: ['p2c', 'Destroy the heavy strike flight', 'open'] }, { spawn: { grp: 'C', ships: [['kestrel',3],['merlin',2]], bearing: [0.1,-0.1,-1], dist: 2200, spread: 200 } }] },
+      { when: { dead: 'C', delay: 3 }, do: [{ obj: ['p2c', null, 'done'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'p03', look: 'ao2', title: 'SIDERITE VEIL', subtitle: 'Survive the ambush at Mining Belt Alpha-9', grades: [2600, 2200, 1800, 1300],
+    briefing: `A distress beacon inside the abandoned Alpha-9 belt matches a lost survey craft. The HALBERD has stopped to investigate. Keep close, preserve countermeasures, and expect a trap.`,
+    debriefWin: 'Eagle Flight survived a military-grade kill box. The attackers used demilitarized human hulls with corporate avionics and knew the patrol frequency.',
+    debriefLose: 'The task group was overwhelmed in Alpha-9. The route toward Lily is open to whoever set the trap.',
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [85,10,105], speed: 50 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [115,15,135] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [55,5,135] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ comm: ['HAWK', 'Ambush. Stay tight on the HALBERD.'] }, { obj: ['p3a', 'Defend the HALBERD against the ambushers', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',4],['kestrel',2]], bearing: [0.3,0.2,-1], dist: 2200, spread: 260 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p3a', null, 'done'] }, { comm: ['SPARROW', 'More locks from the dark!'] }, { obj: ['p3b', 'Destroy the missile interceptor wave', 'open'] }, { spawn: { grp: 'B', ships: [['merlin',3],['kestrel',3]], bearing: [-0.4,-0.1,-1], dist: 2500, spread: 240 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p3b', null, 'done'] }, { comm: ['CONTROL', 'All hostile signals dark. Form up; we are falling back to Lily.'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'p04', look: 'lilypad', title: 'BIO-SIGNATURE ZERO', subtitle: 'First contact at the Lily Relay approach', grades: [3000, 2500, 2000, 1500],
+    briefing: `Listening posts around Lily went silent thirty minutes ago. Passive arrays show hulls with no seams, no human IFF, and thermal signatures unlike anything in the registry. Protect the HALBERD, collect what telemetry you can, and survive.`,
+    debriefWin: 'First contact confirmed: the invaders are designated FROGG. Long-range arrays show an entire vanguard entering the Lily corridor. The HALBERD is falling back to mount the relay defence.',
+    debriefLose: 'First contact was catastrophic. The colonies will face the invasion blind.',
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [90,15,110], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,20,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ comm: ['SPARROW', 'Contacts. They are not on any fleet IFF.'] }, { obj: ['p4a', 'Engage the unknown interceptors', 'open'] }, { spawn: { grp: 'A', ships: [['darter',4],['leaper',2]], bearing: [0.1,0.05,-1], dist: 2400, spread: 220 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p4a', null, 'done'] }, { comm: ['CONTROL', 'Heavy bio-signatures closing: bombers and a gunship.'] }, { obj: ['p4b', 'Stop the alien bombers before they reach the HALBERD', 'open'] }, { spawn: { grp: 'B', ships: [['toad',2],['spitter',1],['darter',2]], bearing: [-0.3,0.1,-1], dist: 2700, spread: 240 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p4b', null, 'done'] }, { comm: ['CONTROL', 'All CDF flights, fall back to Lily. Code Red.'] }, { end: 'win' }] },
+    ],
+  },
+];
+
+const CAMPAIGNS = [
+  { id: 'prologue', title: 'UNCHARTED VANGUARD', subtitle: 'Four sorties from customs patrol to first contact', missions: PROLOGUE_MISSIONS },
+  { id: 'severed_node', title: 'THE SEVERED NODE', subtitle: 'Five sorties against the FROGG vanguard', missions: MISSIONS },
+];
+function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS[1]; }
+function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); return c.missions[i + 1] || null; }
+
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } }
@@ -375,6 +461,7 @@ function startMission(M, seg) {
   if (cine) cancelTransit();
   plogReset(M.title);
   clearWorld();
+  lootClear();                                          // never carry free-flight pickups into a campaign sortie
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
   applyLook(M.look || 'lilypad'); cine = null; document.body.classList.remove('cine');
@@ -557,34 +644,41 @@ function missionStats() {
   const grade = !win ? 'F' : total > G[0] ? 'S' : total > G[1] ? 'A' : total > G[2] ? 'B' : total > G[3] ? 'C' : 'D';
   return { score, n, halPct, acc, total, grade };
 }
+function briefingLoadout(shipId) {
+  const def = SHIPS[shipId];
+  if (!def) return '<div>LOADOUT UNAVAILABLE</div>';
+  const weapons = new Map();
+  for (const m of [...(def.mounts || []), ...(def.turrets || [])]) {
+    // Launcher hardpoints describe where carried ordnance leaves the hull; the
+    // stores line below is the authoritative count for those weapons.
+    if (m.w && !m.store && WEAPONS[m.w]) weapons.set(m.w, (weapons.get(m.w) || 0) + 1);
+  }
+  const fmt = ([id, n]) => `${n}× ${WEAPONS[id].name}`;
+  const guns = [...weapons].map(fmt).join(' · ') || `UNARMED ${def.role.toLowerCase()}`;
+  const stores = Object.entries(def.stores || {}).filter(([id, n]) => id !== 'flare' && n > 0 && WEAPONS[id]);
+  const ordnance = stores.map(([id, n]) => `${n}× ${WEAPONS[id].name}`).join(' · ') || 'no carried ordnance';
+  const flare = def.stores?.flare ? `${def.stores.flare}× FLARES / CHAFF` : 'no countermeasures';
+  return `<div>${guns}</div><div>${ordnance}</div><div>${flare}</div>`;
+}
 function showBriefing(M) {
   const el = $id('brief');
   const ship = M.setup.player.ship || 'kestrel';
-  const LOADOUTS = {   // per-ship briefing loadout block (weapons/stores from data/db.json)
-    kestrel: '<div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div>',
-    merlin: '<div>2× MK-20 cannon</div><div>2× SW-9 Swift (IR)</div><div>12× flares/chaff</div>',
-    bittern: '<div>2× MK-30 HE cannon · 2× PD-30 turrets</div><div>4× torpedo · 2× SW-9 Swift (IR)</div><div>32× flares/chaff</div>',
-    falchion: '<div>2× MK-20 cannon · 2× MD-9 mag driver · 3× PD-30 turrets</div><div>6× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 2× HM-1 Hammer · 2× drones</div><div>32× flares/chaff</div>',
-    liner: '<div>unarmed evacuation liner (jump-capable refit)</div><div>6× PD-30 turrets</div><div>24× flares/chaff</div>',
-    destroyer: '<div>2× RG-90 railgun · 4× MD-55 mass driver · 8× LS-8 laser</div><div>8× PD-30 turrets · 8× HM-1 Hammer</div>',
-    sar: '<div>unarmed SAR cutter (crew 3): grapple winch, pod bay</div><div>pilot recovery · no weapons</div><div>24× flares/chaff</div>',
-    tern: '<div>unarmed resupply shuttle</div><div>cargo: ammunition, missiles, torpedoes, drones</div><div>12× flares/chaff</div>',
-  };
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
-  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
+  const campaign = campaignOf(M), missionList = campaign.missions;
+  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
-    <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
+    <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
     <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
-    <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
+    <div class="btns"><button id="bgo">LAUNCH</button>${missionList.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
     <div class="dim keys">W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
   el.querySelectorAll('[data-fm]').forEach(b => { b.onclick = () => { fmSet(b.dataset.fm, true); showBriefing(M); }; });
   el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
   $id('bgo').onclick = () => { el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
-  el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(MISSIONS[+b.dataset.i]); });
+  el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(missionList[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
   $id('bcred').onclick = () => showCredits(true);
   $id('bmenu').onclick = () => showMainMenu();
@@ -596,17 +690,18 @@ function showDebrief() {
   const career = S.careerTxt;
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>× ${killLog[k]}</b> <span class="dim">${(SCORE[k] || 100) * killLog[k]}</span></div>`).join('') || '<div class="dim">none</div>';
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
-  el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
+  const next = campaignNext(M);
+  el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
     ${(S.result === 'win' ? M.debriefWin : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : M.debriefLose}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>
-    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && MISSIONS[MISSIONS.indexOf(M) + 1] ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
+    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
-  if ($id('bnext')) $id('bnext').onclick = () => startMission(MISSIONS[MISSIONS.indexOf(M) + 1]);
+  if ($id('bnext')) $id('bnext').onclick = () => startMission(next);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
 }
