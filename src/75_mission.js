@@ -564,6 +564,10 @@ function showBriefing(M) {
     kestrel: '<div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div>',
     merlin: '<div>2× MK-20 cannon</div><div>2× SW-9 Swift (IR)</div><div>12× flares/chaff</div>',
     bittern: '<div>2× MK-30 HE cannon · 2× PD-30 turrets</div><div>4× torpedo · 2× SW-9 Swift (IR)</div><div>32× flares/chaff</div>',
+    falchion: '<div>2× MK-20 cannon · 2× MD-9 mag driver · 3× PD-30 turrets</div><div>6× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 2× HM-1 Hammer · 2× drones</div><div>32× flares/chaff</div>',
+    liner: '<div>unarmed evacuation liner (jump-capable refit)</div><div>6× PD-30 turrets</div><div>24× flares/chaff</div>',
+    destroyer: '<div>2× RG-90 railgun · 4× MD-55 mass driver · 8× LS-8 laser</div><div>8× PD-30 turrets · 8× HM-1 Hammer</div>',
+    sar: '<div>unarmed SAR cutter (crew 3): grapple winch, pod bay</div><div>pilot recovery · no weapons</div><div>24× flares/chaff</div>',
     tern: '<div>unarmed resupply shuttle</div><div>cargo: ammunition, missiles, torpedoes, drones</div><div>12× flares/chaff</div>',
   };
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
