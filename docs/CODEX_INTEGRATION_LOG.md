@@ -250,3 +250,7 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   spine with lower barrels and matching database mount/component positions.
   Replaced the oversized sheet radiator that read as a midship wall in the
   voxel bay with compact, hull-rooted radiator booms and support struts.
+- Removed obsolete radiator ribs and decorative turret-ring rods that remained
+  after that geometry change and could render as detached floating fragments.
+  Halberd visible hardware now follows a direct-support rule: every mass either
+  intersects the primary hull or a structural member that does.

@@ -261,7 +261,6 @@ SHIPS.bittern = {
 const hTur = (x, y, z, dy = 1) => [                              // armoured turret seat + ammo drum for each PD turret
   tap([x, y - 0.25 * dy, z], 0.55, [1.5, 0.5], [1.5, 0.5], H.panel, { sh: 'e', lod: 2 }),
   tap([x, y - 0.05 * dy, z], 0.45, [1.1, 0.35], [1.1, 0.35], H.dark, { sh: 'e', lod: 2 }),
-  ...ringSegs(x, y - 0.1 * dy, z - 0.5, z + 0.5, 1.3, 8, 0.07, 0x7a838d, { lod: 3 }),
   // Compact twin barrels are part of the voxel hull, rooted in the seat rather
   // than borrowed from the live-combat turret rig (whose free rotation is not
   // meaningful in an engineering inspection view).
@@ -281,10 +280,9 @@ const halberdDetail = [
   tap([4.05, -0.2, -2], 0.15, [0.5, 1.5], [0.5, 1.5], H.dark, { lod: 2 }),
   ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, 1.25, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
   ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, -1.65, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
-  // radiator wings: heat-pipe manifolds and rib strips
-  ...Array.from({ length: 9 }, (_, i) => seg([4.8, 0.5, 8.6 + i * 1.05], [13.4, 0.52, 9.9 + i * 1.05], 0.1, 0.1, i % 3 === 0 ? H.orange : 0x7a838d, { lod: 2 })),
-  seg([4.6, 0.55, 8.2], [4.6, 0.55, 18.5], 0.28, 0.28, H.dark, { lod: 2 }),
-  tap([12.5, 0.4, 14], 1.65, [0.2, 0.32], [0.2, 0.28], H.dark, { ax: 'x', sweep: -0.42, lod: 2 }),
+  // Radiator ribs are embedded in the compact boom below, not floating
+  // remnants of the earlier full-wing radiator.
+  ...Array.from({ length: 5 }, (_, i) => seg([4.0, 0.62, 9.1 + i * 1.2], [10.45, 0.62, 9.3 + i * 1.2], 0.07, 0.07, i % 2 ? 0x7a838d : H.orange, { lod: 2 })),
   // engine block: cooling cowl ribs, nozzle petals and bell rings
   ...ringSegs(0, 0, 21, 29.5, 4.95, 18, 0.2, 0x3e454e, { lod: 2 }),
   ...[22, 24, 26, 28].map(z => tap([0, 0, z], 0.15, [5.2, 3.7], [5.2, 3.7], 0x5b636d, { sh: 'h', lod: 2 })),
