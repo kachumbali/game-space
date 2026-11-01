@@ -1061,7 +1061,8 @@
             -12
           ],
           "comp": "tur1",
-          "side": 1
+          "side": 1,
+          "visualScale": 0.55
         },
         {
           "w": "laser",
@@ -1071,7 +1072,8 @@
             -12
           ],
           "comp": "tur2",
-          "side": 1
+          "side": 1,
+          "visualScale": 0.55
         },
         {
           "w": "pd",

@@ -1,4 +1,10 @@
-# Strategy layer: capturing star systems and resources (design proposal)
+# Strategy / Dynamic Campaign: capturing star systems and resources
+
+Status: a distinct optional game mode, separate from Free Flight, Skirmish and
+the authored Scripted Campaign. It is still design-only: it must never replace,
+rewrite or procedurally dilute the authored campaign route. Its first playable
+version is the small turn-based strategic layer described in section 3, with a
+clear Fly-or-Auto-resolve battle choice and separately versioned persistence.
 
 Origin: owner's idea (2026-10-21): a persistent strategy layer in a Wing Commander-like game; dogfight missions
 fought **if the player chooses**. This is a proposal for review, not a commitment. Evidence base: our own repo,

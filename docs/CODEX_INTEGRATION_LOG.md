@@ -268,3 +268,14 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   complete shipbuilder. Heat, mass, volume, shield and drive demands have not
   yet been authored as data, so the audit says exactly what it can and cannot
   validate. It updates while editing and never writes to source files.
+
+## Product-mode contract and Halberd live-turret correction — 2026-11-01
+
+- Recorded the four-mode contract in the product vision: Free Flight,
+  Skirmish, the authored Scripted Campaign, and the separate optional Strategy
+  / Dynamic Campaign. The strategy layer will generate its own persistent war
+  battles without altering the authored campaign route.
+- The Shipyard displays only authored voxel geometry, while live combat adds
+  tracking turret rigs. Halberd's two laser rigs now use a compact visual scale
+  matched to their embedded voxel seats; their weapon class, tracking and
+  combat values are unchanged.

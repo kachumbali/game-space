@@ -465,7 +465,12 @@ const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
 function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'sting') ? 'S' : 'M'); }
 function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
 function makeTurret(s, t) {
-  const w = WEAPONS[t.w], cls = turretCls(t), D = turretDia(s, t), bl = (TUR_BARREL[cls] || 1.5) * D;
+  const w = WEAPONS[t.w], cls = turretCls(t);
+  // Gameplay class still controls tracking and weapon role.  Some authored
+  // hulls have a compact embedded housing, so their live rotating rig must
+  // fit that seat instead of becoming a second, oversized ship feature.
+  const visualScale = Number.isFinite(t.visualScale) ? clamp(t.visualScale, 0.35, 1) : 1;
+  const D = turretDia(s, t) * visualScale, bl = (TUR_BARREL[cls] || 1.5) * D;
   const g = new THREE.Group();
   const fr = s.def.fac === 'frogg';
   const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
