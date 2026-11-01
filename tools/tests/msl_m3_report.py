@@ -29,7 +29,7 @@ def main():
     out = []
     for name, f in (('BEFORE (main dfb612a)', a.before), ('AFTER', a.after)):
         if not f: continue
-        by = load(f); ns = len(next(iter(json.load(open(f))).values())) and len(json.load(open(f)))
+        by = load(f); ns = len(json.load(open(f)))
         ws = [w for w in ['ir', 'rf', 'tick', 'torp', 'tad', 'torp_2', 'torp_3', 'torp_4'] if any(k.startswith(w + '|') for k in by)]
         out.append(f'### {name}: missiles fired per kill, head-on (mean over {ns} seeds; range of the cell in brackets; `[k/n]` = killed in k of n)\n'); out += table(by, ws); out.append('')
         out.append(f'### {name}: broadside (target turned 90 degrees)\n')

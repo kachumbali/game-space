@@ -34,7 +34,7 @@ SKIP = {'nuke', 'flare'}
 FIGHTERS = {'merlin', 'darter', 'kestrel', 'leaper', 'bittern', 'toad', 'reaver'}
 W = DB['weapons']
 def wmode(wid):
-    w = W[wid]
+    w = W[W[wid].get('base', wid)]
     if w['kind'] == 'msl': return 'msl'
     if w['kind'] == 'spine': return 'spine'
     if w.get('turret'): return 'turret'

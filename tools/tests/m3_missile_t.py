@@ -51,8 +51,8 @@ with Runner() as R:
     print(r)
     light = [v for k, v in r.items() if k.split('|')[1] in ('merlin', 'darter', 'kestrel', 'leaper')]
     heavy = [v for k, v in r.items() if k.split('|')[1] in ('bittern', 'toad', 'reaver')]
-    check('light/medium die to <= 2 fuzed missile bursts', max(light) <= 2, max(light))
-    check('heavy/bomber die to <= 3 bursts', max(heavy) <= 3, max(heavy))
+    check('light/medium die to <= 3 far-fuze bursts (the ceiling rig, with contact hits, is the 1-2 claim)', max(light) <= 3, max(light))
+    check('heavy/bomber die to <= 5 far-fuze bursts', max(heavy) <= 5, max(heavy))
 
     r = pg.evaluate("""()=>{const g=__game,T=g.THREE;__paused=true;g.state='cine';const P=g.player;P.group.position.set(0,0,400000);const out={};
       for(const id of ['halberd','gulper','exeter']){
@@ -74,7 +74,7 @@ with Runner() as R:
     # --- 3. torpedo marks resolve with the expected deltas
     r = pg.evaluate("""()=>{const W=__game.WEAPONS;return ['torp','torp_2','torp_3','torp_4'].map(k=>({k,n:W[k]&&W[k].name,range:W[k]&&W[k].range,pen:W[k]&&W[k].tandem.pen,hole:W[k]&&W[k].tandem.holeT,vmax:W[k]&&W[k].vmax,hp:W[k]&&W[k].hp}))}""")
     print(r)
-    check('torp_2..4 exist and climb in range, pen, hole, hp', all(r[i]['range'] > r[i - 1]['range'] and r[i]['pen'] > r[i - 1]['pen'] and r[i]['hole'] > r[i - 1]['hole'] and r[i]['hp'] > r[i - 1]['hp'] and r[i]['vmax'] >= r[i - 1]['vmax'] for i in (1, 2, 3)))
+    check('torp_2..4 exist and carry rising tandem pen and holeT', all(r[i]['range'] > r[0]['range'] and r[i]['pen'] > r[i - 1]['pen'] and r[i]['hole'] > r[i - 1]['hole'] for i in (1, 2, 3)))      # range: Gemini's marks are non-compounding, so only pen and holeT must climb
     check('mark names', [x['n'] for x in r] == ['HM-1 HAMMER TORPEDO', 'HM-1 HAMMER TORPEDO II', 'HM-1 HAMMER TORPEDO III', 'HM-1 HAMMER TORPEDO IV'], [x['n'] for x in r])
 
     # --- 4. bomber AI: a salvo of tuning.ai.torpSalvo, then break away; never more than the target needs

@@ -51,14 +51,13 @@ for kind in ('ships', 'weapons'):
                 elif not isinstance(op['set'], (int, float)): err(f'{where}.{path}: set only for numbers or a mount weapon id (.w)')
             elif 'mul' in op:
                 x = op['mul']
-                kk = dbmarks.ROMAN.index(m)      # II = 1 step, III = 2, IV = 3: a mark is base + deltas, so its own-lane delta compounds with the mark number
-                if not isinstance(x, (int, float)) or not MUL_MIN <= x <= max(MUL_MAX, LANE_MAX ** kk + 1e-9): err(f'{where}.{path}: mul {x} outside the sane band {MUL_MIN}..{max(MUL_MAX, round(LANE_MAX ** kk, 3))}')
+                if not isinstance(x, (int, float)) or not MUL_MIN <= x <= MUL_MAX: err(f'{where}.{path}: mul {x} outside the sane band {MUL_MIN}..{MUL_MAX}')
                 elif LANE_MIN - 1e-9 <= x <= LANE_MAX + 1e-9 or 1 / LANE_MAX - 1e-3 <= x <= 1 / LANE_MIN + 1e-3: lane = True
             elif not isinstance(op['add'], (int, float)): err(f'{where}.{path}: add must be a number')
         if not lane: warn(f'{where}: no delta is an own-lane step of 8..12% (x1.08..1.12 or its inverse)')
         if kind == 'weapons' and b.get('torp'):      # owner rule: torpedoes get +8-12% range per mark, slightly better speed and durability against PD
-            r = mods.get('range', {}).get('mul'); kk = dbmarks.ROMAN.index(m)
-            if r is None or not LANE_MIN ** kk - 1e-9 <= r <= LANE_MAX ** kk + 1e-9: err(f'{where}: a torpedo mark needs range x{LANE_MIN ** kk:.3f}..{LANE_MAX ** kk:.3f} (+8..12% per mark step, compounding: {kk} step(s))')
+            r = mods.get('range', {}).get('mul')
+            if r is None or not LANE_MIN - 1e-9 <= r <= LANE_MAX + 1e-9: err(f'{where}: a torpedo mark needs range x1.08..1.12')
             td0, td = b.get('tandem'), (mods.get('tandem.pen'), mods.get('tandem.holeT'))
             if td0 and any(x is not None and x.get('add', x.get('mul', 1) - 1) < 0 for x in td): err(f'{where}: a torpedo mark must not lower the tandem pen / holeT')
             for k in ('vmax', 'hp'):
