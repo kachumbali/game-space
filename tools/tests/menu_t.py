@@ -80,6 +80,8 @@ with Runner() as R:
     check('restart dialog -> main menu', pg.locator('.mi[data-a=skirmish]').count() == 1 and pg.evaluate(VIS, 'rdlg') == 'none')
     pg.locator('.mi[data-a=campaign]').click(); pg.locator('.mi[data-a=m1]').click(); pg.wait_for_timeout(300)
     check('mission list opens the briefing with MAIN MENU button', pg.locator('#bgo').count() == 1 and pg.locator('#bmenu').count() == 1)
+    loadout = pg.inner_text('#brief')
+    check('briefing loadout derives current Kestrel weapons', 'MD-9 MAG DRIVER' in loadout and 'MK-30 HE CANNON' in loadout and 'PL-4' not in loadout, loadout[:300].replace('\n', ' | '))
     pg.locator('#bmenu').click(); pg.wait_for_timeout(300)
     check('briefing -> main menu', pg.locator('.mi[data-a=free]').count() == 1)
     pg.locator('.mi[data-a=free]').click(); pg.wait_for_timeout(300)

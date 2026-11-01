@@ -104,3 +104,10 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
 - Extended `tools/tests/bullfrog_t.py` with M3 assertions for bow impacts on
   both corvettes and for the tandem shield drain, penetration, and exposed-window
   state. The test still needs a working Playwright/Chromium run on this machine.
+
+## G5 briefing loadouts — 2026-11-01
+
+- Replaced the handwritten `LOADOUTS` table in `showBriefing` with
+  `briefingLoadout(shipId)`, which derives fixed mounts, turrets, ordnance, and
+  countermeasures from the loaded database. This removes stale references to the
+  retired plasma bolter and correctly reports the Bittern's twelve torpedoes.

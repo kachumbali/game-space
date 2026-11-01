@@ -557,20 +557,30 @@ function missionStats() {
   const grade = !win ? 'F' : total > G[0] ? 'S' : total > G[1] ? 'A' : total > G[2] ? 'B' : total > G[3] ? 'C' : 'D';
   return { score, n, halPct, acc, total, grade };
 }
+function briefingLoadout(shipId) {
+  const def = SHIPS[shipId];
+  if (!def) return '<div>LOADOUT UNAVAILABLE</div>';
+  const weapons = new Map();
+  for (const m of [...(def.mounts || []), ...(def.turrets || [])]) {
+    // Launcher hardpoints describe where carried ordnance leaves the hull; the
+    // stores line below is the authoritative count for those weapons.
+    if (m.w && !m.store && WEAPONS[m.w]) weapons.set(m.w, (weapons.get(m.w) || 0) + 1);
+  }
+  const fmt = ([id, n]) => `${n}× ${WEAPONS[id].name}`;
+  const guns = [...weapons].map(fmt).join(' · ') || `UNARMED ${def.role.toLowerCase()}`;
+  const stores = Object.entries(def.stores || {}).filter(([id, n]) => id !== 'flare' && n > 0 && WEAPONS[id]);
+  const ordnance = stores.map(([id, n]) => `${n}× ${WEAPONS[id].name}`).join(' · ') || 'no carried ordnance';
+  const flare = def.stores?.flare ? `${def.stores.flare}× FLARES / CHAFF` : 'no countermeasures';
+  return `<div>${guns}</div><div>${ordnance}</div><div>${flare}</div>`;
+}
 function showBriefing(M) {
   const el = $id('brief');
   const ship = M.setup.player.ship || 'kestrel';
-  const LOADOUTS = {   // per-ship briefing loadout block (weapons/stores from data/db.json)
-    kestrel: '<div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div>',
-    merlin: '<div>2× MK-20 cannon</div><div>2× SW-9 Swift (IR)</div><div>12× flares/chaff</div>',
-    bittern: '<div>2× MK-30 HE cannon · 2× PD-30 turrets</div><div>4× torpedo · 2× SW-9 Swift (IR)</div><div>32× flares/chaff</div>',
-    tern: '<div>unarmed resupply shuttle</div><div>cargo: ammunition, missiles, torpedoes, drones</div><div>12× flares/chaff</div>',
-  };
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
-    <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${LOADOUTS[ship] || LOADOUTS.kestrel}</div></div>
+    <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
     <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${MISSIONS.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
