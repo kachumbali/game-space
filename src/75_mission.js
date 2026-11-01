@@ -563,6 +563,8 @@ function showBriefing(M) {
   const LOADOUTS = {   // per-ship briefing loadout block (weapons/stores from data/db.json)
     kestrel: '<div>2× MK-20 cannon · 2× PL-4 plasma bolter</div><div>4× SW-9 Swift (IR) · 2× LN-3 Lance (radar) · 1× HM-1 Hammer</div><div>24× flares/chaff</div>',
     merlin: '<div>2× MK-20 cannon</div><div>2× SW-9 Swift (IR)</div><div>12× flares/chaff</div>',
+    bittern: '<div>2× MK-30 HE cannon · 2× PD-30 turrets</div><div>4× torpedo · 2× SW-9 Swift (IR)</div><div>32× flares/chaff</div>',
+    tern: '<div>unarmed resupply shuttle</div><div>cargo: ammunition, missiles, torpedoes, drones</div><div>12× flares/chaff</div>',
   };
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · COLONIAL DEFENCE FORCE · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>

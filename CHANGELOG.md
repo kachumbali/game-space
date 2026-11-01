@@ -2,6 +2,10 @@
 
 Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
 
+## 0.2.3: Tern and Bittern selectable (2026-11-01)
+- Skirmish setup (and `?sk_ship=`) now offers BITTERN (torpedo bomber) and TERN (unarmed resupply shuttle) as your ship; the Bittern can also be a wingman. Mission briefings show their loadouts.
+- Test: flown in skirmish headless (Bittern fires, Tern flies unarmed); menu_t 0 failures. Not hand-played.
+
 ## 0.2.2: pause menu with exit (2026-10-30)
 Owner request: the ESC pause menu must also offer exit mission / back to menu.
 - **ESC (touch: the II button, now visible top-left; RAD moved beside it) opens a PAUSE MENU:** RESUME, RESTART..., OPTIONS, and EXIT MISSION / EXIT SKIRMISH /
