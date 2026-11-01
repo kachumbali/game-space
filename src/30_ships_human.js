@@ -252,6 +252,11 @@ const hTur = (x, y, z, dy = 1) => [                              // armoured tur
   tap([x, y - 0.25 * dy, z], 0.55, [1.5, 0.5], [1.5, 0.5], H.panel, { sh: 'e', lod: 2 }),
   tap([x, y - 0.05 * dy, z], 0.45, [1.1, 0.35], [1.1, 0.35], H.dark, { sh: 'e', lod: 2 }),
   ...ringSegs(x, y - 0.1 * dy, z - 0.5, z + 0.5, 1.3, 8, 0.07, 0x7a838d, { lod: 3 }),
+  // Compact twin barrels are part of the voxel hull, rooted in the seat rather
+  // than borrowed from the live-combat turret rig (whose free rotation is not
+  // meaningful in an engineering inspection view).
+  seg([x - 0.42, y + 0.28 * dy, z - 0.25], [x - 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
+  seg([x + 0.42, y + 0.28 * dy, z - 0.25], [x + 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
 ];
 const halberdDetail = [
   ...hTur(2.6, 1.85, -12), ...hTur(-2.6, 1.85, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
@@ -262,14 +267,6 @@ const halberdDetail = [
   tap([0, 3.7, -4], 2.0, [1.6, 0.5], [1.9, 0.6], 0x6e7782, { sh: 'h', lod: 2 }),
   // VLS lattice (tier 1 paint), dorsal armour seams and a ventral sensor strake
   ...paintGrid(-1.2, 3.0, 12.6, 5, 9, 0.5, 0.55, 0.36, 0.38, 0x16191d, { mix: 0.9 }),
-  // bridge tower: lit windows, comms dishes and antennae
-  ell([2.6, 8.5, 9.4], [1.3, 0.16, 1.3], 0xdfe2e6, { rot: [0.5, 0, 0.35], lod: 2 }),
-  seg([2.6, 8.5, 9.4], [2.9, 9.4, 8.7], 0.06, 0.06, H.dark, { lod: 2 }),
-  ell([-2.2, 8.0, 12], [0.9, 0.12, 0.9], 0xdfe2e6, { rot: [-0.4, 0, -0.3], lod: 2 }),
-  tap([0, 8.0, 11.5], 1.1, [1.4, 0.5], [1.4, 0.5], H.panel, { sh: 'h', lod: 2 }),
-  ...rungs(0, 8.65, 10.4, 12.6, 4, 1.1, 0.12, 0.08, 0x8e969f, { lod: 2 }),
-  seg([0, 9.6, 11], [0, 10.35, 11], 0.08, 0.04, H.dark, { lod: 2 }), seg([-1.5, 9.6, 11], [1.5, 9.6, 11], 0.05, 0.05, H.dark, { lod: 2 }),
-  ell([0, 10.45, 11], [0.14, 0.14, 0.14], 0xff3030, { glow: true, lod: 2 }),
   // hangar door frame with amber guide lights, boarding hatch rows
   tap([4.05, -0.2, -2], 0.15, [0.5, 1.5], [0.5, 1.5], H.dark, { lod: 2 }),
   ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, 1.25, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
@@ -326,11 +323,11 @@ SHIPS.halberd = {
     tap([0, 2.45, 15.5], 2.45, [1.55, 0.32], [1.55, 0.32], H.panel, { sh: 'h', dots: { col: H.amber, p: 0.04 } }),
     tap([3.15, -0.15, -1.5], 4.3, [0.28, 1.12], [0.28, 1.12], 0x16191d, { dots: { col: H.amber, p: 0.14 } }), // service bay
     tap([3.0, 1.12, 7.0], 2.75, [0.14, 0.14], [0.14, 0.14], H.orange),
-    tap([9.0, 0.6, 11.5], 6.3, [6.5, 0.15], [2.1, 0.1], H.white, { ax: 'x', sweep: -0.42, seam: [1.4, 2.1] }), // radiator wing
-    tap([9.1, 0.68, 11.7], 6.15, [0.2, 0.19], [0.2, 0.12], H.orange, { ax: 'x', sweep: -0.42 }),
+    tap([9.0, 0.6, 11.5], 5.55, [6.5, 0.15], [2.1, 0.1], H.white, { ax: 'x', sweep: -0.42, seam: [1.4, 2.1] }), // radiator wing
+    tap([9.1, 0.68, 11.7], 5.4, [0.2, 0.19], [0.2, 0.12], H.orange, { ax: 'x', sweep: -0.42 }),
     seg([3.0, 0.55, 9.2], [7.0, 0.62, 10.6], 0.34, 0.26, H.panel),
     seg([3.0, 0.45, 15.0], [7.0, 0.62, 13.7], 0.28, 0.22, H.panel),
-    ell([14.7, 0.65, 10.0], [0.42, 0.28, 0.62], H.amber, { glow: true, glowF: 1.2 }), // wing-tip PD sensor
+    ell([14.35, 0.65, 10.0], [0.3, 0.24, 0.48], H.amber, { glow: true, glowF: 1.2 }), // wing-tip PD sensor
     // three engine nacelles are enclosed in a single aft frame, matching the database engine positions.
     tap([0, 0, 25.5], 4.4, [3.45, 2.65], [4.25, 3.05], 0x4d5560, { sh: 'h' }),
     tap([3.9, 0, 26.2], 3.35, [1.35, 1.25], [1.55, 1.45], H.hull2, { sh: 'h' }),

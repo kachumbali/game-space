@@ -65,6 +65,11 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
   missile = pylon/rack/pod); a missile store needs its `launch` point at the mouth of that rack/pod/bay; turrets get their
   assembly from `makeTurret` plus a seat/housing prim on the hull. A mount or launch point floating on bare hull is a defect.
   `tools/tests/muzzle_t.py` (numbers + marker screenshots in `$GS_SHOTS/ships`) is the check.
+- **Hull structural integrity:** a major visible mass (bridge, engine nacelle, wing/radiator, bay, turret housing, sensor
+  pedestal) must visibly connect to the pressure hull or a clearly load-bearing pylon/strut in top, side, and 3/4 views.
+  No floating detail islands. Antennae, dishes, lights, and muzzle tips are allowed only when visibly rooted in a mast, housing,
+  or weapon barrel. Before accepting a geometry pass, inspect the runtime ship and `?yard=<id>` at top, side, and 3/4 views;
+  enable the extents box and resolve geometry outside the intended collision envelope rather than silently enlarging it.
 - Blueprint/plate generator scripts are in `tools/gen/` (moved 2026-10-22, not re-run since; see its README). Test scripts: `tools/tests/`.
 - Size cap for now: ships at or under 1,000 m (owner decision 2026-10-23); frigates remain under 500 m. Only frigates, HECLA (1,000 m strategic tender) and the FROGG Bullfrog (600 m, `cls: 'capital'`) jump. Docking does not repair.
 

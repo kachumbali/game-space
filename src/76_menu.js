@@ -1,6 +1,6 @@
 // ======================================================================
 //  MAIN MENU + SKIRMISH (quick-test mode)
-//  Menu: CAMPAIGN / SKIRMISH / FREE FLIGHT / OPTIONS / CREDITS, drawn into the #brief overlay (state stays 'brief', the
+//  Menu: CAMPAIGN / SHIPYARD / SKIRMISH / FREE FLIGHT / OPTIONS / CREDITS, drawn into the #brief overlay (state stays 'brief', the
 //  last mission's world is the backdrop). Skirmish: a configurable fight from `cfg` (setup screen, ?sk= URL form or
 //  __game.startSkirmish(cfg)); game.mode = 'skirmish'. Win = enemy force dead (or endless respawn), lose = player down.
 //  Part 76 only calls other parts at run time, so there are no load-time dependencies on later parts.
@@ -51,6 +51,7 @@ function skFromParams() {
 // ---- menu plumbing ---------------------------------------------------------------------------------------
 let menuView = null;           // 'main' | 'missions' | 'skirmish' | 'debrief' | null (closed)
 const lastMission = () => MISSIONS[MISSIONS.length - 1];
+const yardShips = () => Object.values(SHIPS).filter(s => !s.mark && s.id !== 'drone').sort((a, b) => (a.fac || '').localeCompare(b.fac || '') || (a.cls || '').localeCompare(b.cls || '') || a.name.localeCompare(b.name));
 function menuShell(html, cls) {
   const el = $id('brief');
   el.innerHTML = `<div class="panel menu ${cls || ''}">${html}</div>`;
@@ -74,6 +75,7 @@ function showMainMenu() {
   const items = [
     ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
     ['campaign', 'CAMPAIGNS', 'Uncharted Vanguard, then The Severed Node'],
+    ['yard', 'SHIPYARD', 'Fleet technical database: inspect hulls, systems, weapons'],
     ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
@@ -90,17 +92,56 @@ function showMainMenu() {
 function menuAct(a) {
   if (a === 'intro') { menuLeave(); startScene('intro_test'); }
   else if (a === 'campaign') showCampaignList();
+  else if (a === 'yard') showShipyardCatalog();
   else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }
   else if (a === 'options') toggleOpts(true);
   else if (a === 'credits') showCredits(true);
   else if (a === 'back') showMainMenu();
+  else if (a.startsWith('yard:')) showShipyardCatalog(a.slice(5));
   else if (a.startsWith('campaign:')) showMissionList(CAMPAIGNS.find(c => c.id === a.slice(9)));
   else if (a.startsWith('mission:')) {
     const [, cid, i] = a.split(':'); const c = CAMPAIGNS.find(x => x.id === cid);
     if (c && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
   }
+}
+function yardWeaponLine(wid, suffix = '') {
+  const w = WEAPONS[wid];
+  if (!w) return wid.toUpperCase() + suffix;
+  const feed = w.ammo ? `${w.ammo} rds` : w.energy ? `${w.energy} MJ/shot` : 'reactor-fed';
+  return `${w.name}${suffix} · ${w.kind || 'weapon'} · ${feed}`;
+}
+function yardStores(def) {
+  const stores = Object.entries(def.stores || {}).filter(([, n]) => n > 0).map(([id, n]) => `${id.toUpperCase()} × ${n}`);
+  return stores.length ? stores.join(' · ') : 'None carried';
+}
+function showShipyardCatalog(selectedId) {
+  menuView = 'yard';
+  const roster = yardShips();
+  const def = SHIPS[selectedId] || roster.find(s => s.id === 'kestrel') || roster[0];
+  const weapons = [
+    ...(def.mounts || []).map(m => yardWeaponLine(m.w, m.grp ? ` · G${m.grp}` : '')),
+    ...(def.turrets || []).map(t => yardWeaponLine(t.w, ` · ${t.side < 0 ? 'ventral' : 'dorsal'} turret`)),
+  ];
+  const components = (def.comps || []).map(c => `${c.name} (${c.hp} HP)`).join(' · ') || 'No damageable subsystems authored';
+  const faction = def.fac === 'frogg' ? 'FROGG BIOFLEET' : 'COLONIAL DEFENCE FORCE';
+  const speed = `${Math.round(def.maxSpeed || 0)} m/s`;
+  const shields = def.shield ? `${Math.round(def.shield.fore || 0)} / ${Math.round(def.shield.aft || 0)}` : 'None';
+  const plant = def.power ? `${Math.round(def.power.plantMW)} MW` : '—';
+  const cap = def.power ? `${Math.round(def.power.capacitorMJ)} MJ` : '—';
+  menuShell(`<div class="sub">SHIPYARD · FLEET TECHNICAL DATABASE</div><h1>INSPECT FLEET ASSETS</h1><h2>Select a hull, review its field data, then enter the voxel inspection bay.</h2>
+    <div class="yardcatalog"><nav class="yardroster" aria-label="Ship roster">${roster.map(s => `<button class="yardship ${s.id === def.id ? 'on' : ''}" data-a="yard:${s.id}"><b>${s.name}</b><small>${s.fac === 'frogg' ? 'FROGG' : 'CDF'} · ${(s.role || s.cls).toUpperCase()}</small></button>`).join('')}</nav>
+    <section class="yarddetail"><div class="sub">${faction} · ${(def.role || def.cls).toUpperCase()}</div><h2>${def.name}</h2>
+      <div class="yardstats"><div><span>IN-GAME LENGTH</span>${Math.round(def.length)} m</div><div><span>HULL STRUCTURE</span>${Math.round(def.structure || 0)}</div><div><span>SHIELDS F / A</span>${shields}</div><div><span>TOP SPEED</span>${speed}</div><div><span>REACTOR</span>${plant}</div><div><span>CAPACITOR</span>${cap}</div></div>
+      <div class="yardreadout"><div><div class="sub">ARMAMENT</div><ul>${weapons.map(w => `<li>${w}</li>`).join('') || '<li>Unarmed</li>'}</ul><div class="sub">ORDNANCE / STORES</div><div>${yardStores(def)}</div></div>
+      <div><div class="sub">SUBSYSTEMS</div><div>${components}</div><div class="sub">FLIGHT / PROTECTION</div><div>Armour: ${(def.armor?.type || 'none').toUpperCase()} ${def.armor?.rating ?? '—'} · Turn: ${(def.turn || 0).toFixed(2)} · Engines: ${(def.engines || []).length}</div><div class="sub">INSPECTION NOTE</div><div>Markers in the voxel bay show engines, mounts, turrets, sensors, shields, reactor and other authored systems.</div></div></div>
+      <div class="btns yardlaunch"><button id="yard_inspect">OPEN VOXEL INSPECTION BAY</button><button class="alt" id="yard_back">BACK</button></div></section></div>`, 'yard-menu');
+  const el = $id('brief');
+  el.querySelectorAll('[data-a]').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
+  el.querySelector('#yard_inspect').onclick = () => { location.href = `${location.pathname}?yard=${encodeURIComponent(def.id)}`; };
+  el.querySelector('#yard_back').onclick = showMainMenu;
+  menuFocus('.yardship.on');
 }
 function showCampaignList() {
   menuView = 'missions';
@@ -120,12 +161,12 @@ function showMissionList(campaign) {
 // up/down/enter on menu lists (capture phase, after the options/credits handlers which stop propagation when they are open)
 addEventListener('keydown', e => {
   if (!menuView || optsOpen || credOpen || e.ctrlKey || e.metaKey) return;
-  if (menuView === 'main' || menuView === 'missions') {
+  if (menuView === 'main' || menuView === 'missions' || menuView === 'yard') {
     const L = [...$id('brief').querySelectorAll('.mi')], i = L.indexOf(document.activeElement);
     if (e.code === 'ArrowDown' || e.code === 'KeyS') L[(i + 1) % L.length].focus();
     else if (e.code === 'ArrowUp' || e.code === 'KeyW') L[(i - 1 + L.length) % L.length].focus();
     else if (e.code === 'Enter' || e.code === 'NumpadEnter' ) { (i >= 0 ? L[i] : L[0]).click(); }
-    else if (e.code === 'Escape' && menuView === 'missions') showMainMenu();
+    else if (e.code === 'Escape' && (menuView === 'missions' || menuView === 'yard')) showMainMenu();
     else if (e.code === 'KeyO' || e.code === 'KeyR') return;           // O is handled by the options listener; keep R from opening the restart dialog
     else return;
   } else if (menuView === 'skirmish') {

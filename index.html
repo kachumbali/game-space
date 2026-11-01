@@ -14,6 +14,7 @@
   #yard .yardhead{display:flex;align-items:center;justify-content:space-between;gap:8px}
   #yard h1{margin:0 0 8px;color:#d8fff0;font-size:16px;letter-spacing:2px}
   #yard .yardhead button{flex:none}
+  #yard .yardhead-actions{display:flex;gap:5px;align-items:center}
   #yard .ypanel.collapsed{width:auto;max-height:none;padding:8px}
   #yard .ypanel.collapsed .yard-controls{display:none}
   #yard label{display:block;margin:8px 0 3px;color:#83b8a5}
@@ -124,6 +125,21 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #brief button:focus,#brief select:focus{outline:none;border-color:#ffd24a;color:#ffd24a}
   #brief button.mi:focus{background:#17614a}
   #brief .menu.sk{width:min(820px,96vw)}
+  #brief .menu.yard-menu{width:min(960px,96vw)}
+  #brief .yardcatalog{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(0,1.28fr);gap:14px;margin-top:10px}
+  #brief .yardroster{display:flex;flex-direction:column;gap:4px;max-height:52vh;overflow:auto;padding-right:3px}
+  #brief .yardship{padding:7px 9px;text-align:left;font-size:12px;letter-spacing:1px}
+  #brief .yardship small{display:block;opacity:.65;font-size:9px;margin-top:2px}
+  #brief .yardship.on{border-color:#ffd24a;background:#17614a;color:#ffd24a}
+  #brief .yarddetail{border:1px solid #3a6a58;background:rgba(7,25,20,.78);padding:12px;min-width:0}
+  #brief .yarddetail h2{margin:2px 0 8px;color:#ffd24a;font-size:17px}
+  #brief .yardstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:8px 0 12px}
+  #brief .yardstats div{border:1px solid #254b3d;padding:5px;font-size:12px;color:#d8f7e9}
+  #brief .yardstats span{display:block;color:#82b7a2;font-size:9px;letter-spacing:1px;margin-bottom:2px}
+  #brief .yardreadout{display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:11px;line-height:1.45}
+  #brief .yardreadout .sub{margin-top:2px}
+  #brief .yardreadout ul{padding-left:17px;margin:3px 0 8px}.yardreadout li{margin:2px 0}
+  #brief .yardlaunch{margin-top:8px}
   #brief .menu h1{font-size:22px}
   #brief .skg{display:grid;grid-template-columns:1fr 1fr;gap:6px 28px;margin-top:8px}
   #brief .skrow{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:2px 0 8px}
@@ -136,6 +152,7 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #brief .skwarn{margin:4px 0;padding:6px 8px;border:1px solid #ff8a5a;color:#ffb090;font-size:11px}#brief .skwarn.lo{border-color:#3a6a58;color:#8fcdb8}
   #brief .btns.stick{position:sticky;bottom:-18px;background:rgba(6,16,14,.97);padding:10px 0 4px;margin-bottom:-4px}
   @media (max-width:700px){#brief .skg{grid-template-columns:1fr}}
+  @media (max-width:700px){#brief .yardcatalog{grid-template-columns:1fr}.yardroster{max-height:180px;display:grid;grid-template-columns:1fr 1fr}.yardstats{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-height:520px),(max-width:520px){
     #brief .panel{padding:10px 14px;font-size:12px}#brief .menu h1{font-size:17px;letter-spacing:2px}#brief h2{margin-bottom:4px}
     #brief .mlist{gap:5px;margin:8px 0 4px}#brief .mi{padding:6px 12px;font-size:13px}#brief .mi span{display:none}
@@ -1674,6 +1691,11 @@ const hTur = (x, y, z, dy = 1) => [                              // armoured tur
   tap([x, y - 0.25 * dy, z], 0.55, [1.5, 0.5], [1.5, 0.5], H.panel, { sh: 'e', lod: 2 }),
   tap([x, y - 0.05 * dy, z], 0.45, [1.1, 0.35], [1.1, 0.35], H.dark, { sh: 'e', lod: 2 }),
   ...ringSegs(x, y - 0.1 * dy, z - 0.5, z + 0.5, 1.3, 8, 0.07, 0x7a838d, { lod: 3 }),
+  // Compact twin barrels are part of the voxel hull, rooted in the seat rather
+  // than borrowed from the live-combat turret rig (whose free rotation is not
+  // meaningful in an engineering inspection view).
+  seg([x - 0.42, y + 0.28 * dy, z - 0.25], [x - 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
+  seg([x + 0.42, y + 0.28 * dy, z - 0.25], [x + 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
 ];
 const halberdDetail = [
   ...hTur(2.6, 1.85, -12), ...hTur(-2.6, 1.85, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
@@ -1684,14 +1706,6 @@ const halberdDetail = [
   tap([0, 3.7, -4], 2.0, [1.6, 0.5], [1.9, 0.6], 0x6e7782, { sh: 'h', lod: 2 }),
   // VLS lattice (tier 1 paint), dorsal armour seams and a ventral sensor strake
   ...paintGrid(-1.2, 3.0, 12.6, 5, 9, 0.5, 0.55, 0.36, 0.38, 0x16191d, { mix: 0.9 }),
-  // bridge tower: lit windows, comms dishes and antennae
-  ell([2.6, 8.5, 9.4], [1.3, 0.16, 1.3], 0xdfe2e6, { rot: [0.5, 0, 0.35], lod: 2 }),
-  seg([2.6, 8.5, 9.4], [2.9, 9.4, 8.7], 0.06, 0.06, H.dark, { lod: 2 }),
-  ell([-2.2, 8.0, 12], [0.9, 0.12, 0.9], 0xdfe2e6, { rot: [-0.4, 0, -0.3], lod: 2 }),
-  tap([0, 8.0, 11.5], 1.1, [1.4, 0.5], [1.4, 0.5], H.panel, { sh: 'h', lod: 2 }),
-  ...rungs(0, 8.65, 10.4, 12.6, 4, 1.1, 0.12, 0.08, 0x8e969f, { lod: 2 }),
-  seg([0, 9.6, 11], [0, 10.35, 11], 0.08, 0.04, H.dark, { lod: 2 }), seg([-1.5, 9.6, 11], [1.5, 9.6, 11], 0.05, 0.05, H.dark, { lod: 2 }),
-  ell([0, 10.45, 11], [0.14, 0.14, 0.14], 0xff3030, { glow: true, lod: 2 }),
   // hangar door frame with amber guide lights, boarding hatch rows
   tap([4.05, -0.2, -2], 0.15, [0.5, 1.5], [0.5, 1.5], H.dark, { lod: 2 }),
   ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, 1.25, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
@@ -1748,11 +1762,11 @@ SHIPS.halberd = {
     tap([0, 2.45, 15.5], 2.45, [1.55, 0.32], [1.55, 0.32], H.panel, { sh: 'h', dots: { col: H.amber, p: 0.04 } }),
     tap([3.15, -0.15, -1.5], 4.3, [0.28, 1.12], [0.28, 1.12], 0x16191d, { dots: { col: H.amber, p: 0.14 } }), // service bay
     tap([3.0, 1.12, 7.0], 2.75, [0.14, 0.14], [0.14, 0.14], H.orange),
-    tap([9.0, 0.6, 11.5], 6.3, [6.5, 0.15], [2.1, 0.1], H.white, { ax: 'x', sweep: -0.42, seam: [1.4, 2.1] }), // radiator wing
-    tap([9.1, 0.68, 11.7], 6.15, [0.2, 0.19], [0.2, 0.12], H.orange, { ax: 'x', sweep: -0.42 }),
+    tap([9.0, 0.6, 11.5], 5.55, [6.5, 0.15], [2.1, 0.1], H.white, { ax: 'x', sweep: -0.42, seam: [1.4, 2.1] }), // radiator wing
+    tap([9.1, 0.68, 11.7], 5.4, [0.2, 0.19], [0.2, 0.12], H.orange, { ax: 'x', sweep: -0.42 }),
     seg([3.0, 0.55, 9.2], [7.0, 0.62, 10.6], 0.34, 0.26, H.panel),
     seg([3.0, 0.45, 15.0], [7.0, 0.62, 13.7], 0.28, 0.22, H.panel),
-    ell([14.7, 0.65, 10.0], [0.42, 0.28, 0.62], H.amber, { glow: true, glowF: 1.2 }), // wing-tip PD sensor
+    ell([14.35, 0.65, 10.0], [0.3, 0.24, 0.48], H.amber, { glow: true, glowF: 1.2 }), // wing-tip PD sensor
     // three engine nacelles are enclosed in a single aft frame, matching the database engine positions.
     tap([0, 0, 25.5], 4.4, [3.45, 2.65], [4.25, 3.05], 0x4d5560, { sh: 'h' }),
     tap([3.9, 0, 26.2], 3.35, [1.35, 1.25], [1.55, 1.45], H.hull2, { sh: 'h' }),
@@ -6800,7 +6814,7 @@ function tipsTick(M, S) {
 }
 // ======================================================================
 //  MAIN MENU + SKIRMISH (quick-test mode)
-//  Menu: CAMPAIGN / SKIRMISH / FREE FLIGHT / OPTIONS / CREDITS, drawn into the #brief overlay (state stays 'brief', the
+//  Menu: CAMPAIGN / SHIPYARD / SKIRMISH / FREE FLIGHT / OPTIONS / CREDITS, drawn into the #brief overlay (state stays 'brief', the
 //  last mission's world is the backdrop). Skirmish: a configurable fight from `cfg` (setup screen, ?sk= URL form or
 //  __game.startSkirmish(cfg)); game.mode = 'skirmish'. Win = enemy force dead (or endless respawn), lose = player down.
 //  Part 76 only calls other parts at run time, so there are no load-time dependencies on later parts.
@@ -6851,6 +6865,7 @@ function skFromParams() {
 // ---- menu plumbing ---------------------------------------------------------------------------------------
 let menuView = null;           // 'main' | 'missions' | 'skirmish' | 'debrief' | null (closed)
 const lastMission = () => MISSIONS[MISSIONS.length - 1];
+const yardShips = () => Object.values(SHIPS).filter(s => !s.mark && s.id !== 'drone').sort((a, b) => (a.fac || '').localeCompare(b.fac || '') || (a.cls || '').localeCompare(b.cls || '') || a.name.localeCompare(b.name));
 function menuShell(html, cls) {
   const el = $id('brief');
   el.innerHTML = `<div class="panel menu ${cls || ''}">${html}</div>`;
@@ -6874,6 +6889,7 @@ function showMainMenu() {
   const items = [
     ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
     ['campaign', 'CAMPAIGNS', 'Uncharted Vanguard, then The Severed Node'],
+    ['yard', 'SHIPYARD', 'Fleet technical database: inspect hulls, systems, weapons'],
     ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
     ['skirmish', 'SKIRMISH', 'Quick test: pick ships, waves, skill, look'],
     ['free', 'FREE FLIGHT', 'Endless FROGG waves'],
@@ -6890,17 +6906,56 @@ function showMainMenu() {
 function menuAct(a) {
   if (a === 'intro') { menuLeave(); startScene('intro_test'); }
   else if (a === 'campaign') showCampaignList();
+  else if (a === 'yard') showShipyardCatalog();
   else if (a === 'survival') showSurvivalSetup();
   else if (a === 'skirmish') showSkirmishSetup();
   else if (a === 'free') { menuLeave(); resetGame(); launchLock(); }
   else if (a === 'options') toggleOpts(true);
   else if (a === 'credits') showCredits(true);
   else if (a === 'back') showMainMenu();
+  else if (a.startsWith('yard:')) showShipyardCatalog(a.slice(5));
   else if (a.startsWith('campaign:')) showMissionList(CAMPAIGNS.find(c => c.id === a.slice(9)));
   else if (a.startsWith('mission:')) {
     const [, cid, i] = a.split(':'); const c = CAMPAIGNS.find(x => x.id === cid);
     if (c && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
   }
+}
+function yardWeaponLine(wid, suffix = '') {
+  const w = WEAPONS[wid];
+  if (!w) return wid.toUpperCase() + suffix;
+  const feed = w.ammo ? `${w.ammo} rds` : w.energy ? `${w.energy} MJ/shot` : 'reactor-fed';
+  return `${w.name}${suffix} · ${w.kind || 'weapon'} · ${feed}`;
+}
+function yardStores(def) {
+  const stores = Object.entries(def.stores || {}).filter(([, n]) => n > 0).map(([id, n]) => `${id.toUpperCase()} × ${n}`);
+  return stores.length ? stores.join(' · ') : 'None carried';
+}
+function showShipyardCatalog(selectedId) {
+  menuView = 'yard';
+  const roster = yardShips();
+  const def = SHIPS[selectedId] || roster.find(s => s.id === 'kestrel') || roster[0];
+  const weapons = [
+    ...(def.mounts || []).map(m => yardWeaponLine(m.w, m.grp ? ` · G${m.grp}` : '')),
+    ...(def.turrets || []).map(t => yardWeaponLine(t.w, ` · ${t.side < 0 ? 'ventral' : 'dorsal'} turret`)),
+  ];
+  const components = (def.comps || []).map(c => `${c.name} (${c.hp} HP)`).join(' · ') || 'No damageable subsystems authored';
+  const faction = def.fac === 'frogg' ? 'FROGG BIOFLEET' : 'COLONIAL DEFENCE FORCE';
+  const speed = `${Math.round(def.maxSpeed || 0)} m/s`;
+  const shields = def.shield ? `${Math.round(def.shield.fore || 0)} / ${Math.round(def.shield.aft || 0)}` : 'None';
+  const plant = def.power ? `${Math.round(def.power.plantMW)} MW` : '—';
+  const cap = def.power ? `${Math.round(def.power.capacitorMJ)} MJ` : '—';
+  menuShell(`<div class="sub">SHIPYARD · FLEET TECHNICAL DATABASE</div><h1>INSPECT FLEET ASSETS</h1><h2>Select a hull, review its field data, then enter the voxel inspection bay.</h2>
+    <div class="yardcatalog"><nav class="yardroster" aria-label="Ship roster">${roster.map(s => `<button class="yardship ${s.id === def.id ? 'on' : ''}" data-a="yard:${s.id}"><b>${s.name}</b><small>${s.fac === 'frogg' ? 'FROGG' : 'CDF'} · ${(s.role || s.cls).toUpperCase()}</small></button>`).join('')}</nav>
+    <section class="yarddetail"><div class="sub">${faction} · ${(def.role || def.cls).toUpperCase()}</div><h2>${def.name}</h2>
+      <div class="yardstats"><div><span>IN-GAME LENGTH</span>${Math.round(def.length)} m</div><div><span>HULL STRUCTURE</span>${Math.round(def.structure || 0)}</div><div><span>SHIELDS F / A</span>${shields}</div><div><span>TOP SPEED</span>${speed}</div><div><span>REACTOR</span>${plant}</div><div><span>CAPACITOR</span>${cap}</div></div>
+      <div class="yardreadout"><div><div class="sub">ARMAMENT</div><ul>${weapons.map(w => `<li>${w}</li>`).join('') || '<li>Unarmed</li>'}</ul><div class="sub">ORDNANCE / STORES</div><div>${yardStores(def)}</div></div>
+      <div><div class="sub">SUBSYSTEMS</div><div>${components}</div><div class="sub">FLIGHT / PROTECTION</div><div>Armour: ${(def.armor?.type || 'none').toUpperCase()} ${def.armor?.rating ?? '—'} · Turn: ${(def.turn || 0).toFixed(2)} · Engines: ${(def.engines || []).length}</div><div class="sub">INSPECTION NOTE</div><div>Markers in the voxel bay show engines, mounts, turrets, sensors, shields, reactor and other authored systems.</div></div></div>
+      <div class="btns yardlaunch"><button id="yard_inspect">OPEN VOXEL INSPECTION BAY</button><button class="alt" id="yard_back">BACK</button></div></section></div>`, 'yard-menu');
+  const el = $id('brief');
+  el.querySelectorAll('[data-a]').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
+  el.querySelector('#yard_inspect').onclick = () => { location.href = `${location.pathname}?yard=${encodeURIComponent(def.id)}`; };
+  el.querySelector('#yard_back').onclick = showMainMenu;
+  menuFocus('.yardship.on');
 }
 function showCampaignList() {
   menuView = 'missions';
@@ -6920,12 +6975,12 @@ function showMissionList(campaign) {
 // up/down/enter on menu lists (capture phase, after the options/credits handlers which stop propagation when they are open)
 addEventListener('keydown', e => {
   if (!menuView || optsOpen || credOpen || e.ctrlKey || e.metaKey) return;
-  if (menuView === 'main' || menuView === 'missions') {
+  if (menuView === 'main' || menuView === 'missions' || menuView === 'yard') {
     const L = [...$id('brief').querySelectorAll('.mi')], i = L.indexOf(document.activeElement);
     if (e.code === 'ArrowDown' || e.code === 'KeyS') L[(i + 1) % L.length].focus();
     else if (e.code === 'ArrowUp' || e.code === 'KeyW') L[(i - 1 + L.length) % L.length].focus();
     else if (e.code === 'Enter' || e.code === 'NumpadEnter' ) { (i >= 0 ? L[i] : L[0]).click(); }
-    else if (e.code === 'Escape' && menuView === 'missions') showMainMenu();
+    else if (e.code === 'Escape' && (menuView === 'missions' || menuView === 'yard')) showMainMenu();
     else if (e.code === 'KeyO' || e.code === 'KeyR') return;           // O is handled by the options listener; keep R from opening the restart dialog
     else return;
   } else if (menuView === 'skirmish') {
@@ -9478,7 +9533,7 @@ if (params.has('yard')) {
   const YARD_root = document.createElement('div');
   YARD_root.id = 'yard';
   YARD_root.innerHTML = `<section class="ypanel">
-    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></header>
+    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><div class="yardhead-actions"><button id="yard-menu-exit" type="button">Main menu</button><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></div></header>
     <div class="yard-controls" id="yard-controls">
     <label for="yard-ship">SHIP</label><select id="yard-ship"></select>
     <div class="yardrow"><label for="yard-template">NEW FROM TEMPLATE</label><select id="yard-template"><option value="kestrel">Kestrel / fighter</option><option value="halberd">Halberd / corvette</option><option value="exeter">Exeter / frigate</option></select><button id="yard-new-template" type="button">New ship from template</button></div>
@@ -9500,10 +9555,10 @@ if (params.has('yard')) {
     <textarea id="yard-db-entry" spellcheck="false" aria-label="Ship database entry JSON"></textarea>
     <div id="yard-db-error" class="yarderror" role="alert" aria-live="polite"></div>
     <div class="yardrow">
-      <label><input id="yard-comp-markers" type="checkbox" checked> comps</label>
-      <label><input id="yard-mount-markers" type="checkbox" checked> mounts</label>
-      <label><input id="yard-turret-markers" type="checkbox" checked> turrets</label>
-      <label><input id="yard-engine-markers" type="checkbox" checked> engines</label>
+      <label><input id="yard-comp-markers" type="checkbox"> comps</label>
+      <label><input id="yard-mount-markers" type="checkbox"> mounts</label>
+      <label><input id="yard-turret-markers" type="checkbox"> turrets</label>
+      <label><input id="yard-engine-markers" type="checkbox"> engines</label>
       <label><input id="yard-extents-toggle" type="checkbox"> extents box</label>
     </div>
     <div class="yardrow">
@@ -9549,7 +9604,7 @@ if (params.has('yard')) {
   const YARD_extents = new THREE.Group();
   const YARD_palette = { engine: 0xff8a20, gun: 0xff3030, turret: 0xffe040, radar: 0x30e0ff, shield: 0x4080ff, radiator: 0xff40ff, power: 0xffffff };
   YARD_model.add(YARD_markerRoot);
-  for (const group of Object.values(YARD_markerGroups)) YARD_markerRoot.add(group);
+  for (const group of Object.values(YARD_markerGroups)) { group.visible = false; YARD_markerRoot.add(group); }
   YARD_model.add(YARD_extents);
 
   const YARD_addLine = (group, points, color, opacity = 1) => {
@@ -9641,11 +9696,13 @@ if (params.has('yard')) {
   function YARD_emptyGroup(group) {
     for (const child of [...group.children]) {
       group.remove(child);
-      child.geometry?.dispose();
-      for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
-        material?.map?.dispose();
-        material?.dispose();
-      }
+      child.traverse(node => {
+        node.geometry?.dispose();
+        for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+          material?.map?.dispose();
+          material?.dispose();
+        }
+      });
     }
   }
 
@@ -9809,7 +9866,12 @@ if (params.has('yard')) {
 
   function YARD_loadEntry(id) {
     YARD_sourceShipId = id === '__new' ? null : id;
-    const entry = id === '__new' ? { ...YARD_colorStrings(DB.ships.kestrel), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(DB.ships[id]);
+    // Runtime scaling shares nested database arrays with the live ship table.
+    // Take an authored-scale clone instead of those potentially scaled nested
+    // values, or diagnostics will float at twice their correct coordinates.
+    const source = YARD_cloneAuthoredShip(id === '__new' ? 'kestrel' : id);
+    const { prims, ...entrySource } = source;
+    const entry = id === '__new' ? { ...YARD_colorStrings(entrySource), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(entrySource);
     YARD_dbEditor.value = JSON.stringify(entry, null, 2);
     YARD_dbChange();
   }
@@ -10149,6 +10211,7 @@ if (params.has('yard')) {
   YARD_select.value = YARD_requested && __game.SHIPS[YARD_requested.toLowerCase()] ? YARD_requested.toLowerCase() : 'kestrel';
   YARD_select.addEventListener('change', () => YARD_selectShip(YARD_select.value === '__new' ? '__new' : YARD_select.value));
   document.getElementById('yard-new-template').addEventListener('click', () => YARD_newFromTemplate(document.getElementById('yard-template').value));
+  document.getElementById('yard-menu-exit').addEventListener('click', () => { location.href = location.pathname; });
   document.getElementById('yard-panel-toggle').addEventListener('click', event => {
     const panel = event.currentTarget.closest('.ypanel');
     const expanded = event.currentTarget.getAttribute('aria-expanded') === 'true';

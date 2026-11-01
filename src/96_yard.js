@@ -6,7 +6,7 @@ if (params.has('yard')) {
   const YARD_root = document.createElement('div');
   YARD_root.id = 'yard';
   YARD_root.innerHTML = `<section class="ypanel">
-    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></header>
+    <header class="yardhead"><h1>SHIPYARD / VOXEL WORKBENCH</h1><div class="yardhead-actions"><button id="yard-menu-exit" type="button">Main menu</button><button id="yard-panel-toggle" type="button" aria-controls="yard-controls" aria-expanded="true">Collapse</button></div></header>
     <div class="yard-controls" id="yard-controls">
     <label for="yard-ship">SHIP</label><select id="yard-ship"></select>
     <div class="yardrow"><label for="yard-template">NEW FROM TEMPLATE</label><select id="yard-template"><option value="kestrel">Kestrel / fighter</option><option value="halberd">Halberd / corvette</option><option value="exeter">Exeter / frigate</option></select><button id="yard-new-template" type="button">New ship from template</button></div>
@@ -28,10 +28,10 @@ if (params.has('yard')) {
     <textarea id="yard-db-entry" spellcheck="false" aria-label="Ship database entry JSON"></textarea>
     <div id="yard-db-error" class="yarderror" role="alert" aria-live="polite"></div>
     <div class="yardrow">
-      <label><input id="yard-comp-markers" type="checkbox" checked> comps</label>
-      <label><input id="yard-mount-markers" type="checkbox" checked> mounts</label>
-      <label><input id="yard-turret-markers" type="checkbox" checked> turrets</label>
-      <label><input id="yard-engine-markers" type="checkbox" checked> engines</label>
+      <label><input id="yard-comp-markers" type="checkbox"> comps</label>
+      <label><input id="yard-mount-markers" type="checkbox"> mounts</label>
+      <label><input id="yard-turret-markers" type="checkbox"> turrets</label>
+      <label><input id="yard-engine-markers" type="checkbox"> engines</label>
       <label><input id="yard-extents-toggle" type="checkbox"> extents box</label>
     </div>
     <div class="yardrow">
@@ -77,7 +77,7 @@ if (params.has('yard')) {
   const YARD_extents = new THREE.Group();
   const YARD_palette = { engine: 0xff8a20, gun: 0xff3030, turret: 0xffe040, radar: 0x30e0ff, shield: 0x4080ff, radiator: 0xff40ff, power: 0xffffff };
   YARD_model.add(YARD_markerRoot);
-  for (const group of Object.values(YARD_markerGroups)) YARD_markerRoot.add(group);
+  for (const group of Object.values(YARD_markerGroups)) { group.visible = false; YARD_markerRoot.add(group); }
   YARD_model.add(YARD_extents);
 
   const YARD_addLine = (group, points, color, opacity = 1) => {
@@ -169,11 +169,13 @@ if (params.has('yard')) {
   function YARD_emptyGroup(group) {
     for (const child of [...group.children]) {
       group.remove(child);
-      child.geometry?.dispose();
-      for (const material of Array.isArray(child.material) ? child.material : [child.material]) {
-        material?.map?.dispose();
-        material?.dispose();
-      }
+      child.traverse(node => {
+        node.geometry?.dispose();
+        for (const material of Array.isArray(node.material) ? node.material : [node.material]) {
+          material?.map?.dispose();
+          material?.dispose();
+        }
+      });
     }
   }
 
@@ -337,7 +339,12 @@ if (params.has('yard')) {
 
   function YARD_loadEntry(id) {
     YARD_sourceShipId = id === '__new' ? null : id;
-    const entry = id === '__new' ? { ...YARD_colorStrings(DB.ships.kestrel), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(DB.ships[id]);
+    // Runtime scaling shares nested database arrays with the live ship table.
+    // Take an authored-scale clone instead of those potentially scaled nested
+    // values, or diagnostics will float at twice their correct coordinates.
+    const source = YARD_cloneAuthoredShip(id === '__new' ? 'kestrel' : id);
+    const { prims, ...entrySource } = source;
+    const entry = id === '__new' ? { ...YARD_colorStrings(entrySource), id: 'new_ship', name: 'NEW SHIP' } : YARD_colorStrings(entrySource);
     YARD_dbEditor.value = JSON.stringify(entry, null, 2);
     YARD_dbChange();
   }
@@ -677,6 +684,7 @@ if (params.has('yard')) {
   YARD_select.value = YARD_requested && __game.SHIPS[YARD_requested.toLowerCase()] ? YARD_requested.toLowerCase() : 'kestrel';
   YARD_select.addEventListener('change', () => YARD_selectShip(YARD_select.value === '__new' ? '__new' : YARD_select.value));
   document.getElementById('yard-new-template').addEventListener('click', () => YARD_newFromTemplate(document.getElementById('yard-template').value));
+  document.getElementById('yard-menu-exit').addEventListener('click', () => { location.href = location.pathname; });
   document.getElementById('yard-panel-toggle').addEventListener('click', event => {
     const panel = event.currentTarget.closest('.ypanel');
     const expanded = event.currentTarget.getAttribute('aria-expanded') === 'true';

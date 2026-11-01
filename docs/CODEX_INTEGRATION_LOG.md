@@ -170,3 +170,30 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
 - Retained every database-defined subsystem, weapon, turret, and engine
   position. This is a geometry-only pass: no collision extents, gameplay
   statistics, balance values, or mission scripting changed.
+
+## Shipyard fleet database — 2026-11-01
+
+- Added **SHIPYARD** to the main menu. It is a TIE Fighter-style technical
+  roster: select a base hull to inspect role, in-game length, hull, shields,
+  speed, reactor/capacitor, armament, stores, and authored subsystem list.
+- **OPEN VOXEL INSPECTION BAY** routes to the existing `?yard=<ship>` model
+  viewer, whose markers expose the authored subsystem positions. The catalog is
+  read-only and derives its technical readout from runtime ship and weapon data;
+  it does not alter combat rules or ship values.
+
+## Shipyard inspection integrity — 2026-11-01
+
+- The voxel bay header now has a **Main menu** control, returning cleanly to
+  the front-end menu without retaining the `?yard=` query.
+- Diagnostic component, mount, turret, and engine markers are now **off by
+  default**; they remain opt-in inspection overlays rather than pretending to
+  be ship hardware. The Halberd uses compact voxel turret barrels visibly
+  rooted in its armoured seats. The free-rotating live-combat turret rig is not
+  used in the engineering preview, where it can appear detached.
+- The yard now derives its diagnostic data from an authored-scale clone. This
+  prevents values shared with the live, scale-adjusted ship table from placing
+  markers at doubled, visibly detached coordinates.
+- Removed superseded Halberd bridge/dish detail that floated above the new low
+  bridge. Added the hull structural-integrity rule to `AGENTS.md`: major masses
+  must show a continuous supporting path to the hull in top, side, and 3/4
+  views, and geometry beyond collision extents must be fixed deliberately.
