@@ -6,7 +6,7 @@ Claude is the orchestrator: it decides scope, writes briefs, reviews and merges.
 
 | Who | Does | Does not |
 |---|---|---|
-| Owner (Jonas) | decisions, iPad hand-play, picks what merges | - |
+| Owner (kachumbali) | decisions, iPad hand-play, picks what merges | - |
 | Claude (orchestrator) | briefs, specs, balance/design decisions, `tools/check_branch.sh` review, merge, history hygiene | bulk coding, long test runs, asset generation |
 | Copilot agent (VS Code) | coding and testing briefs in `docs/COPILOT_BRIEFS.md` | merging to main, balance changes, history rewrites |
 | Gemini | reference images and concept art for new ships (never committed) | code |

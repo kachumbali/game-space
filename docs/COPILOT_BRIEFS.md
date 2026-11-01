@@ -3,7 +3,7 @@
 Each section is a self-contained prompt: paste the section text (or just "Do brief N in docs/COPILOT_BRIEFS.md") into Copilot agent mode with the repo open.
 Rules that apply to every brief (they are also in AGENTS.md - the agent must read AGENTS.md first):
 - Work on a NEW branch named in the brief; never commit to `main`; do not force-push; do not rewrite history.
-- Commit author/email must be the noreply identity: `git config user.name "Jonas Koll"` and `git config user.email "178489347+kachumbali@users.noreply.github.com"` in this repo. No personal email anywhere.
+- Commit author/email must be the noreply identity: `git config user.name "kachumbali"` and `git config user.email "178489347+kachumbali@users.noreply.github.com"` in this repo. No personal email anywhere.
 - Source of truth for ship/weapon numbers is `data/db.json` (see docs/DATABASE.md); geometry stays in `src/30_ships_human.js` / `src/31_ships_frogg.js`. `index.html` is generated: edit `src/*` and run `python3 build.py`.
 - Build must pass (`python3 build.py`, `python3 tools/validate_db.py`) and `cd tools/tests && python3 suite1.py` must show `ERRS []` for all URL variants (needs Playwright + Chromium; see tools/tests/README.md and docs/HANDOFF.md for the environment).
 - No images committed (`*.png/*.jpg` are git-ignored on purpose). No new player-facing gameplay systems (feature freeze until owner hand-plays on iPad).

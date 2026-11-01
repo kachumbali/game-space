@@ -8,7 +8,7 @@ const $id = id => document.getElementById(id);
 
 // ---- persistent crew ----------------------------------------------------------------------------------
 const PILOT_DEFS = {
-  player: { name: 'Lt. J. Koll', callsign: 'ECHO', trait: 'new to Eagle flight', skill: 3 },
+  player: { name: 'Lt. Tom Cat', callsign: 'MEOW', trait: 'new to Eagle flight', skill: 3 },
   hawk: { name: 'Lt. Maya Okafor', callsign: 'HAWK', trait: 'flight lead, dry humour, hates the FROGGs for personal reasons', skill: 4 },
   sparrow: { name: 'Ens. Tomás Vidal', callsign: 'SPARROW', trait: 'rookie, talks when nervous', skill: 2 },
 };
@@ -46,7 +46,7 @@ const MISSIONS = [{
 
 Intelligence expects a FROGG raiding party: fast fighters first to strip our screen, then torpedo bombers for the Halberd, then, if they find us soft, an escort corvette of their own.
 
-Eagle flight (ECHO, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
+Eagle flight (MEOW, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
 
 ROE: weapons free. Missiles are scarce, fly the guns first.`,
   objectivesAtStart: [],
@@ -383,7 +383,7 @@ function startMission(M, seg) {
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
-  const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'ECHO', id: 'player', pilot: 'player' });
+  const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player', pilot: 'player' });
   p.modBase = { take: diffCfg().take }; recalcMods(p);
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
@@ -492,7 +492,7 @@ function missionUpdate(dt) {
     runActions(st.do);
   }
   if (game.anchor && !game.anchor.alive) { const an = anchorName(game.anchor); comm('CONTROL', `${an} is lost. All ships, abort. Abort.`); objective('o1', null, 'failed'); endMission('lose', `THE ${an} WAS DESTROYED`); }
-  if (state === 'dead') endMission('lose', 'ECHO DOWN');
+  if (state === 'dead') endMission('lose', 'MEOW DOWN');
   // optional chatter: missile warnings
   if (player && player.alive) {
     if (warnState.incoming.length && time - (S.lastMslCall || -99) > 9) {

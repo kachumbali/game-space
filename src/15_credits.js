@@ -2,11 +2,11 @@
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.
 // ======================================================================
-const GAME_VERSION = '0.2.3';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
+const GAME_VERSION = '0.3.0-dev';                   // 0.1 = origin/main 9bc97d7 (2026-10-24, tag v0.1); 0.2 = the fun update (CHANGELOG.md)
 const GAME_TITLE = 'Claude Space Commander';      // working title (owner, 2026-10-22)
 const CREDITS = [
   ['GAME', [
-    ['Design and direction', 'Jonas Koll'],
+    ['Design and direction', 'kachumbali'],
     ['Engine, ships, missions, game systems, procedural sound, most documentation', 'Claude (Anthropic)'],
     ['Later development passes (weapons, capital ships, magazines, balance and UX review) and documentation, from 2026-10-22', 'Mistral Vibe (Mistral AI)'],
     ['Lore proposals (history, factions, FROGG species) and the combat music loops', 'Google Gemini, adapted and integrated by the team'],

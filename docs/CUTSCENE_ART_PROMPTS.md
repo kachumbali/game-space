@@ -41,7 +41,7 @@ Facing: three-quarter view, eyes toward the viewer, shoulders square to a camera
 **SPARROW**, Ens. Tomas Vidal, rookie, talks when nervous (skill 2). `[STYLE]` +
 `head and shoulders portrait on a flat mid-grey background, a young man of about twenty-two of Latin American descent, thin face, short dark hair slightly sweat-damp, wide eager eyes, a slightly nervous crooked grin, charcoal flight suit with amber chest stripe and a white eagle-head shoulder patch, three-quarter view, soft key light from the right with a cold teal rim light`
 
-**ECHO**, Lt. J. Koll, the player (skill 3). Optional: if you prefer the player stays a blank slate, use the helmet-on version only.
+**MEOW**, Lt. Tom Cat, the player (skill 3). Optional: if you prefer the player stays a blank slate, use the helmet-on version only.
 `[STYLE]` + `head and shoulders portrait on a flat mid-grey background, a pilot in their early thirties, short dark hair, calm focused expression, charcoal flight suit with amber chest stripe and a white eagle-head shoulder patch, three-quarter view` and, for the faceless variant: `helmet on, visor down and reflecting a blue-white nebula, no visible face`
 
 **CAPTAIN of HSS Halberd** (name TBD). `[STYLE]` + `head and shoulders portrait on a flat mid-grey background, a captain in her late fifties, silver cropped hair, deep lines, calm authority, navy-charcoal command uniform with a single amber collar bar, three-quarter view, key light from above`
