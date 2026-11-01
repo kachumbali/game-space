@@ -66,6 +66,7 @@ addEventListener('keydown', e => {
     case 'Backspace': matchSpeed(player); e.preventDefault(); break;
     case 'KeyC': stick.x = stick.y = 0; break;
     case 'KeyJ': comsToggle(); break;
+    case 'KeyU': if (player.alive && state === 'play' && !userPause) { player.turretsHold = !player.turretsHold; log(player.turretsHold ? 'TURRETS HOLD FIRE' : 'TURRETS AUTO', '#ffd24a'); sfx('click'); } break;
     case 'KeyL': plogDownload(); break;
     case 'KeyR': if (!e.ctrlKey && !e.metaKey) askRestart(); break;
     case 'KeyT': if (player.alive) cycleTarget(); break;
@@ -151,6 +152,7 @@ if (isTouch) {
   hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
   hold('bpause', () => pauseToggle(), () => {});   // S1 touch parity: the pause button
+  hold('btur', () => { if (player.alive && state === 'play' && !userPause) { player.turretsHold = !player.turretsHold; log(player.turretsHold ? 'TURRETS HOLD FIRE' : 'TURRETS AUTO', '#ffd24a'); } }, () => {});   // touch parity for key U
   hold('brad', () => { radarIdx = (radarIdx + 1) % RADAR_RANGES.length; }, () => {});   // S2 touch parity: radar range (desktop key K)
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});
   hold('btgt', () => { if (player && player.alive) cycleTarget(); }, () => {});

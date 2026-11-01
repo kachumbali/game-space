@@ -479,6 +479,7 @@ function updateTurrets(s, dt) {
     const comp = compOf(s, T.comp);
     const dead = comp && comp.hp <= 0;
     T.group.visible = true;
+    if (s.turretsHold && !dead) continue;                                      // pilot order (key U): turrets hold fire to save energy and ammunition
     if (dead) {                                                                 // dead turret: barrel droops onto the hull, assembly goes dark, no fire
       if (!T.dead) { T.dead = true; for (const m of T.mats) m.color.multiplyScalar(0.3); }
       T.head.quaternion.slerp(_wq.setFromAxisAngle(_w1.set(1, 0, 0), -0.7), Math.min(1, dt * 1.5));

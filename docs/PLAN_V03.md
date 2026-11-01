@@ -29,6 +29,12 @@ Seeded time-to-kill matrix (every weapon vs every target class; energy cost, cap
 - Capital beams (O: all three): slower turret slew (fighters beat it by angular rate), a charge-up telegraph, a slower ramp. Beams stay instant-hit.
 - Heavy fighters and bombers carry 1-2 small PD turrets as defensive gunners (WW2 bomber / Space: Above and Beyond); AI gunner behaviour.
 
+## Owner decisions 2026-11-01 (second round)
+- Bittern: 12 torpedoes (done). Player turret hold-fire toggle, key U / touch TUR (done).
+- 3 s rule is flexible: make it realistic but fun.
+- Torpedoes need real punch against shields: **tandem warhead** (precursor opens the shield facet, main charge reaches the hull); higher marks add the harmonic tuning (more bypass).
+- S turrets: deterrent and missile defence first, a slow fighter killer second (about 12-25 s per light fighter for one turret), so bomber gunners matter without making bombers untouchable.
+
 ## M3. Missiles and torpedoes
 - Light and medium fighters die in 1-2 missile hits (O); heavy fighters and bombers up to 3. Still evadable (flares, chaff, PD).
 - Torpedoes take about 10-15% of a frigate each; only warheads kill a frigate outright.
