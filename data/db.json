@@ -49,18 +49,6 @@
       "sig": 1,
       "flameColor": "#66c8ff"
     },
-    "kestrel_2": {
-      "base": "kestrel",
-      "mark": "II",
-      "scaffolding": "EXAMPLE ONLY: shows the marks schema (docs/MARKS_SCHEMA.md). Numbers are placeholders inside the +8..12% own-lane band, not balance data.",
-      "mods": {
-        "maxSpeed": {"mul": 1.1},
-        "accel": {"mul": 1.1},
-        "structure": {"mul": 0.95},
-        "shield.fore": {"mul": 0.95},
-        "shield.aft": {"mul": 0.95}
-      }
-    },
     "merlin": {
       "id": "merlin",
       "name": "MERLIN",
@@ -1498,6 +1486,128 @@
       "sig": 11,
       "flameColor": "#66c8ff",
       "ai": {"role": "capital"}
+    },
+    "kestrel_2": {
+      "base": "kestrel",
+      "mark": "II",
+      "mods": {
+        "maxSpeed": {"mul": 1.1},
+        "accel": {"mul": 1.1},
+        "structure": {"mul": 0.95},
+        "shield.fore": {"mul": 0.95},
+        "shield.aft": {"mul": 0.95}
+      }
+    },
+    "kestrel_3": {
+      "base": "kestrel",
+      "mark": "III",
+      "mods": {
+        "shield.fore": {"mul": 1.1},
+        "shield.aft": {"mul": 1.1},
+        "power.capacitorMJ": {"mul": 1.1},
+        "maxSpeed": {"mul": 0.95},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "kestrel_4": {
+      "base": "kestrel",
+      "mark": "IV",
+      "mods": {
+        "structure": {"mul": 1.1},
+        "armor.rating": {"mul": 1.1},
+        "accel": {"mul": 0.95},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "merlin_2": {
+      "base": "merlin",
+      "mark": "II",
+      "mods": {
+        "turn": {"mul": 1.1},
+        "accel": {"mul": 1.08},
+        "shield.fore": {"mul": 0.95},
+        "shield.aft": {"mul": 0.95}
+      }
+    },
+    "merlin_3": {
+      "base": "merlin",
+      "mark": "III",
+      "mods": {
+        "shield.fore": {"mul": 1.1},
+        "shield.aft": {"mul": 1.1},
+        "shieldRegen": {"mul": 1.1},
+        "maxSpeed": {"mul": 0.95},
+        "accel": {"mul": 0.95}
+      }
+    },
+    "merlin_4": {
+      "base": "merlin",
+      "mark": "IV",
+      "mods": {
+        "structure": {"mul": 1.1},
+        "armor.rating": {"mul": 1.1},
+        "turn": {"mul": 0.95},
+        "accel": {"mul": 0.95}
+      }
+    },
+    "bittern_2": {
+      "base": "bittern",
+      "mark": "II",
+      "mods": {
+        "power.plantMW": {"mul": 1.1},
+        "power.capacitorMJ": {"mul": 1.1},
+        "stores.torp": {"add": 2},
+        "maxSpeed": {"mul": 0.95},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "bittern_3": {
+      "base": "bittern",
+      "mark": "III",
+      "mods": {
+        "shield.fore": {"mul": 1.1},
+        "shield.aft": {"mul": 1.1},
+        "shieldRegen": {"mul": 1.1},
+        "maxSpeed": {"mul": 0.95},
+        "accel": {"mul": 0.95}
+      }
+    },
+    "bittern_4": {
+      "base": "bittern",
+      "mark": "IV",
+      "mods": {
+        "structure": {"mul": 1.1},
+        "armor.rating": {"mul": 1.1},
+        "turn": {"mul": 0.94},
+        "accel": {"mul": 0.95}
+      }
+    },
+    "tern_2": {
+      "base": "tern",
+      "mark": "II",
+      "mods": {
+        "shield.fore": {"mul": 1.1},
+        "shield.aft": {"mul": 1.1},
+        "maxSpeed": {"mul": 0.95}
+      }
+    },
+    "tern_3": {
+      "base": "tern",
+      "mark": "III",
+      "mods": {
+        "maxSpeed": {"mul": 1.1},
+        "accel": {"mul": 1.1},
+        "structure": {"mul": 0.95}
+      }
+    },
+    "tern_4": {
+      "base": "tern",
+      "mark": "IV",
+      "mods": {
+        "structure": {"mul": 1.1},
+        "armor.rating": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
     }
   },
   "weapons": {
@@ -2043,6 +2153,154 @@
       "pdOnly": true,
       "ammo": 1000,
       "flak": 5
+    },
+    "torp_2": {
+      "base": "torp",
+      "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1},
+        "life": {"mul": 1.1},
+        "vmax": {"mul": 1.04},
+        "hp": {"mul": 1.08},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "torp_3": {
+      "base": "torp",
+      "mark": "III",
+      "mods": {
+        "range": {"mul": 1.09},
+        "life": {"mul": 1.09},
+        "vmax": {"mul": 1.08},
+        "hp": {"mul": 1.04},
+        "lockTime": {"mul": 0.95}
+      }
+    },
+    "torp_4": {
+      "base": "torp",
+      "mark": "IV",
+      "mods": {
+        "range": {"mul": 1.12},
+        "life": {"mul": 1.12},
+        "vmax": {"mul": 1.03},
+        "hp": {"mul": 1.1},
+        "dmg": {"mul": 1.05}
+      }
+    },
+    "tad_2": {
+      "base": "tad",
+      "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1},
+        "life": {"mul": 1.1},
+        "vmax": {"mul": 1.04},
+        "hp": {"mul": 1.08},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "tad_3": {
+      "base": "tad",
+      "mark": "III",
+      "mods": {
+        "range": {"mul": 1.09},
+        "life": {"mul": 1.09},
+        "vmax": {"mul": 1.08},
+        "hp": {"mul": 1.04},
+        "lockTime": {"mul": 0.95}
+      }
+    },
+    "tad_4": {
+      "base": "tad",
+      "mark": "IV",
+      "mods": {
+        "range": {"mul": 1.12},
+        "life": {"mul": 1.12},
+        "vmax": {"mul": 1.03},
+        "hp": {"mul": 1.1},
+        "dmg": {"mul": 1.05}
+      }
+    },
+    "ir_2": {
+      "base": "ir",
+      "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1},
+        "life": {"mul": 1.1},
+        "vmax": {"mul": 1.04},
+        "lockTime": {"mul": 1.05}
+      }
+    },
+    "ir_3": {
+      "base": "ir",
+      "mark": "III",
+      "mods": {
+        "turn": {"mul": 1.1},
+        "vmax": {"mul": 1.08},
+        "dmg": {"mul": 0.95}
+      }
+    },
+    "ir_4": {
+      "base": "ir",
+      "mark": "IV",
+      "mods": {
+        "dmg": {"mul": 1.1},
+        "blast": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "rf_2": {
+      "base": "rf",
+      "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1},
+        "life": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "rf_3": {
+      "base": "rf",
+      "mark": "III",
+      "mods": {
+        "vmax": {"mul": 1.1},
+        "acc": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "rf_4": {
+      "base": "rf",
+      "mark": "IV",
+      "mods": {
+        "dmg": {"mul": 1.1},
+        "hp": {"mul": 1.1},
+        "vmax": {"mul": 0.95}
+      }
+    },
+    "tick_2": {
+      "base": "tick",
+      "mark": "II",
+      "mods": {
+        "range": {"mul": 1.1},
+        "life": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
+    },
+    "tick_3": {
+      "base": "tick",
+      "mark": "III",
+      "mods": {
+        "turn": {"mul": 1.1},
+        "vmax": {"mul": 1.08},
+        "dmg": {"mul": 0.95}
+      }
+    },
+    "tick_4": {
+      "base": "tick",
+      "mark": "IV",
+      "mods": {
+        "dmg": {"mul": 1.1},
+        "blast": {"mul": 1.1},
+        "turn": {"mul": 0.95}
+      }
     }
   },
   "armor": {
