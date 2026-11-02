@@ -278,3 +278,4 @@ if __name__=='__main__':
             print('====',n,flush=True); SC[n](R)
         print('ERRS',R.errs[:5])
     print('FAILED:',fails if fails else 'none')
+    sys.exit(bool(fails or R.errs))

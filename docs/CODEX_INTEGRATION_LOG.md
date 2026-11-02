@@ -1,5 +1,20 @@
 # Codex local integration log — 2026-11-01
 
+## Playtest support — 2026-11-02 (Codex)
+
+- Split the eleven Bullfrog scenarios into individual CI matrix jobs; the
+  runner now exits nonzero for failing assertions or browser errors.
+- BOOST touch QA pauses automatic frames, checks that boost is off without a
+  touch (positive control), then advances a simulation step while the button
+  is still held. This removes the race between releasing the touch and reading
+  the afterburner state.
+- Added the owner device checklist. Build, database validation and Python
+  compilation were run locally; no browser or actual device tests were run.
+  Cloud: run every `bullfrog_t.py` group (spine, exeter, xl_filter, friendly,
+  arcs, pd, hangar, inst, blast, m3, warn), `touch_qa_t.py` repeatedly at both
+  viewport sizes, and the full `tools/check_branch.sh` gate. Verify each CI
+  group completes within its ten-minute job cap.
+
 ## Lane A touch parity — 2026-11-02 (work in progress)
 
 - Added a touch DOCK control bound to the existing docking action and raised the
