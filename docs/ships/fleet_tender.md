@@ -211,7 +211,7 @@ that in play. It is a lower bound, not a prediction: nothing was simulated. This
 | Fuel tanks | `fuel` | 700 | 35 | (0, -30, 1,250) | |
 | Berth clamp (8, role `dock`) | `clpL1..4`, `clpR1..4` | 500 | 30 | (+-200, 0, -900 / -300 / 300 / 900) | Four per slip: a heavy berth uses all four, a medium berth two. |
 | Corvette rack (4, role `dock`) | `crFL/FR`, `crAL/AR` | 400 | 40 | (+-60, -95, -300 / 300) | Three corvettes per rack in line. |
-| Turret (52) | `PD01`..`PD40`, `LS01`..`LS12` | 90 | 3.2 / 6 | section 6.2 | Same hp and r as the Exeter's PD and LS-8 turrets. |
+| Turret (16) | `PD01`,`PD05`,`PD10`,`PD21`,`PD25`,`PD37`, `PS01`..`PS04`, `LS01`..`LS06` | 90 | 3.2 / 6 | section 6.2 | Same hp and r as the Exeter's PD and LS-8 turrets. |
 
 Campaign meaning of service components (for the loss and damage model, not engine behaviour): yard dead = no repair; ordnance dead = rearm throughput halved and the stock
 lost; fuel dead = no refuel and no jump tank. These are soft kills that leave the ship afloat.
@@ -219,7 +219,7 @@ lost; fuel dead = no refuel and no jump tank. These are soft kills that leave th
 ## 6. Armament
 
 ### 6.1 Fit and why it is mostly unarmed
-No fixed mounts, no missiles, no spine. **40 PD-30 (`pd`, cls S) and 6 LS-8 (`laserM`, cls M)** only (owner 2026-10-24: 12 killed a Kestrel in ~25 s and a Merlin in ~5 s; the 6 ventral LS07-LS12 were removed from db.json, the 6 dorsal LS01-LS06 remain); all weapons are existing ids [R: db.json weapons].
+No fixed mounts, no missiles, no spine. **6 PD-30 (`pd`, cls S, 1,500-round magazines, spread bow / booms / stern), 4 P-4 pulse (`pulseS`, cls S, last line of defence at the mid-hull) and 6 LS-8 (`laserM`, cls M)** only (owner 2026-11-02: 40 PD was far too many; PD cut to 6, 4 pulse added) (owner 2026-10-24: 12 killed a Kestrel in ~25 s and a Merlin in ~5 s; the 6 ventral LS07-LS12 were removed from db.json, the 6 dorsal LS01-LS06 remain); all weapons are existing ids [R: db.json weapons].
 
 Why: (1) the class is a base, and an armed 4 km hull would be driven by `capitalAI` as a gunship (it closes to about 1,100 m of its target and fires mains inside about 1,300 m) [R: 70_ai.js 367-375]; (2) offensive
 weight belongs to the Exeter and carrier it services; (3) humans lean on layered PD [R: LORE.md weapon doctrine]; (4) it must stay a protect-object: a tender that wins fights removes the reason to escort it.
