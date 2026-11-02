@@ -6,6 +6,7 @@
 //  AI runs through fighterAI (70_ai.js) for the shooting orders; scout, return and ram are drone-only flight laws below.
 // ======================================================================
 const DRONE_ORDERS = ['engage', 'all', 'protect', 'return', 'scout', 'ram'];
+document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">KITE-6: open COMMS (J or touch COMMS), select DRONES to launch or give orders; its default is PROTECT.</div>');
 const DRONE_LIMIT = { fighter: 1, corvette: 6, frigate: 6, capital: 6 };   // heavy fighter 2 = def.droneLimit; frigate: assumed 6 slaved (stock 48)
 const RAM_K = 0.002, RAM_VMAX = 250;      // ram damage = K x closing speed^2 (drone mass 1): ~72 at the 190 m/s top speed (6 rams ~ one Halberd), see docs/FLEET_LOGIC.md
 const SCOUT_RANGE = 2500, SCOUT_SENSE = 1800;
@@ -34,7 +35,7 @@ function launchDrones(ctrl, n = 1) {
     const idx = live.length + i;
     const pos = ctrl.group.position.clone().addScaledVector(fwd, ctrl.def.half[2] + 14 + (idx >> 3) * 12)
       .addScaledVector(side, ((idx % 8) - 3.5) * 11).addScaledVector(up, (idx % 2 ? 1 : -1) * 4);
-    const d = makeShip('drone', ctrl.team, pos, ctrl.group.quaternion.clone(), { callsign: `${ctrl.callsign || ctrl.def.name} D${idx + 1}` });
+    const d = makeShip('kite6', ctrl.team, pos, ctrl.group.quaternion.clone(), { callsign: `${ctrl.callsign || ctrl.def.name} D${idx + 1}` });
     d.vel.copy(ctrl.vel);
     d.ctrl = ctrl; d.dOrder = 'protect'; d.dIdx = idx; d.dTgt = null; d.hitCool = 1;
     ctrl.drones.push(d); out.push(d);

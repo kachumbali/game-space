@@ -20,7 +20,7 @@ const SK_PRESETS = [
   { id: 'hive', name: 'HIVE CARRIER (UNARMED)', rows: [['hivecarrier', 1]], warn: true },
 ];
 const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['falchion', 'FALCHION (two-seat heavy fighter)'], ['merlin', 'MERLIN (light fighter)'], ['bittern', 'BITTERN (torpedo bomber)'], ['tern', 'TERN (unarmed resupply shuttle)'], ['sar', 'SAR CUTTER (unarmed rescue ship)']];
-const SK_WING = SK_PLAYER.filter(x => x[0] !== 'tern' && x[0] !== 'sar');   // the shuttle and the SAR cutter have no weapons, so they are not offered as wingmen
+const SK_WING = [...SK_PLAYER.filter(x => x[0] !== 'tern' && x[0] !== 'sar'), ['kite6', 'KITE-6 (loyal wingman)']];
 const SK_ALLY = [['NONE', 'none'], ['HALBERD', 'halberd'], ['EXETER', 'exeter'], ['CLAYMORE', 'destroyer'], ['ARGOSY (UNARMED)', 'liner']];   // escort capital on your side   // skirmish: your ship and your wingmen's ship
 const SK_RANGES = [['CLOSE', 800], ['MEDIUM', 2000], ['FAR', 4000], ['VERY FAR', 10000]];
 const SK_DEFAULT = { ship: 'kestrel', wship: 'kestrel', wing: 0, rows: [['leaper', 2]], skill: 3, wskill: 3, fm: 'arcade', missiles: true, respawn: false, range: 2000, look: 'lilypad', ally: 'none' };
@@ -253,7 +253,8 @@ function startSkirmish(cfgIn) {
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
   for (let i = 0; i < cfg.wing; i++) {
     const pos = p.group.position.clone().addScaledVector(pf, -80).add(new THREE.Vector3((i - (cfg.wing - 1) / 2) * 60, (i % 2) * 25, 0));
-    makeShip(cfg.wship, 0, pos, new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: cfg.wskill, fm: cfg.fm });
+    const wing = makeShip(cfg.wship, 0, pos, new THREE.Quaternion(), { callsign: 'WING' + (i + 1), ai: 'fighter', skill: cfg.wskill, fm: cfg.fm });
+    if (wing.def.drone) { wing.ctrl = p; wing.dOrder = 'protect'; wing.dIdx = i; p.drones.push(wing); }
   }
   if (cfg.ally !== 'none') {
     const a = makeShip(cfg.ally, 0, p.group.position.clone().addScaledVector(pf, -700), new THREE.Quaternion(), { callsign: cfg.ally.toUpperCase(), id: 'ally', ai: 'capital', hold: true });

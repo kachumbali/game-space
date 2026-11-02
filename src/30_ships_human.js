@@ -638,6 +638,15 @@ SHIPS.drone = {
 // ---- TENDER: unarmed fleet resupply ship (owner decision 2026-10-22: fleet tender ships for the magazine rule) ----
 // Rearms friendly ships within `serviceR` (ammo pools, missile stores, XL slugs) at `tenderTick` (55_ships.js).
 // Binding rule kept: rearm is not repair - structure, components and shields are NOT restored (AGENTS.md).
+SHIPS.kite6 = {
+  ...DB.ships.kite6,
+  prims: [...SHIPS.drone.prims,
+    seg([0, 0.32, 1], [0, 0.7, 1], 0.035, 0.025, D6.dark, { noMirror: true }),
+    ell([0, 0.72, 1], [0.12, 0.06, 0.12], D6.canopy),
+    seg([1.5, -0.1, 0.5], [1.5, -0.25, 0.5], 0.08, 0.08, D6.dark),
+    seg([1.5, -0.25, 0.2], [1.5, -0.25, 1.5], 0.08, 0.08, D6.hull),
+  ],
+};
 SHIPS.tender = {
   ...DB.ships.tender,
   prims: [

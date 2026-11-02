@@ -3140,6 +3140,29 @@
         "role": "capital"
       }
     },
+    "kite6": {
+      "id": "kite6", "name": "KITE-6 LOYAL WINGMAN", "cls": "fighter",
+      "drone": true, "fac": "human", "role": "SCOUT / INTERCEPTOR (UNMANNED)",
+      "length": 6, "half": [2.9, 0.7, 3.4], "mirror": true, "radius": 3.3,
+      "seam": [1.5, 1.1], "eye": [0, 0.3, -1.2], "resMul": 0.32, "noDetail": true,
+      "engines": [{"pos": [0, 0, 3.3], "comp": "eng", "r": 0.3}],
+      "mounts": [{"w": "dgun", "pos": [0, -0.32, -3.05], "comp": "gun", "grp": 1}],
+      "stores": {"ir": 2}, "launches": [[1.5, -0.25, 0.2], [-1.5, -0.25, 0.2]],
+      "hardpoints": [
+        {"id": "S1", "size": "S", "cap": 1, "allow": ["ir"]},
+        {"id": "S2", "size": "S", "cap": 1, "allow": ["ir"]}
+      ],
+      "comps": [
+        {"id": "eng", "name": "ENGINE", "role": "engine", "pos": [0, 0, 2.4], "r": 0.9, "hp": 5},
+        {"id": "gun", "name": "GUN", "role": "gun", "pos": [0, -0.3, -1.5], "r": 0.6, "hp": 4},
+        {"id": "power", "name": "REACTOR", "role": "power", "pos": [0, 0, 0.8], "r": 0.7, "hp": 6},
+        {"id": "radar", "name": "DATALINK", "role": "radar", "pos": [0, 0.4, 1], "r": 0.4, "hp": 3}
+      ],
+      "shield": {"fore": 6, "aft": 6}, "armor": {"type": "composite", "rating": 0.1},
+      "structure": 7, "maxSpeed": 190, "accel": 120, "turn": 2.6, "shieldRegen": 0.5,
+      "power": {"plantMW": 51, "capacitorMJ": 100}, "sig": 0.4, "aiSpeed": 150,
+      "flameColor": "#66c8ff", "ai": {"role": "fighter", "aggr": 1, "skill": 5}
+    },
     "drone": {
       "id": "drone",
       "name": "DRONE",
