@@ -1,5 +1,17 @@
 # Codex local integration log — 2026-11-01
 
+## Campaign measurement lane B — 2026-11-02
+
+- Started from `origin/main` 5cbef17 in an isolated worktree. The requested
+  briefing difficulty selector was already present and applies difficulty to
+  the player and enemy spawn sizes/skills; it was not duplicated.
+- Added an all-nine-mission seeded bot runner and a campaign kill/drop test.
+  Neither browser test was run to completion: test setup could not install its
+  Three.js npm dependency locally. Python compilation passes. See
+  `docs/CAMPAIGN_MEASUREMENT.md` for the remaining 180 runs and balance gate.
+- Wave sizes remain unmodified; there are no measured loss rates yet. The
+  owner device-play gate remains outstanding.
+
 ## Purpose and branch
 
 This is a local-only integration branch for the Gemini handoff. It was created from
