@@ -247,8 +247,17 @@ function missileLiveCap() {
   const device=deviceName(), key=device==='phone'?'phone':device==='tablet'?'tablet':'desktop';
   return cfg.liveCap[key];
 }
-function launchMissile(s, wid) {
+function launchMissile(s, wid, opts = null) {
   const w = WEAPONS[wid];
+  if (!w) return false;
+  // Existing callers on launcher-equipped ships must not bypass their cells.
+  if (TUNE.ordnance?.enabled && s.launcherRuntime && !opts?.launcher) {
+    const cell = s.launcherRuntime.find(l => { const c = s.comps.find(x => x.id === l.comp); return l.wid === wid && l.ready > 0 && l.timer <= 0 && c && c.hp > c.max * 0.5; });
+    const locked = s.lock?.p >= 1 && s.lock.wid === wid ? s.lock.tgt : null;
+    const fired = cell ? fireLauncher(s, cell, wid, locked) : false;
+    if (fired && locked) s.lock.p = 0;
+    return fired;
+  }
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
   if (missiles.reduce((n,m)=>n+(!m.dead?1:0),0) >= missileLiveCap()) { plogN('missile.capRefused'); return false; }
@@ -256,25 +265,30 @@ function launchMissile(s, wid) {
   const station = stationManaged ? ordnanceLaunchStation(s, wid) : null;
   if (stationManaged && !station) return false;
   const L = s.lock;
-  const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;
+  const custom = TUNE.ordnance?.enabled && opts;
+  const designated = custom && opts.target?.alive && !opts.target.dying && opts.target.team !== s.team ? opts.target : null;
+  const guided = designated || (L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive ? L.tgt : null);
   s.stores[wid]--;
   s.group.updateMatrixWorld(true);
   const half = s.def.half;
   const points = s.def.launches?.length ? s.def.launches : s.def.launch ? [s.def.launch] : null;
   const side = (s.launchAlt = -(s.launchAlt || 1));
-  const lp = station ? station.pos : points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const customPos = custom && Array.isArray(opts.pos) && opts.pos.length === 3 && opts.pos.every(Number.isFinite) ? opts.pos : null;
+  const lp = customPos || (station ? station.pos : points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5]);
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
-  const mesh = missileMesh(w); mesh.position.copy(pos); mesh.quaternion.copy(q); scene.add(mesh);
+  const aimed = custom && opts.dir?.isVector3 && Number.isFinite(opts.dir.lengthSq()) && opts.dir.lengthSq() > 1e-12;
+  if (aimed) dir.copy(opts.dir).normalize();
+  const mesh = missileMesh(w); mesh.position.copy(pos); if (aimed) mesh.quaternion.setFromUnitVectors(NEGZ, dir); else mesh.quaternion.copy(q); scene.add(mesh);
   missiles.push({
     wid, w, team: s.team, owner: s, pos, vel: dir.clone().multiplyScalar(w.v0).add(s.vel), dir, mesh, age: 0,
-    target: guided ? L.tgt : null, hp: w.hp, dead: false, lostT: 0,
+    target: guided, hp: w.hp, dead: false, lostT: 0,
   });
   if (TUNE.ordnance?.enabled) PLOG.cnt['missile.highWater'] = Math.max(PLOG.cnt['missile.highWater'] || 0, missiles.filter(m=>!m.dead).length);
-  if (guided) L.p = 0;
+  if (guided && !designated) L.p = 0;
   sfx('msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9);
-  if (s.team !== player?.team && guided && L.tgt === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
+  if (s.team !== player?.team && guided === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
   return true;
 }
 function steerMissile(m, dt) {

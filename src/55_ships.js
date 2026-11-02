@@ -31,6 +31,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
   if (opts.player) player = s;
   buildVox(s);
   initArmament(s);
+  initLaunchers(s);
   s.group.visible = !(s === player && view === 'cockpit');
   return s;
 }

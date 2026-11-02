@@ -1,5 +1,37 @@
 # Codex local integration log — 2026-11-01
 
+## Launcher runtime, lane 3a (Codex, `codex/launcher-runtime`)
+
+- Experimental only: `tuning.ordnance.enabled` remains false. Human Halberd,
+  Exeter, Claymore and Hecla grouped launcher data now includes one hull-local
+  location and damageable component per cell. Recessed covers are painted on
+  existing hull voxels and marker views use the same components. Halberd cell
+  positions and radii follow its existing scale transform. No FROGG launcher
+  data or new FROGG stores were added.
+- `initLaunchers`, `launcherTick`, `launcherReconcile`, and `fireLauncher`
+  implement independent simulation-second reloads, typed ready rounds and
+  magazine reserves. `s.stores` is the total of loaded plus reserve rounds;
+  existing tender additions are reconciled without duplicating ammunition.
+  Damaged (at or below 50% health) and destroyed cells cannot load or fire.
+  An over-cap refusal does not consume a cell or a round. Existing generic
+  launches on these ships route through a ready healthy cell. The capital AI
+  global timer, target policy, torpedo hold rule, hangars, HUD and other lanes
+  are not implemented here; the AI lane should call the cell API explicitly.
+- The opt-in `launchMissile` options can select a local origin, world heading
+  and hostile target while preserving the existing seeker logic. Invalid
+  headings fall back to forward; disabled behavior retains the old path.
+- Locally passed: build, DB validation, `launcher_runtime_unit.js` (independent
+  clocks, fire/reload, fixed racks, typed reserves, tender additions, damaged
+  cells, cap refusal, FROGG and flag-off controls), `launcher_schema_unit.py`
+  (valid and invalid position/HP controls), JS syntax and Python compilation.
+  No browser, seeded sweep, real-device check or full gate was run locally.
+- Claude cloud: run `launcher_runtime_t.py`, `missile_budget_t.py`, existing
+  missile/ordnance, shipyard and `muzzle_t.py` checks and `tools/check_branch.sh`.
+  Test `?db=` with the flag explicitly true and false; inspect every cell in
+  Exeter, Halberd, Claymore and Hecla in flight and `?yard=` from top, side,
+  and 3/4 views. The authored hatch locations and visual attachment have **not**
+  been browser-rendered or owner-approved; do not enable by default until then.
+
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
 - `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated

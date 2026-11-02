@@ -8,6 +8,7 @@ function scaleShip(def, newLength) {
   def.length = newLength; def.radius *= k; def.half = v(def.half);
   if (def.launch) def.launch = v(def.launch);
   for (const h of def.hardpoints || []) if (h.pos) h.pos = v(h.pos);
+  for (const l of def.launchers || []) { if (l.positions) l.positions = l.positions.map(v); if (l.mountRadius) l.mountRadius *= k; }
   for (const p of def.prims) {
     for (const f of ['c', 'a', 'b', 'h0', 'h1', 'box']) if (p[f]) p[f] = v(p[f]);
     if (p.t === 'ell') p.r = v(p.r);
@@ -30,6 +31,9 @@ for (const id in DB.ships) {
 }
 const SCALE_TO = { halberd: 128, gulper: 146, hivecarrier: 2500 };    // hive carrier 2.5 km (owner scale ladder: carriers 2-3 km)
 for (const id in SHIPS) { const k = SCALE_TO[SHIPS[id].base || id]; if (k) scaleShip(SHIPS[id], k); }
+// Marker views and combat use the same positions. Dynamic test overrides may
+// still initialise later via initLaunchers without altering the ship schema.
+if (TUNE.ordnance?.enabled) for (const d of Object.values(SHIPS)) d.comps.push(...launcherMounts(d));
 
 // human-testing tweak: fighters turn 2.85x faster (sim runs at 0.375x, so ~1.07x real time) (applies to player and AI alike)
 for (const id in SHIPS) if (SHIPS[id].cls === 'fighter') SHIPS[id].turn *= TUNE.fighter.turnMul;

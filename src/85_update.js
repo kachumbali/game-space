@@ -105,6 +105,7 @@ function update(dt) {
   if (state === 'brief') { briefCamera(dt); updateEnv(); return; }
   for (const s of ships) {
     if (!s.alive) continue;
+    launcherTick(s, dt);
     for (const m of s.mounts) m.cool -= dt;
     s.cmCool -= dt; s.hitCool -= dt;
     if (s.dying > 0) {

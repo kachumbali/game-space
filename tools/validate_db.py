@@ -30,6 +30,14 @@ for sid, ship in raw['ships'].items():
         for field in ('cap','count'):
             value=launcher.get(field, 1 if field=='count' else None)
             if not isinstance(value,int) or isinstance(value,bool) or value<1: err(f'{loc}.{field}: positive integer required')
+        points = launcher.get('positions')
+        if not isinstance(points, list) or len(points) != launcher.get('count') or any(not isinstance(p, list) or len(p) != 3 or any(not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) for v in p) for p in (points if isinstance(points, list) else [])):
+            err(f'{loc}.positions: one finite 3D point per launcher required')
+        elif any(any(abs(v) > h for v, h in zip(p, ship['half'])) for p in points):
+            err(f'{loc}.positions: launcher point outside the hull extents')
+        for field in ('mountHp', 'mountRadius'):
+            value = launcher.get(field)
+            if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value <= 0: err(f'{loc}.{field}: finite positive number required')
         reload=launcher.get('reload')
         if not isinstance(reload,(int,float)) or isinstance(reload,bool) or not math.isfinite(reload) or reload<0: err(f'{loc}.reload: finite non-negative number required')
         stores=launcher.get('stores',[])
