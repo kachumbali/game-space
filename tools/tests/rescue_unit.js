@@ -15,6 +15,9 @@ pilot.structure=80;assert.equal(C.rescueCritical(pilot),false);assert.equal(C.re
 pilot.structure=20;assert.equal(C.rescueRequestEject(pilot),true);assert.equal(pilot.rescueManualRequested,true);
 const pod=C.rescueSpawnCapsule(pilot,{pilot:'hawk'});assert(pod&&pod.alive);assert.equal(C.game.rescueLog.length,1);
 const sar={alive:true,dying:0,team:0,def:{rescue:true,sar:{}},group:group(50),lastHit:-99}; C.ships.push(sar);
+const threat={alive:true,dying:0,team:1,target:sar,group:group(500)};C.ships.push(threat);
+assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),false);threat.target=null;
+assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),true);C.ships.pop();
 sar.lastHit=10;C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'adrift');
 sar.lastHit=-99;C.missiles.push({target:sar,dead:false});C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'adrift');
 C.missiles=[];C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'recovered');assert.equal(C.CREW.hawk.status,'recovering');

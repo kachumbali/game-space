@@ -66,7 +66,9 @@ function rescueCanPickup(rescuer, p, now, cfg) {
   return rescuer !== p && rescuer.alive && !rescuer.dying && !!rescuer.def.rescue &&
     rescueSurfaceDistance(rescuer, p) <= cfg.pickupRadius &&
     now - (rescuer.lastHit ?? -Infinity) >= cfg.safeAfterHit &&
-    !missiles.some(m => !m.dead && m.target === rescuer);
+    !missiles.some(m => !m.dead && m.target === rescuer) &&
+    !ships.some(e => e.alive && !e.dying && e.team !== rescuer.team && e.target === rescuer &&
+      e.group.position.distanceTo(rescuer.group.position) <= cfg.safeThreatRange);
 }
 // Return true when this ship has a rescue-specific flight task and normal fighter AI must not run.
 function rescueShipAI(s, dt) {

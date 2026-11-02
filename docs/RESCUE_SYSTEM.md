@@ -10,8 +10,9 @@ destruction roll; an automatic ejection still uses it.
 
 SAR cutters route to the nearest friendly beacon. Designated capital ships
 and tenders can recover beacons in reach; designated FROGG ships can capture
-them. Pickup stops while the rescuer has recently been hit or is targeted by
-a missile. Recovery, capture, expiry and destruction update the crew record.
+them. Pickup stops while the rescuer has recently been hit, is targeted by a
+missile, or is targeted by a nearby hostile. Recovery, capture, expiry and
+destruction update the crew record.
 A player capsule drifts until rescued or lost; mission outcomes wait for the
 player's rescue when possible. No rescue mechanics run with the flag off.
 
