@@ -1,5 +1,18 @@
 # Codex local integration log — 2026-11-01
 
+## Long Retreat mechanics (Codex, `codex/retreat-mechanics`)
+
+- Added convoy spool/loss/escape tracking, R3 counted liner capacity, partial
+  outcome and R4 one-time scripted release of a sealed nuclear reserve. Wave
+  sizes and existing stage timers were not changed. Escaped passengers are
+  counted for the mission only; no persistent strategic ledger exists.
+- Local build, DB validation, JS syntax and `node tools/tests/retreat_logic_t.js`
+  pass, including early-departure, partial, all and no-survivor controls.
+  Cloud: exercise all four R1/R3/R4 convoy outcomes and visible countdowns,
+  R4 nuclear availability before/after release and after restart, transit
+  checkpoint restart, campaign progression/debrief, no arcade drops and the
+  full branch gate. No browser/device or seeded balance runs were performed.
+
 ## Lane A touch parity — 2026-11-02 (work in progress)
 
 - Added a touch DOCK control bound to the existing docking action and raised the

@@ -498,6 +498,26 @@ function startMission(M, seg) {
 }
 
 function groupAlive(g) { return ships.some(s => s.alive && s.grp === g); }
+// Convoy records retain their own status after a ship departs or is disposed.
+function convoyStart(S, spec) {
+  S.convoy = { objectiveId: spec.id, duration: spec.duration, elapsed: 0, passengers: 0, entries: spec.ships.map(x => ({ id: x.id, capacity: x.capacity || 0, ship: ships.find(s => s.id === x.id), status: 'spooling' })) };
+}
+function convoyAdvance(C, dt) {
+  C.elapsed += dt;
+  for (const e of C.entries) {
+    if (e.status !== 'spooling') continue;
+    if (!e.ship || !e.ship.alive || e.ship.dying) { e.status = 'lost'; continue; }
+    if (C.elapsed >= C.duration) { e.status = 'escaped'; C.passengers += e.capacity; e.ship.alive = false; e.ship.group.visible = false; }
+  }
+}
+function convoyOutcome(C) {
+  const escaped = C.entries.filter(e => e.status === 'escaped').length;
+  return escaped === C.entries.length ? 'win' : escaped ? 'partial' : 'lose';
+}
+function releaseNuclearReserve(S, p) {
+  if (S.nuclearReleased) return false;
+  S.nuclearReleased = true; p.stores.nuke = 1; return true;
+}
 function condMet(w, S) {
   if (w.t !== undefined && S.t < w.t) return false;
   if (w.after !== undefined && S.stageT < w.after) return false;
@@ -516,9 +536,11 @@ function runActions(list) {
       }
     }
     if (a.jumpIn) { sfx('jump'); }
+    if (a.convoy) { convoyStart(S, a.convoy); objective(a.convoy.id, 'Convoy spooling: 0/' + a.convoy.ships.length, 'open'); }
+    if (a.nuclearRelease && releaseNuclearReserve(S, player)) comm('CONTROL', 'Nuclear reserve released. One warhead authorised.');
     if (a.transit) startTransit(a.transit);
     if (a.spawn) spawnGroup(a.spawn);
-    if (a.end) endMission(a.end);
+    if (a.end) endMission(a.end === 'convoy' ? convoyOutcome(S.convoy) : a.end);
   }
   const ob = list.find(a => a.obj && a.obj[2] === 'open' && a.obj[1] && a.obj[3] === undefined), spw = list.find(a => a.spawn);
   if (ob && spw) { const o = objectives.find(x => x.id === ob.obj[0]); if (o) { o.grp = spw.spawn.grp; o.total = ships.filter(s => s.grp === o.grp && s.alive).length; } }
@@ -564,12 +586,20 @@ function missionUpdate(dt) {
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
+  if (S.convoy) {
+    convoyAdvance(S.convoy, dt);
+    const escaped = S.convoy.entries.filter(e => e.status === 'escaped').length;
+    const active = S.convoy.entries.filter(e => e.status === 'spooling').length;
+    const o = objectives.find(x => x.id === S.convoy.objectiveId);
+    if (o) { o.text = `Convoy: ${escaped}/${S.convoy.entries.length} departed · ${S.convoy.passengers} evacuated · ${Math.ceil(Math.max(0, S.convoy.duration - S.convoy.elapsed))} s`; if (!active) o.state = escaped ? 'done' : 'failed'; }
+  }
   for (const o of objectives) if (o.holdEnd !== undefined && o.state === 'open') {   // live countdown for hold objectives
     const rem = Math.max(0, Math.ceil(o.holdEnd - S.t));
     o.text = `${o.base} · ${Math.floor(rem / 60)}:${String(rem % 60).padStart(2, '0')}`;
   }
   const st = M.stages[S.stage];
   if (st && condMet(st.when, S)) {
+    if (st.do.some(a => a.end === 'convoy') && S.convoy?.entries.some(e => e.status === 'spooling')) return;
     const tr0 = S.stage > 0 && st.do.find(a => a.transit);
     if (tr0 && !S.jumpGo) { showJumpPrompt(tr0.transit.to); return; }     // objectives done: the player starts the jump to the next AO (owner 2026-10-24)
     hideJumpPrompt(); S.jumpGo = false;
@@ -593,7 +623,7 @@ function endMission(result, why) {
   const S = game.mstate; if (!S || S.ended) return;
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
   if (result === 'lose' && state !== 'dead') state = 'done';
-  if (result === 'win') state = 'done';
+  if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome
   const involved = { player: true };
   for (const s of ships) if (s.pilot) involved[s.pilot] = true;
@@ -692,13 +722,13 @@ function showDebrief() {
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>× ${killLog[k]}</b> <span class="dim">${(SCORE[k] || 100) * killLog[k]}</span></div>`).join('') || '<div class="dim">none</div>';
   const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
   const next = campaignNext(M);
-  el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : 'MISSION FAILED'}</h1>
+  el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : S.result === 'partial' ? 'PARTIAL SUCCESS' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
-    ${(S.result === 'win' ? M.debriefWin : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : M.debriefLose}</p>` : ''}
+    ${(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || 'Some convoy ships escaped; others were lost.') : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || 'Some convoy ships escaped; others were lost.') : M.debriefLose}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div><div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>
-    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'win' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
+    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result !== 'lose' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { startMission(game.mission); };
