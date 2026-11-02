@@ -1,5 +1,21 @@
 # Codex local integration log — 2026-11-01
 
+## Ordnance follow-up (Codex, `codex/ordnance-followup`)
+
+- Player briefing selections now resolve per-station remaining rounds and
+  launch coordinates; AI defaults and launch logic remain unchanged. A mission
+  may specify `ordnanceStock` caps by weapon id; the briefing displays caps and
+  refuses launch if the current selection exceeds them. Added help-overlay
+  guidance and validation for station positions.
+- Existing hull positions are provisional where no clear rack exists; see
+  `docs/ORDNANCE_MANIFEST.md`. No new free-floating rack geometry was added.
+- Local: build, DB validation, JS syntax, and `node tools/tests/ordnance_logic_t.js`
+  pass, including over-stock and exhausted-station negative controls.
+  Cloud: run `tools/tests/ordnance_t.py`, add browser checks for stock refusal,
+  station launch origins and exhausted/swapped stations, test mission restart
+  and tender rearm, inspect each hull in live and shipyard views, then run
+  `tools/check_branch.sh`. No browser or device tests were run locally.
+
 ## Lane A touch parity — 2026-11-02 (work in progress)
 
 - Added a touch DOCK control bound to the existing docking action and raised the

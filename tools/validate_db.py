@@ -22,6 +22,8 @@ for sid, s in raw['ships'].items():
     if len(set(ids)) != len(ids): err(f'{where}: duplicate station ids')
     default = {}
     for h in hp:
+        pos = h.get('pos')
+        if not isinstance(pos, list) or len(pos) != 3 or not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in pos): err(f'{where}.{h.get("id")}: pos must be three coordinates')
         if h.get('size') not in SIZES: err(f'{where}.{h.get("id")}: size must be one of {SIZES}')
         if not isinstance(h.get('cap'), int) or h['cap'] < 1: err(f'{where}.{h.get("id")}: cap must be a positive integer')
         if not h.get('allow'): err(f'{where}.{h.get("id")}: needs a non-empty allow list'); continue
