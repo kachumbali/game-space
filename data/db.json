@@ -1026,6 +1026,11 @@
     },
     "halberd": {
       "id": "halberd",
+      "launchers": [
+        {"id":"FT-M", "kind":"fixed", "role":"missile", "count":4, "reload":20, "cap":4, "stores":["ir","rf"]},
+        {"id":"FT-T", "kind":"fixed", "role":"torpedo", "count":2, "reload":14, "cap":4, "stores":["torp"]}
+      ],
+      "ordnancePlan": {"enabled":false, "stores":{"ir":12,"rf":4,"torp":8,"drone":12}, "droneLimit":6, "hangar":{"total":0}},
       "name": "HALBERD",
       "cls": "corvette",
       "fac": "human",
@@ -1374,6 +1379,11 @@
     },
     "exeter": {
       "id": "exeter",
+      "launchers": [
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":4, "reload":10, "cap":1, "stores":["torp"]}
+      ],
+      "ordnancePlan": {"enabled":false, "stores":{"ir":40,"rf":24,"torp":24,"drone":48}, "droneLimit":12, "hangar":{"total":12,"airborneCap":6,"interval":6,"bays":2,"manifest":{"kestrel":6,"falchion":2,"bittern":2,"merlin":2}}},
       "name": "EXETER",
       "cls": "frigate",
       "fac": "human",
@@ -2093,6 +2103,11 @@
     },
     "hecla": {
       "id": "hecla",
+      "launchers": [
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":16, "reload":5, "cap":1, "stores":["ir","rf"]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"]}
+      ],
+      "ordnancePlan": {"enabled":false, "stores":{"ir":100,"rf":60,"torp":48,"drone":96}, "droneLimit":24, "hold":{"missile":800,"torpedo":240}, "hangar":{"total":36,"airborneCap":12,"interval":4,"bays":4,"manifest":{"kestrel":16,"falchion":8,"bittern":8,"merlin":4}}},
       "name": "HECLA",
       "cls": "capital",
       "fac": "human",
@@ -6832,6 +6847,11 @@
     },
     "destroyer": {
       "id": "destroyer",
+      "launchers": [
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":8, "reload":5, "cap":1, "stores":["ir","rf"]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"]}
+      ],
+      "ordnancePlan": {"enabled":false, "stores":{"ir":48,"rf":36,"torp":48,"drone":24}, "droneLimit":12, "hangar":{"total":8,"airborneCap":4,"interval":6,"bays":1,"manifest":{"kestrel":4,"bittern":4}}},
       "name": "CLAYMORE",
       "cls": "capital",
       "fac": "human",
@@ -9645,6 +9665,7 @@
       "shieldDelay": 4,
       "energyDefault": 17
     },
+    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}},
     "missile": {
       "steerMinSpeed": 80,
       "leadMax": 3,

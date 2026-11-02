@@ -4,7 +4,7 @@ Exit code 1 on any error. Checks: every mounted/turreted weapon exists, every mo
 store keys match, armour/class tables cover every ship, hex colours are well-formed, the tuning section is complete, and marks
 (base + mods variants, docs/MARKS_SCHEMA.md): base exists, only known keys, deltas inside a sane band, roman-numeral name suffix.
 Marks are checked on the raw file; every other check runs on the resolved db, so variants are validated as complete defs."""
-import json, os, re, sys
+import json, math, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import dbmarks
 raw = dbmarks.load(sys.argv[1] if len(sys.argv) > 1 else dbmarks.DB_PATH)
@@ -14,6 +14,31 @@ def warn(m): warns.append(m)
 
 # ---- ordnance hardpoints (docs/ORDNANCE_MANIFEST.md) ----
 SIZES = ('S', 'M', 'L', 'XL')
+for sid, ship in raw['ships'].items():
+    if 'launchers' not in ship: continue
+    entries = ship['launchers']
+    if not isinstance(entries, list): err(f'ships.{sid}.launchers must be a list'); continue
+    seen = set()
+    for i, launcher in enumerate(entries):
+        loc = f'ships.{sid}.launchers[{i}]'
+        if not isinstance(launcher, dict): err(f'{loc} must be an object'); continue
+        ident = launcher.get('id')
+        if not isinstance(ident, str) or not ident or ident in seen: err(f'{loc}: missing or duplicate id')
+        seen.add(ident)
+        if launcher.get('kind') not in ('fixed','reloadable'): err(f'{loc}: kind must be fixed or reloadable')
+        if launcher.get('role') not in ('missile','torpedo'): err(f'{loc}: role must be missile or torpedo')
+        for field in ('cap','count'):
+            value=launcher.get(field, 1 if field=='count' else None)
+            if not isinstance(value,int) or isinstance(value,bool) or value<1: err(f'{loc}.{field}: positive integer required')
+        reload=launcher.get('reload')
+        if not isinstance(reload,(int,float)) or isinstance(reload,bool) or not math.isfinite(reload) or reload<0: err(f'{loc}.reload: finite non-negative number required')
+        stores=launcher.get('stores',[])
+        if not isinstance(stores,list): err(f'{loc}.stores must be a list'); continue
+        for wid in stores:
+            w=raw['weapons'].get(wid,{}) if isinstance(wid,str) else {}
+            if w.get('kind')!='msl' or bool(w.get('torp')) != (launcher.get('role')=='torpedo') or w.get('nuclear'): err(f'{loc}: incompatible store {wid!r}')
+    plan=ship.get('ordnancePlan')
+    if not isinstance(plan,dict) or plan.get('enabled') is not False: err(f'ships.{sid}.ordnancePlan must remain disabled')
 for sid, s in raw['ships'].items():
     hp = s.get('hardpoints')
     if hp is None: continue
@@ -93,6 +118,15 @@ S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only
 # ---- tuning: every section the game reads must exist ----
 for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret'):
     if not isinstance(db.get('tuning', {}).get(k), dict): err(f'tuning.{k} missing')
+ordnance = db.get('tuning', {}).get('ordnance')
+if not isinstance(ordnance, dict) or not isinstance(ordnance.get('enabled'), bool): err('tuning.ordnance.enabled must be boolean')
+else:
+    caps=ordnance.get('liveCap')
+    if not isinstance(caps,dict): err('tuning.ordnance.liveCap must be an object')
+    else:
+        for k in ('desktop','tablet','phone'):
+            v=caps.get(k)
+            if not isinstance(v,int) or isinstance(v,bool) or v<1: err(f'tuning.ordnance.liveCap.{k} must be a positive integer')
 
 # ---- ships and weapons (resolved) ----
 for sid, s in S.items():

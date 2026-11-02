@@ -94,12 +94,18 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 
 | Weapon | Dmg | Blast | Range | HP | Seeker | Decoys | Notes |
 |---|---|---|---|---|---|---|---|
-| SW-9 SWIFT | 26 | 10 | 1700 | 1 | IR | flare 0.7 | Kestrel x4 |
-| LN-3 LANCE | 34 | 11 | 3400 | 1 | radar | chaff 0.65 | Kestrel x2 |
-| HM-1 HAMMER | 170 | 30 | 2000 | 7 | IR | mixed | Kestrel x1 |
+| SW-9 SWIFT | 210 | 10 | 1700 | 1 | IR | flare 0.7 | Kestrel x4 |
+| LN-3 LANCE | 240 | 11 | 3400 | 1 | radar | chaff 0.65 | Kestrel x2 |
+| HM-1 HAMMER | 280 | 30 | 2000 | 7 | IR | mixed | Kestrel x1; tandem warhead |
 | NK-1 TAC WARHEAD | fluence model | - | 2200 | 5 | IR | mixed | standard load 0.5 kT; dial 0.1-10 kT (`?nukeKt=`); strategic 100 kT-10 MT is lore-only (`docs/NUKES.md`) |
-| SK-1 IR MISSILE | 31.2 (x1.3 FROGG bonus) | 9 | 2200 | 1 | IR (wetware) | flare 0.3 | all FROGG fighters |
-| ST-2 TORPEDO | 195 (x1.3) | 28 | 2600 | 8 | IR (wetware) | 0.05 flare | Toad 12, Gulper 36 (four 9-round cassettes), Bullfrog 16 |
+| SK-1 IR MISSILE | 228 | 9 | 2200 | 1 | IR (wetware) | flare 0.3 | all FROGG fighters |
+| ST-2 TORPEDO | 310 | 28 | 2600 | 8 | IR (wetware) | 0.05 flare | Toad 12, Gulper 36 (four 9-round cassettes), Bullfrog 16; tandem warhead |
+
+These are base database damage inputs, not measured damage to a specific hull.
+The `dmgCls` and `pierceCls` tables are currently not read by runtime source;
+the per-hull measurements requested in `DESIGN_CAPITAL_ORDNANCE.md` remain
+pending cloud execution. Torpedo tandem shield drain and penetration affect
+actual outcomes; no damage values were changed in this documentation update.
 
 ## 5. Fits and doctrine
 

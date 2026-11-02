@@ -222,22 +222,36 @@ function lockUpdate(s, dt) {
 }
 
 // ---- missiles -----------------------------------------------------------------------------------------
-const missileGeos = {};
+const missileGeos = new Map();
 function missileMesh(w) {
   const g = new THREE.Group();
   const s = w.size;
-  const body = new THREE.Mesh(new THREE.BoxGeometry(0.26 * s, 0.26 * s, 2.6 * s), new THREE.MeshBasicMaterial({ color: new THREE.Color(w.color).multiplyScalar(0.9) }));
-  const tip = new THREE.Mesh(new THREE.BoxGeometry(0.2 * s, 0.2 * s, 0.5 * s), new THREE.MeshBasicMaterial({ color: w.frogg ? 0xb4ff40 : 0xd04a3a }));
+  const shared = !!TUNE.ordnance?.enabled;
+  let r = shared ? missileGeos.get(w) : null;
+  if (!r) {
+    r = { bodyGeo:new THREE.BoxGeometry(0.26*s,0.26*s,2.6*s), tipGeo:new THREE.BoxGeometry(0.2*s,0.2*s,0.5*s), flameGeo:new THREE.ConeGeometry(0.22*s,2.2*s,6).rotateX(Math.PI/2),
+      bodyMat:new THREE.MeshBasicMaterial({color:new THREE.Color(w.color).multiplyScalar(0.9)}), tipMat:new THREE.MeshBasicMaterial({color:w.frogg?0xb4ff40:0xd04a3a}), flameMat:new THREE.MeshBasicMaterial({color:new THREE.Color(w.flame).multiplyScalar(2.2)}) };
+    if (shared) missileGeos.set(w,r);
+  }
+  const body = new THREE.Mesh(r.bodyGeo, r.bodyMat);
+  const tip = new THREE.Mesh(r.tipGeo, r.tipMat);
   tip.position.z = -1.5 * s;
-  const fl = new THREE.Mesh(new THREE.ConeGeometry(0.22 * s, 2.2 * s, 6).rotateX(Math.PI / 2), new THREE.MeshBasicMaterial({ color: new THREE.Color(w.flame).multiplyScalar(2.2) }));
+  const fl = new THREE.Mesh(r.flameGeo, r.flameMat);
   fl.position.z = 2.0 * s;
-  g.add(body, tip, fl); g.userData.fl = fl;
+  g.add(body, tip, fl); g.userData.fl = fl; g.userData.sharedMissileResources = shared;
   return g;
+}
+function missileLiveCap() {
+  const cfg=TUNE.ordnance;
+  if (!cfg?.enabled) return Infinity;
+  const device=deviceName(), key=device==='phone'?'phone':device==='tablet'?'tablet':'desktop';
+  return cfg.liveCap[key];
 }
 function launchMissile(s, wid) {
   const w = WEAPONS[wid];
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
+  if (missiles.reduce((n,m)=>n+(!m.dead?1:0),0) >= missileLiveCap()) { plogN('missile.capRefused'); return false; }
   const stationManaged = s === player && s.ordnanceLoad && s.ordnanceLoad.some(st => st.allow.includes(wid));
   const station = stationManaged ? ordnanceLaunchStation(s, wid) : null;
   if (stationManaged && !station) return false;
@@ -257,6 +271,7 @@ function launchMissile(s, wid) {
     wid, w, team: s.team, owner: s, pos, vel: dir.clone().multiplyScalar(w.v0).add(s.vel), dir, mesh, age: 0,
     target: guided ? L.tgt : null, hp: w.hp, dead: false, lostT: 0,
   });
+  if (TUNE.ordnance?.enabled) PLOG.cnt['missile.highWater'] = Math.max(PLOG.cnt['missile.highWater'] || 0, missiles.filter(m=>!m.dead).length);
   if (guided) L.p = 0;
   sfx('msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9);
   if (s.team !== player?.team && guided && L.tgt === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
@@ -431,7 +446,7 @@ function updateMissiles(dt) {
       if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
-  for (const m of missiles) if (m.dead) { scene.remove(m.mesh); m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
+  for (const m of missiles) if (m.dead) { scene.remove(m.mesh); if (!m.mesh.userData.sharedMissileResources) m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
   missiles = missiles.filter(m => !m.dead);
 }
 

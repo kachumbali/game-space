@@ -1,5 +1,23 @@
 # Codex local integration log — 2026-11-01
 
+## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
+
+- `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated
+  stale base ordnance values in `WEAPONS.md` without changing weapon damage;
+  the 20-seed per-hull runtime damage table remains outstanding.
+- Added opt-in device missile caps, refusal/high-water counters and shared
+  per-weapon mesh resources. `tuning.ordnance.enabled` defaults false; normal
+  launch behavior remains uncapped and uses independent resources.
+- Added validated grouped launcher records and disabled human fleet plans
+  matching the study, leaving live stores untouched. No new FROGG launchers,
+  tick or nuclear stores. No launcher/hangar execution is implemented.
+- Local build, DB validation, source syntax and schema, damage-report and
+  device-cap unit controls passed. Cloud: run `missile_budget_t.py`, existing
+  missile/ordnance/drone/campaign checks and the full branch gate, then execute
+  the 20-seed damage collection and report commands in
+  `docs/CAPITAL_ORDNANCE_CLOUD_RUN.md`. No browser or seeded runs were done
+  locally; no per-hull damage numbers or performance claims are made.
+
 ## Gulper / Merlin experiments (Codex, `codex/gulper-merlin`)
 
 - Merlin max speed is 262.5; an authored AI cruise of 140 preserves the old
