@@ -108,10 +108,15 @@ All beam weapons (human `laser`, FROGG `flaser` and `lance` - the FROGG beams ar
 |---|---|---|---|---|---|---|---|---|
 | `flaser` (M-1 PULSE MASER) | FROGG Leaper, Reaver, Spitter | 0.35 / 0.9 | 0.5 | 2.2x | 3.5 | 0.1 | 950 | 9 (capacitor) |
 | `lance` (M-7 MASER LANCE) | FROGG Gulper | 0.8 / 2.1 | 1.0 | 3.0x | 3 | 0.06 | 1500 | 3 (pool 400, +70/s) |
-| `laser` (LS-2 turret) | Halberd (2 dorsal-forward turrets), Exeter (4 turrets) | 0.5 / 1.3 | 0.8 | 3.0x | 3 | 0.25 | 1600 | 12 (Halberd pool 600, +100/s; Exeter 2500, +350/s) |
+| `pulseS` (P-4 defence pulse, S) | Halberd (2 dorsal-forward turrets), Exeter (4 turrets) | 0.2 / 0.5 | 0.65 | 1.1x | 1.35 | 0.32 | 900 | 7 (fast anti-fighter suppression) |
+| `laserM` (LS-8 anti-capital, M) | Exeter (8 M turrets), HECLA (6 M turrets), Claymore (8 M turrets) | 0.85 / 2.3 | 3.5 | 2.4x | 5.5 | 0.4 | 2200 | 26 (18 deg/s; corvette-and-larger targets only) |
 
 Feedback to the pilot: a tracked player sees `LASER TRACKING n%` (blink speeds up) and hears a rising tick; once the beam is burning, `LASER ON YOU - BREAK` and a fast tone. A tracking beam is drawn thin and dim, a burning beam bright.
-Laser turrets hold their target (switching resets the focus), prefer large targets (PD turrets keep the fighters and missiles), do not fire with a friendly in the line, and spend ship energy.
+Beam turrets hold their target (switching resets the focus), divide fire between
+available targets on the same ship, do not fire with a friendly in the line, and
+spend ship energy. LS-8 batteries cannot select fighters and take 1.8 sim seconds
+to re-target; P-4 is the dedicated fighter defence beam. Beam hit probability
+falls with target angular speed and rises with gunner skill.
 Not modelled: heat, mirror damage, spot size growth with range, ablative cap per second (the existing ablative rate cap applies as for any hit). All numbers are placeholders tuned in headless duels; none is verified by play.
 
 ## 7. Beam rendering (2026-10-22; owner: "laser lock was displayed, but can you also render a beam?")

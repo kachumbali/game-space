@@ -511,6 +511,17 @@ function turretMuzzle(T, out) {                 // world position of the next ba
   T.head.updateWorldMatrix(true, false);
   return T.head.localToWorld(out.copy(m));
 }
+function turretAllowsTarget(T, e) {
+  // LS-8 batteries are deliberately blind to fighters: their tracking gear is
+  // for hulls, not dogfights.  Keep this on the weapon definition so marks
+  // inherit it and later L batteries use the same doctrine.
+  return !T.w.targetClasses || T.w.targetClasses.includes(e.def.cls);
+}
+function turretTargetLoad(s, e, self) {
+  let n = 0;
+  for (const other of s.turrets) if (other !== self && other.tgt === e && !other.dead) n++;
+  return n;
+}
 function updateTurrets(s, dt) {
   if (!s.turrets.length) return;
   const sg = s.group;
@@ -532,7 +543,9 @@ function updateTurrets(s, dt) {
       T.thinkT = 0.2 + Math.random() * 0.1;
       let best = null, bs = 1e9;
       const beamT = T.w.kind === 'beam';
-      if (beamT && T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && T.tgt.group.position.distanceTo(tp) < T.w.range) best = T.tgt;   // a laser turret holds its target: focus is lost on every switch
+      const targetValid = T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && turretAllowsTarget(T, T.tgt) && T.tgt.group.position.distanceTo(tp) < T.w.range;
+      const retargetLocked = T.w.retarget && time - (T.targetAt ?? -99) < T.w.retarget;
+      if (beamT && targetValid && (retargetLocked || !T.w.retarget)) best = T.tgt;   // beams retain their focus; LS-8s also need time to re-acquire a new hull
       else if (!beamT && !T.w.noPD) for (const m of hostileMissiles) {   // noPD (acid cannon) never shoots missiles                 // missiles first
         const d = m.pos.distanceTo(tp);
         if (d < T.w.range * 0.75 && (m.target === s || d < 500) && d < bs) { bs = d; best = m; }
@@ -541,13 +554,16 @@ function updateTurrets(s, dt) {
         bs = 1e9;
         for (const e of ships) {
           if (!e.alive || e.team === s.team || e.dying) continue;
+          if (!turretAllowsTarget(T, e)) continue;
           const d = e.group.position.distanceTo(tp);
           if ((T.w.pdOnly && d > 300) || (T.w.bigOnly && e.def.cls === 'fighter' && d > 900)) continue;      // Bullfrog roles: thorn = missiles (ships only inside 300 m), heavy lance = big targets
           const pr = T.w.noPD ? (e.def.cls === 'fighter' && e.def.ai?.role !== 'bomber' ? d * 3 : d) : beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
           const prA = e.target === s ? pr * TUNE.turret.attackerBias : pr;           // M2 gunner doctrine: whoever is shooting at this ship comes first (a bomber's gunner engages the fighter on its six)
-          if (d < T.w.range && prA < bs) { bs = prA; best = e; }
+          const spread = 1 + turretTargetLoad(s, e, T) * TUNE.turret.targetSpread;  // soft spread: concentrate only when this is the sole viable target
+          if (d < T.w.range && prA * spread < bs) { bs = prA * spread; best = e; }
         }
       }
+      if (best !== T.tgt) T.targetAt = time;
       T.tgt = best;
     }
     const tg = T.tgt;
@@ -573,7 +589,13 @@ function updateTurrets(s, dt) {
     const err = fwd.angleTo(_w3);
     if (T.w.kind === 'beam') {
       const tol = clamp(0.8 * (tg.def ? tg.def.radius : 5) / Math.max(dist, 1), 0.004, 0.05);
-      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy) {
+      const relVel = _w4.copy(tvel).sub(s.vel);
+      const radial = relVel.dot(_w3);
+      const angularSpeed = relVel.addScaledVector(_w3, -radial).length() / Math.max(dist, 1);
+      const skill = clamp(Math.round(s.skill ?? 3), 1, 5);
+      const trackingError = angularSpeed * TUNE.turret.beamAngularError * (6 - skill);
+      const hitChance = clamp(1 - trackingError / Math.max(tol, 0.001), TUNE.turret.beamMinHit, 1);
+      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy && Math.random() < hitChance) {
         const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }

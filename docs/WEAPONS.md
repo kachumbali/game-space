@@ -31,7 +31,7 @@ Three gun classes, plus ordnance:
 |---|---|---|
 | 1. Chemical guns | ammunition only, no energy draw | MK-20, MK-30 HE, GA-9, DR-2 (human); R-9 (FROGG) |
 | 2. Mag / rail | a little energy AND ammo - the projectile plus the capacitor discharge | RG-90 (12 en/shot, 100 rds), MD-9 (30 en, 120 slugs), MD-55 (15 en, 250 rds), MK-90 (800 en, 100 slugs), R-12 (6 en, 60 rds) |
-| 3. Energy only | no magazine; the reactor is the feed (ETS WEAPONS speeds it) | LS-2, LS-8, all M- masers, the GX-1 XL |
+| 3. Energy only | no magazine; the reactor is the feed (ETS WEAPONS speeds it) | P-4, LS-8, all M- masers, the GX-1 XL |
 | 4. Ordnance | missile stores; drones are HUMAN-ONLY (FROGG anti-AI doctrine - "dead silicon" - fields no autonomous machines; their seekers are wetware) | SW-9, LN-3, HM-1, NK-1 (human); SK-1, ST-2 (FROGG); SD-4 drones (human only) |
 
 Faction lean: **FROGG energy-heavy** (masers and wetware ordnance; kinetics few and specialised), **humans
@@ -59,8 +59,8 @@ S (light fighter), M (heavy fighter/corvette), L (capital direct-fire), and XL
 | GA-9 ROTARY CANNON | proj kin | 2.8 | 25/s | 1100 | 1320 | 15% | - | 900 (36 s) | A-10-style, Halberd grp 2; AI fires it only inside 1300 m |
 | RG-90 RAILGUN | proj kin | 70 | 0.42/s | 2000 | 4400 | 60% | 12/shot | 100/mnt (~4 min) | class 2: best kinetic pierce in the game |
 | MD-55 MASS DRIVER (L) | proj kin | 60 | 0.45/s | 1800 | 2600 | 40% | 15/shot | 250/turret (~9 min) | class 2; bigOnly, noPD |
-| LS-2 TURRET LASER | beam en | 3/pulse | 4/s | - | 1600 | - | 12/pulse | reactor | peak x3 after 0.5 s acq |
-| LS-8 TURRET LASER (M) | beam en | 6.5/pulse | 3.6/s | - | 1800 | - | 26/pulse | reactor | peak x3 |
+| P-4 DEFENCE PULSE (S) | beam en | 1.35/pulse | 3.1/s | - | 900 | - | 7/pulse | reactor | 100 deg/s anti-fighter suppression; peak x1.1 |
+| LS-8 ANTI-CAPITAL LASER (M) | beam en | 5.5/pulse | 2.5/s | - | 2200 | - | 26/pulse | reactor | corvette-and-larger targets only; 18 deg/s, 1.5 s charge, peak x2.4 |
 | PD-30 POINT DEFENCE | proj kin | 1.3 | 13.3/s | 1100 | 900 | - | - | 1500/turret (~110 s) | Phalanx-style drum |
 
 **MK-90 MASS DRIVER (XL)**: 900 kin, 60% pierce, 3200 m instant ray, 5 s charge + 1.5 s lock (heading frozen),
@@ -106,8 +106,8 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | Ship | Fixed mounts | Turrets | Stores |
 |---|---|---|---|
 | Kestrel | 1x MK-20, 1x MD-9 mag (grp 1); 2x MK-30 HE (grp 2) | - | 4 SW-9, 2 LN-3, 1 HM-1 |
-| Halberd | 2x RG-90 (grp 1); 1x GA-9 rotary (grp 2) | 2x LS-2, 4x PD-30 | - |
-| Exeter | 2x RG-90 (grp 1); MK-90 XL, 100 slugs (grp 9, store) | 4x LS-2, 8x LS-8, 4x MD-55, 3x PD-30 | 48 drones |
+| Halberd | 2x RG-90 (grp 1); 1x GA-9 rotary (grp 2) | 2x P-4, 4x PD-30 | - |
+| Exeter | 2x RG-90 (grp 1); MK-90 XL, 100 slugs (grp 9, store) | 4x P-4, 8x LS-8, 4x MD-55, 3x PD-30 | 48 drones |
 | Tender | unarmed - rearm service within 600 m | - | - |
 | Drone | 1x DR-2 | - | - |
 | Darter | 2x R-9 | - | 2 SK-1 |

@@ -1033,7 +1033,7 @@
       ],
       "turrets": [
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             2.6,
             1.85,
@@ -1044,7 +1044,7 @@
           "visualScale": 0.55
         },
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             -2.6,
             1.85,
@@ -1389,7 +1389,7 @@
       ],
       "turrets": [
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             0,
             24,
@@ -1399,7 +1399,7 @@
           "side": 1
         },
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             24,
             22.4,
@@ -1409,7 +1409,7 @@
           "side": 1
         },
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             -24,
             22.4,
@@ -1439,7 +1439,7 @@
           "side": 1
         },
         {
-          "w": "laser",
+          "w": "pulseS",
           "pos": [
             0,
             -22.4,
@@ -8495,7 +8495,7 @@
     },
     "laser": {
       "kind": "beam",
-      "name": "LS-2 TURRET LASER",
+      "name": "LS-2 LEGACY TURRET LASER",
       "cd": 0.25,
       "dmg": 3,
       "dt": "en",
@@ -8509,27 +8509,52 @@
       "track": 2.2,
       "turret": true,
       "bw": 1,
-      "slew": 45,
+      "slew": 40,
       "charge": 0.5
+    },
+    "pulseS": {
+      "kind": "beam",
+      "name": "P-4 DEFENCE PULSE (S)",
+      "cd": 0.32,
+      "dmg": 1.35,
+      "dt": "en",
+      "range": 900,
+      "energy": 7,
+      "color": "#ffb060",
+      "sfx": "pulse",
+      "acq": 0.2,
+      "ramp": 0.65,
+      "peak": 1.1,
+      "track": 2.4,
+      "turret": true,
+      "bw": 0.45,
+      "slew": 100,
+      "charge": 0.12
     },
     "laserM": {
       "kind": "beam",
-      "name": "LS-8 TURRET LASER (M)",
-      "cd": 0.28,
-      "dmg": 6.5,
+      "name": "LS-8 ANTI-CAPITAL LASER (M)",
+      "cd": 0.4,
+      "dmg": 5.5,
       "dt": "en",
-      "range": 1800,
+      "range": 2200,
       "energy": 26,
       "color": "#ff6030",
       "sfx": "pulse",
-      "acq": 0.6,
-      "ramp": 3.0,
-      "peak": 3,
+      "acq": 0.85,
+      "ramp": 3.5,
+      "peak": 2.4,
       "track": 1.8,
       "turret": true,
       "bw": 1.6,
-      "slew": 35,
-      "charge": 0.6
+      "slew": 18,
+      "charge": 1.5,
+      "retarget": 1.8,
+      "targetClasses": [
+        "corvette",
+        "frigate",
+        "capital"
+      ]
     },
     "pd": {
       "kind": "proj",
@@ -10273,9 +10298,12 @@
     "turret": {
       "reserveShip": 0.25,
       "reserveMsl": 0.05,
-      "attackerBias": 0.5
+      "attackerBias": 0.5,
+      "targetSpread": 0.45,
+      "beamAngularError": 0.018,
+      "beamMinHit": 0.08
     },
-    "turretNote": "M2: kinetic PD stops firing when the capacitor is below reserveShip (ships) / reserveMsl (missiles) x energyMax; a turret scores a ship that is targeting its own ship x attackerBias (lower = first)"
+    "turretNote": "M2/P1: kinetic PD stops firing when the capacitor is below reserveShip (ships) / reserveMsl (missiles) x energyMax; a turret scores a ship targeting its own ship x attackerBias (lower = first), divides fire with targetSpread, and beam accuracy falls with angular speed and pilot skill."
   },
   "mass": {
     "fighter": 1,

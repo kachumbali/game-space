@@ -297,3 +297,28 @@ Re-ran every red test of the post-merge sweep one at a time on the merged build.
 - Fixed (test was wrong or stale): `menu_t` (campaign list is now two levels, `mission:severed_node:0`; the 30 s skirmish step makes the player invulnerable so an idle player cannot die), `yard_t` (camera eases, wheel check waits 600 ms), `roster_t` (SAR is unarmed and hunted, so no survival check; `SK_PLAYER`/`SK_WING` now exported on `__game`), `tur_aim_t` (MD-55 is `bigOnly`, skips fighters inside 900 m, so "never fired" is correct there), `bittern_t`, `campaign_t`, `scene_t`, `tern_t`, `tender_pd_t` pass.
 - Not tests, documented in `tools/tests/README.md`: `view_t`, `plog_t`, `render_t`, `muzzle_t` (need arguments or minutes).
 - Still red, real: `bullfrog_t` (3 fails: HUD text during the lock, no charge while a friendly is in the line, fizzle check; identical before the merge; also hits the 420 s cap) and `touch_qa_t` (4 fails: no touch DOCK control `#bdock`, touch power shift has no effect; player-facing touch gaps).
+
+## P1 capital-laser split, 2026-11-02 (Codex, `codex/next-development`)
+
+- Branched from the current `origin/main` at `f73917d`, as required by
+  `docs/CODEX_NOTE.md`; no old local integration branch was reused.
+- Added the S-class P-4 defence pulse and moved Halberd's two and Exeter's four
+  former LS-2 placements to it. It is a short-range, low-output, 100 deg/s
+  anti-fighter suppressor rather than a wing-deleting capital laser.
+- Recast LS-8 (`laserM`) as the slow anti-capital battery: corvette/frigate/
+  capital target filter, 18 deg/s slew, 1.8 s re-target delay, and 1.5 s
+  charge. HECLA remains at exactly six LS-8 installations; its count was not
+  changed.
+- Added per-ship soft target spreading and speed/skill-dependent beam hit
+  probability. These use `data/db.json` tuning values, not source constants.
+  XL fighter immunity was not changed.
+- Added `tools/tests/capital_laser_t.py`; it passed alongside DB validation,
+  source syntax, diff whitespace checks, and a fresh build (33 ships, 111
+  weapons, 93 marks). Updated the player-facing weapon and laser catalogue with
+  the new P-4/LS-8 roles and live values.
+- Measurement is intentionally **not claimed**: the required 20-seed browser
+  sweep failed to complete even seed 1 in this local Chrome/SwiftShader setup.
+  `docs/BALANCE_REPORT_3.md` records the exact pending P1 gates for Claude's
+  cloud browser run. Do not merge P1 until those figures are recorded and the
+  branch gate has been run. P0's known `bullfrog_t` and `touch_qa_t` failures
+  remain out of scope and untouched.
