@@ -437,8 +437,8 @@
         }
       ],
       "shield": {
-        "fore": 22,
-        "aft": 20
+        "fore": 44,
+        "aft": 40
       },
       "armor": {
         "type": "composite",
