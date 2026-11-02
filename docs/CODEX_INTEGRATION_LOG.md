@@ -15,6 +15,23 @@
   Cloud: run `retreat_convoy_t.py`, `drone_t.py kite_carriers`, both scenarios
   listed in the measurement note, and the full gate; report losses, kills,
   survival and incomplete runs.
+## Campaign pilot bot (Codex, `codex/pilot-bot`)
+
+- Added `tools/tests/pilot_good.js`: objective-relative target selection,
+  guns and locked missiles, collision break, afterburner disengagement,
+  countermeasures and damaged return to the anchor. Measurement selects it
+  with `BOT=good`; `BOT=simple` retains the original pilot.
+- Local build, database validation, JS syntax and Python compilation passed.
+  `tools/check_opsec.py` reports existing author-name matches in
+  `docs/BRIEF_CAPITAL_LASERS.md`, `docs/CODEX_NOTE.md` and
+  `docs/PLAN_V04_CODEX.md` on the base; this branch did not change them.
+  Six-seed comparisons, the 13-mission browser runs and `check_branch.sh` were
+  not run: automatic approval review rejected local Chromium execution based
+  on the prior no-local-browser instruction. No win/loss numbers are claimed.
+  Cloud: run `BOT=simple` and `BOT=good` with six seeds across all 13 missions,
+  record raw JSON and loss/unfinished results separately, check prologue 1 and
+  a formerly 6/6 loss mission, then run `tools/check_branch.sh`. Check bot
+  collision, disengagement, re-entry, missile lock and no-console-errors.
 
 ## Playtest support — 2026-11-02 (Codex)
 
