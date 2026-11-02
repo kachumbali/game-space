@@ -17,12 +17,14 @@ def check(label, passed, detail=''):
     print(('PASS ' if passed else 'FAIL ') + label + (f' — {detail}' if detail else ''), flush=True)
 
 
-def touch_at(page, x, y, hold=0.12):
+def touch_at(page, x, y, hold=0.12, during=None):
     cdp = page.context.new_cdp_session(page)
     point = {'x': x, 'y': y, 'id': 1, 'radiusX': 1, 'radiusY': 1, 'force': 1}
     cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [point]})
     try:
         time.sleep(hold)
+        if during:
+            return during()
     finally:
         cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
         cdp.detach()
@@ -190,21 +192,27 @@ with Runner() as R:
 
         try:
             fuel_before = page.evaluate("""() => {
+              __paused=true;
               const p=__game.player;
+              p.abLock=false;
               p.abFuel=p.def.abMax*__game.pwF(p,'e');
               p.throttle=0.5;
               return p.abFuel;
             }""")
+            baseline = page.evaluate("() => { __game.update(0.1); return __game.player.ab; }")
+            check(f'{label}: BOOST inactive without touch', not baseline, f'active={baseline}')
             box = page.locator('#bboost').bounding_box()
             if not box:
                 raise RuntimeError('#bboost has no visible bounding box')
-            touch_at(page, box['x'] + box['width'] / 2, box['y'] + box['height'] / 2, 0.7)
-            boost = page.evaluate('() => ({fuel:__game.player.abFuel, active:__game.player.ab})')
+            boost = touch_at(page, box['x'] + box['width'] / 2, box['y'] + box['height'] / 2, 0.12,
+                             lambda: page.evaluate('() => { __game.update(0.1); return {fuel:__game.player.abFuel, active:__game.player.ab}; }'))
             check(f'{label}: BOOST touch activates afterburner',
                   boost['active'] and boost['fuel'] < fuel_before,
                   f"fuel {fuel_before:.3f} -> {boost['fuel']:.3f}; active={boost['active']}")
         except Exception as exc:
             check(f'{label}: BOOST touch activates afterburner', False, str(exc))
+        finally:
+            page.evaluate('() => { __paused=false; }')
 
         dock_exists = page.locator('#bdock').count() > 0
         check(f'{label}: DOCK touch control exists', dock_exists,
