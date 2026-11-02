@@ -29,6 +29,17 @@
   station launch origins and exhausted/swapped stations, test mission restart
   and tender rearm, inspect each hull in live and shipyard views, then run
   `tools/check_branch.sh`. No browser or device tests were run locally.
+## KITE-6 wingman (Codex, `codex/kite6`)
+
+- Added six-metre KITE-6, one engine, DR-2, two S Swift rails and datalink
+  mast. Drone launches and skirmish wing selection use it; existing drone
+  orders and touch COMMS are reused, with PROTECT as the default and a help
+  line. Controller-less drone AI was retained.
+- Local build, validation, source syntax and data contract (including an
+  invalid-size control) pass. Cloud: run `drone_t.py`, `drone_noctrl_t.py`,
+  skirmish menu/touch COMMS tests, verify launch, orders, two missile launches,
+  controller loss and the shipyard model, then `tools/check_branch.sh`.
+  Browser, device and seeded balance tests were not run locally.
 
 ## Lane A touch parity — 2026-11-02 (work in progress)
 
