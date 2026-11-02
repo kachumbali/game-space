@@ -199,8 +199,8 @@ with Runner() as R:
     check('two-pointer pinch changes camera distance', pinch)
     page.mouse.move(700, 300)
     wheel_before = page.evaluate('Math.hypot(...__game.camera.position.toArray())')
-    page.mouse.wheel(0, 120)
-    page.wait_for_timeout(100)
+    page.mouse.move(640, 360); page.mouse.wheel(0, 120)
+    page.wait_for_timeout(600)
     wheel_after = page.evaluate('Math.hypot(...__game.camera.position.toArray())')
     check('wheel changes camera distance', abs(wheel_after - wheel_before) > 0.1)
 
