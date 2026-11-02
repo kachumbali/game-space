@@ -370,3 +370,17 @@ Re-ran every red test of the post-merge sweep one at a time on the merged build.
   cloud browser run. Do not merge P1 until those figures are recorded and the
   branch gate has been run. P0's known `bullfrog_t` and `touch_qa_t` failures
   remain out of scope and untouched.
+
+## P5 red-team work in progress (Codex, `codex/p5-red-team`)
+
+- Based on `origin/main` 5cbef17. Enemy AI considers nearby hostile tenders
+  before squad focus, while respecting explicit orders and immediate attack.
+- AI explosive fixed mounts hold when a friendly hull is near the target;
+  other weapons in the group can still fire. This is a conservative target
+  neighbourhood estimate, not a prediction of all possible impacts.
+- R-12 now carries `bigOnly`/`noPD` and AI fixed-mount fire respects the
+  existing 900 m close-defence exception. Player fire and 45% pierce remain
+  unchanged; marks inherit the flags. No balance improvement is claimed.
+- Build, database validation and JavaScript syntax pass. Browser behavior,
+  seeded combat measurements and the full branch gate remain outstanding.
+  Rebase on the newly merged main before publishing as instructed by owner.

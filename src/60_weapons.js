@@ -183,6 +183,11 @@ function fireGuns(s, mask) {
   for (const m of s.mounts) {
     if (m.store) continue;
     if (!(mask & (1 << (m.grp - 1)))) continue;
+    const w = WEAPONS[m.w], target = s.target;
+    if (s !== player && w.bigOnly && target && target.def.cls === 'fighter' && target.group.position.distanceTo(s.group.position) > TUNE.ai.bigGunFighterRange) continue;
+    // A near miss on the target can detonate HE beside a friendly. Hold that
+    // mount only; non-explosive guns in the same group remain available.
+    if (s !== player && w.blast && target && target.alive && ships.some(f => f !== s && f.alive && !f.dying && f.team === s.team && f.group.position.distanceTo(target.group.position) <= w.blast + f.def.radius + target.def.radius)) continue;
     any = true;
     if (fireMount(s, m)) n++;
   }

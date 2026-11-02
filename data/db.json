@@ -8085,6 +8085,8 @@
       "sz": 0.7,
       "sfx": "rail",
       "big": true,
+      "bigOnly": true,
+      "noPD": true,
       "ammo": 60,
       "energy": 6
     },
@@ -9696,6 +9698,9 @@
     "ai": {
       "tolMul": 1,
       "rngMul": 0.55,
+      "tenderPriority": 0.35,
+      "tenderRange": 3500,
+      "bigGunFighterRange": 900,
       "torpSalvo": 3,
       "torpGapT": 0.9,
       "torpReload": 14,

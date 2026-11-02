@@ -83,6 +83,16 @@ function pickTarget(s) {
   if (role === 'lancer') return lancerPick(s);                              // 79_bullfrog.js
   if (s.ai.escort && s.ai.escort.alive) { const et = escortPick(s); if (et) return et; }
   if (s.ai.order && !isCapital(s)) { const ot = orderTarget(s); if (ot !== undefined) return ot; }
+  // A nearby enemy resupply ship is a strategic target, but an explicit order
+  // or a pilot already defending itself still takes precedence.
+  if (s.team !== 0 && !(s.lastAttacker && s.lastAttacker.alive && time - (s.lastHit ?? -99) < 3)) {
+    const tenders = hostilesOf(s).filter(e => e.def.tender && e.group.position.distanceTo(s.group.position) < TUNE.ai.tenderRange);
+    if (tenders.length) {
+      const nearest = tenders.reduce((a, b) => a.group.position.distanceToSquared(s.group.position) < b.group.position.distanceToSquared(s.group.position) ? a : b);
+      const other = hostilesOf(s).filter(e => !e.def.tender).reduce((d, e) => Math.min(d, e.group.position.distanceTo(s.group.position)), Infinity);
+      if (nearest.group.position.distanceTo(s.group.position) * TUNE.ai.tenderPriority < other) return nearest;
+    }
+  }
   if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
     const la = s.lastAttacker, hp = s.structure / s.def.structure;
     const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);

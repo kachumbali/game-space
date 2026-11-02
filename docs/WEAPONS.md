@@ -144,6 +144,14 @@ slugs never bind inside a mission (one slug per 30 s); it is a campaign constrai
 
 ## 7. Red-team findings (2026-10-22 pass)
 
+P5 working-branch update: enemy AI now considers nearby resupply tenders a
+priority subject to orders and immediate self-defence. AI holds an explosive
+mount when a friendly hull is within the potential blast neighbourhood of its
+target; other mounts remain available. The R-12 is flagged `bigOnly` and
+`noPD`; AI may use it against fighters only inside 900 m, while player-fired
+weapons remain unrestricted. The 45% pierce remains unchanged pending balance
+measurement. These rules need browser and seeded play verification.
+
 Fixed by the current commit set: the Kestrel's dead ETS WEAPONS channel (the MD-9 now feeds it); AI gun
 discipline (was: dry ships fought on as if armed); no AI ammo awareness at all (was: free fire to empty).
 
