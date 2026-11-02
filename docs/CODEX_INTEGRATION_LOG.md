@@ -584,3 +584,8 @@ Codex's red-team AI pass (`7927281`: FROGG fighters prefer a nearby tender, AI b
 
 ## Capital ordnance P0-P3: Claude cloud verification (2026-11-02)
 Gate PASS on branch + main; `capital_schema_t`, `missile_budget_t` (caps 20/32/48, refusals, flat resources), `msl_t`, `ordnance_t` PASS. P0 damage table inserted in `docs/WEAPONS.md`, raw data in `docs/data/capital_missile_damage*`. Not run: real iPad/phone performance, drone/campaign suites.
+
+## Capital ordnance runtime (partial): Claude cloud verification (2026-11-02)
+Merged as partial: class damage scaling (always on), aimed-launch primitive, finite tender budgets, nuclear controls (quick-play option off by default, player-only fire, one scripted campaign release), paired capital sweep scenarios, missile-count instrumentation. Gate PASS; `missile_class_t` (IR: fighter 231, corvette 104, frigate 58, capital 35), `launcher_direction_t`, `tender_ordnance_t`, `nuclear_authority_t` and the four unit scripts PASS; `msl_t`, `ordnance_t` PASS.
+Sweeps, 10 seeds, parent (main) vs branch with the new flag off: Exeter + 2 Kestrels vs Bullfrog 0/10 both; Halberd vs 2 Gulpers 0/10 both; 1 Falchion vs Gulper 2/10 both; identical medians, so the damage rule does not change these fights. Branch only: `capital-exeter-on` 0/10, `capital-hecla-off` 5/10 (median TTK 109 s), `capital-hecla-on` 2/10; the "on" cases enable the unfinished flag, so they say nothing about the finished design. Raw: `docs/data/capital_runtime/`.
+NOT done (still to build): per-launcher runtime and AI, torpedo hold rule, hangar and drone launches, launcher HUD, launcher positions and damageable mounts on the hull models. Do not enable `tuning.ordnance.enabled` in play.
