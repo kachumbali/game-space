@@ -1027,8 +1027,8 @@
     "halberd": {
       "id": "halberd",
       "launchers": [
-        {"id":"FT-M", "kind":"fixed", "role":"missile", "count":4, "reload":20, "cap":4, "stores":["ir","rf"]},
-        {"id":"FT-T", "kind":"fixed", "role":"torpedo", "count":2, "reload":14, "cap":4, "stores":["torp"]}
+        {"id":"FT-M", "kind":"fixed", "role":"missile", "count":4, "reload":20, "cap":4, "stores":["ir","rf"], "mountHp":70, "mountRadius":0.7, "positions":[[-0.8,3,12.6],[0.8,3,12.6],[-0.8,3,14.8],[0.8,3,14.8]]},
+        {"id":"FT-T", "kind":"fixed", "role":"torpedo", "count":2, "reload":14, "cap":4, "stores":["torp"], "mountHp":90, "mountRadius":0.7, "positions":[[-0.8,3,17.0],[0.8,3,17.0]]}
       ],
       "ordnancePlan": {"enabled":false, "stores":{"ir":12,"rf":4,"torp":8,"drone":12}, "droneLimit":6, "hangar":{"total":0}},
       "name": "HALBERD",
@@ -1381,8 +1381,8 @@
       "id": "exeter",
       "rescue": true,
       "launchers": [
-        {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"]},
-        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":4, "reload":10, "cap":1, "stores":["torp"]}
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":100, "mountRadius":3, "positions":[[-11,18,-45],[11,18,-45],[-11,18,-30],[11,18,-30],[-11,18,-15],[11,18,-15]]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":4, "reload":10, "cap":1, "stores":["torp"], "mountHp":120, "mountRadius":3, "positions":[[-11,18,100],[11,18,100],[-11,18,115],[11,18,115]]}
       ],
       "ordnancePlan": {"enabled":false, "stores":{"ir":40,"rf":24,"torp":24,"drone":48}, "droneLimit":12, "hangar":{"total":12,"airborneCap":6,"interval":6,"bays":2,"manifest":{"kestrel":6,"falchion":2,"bittern":2,"merlin":2}}},
       "name": "EXETER",
@@ -2105,8 +2105,8 @@
     "hecla": {
       "id": "hecla",
       "launchers": [
-        {"id":"RM", "kind":"reloadable", "role":"missile", "count":16, "reload":5, "cap":1, "stores":["ir","rf"]},
-        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"]}
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":16, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":150, "mountRadius":3, "positions":[[-8,18,-300],[8,18,-300],[-8,18,-280],[8,18,-280],[-8,18,-260],[8,18,-260],[-8,18,-240],[8,18,-240],[-8,18,-220],[8,18,-220],[-8,18,-200],[8,18,-200],[-8,18,-180],[8,18,-180],[-8,18,-160],[8,18,-160]]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":180, "mountRadius":3, "positions":[[-8,18,180],[8,18,180],[-8,18,200],[8,18,200],[-8,18,220],[8,18,220],[-8,18,240],[8,18,240]]}
       ],
       "ordnancePlan": {"enabled":false, "stores":{"ir":100,"rf":60,"torp":48,"drone":96}, "droneLimit":24, "hold":{"missile":800,"torpedo":240}, "hangar":{"total":36,"airborneCap":12,"interval":4,"bays":4,"manifest":{"kestrel":16,"falchion":8,"bittern":8,"merlin":4}}},
       "name": "HECLA",
@@ -6853,8 +6853,8 @@
     "destroyer": {
       "id": "destroyer",
       "launchers": [
-        {"id":"RM", "kind":"reloadable", "role":"missile", "count":8, "reload":5, "cap":1, "stores":["ir","rf"]},
-        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"]}
+        {"id":"RM", "kind":"reloadable", "role":"missile", "count":8, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":120, "mountRadius":3, "positions":[[-11,22,-60],[11,22,-60],[-11,22,-48],[11,22,-48],[-11,22,-36],[11,22,-36],[-11,22,-24],[11,22,-24]]},
+        {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":140, "mountRadius":3, "positions":[[-11,22,30],[11,22,30],[-11,22,42],[11,22,42],[-11,22,54],[11,22,54],[-11,22,66],[11,22,66]]}
       ],
       "ordnancePlan": {"enabled":false, "stores":{"ir":48,"rf":36,"torp":48,"drone":24}, "droneLimit":12, "hangar":{"total":8,"airborneCap":4,"interval":6,"bays":1,"manifest":{"kestrel":4,"bittern":4}}},
       "name": "CLAYMORE",

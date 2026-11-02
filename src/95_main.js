@@ -110,6 +110,8 @@ Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(S
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
 
+Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
+
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
 if (params.has('diag')) {
   const diag = document.createElement('pre');

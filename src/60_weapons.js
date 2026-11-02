@@ -265,7 +265,16 @@ function nuclearLaunchAllowed(enabled, isPlayer, campaign, released, fired) {
 }
 function launchMissile(s, wid, opts = null) {
   const w = WEAPONS[wid];
+  if (!w) return false;
   if (w?.nuclear && !nuclearLaunchAllowed(!!TUNE.ordnance?.enabled, s === player, game.mode === 'mission', !!game.mstate?.nuclearReleased, !!game.mstate?.nuclearFired)) return false;
+  // Existing callers on launcher-equipped ships must not bypass their cells.
+  if (TUNE.ordnance?.enabled && s.launcherRuntime && !opts?.launcher) {
+    const cell = s.launcherRuntime.find(l => { const c = s.comps.find(x => x.id === l.comp); return l.wid === wid && l.ready > 0 && l.timer <= 0 && c && c.hp > c.max * 0.5; });
+    const locked = s.lock?.p >= 1 && s.lock.wid === wid ? s.lock.tgt : null;
+    const fired = cell ? fireLauncher(s, cell, wid, locked) : false;
+    if (fired && locked) s.lock.p = 0;
+    return fired;
+  }
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
   if (missiles.reduce((n,m)=>n+(!m.dead?1:0),0) >= missileLiveCap()) { plogN('missile.capRefused'); return false; }
