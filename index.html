@@ -3995,6 +3995,11 @@ function droneAI(s, dt) {
     s.ctrl = c = null; s.dOrder = 'orphan'; s.dTgt = null; plogN('drone.orphan');
   }
   const o = s.dOrder || 'protect', ep = s.group.position;
+  if (!c && o !== 'orphan') {              // mission-spawned drone with no controller (e.g. the prologue's privateer screen): autonomous, hunts the nearest hostile
+    if (ai.tgtT <= 0 || !validHostile(s, s.target)) { s.target = nearestHostile(s, ep, 1e9, true); ai.tgtT = 3 + Math.random() * 2; }
+    if (s.target) return fighterAI(s, dt);
+    aiFly(s, { throttle: 0.3 }, dt); return;
+  }
   if (o === 'orphan') {
     const t = nearestHostile(s, ep, 700);
     if (t) { s.target = t; return fighterAI(s, dt); }
