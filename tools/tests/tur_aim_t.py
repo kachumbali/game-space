@@ -45,7 +45,8 @@ with Runner() as R:
         print(sid, 'len', out['len'], 't', out['t'])
         for c, r in out['rec'].items():
             flag = ''
-            if r['n'] == 0 and r['w'] == 'mdl': flag = ''   # MD-55 is bigOnly: skips fighters inside 900 m (src/60_weapons.js), the test targets are closer
+            if r['n'] == 0 and r['w'] in ('mdl', 'pulseS'): flag = ''   # MD-55 is bigOnly (skips fighters inside 900 m); P-4 reaches 900 m and the test targets sit 1000+ m out (src/60_weapons.js)
+            elif r['n'] == 0 and r['w'] == 'laserM' and any(o['w'] == 'laserM' and o['side'] == r['side'] and o['n'] > 0 for o in out['rec'].values()): flag = ''   # LS-8 fires at hulls only: with 2 legal targets per hemisphere and target spreading one of 4 turrets can idle; require that the hemisphere fires
             elif r['n'] == 0: flag = 'NEVER FIRED'
             elif r['maxAng'] > 0.12: flag = 'AIM OFF'
             if r.get('noBoltAtTip'): flag += ' BOLT-NOT-AT-TIP x%d' % r['noBoltAtTip']

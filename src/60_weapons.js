@@ -556,6 +556,8 @@ function updateTurrets(s, dt) {
           if (!e.alive || e.team === s.team || e.dying) continue;
           if (!turretAllowsTarget(T, e)) continue;
           const d = e.group.position.distanceTo(tp);
+          // a turret cannot aim into the opposite hemisphere (sideOk below); never pick such a target, or target spreading leaves the turret idle while valid targets exist
+          if (T.def.side && d > 1) { _w3.copy(e.group.position).sub(tp); _w3.applyQuaternion(_wq.copy(sg.quaternion).invert()); if (_w3.y * T.def.side < -0.05 * d) continue; }
           if ((T.w.pdOnly && d > 300) || (T.w.bigOnly && e.def.cls === 'fighter' && d > 900)) continue;      // Bullfrog roles: thorn = missiles (ships only inside 300 m), heavy lance = big targets
           const pr = T.w.noPD ? (e.def.cls === 'fighter' && e.def.ai?.role !== 'bomber' ? d * 3 : d) : beamT ? (e.def.cls === 'fighter' ? d * 1.6 : d) : (e.def.cls === 'fighter' ? d : d * 2.2);   // lasers favour big, steady targets; PD handles fighters
           const prA = e.target === s ? pr * TUNE.turret.attackerBias : pr;           // M2 gunner doctrine: whoever is shooting at this ship comes first (a bomber's gunner engages the fighter on its six)

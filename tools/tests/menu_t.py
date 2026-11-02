@@ -67,7 +67,7 @@ with Runner() as R:
     check('enemy missiles removed', pg.evaluate("()=>__game.ships.filter(s=>s.team===1).every(s=>['tick','tad'].every(k=>!(s.stores[k]>0)))"))
     d = pg.evaluate("()=>{const g=__game;const p=g.player;return Math.min(...g.ships.filter(s=>s.team===1).map(s=>s.group.position.distanceTo(p.group.position)))}")
     check('start range ~800 m', 700 < d < 1100, d)
-    st = pg.evaluate("()=>{const g=__game;__paused=true;g.player.structure=1e6;g.player.shield.fore=g.player.shield.aft=1e6;for(let i=0;i<600;i++)g.update(0.05);return [g.state,g.ships.length,g.ships.filter(s=>s.alive&&s.team===1).length,g.skState.t]}")
+    st = pg.evaluate("()=>{const g=__game;__paused=true;const P=g.player;for(let i=0;i<600;i++){P.structure=1e6;P.shield.fore=P.shield.aft=1e6;for(const c of P.comps)c.hp=c.max;g.update(0.05);}   /* idle player must survive 30 s: a destroyed reactor kills the ship whatever the structure is */return [g.state,g.ships.length,g.ships.filter(s=>s.alive&&s.team===1).length,g.skState.t]}")
     check('stepped 30 sim-s', st[3] > 25, st)
     pg.screenshot(path=f'{SH}/menu_skirmish_flight.png')
     # win path: kill all enemies, debrief
