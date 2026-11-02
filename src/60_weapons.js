@@ -336,6 +336,10 @@ function tandemStrike(s, lp, w) {
   }
   return t.pierce || 0;
 }
+function missileClassFactors(w, cls) {
+  if (w.kind !== 'msl' || w.classScale === false || w.torp || w.nuclear) return { damage: 1, pierce: 1 };
+  return { damage: TUNE.missile.dmgCls[cls] ?? 1, pierce: TUNE.missile.pierceCls[cls] ?? 1 };
+}
 function blastAt(pos, w, team, owner, direct, skip) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
@@ -363,8 +367,10 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    const pierce = direct === s ? tandemStrike(s, lp, w) : 0;
-    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
+    const factors = missileClassFactors(w, s.def.cls);
+    const pierce = w.kind === 'msl' && w.classScale !== false && !w.torp && !w.nuclear
+      ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, lp, w) : 0;
+    applyHit(s, lp, w.dmg * f * factors.damage * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }

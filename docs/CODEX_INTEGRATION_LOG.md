@@ -1,5 +1,19 @@
 # Codex local integration log — 2026-11-01
 
+## Capital ordnance step 1: class damage (Codex)
+
+- Restored always-on `dmgCls` and `pierceCls` scaling for missile blasts,
+  including splash. Torpedoes and nukes explicitly opt out; tandem precursor
+  behavior is unchanged. `WEAPONS.md` marks the previous P0 table historical.
+- `ttk_matrix.py` now identifies its expected class-rule behavior; historical
+  ceiling data must be regenerated. Existing missile/TTK and balance outcomes
+  can change; no existing test assertions were weakened or re-baselined.
+- Local build, DB validation, JS syntax, Python compilation and four-class
+  plus torpedo/nuke/projectile positive/negative unit controls passed. Cloud:
+  run `missile_class_t.py`, `bullfrog_t.py m3`, `p0_t.py`, missile and ordnance
+  tests, and the seeded P0 commands in `CAPITAL_ORDNANCE_CLOUD_RUN.md`; replace
+  the historical table only with actual results. Full branch gate is pending.
+
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
 - `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated
