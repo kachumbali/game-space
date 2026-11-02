@@ -31,6 +31,12 @@
   Exeter, Halberd, Claymore and Hecla in flight and `?yard=` from top, side,
   and 3/4 views. The authored hatch locations and visual attachment have **not**
   been browser-rendered or owner-approved; do not enable by default until then.
+- Flag changes at runtime do not rebuild ship definitions: hatch paint and
+  shipyard component markers are created at page load when the flag is on.
+  Turning the flag off mid-page hides runtime launcher behavior but leaves
+  that page's model geometry/markers until reload; turning it on mid-page
+  creates runtime components but does not add hatch paint or yard markers.
+  Set the flag in the database before loading, and reload after changing it.
 
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
