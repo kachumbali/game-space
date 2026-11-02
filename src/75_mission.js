@@ -677,7 +677,7 @@ function showBriefing(M) {
   bindOrdnanceBriefing(el, M);
   el.querySelectorAll('[data-fm]').forEach(b => { b.onclick = () => { fmSet(b.dataset.fm, true); showBriefing(M); }; });
   el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
-  $id('bgo').onclick = () => { ordnanceApply(player); el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
+  $id('bgo').onclick = () => { if (!ordnanceApply(player)) { showBriefing(M); return; } el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(missionList[+b.dataset.i]); });
   $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };

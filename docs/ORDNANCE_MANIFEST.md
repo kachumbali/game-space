@@ -6,6 +6,15 @@ and resolution to `player.stores` at LAUNCH (`src/77_ordnance.js`, `tools/tests/
 visible rack/rail models, launch points tied to the selected station, mission stock limits, in-flight help, strategic stock (step 4). Torpedo stations on
 non-bomber fighters are marked `legacy: true` (Kestrel 1, Falchion 2) pending a decision. Swaps (M1: LANCE radar -> SWIFT IR gives 6 IR) are unmeasured.
 
+Follow-up: player-selected stations now retain their own rounds and launch
+coordinates. A mission may set `ordnanceStock: {ir: 4, rf: 2}`; omitted ids
+are unrestricted, and a load exceeding a specified cap cannot launch. AI keeps
+its existing default and generic launch behavior. The existing Kestrel rails
+and Bittern bay are represented; additional Kestrel legacy torpedo, Merlin and
+Falchion station coordinates require model/launch alignment review in the
+shipyard before treating them as finished physical racks. Station selection is
+not a persistent campaign stock ledger.
+
 ## Physical size classes
 
 | Class | Ordnance | Eligible hulls | Rule |
