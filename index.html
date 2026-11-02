@@ -6888,7 +6888,7 @@ const CAMPAIGNS = [
   { id: 'prologue', title: 'UNCHARTED VANGUARD', subtitle: 'Four sorties from customs patrol to first contact', missions: PROLOGUE_MISSIONS },
   { id: 'severed_node', title: 'THE SEVERED NODE', subtitle: 'Five sorties against the FROGG vanguard', missions: MISSIONS },
 ];
-function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS[1]; }
+function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS.find(c => c.id === 'severed_node'); }
 function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); return c.missions[i + 1] || null; }
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
@@ -7315,7 +7315,7 @@ function showCampaignList() {
   menuFocus();
 }
 function showMissionList(campaign) {
-  const c = campaign || CAMPAIGNS[1];
+  const c = campaign || CAMPAIGNS.find(c => c.id === 'severed_node');
   menuView = 'missions';
   menuShell(`<div class="sub">CAMPAIGN · ${c.title}</div><h1>SELECT MISSION</h1><h2>Opens the briefing</h2>
     <div class="mlist">${c.missions.map((m, i) => `<button class="mi" data-a="mission:${c.id}:${i}"><b>${i + 1}. ${m.title}</b><span>${m.subtitle}</span></button>`).join('')}<button class="mi alt" data-a="campaign"><b>BACK TO CAMPAIGNS</b></button></div>`, 'main');
@@ -9835,7 +9835,7 @@ if (!params.has('yard')) {
   if (params.has('scene')) {
     startScene(params.get('scene') || 'intro_test');
   } else {
-    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS[1];
+    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS.find(c => c.id === 'severed_node');
     startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))]);
     if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
     else if (params.has('sk')) startSkirmish(skFromParams());

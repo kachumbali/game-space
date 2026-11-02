@@ -450,7 +450,7 @@ const CAMPAIGNS = [
   { id: 'prologue', title: 'UNCHARTED VANGUARD', subtitle: 'Four sorties from customs patrol to first contact', missions: PROLOGUE_MISSIONS },
   { id: 'severed_node', title: 'THE SEVERED NODE', subtitle: 'Five sorties against the FROGG vanguard', missions: MISSIONS },
 ];
-function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS[1]; }
+function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS.find(c => c.id === 'severed_node'); }
 function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); return c.missions[i + 1] || null; }
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
