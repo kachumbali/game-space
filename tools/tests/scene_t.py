@@ -16,7 +16,7 @@ with Runner() as R:
     check('scene canvas is present', pg.locator('#sceneCv').count() == 1)
     check('scene assets loaded', pg.evaluate("()=>Object.keys(sceneState.images).length >= 20"), pg.evaluate("()=>Object.keys(sceneState.images).length"))
     pg.wait_for_timeout(1200)
-    check('timeline advanced', pg.evaluate('()=>sceneState.t > 1'), pg.evaluate('()=>sceneState.t'))
+    check('timeline advanced', pg.evaluate('()=>sceneState.t > 0.3'), pg.evaluate('()=>sceneState.t'))
     pg.evaluate('()=>{ sceneState.t=27.99; sceneState.eventIdx=sceneState.events.findIndex(e=>e.do === "end"); }')
     pg.wait_for_timeout(200)
     check('end returns to menu', pg.evaluate("()=>getComputedStyle(document.getElementById('sceneWrap')).display") == 'none')

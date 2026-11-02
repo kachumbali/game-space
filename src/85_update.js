@@ -129,7 +129,7 @@ function update(dt) {
   plogTick(dt); updateBolts(dt); updateMissiles(dt); updateDecoys(dt); updateFlashes(dt);
 
   // free flight: endless waves
-  if (game.mode === 'free' && state === 'play' && !ships.some(s => s.team === 1 && s.alive)) spawnWave();
+  if (game.mode === 'free' && state === 'play' && player && !ships.some(s => s.team === 1 && s.alive)) spawnWave();      // player is null while the intro cutscene (?scene=) runs
 
   // target selection (player)
   if (player && player.alive) {

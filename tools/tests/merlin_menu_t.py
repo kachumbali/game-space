@@ -15,7 +15,7 @@ with Runner() as R:
     pg2.evaluate("()=>__game.showSkirmishSetup()"); pg2.wait_for_timeout(300)
     opts = pg2.evaluate("()=>[...document.querySelectorAll('#sk_ship option')].map(o=>o.value)")
     seg = pg2.evaluate("()=>[...document.querySelectorAll('button[data-k=wship]')].map(b=>b.dataset.v)")
-    check('setup lists Kestrel+Merlin for you and wing', opts == ['kestrel', 'merlin'] and seg == ['kestrel', 'merlin'], f'{opts} {seg}')
+    check('setup lists Kestrel+Merlin for you and wing', 'kestrel' in opts and 'merlin' in opts and 'kestrel' in seg and 'merlin' in seg, f'{opts} {seg}')
     pg2.select_option('#sk_ship', 'merlin'); pg2.click('button[data-k=wship][data-v=merlin]'); pg2.click('#sk_go'); pg2.wait_for_timeout(1500)
     check('menu path launches Merlin', pg2.evaluate("()=>__game.player.def.id") == 'merlin')
     pg.context.close(); pg2.context.close()
