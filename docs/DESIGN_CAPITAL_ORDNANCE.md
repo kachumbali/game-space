@@ -358,3 +358,12 @@ Gate for all: `tools/check_branch.sh`; rebase on `origin/main`; balance claims n
 5. The no-arcade-drops rule for Campaign is untouched.
 6. FROGG parity (Q4): symmetric launchers would make the Bullfrog far more dangerous to Exeter.
 7. Performance on iPad/phone is the single unmeasured gate; P1 is deliberately first among code tasks.
+
+---
+## OWNER DECISIONS 2026-11-02 (these override the draft above where they differ)
+
+1. Reload times are **game (simulation) seconds**: 10 s torpedo tube reload, 5 s missile cell as proposed.
+2. **Yes** to AI torpedo holding: capital AI fires torpedoes only when the salvo is at least 2x the target's PD capacity or the target's PD is below 50 % (tune by sweep, keep the rule data-driven).
+3. **Nukes:** nuclear torpedoes are an **option toggled in the quick-play modes** (Skirmish, Gauntlet, Free Flight: a setting, default off). In the **campaign** it is a **story moment**: the player triggers it (scripted release by the mission, player fires). Never fired by the AI, never restocked by the tender.
+4. **No launchers for the FROGG for now** (Bullfrog, Gulper, hive carrier keep what they have; the Gulper's extra tick missiles from the draft are NOT done).
+5. Priority: balance pass v0.5 first (`docs/DESIGN_V05_BALANCE_PASS.md`), then P0-P3 of this document, then campaign tuning with the new fleets.
