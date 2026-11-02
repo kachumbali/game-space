@@ -1,0 +1,907 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-merlin-darter": {
+      "name": "Merlin vs Darter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 15.85,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                684.5,
+                587.7,
+                -686.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35394.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                379,
+                628.8,
+                -953.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 22644.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 22644.9,
+                "structure": 10.9,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 43.36,
+                "hostile_hits": 3,
+                "distance_flown": 35394.2,
+                "structure": 14,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 22.2,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                1161.4,
+                345.5,
+                -2283.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 27428.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1197.8,
+                308.7,
+                -2028.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 21730.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 19.36,
+                "hostile_hits": 12,
+                "distance_flown": 21730.4,
+                "structure": 7.51,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 40.49,
+                "hostile_hits": 3,
+                "distance_flown": 27428.1,
+                "structure": 12.64,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 40,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 21.65,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6071.7,
+                "structure": 0,
+                "shield": 22,
+                "death_time": 40,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 49.15,
+                "hostile_hits": 2,
+                "distance_flown": 8886.4,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 40,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 17.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 16.25,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 2639.2,
+                "structure": 0,
+                "shield": 22,
+                "death_time": 17.65,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46,
+                "hostile_hits": 1,
+                "distance_flown": 3364.1,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 17.65,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 12.9,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -653.9,
+                -380.6,
+                928.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 32697.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -533.7,
+                -276.3,
+                407.8
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 25777.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 16.4,
+                "hostile_hits": 8,
+                "distance_flown": 25777.2,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 32697.6,
+                "structure": 13.9,
+                "shield": 1.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 14.9,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                886.9,
+                -720.2,
+                -918.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 34043.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                143,
+                -657.6,
+                -803
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 22656.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 22656.6,
+                "structure": 7.04,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 44.06,
+                "hostile_hits": 2,
+                "distance_flown": 34043.9,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10.6,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                187,
+                -277.3,
+                -3462.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36132.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -558.4,
+                -276.7,
+                -3396.5
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 25771.5
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 10.14,
+                "hostile_hits": 5,
+                "distance_flown": 25771.5,
+                "structure": 7.93,
+                "shield": 39.77,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 58.92,
+                "hostile_hits": 7,
+                "distance_flown": 36132.8,
+                "structure": 13.96,
+                "shield": 7.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.55,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 4458.3,
+                "structure": 0,
+                "shield": 22,
+                "death_time": 31.65,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55.41,
+                "hostile_hits": 4,
+                "distance_flown": 6500.7,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 31.65,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 100,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 22.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 10.5,
+                "hostile_hits": 5,
+                "distance_flown": 14411.3,
+                "structure": 0,
+                "shield": 20,
+                "death_time": 100,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 70,
+                "hostile_hits": 2,
+                "distance_flown": 19870.5,
+                "structure": 14,
+                "shield": 7.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 100,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 96.95,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 45.8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 14056.4,
+                "structure": 0,
+                "shield": 20,
+                "death_time": 96.95,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 73.15,
+                "hostile_hits": 3,
+                "distance_flown": 19003.6,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 96.95,
+          "odd": [],
+          "scenario": "v05-merlin-darter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 0,
+        "win_rate": 0.0,
+        "time_to_kill_human_wins_only": {
+          "median": null,
+          "p25": null,
+          "p75": null
+        },
+        "human_losses": {
+          "median": 0.5,
+          "p25": 0.0,
+          "p75": 1.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion-reaver": {
+      "name": "Falchion vs Reaver",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 20,
+          "winner": "human",
+          "time_to_kill": 20,
+          "first_hit": {
+            "time": 4.85,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 73,
+                "distance_flown": 1862.7,
+                "structure": 110,
+                "shield": 145.71,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 23.8,
+                "hostile_hits": 4,
+                "distance_flown": 2271.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 20,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 28.45,
+          "winner": "human",
+          "time_to_kill": 28.45,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 136.45,
+                "hostile_hits": 85,
+                "distance_flown": 2643.5,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 3004.2,
+                "structure": 3.55,
+                "shield": 0,
+                "death_time": 28.45,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 28.45,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.6,
+          "winner": "human",
+          "time_to_kill": 12.6,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 124.73,
+                "hostile_hits": 85,
+                "distance_flown": 1216.3,
+                "structure": 110,
+                "shield": 117.72,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 36.4,
+                "hostile_hits": 8,
+                "distance_flown": 1774.9,
+                "structure": 15.27,
+                "shield": 0,
+                "death_time": 12.6,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.15,
+          "winner": "human",
+          "time_to_kill": 12.15,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 132.2,
+                "hostile_hits": 96,
+                "distance_flown": 1136.1,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1690.4,
+                "structure": 7.8,
+                "shield": 0,
+                "death_time": 12.15,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.85,
+          "winner": "human",
+          "time_to_kill": 12.85,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 95,
+                "distance_flown": 1225.7,
+                "structure": 110,
+                "shield": 134.25,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 1834.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 12.85,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 41.25,
+          "winner": "human",
+          "time_to_kill": 41.25,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 139.31,
+                "hostile_hits": 62,
+                "distance_flown": 3879.3,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 4054.1,
+                "structure": 0.69,
+                "shield": 0,
+                "death_time": 41.25,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 41.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 11.55,
+          "winner": "human",
+          "time_to_kill": 11.55,
+          "first_hit": {
+            "time": 5,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 133.98,
+                "hostile_hits": 92,
+                "distance_flown": 1098.8,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1559.1,
+                "structure": 6.02,
+                "shield": 0,
+                "death_time": 11.55,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 11.55,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.7,
+          "winner": "human",
+          "time_to_kill": 20.7,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 139.06,
+                "hostile_hits": 73,
+                "distance_flown": 1913.7,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 3190.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 20.7,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 13.5,
+          "winner": "human",
+          "time_to_kill": 13.5,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 93,
+                "distance_flown": 1268.8,
+                "structure": 110,
+                "shield": 119.38,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 39.55,
+                "hostile_hits": 9,
+                "distance_flown": 1670.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 13.5,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 13.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 18.3,
+          "winner": "human",
+          "time_to_kill": 18.3,
+          "first_hit": {
+            "time": 4.85,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 136.52,
+                "hostile_hits": 65,
+                "distance_flown": 1672.3,
+                "structure": 110,
+                "shield": 117.91,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 38.05,
+                "hostile_hits": 5,
+                "distance_flown": 2221.9,
+                "structure": 3.48,
+                "shield": 0,
+                "death_time": 18.3,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 18.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-reaver",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 15.9,
+          "p25": 12.6625,
+          "p75": 20.525
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

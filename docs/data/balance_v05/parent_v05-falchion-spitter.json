@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion-spitter": {
+      "name": "Falchion vs Spitter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 13.75,
+          "winner": "human",
+          "time_to_kill": 13.75,
+          "first_hit": {
+            "time": 3.65,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 79.72,
+                "hostile_hits": 53,
+                "distance_flown": 1303.4,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 1616.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 13.75,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 13.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 15.15,
+          "winner": "human",
+          "time_to_kill": 15.15,
+          "first_hit": {
+            "time": 5.45,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 86.76,
+                "hostile_hits": 43,
+                "distance_flown": 1427.7,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 2029.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 15.15,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 15.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 10,
+          "winner": "human",
+          "time_to_kill": 10,
+          "first_hit": {
+            "time": 5.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 50,
+                "distance_flown": 938,
+                "structure": 110,
+                "shield": 146.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 1403.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 10,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 10,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 16.65,
+          "winner": "human",
+          "time_to_kill": 16.65,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 91.56,
+                "hostile_hits": 45,
+                "distance_flown": 1524.1,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 1981,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 16.65,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 16.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 10.05,
+          "winner": "human",
+          "time_to_kill": 10.05,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 48,
+                "distance_flown": 959.4,
+                "structure": 110,
+                "shield": 113.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 36.3,
+                "hostile_hits": 3,
+                "distance_flown": 1358.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 10.05,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 10.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 11.3,
+          "winner": "human",
+          "time_to_kill": 11.3,
+          "first_hit": {
+            "time": 5.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 50,
+                "distance_flown": 1074.9,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1601.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 11.3,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 11.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.65,
+          "winner": "human",
+          "time_to_kill": 12.65,
+          "first_hit": {
+            "time": 5.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 55,
+                "distance_flown": 1189.3,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1749.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 12.65,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 15.4,
+          "winner": "human",
+          "time_to_kill": 15.4,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 55,
+                "distance_flown": 1462.7,
+                "structure": 110,
+                "shield": 143.25,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 2006.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 15.4,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 15.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 14.6,
+          "winner": "human",
+          "time_to_kill": 14.6,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 83.05,
+                "hostile_hits": 38,
+                "distance_flown": 1341.9,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 1790.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 14.6,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 14.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 17.25,
+          "winner": "human",
+          "time_to_kill": 17.25,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 42,
+                "distance_flown": 1609.8,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 2438.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 17.25,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 17.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-spitter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 14.175,
+          "p25": 11.637500000000001,
+          "p75": 15.3375
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

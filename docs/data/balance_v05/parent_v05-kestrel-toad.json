@@ -1,0 +1,755 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-kestrel-toad": {
+      "name": "Kestrel vs Toad",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 79.35,
+          "winner": "human",
+          "time_to_kill": 79.35,
+          "first_hit": {
+            "time": 13.9,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 244.6,
+                "hostile_hits": 90,
+                "distance_flown": 9728.1,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 6686.7,
+                "structure": 55.4,
+                "shield": 0,
+                "death_time": 79.35,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 79.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 57.45,
+          "winner": "human",
+          "time_to_kill": 57.45,
+          "first_hit": {
+            "time": 7.45,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 234.07,
+                "hostile_hits": 57,
+                "distance_flown": 6825.9,
+                "structure": 50,
+                "shield": 68.67,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 47.03,
+                "hostile_hits": 15,
+                "distance_flown": 6394.6,
+                "structure": 65.93,
+                "shield": 0,
+                "death_time": 57.45,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 57.45,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 47.7,
+          "winner": "human",
+          "time_to_kill": 47.7,
+          "first_hit": {
+            "time": 4,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 251.99,
+                "hostile_hits": 92,
+                "distance_flown": 5498.2,
+                "structure": 50,
+                "shield": 61.69,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 59.49,
+                "hostile_hits": 19,
+                "distance_flown": 4272.8,
+                "structure": 48.01,
+                "shield": 0,
+                "death_time": 47.7,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 47.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 68.65,
+          "winner": "human",
+          "time_to_kill": 68.65,
+          "first_hit": {
+            "time": 5.5,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 266.18,
+                "hostile_hits": 94,
+                "distance_flown": 7897,
+                "structure": 50,
+                "shield": 72.81,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 56.13,
+                "hostile_hits": 18,
+                "distance_flown": 5905.6,
+                "structure": 33.82,
+                "shield": 0,
+                "death_time": 68.65,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 68.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 82,
+          "winner": "human",
+          "time_to_kill": 82,
+          "first_hit": {
+            "time": 15.4,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 268.79,
+                "hostile_hits": 81,
+                "distance_flown": 9834.6,
+                "structure": 50,
+                "shield": 73.83,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 50.33,
+                "hostile_hits": 16,
+                "distance_flown": 7583.9,
+                "structure": 15.44,
+                "shield": 0,
+                "death_time": 82,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 82,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 52.35,
+          "winner": "human",
+          "time_to_kill": 52.35,
+          "first_hit": {
+            "time": 6.65,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 258.4,
+                "hostile_hits": 78,
+                "distance_flown": 6165.8,
+                "structure": 50,
+                "shield": 62.91,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 43.75,
+                "hostile_hits": 14,
+                "distance_flown": 4611.8,
+                "structure": 41.6,
+                "shield": 0,
+                "death_time": 52.35,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 52.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.25,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -64.5,
+                394.4,
+                672.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 13439.5
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -125.9,
+                357.5,
+                916.7
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 21093.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 255.06,
+                "hostile_hits": 80,
+                "distance_flown": 21093.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 103.14,
+                "hostile_hits": 27,
+                "distance_flown": 13439.5,
+                "structure": 44.94,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 100.6,
+          "winner": "human",
+          "time_to_kill": 100.6,
+          "first_hit": {
+            "time": 6.75,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 257.22,
+                "hostile_hits": 79,
+                "distance_flown": 11615.7,
+                "structure": 49,
+                "shield": 40,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 64.62,
+                "hostile_hits": 22,
+                "distance_flown": 8954.6,
+                "structure": 9.83,
+                "shield": 0,
+                "death_time": 100.6,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 100.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 82.05,
+          "winner": "human",
+          "time_to_kill": 82.05,
+          "first_hit": {
+            "time": 6.85,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 279.71,
+                "hostile_hits": 109,
+                "distance_flown": 9486.6,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 65.68,
+                "hostile_hits": 21,
+                "distance_flown": 6246.6,
+                "structure": 20.29,
+                "shield": 0,
+                "death_time": 82.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 82.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 100.9,
+          "winner": "human",
+          "time_to_kill": 100.9,
+          "first_hit": {
+            "time": 5.9,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 265.67,
+                "hostile_hits": 107,
+                "distance_flown": 10591.6,
+                "structure": 46.03,
+                "shield": 42.42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 100.79,
+                "hostile_hits": 33,
+                "distance_flown": 6860.9,
+                "structure": 34.33,
+                "shield": 0,
+                "death_time": 100.9,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 100.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-toad",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 9,
+        "win_rate": 0.9,
+        "time_to_kill_human_wins_only": {
+          "median": 79.35,
+          "p25": 57.45,
+          "p75": 82.05
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

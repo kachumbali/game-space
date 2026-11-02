@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion-toad": {
+      "name": "Falchion vs Toad",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 16.65,
+          "winner": "human",
+          "time_to_kill": 16.65,
+          "first_hit": {
+            "time": 5.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 190.61,
+                "hostile_hits": 117,
+                "distance_flown": 1575.2,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 2009.2,
+                "structure": 74.19,
+                "shield": 0,
+                "death_time": 16.65,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 16.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 19.15,
+          "winner": "human",
+          "time_to_kill": 19.15,
+          "first_hit": {
+            "time": 3.85,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 230.64,
+                "hostile_hits": 131,
+                "distance_flown": 1828.2,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 2051,
+                "structure": 69.36,
+                "shield": 0,
+                "death_time": 19.15,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 19.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.4,
+          "winner": "human",
+          "time_to_kill": 20.4,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 256.62,
+                "hostile_hits": 135,
+                "distance_flown": 1909.6,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 1996.5,
+                "structure": 43.38,
+                "shield": 0,
+                "death_time": 20.4,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 15.35,
+          "winner": "human",
+          "time_to_kill": 15.35,
+          "first_hit": {
+            "time": 2.95,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 232.82,
+                "hostile_hits": 110,
+                "distance_flown": 1480.6,
+                "structure": 110,
+                "shield": 148.87,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 1877.8,
+                "structure": 52.2,
+                "shield": 0,
+                "death_time": 15.35,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 15.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 19.6,
+          "winner": "human",
+          "time_to_kill": 19.6,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 219.88,
+                "hostile_hits": 102,
+                "distance_flown": 1823.6,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.22,
+                "hostile_hits": 2,
+                "distance_flown": 1936.1,
+                "structure": 42.02,
+                "shield": 0,
+                "death_time": 19.6,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 19.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 15.15,
+          "winner": "human",
+          "time_to_kill": 15.15,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 215.87,
+                "hostile_hits": 122,
+                "distance_flown": 1444.7,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1786.8,
+                "structure": 71.28,
+                "shield": 0,
+                "death_time": 15.15,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 15.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 15.95,
+          "winner": "human",
+          "time_to_kill": 15.95,
+          "first_hit": {
+            "time": 5.6,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 257.22,
+                "hostile_hits": 146,
+                "distance_flown": 1539.8,
+                "structure": 110,
+                "shield": 137.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 1850.5,
+                "structure": 42.78,
+                "shield": 0,
+                "death_time": 15.95,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 15.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 16.05,
+          "winner": "human",
+          "time_to_kill": 16.05,
+          "first_hit": {
+            "time": 5,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "falchion",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 232.66,
+                "hostile_hits": 135,
+                "distance_flown": 1552.5,
+                "structure": 110,
+                "shield": 142.63,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 1909.4,
+                "structure": 27.29,
+                "shield": 0,
+                "death_time": 16.05,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 16.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 14.7,
+          "winner": "human",
+          "time_to_kill": 14.7,
+          "first_hit": {
+            "time": 5.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 225.56,
+                "hostile_hits": 117,
+                "distance_flown": 1413.4,
+                "structure": 110,
+                "shield": 148.96,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 1481.1,
+                "structure": 74.44,
+                "shield": 0,
+                "death_time": 14.7,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 14.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 21.5,
+          "winner": "human",
+          "time_to_kill": 21.5,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 251.59,
+                "hostile_hits": 127,
+                "distance_flown": 1967.7,
+                "structure": 110,
+                "shield": 120.72,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 37.8,
+                "hostile_hits": 12,
+                "distance_flown": 2020.3,
+                "structure": 29.56,
+                "shield": 0,
+                "death_time": 21.5,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 21.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-toad",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 16.35,
+          "p25": 15.5,
+          "p75": 19.4875
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

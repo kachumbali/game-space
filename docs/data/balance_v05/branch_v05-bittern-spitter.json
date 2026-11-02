@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-bittern-spitter": {
+      "name": "Bittern vs Spitter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 37.3,
+          "winner": "human",
+          "time_to_kill": 37.3,
+          "first_hit": {
+            "time": 5.5,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 75,
+                "distance_flown": 2494,
+                "structure": 134.46,
+                "shield": 113.79,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 118.35,
+                "hostile_hits": 14,
+                "distance_flown": 4409.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 37.3,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 37.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 32.25,
+          "winner": "human",
+          "time_to_kill": 32.25,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 76,
+                "distance_flown": 2070.8,
+                "structure": 127.44,
+                "shield": 70.94,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 149.61,
+                "hostile_hits": 31,
+                "distance_flown": 3586.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 32.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 32.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.55,
+          "winner": "human",
+          "time_to_kill": 36.55,
+          "first_hit": {
+            "time": 6.05,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 77,
+                "distance_flown": 2363,
+                "structure": 134.6,
+                "shield": 109.09,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 125.53,
+                "hostile_hits": 20,
+                "distance_flown": 4044.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 36.55,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.55,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 32.25,
+          "winner": "human",
+          "time_to_kill": 32.25,
+          "first_hit": {
+            "time": 5.55,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 71,
+                "distance_flown": 2102.5,
+                "structure": 132.43,
+                "shield": 104.32,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 118.77,
+                "hostile_hits": 32,
+                "distance_flown": 3629.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 32.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 32.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 29.5,
+          "winner": "human",
+          "time_to_kill": 29.5,
+          "first_hit": {
+            "time": 5.55,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 86,
+                "distance_flown": 1922,
+                "structure": 127.19,
+                "shield": 44.42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 141.13,
+                "hostile_hits": 43,
+                "distance_flown": 3108,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 29.5,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 29.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 32.85,
+          "winner": "human",
+          "time_to_kill": 32.85,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 81,
+                "distance_flown": 2306.6,
+                "structure": 119.56,
+                "shield": 42.89,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 150.81,
+                "hostile_hits": 29,
+                "distance_flown": 3151.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 32.85,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 32.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 39.55,
+          "winner": "human",
+          "time_to_kill": 39.55,
+          "first_hit": {
+            "time": 5.7,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 41,
+                "distance_flown": 2581.3,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 21.8,
+                "hostile_hits": 7,
+                "distance_flown": 3758.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 39.55,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 39.55,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 34.15,
+          "winner": "human",
+          "time_to_kill": 34.15,
+          "first_hit": {
+            "time": 5.75,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 105,
+                "distance_flown": 2426.4,
+                "structure": 140,
+                "shield": 95.58,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 120.59,
+                "hostile_hits": 30,
+                "distance_flown": 3432,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 34.15,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 34.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 38.4,
+          "winner": "human",
+          "time_to_kill": 38.4,
+          "first_hit": {
+            "time": 5.5,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 87,
+                "distance_flown": 2436.7,
+                "structure": 115.81,
+                "shield": 73.14,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 157.26,
+                "hostile_hits": 40,
+                "distance_flown": 4258.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 38.4,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 38.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 22.6,
+          "winner": "human",
+          "time_to_kill": 22.6,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 60,
+                "distance_flown": 1553.7,
+                "structure": 140,
+                "shield": 98.37,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 89.75,
+                "hostile_hits": 20,
+                "distance_flown": 2499.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 22.6,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 22.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-spitter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 33.5,
+          "p25": 32.25,
+          "p75": 37.1125
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

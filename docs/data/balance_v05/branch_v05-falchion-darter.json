@@ -1,0 +1,793 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion-darter": {
+      "name": "Falchion vs Darter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 46.5,
+          "winner": "human",
+          "time_to_kill": 46.5,
+          "first_hit": {
+            "time": 7,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 29.07,
+                "hostile_hits": 32,
+                "distance_flown": 4736.9,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 24.86,
+                "hostile_hits": 8,
+                "distance_flown": 9701.8,
+                "structure": 12.93,
+                "shield": 0,
+                "death_time": 46.5,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 46.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 43.7,
+          "winner": "human",
+          "time_to_kill": 43.7,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 42,
+                "hostile_hits": 26,
+                "distance_flown": 3948.5,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.44,
+                "hostile_hits": 11,
+                "distance_flown": 7827.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 43.7,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 43.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.5,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -5252.3,
+                -17275.3,
+                14654.7
+              ],
+              "target": {
+                "id": "falchion",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "falchion",
+                "callsign": "H1"
+              },
+              "distance_flown": 32483.1
+            },
+            {
+              "team": "human",
+              "id": "falchion",
+              "callsign": "H1",
+              "position": [
+                -2776.6,
+                -9945.7,
+                8224.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 18928.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 21.4,
+                "hostile_hits": 24,
+                "distance_flown": 18928.6,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 32483.1,
+                "structure": 18.62,
+                "shield": 0.92,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 34.3,
+          "winner": "human",
+          "time_to_kill": 34.3,
+          "first_hit": {
+            "time": 3.7,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 34.52,
+                "hostile_hits": 44,
+                "distance_flown": 3341.5,
+                "structure": 110,
+                "shield": 147.62,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 6476.5,
+                "structure": 7.48,
+                "shield": 0,
+                "death_time": 34.3,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 34.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                448.3,
+                -629.4,
+                -1648.1
+              ],
+              "target": {
+                "id": "falchion",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "falchion",
+                "callsign": "H1"
+              },
+              "distance_flown": 29349.6
+            },
+            {
+              "team": "human",
+              "id": "falchion",
+              "callsign": "H1",
+              "position": [
+                695.7,
+                -632,
+                -1725.2
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 16410.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 16.77,
+                "hostile_hits": 11,
+                "distance_flown": 16410.4,
+                "structure": 110,
+                "shield": 120.88,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 122.08,
+                "hostile_hits": 39,
+                "distance_flown": 29349.6,
+                "structure": 23.35,
+                "shield": 1.88,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 98.4,
+          "winner": "human",
+          "time_to_kill": 98.4,
+          "first_hit": {
+            "time": 3.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "falchion",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 42,
+                "hostile_hits": 29,
+                "distance_flown": 8730.3,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 71.86,
+                "hostile_hits": 23,
+                "distance_flown": 18703.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 98.4,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 98.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 54.1,
+          "winner": "human",
+          "time_to_kill": 54.1,
+          "first_hit": {
+            "time": 3.65,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.28,
+                "hostile_hits": 43,
+                "distance_flown": 5086.7,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 37.16,
+                "hostile_hits": 12,
+                "distance_flown": 9486.1,
+                "structure": 5.72,
+                "shield": 0,
+                "death_time": 54.1,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 54.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 73.7,
+          "winner": "human",
+          "time_to_kill": 73.7,
+          "first_hit": {
+            "time": 3.7,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 42,
+                "hostile_hits": 25,
+                "distance_flown": 6557.3,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 71.93,
+                "hostile_hits": 23,
+                "distance_flown": 13671.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 73.7,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 73.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 50.15,
+          "winner": "human",
+          "time_to_kill": 50.15,
+          "first_hit": {
+            "time": 5.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.45,
+                "hostile_hits": 48,
+                "distance_flown": 4709,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.57,
+                "hostile_hits": 11,
+                "distance_flown": 5839.4,
+                "structure": 11.55,
+                "shield": 0,
+                "death_time": 50.15,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 50.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.1,
+          "winner": "human",
+          "time_to_kill": 31.1,
+          "first_hit": {
+            "time": 4.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32.79,
+                "hostile_hits": 43,
+                "distance_flown": 3253,
+                "structure": 110,
+                "shield": 109.74,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 40.26,
+                "hostile_hits": 7,
+                "distance_flown": 6026.3,
+                "structure": 9.21,
+                "shield": 0,
+                "death_time": 31.1,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 31.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-darter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 8,
+        "win_rate": 0.8,
+        "time_to_kill_human_wins_only": {
+          "median": 48.325,
+          "p25": 41.35,
+          "p75": 59.0
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

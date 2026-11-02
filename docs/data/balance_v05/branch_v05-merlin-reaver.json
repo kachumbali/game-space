@@ -1,0 +1,1059 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-merlin-reaver": {
+      "name": "Merlin vs Reaver",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 144.05,
+          "winner": "human",
+          "time_to_kill": 144.05,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 122.24,
+                "hostile_hits": 74,
+                "distance_flown": 20167.4,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 21.35,
+                "hostile_hits": 5,
+                "distance_flown": 12046.6,
+                "structure": 52.76,
+                "shield": 0,
+                "death_time": 144.05,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 144.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -600.3,
+                263.6,
+                -1098.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12999.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -821.1,
+                350.8,
+                -1469.2
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25281.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 109.1,
+                "hostile_hits": 72,
+                "distance_flown": 25281.2,
+                "structure": 35,
+                "shield": 38.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 51.67,
+                "hostile_hits": 8,
+                "distance_flown": 12999.1,
+                "structure": 65.9,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                225.9,
+                -127.9,
+                -1610.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 14584.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                466.2,
+                -72.9,
+                -1326.4
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 24917
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 81.41,
+                "hostile_hits": 54,
+                "distance_flown": 24917,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 18.86,
+                "hostile_hits": 6,
+                "distance_flown": 14584.3,
+                "structure": 82.99,
+                "shield": 10.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.6,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -930.4,
+                -723.7,
+                -1612.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 17826.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -847.7,
+                -596.4,
+                -1316
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25362.5
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 78.77,
+                "hostile_hits": 56,
+                "distance_flown": 25362.5,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 17826.4,
+                "structure": 79.33,
+                "shield": 16.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -269.8,
+                664.7,
+                -1350.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13052.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -82.4,
+                655.5,
+                -996.1
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25013.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 124.8,
+                "hostile_hits": 115,
+                "distance_flown": 25013.4,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 24.5,
+                "hostile_hits": 6,
+                "distance_flown": 13052.1,
+                "structure": 50.2,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 12.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                264.9,
+                268.2,
+                -651.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13973.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -137.6,
+                246.2,
+                -468.8
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25088.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 142.67,
+                "hostile_hits": 34,
+                "distance_flown": 25088.6,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 13973.4,
+                "structure": 25.93,
+                "shield": 6.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                48.7,
+                -470.7,
+                -2691.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12028.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -321.8,
+                -582,
+                -2818.7
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25176.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 126.97,
+                "hostile_hits": 113,
+                "distance_flown": 25176.8,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 12028.1,
+                "structure": 48.03,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 12.45,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -218.6,
+                -173.6,
+                -1527.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 18656.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -386.6,
+                -177,
+                -1058.6
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25900.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 70.06,
+                "hostile_hits": 41,
+                "distance_flown": 25900.9,
+                "structure": 35,
+                "shield": 38.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 18656.5,
+                "structure": 83.84,
+                "shield": 21.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 16.8,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -1279,
+                -41.2,
+                -1431.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 17097.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -1155.6,
+                -138,
+                -955.2
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25010.5
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 117.44,
+                "hostile_hits": 35,
+                "distance_flown": 25010.5,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 17097.6,
+                "structure": 57.56,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.1,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                -2253.4,
+                -496.4,
+                -4579.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 19448.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -2370,
+                -376.6,
+                -4614.1
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 25768.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 82.65,
+                "hostile_hits": 53,
+                "distance_flown": 25768.4,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 19448.6,
+                "structure": 85.95,
+                "shield": 6.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-reaver",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 1,
+        "win_rate": 0.1,
+        "time_to_kill_human_wins_only": {
+          "median": 144.05,
+          "p25": 144.05,
+          "p75": 144.05
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

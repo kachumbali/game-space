@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-kestrel-reaver": {
+      "name": "Kestrel vs Reaver",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 119.9,
+          "winner": "human",
+          "time_to_kill": 119.9,
+          "first_hit": {
+            "time": 5.8,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 139.83,
+                "hostile_hits": 57,
+                "distance_flown": 14546.6,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 42.65,
+                "hostile_hits": 10,
+                "distance_flown": 9974.8,
+                "structure": 0.17,
+                "shield": 0,
+                "death_time": 119.9,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 119.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 103.75,
+          "winner": "human",
+          "time_to_kill": 103.75,
+          "first_hit": {
+            "time": 4.6,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 137.72,
+                "hostile_hits": 50,
+                "distance_flown": 12403.5,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 22.05,
+                "hostile_hits": 7,
+                "distance_flown": 7743.9,
+                "structure": 2.28,
+                "shield": 0,
+                "death_time": 103.75,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 103.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 131.05,
+          "winner": "human",
+          "time_to_kill": 131.05,
+          "first_hit": {
+            "time": 6.15,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 56,
+                "distance_flown": 13025.8,
+                "structure": 29.61,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 72.92,
+                "hostile_hits": 14,
+                "distance_flown": 12267.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 131.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 131.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 21.65,
+          "winner": "human",
+          "time_to_kill": 21.65,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 54,
+                "distance_flown": 2654.2,
+                "structure": 50,
+                "shield": 72.37,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 20.65,
+                "hostile_hits": 3,
+                "distance_flown": 3278.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 21.65,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 21.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 57.05,
+          "winner": "human",
+          "time_to_kill": 57.05,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 139.48,
+                "hostile_hits": 50,
+                "distance_flown": 7189.4,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 15.05,
+                "hostile_hits": 3,
+                "distance_flown": 6921.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 57.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 57.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 178.95,
+          "winner": "human",
+          "time_to_kill": 178.95,
+          "first_hit": {
+            "time": 14.25,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 33,
+                "distance_flown": 21556.3,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 46.55,
+                "hostile_hits": 13,
+                "distance_flown": 12016.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 178.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 178.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 44.15,
+          "winner": "human",
+          "time_to_kill": 44.15,
+          "first_hit": {
+            "time": 10.65,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 121,
+                "hostile_hits": 39,
+                "distance_flown": 5484.8,
+                "structure": 50,
+                "shield": 70.55,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 4817.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 44.15,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 44.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 85.8,
+          "winner": "human",
+          "time_to_kill": 85.8,
+          "first_hit": {
+            "time": 6.4,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 56,
+                "distance_flown": 10397.5,
+                "structure": 46.31,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 64.69,
+                "hostile_hits": 14,
+                "distance_flown": 7127.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 85.8,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 85.8,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 75.95,
+          "winner": "human",
+          "time_to_kill": 75.95,
+          "first_hit": {
+            "time": 13,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 140,
+                "hostile_hits": 55,
+                "distance_flown": 9255.1,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 6997.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 75.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 75.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 78.7,
+          "winner": "human",
+          "time_to_kill": 78.7,
+          "first_hit": {
+            "time": 3.95,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 131.53,
+                "hostile_hits": 56,
+                "distance_flown": 9757.8,
+                "structure": 49.69,
+                "shield": 64.46,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 63.01,
+                "hostile_hits": 12,
+                "distance_flown": 8237.9,
+                "structure": 8.47,
+                "shield": 0,
+                "death_time": 78.7,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 78.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-reaver",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 82.25,
+          "p25": 61.775,
+          "p75": 115.86250000000001
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

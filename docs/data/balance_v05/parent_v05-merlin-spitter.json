@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-merlin-spitter": {
+      "name": "Merlin vs Spitter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 152.25,
+          "winner": "human",
+          "time_to_kill": 152.25,
+          "first_hit": {
+            "time": 11.65,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 90.27,
+                "hostile_hits": 71,
+                "distance_flown": 21327.9,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 8089.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 152.25,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 152.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 100.75,
+          "winner": "human",
+          "time_to_kill": 100.75,
+          "first_hit": {
+            "time": 8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 90.39,
+                "hostile_hits": 71,
+                "distance_flown": 14127.8,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 10471.8,
+                "structure": 1.61,
+                "shield": 0,
+                "death_time": 100.75,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 100.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 97.9,
+          "winner": "human",
+          "time_to_kill": 97.9,
+          "first_hit": {
+            "time": 5.55,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 72,
+                "distance_flown": 13813.9,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 7915.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 97.9,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 97.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 67.8,
+          "winner": "human",
+          "time_to_kill": 67.8,
+          "first_hit": {
+            "time": 11.65,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 77,
+                "distance_flown": 9579.2,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 7314.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 67.8,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 67.8,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 66.3,
+          "winner": "human",
+          "time_to_kill": 66.3,
+          "first_hit": {
+            "time": 13,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 89.27,
+                "hostile_hits": 70,
+                "distance_flown": 9314.5,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 5217,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 66.3,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 66.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 107.7,
+          "winner": "human",
+          "time_to_kill": 107.7,
+          "first_hit": {
+            "time": 8.8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 88.41,
+                "hostile_hits": 73,
+                "distance_flown": 14972.7,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5731.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 107.7,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 107.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 49.85,
+          "winner": "human",
+          "time_to_kill": 49.85,
+          "first_hit": {
+            "time": 8.7,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 79.18,
+                "hostile_hits": 66,
+                "distance_flown": 6829.5,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 4356.6,
+                "structure": 8.6,
+                "shield": 0,
+                "death_time": 49.85,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 49.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 32.95,
+          "winner": "human",
+          "time_to_kill": 32.95,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 86.48,
+                "hostile_hits": 75,
+                "distance_flown": 3406.8,
+                "structure": 24.43,
+                "shield": 41.26,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 24.72,
+                "hostile_hits": 3,
+                "distance_flown": 3811.6,
+                "structure": 5.52,
+                "shield": 0,
+                "death_time": 32.95,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 32.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 37.75,
+          "winner": "human",
+          "time_to_kill": 37.75,
+          "first_hit": {
+            "time": 10.45,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 76.03,
+                "hostile_hits": 63,
+                "distance_flown": 5286.1,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 4488.7,
+                "structure": 11.17,
+                "shield": 0,
+                "death_time": 37.75,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 37.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 116.65,
+          "winner": "human",
+          "time_to_kill": 116.65,
+          "first_hit": {
+            "time": 10.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 92,
+                "hostile_hits": 75,
+                "distance_flown": 16322.3,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 6889.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 116.65,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 116.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-spitter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 82.85,
+          "p25": 53.9625,
+          "p75": 105.9625
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

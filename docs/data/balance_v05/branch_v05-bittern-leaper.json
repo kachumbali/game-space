@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-bittern-leaper": {
+      "name": "Bittern vs Leaper",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 36.95,
+          "winner": "human",
+          "time_to_kill": 36.95,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 65,
+                "distance_flown": 2638,
+                "structure": 140,
+                "shield": 136.02,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 104.7,
+                "hostile_hits": 12,
+                "distance_flown": 4940.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 36.95,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.35,
+          "winner": "human",
+          "time_to_kill": 36.35,
+          "first_hit": {
+            "time": 5.9,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 35,
+                "distance_flown": 2640.8,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 63,
+                "hostile_hits": 8,
+                "distance_flown": 5947.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 36.35,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.7,
+          "winner": "human",
+          "time_to_kill": 31.7,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 54.65,
+                "hostile_hits": 75,
+                "distance_flown": 2387.3,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 47.64,
+                "hostile_hits": 7,
+                "distance_flown": 4248.3,
+                "structure": 10.35,
+                "shield": 0,
+                "death_time": 31.7,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 31.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 45.45,
+          "winner": "human",
+          "time_to_kill": 45.45,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 76,
+                "distance_flown": 3503.3,
+                "structure": 140,
+                "shield": 169.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 69.74,
+                "hostile_hits": 8,
+                "distance_flown": 5262.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 45.45,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 45.45,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 34.75,
+          "winner": "human",
+          "time_to_kill": 34.75,
+          "first_hit": {
+            "time": 6.2,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 58.58,
+                "hostile_hits": 60,
+                "distance_flown": 2689.1,
+                "structure": 140,
+                "shield": 135.27,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 95.78,
+                "hostile_hits": 11,
+                "distance_flown": 5082.3,
+                "structure": 6.42,
+                "shield": 0,
+                "death_time": 34.75,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 34.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 89.1,
+          "winner": "human",
+          "time_to_kill": 89.1,
+          "first_hit": {
+            "time": 6.3,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 60.72,
+                "hostile_hits": 60,
+                "distance_flown": 6528.9,
+                "structure": 140,
+                "shield": 161.25,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 80.32,
+                "hostile_hits": 10,
+                "distance_flown": 9560.3,
+                "structure": 4.28,
+                "shield": 0,
+                "death_time": 89.1,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 89.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 29.75,
+          "winner": "human",
+          "time_to_kill": 29.75,
+          "first_hit": {
+            "time": 6.35,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 76,
+                "distance_flown": 2184.3,
+                "structure": 140,
+                "shield": 169.23,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 43.75,
+                "hostile_hits": 5,
+                "distance_flown": 4290.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 29.75,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 29.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 65.7,
+          "winner": "human",
+          "time_to_kill": 65.7,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 42,
+                "distance_flown": 4424.4,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 79.34,
+                "hostile_hits": 10,
+                "distance_flown": 6874.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 65.7,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 65.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 119.2,
+          "winner": "human",
+          "time_to_kill": 119.2,
+          "first_hit": {
+            "time": 6.35,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 46,
+                "distance_flown": 8365.9,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 199.29,
+                "hostile_hits": 23,
+                "distance_flown": 10099.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 119.2,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 119.2,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 30.65,
+          "winner": "human",
+          "time_to_kill": 30.65,
+          "first_hit": {
+            "time": 5.85,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 46,
+                "distance_flown": 2177.8,
+                "structure": 140,
+                "shield": 131.71,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 79.6,
+                "hostile_hits": 10,
+                "distance_flown": 5272.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 30.65,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 30.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-leaper",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 36.650000000000006,
+          "p25": 32.4625,
+          "p75": 60.6375
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

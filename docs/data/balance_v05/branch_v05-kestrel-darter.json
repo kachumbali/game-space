@@ -1,0 +1,869 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-kestrel-darter": {
+      "name": "Kestrel vs Darter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 72.9,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.2,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 8447.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 72.9,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 124.65,
+                "hostile_hits": 24,
+                "distance_flown": 14088.8,
+                "structure": 24,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 72.9,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 118.55,
+          "winner": "human",
+          "time_to_kill": 118.55,
+          "first_hit": {
+            "time": 8.55,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 42,
+                "hostile_hits": 19,
+                "distance_flown": 12042.5,
+                "structure": 32.39,
+                "shield": 34.05,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 125.58,
+                "hostile_hits": 55,
+                "distance_flown": 17366.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 118.55,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 118.55,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 29.35,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10.3,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 1,
+                "distance_flown": 3837.1,
+                "structure": 22.99,
+                "shield": 40,
+                "death_time": 29.35,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 73.31,
+                "hostile_hits": 3,
+                "distance_flown": 6944.1,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 29.35,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 66.55,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.35,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 8393.3,
+                "structure": 0,
+                "shield": 32.27,
+                "death_time": 66.55,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 145.54,
+                "hostile_hits": 7,
+                "distance_flown": 13795.5,
+                "structure": 24,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 66.55,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 172,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.95,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 24.4,
+                "hostile_hits": 11,
+                "distance_flown": 12804.7,
+                "structure": 10.46,
+                "shield": 0,
+                "death_time": 172,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 88.87,
+                "hostile_hits": 39,
+                "distance_flown": 23507.8,
+                "structure": 17.6,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 172,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10.45,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -832,
+                396.4,
+                -1758.6
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 35635.3
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -584.5,
+                463.7,
+                -2203.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 22410.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 22410.4,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 25.14,
+                "hostile_hits": 8,
+                "distance_flown": 35635.3,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.55,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -267.4,
+                -173.6,
+                -2072.9
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 24955.3
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -105.2,
+                -199.3,
+                -1834.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 21524
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 14.65,
+                "hostile_hits": 5,
+                "distance_flown": 21524,
+                "structure": 49.92,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.51,
+                "hostile_hits": 22,
+                "distance_flown": 24955.3,
+                "structure": 21.45,
+                "shield": 2.99,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 52.9,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.5,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 1,
+                "distance_flown": 6429.5,
+                "structure": 22.99,
+                "shield": 40,
+                "death_time": 52.9,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 73.31,
+                "hostile_hits": 3,
+                "distance_flown": 10477.3,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 52.9,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.25,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -455,
+                536.9,
+                -1546
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 34607.5
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -881.9,
+                520.4,
+                -982.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 21494.3
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 21494.3,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 47.18,
+                "hostile_hits": 15,
+                "distance_flown": 34607.5,
+                "structure": 24,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.45,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                2200.2,
+                -313.7,
+                -1624.7
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 33423.9
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                1876.3,
+                -299,
+                -1734.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 19443.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 22.22,
+                "hostile_hits": 6,
+                "distance_flown": 19443.2,
+                "structure": 22.99,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 85.81,
+                "hostile_hits": 7,
+                "distance_flown": 33423.9,
+                "structure": 19.78,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-darter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 1,
+        "win_rate": 0.1,
+        "time_to_kill_human_wins_only": {
+          "median": 118.55,
+          "p25": 118.55,
+          "p75": 118.55
+        },
+        "human_losses": {
+          "median": 0.5,
+          "p25": 0.0,
+          "p75": 1.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

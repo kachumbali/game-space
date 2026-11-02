@@ -1,0 +1,755 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-bittern-darter": {
+      "name": "Bittern vs Darter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 47.05,
+          "winner": "human",
+          "time_to_kill": 47.05,
+          "first_hit": {
+            "time": 3.55,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 13,
+                "distance_flown": 3402.6,
+                "structure": 140,
+                "shield": 147.31,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 90.71,
+                "hostile_hits": 29,
+                "distance_flown": 9053.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 47.05,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 47.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 34.6,
+          "winner": "human",
+          "time_to_kill": 34.6,
+          "first_hit": {
+            "time": 4.4,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 23,
+                "distance_flown": 2542.9,
+                "structure": 140,
+                "shield": 120.52,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 78.22,
+                "hostile_hits": 25,
+                "distance_flown": 7130.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 34.6,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 34.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.7,
+          "winner": "human",
+          "time_to_kill": 31.7,
+          "first_hit": {
+            "time": 4.35,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 25,
+                "distance_flown": 2334.9,
+                "structure": 140,
+                "shield": 159.32,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 49.97,
+                "hostile_hits": 16,
+                "distance_flown": 5771.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.7,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 31.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.95,
+          "winner": "human",
+          "time_to_kill": 36.95,
+          "first_hit": {
+            "time": 3.9,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.25,
+                "hostile_hits": 22,
+                "distance_flown": 2697.1,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 31.19,
+                "hostile_hits": 10,
+                "distance_flown": 6621.1,
+                "structure": 1.75,
+                "shield": 0,
+                "death_time": 36.95,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 29.3,
+          "winner": "human",
+          "time_to_kill": 29.3,
+          "first_hit": {
+            "time": 3.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.74,
+                "hostile_hits": 23,
+                "distance_flown": 2233.4,
+                "structure": 140,
+                "shield": 134.75,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 59.6,
+                "hostile_hits": 19,
+                "distance_flown": 6222.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 29.3,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 29.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 35.3,
+          "winner": "human",
+          "time_to_kill": 35.3,
+          "first_hit": {
+            "time": 3.95,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 20,
+                "distance_flown": 2549.8,
+                "structure": 140,
+                "shield": 150.56,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 68.94,
+                "hostile_hits": 22,
+                "distance_flown": 6482.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 35.3,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 35.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.35,
+          "winner": "human",
+          "time_to_kill": 31.35,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 15,
+                "distance_flown": 2023.7,
+                "structure": 140,
+                "shield": 168.37,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.23,
+                "hostile_hits": 11,
+                "distance_flown": 6678.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.35,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 31.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -16774.7,
+                1867.4,
+                -14489.6
+              ],
+              "target": {
+                "id": "bittern",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "bittern",
+                "callsign": "H1"
+              },
+              "distance_flown": 24588.9
+            },
+            {
+              "team": "human",
+              "id": "bittern",
+              "callsign": "H1",
+              "position": [
+                3251.3,
+                411.3,
+                2162.1
+              ],
+              "target": {
+                "id": "bittern",
+                "callsign": "MEOW",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 13560.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 23.1,
+                "hostile_hits": 12,
+                "distance_flown": 13560.1,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 63,
+                "hostile_hits": 20,
+                "distance_flown": 24588.9,
+                "structure": 8.9,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.1,
+          "winner": "human",
+          "time_to_kill": 31.1,
+          "first_hit": {
+            "time": 3.85,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.14,
+                "hostile_hits": 17,
+                "distance_flown": 2371.9,
+                "structure": 140,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 28.13,
+                "hostile_hits": 9,
+                "distance_flown": 6340.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.1,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 31.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 40.25,
+          "winner": "human",
+          "time_to_kill": 40.25,
+          "first_hit": {
+            "time": 3.9,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32,
+                "hostile_hits": 24,
+                "distance_flown": 2734.6,
+                "structure": 129.6,
+                "shield": 108.75,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 109.47,
+                "hostile_hits": 43,
+                "distance_flown": 6302.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 40.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 40.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-darter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 9,
+        "win_rate": 0.9,
+        "time_to_kill_human_wins_only": {
+          "median": 34.6,
+          "p25": 31.35,
+          "p75": 36.95
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

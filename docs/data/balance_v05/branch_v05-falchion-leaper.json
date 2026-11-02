@@ -1,0 +1,755 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion-leaper": {
+      "name": "Falchion vs Leaper",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 37.45,
+          "winner": "human",
+          "time_to_kill": 37.45,
+          "first_hit": {
+            "time": 4.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 84,
+                "distance_flown": 3864,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.92,
+                "hostile_hits": 4,
+                "distance_flown": 4516.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 37.45,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 37.45,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 26.4,
+          "winner": "human",
+          "time_to_kill": 26.4,
+          "first_hit": {
+            "time": 5,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 82,
+                "distance_flown": 2695,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 4097.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 26.4,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 26.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 50.2,
+          "winner": "human",
+          "time_to_kill": 50.2,
+          "first_hit": {
+            "time": 4.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 56.1,
+                "hostile_hits": 69,
+                "distance_flown": 4716.4,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 26.25,
+                "hostile_hits": 3,
+                "distance_flown": 5699.2,
+                "structure": 8.9,
+                "shield": 0,
+                "death_time": 50.2,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 50.2,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 43.35,
+          "winner": "human",
+          "time_to_kill": 43.35,
+          "first_hit": {
+            "time": 4.65,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 89,
+                "distance_flown": 4343,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.92,
+                "hostile_hits": 4,
+                "distance_flown": 5046.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 43.35,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 43.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 22.25,
+          "winner": "human",
+          "time_to_kill": 22.25,
+          "first_hit": {
+            "time": 4.65,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 59,
+                "distance_flown": 2185.4,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3944.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 22.25,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 22.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 49.8,
+          "winner": "human",
+          "time_to_kill": 49.8,
+          "first_hit": {
+            "time": 4.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 54,
+                "distance_flown": 4690,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 17.5,
+                "hostile_hits": 2,
+                "distance_flown": 5975.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 49.8,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 49.8,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 61.05,
+          "winner": "human",
+          "time_to_kill": 61.05,
+          "first_hit": {
+            "time": 5.85,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "falchion",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 64.95,
+                "hostile_hits": 68,
+                "distance_flown": 6006.9,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 52.34,
+                "hostile_hits": 6,
+                "distance_flown": 6853.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 61.05,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 61.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.2,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                17234.8,
+                -11694.3,
+                -7542.2
+              ],
+              "target": {
+                "id": "falchion",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "falchion",
+                "callsign": "H1"
+              },
+              "distance_flown": 23929.4
+            },
+            {
+              "team": "human",
+              "id": "falchion",
+              "callsign": "H1",
+              "position": [
+                14521.3,
+                -9776.4,
+                -6457.2
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 19318.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 39.55,
+                "hostile_hits": 42,
+                "distance_flown": 19318.9,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.25,
+                "hostile_hits": 3,
+                "distance_flown": 23929.4,
+                "structure": 25.45,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 64.45,
+          "winner": "human",
+          "time_to_kill": 64.45,
+          "first_hit": {
+            "time": 6.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 76,
+                "distance_flown": 6311.3,
+                "structure": 110,
+                "shield": 150,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 43.57,
+                "hostile_hits": 5,
+                "distance_flown": 6956.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 64.45,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 64.45,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 37.1,
+          "winner": "human",
+          "time_to_kill": 37.1,
+          "first_hit": {
+            "time": 4.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 59,
+                "distance_flown": 3807.4,
+                "structure": 110,
+                "shield": 148.48,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 17.5,
+                "hostile_hits": 2,
+                "distance_flown": 4781,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 37.1,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 37.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion-leaper",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 9,
+        "win_rate": 0.9,
+        "time_to_kill_human_wins_only": {
+          "median": 43.35,
+          "p25": 37.1,
+          "p75": 50.2
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

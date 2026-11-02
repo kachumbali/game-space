@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-bittern-toad": {
+      "name": "Bittern vs Toad",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 25.5,
+          "winner": "human",
+          "time_to_kill": 25.5,
+          "first_hit": {
+            "time": 6.1,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 223.25,
+                "hostile_hits": 131,
+                "distance_flown": 1689.3,
+                "structure": 140,
+                "shield": 100.28,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 96.28,
+                "hostile_hits": 25,
+                "distance_flown": 2714.9,
+                "structure": 86.75,
+                "shield": 0,
+                "death_time": 25.5,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 25.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.35,
+          "winner": "human",
+          "time_to_kill": 36.35,
+          "first_hit": {
+            "time": 5.75,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 283.41,
+                "hostile_hits": 195,
+                "distance_flown": 2296.3,
+                "structure": 140,
+                "shield": 113.42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 109.61,
+                "hostile_hits": 35,
+                "distance_flown": 3070.7,
+                "structure": 26.59,
+                "shield": 0,
+                "death_time": 36.35,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.35,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 28.75,
+          "winner": "human",
+          "time_to_kill": 28.75,
+          "first_hit": {
+            "time": 5.7,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 204.21,
+                "hostile_hits": 159,
+                "distance_flown": 2033,
+                "structure": 140,
+                "shield": 165.09,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 31.5,
+                "hostile_hits": 10,
+                "distance_flown": 2788.2,
+                "structure": 77.33,
+                "shield": 0,
+                "death_time": 28.75,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 28.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 29.7,
+          "winner": "human",
+          "time_to_kill": 29.7,
+          "first_hit": {
+            "time": 5.85,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 235.63,
+                "hostile_hits": 154,
+                "distance_flown": 1908.8,
+                "structure": 140,
+                "shield": 70.25,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 103.65,
+                "hostile_hits": 33,
+                "distance_flown": 2756.8,
+                "structure": 74.37,
+                "shield": 0,
+                "death_time": 29.7,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 29.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 47.4,
+          "winner": "human",
+          "time_to_kill": 47.4,
+          "first_hit": {
+            "time": 5.65,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 220.57,
+                "hostile_hits": 108,
+                "distance_flown": 3373.8,
+                "structure": 140,
+                "shield": 137.42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 65.63,
+                "hostile_hits": 21,
+                "distance_flown": 4051,
+                "structure": 89.43,
+                "shield": 0,
+                "death_time": 47.4,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 47.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 23.25,
+          "winner": "human",
+          "time_to_kill": 23.25,
+          "first_hit": {
+            "time": 5.65,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 212.09,
+                "hostile_hits": 139,
+                "distance_flown": 1640.1,
+                "structure": 140,
+                "shield": 156.49,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 44.1,
+                "hostile_hits": 14,
+                "distance_flown": 2453.3,
+                "structure": 97.91,
+                "shield": 0,
+                "death_time": 23.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 23.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.85,
+          "winner": "human",
+          "time_to_kill": 20.85,
+          "first_hit": {
+            "time": 5.95,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 200.5,
+                "hostile_hits": 123,
+                "distance_flown": 1408.9,
+                "structure": 140,
+                "shield": 141.65,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 50.4,
+                "hostile_hits": 16,
+                "distance_flown": 2101.1,
+                "structure": 83.04,
+                "shield": 0,
+                "death_time": 20.85,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.9,
+          "winner": "human",
+          "time_to_kill": 20.9,
+          "first_hit": {
+            "time": 5.75,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 213.52,
+                "hostile_hits": 127,
+                "distance_flown": 1468.9,
+                "structure": 140,
+                "shield": 129.46,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 66.15,
+                "hostile_hits": 21,
+                "distance_flown": 2411.5,
+                "structure": 96.48,
+                "shield": 0,
+                "death_time": 20.9,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 32.85,
+          "winner": "human",
+          "time_to_kill": 32.85,
+          "first_hit": {
+            "time": 5.6,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 241.38,
+                "hostile_hits": 189,
+                "distance_flown": 2362.9,
+                "structure": 140,
+                "shield": 129.02,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 94.3,
+                "hostile_hits": 30,
+                "distance_flown": 3425.2,
+                "structure": 68.62,
+                "shield": 0,
+                "death_time": 32.85,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 32.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.25,
+          "winner": "human",
+          "time_to_kill": 36.25,
+          "first_hit": {
+            "time": 5.75,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 287.1,
+                "hostile_hits": 203,
+                "distance_flown": 2621.5,
+                "structure": 140,
+                "shield": 168.93,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 47.15,
+                "hostile_hits": 15,
+                "distance_flown": 3678.2,
+                "structure": 22.9,
+                "shield": 0,
+                "death_time": 36.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-toad",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 29.225,
+          "p25": 23.8125,
+          "p75": 35.4
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

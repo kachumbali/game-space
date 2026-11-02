@@ -1,0 +1,1021 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-merlin-toad": {
+      "name": "Merlin vs Toad",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 164.75,
+          "winner": "human",
+          "time_to_kill": 164.75,
+          "first_hit": {
+            "time": 4.55,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 249.76,
+                "hostile_hits": 206,
+                "distance_flown": 18808,
+                "structure": 28.2,
+                "shield": 27.74,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 85.25,
+                "hostile_hits": 34,
+                "distance_flown": 11763.6,
+                "structure": 60.24,
+                "shield": 0,
+                "death_time": 164.75,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 164.75,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 8.6,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -571.1,
+                494.6,
+                -4749.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13523
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -672.7,
+                543.8,
+                -4828.9
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24813.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 176.59,
+                "hostile_hits": 90,
+                "distance_flown": 24813.6,
+                "structure": 35,
+                "shield": 38.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 53.46,
+                "hostile_hits": 17,
+                "distance_flown": 13523,
+                "structure": 133.41,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 140.95,
+          "winner": "human",
+          "time_to_kill": 140.95,
+          "first_hit": {
+            "time": 5.65,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 257.14,
+                "hostile_hits": 194,
+                "distance_flown": 13641.8,
+                "structure": 32.06,
+                "shield": 39.44,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 82.12,
+                "hostile_hits": 23,
+                "distance_flown": 10677.9,
+                "structure": 52.86,
+                "shield": 0,
+                "death_time": 140.95,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 140.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.75,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                2227.1,
+                -696.7,
+                -1540.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 16147.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                2417.3,
+                -778.5,
+                -1564.2
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 25396
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 193.08,
+                "hostile_hits": 98,
+                "distance_flown": 25396,
+                "structure": 32.12,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 75.14,
+                "hostile_hits": 17,
+                "distance_flown": 16147.8,
+                "structure": 116.92,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.1,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -4907.2,
+                280.9,
+                -5292.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13394.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -5054.9,
+                284.5,
+                -5306.7
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24571.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 152.26,
+                "hostile_hits": 94,
+                "distance_flown": 24571.2,
+                "structure": 35,
+                "shield": 38.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.79,
+                "hostile_hits": 27,
+                "distance_flown": 13394.5,
+                "structure": 111.34,
+                "shield": 46.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.75,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -817.5,
+                52,
+                1807
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 11341.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -917.2,
+                161.3,
+                2141.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24526.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 181.55,
+                "hostile_hits": 105,
+                "distance_flown": 24526.8,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65.75,
+                "hostile_hits": 21,
+                "distance_flown": 11341.8,
+                "structure": 77.35,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.65,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                1333.7,
+                -1233,
+                788.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12482.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                992.7,
+                -1247,
+                707.5
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24972.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 273.83,
+                "hostile_hits": 144,
+                "distance_flown": 24972.7,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 50.21,
+                "hostile_hits": 16,
+                "distance_flown": 12482.7,
+                "structure": 26.65,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -399.4,
+                316.9,
+                -5701.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13623.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -311.5,
+                322.8,
+                -5700.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24815.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 195.24,
+                "hostile_hits": 114,
+                "distance_flown": 24815.6,
+                "structure": 35,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 43.79,
+                "hostile_hits": 14,
+                "distance_flown": 13623.3,
+                "structure": 114.76,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.45,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                243.2,
+                -160.4,
+                1266.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12707
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                231.5,
+                -239.5,
+                1387.1
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 19708.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 221.05,
+                "hostile_hits": 143,
+                "distance_flown": 19708.7,
+                "structure": 33.12,
+                "shield": 35.51,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 105.33,
+                "hostile_hits": 31,
+                "distance_flown": 12707,
+                "structure": 88.95,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.65,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -5368,
+                -149,
+                -2273.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15012.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -5529.4,
+                -193.2,
+                -2555.4
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 25028.3
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 146.44,
+                "hostile_hits": 89,
+                "distance_flown": 25028.3,
+                "structure": 31.63,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 61,
+                "hostile_hits": 14,
+                "distance_flown": 15012.4,
+                "structure": 110.86,
+                "shield": 52.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-merlin-toad",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 2,
+        "win_rate": 0.2,
+        "time_to_kill_human_wins_only": {
+          "median": 152.85,
+          "p25": 146.89999999999998,
+          "p75": 158.8
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

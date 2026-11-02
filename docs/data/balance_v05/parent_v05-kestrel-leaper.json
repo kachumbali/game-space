@@ -1,0 +1,907 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "21248e74c1ea5eed61f105c7b2c2a992200249e7",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-kestrel-leaper": {
+      "name": "Kestrel vs Leaper",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 93.1,
+          "winner": "human",
+          "time_to_kill": 93.1,
+          "first_hit": {
+            "time": 10.1,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55,
+                "hostile_hits": 32,
+                "distance_flown": 11712.4,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 10536.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 93.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 93.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 62.1,
+          "winner": "human",
+          "time_to_kill": 62.1,
+          "first_hit": {
+            "time": 21.8,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55,
+                "hostile_hits": 30,
+                "distance_flown": 7296.6,
+                "structure": 36.2,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 53.8,
+                "hostile_hits": 2,
+                "distance_flown": 7545.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 62.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 62.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 96.7,
+          "winner": "human",
+          "time_to_kill": 96.7,
+          "first_hit": {
+            "time": 7.8,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55,
+                "hostile_hits": 32,
+                "distance_flown": 11965,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 8400.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 96.7,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 96.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.8,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -1539.3,
+                -110.4,
+                -523.5
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 18091.2
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -1130.5,
+                2.8,
+                -605.5
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 21477.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.35,
+                "hostile_hits": 9,
+                "distance_flown": 21477.6,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 43.69,
+                "hostile_hits": 5,
+                "distance_flown": 18091.2,
+                "structure": 23.15,
+                "shield": 5.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                248.7,
+                250.6,
+                -432.7
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 21655.4
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -80.6,
+                264.1,
+                -594.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 22316.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 19.17,
+                "hostile_hits": 7,
+                "distance_flown": 22316.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 17.5,
+                "hostile_hits": 2,
+                "distance_flown": 21655.4,
+                "structure": 23.93,
+                "shield": 8.48,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 56.65,
+          "winner": "human",
+          "time_to_kill": 56.65,
+          "first_hit": {
+            "time": 9.35,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 52.64,
+                "hostile_hits": 32,
+                "distance_flown": 7187.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 7840.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 56.65,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 56.65,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 17.25,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -586.5,
+                314.7,
+                -892.6
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 16027.3
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -360.7,
+                367.9,
+                -998.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 19130.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.65,
+                "hostile_hits": 21,
+                "distance_flown": 19130.2,
+                "structure": 34.99,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55.01,
+                "hostile_hits": 2,
+                "distance_flown": 16027.3,
+                "structure": 4.39,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 8.55,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                1163,
+                -187.5,
+                -1323.4
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 17113.7
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                783.4,
+                -232.7,
+                -1013
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 21612.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 52.32,
+                "hostile_hits": 18,
+                "distance_flown": 21612.8,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.25,
+                "hostile_hits": 3,
+                "distance_flown": 17113.7,
+                "structure": 2.68,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 89.1,
+          "winner": "human",
+          "time_to_kill": 89.1,
+          "first_hit": {
+            "time": 30.55,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.12,
+                "hostile_hits": 23,
+                "distance_flown": 11568.7,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 17.5,
+                "hostile_hits": 2,
+                "distance_flown": 12462.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 89.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 89.1,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 22.3,
+            "attacker": "leaper",
+            "attacker_callsign": "FROGG LEAPER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                52.2,
+                280.6,
+                996.4
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 20902.3
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                398.5,
+                272.4,
+                664.7
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 22400.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.87,
+                "hostile_hits": 12,
+                "distance_flown": 22400.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.64,
+                "hostile_hits": 3,
+                "distance_flown": 20902.3,
+                "structure": 20.63,
+                "shield": 3.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-leaper",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 5,
+        "win_rate": 0.5,
+        "time_to_kill_human_wins_only": {
+          "median": 89.1,
+          "p25": 62.1,
+          "p75": 93.1
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.5,
+          "p25": 0.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

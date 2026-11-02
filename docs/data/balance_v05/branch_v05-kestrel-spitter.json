@@ -1,0 +1,717 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-kestrel-spitter": {
+      "name": "Kestrel vs Spitter",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 46.05,
+          "winner": "human",
+          "time_to_kill": 46.05,
+          "first_hit": {
+            "time": 16.7,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.26,
+                "hostile_hits": 33,
+                "distance_flown": 5768.1,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5674.5,
+                "structure": 17.74,
+                "shield": 0,
+                "death_time": 46.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 46.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 27.15,
+          "winner": "human",
+          "time_to_kill": 27.15,
+          "first_hit": {
+            "time": 8.45,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 39,
+                "distance_flown": 3253.1,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2796.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 27.15,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 27.15,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 13.85,
+          "winner": "human",
+          "time_to_kill": 13.85,
+          "first_hit": {
+            "time": 5.55,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 81.04,
+                "hostile_hits": 35,
+                "distance_flown": 1659.5,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1958.1,
+                "structure": 12.64,
+                "shield": 0,
+                "death_time": 13.85,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 13.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.4,
+          "winner": "human",
+          "time_to_kill": 12.4,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.65,
+                "hostile_hits": 40,
+                "distance_flown": 1471.8,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1752.5,
+                "structure": 17.12,
+                "shield": 0,
+                "death_time": 12.4,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 120.6,
+          "winner": "human",
+          "time_to_kill": 120.6,
+          "first_hit": {
+            "time": 5.5,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 37,
+                "distance_flown": 14446.3,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 10376.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 120.6,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 120.6,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 33.05,
+          "winner": "human",
+          "time_to_kill": 33.05,
+          "first_hit": {
+            "time": 5.85,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 34,
+                "distance_flown": 3967.4,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 3882.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 33.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 33.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 94,
+          "winner": "human",
+          "time_to_kill": 94,
+          "first_hit": {
+            "time": 12.7,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 34,
+                "distance_flown": 11193.5,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 7516.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 94,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 94,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 12.55,
+          "winner": "human",
+          "time_to_kill": 12.55,
+          "first_hit": {
+            "time": 8.5,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 67.28,
+                "hostile_hits": 33,
+                "distance_flown": 1494.1,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1824.9,
+                "structure": 27.82,
+                "shield": 0,
+                "death_time": 12.55,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 12.55,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 19.95,
+          "winner": "human",
+          "time_to_kill": 19.95,
+          "first_hit": {
+            "time": 6.35,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 99.59,
+                "hostile_hits": 54,
+                "distance_flown": 2401.5,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2256.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 19.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 19.95,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 78.4,
+          "winner": "human",
+          "time_to_kill": 78.4,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 102,
+                "hostile_hits": 33,
+                "distance_flown": 9311.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 7658.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 78.4,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 78.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-kestrel-spitter",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 10,
+        "win_rate": 1.0,
+        "time_to_kill_human_wins_only": {
+          "median": 30.099999999999998,
+          "p25": 15.375,
+          "p75": 70.3125
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}

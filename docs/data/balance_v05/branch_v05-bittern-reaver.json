@@ -1,0 +1,793 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "385e64ca6beb82b6b61a0ed024c8ad61ad525311",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-bittern-reaver": {
+      "name": "Bittern vs Reaver",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 39.4,
+          "winner": "human",
+          "time_to_kill": 39.4,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 142.07,
+                "hostile_hits": 124,
+                "distance_flown": 2726.5,
+                "structure": 111.11,
+                "shield": 88.91,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 152.32,
+                "hostile_hits": 50,
+                "distance_flown": 3981.5,
+                "structure": 32.93,
+                "shield": 0,
+                "death_time": 39.4,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 39.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 34.25,
+          "winner": "human",
+          "time_to_kill": 34.25,
+          "first_hit": {
+            "time": 5.35,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 139.81,
+                "hostile_hits": 151,
+                "distance_flown": 2483.5,
+                "structure": 140,
+                "shield": 129.64,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 85.3,
+                "hostile_hits": 20,
+                "distance_flown": 3452.6,
+                "structure": 35.19,
+                "shield": 0,
+                "death_time": 34.25,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 34.25,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                15433.2,
+                -5253.1,
+                -2306.3
+              ],
+              "target": {
+                "id": "bittern",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "bittern",
+                "callsign": "H1"
+              },
+              "distance_flown": 18586.3
+            },
+            {
+              "team": "human",
+              "id": "bittern",
+              "callsign": "H1",
+              "position": [
+                10664.2,
+                -3748.7,
+                -1892.2
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 12999.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 112.75,
+                "hostile_hits": 72,
+                "distance_flown": 12999.9,
+                "structure": 126.69,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 136.57,
+                "hostile_hits": 32,
+                "distance_flown": 18586.3,
+                "structure": 62.25,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 24.9,
+          "winner": "human",
+          "time_to_kill": 24.9,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 116.27,
+                "hostile_hits": 115,
+                "distance_flown": 1730.4,
+                "structure": 140,
+                "shield": 78.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 110.6,
+                "hostile_hits": 28,
+                "distance_flown": 3109.5,
+                "structure": 58.73,
+                "shield": 0,
+                "death_time": 24.9,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 24.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 22.7,
+          "winner": "human",
+          "time_to_kill": 22.7,
+          "first_hit": {
+            "time": 5,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 110.94,
+                "hostile_hits": 107,
+                "distance_flown": 1564.8,
+                "structure": 140,
+                "shield": 124.37,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 64.86,
+                "hostile_hits": 19,
+                "distance_flown": 2653.6,
+                "structure": 64.06,
+                "shield": 0,
+                "death_time": 22.7,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 22.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 44.9,
+          "winner": "human",
+          "time_to_kill": 44.9,
+          "first_hit": {
+            "time": 5.3,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 149.37,
+                "hostile_hits": 101,
+                "distance_flown": 2791.8,
+                "structure": 121.6,
+                "shield": 103.54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 152.73,
+                "hostile_hits": 45,
+                "distance_flown": 4045.5,
+                "structure": 25.63,
+                "shield": 0,
+                "death_time": 44.9,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 44.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 43,
+          "winner": "human",
+          "time_to_kill": 43,
+          "first_hit": {
+            "time": 5.55,
+            "attacker": "reaver",
+            "attacker_callsign": "FROGG REAVER",
+            "target": "bittern",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 163.35,
+                "hostile_hits": 104,
+                "distance_flown": 2763.2,
+                "structure": 123.47,
+                "shield": 129.61,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 135.69,
+                "hostile_hits": 37,
+                "distance_flown": 4074.7,
+                "structure": 11.65,
+                "shield": 0,
+                "death_time": 43,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 43,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.9,
+          "winner": "human",
+          "time_to_kill": 20.9,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 142.67,
+                "hostile_hits": 81,
+                "distance_flown": 1418.5,
+                "structure": 140,
+                "shield": 71.25,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 116.2,
+                "hostile_hits": 28,
+                "distance_flown": 2751.6,
+                "structure": 32.33,
+                "shield": 0,
+                "death_time": 20.9,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.15,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "reaver",
+              "callsign": "FROGG REAVER",
+              "position": [
+                9666.2,
+                -887.1,
+                -13132.8
+              ],
+              "target": {
+                "id": "bittern",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "bittern",
+                "callsign": "H1"
+              },
+              "distance_flown": 18789.3
+            },
+            {
+              "team": "human",
+              "id": "bittern",
+              "callsign": "H1",
+              "position": [
+                6607.2,
+                -641.1,
+                -9293.6
+              ],
+              "target": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "reaver",
+                "callsign": "FROGG REAVER"
+              },
+              "distance_flown": 13048.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 85.43,
+                "hostile_hits": 84,
+                "distance_flown": 13048.2,
+                "structure": 138.38,
+                "shield": 170,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 125.65,
+                "hostile_hits": 31,
+                "distance_flown": 18789.3,
+                "structure": 75.15,
+                "shield": 14.41,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 39.5,
+          "winner": "human",
+          "time_to_kill": 39.5,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "bittern",
+            "attacker_callsign": "H1",
+            "target": "reaver",
+            "target_callsign": "FROGG REAVER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "bittern",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 175,
+                "hostile_hits": 125,
+                "distance_flown": 2412.2,
+                "structure": 115.56,
+                "shield": 47.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "reaver",
+                "callsign": "FROGG REAVER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 160.62,
+                "hostile_hits": 52,
+                "distance_flown": 4069.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 39.5,
+                "killed_by": {
+                  "id": "bittern",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 39.5,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-bittern-reaver",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 8,
+        "win_rate": 0.8,
+        "time_to_kill_human_wins_only": {
+          "median": 36.825,
+          "p25": 24.349999999999998,
+          "p75": 40.375
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}
