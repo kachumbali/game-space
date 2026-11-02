@@ -243,7 +243,35 @@
         "capacitorMJ": 100
       },
       "sig": 1,
-      "flameColor": "#66c8ff"
+      "flameColor": "#66c8ff",
+      "hardpoints": [
+        {
+          "id": "S1",
+          "size": "S",
+          "cap": 4,
+          "allow": [
+            "ir"
+          ]
+        },
+        {
+          "id": "M1",
+          "size": "M",
+          "cap": 2,
+          "allow": [
+            "rf",
+            "ir"
+          ]
+        },
+        {
+          "id": "L1",
+          "size": "L",
+          "cap": 1,
+          "allow": [
+            "torp"
+          ],
+          "legacy": true
+        }
+      ]
     },
     "merlin": {
       "id": "merlin",
@@ -427,7 +455,17 @@
       "ai": {
         "role": "fighter",
         "aggr": 0.9
-      }
+      },
+      "hardpoints": [
+        {
+          "id": "S1",
+          "size": "S",
+          "cap": 2,
+          "allow": [
+            "ir"
+          ]
+        }
+      ]
     },
     "tern": {
       "id": "tern",
@@ -950,7 +988,33 @@
       "ai": {
         "role": "bomber",
         "aggr": 0.3
-      }
+      },
+      "hardpoints": [
+        {
+          "id": "S1",
+          "size": "S",
+          "cap": 2,
+          "allow": [
+            "ir"
+          ]
+        },
+        {
+          "id": "L1",
+          "size": "L",
+          "cap": 6,
+          "allow": [
+            "torp"
+          ]
+        },
+        {
+          "id": "L2",
+          "size": "L",
+          "cap": 6,
+          "allow": [
+            "torp"
+          ]
+        }
+      ]
     },
     "halberd": {
       "id": "halberd",
@@ -6158,7 +6222,43 @@
       "ai": {
         "role": "fighter",
         "aggr": 0.65
-      }
+      },
+      "hardpoints": [
+        {
+          "id": "S1",
+          "size": "S",
+          "cap": 4,
+          "allow": [
+            "ir"
+          ]
+        },
+        {
+          "id": "S2",
+          "size": "S",
+          "cap": 2,
+          "allow": [
+            "ir"
+          ]
+        },
+        {
+          "id": "M1",
+          "size": "M",
+          "cap": 2,
+          "allow": [
+            "rf",
+            "ir"
+          ]
+        },
+        {
+          "id": "L1",
+          "size": "L",
+          "cap": 2,
+          "allow": [
+            "torp"
+          ],
+          "legacy": true
+        }
+      ]
     },
     "sar": {
       "id": "sar",

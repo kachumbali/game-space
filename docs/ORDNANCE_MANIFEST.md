@@ -1,9 +1,10 @@
 # Ordnance manifest and hardpoint rules
 
-Status: approved design contract. The briefing offers interim magazine-level
-load/empty controls; individual physical station selection is not yet built.
-Existing fighter torpedoes are labelled legacy fits and retain their authored
-capacity pending a physical-station migration.
+Status: steps 1-3 of the implementation order are built for the playable fighters (Kestrel, Falchion, Merlin, Bittern): `hardpoints` in
+`data/db.json` (checked by `tools/validate_db.py`), a briefing station list (tap or click cycles a station through its allowed ordnance, then EMPTY),
+and resolution to `player.stores` at LAUNCH (`src/77_ordnance.js`, `tools/tests/ordnance_t.py`). Defaults equal the authored stores. Not built:
+visible rack/rail models, launch points tied to the selected station, mission stock limits, in-flight help, strategic stock (step 4). Torpedo stations on
+non-bomber fighters are marked `legacy: true` (Kestrel 1, Falchion 2) pending a decision. Swaps (M1: LANCE radar -> SWIFT IR gives 6 IR) are unmeasured.
 
 ## Physical size classes
 

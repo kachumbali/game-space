@@ -13,6 +13,10 @@
 - Briefing integration is in `src/75_mission.js`, overlapping lane B. Merge
   carefully, rebuild `index.html`, and run the branch gate. No device playtest.
 
+## Lane C finished by cloud session — 2026-11-02
+
+Per-station ordnance replaces the interim magazine toggle: `hardpoints` for Kestrel, Falchion, Merlin, Bittern in the db (validator checks ids, sizes, caps, allow lists, default load == stores, legacy torpedo flag), `src/77_ordnance.js`, `tools/tests/ordnance_t.py` (9 checks, green). AI keeps authored stores. Launch geometry, stock limits, models: not built. Swaps are unmeasured.
+
 ## Purpose and branch
 
 This is a local-only integration branch for the Gemini handoff. It was created from

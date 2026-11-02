@@ -308,20 +308,3 @@ function showSkirmishDebrief() {
   $id('sk_menu').onclick = () => openMenu();
   menuFocus('#sk_re');
 }
-// Interim magazine selection: the database has aggregate stores, not individual
-// physical stations. Keep legacy torpedoes and stock counts exactly as authored.
-function ordnanceBriefing(shipId) {
-  const stores = SHIPS[shipId]?.stores || {};
-  const rows = Object.entries(stores).filter(([id, n]) => n > 0 && WEAPONS[id]?.kind === 'msl');
-  if (!rows.length) return '';
-  return `<div class="sub">ORDNANCE · MAGAZINES</div><div class="dim">Tap to load or leave a magazine empty. Individual stations are not yet configured.</div>` + rows.map(([id, n]) => `<button type="button" data-ordnance="${id}" class="alt">${WEAPONS[id].name} × ${n}: ${player.stores[id] > 0 ? 'LOADED' : 'EMPTY'}${WEAPONS[id].torp && SHIPS[shipId].cls === 'fighter' && SHIPS[shipId].ai?.role !== 'bomber' ? ' · LEGACY FIT' : ''}</button>`).join('');
-}
-function bindOrdnanceBriefing(el, mission) {
-  el.querySelectorAll('[data-ordnance]').forEach(button => {
-    button.onclick = () => {
-      const id = button.dataset.ordnance, capacity = player.def.stores[id];
-      player.stores[id] = player.stores[id] > 0 ? 0 : capacity;
-      showBriefing(mission);
-    };
-  });
-}

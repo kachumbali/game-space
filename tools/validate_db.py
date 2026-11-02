@@ -12,6 +12,28 @@ errs, warns = [], []
 def err(m): errs.append(m)
 def warn(m): warns.append(m)
 
+# ---- ordnance hardpoints (docs/ORDNANCE_MANIFEST.md) ----
+SIZES = ('S', 'M', 'L', 'XL')
+for sid, s in raw['ships'].items():
+    hp = s.get('hardpoints')
+    if hp is None: continue
+    where = f'ships.{sid}.hardpoints'
+    ids = [h.get('id') for h in hp]
+    if len(set(ids)) != len(ids): err(f'{where}: duplicate station ids')
+    default = {}
+    for h in hp:
+        if h.get('size') not in SIZES: err(f'{where}.{h.get("id")}: size must be one of {SIZES}')
+        if not isinstance(h.get('cap'), int) or h['cap'] < 1: err(f'{where}.{h.get("id")}: cap must be a positive integer')
+        if not h.get('allow'): err(f'{where}.{h.get("id")}: needs a non-empty allow list'); continue
+        for w in h['allow']:
+            if raw['weapons'].get(w, {}).get('kind') != 'msl': err(f'{where}.{h.get("id")}: allow {w!r} is not a missile/torpedo weapon')
+        if 'base' not in s: default[h['allow'][0]] = default.get(h['allow'][0], 0) + h.get('cap', 0)
+        torp_ok = s.get('ai', {}).get('role') == 'bomber' or s['cls'] != 'fighter' or h.get('legacy')
+        if any(raw['weapons'].get(w, {}).get('torp') for w in h['allow']) and not torp_ok: err(f'{where}.{h.get("id")}: a torpedo station on a non-bomber fighter must be marked legacy: true')
+    if 'base' not in s:
+        for w, n in default.items():
+            if s.get('stores', {}).get(w) != n: err(f'ships.{sid}: default station load of {w} is {n} but stores.{w} is {s.get("stores", {}).get(w)}')
+
 # ---- marks ----
 MUL_MIN, MUL_MAX = 0.75, 1.20          # hard band for any single delta
 LANE_MIN, LANE_MAX = 1.08, 1.12        # a mark's own-lane step (or its inverse for cost-like stats, e.g. cooldown)
