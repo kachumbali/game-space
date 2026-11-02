@@ -88,7 +88,7 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | Mark | Dmg | ROF | Vel | Range | Pierce | Magazine | Notes |
 |---|---|---|---|---|---|---|---|
 | R-9 AUTOCANNON | 4.5 kin | 6.2/s | 900 | 1800 | - | 400/mnt (~64 s) | half the MK-20's volume, 1.5x the bite |
-| R-12 PENETRATOR DRIVER | 34 kin | 0.38/s | 1400 | 3080 | 45% | 6/shot | 60/mnt | class 2 AP rod; flags under review (section 7) |
+| R-12 PENETRATOR DRIVER | 73.2 kin | 0.46/s | 2200 | 5300 | 60% | 13.7/shot | 90/mnt | RG-90 baseline at Mark V (owner 2026-11-02); bigOnly, noPD; FROGG visuals |
 
 ## 4. Ordnance (all ships, stores-limited)
 
@@ -169,12 +169,12 @@ Open, in priority order:
    attrition-asymmetric.
 3. **M-8 heavy maser is the most energy-efficient gun in the game** (2.25 dmg/energy at peak vs LS-2's 1.5):
    a sustained 135 dps peak from 60 energy/s on a 320-regen capital. Consider 10-12 energy/pulse or peak x2.5.
-4. **R-12 has neither bigOnly nor noPD** (its human counterpart MD-55 has both): the AP rod doubles as a 3 km
+4. **R-12: RESOLVED 2026-11-02** - now the RG-90 baseline at Mark V (bigOnly, noPD, 60% pierce); see the table. Re-measure Gulper fights.
    anti-fighter sniper, one-shotting shields. And a "penetrator" pierces less (45%) than the generic RG-90
    (60%). Either intended (humans own kinetic tech) or worth flags.
 5. **R-4/R-5 are named autocannons and fire `en` bolts** - leftovers of the biological pass. Either retune to
    kin or rename to maser Gatlings.
-6. **GX-1 vs hard armour is a landmine**: hard takes 0.4x from energy; the first human ship given hard armour
+6. **GX-1 vs hard armour: DECIDED 2026-11-02 - leave unchanged.** Rule: before any human hull gets hard armour, revisit the GX-1 (its pierce is 20%, hard takes 0.4x from energy). Original note: hard takes 0.4x from energy; the first human ship given hard armour
    neuters the FROGG's only capital-killer (20% pierce, kinetic XL pierces 60%). Decide whether the FROGG get
    an AP-rod XL.
 7. **HE splash + no AI blast awareness**: friendly fire at 50% in 8 m furballs, and `fireGuns` checks the line

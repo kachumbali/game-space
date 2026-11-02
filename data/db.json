@@ -8107,13 +8107,13 @@
     "rodg": {
       "kind": "proj",
       "name": "R-12 PENETRATOR DRIVER",
-      "cd": 2.6,
-      "v": 1400,
-      "dmg": 34,
+      "cd": 2.16,
+      "v": 2200,
+      "dmg": 73.2,
       "dt": "kin",
-      "pierce": 0.45,
-      "life": 2.2,
-      "spread": 0.002,
+      "pierce": 0.6,
+      "life": 2.42,
+      "spread": 0.0003,
       "color": "#d8ff80",
       "len": 9,
       "sz": 0.7,
@@ -8121,8 +8121,8 @@
       "big": true,
       "bigOnly": true,
       "noPD": true,
-      "ammo": 60,
-      "energy": 6
+      "ammo": 90,
+      "energy": 13.7
     },
     "sting": {
       "kind": "proj",
@@ -8958,48 +8958,6 @@
         }
       }
     },
-    "rodg_2": {
-      "base": "rodg",
-      "mark": "II",
-      "mods": {
-        "dmg": {
-          "mul": 1.1
-        },
-        "energy": {
-          "mul": 1.08
-        }
-      }
-    },
-    "rodg_3": {
-      "base": "rodg",
-      "mark": "III",
-      "mods": {
-        "v": {
-          "mul": 1.1
-        },
-        "life": {
-          "mul": 1.1
-        },
-        "ammo": {
-          "mul": 0.9
-        }
-      }
-    },
-    "rodg_4": {
-      "base": "rodg",
-      "mark": "IV",
-      "mods": {
-        "cd": {
-          "mul": 0.9
-        },
-        "dmg": {
-          "mul": 0.95
-        },
-        "energy": {
-          "mul": 1.06
-        }
-      }
-    },
     "spit_2": {
       "base": "spit",
       "mark": "II",
@@ -9816,7 +9774,7 @@
       "flaser": "---- FROGG ---- (realism pass 2026-10-22: biological-acid weapons became masers (en, the green bolts) and autocannon/penetrator kinetics; ids are stable, display names are what the player sees) | fighter pulse bank: ~12-pulse burst from the capacitor, then limited by recharge",
       "lance": "continuous large maser: needs a big power pool (def.energyMax)",
       "fang": "~64 s of fire",
-      "rodg": "mag/rail class: heavy rods, small magazine + capacitor draw (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family",
+      "rodg": "R-12 = RG-90 baseline stats at Mark V (owner 2026-11-02: II+III+IV mods combined: dmg x1.045, v x1.1, life x1.1, ammo x0.9, cd x0.9, energy x1.145); FROGG visuals kept. mag/rail class: heavy rods, small magazine + capacitor draw (owner rule)    // AP rod: replaced the LASH CANNON as the Gulper's main; the penetrator-rod variant of the FROGG kinetic family",
       "ir": "---- missiles ----  seeker: ir (flares fool it) / rf (chaff fools it)",
       "nuke": "owner 2026-10-22: standard load is a realistic battlefield yield (B61-style sub-kiloton tactical setting); dial via `?nukeKt=` 0.1 (minimum) to 10 kT; strategic 100 kT-10 MT is lore-only (docs/NUKES.md)",
       "spine": "XL main (realism pass 2026-10-22: the FROGG energy family is masers; ids are stable, names are player-facing): mount has store:'spine' so fireGuns skips it; charge then an instant 12 m wide ray, see spineStep / spineFire",
