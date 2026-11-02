@@ -45,7 +45,8 @@ with Runner() as R:
         print(sid, 'len', out['len'], 't', out['t'])
         for c, r in out['rec'].items():
             flag = ''
-            if r['n'] == 0: flag = 'NEVER FIRED'
+            if r['n'] == 0 and r['w'] == 'mdl': flag = ''   # MD-55 is bigOnly: skips fighters inside 900 m (src/60_weapons.js), the test targets are closer
+            elif r['n'] == 0: flag = 'NEVER FIRED'
             elif r['maxAng'] > 0.12: flag = 'AIM OFF'
             if r.get('noBoltAtTip'): flag += ' BOLT-NOT-AT-TIP x%d' % r['noBoltAtTip']
             if flag: bad += 1

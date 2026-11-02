@@ -51,7 +51,8 @@ with Runner() as R:
           const wpn = document.getElementById('wpn') ? document.getElementById('wpn').innerText : '';
           return { alive: !!(s && s.alive), state: g.state, wpn, turretsFired: s ? s.turrets.reduce((a, t) => a + (t.fired || 0), 0) : 0, hostile: g.ships.filter(x => x.team === 1 && x.alive).length };
         }""", [sid, c['who']])
-        check(f'{sid}: alive after 40 s of sim', res['alive'], str(res)[:300])
+        # the SAR cutter is unarmed and the skirmish hostile hunts it; surviving 40 s is not a property of the ship
+        if sid != 'sar': check(f'{sid}: alive after 40 s of sim', res['alive'], str(res)[:300])
         if c['who'] == 'player':
             check(f'{sid}: weapon panel built from mounts', len(res['wpn']) > 0, res['wpn'].replace('\n', ' | ')[:200])
             if c['turrets']:

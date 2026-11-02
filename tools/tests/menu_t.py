@@ -67,7 +67,7 @@ with Runner() as R:
     check('enemy missiles removed', pg.evaluate("()=>__game.ships.filter(s=>s.team===1).every(s=>['tick','tad'].every(k=>!(s.stores[k]>0)))"))
     d = pg.evaluate("()=>{const g=__game;const p=g.player;return Math.min(...g.ships.filter(s=>s.team===1).map(s=>s.group.position.distanceTo(p.group.position)))}")
     check('start range ~800 m', 700 < d < 1100, d)
-    st = pg.evaluate("()=>{const g=__game;__paused=true;for(let i=0;i<600;i++)g.update(0.05);return [g.state,g.ships.length,g.ships.filter(s=>s.alive&&s.team===1).length,g.skState.t]}")
+    st = pg.evaluate("()=>{const g=__game;__paused=true;g.player.structure=1e6;g.player.shield.fore=g.player.shield.aft=1e6;for(let i=0;i<600;i++)g.update(0.05);return [g.state,g.ships.length,g.ships.filter(s=>s.alive&&s.team===1).length,g.skState.t]}")
     check('stepped 30 sim-s', st[3] > 25, st)
     pg.screenshot(path=f'{SH}/menu_skirmish_flight.png')
     # win path: kill all enemies, debrief
@@ -81,7 +81,7 @@ with Runner() as R:
     check('R opens restart dialog with SKIRMISH + MAIN MENU', pg.evaluate(VIS, 'rdlg') == 'flex' and 'RESTART SKIRMISH' in pg.inner_text('#rdlg') and pg.locator('#rd3').count() == 1)
     pg.locator('#rd3').click(); pg.wait_for_timeout(500)
     check('restart dialog -> main menu', pg.locator('.mi[data-a=skirmish]').count() == 1 and pg.evaluate(VIS, 'rdlg') == 'none')
-    pg.locator('.mi[data-a=campaign]').click(); pg.locator('.mi[data-a=m1]').click(); pg.wait_for_timeout(300)
+    pg.locator('.mi[data-a=campaign]').click(); pg.locator('.mi[data-a="campaign:severed_node"]').click(); pg.locator('.mi[data-a="mission:severed_node:0"]').click(); pg.wait_for_timeout(300)
     check('mission list opens the briefing with MAIN MENU button', pg.locator('#bgo').count() == 1 and pg.locator('#bmenu').count() == 1)
     loadout = pg.inner_text('#brief')
     check('briefing loadout derives current Kestrel weapons', 'MD-9 MAG DRIVER' in loadout and 'MK-30 HE CANNON' in loadout and 'PL-4' not in loadout, loadout[:300].replace('\n', ' | '))

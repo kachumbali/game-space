@@ -291,3 +291,9 @@ Then inspect `?scene=intro_test` at the deployed subpath as well as at localhost
   **KITE-6 Loyal Wingman**: a 6 m expendable scout/interceptor with DR-2,
   two S-class Swift rails, datalink mast, finite campaign inventory and no
   torpedo capability. Existing drone orders/control limits provide its base.
+
+## P0 test debt, 2026-11-02 (cloud session, branch p0-test-debt)
+Re-ran every red test of the post-merge sweep one at a time on the merged build.
+- Fixed (test was wrong or stale): `menu_t` (campaign list is now two levels, `mission:severed_node:0`; the 30 s skirmish step makes the player invulnerable so an idle player cannot die), `yard_t` (camera eases, wheel check waits 600 ms), `roster_t` (SAR is unarmed and hunted, so no survival check; `SK_PLAYER`/`SK_WING` now exported on `__game`), `tur_aim_t` (MD-55 is `bigOnly`, skips fighters inside 900 m, so "never fired" is correct there), `bittern_t`, `campaign_t`, `scene_t`, `tern_t`, `tender_pd_t` pass.
+- Not tests, documented in `tools/tests/README.md`: `view_t`, `plog_t`, `render_t`, `muzzle_t` (need arguments or minutes).
+- Still red, real: `bullfrog_t` (3 fails: HUD text during the lock, no charge while a friendly is in the line, fizzle check; identical before the merge; also hits the 420 s cap) and `touch_qa_t` (4 fails: no touch DOCK control `#bdock`, touch power shift has no effect; player-facing touch gaps).

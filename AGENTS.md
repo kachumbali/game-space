@@ -3,6 +3,8 @@
 Read this before editing. Owner: kachumbali; he tests builds on iPad/phone/desktop and iterates. Tone: sober,
 critical, evidence-weighted, no flattery; state what was and was not verified.
 
+> **Codex: read docs/CODEX_NOTE.md first (state, owner rules, coordination).**
+
 ## Build and run
 - Source is `src/*` (sorted by filename); `python3 build.py` concatenates into the single file `index.html`
   (Three.js 0.170 via CDN). **Never edit `index.html` by hand.** Rebuild after every change.
