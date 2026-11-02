@@ -151,6 +151,13 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
 }
+function burstCooldown(slot, w, cooldown) {
+  if (!w.burst) return cooldown;
+  slot.burstShots = (slot.burstShots || 0) + 1;
+  if (slot.burstShots < w.burst) return cooldown;
+  slot.burstShots = 0;
+  return cooldown + w.burstPause;
+}
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
   if (comp && comp.hp <= 0) return false;
@@ -168,7 +175,7 @@ function fireMount(s, m) {
   if (s === player) s.shots = (s.shots || 0) + 1;
   plogShot(s);
   if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
-  m.cool = w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1));
+  m.cool = burstCooldown(m, w, w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1)));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
   sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
@@ -481,7 +488,7 @@ function updateFlashes(dt) {
 // Turret classes by absolute diameter of the visible assembly (owner spec 2026-10-22): S about 5 m, M 10-15 m, L 20-40 m; barrels 1.2x (S) to 1.7-1.8x (M, L) the diameter.
 // `cls` on the turret data entry; default by weapon: pd/sting = S, everything else = M. Clamp: never more than 12% of the hull length (small hulls).
 const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
-function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'sting') ? 'S' : 'M'); }
+function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'pdS' || t.w === 'sting' || t.w === 'thorn') ? 'S' : 'M'); }
 function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
 function makeTurret(s, t) {
   const w = WEAPONS[t.w], cls = turretCls(t);
@@ -610,7 +617,7 @@ function updateTurrets(s, dt) {
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
         if (!blocked) {
-          T.cool = T.w.cd * tcd / (0.6 + 0.4 * powerMul(s)); s.energy -= T.w.energy;
+          T.cool = burstCooldown(T, T.w, T.w.cd * tcd / (0.6 + 0.4 * powerMul(s))); s.energy -= T.w.energy;
           fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
           T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
@@ -618,7 +625,7 @@ function updateTurrets(s, dt) {
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
-      T.cool = T.w.cd * tcd;
+      T.cool = burstCooldown(T, T.w, T.w.cd * tcd);
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
       if (T.ammo <= 0 && !T.dry) { T.dry = true; for (const m of T.mats) m.color.multiplyScalar(0.55); }      // drum empty: the assembly goes dark like a dead turret, but it still tracks

@@ -85,6 +85,35 @@ for load in ('default', 'ir'):
         'human': [['kestrel', 3]], 'frogg': [['darter', 3], ['leaper', 3], ['spitter', 3]],
         'ordnance_swap': load == 'ir',
     }
+    SCENARIOS[f'ordnance-3v3-{load}'] = {
+        'name': f'3 Kestrel vs 3 Darter (M1 {load})',
+        'player_ship': 'kestrel', 'wship': 'kestrel', 'wing': 2,
+        'rows': [['darter', 3]], 'human': [['kestrel', 3]], 'frogg': [['darter', 3]],
+        'ordnance_swap': load == 'ir',
+    }
+
+for human in ('merlin', 'kestrel', 'falchion', 'bittern'):
+    for enemy in ('darter', 'leaper', 'spitter', 'reaver', 'toad'):
+        SCENARIOS[f'v05-{human}-{enemy}'] = {
+            'name': f'{human.title()} vs {enemy.title()}', 'player_ship': human,
+            'wship': human, 'wing': 0, 'rows': [[enemy, 1]],
+            'human': [[human, 1]], 'frogg': [[enemy, 1]],
+        }
+for count in (1, 2):
+    for armed in (True, False):
+        SCENARIOS[f'v05-falchion{count}-gulper-{ "missiles" if armed else "guns"}'] = {
+            'name': f'{count} Falchion vs Gulper ({"missiles" if armed else "guns only"})',
+            'player_ship': 'falchion', 'wship': 'falchion', 'wing': count-1,
+            'rows': [['gulper', 1]], 'human': [['falchion', count]], 'frogg': [['gulper', 1]],
+            'no_missiles': not armed,
+        }
+for option in ('hp-shield', 'aim'):
+    SCENARIOS[f'v05-gulper-option-{option}'] = {
+        'name': f'2 Falchion vs Gulper candidate {option}',
+        'player_ship': 'falchion', 'wship': 'falchion', 'wing': 1,
+        'rows': [['gulper', 1]], 'human': [['falchion', 2]], 'frogg': [['gulper', 1]],
+        'gulper_option': option,
+    }
 
 for wing in (0, 2):
   count = wing + 1
@@ -250,6 +279,16 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
       if(!station || station.allow[0]!=='rf' || !station.allow.includes('ir')) throw Error('Kestrel M1 swap unavailable');
       s.stores.rf-=station.cap;s.stores.ir+=station.cap;
     }
+  }
+  if(spec.no_missiles) for(const s of g.ships) if(s!==player && s.team===0)
+    for(const id of Object.keys(s.stores)) if(g.WEAPONS[id]?.kind==='msl') s.stores[id]=0;
+  for(const s of g.ships) if(s.def.id==='gulper') {
+    // Experimental harness-only candidates: no data or gameplay changes.
+    if(spec.gulper_option==='hp-shield') {
+      s.def={...s.def,structure:s.def.structure*1.25,shield:{...s.def.shield,fore:s.def.shield.fore*1.5,aft:s.def.shield.aft*1.5}};
+      s.structure=s.def.structure;s.shield={...s.def.shield};
+    }
+    if(spec.gulper_option==='aim') s.skill=5;
   }
   const roster=new Map(),damage=new Map(),hostileHits=new Map(),travel=new Map(),deathTime=new Map(),deathSource=new Map(),lastWeapons=new Map(),deathWeapons=new Map();
   let uid=0,sim=0,enemyKilledAt=null,humanKilledAt=null,firstHit=null,snapshot180=null;

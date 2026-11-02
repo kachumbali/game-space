@@ -1,5 +1,21 @@
 # Codex local integration log — 2026-11-01
 
+## Balance v0.5 (Codex, `codex/balance-v05`)
+
+- Applied the exact structure table; component HP is independent of structure
+  and was not redistributed. Added half-calibre `pdS`, halved the authored
+  fighter PD drums, and implemented generic `burst`/`burstPause` for fixed
+  mounts and both player/AI turrets. Gulper has three additional R-5 mounts.
+- Added opt-in `?diag` renderer, instancing support and per-ship instanced mesh
+  counts; added fighter matrix, Falchion/Gulper, candidate and 3v3 ordnance
+  sweep scenarios, a PD intercept sweep and unit/browser test fixtures.
+- Local build, DB validation, source syntax, Python compilation, and burst/HP
+  and validator positive/negative controls pass. Browser tests, 20-seed sweeps,
+  image inspection, balance option effects and the full branch gate are NOT
+  run locally at the owner's direction. Claude: run the exact checks and
+  matching-seed comparisons in `docs/BALANCE_V05_CLOUD_RUN.md` before merge.
+  The 3v3 scenario's survival and candidate effects are not yet verified.
+
 ## Housekeeping (Codex, `codex/housekeeping`)
 
 - Exempted owner art under `assets/` from the image rule; images elsewhere

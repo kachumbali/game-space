@@ -120,6 +120,9 @@ for wid, w in W.items():      # tandem warhead (Codex schema 2026-11-01): shield
     if w.get('mark') and not (2 <= t.get('window', 0) <= 4.2): warn(f'{wid}: window outside the 2-4 s range')
 for wid, w in W.items():
     if w.get('kind') == 'msl' and 'pierce' in w and not 0 <= w['pierce'] <= 0.9: err(f'{wid}.pierce must be 0..0.9')
+    if 'burst' in w or 'burstPause' in w:
+        if not isinstance(w.get('burst'), int) or isinstance(w.get('burst'), bool) or w['burst'] < 1: err(f'{wid}.burst must be a positive integer')
+        if not isinstance(w.get('burstPause'), (int, float)) or isinstance(w.get('burstPause'), bool) or w['burstPause'] <= 0: err(f'{wid}.burstPause must be positive')
 def hexes(o, p):
     if isinstance(o, dict):
         for k, v in o.items():

@@ -315,6 +315,9 @@ SHIPS.gulper = {
     ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
     // sting turret bases
     ell([3.6, 7.0, -2], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 5.5, 14], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }),
+    ell([0, 7.2, -19], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
+    ell([0, -5.9, -20], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
+    ell([0, -7, 16], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
     // trailing blades
     nBlade([8, 0.5, 6], [16.5, 0.2, 34], 0.9), nBlade([7, -3, 12], [14, -3.8, 36], 0.7), nBlade([6, 3.5, 4], [12, 5.6, 30], 0.6),
     // engine nacelles

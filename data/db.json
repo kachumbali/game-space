@@ -444,7 +444,7 @@
         "type": "composite",
         "rating": 0.3
       },
-      "structure": 26,
+      "structure": 35,
       "maxSpeed": 175,
       "accel": 95,
       "turn": 2.5,
@@ -803,7 +803,7 @@
       ],
       "turrets": [
         {
-          "w": "pd",
+          "w": "pdS",
           "pos": [
             0,
             1.85,
@@ -811,10 +811,10 @@
           ],
           "comp": "tur1",
           "side": 1,
-          "ammo": 300
+          "ammo": 150
         },
         {
-          "w": "pd",
+          "w": "pdS",
           "pos": [
             0,
             -1.85,
@@ -822,7 +822,7 @@
           ],
           "comp": "tur2",
           "side": -1,
-          "ammo": 300
+          "ammo": 150
         }
       ],
       "stores": {
@@ -1359,7 +1359,7 @@
         "type": "hard",
         "rating": 0.28
       },
-      "structure": 420,
+      "structure": 460,
       "maxSpeed": 28,
       "accel": 6,
       "turn": 0.22,
@@ -2075,7 +2075,7 @@
         "type": "composite",
         "rating": 0.27
       },
-      "structure": 1600,
+      "structure": 1800,
       "maxSpeed": 30,
       "accel": 3,
       "turn": 0.08,
@@ -3166,7 +3166,7 @@
         {"id": "radar", "name": "DATALINK", "role": "radar", "pos": [0, 0.4, 1], "r": 0.4, "hp": 3}
       ],
       "shield": {"fore": 6, "aft": 6}, "armor": {"type": "composite", "rating": 0.1},
-      "structure": 7, "maxSpeed": 190, "accel": 120, "turn": 2.6, "shieldRegen": 0.5,
+      "structure": 10, "maxSpeed": 190, "accel": 120, "turn": 2.6, "shieldRegen": 0.5,
       "power": {"plantMW": 51, "capacitorMJ": 100}, "sig": 0.4, "aiSpeed": 150,
       "flameColor": "#66c8ff", "ai": {"role": "fighter", "aggr": 1, "skill": 5}
     },
@@ -3266,7 +3266,7 @@
         "type": "composite",
         "rating": 0.1
       },
-      "structure": 7,
+      "structure": 10,
       "maxSpeed": 190,
       "accel": 120,
       "turn": 2.6,
@@ -3626,7 +3626,7 @@
         "type": "composite",
         "rating": 0.46
       },
-      "structure": 14,
+      "structure": 24,
       "maxSpeed": 165,
       "aiSpeed": 120,
       "accel": 90,
@@ -3810,7 +3810,7 @@
         "type": "composite",
         "rating": 0.5
       },
-      "structure": 25,
+      "structure": 35,
       "maxSpeed": 120,
       "aiSpeed": 85,
       "accel": 65,
@@ -3996,7 +3996,7 @@
         "type": "ablative",
         "rating": 0.5
       },
-      "structure": 38,
+      "structure": 48,
       "maxSpeed": 90,
       "aiSpeed": 66,
       "accel": 50,
@@ -4269,7 +4269,7 @@
         "type": "composite",
         "rating": 0.45
       },
-      "structure": 130,
+      "structure": 140,
       "maxSpeed": 82,
       "aiSpeed": 60,
       "accel": 34,
@@ -4491,7 +4491,7 @@
         "type": "hard",
         "rating": 0.43
       },
-      "structure": 60,
+      "structure": 95,
       "maxSpeed": 95,
       "aiSpeed": 66,
       "accel": 50,
@@ -4686,6 +4686,10 @@
           ],
           "comp": "tur4",
           "side": 1
+        },
+        {"w": "thorn", "cls": "S", "pos": [0, 7.6, -19], "comp": "pd1", "side": 1},
+        {"w": "thorn", "cls": "S", "pos": [0, -6.2, -20], "comp": "pd2", "side": -1},
+        {"w": "thorn", "cls": "S", "pos": [0, -7.3, 16], "comp": "pd3", "side": -1
         }
       ],
       "stores": {
@@ -4859,6 +4863,9 @@
           "r": 1.5,
           "hp": 26
         },
+        {"id": "pd1", "name": "POINT DEFENCE DORSAL", "role": "turret", "pos": [0, 7.6, -19], "r": 1.5, "hp": 26},
+        {"id": "pd2", "name": "POINT DEFENCE VENTRAL FORWARD", "role": "turret", "pos": [0, -6.2, -20], "r": 1.5, "hp": 26},
+        {"id": "pd3", "name": "POINT DEFENCE VENTRAL AFT", "role": "turret", "pos": [0, -7.3, 16], "r": 1.5, "hp": 26},
         {
           "id": "shield",
           "name": "SHIELD GLAND",
@@ -4904,7 +4911,7 @@
         "type": "composite",
         "rating": 0.31
       },
-      "structure": 380,
+      "structure": 480,
       "maxSpeed": 34,
       "aiSpeed": 26,
       "accel": 6,
@@ -5916,7 +5923,7 @@
         "type": "hard",
         "rating": 0.3
       },
-      "structure": 3000,
+      "structure": 3200,
       "shieldRegen": 6,
       "power": {
         "plantMW": 960,
@@ -6039,7 +6046,7 @@
       ],
       "turrets": [
         {
-          "w": "pd",
+          "w": "pdS",
           "pos": [
             0,
             1.55,
@@ -6047,10 +6054,10 @@
           ],
           "comp": "tur1",
           "side": 1,
-          "ammo": 400
+          "ammo": 200
         },
         {
-          "w": "pd",
+          "w": "pdS",
           "pos": [
             0,
             1.65,
@@ -6058,10 +6065,10 @@
           ],
           "comp": "tur2",
           "side": 1,
-          "ammo": 400
+          "ammo": 200
         },
         {
-          "w": "pd",
+          "w": "pdS",
           "pos": [
             0,
             -1.55,
@@ -6069,7 +6076,7 @@
           ],
           "comp": "tur3",
           "side": -1,
-          "ammo": 400
+          "ammo": 200
         }
       ],
       "stores": {
@@ -7554,7 +7561,7 @@
         "type": "composite",
         "rating": 0.32
       },
-      "structure": 2400,
+      "structure": 2700,
       "maxSpeed": 28,
       "accel": 2.6,
       "turn": 0.07,
@@ -8025,6 +8032,14 @@
         "capital": 0.25
       },
       "dmgMsl": 1.3
+    },
+    "pdS": {
+      "kind": "proj", "name": "PD-15 BURST POINT DEFENCE (S)",
+      "cd": 0.075, "v": 1100, "dmg": 2.15, "dt": "kin", "life": 0.85,
+      "spread": 0.012, "color": "#ffe0b0", "len": 3.2, "sz": 0.13,
+      "sfx": "pd", "range": 900, "track": 4.5, "turret": true,
+      "ammo": 750, "energy": 0.45, "flak": 6, "burst": 10, "burstPause": 1,
+      "vsCls": {"corvette": 0.3, "frigate": 0.25, "capital": 0.25}, "dmgMsl": 0.65
     },
     "flaser": {
       "kind": "beam",

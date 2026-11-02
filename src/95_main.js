@@ -104,3 +104,23 @@ globalThis.__game = {
 Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSYS, subEff, compEff, subMean, subDegraded, sensorLimit, abMaxOf, energyCapOf, updateTurrets, tenderTick, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
+
+// Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
+if (params.has('diag')) {
+  const diag = document.createElement('pre');
+  diag.id = 'diagnostics';
+  diag.style.cssText = 'position:fixed;top:8px;right:8px;z-index:30;max-width:45vw;max-height:45vh;overflow:auto;background:#001b22dd;color:#bff;padding:8px;font:11px monospace;pointer-events:none;white-space:pre-wrap';
+  document.body.appendChild(diag);
+  const gl = renderer.getContext(), info = gl.getExtension('WEBGL_debug_renderer_info');
+  const gpu = info ? gl.getParameter(info.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER);
+  const instancing = renderer.capabilities.isWebGL2 || !!gl.getExtension('ANGLE_instanced_arrays');
+  const updateDiag = () => {
+    const rows = ships.filter(s => s.alive && s.group).map(s => {
+      let meshes = 0, instances = 0;
+      s.group.traverse(o => { if (o.isInstancedMesh) { meshes++; instances += o.count; } });
+      return `${s.callsign || s.def.name}: ${meshes} meshes / ${instances} instances`;
+    });
+    diag.textContent = `WebGL renderer: ${gpu}\nInstancing: ${instancing ? 'supported' : 'unavailable'}\n${rows.join('\n') || 'No active ships'}`;
+  };
+  updateDiag(); setInterval(updateDiag, 1000);
+}
