@@ -30,7 +30,7 @@ function comm(from, text, color) {
   const mine = from !== 'FROGG';
   comms.push({ from, text, color: color || (from === 'CONTROL' ? '#ffd080' : '#7fe0ff'), t: time });
   if (comms.length > 5) comms.shift();
-  if (mine) sfx('blip');
+  if (mine) sfx('comms');
 }
 const objectives = [];       // {id, text, state:'open'|'done'|'failed'}
 function objective(id, text, st = 'open') {

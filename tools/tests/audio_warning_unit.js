@@ -1,0 +1,14 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const src=fs.readFileSync('src/85_update.js','utf8');
+const code=src.slice(src.indexOf('function cockpitConditionWarnings('),src.indexOf('function updateWarnings('));
+const events=[],c={AUDIO:{energyT:0,hullT:0,conditionT:0},sfx:n=>events.push(n)};
+vm.createContext(c);vm.runInContext(code,c);
+const p={energy:100,energyMax:100,structure:100,def:{structure:100}};
+c.cockpitConditionWarnings(p,0.1,false);assert.equal(events.length,0);
+p.energy=10;p.structure=10;c.cockpitConditionWarnings(p,0.1,true);assert.equal(events.length,0);
+c.cockpitConditionWarnings(p,0.1,false);assert.deepEqual(events,['hullalarm']);
+c.cockpitConditionWarnings(p,0.1,false);assert.deepEqual(events,['hullalarm']);
+c.cockpitConditionWarnings(p,1,false);assert.deepEqual(events,['hullalarm','lowenergy']);
+p.energy=100;p.structure=100;c.cockpitConditionWarnings(p,6,false);
+assert.deepEqual(events,['hullalarm','lowenergy']);assert.equal(c.AUDIO.hullT,0);
+console.log('cockpit condition thresholds, priority and cooldown controls: OK');

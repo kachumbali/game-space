@@ -28,10 +28,15 @@ juiceReset();
 const CHAIN_NAMES = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'QUAD KILL', 'RAMPAGE', 'RAMPAGE', 'UNSTOPPABLE', 'UNSTOPPABLE'];
 
 // ---- sounds (same synth as the rest of the game) ----------------------------------------------------------
-SFX.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
-SFX.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
-SFX.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
-SFX.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
+// Restrained sensor/impact feedback rather than a musical kill reward.
+SFX.hitmark = () => noiseBurst(0.035, 0.06, 1500, 650, 'bandpass');
+SFX.hitshield = () => { tone(480, 320, 0.05, 'sine', 0.045); noiseBurst(0.045, 0.035, 1200, 500, 'lowpass'); };
+SFX.kill = () => { noiseBurst(0.13, 0.05, 1000, 300, 'bandpass'); tone(220, 150, 0.12, 'sine', 0.04); };
+SFX.subkill = () => { noiseBurst(0.19, 0.11, 1100, 240, 'bandpass'); tone(160, 65, 0.18, 'sine', 0.09); };
+SFX_FALLBACK.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
+SFX_FALLBACK.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
+SFX_FALLBACK.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
+SFX_FALLBACK.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
 SFX.pickup = () => { tone(700, 1400, 0.10, 'sine', 0.14); tone(1050, 2100, 0.12, 'sine', 0.1, 0.06); };
 SFX.perk = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.01, 0.18, 'triangle', 0.14, i * 0.07));
 SFX.wave = () => { tone(110, 90, 0.5, 'sawtooth', 0.2); tone(165, 140, 0.5, 'sawtooth', 0.12, 0.1); };

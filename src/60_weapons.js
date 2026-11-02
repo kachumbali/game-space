@@ -158,6 +158,12 @@ function burstCooldown(slot, w, cooldown) {
   slot.burstShots = 0;
   return cooldown + w.burstPause;
 }
+function weaponAudioId(w) {
+  if ((w.name || '').includes('MASER')) return 'maser';
+  if (w.kind !== 'beam') return w.sfx;
+  if ((w.name || '').includes('LASER')) return 'laser';
+  return 'pulse';
+}
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
   if (comp && comp.hp <= 0) return false;
@@ -178,7 +184,7 @@ function fireMount(s, m) {
   m.cool = burstCooldown(m, w, w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1)));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
-  sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
+  sfx(weaponAudioId(w), dist, s === player ? 0.9 : 0.7, s.def.cls);
   return true;
 }
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
@@ -273,7 +279,7 @@ function launchMissile(s, wid) {
   });
   if (TUNE.ordnance?.enabled) PLOG.cnt['missile.highWater'] = Math.max(PLOG.cnt['missile.highWater'] || 0, missiles.filter(m=>!m.dead).length);
   if (guided) L.p = 0;
-  sfx('msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9);
+  sfx(w.torp ? 'torp' : 'msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9, s.def.cls);
   if (s.team !== player?.team && guided && L.tgt === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
   return true;
 }
@@ -636,7 +642,7 @@ function updateTurrets(s, dt) {
           fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
           T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
-          if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
+          if (Math.random() < 0.3) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
@@ -648,7 +654,7 @@ function updateTurrets(s, dt) {
       T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
       if (Math.random() < 0.35) sparksAt(mp, 1, 5, [2.4, 2.0, 1.0, 1]);
-      if (Math.random() < 0.25) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
+      if (Math.random() < 0.25) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
     }
   }
 }

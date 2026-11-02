@@ -79,6 +79,7 @@ function frame(t) {
   if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
   if (!params.has('yard')) {
+    audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
     musicTick(dt);
     if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
@@ -105,6 +106,7 @@ Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSY
 Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
+Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(SFX), musicFiles: MUSIC_FILES });
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
 if (params.has('diag')) {

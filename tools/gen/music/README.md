@@ -46,3 +46,21 @@ commercial music use). The MP3s are ours; both tool licences are recorded in
 
 The moods map in `src/13_music.js` (`MUSIC_FILES`); the CC0 tracks `urgent.mp3`
 and `pulse.mp3` remain in `audio/` as fallbacks.
+
+## Original situation cues (2026-11-02)
+
+`generate-situation-score.py` writes ten original GM MIDI scores and renders
+them with its own sample-free additive oscillators. It requires Python 3,
+NumPy and ffmpeg; no soundfont, recordings, or third-party melodies are used.
+Run from the repository root with `python3 tools/gen/music/generate-situation-score.py`.
+The corresponding MP3 files are 96 kbps stereo and under 1.5 MB each. The
+generator makes a 40 ms seam fade; a listener must still judge the loop and
+the music's tone in context. MP3 player implementations can add encoder gap.
+
+The cues are patrol, tension, hive, capital-duel, bullfrog, retreat, rescue,
+loss, victory-new and title-sting. The title sting plays once, then the
+existing menu track fades in; other transitions use the existing crossfade.
+Critical warning tones zero the music gain for their duration, then the music
+fades back in. Test on iOS: media-element unlock and gain routing vary across
+OS/browser versions, and the `file://` fallback still uses `audio.volume`,
+which iOS may ignore.

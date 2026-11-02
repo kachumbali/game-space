@@ -1,5 +1,30 @@
 # Codex local integration log — 2026-11-01
 
+## Audio overhaul (Codex, `codex/audio-overhaul`)
+
+- `docs/AUDIO_AUDIT.md` inventories the prior music and every procedural and
+  sampled effect. The optional enhanced layer adds class-weighted, delayed and
+  filtered effects, torpedo/laser/maser distinctions, cockpit cautions, comms,
+  docking and engine/afterburner ambience. Critical warnings mute music.
+- Ten original sample-free situation cues and their reproducible GM MIDI
+  sources are credited in `src/15_credits.js`, `docs/CREDITS.md` and
+  `docs/AUDIO_CREDITS.md`. Each new MP3 is under 1.5 MB. Neither perceived
+  loop quality nor MP3 padding has been verified by ear; iOS stream limits,
+  unlock and volume behavior require real-device testing.
+- Local build, database validation, sound-ID and track-file controls (including
+  missing-ID/file negative controls), audio synthesis, warning priority and
+  music-mood unit controls passed. No browser test, audio audition, seeded
+  run or full `tools/check_branch.sh` gate was run locally: Claude should run
+  `audio_noerrors_t.py`, existing sound/music/touch tests and the full gate.
+- Owner audition list: fighter and capital cannon/rail, laser, maser, pulse and
+  PD; missile and torpedo launches; small/large/remote detonations, shield and
+  hull hits, subsystem destruction; fighter/corvette/frigate/capital engine
+  and afterburner; lock, missile, energy and hull alarms; docking, jump and
+  comms. Listen to all ten `situation-*` tracks: patrol, tension, hive,
+  capital duel, Bullfrog, retreat, rescue, loss, victory and title sting;
+  check every loop seam and music suppression during warnings on desktop,
+  phone and iPad, with the enhanced sample layer both on and off.
+
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
 - `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated

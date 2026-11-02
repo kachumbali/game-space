@@ -1,0 +1,23 @@
+// Run the actual synthesis code against a WebAudio stub, without a browser.
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const starts=[], frequencies=[];
+const param=()=>({value:0,setValueAtTime(v,t){frequencies.push({v,t});},exponentialRampToValueAtTime(){},setTargetAtTime(v){this.value=v;}});
+const node=()=>({gain:param(),frequency:param(),Q:param(),connect(){},start(t){starts.push(t);},stop(){}});
+const ctx={currentTime:10,createOscillator:node,createGain:node,createBufferSource:node,createBiquadFilter:node};
+const c={params:{has:()=>false},addEventListener(){},AOPT:{samples:true},SAMPLE_MAP:{},Math};vm.createContext(c);
+vm.runInContext(fs.readFileSync('src/12_audio.js','utf8')+`;AUDIO.ctx=ctx;AUDIO.master={};AUDIO.noise={};globalThis.test={sfx,AUDIO,audioEngineUpdate};`,Object.assign(c,{ctx}));
+c.test.sfx('cannon',0,1,'fighter'); const fighter=frequencies.find(x=>x.v===140).v;
+starts.length=0;frequencies.length=0;
+c.test.sfx('cannon',1000,1,'capital');
+assert(starts.every(t=>t>=10.2)); assert(frequencies.some(x=>Math.abs(x.v-fighter*0.52)<1e-8));
+c.test.sfx('launchwarn'); assert(c.test.AUDIO.criticalUntil>ctx.currentTime);
+c.test.AUDIO.criticalUntil=0;c.test.sfx('click');assert.equal(c.test.AUDIO.criticalUntil,0);
+c.test.AUDIO.engineOsc=node();c.test.AUDIO.engineGain=node();
+c.test.audioEngineUpdate({alive:true,def:{cls:'fighter'},throttle:1,ab:true},true);
+assert(c.test.AUDIO.engineGain.gain.value>0);
+c.AOPT.samples=false;c.test.audioEngineUpdate({alive:true,def:{cls:'fighter'}},true);
+assert.equal(c.test.AUDIO.engineGain.gain.value,0);
+starts.length=0; frequencies.length=0;
+c.test.sfx('cannon',1000,1,'capital');
+assert(starts.every(t=>t===10)); assert(frequencies.some(x=>x.v===140));
+console.log('audio distance, capital pitch, warning priority and optional engine controls: OK');
