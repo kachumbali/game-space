@@ -6,6 +6,7 @@ Usage: python3 tools/tests/campaign_measure.py [seed-count] [output.json]
 """
 import ast
 import json
+import os
 import sys
 from pathlib import Path
 from lib import Runner
@@ -21,6 +22,7 @@ output = Path(sys.argv[2]) if len(sys.argv) > 2 else Path('campaign_measure.json
 results = []
 with Runner() as runner:
     for campaign, number in [('prologue', 4), ('long_retreat', 4), ('severed_node', 5)]:
+        if os.environ.get('CM_ONLY') and campaign not in os.environ['CM_ONLY'].split(','): continue
         for mission in range(1, number + 1):
             for seed in range(1, count + 1):
                 for context in list(runner.b.contexts): context.close()
