@@ -150,8 +150,9 @@ function lodTick(dt) {
 // ---- fleet tender service (owner decision 2026-10-22: tender ships resupply the magazine rule) ----
 // Rearms friendly ships within `def.serviceR`: gun ammo pools toward `ammoMax`, missile/flare stores toward the def, XL slugs toward the weapon's magazine.
 // Binding rule kept (AGENTS.md, "docking does not repair"): rearm is not repair - no structure, component or shield restoration.
-// One shared point budget per serviced ship; the tender's magazine is finite.
+// One shared point budget per tender, not an independent budget per recipient.
 function ordnanceRestock(stores, limits, hold, cfg, points) {
+  const initial = points;
   for (const [id, cost] of Object.entries(cfg.points)) {
     if (!(id in limits)) continue;
     const pool = id === 'torp' ? 'torpedo' : id === 'drone' ? 'drone' : 'missile';
@@ -160,12 +161,14 @@ function ordnanceRestock(stores, limits, hold, cfg, points) {
     hold[pool] = (hold[pool] || 0) - amount;
     points -= amount * cost;
   }
+  return initial - points;
 }
 function tenderTick(dt) {
   for (const t of ships) {
     const heclaService = TUNE.ordnance?.enabled && t.def.ordnancePlan?.hold;
     if (!t.alive || (!t.def.tender && !heclaService)) continue;
     const R = t.def.serviceR || TUNE.ordnance?.restock?.serviceRange || 600;
+    let serviceTime = dt;
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
@@ -184,8 +187,9 @@ function tenderTick(dt) {
         const cfg = TUNE.ordnance.restock;
         t.ordnanceHold ||= { ...(heclaService || t.def.ordnanceHold) };
         const docked = dock && dock.phase === 'docked' && dock.t === t && s === player;
-        ordnanceRestock(s.stores, { ...s.def.stores, ...(s.def.ordnancePlan?.stores || {}) }, t.ordnanceHold, cfg,
-          (docked ? cfg.dockedRate : cfg.proximityRate) * serviceEff * dt);
+        const rate = (docked ? cfg.dockedRate : cfg.proximityRate) * serviceEff;
+        const spent = ordnanceRestock(s.stores, { ...s.def.stores, ...(s.def.ordnancePlan?.stores || {}) }, t.ordnanceHold, cfg, rate * serviceTime);
+        if (rate > 0) serviceTime = Math.max(0, serviceTime - spent / rate);
         // Other consumables retain their prior behavior; nuclear weapons are never resupplied.
         for (const k in s.def.stores || {}) if (!(k in cfg.points) && !WEAPONS[k]?.nuclear)
           s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
