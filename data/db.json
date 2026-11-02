@@ -9669,7 +9669,7 @@
       "shieldDelay": 4,
       "energyDefault": 17
     },
-    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}, "restock":{"points":{"ir":1,"rf":1.5,"torp":4,"drone":3},"proximityRate":2,"dockedRate":4,"serviceRange":600}},
+    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}, "quickNukeRounds":1, "restock":{"points":{"ir":1,"rf":1.5,"torp":4,"drone":3},"proximityRate":2,"dockedRate":4,"serviceRange":600}},
     "missile": {
       "steerMinSpeed": 80,
       "leadMax": 3,

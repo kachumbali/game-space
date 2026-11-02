@@ -249,6 +249,7 @@ function startSkirmish(cfgIn) {
   applyLook(cfg.look);
   wave = 0; state = 'play'; flightMode = cfg.fm;
   const p = makeShip(cfg.ship, 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
+  quickNukeLoad(p);
   p.shots = 0; p.hitsLanded = 0;
   const pf = new THREE.Vector3(0, 0, -1).applyQuaternion(p.group.quaternion);
   for (let i = 0; i < cfg.wing; i++) {

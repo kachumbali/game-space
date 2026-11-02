@@ -247,8 +247,19 @@ function missileLiveCap() {
   const device=deviceName(), key=device==='phone'?'phone':device==='tablet'?'tablet':'desktop';
   return cfg.liveCap[key];
 }
+if (TUNE.ordnance?.enabled) document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">Quick-play nuclear load: enable it in OPTIONS before launch; it replaces one torpedo. Cycle missiles with G or the touch weapon control.</div>');
+function quickNukeLoad(s) {
+  if (!TUNE.ordnance?.enabled || !quickNukeEnabled || !s || !(s.stores.torp > 0) || s.stores.nuke > 0) return false;
+  const rounds = Math.min(Math.floor(s.stores.torp), TUNE.ordnance.quickNukeRounds);
+  s.stores.torp -= rounds; s.stores.nuke = rounds;
+  return rounds > 0;
+}
+function nuclearLaunchAllowed(enabled, isPlayer, campaign, released, fired) {
+  return !enabled || (isPlayer && (!campaign || (released && !fired)));
+}
 function launchMissile(s, wid, opts = null) {
   const w = WEAPONS[wid];
+  if (w?.nuclear && !nuclearLaunchAllowed(!!TUNE.ordnance?.enabled, s === player, game.mode === 'mission', !!game.mstate?.nuclearReleased, !!game.mstate?.nuclearFired)) return false;
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
   if (missiles.reduce((n,m)=>n+(!m.dead?1:0),0) >= missileLiveCap()) { plogN('missile.capRefused'); return false; }
@@ -260,6 +271,7 @@ function launchMissile(s, wid, opts = null) {
   const customTarget = custom && opts.target && opts.target.alive && !opts.target.dying && opts.target.team !== s.team ? opts.target : null;
   const guidedTarget = customTarget || (L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive ? L.tgt : null);
   s.stores[wid]--;
+  if (TUNE.ordnance?.enabled && w.nuclear && game.mode === 'mission') game.mstate.nuclearFired = true;
   s.group.updateMatrixWorld(true);
   const half = s.def.half;
   const points = s.def.launches?.length ? s.def.launches : s.def.launch ? [s.def.launch] : null;
