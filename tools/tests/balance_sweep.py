@@ -75,6 +75,17 @@ SCENARIOS = {
     },
 }
 
+# Kestrel M1 carries two radar missiles by default or two IR missiles when
+# swapped. Merlin has no M1 station; compare the actual selectable Kestrel fit.
+for load in ('default', 'ir'):
+    SCENARIOS[f'ordnance-kestrel-{load}'] = {
+        'name': f'3 Kestrel vs 3 Darter + 3 Leaper + 3 Spitter (M1 {load})',
+        'player_ship': 'kestrel', 'wship': 'kestrel', 'wing': 2,
+        'rows': [['darter', 3], ['leaper', 3], ['spitter', 3]],
+        'human': [['kestrel', 3]], 'frogg': [['darter', 3], ['leaper', 3], ['spitter', 3]],
+        'ordnance_swap': load == 'ir',
+    }
+
 for wing in (0, 2):
   count = wing + 1
   scenario_id = f"g{count}"
@@ -205,6 +216,13 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
         callsign:'H'+(++humanSerial),ai:['halberd','exeter','bullfrog','hecla'].includes(id)?'capital':undefined,skill:3
       });
       s.vel.set(0,0,0);
+    }
+  }
+  if(spec.ordnance_swap) for(const s of g.ships){
+    if(s!==player && s.team===0 && s.def.id==='kestrel'){
+      const station=s.def.hardpoints.find(h=>h.id==='M1');
+      if(!station || station.allow[0]!=='rf' || !station.allow.includes('ir')) throw Error('Kestrel M1 swap unavailable');
+      s.stores.rf-=station.cap;s.stores.ir+=station.cap;
     }
   }
   const roster=new Map(),damage=new Map(),hostileHits=new Map(),travel=new Map(),deathTime=new Map(),deathSource=new Map(),lastWeapons=new Map(),deathWeapons=new Map();

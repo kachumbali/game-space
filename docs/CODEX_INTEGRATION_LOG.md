@@ -1,5 +1,21 @@
 # Codex local integration log — 2026-11-01
 
+## Housekeeping (Codex, `codex/housekeeping`)
+
+- Exempted owner art under `assets/` from the image rule; images elsewhere
+  remain subject to the check. The R3 debrief now reports evacuation count;
+  a browser test exercises partial/full loss, navigation and counts. Added a
+  KITE-6 Halberd/Falchion launch-and-run test with an assertion control.
+- Added paired seeded Kestrel M1 RF/IR swap scenarios. Merlin has no M1; no
+  measurement results or balance claims are made. Commands and exact loadout
+  details are in `docs/ORDNANCE_SWAP_MEASUREMENT.md`.
+- Local build, DB validation, Python compilation and shell syntax passed.
+  Browser tests, the 20-seed sweeps and `tools/check_branch.sh` remain unrun:
+  auto-review rejected local Chrome due to the standing no-browser rule.
+  Cloud: run `retreat_convoy_t.py`, `drone_t.py kite_carriers`, both scenarios
+  listed in the measurement note, and the full gate; report losses, kills,
+  survival and incomplete runs.
+
 ## Playtest support — 2026-11-02 (Codex)
 
 - Split the eleven Bullfrog scenarios into individual CI matrix jobs; the

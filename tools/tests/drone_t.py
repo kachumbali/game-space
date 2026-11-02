@@ -9,6 +9,17 @@ PRE='''const g=__game,T=g.THREE;__paused=true;g.game.mode='test';
  const V=(x,y,z)=>new T.Vector3(x,y,z);
  const live=c=>g.dronesOf(c).length;'''
 SC={}
+SC['kite_carriers']=('?free&n=0','''()=>{'''+PRE+'''
+ const result=[];
+ for(const [id, x, stock] of [['halberd',3000,2], ['falchion',6000,2]]){
+   const c=g.spawnShip(id,0,V(x,0,0),V(x,0,-1000),{}); c.stores.drone=stock;
+   const launched=g.launchDrones(c,1), d=launched[0];
+   step(20);
+   result.push({id, count:launched.length, type:d?.def.id, ctrl:d?.ctrl===c,
+     order:d?.dOrder, alive:d?.alive&&!d?.dying, stock:c.stores.drone,
+     length:d?.def.length, rails:d?.def.hardpoints?.length, missiles:d?.stores.ir});
+ }
+ return result}''')
 SC['launch']=('?free&drones=5&dlimit=3','''()=>{'''+PRE+'''
  const r={};
  r.live0=live(P); r.stock0=P.stores.drone; r.more=g.launchDrones(P,5).length;
@@ -90,6 +101,7 @@ SC['ctrl_death']=('?free','''()=>{'''+PRE+'''
  const dd=ds.map(d=>d.group.position.distanceTo(Fr.group.position)); r.nearFrigate=Math.round(Math.min(...dd))+'..'+Math.round(Math.max(...dd));
  return r}''')
 CHK={
+ 'kite_carriers':lambda r:len(r)==2 and all(x['count']==1 and x['type']=='kite6' and x['ctrl'] and x['order']=='protect' and x['alive'] and x['stock']==1 and x['length']==6 and x['rails']==2 and x['missiles']==2 for x in r),
  'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==6 and r['corvLaunch']==6 and r['exStock']==48,
  'engage':lambda r:r['n']==3 and r['targetDead'] and r['droneKills']>=1 and r['personal']==0 and r['nAll']>0 and r['allTgt']>=1 and r['allKills']>=2,
  'protect_return':lambda r:r['retDist']<400 and r['protDist']<400 and r['attackerDead'],
