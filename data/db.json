@@ -3149,8 +3149,8 @@
       "mounts": [{"w": "dgun", "pos": [0, -0.32, -3.05], "comp": "gun", "grp": 1}],
       "stores": {"ir": 2}, "launches": [[1.5, -0.25, 0.2], [-1.5, -0.25, 0.2]],
       "hardpoints": [
-        {"id": "S1", "size": "S", "cap": 1, "allow": ["ir"]},
-        {"id": "S2", "size": "S", "cap": 1, "allow": ["ir"]}
+        {"id": "S1", "size": "S", "cap": 1, "pos": [1.5, -0.25, 0.2], "allow": ["ir"]},
+        {"id": "S2", "size": "S", "cap": 1, "pos": [-1.5, -0.25, 0.2], "allow": ["ir"]}
       ],
       "comps": [
         {"id": "eng", "name": "ENGINE", "role": "engine", "pos": [0, 0, 2.4], "r": 0.9, "hp": 5},
