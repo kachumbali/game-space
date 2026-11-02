@@ -1,0 +1,3376 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "77a684aba239c2f15e6f5061e4413187ef139fe0",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "m-merlin-laser6": {
+      "name": "3 Merlin vs HECLA (6 laserM turrets)",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": 6,
+      "results": [
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10.1,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING2"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                433.2,
+                648.6,
+                -1395.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16005.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                384.5,
+                636.8,
+                -1421.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15962.2
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                697.4,
+                813.4,
+                -1938.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 306
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                669.6,
+                622.2,
+                -1330.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14951.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1455.3,
+                "hostile_hits": 594,
+                "distance_flown": 16005.3,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2087.4,
+                "hostile_hits": 895,
+                "distance_flown": 15962.2,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1992.9,
+                "hostile_hits": 751,
+                "distance_flown": 14951.6,
+                "structure": 14.5,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 70.63,
+                "hostile_hits": 35,
+                "distance_flown": 306,
+                "structure": 12000,
+                "shield": 8964.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.7,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -264.6,
+                -595,
+                -1444.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16087.7
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -461.5,
+                -769.1,
+                -2030
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 303.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -517.1,
+                -589.5,
+                -1420.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14427.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1824.9,
+                "hostile_hits": 770,
+                "distance_flown": 16087.7,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 165.9,
+                "hostile_hits": 79,
+                "distance_flown": 2916.6,
+                "structure": 0.31,
+                "shield": 0,
+                "death_time": 28.35,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1936.2,
+                "hostile_hits": 724,
+                "distance_flown": 14427.2,
+                "structure": 18.95,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.17,
+                "hostile_hits": 22,
+                "distance_flown": 303.9,
+                "structure": 12000,
+                "shield": 10573,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.65,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                850.7,
+                344.8,
+                -1258.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 16016.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                912.1,
+                336,
+                -1195.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16055.6
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                1185.9,
+                441.8,
+                -1817.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 306
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                762,
+                356.6,
+                -1363.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15992.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1787.1,
+                "hostile_hits": 653,
+                "distance_flown": 16016.2,
+                "structure": 25.84,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1919.4,
+                "hostile_hits": 716,
+                "distance_flown": 16055.6,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1871.1,
+                "hostile_hits": 891,
+                "distance_flown": 15992.7,
+                "structure": 25.84,
+                "shield": 40.61,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.12,
+                "hostile_hits": 12,
+                "distance_flown": 306,
+                "structure": 12000,
+                "shield": 8922.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "hecla",
+            "target_callsign": "HECLA"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                397.3,
+                -520.4,
+                -1444.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15976.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                129,
+                -502.9,
+                -1477.1
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16028.1
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                371.1,
+                -670.6,
+                -2079.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 305.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                152.9,
+                -525.2,
+                -1494
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16099.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2079,
+                "hostile_hits": 792,
+                "distance_flown": 15976.2,
+                "structure": 25.78,
+                "shield": 38.47,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1879.5,
+                "hostile_hits": 697,
+                "distance_flown": 16028.1,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1955.1,
+                "hostile_hits": 733,
+                "distance_flown": 16099.7,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 47.21,
+                "hostile_hits": 16,
+                "distance_flown": 305.4,
+                "structure": 12000,
+                "shield": 8586.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "hecla",
+            "target_callsign": "HECLA"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                552.1,
+                -285,
+                -1422.1
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 11472.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                582.1,
+                -282.6,
+                -1439.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16027.2
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                798.2,
+                -376.5,
+                -2031.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 305.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                746.6,
+                -288.5,
+                -1388.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 9039.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1621.2,
+                "hostile_hits": 574,
+                "distance_flown": 11472.1,
+                "structure": 18.87,
+                "shield": 1.09,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1856.4,
+                "hostile_hits": 785,
+                "distance_flown": 16027.2,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1583.4,
+                "hostile_hits": 556,
+                "distance_flown": 9039.9,
+                "structure": 12.8,
+                "shield": 12.67,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.46,
+                "hostile_hits": 32,
+                "distance_flown": 305.8,
+                "structure": 12000,
+                "shield": 9439,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.4,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                271.1,
+                -118.6,
+                -1652.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 13783.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                376.6,
+                -118.4,
+                -1526.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 16058.5
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                741.7,
+                -148.3,
+                -2084.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 305.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                382.1,
+                -99.6,
+                -1531.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 13554.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1890,
+                "hostile_hits": 702,
+                "distance_flown": 13783.2,
+                "structure": 18.4,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1940.4,
+                "hostile_hits": 726,
+                "distance_flown": 16058.5,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1648.5,
+                "hostile_hits": 785,
+                "distance_flown": 13554.6,
+                "structure": 19.44,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 18.9,
+                "hostile_hits": 10,
+                "distance_flown": 305.7,
+                "structure": 12000,
+                "shield": 9021.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.55,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -1.2,
+                955.3,
+                -1261.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15972.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -201.6,
+                977.7,
+                -1338.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15924.2
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                83.8,
+                1240.2,
+                -1839.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 305.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -161.5,
+                937.4,
+                -1280.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15833.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1621.2,
+                "hostile_hits": 673,
+                "distance_flown": 15972.7,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1738.8,
+                "hostile_hits": 828,
+                "distance_flown": 15924.2,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1978.2,
+                "hostile_hits": 744,
+                "distance_flown": 15833.1,
+                "structure": 25.68,
+                "shield": 18.47,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 101.39,
+                "hostile_hits": 34,
+                "distance_flown": 305.1,
+                "structure": 12000,
+                "shield": 9161.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.55,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -848.3,
+                585.1,
+                -1203.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16010.3
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -1170.1,
+                733.9,
+                -1734.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 303.6
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1050,
+                "hostile_hits": 500,
+                "distance_flown": 9471.8,
+                "structure": 6.79,
+                "shield": 0,
+                "death_time": 105.95,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1736.7,
+                "hostile_hits": 629,
+                "distance_flown": 16010.3,
+                "structure": 26,
+                "shield": 38.99,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2081.1,
+                "hostile_hits": 793,
+                "distance_flown": 12060.2,
+                "structure": 8.37,
+                "shield": 0,
+                "death_time": 176.25,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 160.56,
+                "hostile_hits": 74,
+                "distance_flown": 303.6,
+                "structure": 12000,
+                "shield": 9632.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.75,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                723.6,
+                -899.3,
+                -1146.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 8602.2
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                719.5,
+                -1204.4,
+                -1722.9
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 305.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                564.8,
+                -887.2,
+                -1150.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 10071.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1629.6,
+                "hostile_hits": 578,
+                "distance_flown": 8602.2,
+                "structure": 18.93,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 907.2,
+                "hostile_hits": 234,
+                "distance_flown": 4789.4,
+                "structure": 6.65,
+                "shield": 0,
+                "death_time": 51.3,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1806,
+                "hostile_hits": 662,
+                "distance_flown": 10071.8,
+                "structure": 21.24,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 72.18,
+                "hostile_hits": 29,
+                "distance_flown": 305.1,
+                "structure": 12000,
+                "shield": 10157.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.4,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                391.1,
+                -927.5,
+                -1193.9
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 15110.1
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                398.3,
+                -1204.9,
+                -1817.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 305.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1430.1,
+                "hostile_hits": 582,
+                "distance_flown": 8790.8,
+                "structure": 3.62,
+                "shield": 7.77,
+                "death_time": 122.55,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1978.2,
+                "hostile_hits": 744,
+                "distance_flown": 15110.1,
+                "structure": 22.51,
+                "shield": 11.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 728.7,
+                "hostile_hits": 248,
+                "distance_flown": 5816.8,
+                "structure": 13.08,
+                "shield": 6.95,
+                "death_time": 63.3,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 127.39,
+                "hostile_hits": 61,
+                "distance_flown": 305.1,
+                "structure": 12000,
+                "shield": 10363,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.35,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                18.8,
+                -526,
+                -1521
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15980.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -278.2,
+                -500.9,
+                -1453.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14208.4
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -162.7,
+                -683.2,
+                -2101.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 304.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -46.1,
+                -508.3,
+                -1449.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 15930
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1520.4,
+                "hostile_hits": 526,
+                "distance_flown": 15980.8,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2039.1,
+                "hostile_hits": 773,
+                "distance_flown": 14208.4,
+                "structure": 23.45,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2223.9,
+                "hostile_hits": 861,
+                "distance_flown": 15930,
+                "structure": 23.02,
+                "shield": 15.91,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 35.8,
+                "hostile_hits": 12,
+                "distance_flown": 304.5,
+                "structure": 12000,
+                "shield": 8716.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.35,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                89.3,
+                -576.5,
+                -1428.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15975
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                261.9,
+                -758.7,
+                -2065
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 305
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                71.1,
+                -561.3,
+                -1444.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 13238.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1703.1,
+                "hostile_hits": 712,
+                "distance_flown": 15975,
+                "structure": 21.84,
+                "shield": 9.73,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1362.9,
+                "hostile_hits": 451,
+                "distance_flown": 6664,
+                "structure": 4.42,
+                "shield": 1.03,
+                "death_time": 135.55,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1318.8,
+                "hostile_hits": 628,
+                "distance_flown": 13238.8,
+                "structure": 10.92,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 104.75,
+                "hostile_hits": 56,
+                "distance_flown": 305,
+                "structure": 12000,
+                "shield": 10115.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.2,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -681.5,
+                -530.7,
+                -1303.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 15064.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -686.8,
+                -538.1,
+                -1309.2
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 16040.5
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -923.7,
+                -696.5,
+                -1891.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 303.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -613,
+                -521.1,
+                -1374.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15140.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1740.9,
+                "hostile_hits": 730,
+                "distance_flown": 15064.6,
+                "structure": 19.21,
+                "shield": 0.55,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1778.7,
+                "hostile_hits": 649,
+                "distance_flown": 16040.5,
+                "structure": 23.63,
+                "shield": 20,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1990.8,
+                "hostile_hits": 849,
+                "distance_flown": 15140.2,
+                "structure": 25.41,
+                "shield": 26.95,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 123.65,
+                "hostile_hits": 45,
+                "distance_flown": 303.3,
+                "structure": 12000,
+                "shield": 8989.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.35,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -645.7,
+                623.3,
+                -1284
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16044.8
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -716.7,
+                811,
+                -1938.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 304.3
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1772.4,
+                "hostile_hits": 745,
+                "distance_flown": 16044.8,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1169.7,
+                "hostile_hits": 359,
+                "distance_flown": 5717.6,
+                "structure": 9.53,
+                "shield": 5.58,
+                "death_time": 80.9,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 665.7,
+                "hostile_hits": 218,
+                "distance_flown": 4192.3,
+                "structure": 2.7,
+                "shield": 3.94,
+                "death_time": 44.35,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 149.79,
+                "hostile_hits": 72,
+                "distance_flown": 304.3,
+                "structure": 12000,
+                "shield": 10892.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.25,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING2"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -173,
+                854,
+                -1328.9
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15978.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -375.1,
+                834.9,
+                -1270.6
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15973.4
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -362.3,
+                1096.3,
+                -1896.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 304.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1856.4,
+                "hostile_hits": 686,
+                "distance_flown": 15978.8,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2039.1,
+                "hostile_hits": 773,
+                "distance_flown": 15973.4,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1182.3,
+                "hostile_hits": 365,
+                "distance_flown": 5791.2,
+                "structure": 6.58,
+                "shield": 0,
+                "death_time": 72.3,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.52,
+                "hostile_hits": 40,
+                "distance_flown": 304.4,
+                "structure": 12000,
+                "shield": 9422.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.9,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                598.5,
+                -250.2,
+                -1494.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 16001.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                310.8,
+                -252.2,
+                -1500.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 14578.6
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                576.6,
+                -327.2,
+                -2113.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 305.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                408.8,
+                -241.3,
+                -1519.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16017.5
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1974,
+                "hostile_hits": 742,
+                "distance_flown": 16001.8,
+                "structure": 24.87,
+                "shield": 32.06,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1797.6,
+                "hostile_hits": 658,
+                "distance_flown": 14578.6,
+                "structure": 25.19,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2091.6,
+                "hostile_hits": 798,
+                "distance_flown": 16017.5,
+                "structure": 26,
+                "shield": 38.99,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.02,
+                "hostile_hits": 2,
+                "distance_flown": 305.1,
+                "structure": 12000,
+                "shield": 8636.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.25,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -357.6,
+                91.8,
+                -1616.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15992
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -835.8,
+                107.9,
+                -2055.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 303.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -405.1,
+                85.5,
+                -1539.7
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15966.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 728.7,
+                "hostile_hits": 248,
+                "distance_flown": 5036.6,
+                "structure": 13.55,
+                "shield": 0,
+                "death_time": 55.85,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1707.3,
+                "hostile_hits": 714,
+                "distance_flown": 15992,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2003.4,
+                "hostile_hits": 756,
+                "distance_flown": 15966.9,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65.56,
+                "hostile_hits": 34,
+                "distance_flown": 303.4,
+                "structure": 12000,
+                "shield": 10060.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                -487.2,
+                -744.4,
+                -1288.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16037.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                -292.2,
+                -749,
+                -1522.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16002
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -822.6,
+                -955.1,
+                -1824.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING1"
+              },
+              "distance_flown": 303.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1911,
+                "hostile_hits": 712,
+                "distance_flown": 16037.3,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1848,
+                "hostile_hits": 781,
+                "distance_flown": 16002,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1722,
+                "hostile_hits": 622,
+                "distance_flown": 12665.1,
+                "structure": 13.79,
+                "shield": 14.93,
+                "death_time": 146.4,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 76.14,
+                "hostile_hits": 36,
+                "distance_flown": 303.8,
+                "structure": 12000,
+                "shield": 9019,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.9,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                548.3,
+                769.5,
+                -1287.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16075.1
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                919.9,
+                984,
+                -1759.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "WING2"
+              },
+              "distance_flown": 305.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 176.4,
+                "hostile_hits": 84,
+                "distance_flown": 3004.5,
+                "structure": 6.69,
+                "shield": 0,
+                "death_time": 28.2,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1801.8,
+                "hostile_hits": 660,
+                "distance_flown": 16075.1,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1430.1,
+                "hostile_hits": 483,
+                "distance_flown": 6653.5,
+                "structure": 4.87,
+                "shield": 0,
+                "death_time": 77.95,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 71.8,
+                "hostile_hits": 49,
+                "distance_flown": 305.7,
+                "structure": 12000,
+                "shield": 11091.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 10.65,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "merlin",
+            "target_callsign": "WING1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING1",
+              "position": [
+                318.8,
+                854.7,
+                -1258.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 16043.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "WING2",
+              "position": [
+                386.1,
+                854.1,
+                -1227.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 15969.5
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                580.5,
+                1105.1,
+                -1829.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 305.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                534.4,
+                855.4,
+                -1252.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14686.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1482.6,
+                "hostile_hits": 607,
+                "distance_flown": 16043.4,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1551.9,
+                "hostile_hits": 739,
+                "distance_flown": 15969.5,
+                "structure": 26,
+                "shield": 42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2039.1,
+                "hostile_hits": 773,
+                "distance_flown": 14686.8,
+                "structure": 19.02,
+                "shield": 8.82,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 115.34,
+                "hostile_hits": 43,
+                "distance_flown": 305.8,
+                "structure": 12000,
+                "shield": 9426.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-merlin-laser6",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 0,
+        "win_rate": 0.0,
+        "time_to_kill_human_wins_only": {
+          "median": null,
+          "p25": null,
+          "p75": null
+        },
+        "human_losses": {
+          "median": 0.5,
+          "p25": 0.0,
+          "p75": 1.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

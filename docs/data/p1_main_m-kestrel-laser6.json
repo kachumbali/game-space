@@ -1,0 +1,2939 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "f73917d104cc04bd72942d51bc56c1eed0357d22",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "m-kestrel-laser6": {
+      "name": "3 Kestrel vs HECLA (6 laserM turrets)",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": 6,
+      "results": [
+        {
+          "sim_time": 30.8,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.75,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 774.8,
+                "hostile_hits": 149,
+                "distance_flown": 2955,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 30.8,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 570.3,
+                "hostile_hits": 122,
+                "distance_flown": 2338.8,
+                "structure": 14.46,
+                "shield": 0,
+                "death_time": 25.4,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 929.45,
+                "hostile_hits": 234,
+                "distance_flown": 1950.3,
+                "structure": 20.38,
+                "shield": 0,
+                "death_time": 21,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 312.98,
+                "hostile_hits": 109,
+                "distance_flown": 127.1,
+                "structure": 11889.5,
+                "shield": 12335.95,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 30.8,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -384.3,
+                993.4,
+                -1554.1
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 10287
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                151.4,
+                1339.1,
+                -1772.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1429.9,
+                "hostile_hits": 224,
+                "distance_flown": 3673.1,
+                "structure": 23.6,
+                "shield": 0,
+                "death_time": 39.55,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1840.05,
+                "hostile_hits": 477,
+                "distance_flown": 10287,
+                "structure": 11.32,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1140.3,
+                "hostile_hits": 291,
+                "distance_flown": 2557.8,
+                "structure": 11.32,
+                "shield": 0,
+                "death_time": 33.25,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  },
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 360.82,
+                "hostile_hits": 87,
+                "distance_flown": 315,
+                "structure": 11807.6,
+                "shield": 10535.62,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.6,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -434.1,
+                744.9,
+                -1328.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 9056.9
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -517.8,
+                983.5,
+                -1912
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.8
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 686.2,
+                "hostile_hits": 93,
+                "distance_flown": 3125.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 32.8,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2777.31,
+                "hostile_hits": 552,
+                "distance_flown": 9056.9,
+                "structure": 16.37,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1057.55,
+                "hostile_hits": 261,
+                "distance_flown": 2365.1,
+                "structure": 12.35,
+                "shield": 0,
+                "death_time": 27.4,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  },
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 378.55,
+                "hostile_hits": 98,
+                "distance_flown": 315.8,
+                "structure": 11844,
+                "shield": 10241.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.5,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -1017.3,
+                269.2,
+                -1194.9
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 13792.3
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -1231.8,
+                329.9,
+                -1803.5
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3889,
+                "hostile_hits": 596,
+                "distance_flown": 11557.4,
+                "structure": 8.08,
+                "shield": 0,
+                "death_time": 156.5,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  },
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4868.22,
+                "hostile_hits": 766,
+                "distance_flown": 13792.3,
+                "structure": 9.35,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1946.19,
+                "hostile_hits": 493,
+                "distance_flown": 6339.2,
+                "structure": 13.56,
+                "shield": 0,
+                "death_time": 116.8,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 365.03,
+                "hostile_hits": 116,
+                "distance_flown": 315.1,
+                "structure": 9424.69,
+                "shield": 6371.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.7,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -535.9,
+                565,
+                -1354
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 9770.8
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -578.3,
+                753.2,
+                -1992.4
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.5
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1592.5,
+                "hostile_hits": 242,
+                "distance_flown": 3930.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 60.15,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3097.26,
+                "hostile_hits": 555,
+                "distance_flown": 9770.8,
+                "structure": 20.11,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1039.5,
+                "hostile_hits": 253,
+                "distance_flown": 2338.5,
+                "structure": 20.02,
+                "shield": 0,
+                "death_time": 28.85,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 367.87,
+                "hostile_hits": 93,
+                "distance_flown": 315.5,
+                "structure": 11671.1,
+                "shield": 9287.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                421.7,
+                -557,
+                -1432
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 7674.7
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                362,
+                -761.5,
+                -2036.9
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 316.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1224.2,
+                "hostile_hits": 226,
+                "distance_flown": 4312.3,
+                "structure": 15.56,
+                "shield": 0,
+                "death_time": 48.25,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2723.07,
+                "hostile_hits": 483,
+                "distance_flown": 7674.7,
+                "structure": 1.13,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1257.05,
+                "hostile_hits": 308,
+                "distance_flown": 2979.6,
+                "structure": 14.05,
+                "shield": 0,
+                "death_time": 40.6,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS02"
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 359.26,
+                "hostile_hits": 82,
+                "distance_flown": 316.4,
+                "structure": 11751.05,
+                "shield": 9897.01,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 112.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2045.15,
+                "hostile_hits": 365,
+                "distance_flown": 5658.7,
+                "structure": 8.74,
+                "shield": 0,
+                "death_time": 72.65,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2985.85,
+                "hostile_hits": 464,
+                "distance_flown": 7746.6,
+                "structure": 8.36,
+                "shield": 0,
+                "death_time": 112.65,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1428.95,
+                "hostile_hits": 343,
+                "distance_flown": 3708.7,
+                "structure": 17.85,
+                "shield": 0,
+                "death_time": 58.7,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS01"
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 364.35,
+                "hostile_hits": 125,
+                "distance_flown": 231,
+                "structure": 11626.9,
+                "shield": 8413.15,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 112.65,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.75,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING1",
+              "position": [
+                -136.2,
+                46.2,
+                -1581
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14550.8
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -552,
+                53.9,
+                -1566.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 11054.9
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -312.3,
+                64.5,
+                -2183.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.9
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5088.76,
+                "hostile_hits": 766,
+                "distance_flown": 14550.8,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3711.12,
+                "hostile_hits": 611,
+                "distance_flown": 11054.9,
+                "structure": 8.05,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1745.83,
+                "hostile_hits": 421,
+                "distance_flown": 5810,
+                "structure": 6.99,
+                "shield": 0,
+                "death_time": 107.9,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 269.04,
+                "hostile_hits": 80,
+                "distance_flown": 315.9,
+                "structure": 9608.64,
+                "shield": 6345.65,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 121.5,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.75,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3508.22,
+                "hostile_hits": 482,
+                "distance_flown": 9567.1,
+                "structure": 2.46,
+                "shield": 0,
+                "death_time": 121.5,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3034.4,
+                "hostile_hits": 525,
+                "distance_flown": 7565.5,
+                "structure": 8.65,
+                "shield": 0,
+                "death_time": 104.1,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1079.4,
+                "hostile_hits": 304,
+                "distance_flown": 4393.9,
+                "structure": 17.9,
+                "shield": 0,
+                "death_time": 63.35,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 407.72,
+                "hostile_hits": 123,
+                "distance_flown": 241.6,
+                "structure": 11513.15,
+                "shield": 7400.11,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 121.5,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING1",
+              "position": [
+                696.3,
+                -531.2,
+                -1265.8
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14463.8
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                626.4,
+                -549.2,
+                -1321.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14511
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                1112.5,
+                -716.7,
+                -1764.6
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.4
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                656.1,
+                -536.7,
+                -1301.9
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 11877.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4359.43,
+                "hostile_hits": 671,
+                "distance_flown": 14463.8,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5600.9,
+                "hostile_hits": 873,
+                "distance_flown": 14511,
+                "structure": 50,
+                "shield": 77.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2098.09,
+                "hostile_hits": 599,
+                "distance_flown": 11877.1,
+                "structure": 11.59,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 161.92,
+                "hostile_hits": 41,
+                "distance_flown": 315.4,
+                "structure": 8040.28,
+                "shield": 6401.3,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 59,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.7,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 839.5,
+                "hostile_hits": 187,
+                "distance_flown": 3580.4,
+                "structure": 3.56,
+                "shield": 0,
+                "death_time": 54.25,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2196.35,
+                "hostile_hits": 351,
+                "distance_flown": 5171.9,
+                "structure": 21.97,
+                "shield": 0,
+                "death_time": 59,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 741.3,
+                "hostile_hits": 187,
+                "distance_flown": 1801,
+                "structure": 20,
+                "shield": 0,
+                "death_time": 17.85,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 339.1,
+                "hostile_hits": 96,
+                "distance_flown": 163.1,
+                "structure": 11785.5,
+                "shield": 10937.35,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 59,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 53.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.55,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2186.7,
+                "hostile_hits": 359,
+                "distance_flown": 4755.8,
+                "structure": 17.17,
+                "shield": 0,
+                "death_time": 53.65,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1124.25,
+                "hostile_hits": 183,
+                "distance_flown": 3484.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 48.55,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS04"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  },
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 716.1,
+                "hostile_hits": 179,
+                "distance_flown": 1939.9,
+                "structure": 13.24,
+                "shield": 0,
+                "death_time": 23.75,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS01"
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 374.58,
+                "hostile_hits": 115,
+                "distance_flown": 156.2,
+                "structure": 11785.5,
+                "shield": 10687.45,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 53.65,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.2,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "WING2"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING1",
+              "position": [
+                1214.5,
+                73.4,
+                -1114.2
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 14511.9
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                1322.5,
+                72.9,
+                -1059.3
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING1"
+              },
+              "distance_flown": 10998.7
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                1397.3,
+                90.3,
+                -1708.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING1"
+              },
+              "distance_flown": 316.9
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                1039.4,
+                63.6,
+                -1144.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING1"
+              },
+              "distance_flown": 7428.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5673.2,
+                "hostile_hits": 884,
+                "distance_flown": 14511.9,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2404.9,
+                "hostile_hits": 646,
+                "distance_flown": 10998.7,
+                "structure": 24.46,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2904.83,
+                "hostile_hits": 518,
+                "distance_flown": 7428.2,
+                "structure": 16.57,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 202.59,
+                "hostile_hits": 43,
+                "distance_flown": 316.9,
+                "structure": 9054.87,
+                "shield": 6462.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 83.2,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2647.35,
+                "hostile_hits": 368,
+                "distance_flown": 6459.4,
+                "structure": 22.48,
+                "shield": 0,
+                "death_time": 83.2,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2016.2,
+                "hostile_hits": 354,
+                "distance_flown": 4643.9,
+                "structure": 20.02,
+                "shield": 0,
+                "death_time": 78.8,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 888.3,
+                "hostile_hits": 231,
+                "distance_flown": 2611.1,
+                "structure": 13.4,
+                "shield": 0,
+                "death_time": 34.6,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 293.14,
+                "hostile_hits": 87,
+                "distance_flown": 192.9,
+                "structure": 11642.5,
+                "shield": 9305.65,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 83.2,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 156.75,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.6,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3599.25,
+                "hostile_hits": 669,
+                "distance_flown": 11880.7,
+                "structure": 17.85,
+                "shield": 0,
+                "death_time": 156.75,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1497.05,
+                "hostile_hits": 223,
+                "distance_flown": 4645.3,
+                "structure": 12.63,
+                "shield": 0,
+                "death_time": 52.55,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1175.15,
+                "hostile_hits": 303,
+                "distance_flown": 3255.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 48.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 278.97,
+                "hostile_hits": 84,
+                "distance_flown": 286.5,
+                "structure": 11692.55,
+                "shield": 8536,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 156.75,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                511.8,
+                539.4,
+                -1417.2
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 10279.7
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                500.8,
+                698.4,
+                -2031.4
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1461.1,
+                "hostile_hits": 205,
+                "distance_flown": 4587,
+                "structure": 23.02,
+                "shield": 0,
+                "death_time": 51.1,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3675.57,
+                "hostile_hits": 677,
+                "distance_flown": 10279.7,
+                "structure": 22.46,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1498.1,
+                "hostile_hits": 361,
+                "distance_flown": 3381.3,
+                "structure": 6.86,
+                "shield": 0,
+                "death_time": 46.7,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 358.28,
+                "hostile_hits": 99,
+                "distance_flown": 315.4,
+                "structure": 11705.55,
+                "shield": 8340.28,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.1,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING1",
+              "position": [
+                1093.9,
+                -394.5,
+                -1080.1
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14262.6
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                1318,
+                -508.4,
+                -1700.2
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING1"
+              },
+              "distance_flown": 317.1
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5333.92,
+                "hostile_hits": 736,
+                "distance_flown": 14262.6,
+                "structure": 9.97,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 767.4,
+                "hostile_hits": 189,
+                "distance_flown": 2840.1,
+                "structure": 5.71,
+                "shield": 0,
+                "death_time": 43.4,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2927.75,
+                "hostile_hits": 727,
+                "distance_flown": 10784.8,
+                "structure": 13.75,
+                "shield": 0,
+                "death_time": 164.25,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS02"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 352.25,
+                "hostile_hits": 127,
+                "distance_flown": 317.1,
+                "structure": 11064.38,
+                "shield": 6406.55,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.4,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -893.6,
+                406,
+                -1223.9
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 11896.8
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                -1258.8,
+                532.3,
+                -1730.9
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.2
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3322.25,
+                "hostile_hits": 465,
+                "distance_flown": 8218.8,
+                "structure": 5.89,
+                "shield": 0,
+                "death_time": 117.15,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS05"
+                  },
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4457.17,
+                "hostile_hits": 677,
+                "distance_flown": 11896.8,
+                "structure": 12.17,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1315,
+                "hostile_hits": 371,
+                "distance_flown": 4492.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 83.65,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 417.08,
+                "hostile_hits": 111,
+                "distance_flown": 315.2,
+                "structure": 10989.58,
+                "shield": 6416,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 118.1,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 3734.6,
+                "hostile_hits": 567,
+                "distance_flown": 9506.5,
+                "structure": 12,
+                "shield": 0,
+                "death_time": 118.1,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "laserM",
+                    "component": "LS06"
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2574.15,
+                "hostile_hits": 614,
+                "distance_flown": 7192,
+                "structure": 3.34,
+                "shield": 0,
+                "death_time": 113.6,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1621.2,
+                "hostile_hits": 400,
+                "distance_flown": 6922.8,
+                "structure": 23.9,
+                "shield": 0,
+                "death_time": 93.45,
+                "killed_by": {
+                  "id": "hecla",
+                  "callsign": "HECLA"
+                },
+                "killing_weapons": [
+                  {
+                    "weapon": "pd",
+                    "component": null
+                  }
+                ]
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 329.38,
+                "hostile_hits": 117,
+                "distance_flown": 238.3,
+                "structure": 11667.85,
+                "shield": 6902.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 118.1,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.95,
+            "attacker": "hecla",
+            "attacker_callsign": "HECLA",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING1",
+              "position": [
+                1018.4,
+                29.2,
+                -1317.5
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14479
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                940.1,
+                33.4,
+                -1310.4
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 14622.3
+            },
+            {
+              "team": "frogg",
+              "id": "hecla",
+              "callsign": "HECLA",
+              "position": [
+                1046.3,
+                41.2,
+                -1942.1
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 315.2
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                660.1,
+                35.8,
+                -1426.6
+              ],
+              "target": {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "hecla",
+                "callsign": "HECLA"
+              },
+              "distance_flown": 11337.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5241.62,
+                "hostile_hits": 804,
+                "distance_flown": 14479,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 5235.98,
+                "hostile_hits": 786,
+                "distance_flown": 14622.3,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2388.7,
+                "hostile_hits": 722,
+                "distance_flown": 11337.7,
+                "structure": 28.17,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 3,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "hecla",
+                "callsign": "HECLA",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 128.92,
+                "hostile_hits": 36,
+                "distance_flown": 315.2,
+                "structure": 7326.9,
+                "shield": 6306.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "m-kestrel-laser6",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 0,
+        "win_rate": 0.0,
+        "time_to_kill_human_wins_only": {
+          "median": null,
+          "p25": null,
+          "p75": null
+        },
+        "human_losses": {
+          "median": 2.0,
+          "p25": 2.0,
+          "p75": 3.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}
