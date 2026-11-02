@@ -1,0 +1,4457 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "ba1025cd5e4b26d4eae06cdf61c135c16d62615a",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "gm-merlin-leaper-old": {
+      "name": "Merlin vs leaper: old",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.6,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -677.5,
+                -215.4,
+                -27.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 18235.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -1083.3,
+                -236.7,
+                101.3
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 26032.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 354.4,
+              "speed": 147.5,
+              "mode": "break",
+              "ammo": 1122
+            },
+            {
+              "t": 20,
+              "distance": 557.6,
+              "speed": 113.4,
+              "mode": "attack",
+              "ammo": 1032
+            },
+            {
+              "t": 30,
+              "distance": 405.4,
+              "speed": 312.3,
+              "mode": "evade",
+              "ammo": 958
+            },
+            {
+              "t": 40,
+              "distance": 147,
+              "speed": 151.6,
+              "mode": "attack",
+              "ammo": 924
+            },
+            {
+              "t": 50,
+              "distance": 43,
+              "speed": 160.2,
+              "mode": "break",
+              "ammo": 898
+            },
+            {
+              "t": 60,
+              "distance": 170.7,
+              "speed": 173.9,
+              "mode": "break",
+              "ammo": 882
+            },
+            {
+              "t": 70,
+              "distance": 87.7,
+              "speed": 172.8,
+              "mode": "break",
+              "ammo": 872
+            },
+            {
+              "t": 80,
+              "distance": 145.1,
+              "speed": 106.5,
+              "mode": "break",
+              "ammo": 866
+            },
+            {
+              "t": 90,
+              "distance": 310.9,
+              "speed": 142.6,
+              "mode": "break",
+              "ammo": 830
+            },
+            {
+              "t": 100,
+              "distance": 337,
+              "speed": 155.2,
+              "mode": "break",
+              "ammo": 776
+            },
+            {
+              "t": 110,
+              "distance": 326.9,
+              "speed": 139.2,
+              "mode": "break",
+              "ammo": 720
+            },
+            {
+              "t": 120,
+              "distance": 275.3,
+              "speed": 165.4,
+              "mode": "break",
+              "ammo": 692
+            },
+            {
+              "t": 130,
+              "distance": 387.6,
+              "speed": 123.2,
+              "mode": "attack",
+              "ammo": 662
+            },
+            {
+              "t": 140,
+              "distance": 389,
+              "speed": 173.3,
+              "mode": "break",
+              "ammo": 624
+            },
+            {
+              "t": 150,
+              "distance": 317.7,
+              "speed": 167,
+              "mode": "break",
+              "ammo": 588
+            },
+            {
+              "t": 160,
+              "distance": 375.2,
+              "speed": 173.2,
+              "mode": "break",
+              "ammo": 556
+            },
+            {
+              "t": 170,
+              "distance": 387.8,
+              "speed": 173.5,
+              "mode": "break",
+              "ammo": 518
+            },
+            {
+              "t": 180,
+              "distance": 426.4,
+              "speed": 174.4,
+              "mode": "break",
+              "ammo": 484
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 42.53,
+                "hostile_hits": 39,
+                "distance_flown": 26032.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 18235.1,
+                "structure": 22.47,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                961.9,
+                569.2,
+                -4848.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 19717.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1093,
+                535.4,
+                -5144.8
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 26158.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 437,
+              "speed": 170.2,
+              "mode": "break",
+              "ammo": 1128
+            },
+            {
+              "t": 20,
+              "distance": 628.7,
+              "speed": 137.5,
+              "mode": "attack",
+              "ammo": 1044
+            },
+            {
+              "t": 30,
+              "distance": 309.8,
+              "speed": 159.1,
+              "mode": "break",
+              "ammo": 968
+            },
+            {
+              "t": 40,
+              "distance": 245.3,
+              "speed": 112.4,
+              "mode": "attack",
+              "ammo": 964
+            },
+            {
+              "t": 50,
+              "distance": 68.7,
+              "speed": 163.7,
+              "mode": "break",
+              "ammo": 952
+            },
+            {
+              "t": 60,
+              "distance": 154.4,
+              "speed": 172.9,
+              "mode": "break",
+              "ammo": 926
+            },
+            {
+              "t": 70,
+              "distance": 84.1,
+              "speed": 131.2,
+              "mode": "break",
+              "ammo": 926
+            },
+            {
+              "t": 80,
+              "distance": 22.6,
+              "speed": 153.4,
+              "mode": "break",
+              "ammo": 920
+            },
+            {
+              "t": 90,
+              "distance": 135.5,
+              "speed": 131.1,
+              "mode": "break",
+              "ammo": 912
+            },
+            {
+              "t": 100,
+              "distance": 434.8,
+              "speed": 98.9,
+              "mode": "attack",
+              "ammo": 882
+            },
+            {
+              "t": 110,
+              "distance": 294.8,
+              "speed": 132.9,
+              "mode": "break",
+              "ammo": 824
+            },
+            {
+              "t": 120,
+              "distance": 475.9,
+              "speed": 123.9,
+              "mode": "attack",
+              "ammo": 760
+            },
+            {
+              "t": 130,
+              "distance": 274,
+              "speed": 135.9,
+              "mode": "break",
+              "ammo": 704
+            },
+            {
+              "t": 140,
+              "distance": 313,
+              "speed": 155.8,
+              "mode": "break",
+              "ammo": 676
+            },
+            {
+              "t": 150,
+              "distance": 431.8,
+              "speed": 174.4,
+              "mode": "break",
+              "ammo": 654
+            },
+            {
+              "t": 160,
+              "distance": 339.2,
+              "speed": 169.3,
+              "mode": "break",
+              "ammo": 620
+            },
+            {
+              "t": 170,
+              "distance": 317.5,
+              "speed": 171,
+              "mode": "break",
+              "ammo": 586
+            },
+            {
+              "t": 180,
+              "distance": 325.8,
+              "speed": 150.2,
+              "mode": "break",
+              "ammo": 552
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.22,
+                "hostile_hits": 27,
+                "distance_flown": 26158.6,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 19717.5,
+                "structure": 28.78,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 13.85,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                4446.6,
+                -247.3,
+                -5108.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 18496.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                4482.2,
+                -318.7,
+                -5236.1
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 25957.1
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 369.3,
+              "speed": 138.7,
+              "mode": "break",
+              "ammo": 1124
+            },
+            {
+              "t": 20,
+              "distance": 327.7,
+              "speed": 153.8,
+              "mode": "break",
+              "ammo": 1058
+            },
+            {
+              "t": 30,
+              "distance": 106.6,
+              "speed": 134.9,
+              "mode": "break",
+              "ammo": 1030
+            },
+            {
+              "t": 40,
+              "distance": 143.5,
+              "speed": 138.6,
+              "mode": "break",
+              "ammo": 986
+            },
+            {
+              "t": 50,
+              "distance": 88.3,
+              "speed": 174.6,
+              "mode": "break",
+              "ammo": 976
+            },
+            {
+              "t": 60,
+              "distance": 102.9,
+              "speed": 163.9,
+              "mode": "break",
+              "ammo": 968
+            },
+            {
+              "t": 70,
+              "distance": 148.5,
+              "speed": 138.9,
+              "mode": "attack",
+              "ammo": 960
+            },
+            {
+              "t": 80,
+              "distance": 85.2,
+              "speed": 171.6,
+              "mode": "break",
+              "ammo": 954
+            },
+            {
+              "t": 90,
+              "distance": 109.3,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 946
+            },
+            {
+              "t": 100,
+              "distance": 134.6,
+              "speed": 150.9,
+              "mode": "attack",
+              "ammo": 938
+            },
+            {
+              "t": 110,
+              "distance": 122.6,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 930
+            },
+            {
+              "t": 120,
+              "distance": 60.6,
+              "speed": 170.8,
+              "mode": "break",
+              "ammo": 920
+            },
+            {
+              "t": 130,
+              "distance": 104,
+              "speed": 170.5,
+              "mode": "break",
+              "ammo": 912
+            },
+            {
+              "t": 140,
+              "distance": 107.7,
+              "speed": 163.5,
+              "mode": "break",
+              "ammo": 902
+            },
+            {
+              "t": 150,
+              "distance": 152.8,
+              "speed": 174.6,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 160,
+              "distance": 137.4,
+              "speed": 171,
+              "mode": "break",
+              "ammo": 888
+            },
+            {
+              "t": 170,
+              "distance": 96.4,
+              "speed": 153.6,
+              "mode": "break",
+              "ammo": 882
+            },
+            {
+              "t": 180,
+              "distance": 150.3,
+              "speed": 107.7,
+              "mode": "break",
+              "ammo": 870
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.59,
+                "hostile_hits": 45,
+                "distance_flown": 25957.1,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 18496.5,
+                "structure": 17.13,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 23.7,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -1304.7,
+                390.9,
+                -1512.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 24422.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -945.6,
+                383.7,
+                -1544.8
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25838.3
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 632.9,
+              "speed": 60.8,
+              "mode": "attack",
+              "ammo": 1142
+            },
+            {
+              "t": 20,
+              "distance": 600.7,
+              "speed": 131.5,
+              "mode": "attack",
+              "ammo": 1058
+            },
+            {
+              "t": 30,
+              "distance": 556.8,
+              "speed": 66.2,
+              "mode": "attack",
+              "ammo": 992
+            },
+            {
+              "t": 40,
+              "distance": 394.3,
+              "speed": 132.6,
+              "mode": "break",
+              "ammo": 898
+            },
+            {
+              "t": 50,
+              "distance": 671.2,
+              "speed": 92.3,
+              "mode": "attack",
+              "ammo": 836
+            },
+            {
+              "t": 60,
+              "distance": 414.8,
+              "speed": 298.2,
+              "mode": "evade",
+              "ammo": 748
+            },
+            {
+              "t": 70,
+              "distance": 759.8,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 80,
+              "distance": 549.5,
+              "speed": 120.2,
+              "mode": "attack",
+              "ammo": 650
+            },
+            {
+              "t": 90,
+              "distance": 350.7,
+              "speed": 153.8,
+              "mode": "break",
+              "ammo": 606
+            },
+            {
+              "t": 100,
+              "distance": 638.1,
+              "speed": 79.3,
+              "mode": "attack",
+              "ammo": 564
+            },
+            {
+              "t": 110,
+              "distance": 371.2,
+              "speed": 161,
+              "mode": "break",
+              "ammo": 522
+            },
+            {
+              "t": 120,
+              "distance": 675.4,
+              "speed": 132.9,
+              "mode": "attack",
+              "ammo": 480
+            },
+            {
+              "t": 130,
+              "distance": 787.8,
+              "speed": 168.9,
+              "mode": "attack",
+              "ammo": 440
+            },
+            {
+              "t": 140,
+              "distance": 747.3,
+              "speed": 107.1,
+              "mode": "attack",
+              "ammo": 392
+            },
+            {
+              "t": 150,
+              "distance": 655.2,
+              "speed": 135.4,
+              "mode": "attack",
+              "ammo": 346
+            },
+            {
+              "t": 160,
+              "distance": 413.5,
+              "speed": 168.5,
+              "mode": "break",
+              "ammo": 322
+            },
+            {
+              "t": 170,
+              "distance": 624,
+              "speed": 174.1,
+              "mode": "attack",
+              "ammo": 306
+            },
+            {
+              "t": 180,
+              "distance": 360.6,
+              "speed": 140.9,
+              "mode": "break",
+              "ammo": 282
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 16.8,
+                "hostile_hits": 8,
+                "distance_flown": 25838.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 24422.9,
+                "structure": 35,
+                "shield": 13.2,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -1067.4,
+                723.3,
+                -981.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 18725.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -1273.2,
+                594.4,
+                -515.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25874.4
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 415.4,
+              "speed": 169.3,
+              "mode": "break",
+              "ammo": 1138
+            },
+            {
+              "t": 20,
+              "distance": 474.1,
+              "speed": 139.6,
+              "mode": "attack",
+              "ammo": 1048
+            },
+            {
+              "t": 30,
+              "distance": 704.9,
+              "speed": 174.6,
+              "mode": "break",
+              "ammo": 988
+            },
+            {
+              "t": 40,
+              "distance": 544.1,
+              "speed": 314.4,
+              "mode": "evade",
+              "ammo": 898
+            },
+            {
+              "t": 50,
+              "distance": 183.8,
+              "speed": 132.2,
+              "mode": "attack",
+              "ammo": 840
+            },
+            {
+              "t": 60,
+              "distance": 131,
+              "speed": 109.8,
+              "mode": "attack",
+              "ammo": 810
+            },
+            {
+              "t": 70,
+              "distance": 351.2,
+              "speed": 165.1,
+              "mode": "attack",
+              "ammo": 790
+            },
+            {
+              "t": 80,
+              "distance": 35.8,
+              "speed": 173.8,
+              "mode": "break",
+              "ammo": 780
+            },
+            {
+              "t": 90,
+              "distance": 283.3,
+              "speed": 161.3,
+              "mode": "break",
+              "ammo": 724
+            },
+            {
+              "t": 100,
+              "distance": 396.4,
+              "speed": 137.8,
+              "mode": "break",
+              "ammo": 692
+            },
+            {
+              "t": 110,
+              "distance": 438.2,
+              "speed": 127.5,
+              "mode": "attack",
+              "ammo": 662
+            },
+            {
+              "t": 120,
+              "distance": 300.1,
+              "speed": 165.5,
+              "mode": "break",
+              "ammo": 632
+            },
+            {
+              "t": 130,
+              "distance": 399.7,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 604
+            },
+            {
+              "t": 140,
+              "distance": 376.2,
+              "speed": 172.2,
+              "mode": "break",
+              "ammo": 572
+            },
+            {
+              "t": 150,
+              "distance": 349.8,
+              "speed": 140.9,
+              "mode": "break",
+              "ammo": 534
+            },
+            {
+              "t": 160,
+              "distance": 327.2,
+              "speed": 142.2,
+              "mode": "break",
+              "ammo": 502
+            },
+            {
+              "t": 170,
+              "distance": 332.5,
+              "speed": 168.4,
+              "mode": "break",
+              "ammo": 478
+            },
+            {
+              "t": 180,
+              "distance": 525.2,
+              "speed": 106,
+              "mode": "attack",
+              "ammo": 438
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 27.65,
+                "hostile_hits": 15,
+                "distance_flown": 25874.4,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 18725.7,
+                "structure": 33.95,
+                "shield": 3.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 15.7,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -279.7,
+                -200.4,
+                -2033.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 14321.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -501.1,
+                -177.6,
+                -2179.4
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25880.3
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 492.7,
+              "speed": 172.3,
+              "mode": "break",
+              "ammo": 1132
+            },
+            {
+              "t": 20,
+              "distance": 351.6,
+              "speed": 152.5,
+              "mode": "break",
+              "ammo": 1062
+            },
+            {
+              "t": 30,
+              "distance": 640.9,
+              "speed": 174.5,
+              "mode": "break",
+              "ammo": 990
+            },
+            {
+              "t": 40,
+              "distance": 1186.4,
+              "speed": 289.4,
+              "mode": "attack",
+              "ammo": 910
+            },
+            {
+              "t": 50,
+              "distance": 104.4,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 866
+            },
+            {
+              "t": 60,
+              "distance": 145.5,
+              "speed": 166.1,
+              "mode": "break",
+              "ammo": 850
+            },
+            {
+              "t": 70,
+              "distance": 526.7,
+              "speed": 81.1,
+              "mode": "attack",
+              "ammo": 788
+            },
+            {
+              "t": 80,
+              "distance": 299.7,
+              "speed": 120.3,
+              "mode": "break",
+              "ammo": 720
+            },
+            {
+              "t": 90,
+              "distance": 513.3,
+              "speed": 80.5,
+              "mode": "attack",
+              "ammo": 690
+            },
+            {
+              "t": 100,
+              "distance": 478.2,
+              "speed": 89.9,
+              "mode": "attack",
+              "ammo": 660
+            },
+            {
+              "t": 110,
+              "distance": 323.3,
+              "speed": 172.7,
+              "mode": "break",
+              "ammo": 624
+            },
+            {
+              "t": 120,
+              "distance": 388.5,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 590
+            },
+            {
+              "t": 130,
+              "distance": 343,
+              "speed": 138.9,
+              "mode": "break",
+              "ammo": 548
+            },
+            {
+              "t": 140,
+              "distance": 313.6,
+              "speed": 133.5,
+              "mode": "break",
+              "ammo": 518
+            },
+            {
+              "t": 150,
+              "distance": 441.2,
+              "speed": 104.7,
+              "mode": "attack",
+              "ammo": 494
+            },
+            {
+              "t": 160,
+              "distance": 275.8,
+              "speed": 161,
+              "mode": "break",
+              "ammo": 458
+            },
+            {
+              "t": 170,
+              "distance": 296.1,
+              "speed": 129,
+              "mode": "break",
+              "ammo": 426
+            },
+            {
+              "t": 180,
+              "distance": 266.2,
+              "speed": 135,
+              "mode": "break",
+              "ammo": 390
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.42,
+                "hostile_hits": 28,
+                "distance_flown": 25880.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 14321.9,
+                "structure": 27.28,
+                "shield": 1.3,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -225.2,
+                -234.6,
+                -2956.9
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 20382.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -482.8,
+                -189.4,
+                -3121
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 26005.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 763.4,
+              "speed": 67.4,
+              "mode": "attack",
+              "ammo": 1140
+            },
+            {
+              "t": 20,
+              "distance": 370.1,
+              "speed": 133.4,
+              "mode": "break",
+              "ammo": 1050
+            },
+            {
+              "t": 30,
+              "distance": 560.2,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 978
+            },
+            {
+              "t": 40,
+              "distance": 608.9,
+              "speed": 137.9,
+              "mode": "attack",
+              "ammo": 886
+            },
+            {
+              "t": 50,
+              "distance": 684.1,
+              "speed": 107.2,
+              "mode": "attack",
+              "ammo": 810
+            },
+            {
+              "t": 60,
+              "distance": 464.4,
+              "speed": 139.7,
+              "mode": "attack",
+              "ammo": 716
+            },
+            {
+              "t": 70,
+              "distance": 439.3,
+              "speed": 311.7,
+              "mode": "evade",
+              "ammo": 676
+            },
+            {
+              "t": 80,
+              "distance": 88.7,
+              "speed": 174.1,
+              "mode": "break",
+              "ammo": 650
+            },
+            {
+              "t": 90,
+              "distance": 152.2,
+              "speed": 167.9,
+              "mode": "attack",
+              "ammo": 644
+            },
+            {
+              "t": 100,
+              "distance": 99.7,
+              "speed": 169,
+              "mode": "attack",
+              "ammo": 630
+            },
+            {
+              "t": 110,
+              "distance": 105.4,
+              "speed": 138.4,
+              "mode": "attack",
+              "ammo": 612
+            },
+            {
+              "t": 120,
+              "distance": 168.7,
+              "speed": 122.6,
+              "mode": "attack",
+              "ammo": 602
+            },
+            {
+              "t": 130,
+              "distance": 320.3,
+              "speed": 171.1,
+              "mode": "break",
+              "ammo": 586
+            },
+            {
+              "t": 140,
+              "distance": 345.2,
+              "speed": 107.9,
+              "mode": "attack",
+              "ammo": 548
+            },
+            {
+              "t": 150,
+              "distance": 396.6,
+              "speed": 118.4,
+              "mode": "attack",
+              "ammo": 516
+            },
+            {
+              "t": 160,
+              "distance": 260.5,
+              "speed": 140.1,
+              "mode": "break",
+              "ammo": 490
+            },
+            {
+              "t": 170,
+              "distance": 395.4,
+              "speed": 127.7,
+              "mode": "attack",
+              "ammo": 450
+            },
+            {
+              "t": 180,
+              "distance": 308.8,
+              "speed": 126.8,
+              "mode": "break",
+              "ammo": 420
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 34.87,
+                "hostile_hits": 26,
+                "distance_flown": 26005.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 20382.7,
+                "structure": 30.13,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 8.2,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                1217.2,
+                -187.1,
+                -2950
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 23482.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                894.1,
+                42.9,
+                -2134.6
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 25895.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 422,
+              "speed": 169.2,
+              "mode": "break",
+              "ammo": 1128
+            },
+            {
+              "t": 20,
+              "distance": 412.3,
+              "speed": 137,
+              "mode": "break",
+              "ammo": 1038
+            },
+            {
+              "t": 30,
+              "distance": 721.7,
+              "speed": 99.8,
+              "mode": "attack",
+              "ammo": 962
+            },
+            {
+              "t": 40,
+              "distance": 363,
+              "speed": 160.9,
+              "mode": "break",
+              "ammo": 850
+            },
+            {
+              "t": 50,
+              "distance": 693.6,
+              "speed": 174.6,
+              "mode": "break",
+              "ammo": 766
+            },
+            {
+              "t": 60,
+              "distance": 684.7,
+              "speed": 120.4,
+              "mode": "attack",
+              "ammo": 704
+            },
+            {
+              "t": 70,
+              "distance": 454.6,
+              "speed": 139.8,
+              "mode": "attack",
+              "ammo": 648
+            },
+            {
+              "t": 80,
+              "distance": 669.9,
+              "speed": 125.4,
+              "mode": "attack",
+              "ammo": 604
+            },
+            {
+              "t": 90,
+              "distance": 380.3,
+              "speed": 126.7,
+              "mode": "break",
+              "ammo": 560
+            },
+            {
+              "t": 100,
+              "distance": 381.6,
+              "speed": 167.1,
+              "mode": "break",
+              "ammo": 520
+            },
+            {
+              "t": 110,
+              "distance": 715.5,
+              "speed": 119.3,
+              "mode": "attack",
+              "ammo": 478
+            },
+            {
+              "t": 120,
+              "distance": 352.2,
+              "speed": 155.6,
+              "mode": "break",
+              "ammo": 432
+            },
+            {
+              "t": 130,
+              "distance": 722.3,
+              "speed": 125.3,
+              "mode": "attack",
+              "ammo": 398
+            },
+            {
+              "t": 140,
+              "distance": 457.3,
+              "speed": 168.5,
+              "mode": "attack",
+              "ammo": 360
+            },
+            {
+              "t": 150,
+              "distance": 418.5,
+              "speed": 90.3,
+              "mode": "attack",
+              "ammo": 344
+            },
+            {
+              "t": 160,
+              "distance": 331,
+              "speed": 172.1,
+              "mode": "break",
+              "ammo": 328
+            },
+            {
+              "t": 170,
+              "distance": 378.6,
+              "speed": 165,
+              "mode": "break",
+              "ammo": 304
+            },
+            {
+              "t": 180,
+              "distance": 906.8,
+              "speed": 107.1,
+              "mode": "attack",
+              "ammo": 288
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 6,
+                "distance_flown": 25895.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 23482.7,
+                "structure": 35,
+                "shield": 17.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 166.05,
+          "winner": "human",
+          "time_to_kill": 166.05,
+          "first_hit": {
+            "time": 4.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 165.2,
+              "speed": 143.5,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 52.9,
+              "speed": 161.7,
+              "mode": "break",
+              "ammo": 1126
+            },
+            {
+              "t": 30,
+              "distance": 49.7,
+              "speed": 158.6,
+              "mode": "break",
+              "ammo": 1112
+            },
+            {
+              "t": 40,
+              "distance": 172.3,
+              "speed": 170.3,
+              "mode": "break",
+              "ammo": 1068
+            },
+            {
+              "t": 50,
+              "distance": 153.2,
+              "speed": 160.4,
+              "mode": "attack",
+              "ammo": 1052
+            },
+            {
+              "t": 60,
+              "distance": 136,
+              "speed": 169.7,
+              "mode": "break",
+              "ammo": 1034
+            },
+            {
+              "t": 70,
+              "distance": 124.1,
+              "speed": 165.3,
+              "mode": "break",
+              "ammo": 1016
+            },
+            {
+              "t": 80,
+              "distance": 105.6,
+              "speed": 150.8,
+              "mode": "break",
+              "ammo": 998
+            },
+            {
+              "t": 90,
+              "distance": 113.7,
+              "speed": 153.3,
+              "mode": "break",
+              "ammo": 982
+            },
+            {
+              "t": 100,
+              "distance": 193.4,
+              "speed": 89.9,
+              "mode": "attack",
+              "ammo": 960
+            },
+            {
+              "t": 110,
+              "distance": 167.5,
+              "speed": 172,
+              "mode": "break",
+              "ammo": 940
+            },
+            {
+              "t": 120,
+              "distance": 175.3,
+              "speed": 163.4,
+              "mode": "break",
+              "ammo": 914
+            },
+            {
+              "t": 130,
+              "distance": 271.9,
+              "speed": 68.8,
+              "mode": "attack",
+              "ammo": 890
+            },
+            {
+              "t": 140,
+              "distance": 219.5,
+              "speed": 172.8,
+              "mode": "break",
+              "ammo": 864
+            },
+            {
+              "t": 150,
+              "distance": 220.3,
+              "speed": 170.8,
+              "mode": "break",
+              "ammo": 798
+            },
+            {
+              "t": 160,
+              "distance": 278.5,
+              "speed": 150.2,
+              "mode": "attack",
+              "ammo": 718
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 54.66,
+                "hostile_hits": 62,
+                "distance_flown": 23613.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 1.95,
+                "hostile_hits": 1,
+                "distance_flown": 12208,
+                "structure": 10.34,
+                "shield": 0,
+                "death_time": 166.05,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 166.05,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 19.05,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                1544.8,
+                46.9,
+                29.9
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 21955.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1134.6,
+                130.9,
+                394.8
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 26164.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 377.4,
+              "speed": 133.5,
+              "mode": "break",
+              "ammo": 1124
+            },
+            {
+              "t": 20,
+              "distance": 403.6,
+              "speed": 136.2,
+              "mode": "break",
+              "ammo": 1048
+            },
+            {
+              "t": 30,
+              "distance": 147.6,
+              "speed": 175,
+              "mode": "break",
+              "ammo": 1046
+            },
+            {
+              "t": 40,
+              "distance": 100.6,
+              "speed": 174.3,
+              "mode": "break",
+              "ammo": 1040
+            },
+            {
+              "t": 50,
+              "distance": 168.8,
+              "speed": 140.8,
+              "mode": "attack",
+              "ammo": 1012
+            },
+            {
+              "t": 60,
+              "distance": 283.7,
+              "speed": 160.3,
+              "mode": "break",
+              "ammo": 940
+            },
+            {
+              "t": 70,
+              "distance": 702.1,
+              "speed": 59.7,
+              "mode": "attack",
+              "ammo": 868
+            },
+            {
+              "t": 80,
+              "distance": 363.7,
+              "speed": 164.1,
+              "mode": "break",
+              "ammo": 766
+            },
+            {
+              "t": 90,
+              "distance": 557.5,
+              "speed": 113.4,
+              "mode": "attack",
+              "ammo": 704
+            },
+            {
+              "t": 100,
+              "distance": 364.8,
+              "speed": 162.2,
+              "mode": "break",
+              "ammo": 660
+            },
+            {
+              "t": 110,
+              "distance": 340.2,
+              "speed": 143.9,
+              "mode": "break",
+              "ammo": 618
+            },
+            {
+              "t": 120,
+              "distance": 386.8,
+              "speed": 123.2,
+              "mode": "attack",
+              "ammo": 590
+            },
+            {
+              "t": 130,
+              "distance": 363.8,
+              "speed": 171.4,
+              "mode": "break",
+              "ammo": 552
+            },
+            {
+              "t": 140,
+              "distance": 378.5,
+              "speed": 173,
+              "mode": "break",
+              "ammo": 516
+            },
+            {
+              "t": 150,
+              "distance": 333.1,
+              "speed": 171.4,
+              "mode": "break",
+              "ammo": 484
+            },
+            {
+              "t": 160,
+              "distance": 493.5,
+              "speed": 161.4,
+              "mode": "attack",
+              "ammo": 456
+            },
+            {
+              "t": 170,
+              "distance": 322.6,
+              "speed": 127.1,
+              "mode": "break",
+              "ammo": 426
+            },
+            {
+              "t": 180,
+              "distance": 555.4,
+              "speed": 64.2,
+              "mode": "attack",
+              "ammo": 392
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 31.55,
+                "hostile_hits": 17,
+                "distance_flown": 26164.6,
+                "structure": 35,
+                "shield": 80.39,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 21955.3,
+                "structure": 33.45,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 17.8,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -583.3,
+                -17.9,
+                -4151.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 22933.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -782,
+                -35.3,
+                -3820.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 26094.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 357.7,
+              "speed": 148.2,
+              "mode": "break",
+              "ammo": 1122
+            },
+            {
+              "t": 20,
+              "distance": 694.2,
+              "speed": 63.4,
+              "mode": "attack",
+              "ammo": 1050
+            },
+            {
+              "t": 30,
+              "distance": 428.3,
+              "speed": 143.3,
+              "mode": "break",
+              "ammo": 942
+            },
+            {
+              "t": 40,
+              "distance": 437.5,
+              "speed": 170.2,
+              "mode": "break",
+              "ammo": 856
+            },
+            {
+              "t": 50,
+              "distance": 590.1,
+              "speed": 130.3,
+              "mode": "attack",
+              "ammo": 758
+            },
+            {
+              "t": 60,
+              "distance": 405.2,
+              "speed": 281.5,
+              "mode": "evade",
+              "ammo": 698
+            },
+            {
+              "t": 70,
+              "distance": 29.5,
+              "speed": 84.2,
+              "mode": "break",
+              "ammo": 684
+            },
+            {
+              "t": 80,
+              "distance": 80.8,
+              "speed": 72.8,
+              "mode": "break",
+              "ammo": 674
+            },
+            {
+              "t": 90,
+              "distance": 14.5,
+              "speed": 132.3,
+              "mode": "break",
+              "ammo": 674
+            },
+            {
+              "t": 100,
+              "distance": 399.4,
+              "speed": 133.6,
+              "mode": "break",
+              "ammo": 634
+            },
+            {
+              "t": 110,
+              "distance": 452.6,
+              "speed": 309.6,
+              "mode": "evade",
+              "ammo": 592
+            },
+            {
+              "t": 120,
+              "distance": 63.4,
+              "speed": 174.8,
+              "mode": "break",
+              "ammo": 562
+            },
+            {
+              "t": 130,
+              "distance": 155.5,
+              "speed": 99.5,
+              "mode": "break",
+              "ammo": 542
+            },
+            {
+              "t": 140,
+              "distance": 360.1,
+              "speed": 92.8,
+              "mode": "attack",
+              "ammo": 528
+            },
+            {
+              "t": 150,
+              "distance": 572.3,
+              "speed": 174.3,
+              "mode": "break",
+              "ammo": 492
+            },
+            {
+              "t": 160,
+              "distance": 341.9,
+              "speed": 166,
+              "mode": "break",
+              "ammo": 444
+            },
+            {
+              "t": 170,
+              "distance": 341.5,
+              "speed": 133.9,
+              "mode": "break",
+              "ammo": 408
+            },
+            {
+              "t": 180,
+              "distance": 386.4,
+              "speed": 132.9,
+              "mode": "break",
+              "ammo": 380
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 22.48,
+                "hostile_hits": 11,
+                "distance_flown": 26094.6,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 22933.3,
+                "structure": 34.92,
+                "shield": 7.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -2516.3,
+                -675,
+                -2019.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 17840.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -3000.7,
+                -799.1,
+                -1906.2
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 23277.7
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 60.9,
+              "speed": 172.6,
+              "mode": "break",
+              "ammo": 1154
+            },
+            {
+              "t": 20,
+              "distance": 194.5,
+              "speed": 106.7,
+              "mode": "break",
+              "ammo": 1134
+            },
+            {
+              "t": 30,
+              "distance": 72.4,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 1116
+            },
+            {
+              "t": 40,
+              "distance": 498.7,
+              "speed": 172,
+              "mode": "break",
+              "ammo": 1090
+            },
+            {
+              "t": 50,
+              "distance": 524.2,
+              "speed": 169.6,
+              "mode": "break",
+              "ammo": 1020
+            },
+            {
+              "t": 60,
+              "distance": 586.1,
+              "speed": 122.9,
+              "mode": "attack",
+              "ammo": 926
+            },
+            {
+              "t": 70,
+              "distance": 277.6,
+              "speed": 108.6,
+              "mode": "break",
+              "ammo": 858
+            },
+            {
+              "t": 80,
+              "distance": 277.3,
+              "speed": 112.6,
+              "mode": "break",
+              "ammo": 788
+            },
+            {
+              "t": 90,
+              "distance": 284.7,
+              "speed": 137.3,
+              "mode": "break",
+              "ammo": 740
+            },
+            {
+              "t": 100,
+              "distance": 268.7,
+              "speed": 134.9,
+              "mode": "break",
+              "ammo": 712
+            },
+            {
+              "t": 110,
+              "distance": 222.9,
+              "speed": 134.6,
+              "mode": "break",
+              "ammo": 688
+            },
+            {
+              "t": 120,
+              "distance": 387.8,
+              "speed": 95.3,
+              "mode": "attack",
+              "ammo": 656
+            },
+            {
+              "t": 130,
+              "distance": 259.5,
+              "speed": 110.7,
+              "mode": "break",
+              "ammo": 618
+            },
+            {
+              "t": 140,
+              "distance": 458.7,
+              "speed": 86,
+              "mode": "attack",
+              "ammo": 588
+            },
+            {
+              "t": 150,
+              "distance": 482.5,
+              "speed": 54.8,
+              "mode": "attack",
+              "ammo": 558
+            },
+            {
+              "t": 160,
+              "distance": 371,
+              "speed": 78.7,
+              "mode": "attack",
+              "ammo": 524
+            },
+            {
+              "t": 170,
+              "distance": 429.8,
+              "speed": 87.1,
+              "mode": "attack",
+              "ammo": 498
+            },
+            {
+              "t": 180,
+              "distance": 512.6,
+              "speed": 54.2,
+              "mode": "attack",
+              "ammo": 464
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 33.47,
+                "hostile_hits": 23,
+                "distance_flown": 23277.7,
+                "structure": 20.96,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 58.04,
+                "hostile_hits": 1,
+                "distance_flown": 17840.1,
+                "structure": 31.53,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 28.3,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -189.3,
+                80.8,
+                -944.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13586
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -140,
+                60.9,
+                -1284.7
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 25120
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 437.3,
+              "speed": 171.1,
+              "mode": "break",
+              "ammo": 1122
+            },
+            {
+              "t": 20,
+              "distance": 643.4,
+              "speed": 134.1,
+              "mode": "attack",
+              "ammo": 1034
+            },
+            {
+              "t": 30,
+              "distance": 264.4,
+              "speed": 148.9,
+              "mode": "break",
+              "ammo": 938
+            },
+            {
+              "t": 40,
+              "distance": 116.7,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 924
+            },
+            {
+              "t": 50,
+              "distance": 73.9,
+              "speed": 154.2,
+              "mode": "break",
+              "ammo": 872
+            },
+            {
+              "t": 60,
+              "distance": 424.2,
+              "speed": 111.3,
+              "mode": "attack",
+              "ammo": 848
+            },
+            {
+              "t": 70,
+              "distance": 481.7,
+              "speed": 138.3,
+              "mode": "attack",
+              "ammo": 796
+            },
+            {
+              "t": 80,
+              "distance": 433.8,
+              "speed": 174.5,
+              "mode": "break",
+              "ammo": 740
+            },
+            {
+              "t": 90,
+              "distance": 233.7,
+              "speed": 124.7,
+              "mode": "break",
+              "ammo": 688
+            },
+            {
+              "t": 100,
+              "distance": 335.6,
+              "speed": 160.2,
+              "mode": "attack",
+              "ammo": 660
+            },
+            {
+              "t": 110,
+              "distance": 516.3,
+              "speed": 78,
+              "mode": "attack",
+              "ammo": 632
+            },
+            {
+              "t": 120,
+              "distance": 399.6,
+              "speed": 89.3,
+              "mode": "attack",
+              "ammo": 592
+            },
+            {
+              "t": 130,
+              "distance": 478.2,
+              "speed": 62.9,
+              "mode": "attack",
+              "ammo": 562
+            },
+            {
+              "t": 140,
+              "distance": 316.7,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 532
+            },
+            {
+              "t": 150,
+              "distance": 280.3,
+              "speed": 165.6,
+              "mode": "break",
+              "ammo": 496
+            },
+            {
+              "t": 160,
+              "distance": 288.4,
+              "speed": 128.8,
+              "mode": "break",
+              "ammo": 464
+            },
+            {
+              "t": 170,
+              "distance": 297.1,
+              "speed": 136.5,
+              "mode": "break",
+              "ammo": 436
+            },
+            {
+              "t": 180,
+              "distance": 344.4,
+              "speed": 76,
+              "mode": "attack",
+              "ammo": 408
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 41.69,
+                "hostile_hits": 39,
+                "distance_flown": 25120,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 13586,
+                "structure": 19.84,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 36.9,
+          "winner": "human",
+          "time_to_kill": 36.9,
+          "first_hit": {
+            "time": 10,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 140.4,
+              "speed": 96.7,
+              "mode": "attack",
+              "ammo": 1158
+            },
+            {
+              "t": 20,
+              "distance": 481.5,
+              "speed": 171.7,
+              "mode": "break",
+              "ammo": 1068
+            },
+            {
+              "t": 30,
+              "distance": 539.2,
+              "speed": 133.8,
+              "mode": "attack",
+              "ammo": 990
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55.2,
+                "hostile_hits": 4,
+                "distance_flown": 5509.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5842.2,
+                "structure": 0,
+                "shield": 9.8,
+                "death_time": 36.9,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 36.9,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.3,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -455.9,
+                -177.8,
+                -1641.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 17602.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -650.1,
+                -205.9,
+                -1180.1
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25053.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 534,
+              "speed": 173.5,
+              "mode": "break",
+              "ammo": 1134
+            },
+            {
+              "t": 20,
+              "distance": 468,
+              "speed": 134.7,
+              "mode": "attack",
+              "ammo": 1046
+            },
+            {
+              "t": 30,
+              "distance": 349.5,
+              "speed": 150.3,
+              "mode": "break",
+              "ammo": 956
+            },
+            {
+              "t": 40,
+              "distance": 803.4,
+              "speed": 138.8,
+              "mode": "attack",
+              "ammo": 876
+            },
+            {
+              "t": 50,
+              "distance": 440.9,
+              "speed": 133.2,
+              "mode": "attack",
+              "ammo": 768
+            },
+            {
+              "t": 60,
+              "distance": 496.4,
+              "speed": 121,
+              "mode": "attack",
+              "ammo": 704
+            },
+            {
+              "t": 70,
+              "distance": 291.4,
+              "speed": 160.9,
+              "mode": "break",
+              "ammo": 670
+            },
+            {
+              "t": 80,
+              "distance": 345.9,
+              "speed": 152.8,
+              "mode": "break",
+              "ammo": 634
+            },
+            {
+              "t": 90,
+              "distance": 457.6,
+              "speed": 174.5,
+              "mode": "break",
+              "ammo": 602
+            },
+            {
+              "t": 100,
+              "distance": 409.8,
+              "speed": 173.2,
+              "mode": "break",
+              "ammo": 568
+            },
+            {
+              "t": 110,
+              "distance": 546.4,
+              "speed": 122.3,
+              "mode": "attack",
+              "ammo": 538
+            },
+            {
+              "t": 120,
+              "distance": 381.3,
+              "speed": 128.3,
+              "mode": "break",
+              "ammo": 508
+            },
+            {
+              "t": 130,
+              "distance": 447.7,
+              "speed": 127.8,
+              "mode": "attack",
+              "ammo": 476
+            },
+            {
+              "t": 140,
+              "distance": 317,
+              "speed": 161.2,
+              "mode": "break",
+              "ammo": 444
+            },
+            {
+              "t": 150,
+              "distance": 342,
+              "speed": 168.6,
+              "mode": "break",
+              "ammo": 406
+            },
+            {
+              "t": 160,
+              "distance": 518.1,
+              "speed": 168.9,
+              "mode": "attack",
+              "ammo": 382
+            },
+            {
+              "t": 170,
+              "distance": 574,
+              "speed": 169,
+              "mode": "attack",
+              "ammo": 360
+            },
+            {
+              "t": 180,
+              "distance": 501.5,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 344
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 35.64,
+                "hostile_hits": 23,
+                "distance_flown": 25053.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 17602.1,
+                "structure": 29.36,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 22.95,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                2305.6,
+                56.4,
+                -6439.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 20006.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                2244.8,
+                65.6,
+                -6518.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25963.9
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 441.3,
+              "speed": 170.8,
+              "mode": "break",
+              "ammo": 1128
+            },
+            {
+              "t": 20,
+              "distance": 853,
+              "speed": 174.9,
+              "mode": "break",
+              "ammo": 1058
+            },
+            {
+              "t": 30,
+              "distance": 572.7,
+              "speed": 120.1,
+              "mode": "attack",
+              "ammo": 956
+            },
+            {
+              "t": 40,
+              "distance": 393,
+              "speed": 132.6,
+              "mode": "break",
+              "ammo": 862
+            },
+            {
+              "t": 50,
+              "distance": 578.6,
+              "speed": 107.2,
+              "mode": "attack",
+              "ammo": 788
+            },
+            {
+              "t": 60,
+              "distance": 588.7,
+              "speed": 117.6,
+              "mode": "attack",
+              "ammo": 712
+            },
+            {
+              "t": 70,
+              "distance": 148.3,
+              "speed": 169.1,
+              "mode": "break",
+              "ammo": 692
+            },
+            {
+              "t": 80,
+              "distance": 45.3,
+              "speed": 169,
+              "mode": "break",
+              "ammo": 674
+            },
+            {
+              "t": 90,
+              "distance": 94.7,
+              "speed": 154.6,
+              "mode": "break",
+              "ammo": 662
+            },
+            {
+              "t": 100,
+              "distance": 38.7,
+              "speed": 161.2,
+              "mode": "break",
+              "ammo": 654
+            },
+            {
+              "t": 110,
+              "distance": 175.1,
+              "speed": 72.4,
+              "mode": "attack",
+              "ammo": 650
+            },
+            {
+              "t": 120,
+              "distance": 128.4,
+              "speed": 173.8,
+              "mode": "break",
+              "ammo": 646
+            },
+            {
+              "t": 130,
+              "distance": 149.8,
+              "speed": 124.4,
+              "mode": "break",
+              "ammo": 632
+            },
+            {
+              "t": 140,
+              "distance": 77,
+              "speed": 160,
+              "mode": "break",
+              "ammo": 630
+            },
+            {
+              "t": 150,
+              "distance": 81.3,
+              "speed": 170.3,
+              "mode": "break",
+              "ammo": 630
+            },
+            {
+              "t": 160,
+              "distance": 219.2,
+              "speed": 50.9,
+              "mode": "attack",
+              "ammo": 620
+            },
+            {
+              "t": 170,
+              "distance": 110,
+              "speed": 121.6,
+              "mode": "break",
+              "ammo": 614
+            },
+            {
+              "t": 180,
+              "distance": 100.7,
+              "speed": 44.1,
+              "mode": "break",
+              "ammo": 614
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 33.4,
+                "hostile_hits": 26,
+                "distance_flown": 25963.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 20006.4,
+                "structure": 29.77,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.45,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -2385.9,
+                -1496.5,
+                3168.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15575.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -2495.1,
+                -1470.2,
+                3024.1
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 25456.3
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 94.3,
+              "speed": 142.1,
+              "mode": "break",
+              "ammo": 1148
+            },
+            {
+              "t": 20,
+              "distance": 157,
+              "speed": 167.9,
+              "mode": "attack",
+              "ammo": 1114
+            },
+            {
+              "t": 30,
+              "distance": 80.6,
+              "speed": 174.9,
+              "mode": "break",
+              "ammo": 1092
+            },
+            {
+              "t": 40,
+              "distance": 158.7,
+              "speed": 66,
+              "mode": "break",
+              "ammo": 1062
+            },
+            {
+              "t": 50,
+              "distance": 149.7,
+              "speed": 121.9,
+              "mode": "break",
+              "ammo": 1054
+            },
+            {
+              "t": 60,
+              "distance": 53.9,
+              "speed": 147.9,
+              "mode": "break",
+              "ammo": 1042
+            },
+            {
+              "t": 70,
+              "distance": 170.7,
+              "speed": 162.2,
+              "mode": "break",
+              "ammo": 1028
+            },
+            {
+              "t": 80,
+              "distance": 260.8,
+              "speed": 151.3,
+              "mode": "attack",
+              "ammo": 1014
+            },
+            {
+              "t": 90,
+              "distance": 141.7,
+              "speed": 167.1,
+              "mode": "break",
+              "ammo": 996
+            },
+            {
+              "t": 100,
+              "distance": 147.4,
+              "speed": 138.4,
+              "mode": "break",
+              "ammo": 982
+            },
+            {
+              "t": 110,
+              "distance": 263.5,
+              "speed": 138.4,
+              "mode": "attack",
+              "ammo": 972
+            },
+            {
+              "t": 120,
+              "distance": 162.5,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 956
+            },
+            {
+              "t": 130,
+              "distance": 104,
+              "speed": 158.2,
+              "mode": "break",
+              "ammo": 940
+            },
+            {
+              "t": 140,
+              "distance": 329.8,
+              "speed": 140,
+              "mode": "attack",
+              "ammo": 816
+            },
+            {
+              "t": 150,
+              "distance": 179.3,
+              "speed": 160,
+              "mode": "break",
+              "ammo": 704
+            },
+            {
+              "t": 160,
+              "distance": 168,
+              "speed": 153.8,
+              "mode": "break",
+              "ammo": 636
+            },
+            {
+              "t": 170,
+              "distance": 304.4,
+              "speed": 78.2,
+              "mode": "attack",
+              "ammo": 568
+            },
+            {
+              "t": 180,
+              "distance": 182.9,
+              "speed": 148.5,
+              "mode": "break",
+              "ammo": 518
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 62.04,
+                "hostile_hits": 64,
+                "distance_flown": 25456.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 17.5,
+                "hostile_hits": 2,
+                "distance_flown": 15575.6,
+                "structure": 2.96,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 42.05,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                1728.1,
+                1073.9,
+                1470.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 23635.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1431.3,
+                1060.3,
+                1431.9
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 26273.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 356.2,
+              "speed": 150.5,
+              "mode": "break",
+              "ammo": 1122
+            },
+            {
+              "t": 20,
+              "distance": 389.5,
+              "speed": 238.8,
+              "mode": "attack",
+              "ammo": 1052
+            },
+            {
+              "t": 30,
+              "distance": 400,
+              "speed": 134.9,
+              "mode": "break",
+              "ammo": 962
+            },
+            {
+              "t": 40,
+              "distance": 537.2,
+              "speed": 173.5,
+              "mode": "break",
+              "ammo": 878
+            },
+            {
+              "t": 50,
+              "distance": 358.8,
+              "speed": 165.2,
+              "mode": "break",
+              "ammo": 782
+            },
+            {
+              "t": 60,
+              "distance": 353.2,
+              "speed": 163.8,
+              "mode": "break",
+              "ammo": 708
+            },
+            {
+              "t": 70,
+              "distance": 660.6,
+              "speed": 107.9,
+              "mode": "attack",
+              "ammo": 662
+            },
+            {
+              "t": 80,
+              "distance": 384.8,
+              "speed": 133.6,
+              "mode": "break",
+              "ammo": 604
+            },
+            {
+              "t": 90,
+              "distance": 445.8,
+              "speed": 139.6,
+              "mode": "attack",
+              "ammo": 562
+            },
+            {
+              "t": 100,
+              "distance": 83.8,
+              "speed": 143.7,
+              "mode": "break",
+              "ammo": 560
+            },
+            {
+              "t": 110,
+              "distance": 25.3,
+              "speed": 166.5,
+              "mode": "break",
+              "ammo": 548
+            },
+            {
+              "t": 120,
+              "distance": 52.1,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 532
+            },
+            {
+              "t": 130,
+              "distance": 377.9,
+              "speed": 131.8,
+              "mode": "break",
+              "ammo": 502
+            },
+            {
+              "t": 140,
+              "distance": 510.4,
+              "speed": 123.1,
+              "mode": "attack",
+              "ammo": 454
+            },
+            {
+              "t": 150,
+              "distance": 455.6,
+              "speed": 174.3,
+              "mode": "attack",
+              "ammo": 428
+            },
+            {
+              "t": 160,
+              "distance": 400.3,
+              "speed": 73,
+              "mode": "attack",
+              "ammo": 388
+            },
+            {
+              "t": 170,
+              "distance": 473.2,
+              "speed": 161,
+              "mode": "attack",
+              "ammo": 360
+            },
+            {
+              "t": 180,
+              "distance": 299.6,
+              "speed": 125.8,
+              "mode": "break",
+              "ammo": 344
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32.78,
+                "hostile_hits": 20,
+                "distance_flown": 26273.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 23635.5,
+                "structure": 32.22,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 171.4,
+          "winner": "human",
+          "time_to_kill": 171.4,
+          "first_hit": {
+            "time": 5.05,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 129.8,
+              "speed": 137,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 83.1,
+              "speed": 157.7,
+              "mode": "break",
+              "ammo": 1108
+            },
+            {
+              "t": 30,
+              "distance": 18.4,
+              "speed": 152.2,
+              "mode": "break",
+              "ammo": 1090
+            },
+            {
+              "t": 40,
+              "distance": 129.3,
+              "speed": 126.4,
+              "mode": "break",
+              "ammo": 1084
+            },
+            {
+              "t": 50,
+              "distance": 98.3,
+              "speed": 122.8,
+              "mode": "attack",
+              "ammo": 1078
+            },
+            {
+              "t": 60,
+              "distance": 126.4,
+              "speed": 57.4,
+              "mode": "attack",
+              "ammo": 1068
+            },
+            {
+              "t": 70,
+              "distance": 38.3,
+              "speed": 167.2,
+              "mode": "break",
+              "ammo": 1064
+            },
+            {
+              "t": 80,
+              "distance": 99.7,
+              "speed": 172,
+              "mode": "break",
+              "ammo": 1056
+            },
+            {
+              "t": 90,
+              "distance": 116.9,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 1054
+            },
+            {
+              "t": 100,
+              "distance": 124.9,
+              "speed": 172.3,
+              "mode": "break",
+              "ammo": 1046
+            },
+            {
+              "t": 110,
+              "distance": 120.3,
+              "speed": 163.9,
+              "mode": "break",
+              "ammo": 1038
+            },
+            {
+              "t": 120,
+              "distance": 35,
+              "speed": 128.4,
+              "mode": "break",
+              "ammo": 1032
+            },
+            {
+              "t": 130,
+              "distance": 113.4,
+              "speed": 136.2,
+              "mode": "break",
+              "ammo": 1026
+            },
+            {
+              "t": 140,
+              "distance": 109.6,
+              "speed": 161.4,
+              "mode": "break",
+              "ammo": 1018
+            },
+            {
+              "t": 150,
+              "distance": 89.4,
+              "speed": 158.8,
+              "mode": "break",
+              "ammo": 1010
+            },
+            {
+              "t": 160,
+              "distance": 121.4,
+              "speed": 52.1,
+              "mode": "break",
+              "ammo": 1002
+            },
+            {
+              "t": 170,
+              "distance": 617.7,
+              "speed": 140,
+              "mode": "attack",
+              "ammo": 926
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65,
+                "hostile_hits": 45,
+                "distance_flown": 24492.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 17950.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 171.4,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 171.4,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -95.3,
+                24.1,
+                -2492.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 16654.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                188,
+                31.1,
+                -2392.3
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 25615.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 459.5,
+              "speed": 170.8,
+              "mode": "break",
+              "ammo": 1128
+            },
+            {
+              "t": 20,
+              "distance": 578.1,
+              "speed": 136,
+              "mode": "attack",
+              "ammo": 1044
+            },
+            {
+              "t": 30,
+              "distance": 252,
+              "speed": 133,
+              "mode": "break",
+              "ammo": 996
+            },
+            {
+              "t": 40,
+              "distance": 189.7,
+              "speed": 136,
+              "mode": "attack",
+              "ammo": 958
+            },
+            {
+              "t": 50,
+              "distance": 372.1,
+              "speed": 166.5,
+              "mode": "break",
+              "ammo": 874
+            },
+            {
+              "t": 60,
+              "distance": 442.7,
+              "speed": 100,
+              "mode": "attack",
+              "ammo": 802
+            },
+            {
+              "t": 70,
+              "distance": 483,
+              "speed": 77.1,
+              "mode": "attack",
+              "ammo": 742
+            },
+            {
+              "t": 80,
+              "distance": 454.8,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 90,
+              "distance": 455.4,
+              "speed": 78.1,
+              "mode": "attack",
+              "ammo": 676
+            },
+            {
+              "t": 100,
+              "distance": 304.1,
+              "speed": 168,
+              "mode": "break",
+              "ammo": 642
+            },
+            {
+              "t": 110,
+              "distance": 416,
+              "speed": 69,
+              "mode": "attack",
+              "ammo": 610
+            },
+            {
+              "t": 120,
+              "distance": 375.7,
+              "speed": 132.4,
+              "mode": "break",
+              "ammo": 576
+            },
+            {
+              "t": 130,
+              "distance": 284,
+              "speed": 161,
+              "mode": "break",
+              "ammo": 548
+            },
+            {
+              "t": 140,
+              "distance": 545,
+              "speed": 74.8,
+              "mode": "attack",
+              "ammo": 520
+            },
+            {
+              "t": 150,
+              "distance": 345,
+              "speed": 170.2,
+              "mode": "break",
+              "ammo": 478
+            },
+            {
+              "t": 160,
+              "distance": 326.9,
+              "speed": 171.4,
+              "mode": "break",
+              "ammo": 446
+            },
+            {
+              "t": 170,
+              "distance": 259.9,
+              "speed": 161.8,
+              "mode": "break",
+              "ammo": 412
+            },
+            {
+              "t": 180,
+              "distance": 300.7,
+              "speed": 166.4,
+              "mode": "break",
+              "ammo": 376
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 38.52,
+                "hostile_hits": 29,
+                "distance_flown": 25615.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 16654.3,
+                "structure": 26.48,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-leaper-old",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 3,
+        "win_rate": 0.15,
+        "time_to_kill_human_wins_only": {
+          "median": 166.05,
+          "p25": 101.475,
+          "p75": 168.72500000000002
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

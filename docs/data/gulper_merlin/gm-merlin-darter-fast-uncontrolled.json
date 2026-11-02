@@ -1,0 +1,4705 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "ba1025cd5e4b26d4eae06cdf61c135c16d62615a",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "gm-merlin-darter-fast-uncontrolled": {
+      "name": "Merlin vs darter: fast-uncontrolled",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 19.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                771.7,
+                1068.3,
+                -442.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 37088.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                83.7,
+                1086.9,
+                -754.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 36883.1
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 197.2,
+              "speed": 205.9,
+              "mode": "break",
+              "ammo": 1176
+            },
+            {
+              "t": 20,
+              "distance": 176.6,
+              "speed": 214.6,
+              "mode": "break",
+              "ammo": 1144
+            },
+            {
+              "t": 30,
+              "distance": 675.1,
+              "speed": 186.2,
+              "mode": "attack",
+              "ammo": 1090
+            },
+            {
+              "t": 40,
+              "distance": 877.3,
+              "speed": 250.7,
+              "mode": "break",
+              "ammo": 1016
+            },
+            {
+              "t": 50,
+              "distance": 641.3,
+              "speed": 257.2,
+              "mode": "break",
+              "ammo": 940
+            },
+            {
+              "t": 60,
+              "distance": 333,
+              "speed": 212.8,
+              "mode": "break",
+              "ammo": 852
+            },
+            {
+              "t": 70,
+              "distance": 740.3,
+              "speed": 174.1,
+              "mode": "attack",
+              "ammo": 780
+            },
+            {
+              "t": 80,
+              "distance": 816.6,
+              "speed": 260.6,
+              "mode": "break",
+              "ammo": 714
+            },
+            {
+              "t": 90,
+              "distance": 510.3,
+              "speed": 251.7,
+              "mode": "break",
+              "ammo": 666
+            },
+            {
+              "t": 100,
+              "distance": 489,
+              "speed": 205.9,
+              "mode": "attack",
+              "ammo": 620
+            },
+            {
+              "t": 110,
+              "distance": 852.7,
+              "speed": 115.1,
+              "mode": "attack",
+              "ammo": 592
+            },
+            {
+              "t": 120,
+              "distance": 641.1,
+              "speed": 257.1,
+              "mode": "break",
+              "ammo": 546
+            },
+            {
+              "t": 130,
+              "distance": 385.9,
+              "speed": 200,
+              "mode": "break",
+              "ammo": 492
+            },
+            {
+              "t": 140,
+              "distance": 594.4,
+              "speed": 203.7,
+              "mode": "attack",
+              "ammo": 448
+            },
+            {
+              "t": 150,
+              "distance": 882.8,
+              "speed": 252.7,
+              "mode": "break",
+              "ammo": 416
+            },
+            {
+              "t": 160,
+              "distance": 354.3,
+              "speed": 228.1,
+              "mode": "break",
+              "ammo": 366
+            },
+            {
+              "t": 170,
+              "distance": 503.8,
+              "speed": 206.1,
+              "mode": "attack",
+              "ammo": 344
+            },
+            {
+              "t": 180,
+              "distance": 755.7,
+              "speed": 109.4,
+              "mode": "attack",
+              "ammo": 328
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 36883.1,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 37088.7,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 50.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                149.5,
+                811.1,
+                -1026.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35651.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -352.6,
+                801.1,
+                -1094.7
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37153.9
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 757.2,
+              "speed": 163.6,
+              "mode": "attack",
+              "ammo": 1136
+            },
+            {
+              "t": 20,
+              "distance": 821.3,
+              "speed": 96.4,
+              "mode": "attack",
+              "ammo": 1056
+            },
+            {
+              "t": 30,
+              "distance": 731.8,
+              "speed": 259.3,
+              "mode": "break",
+              "ammo": 970
+            },
+            {
+              "t": 40,
+              "distance": 353.5,
+              "speed": 232.1,
+              "mode": "break",
+              "ammo": 878
+            },
+            {
+              "t": 50,
+              "distance": 518.9,
+              "speed": 202.7,
+              "mode": "attack",
+              "ammo": 800
+            },
+            {
+              "t": 60,
+              "distance": 760.9,
+              "speed": 172.5,
+              "mode": "attack",
+              "ammo": 724
+            },
+            {
+              "t": 70,
+              "distance": 633.2,
+              "speed": 256.9,
+              "mode": "break",
+              "ammo": 674
+            },
+            {
+              "t": 80,
+              "distance": 489.1,
+              "speed": 207.3,
+              "mode": "attack",
+              "ammo": 630
+            },
+            {
+              "t": 90,
+              "distance": 411.5,
+              "speed": 215.8,
+              "mode": "break",
+              "ammo": 604
+            },
+            {
+              "t": 100,
+              "distance": 487.6,
+              "speed": 206.1,
+              "mode": "attack",
+              "ammo": 580
+            },
+            {
+              "t": 110,
+              "distance": 711.1,
+              "speed": 153,
+              "mode": "attack",
+              "ammo": 544
+            },
+            {
+              "t": 120,
+              "distance": 651.5,
+              "speed": 247.4,
+              "mode": "break",
+              "ammo": 502
+            },
+            {
+              "t": 130,
+              "distance": 450.2,
+              "speed": 208.2,
+              "mode": "attack",
+              "ammo": 450
+            },
+            {
+              "t": 140,
+              "distance": 824.3,
+              "speed": 84,
+              "mode": "attack",
+              "ammo": 412
+            },
+            {
+              "t": 150,
+              "distance": 586.9,
+              "speed": 256.3,
+              "mode": "break",
+              "ammo": 370
+            },
+            {
+              "t": 160,
+              "distance": 440.4,
+              "speed": 208.3,
+              "mode": "attack",
+              "ammo": 342
+            },
+            {
+              "t": 170,
+              "distance": 836.8,
+              "speed": 97.8,
+              "mode": "attack",
+              "ammo": 326
+            },
+            {
+              "t": 180,
+              "distance": 506.8,
+              "speed": 252.1,
+              "mode": "break",
+              "ammo": 304
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 37153.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 35651.2,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 30.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                288.6,
+                153.9,
+                -728.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35995
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                799.6,
+                303.6,
+                -885.5
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 37264.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 430.7,
+              "speed": 256.5,
+              "mode": "break",
+              "ammo": 1158
+            },
+            {
+              "t": 20,
+              "distance": 346.8,
+              "speed": 228.6,
+              "mode": "break",
+              "ammo": 1072
+            },
+            {
+              "t": 30,
+              "distance": 745.8,
+              "speed": 168.9,
+              "mode": "attack",
+              "ammo": 1002
+            },
+            {
+              "t": 40,
+              "distance": 361.2,
+              "speed": 198.1,
+              "mode": "break",
+              "ammo": 922
+            },
+            {
+              "t": 50,
+              "distance": 712.5,
+              "speed": 180,
+              "mode": "attack",
+              "ammo": 856
+            },
+            {
+              "t": 60,
+              "distance": 695,
+              "speed": 258.5,
+              "mode": "break",
+              "ammo": 778
+            },
+            {
+              "t": 70,
+              "distance": 473.8,
+              "speed": 250.6,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 80,
+              "distance": 402.1,
+              "speed": 208.8,
+              "mode": "break",
+              "ammo": 658
+            },
+            {
+              "t": 90,
+              "distance": 763.7,
+              "speed": 133.5,
+              "mode": "attack",
+              "ammo": 622
+            },
+            {
+              "t": 100,
+              "distance": 879.8,
+              "speed": 78.7,
+              "mode": "break",
+              "ammo": 580
+            },
+            {
+              "t": 110,
+              "distance": 560.5,
+              "speed": 254.3,
+              "mode": "break",
+              "ammo": 534
+            },
+            {
+              "t": 120,
+              "distance": 342,
+              "speed": 206.3,
+              "mode": "break",
+              "ammo": 490
+            },
+            {
+              "t": 130,
+              "distance": 674.8,
+              "speed": 180.1,
+              "mode": "attack",
+              "ammo": 450
+            },
+            {
+              "t": 140,
+              "distance": 789.1,
+              "speed": 123.4,
+              "mode": "attack",
+              "ammo": 408
+            },
+            {
+              "t": 150,
+              "distance": 789.1,
+              "speed": 91.1,
+              "mode": "attack",
+              "ammo": 364
+            },
+            {
+              "t": 160,
+              "distance": 638.3,
+              "speed": 257.3,
+              "mode": "break",
+              "ammo": 340
+            },
+            {
+              "t": 170,
+              "distance": 568.2,
+              "speed": 254.9,
+              "mode": "break",
+              "ammo": 316
+            },
+            {
+              "t": 180,
+              "distance": 555.2,
+              "speed": 205.6,
+              "mode": "attack",
+              "ammo": 300
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 37264.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 35995,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG DARTER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 18.3,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -1099.1,
+                -155.3,
+                -112
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36252.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -782.9,
+                -46.9,
+                309.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37994.5
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 695.3,
+              "speed": 180.7,
+              "mode": "attack",
+              "ammo": 1136
+            },
+            {
+              "t": 20,
+              "distance": 876.4,
+              "speed": 252.6,
+              "mode": "attack",
+              "ammo": 1074
+            },
+            {
+              "t": 30,
+              "distance": 393.6,
+              "speed": 241.5,
+              "mode": "break",
+              "ammo": 984
+            },
+            {
+              "t": 40,
+              "distance": 415.8,
+              "speed": 244.4,
+              "mode": "break",
+              "ammo": 898
+            },
+            {
+              "t": 50,
+              "distance": 361.5,
+              "speed": 197.5,
+              "mode": "break",
+              "ammo": 816
+            },
+            {
+              "t": 60,
+              "distance": 753.1,
+              "speed": 153.9,
+              "mode": "attack",
+              "ammo": 752
+            },
+            {
+              "t": 70,
+              "distance": 884.9,
+              "speed": 248,
+              "mode": "break",
+              "ammo": 698
+            },
+            {
+              "t": 80,
+              "distance": 388.7,
+              "speed": 239.1,
+              "mode": "break",
+              "ammo": 654
+            },
+            {
+              "t": 90,
+              "distance": 421,
+              "speed": 214.1,
+              "mode": "break",
+              "ammo": 602
+            },
+            {
+              "t": 100,
+              "distance": 427.6,
+              "speed": 212.1,
+              "mode": "break",
+              "ammo": 560
+            },
+            {
+              "t": 110,
+              "distance": 586.3,
+              "speed": 199.7,
+              "mode": "attack",
+              "ammo": 530
+            },
+            {
+              "t": 120,
+              "distance": 885.3,
+              "speed": 231.2,
+              "mode": "attack",
+              "ammo": 484
+            },
+            {
+              "t": 130,
+              "distance": 579,
+              "speed": 201.3,
+              "mode": "attack",
+              "ammo": 446
+            },
+            {
+              "t": 140,
+              "distance": 124.4,
+              "speed": 148.2,
+              "mode": "break",
+              "ammo": 442
+            },
+            {
+              "t": 150,
+              "distance": 739.6,
+              "speed": 260,
+              "mode": "break",
+              "ammo": 434
+            },
+            {
+              "t": 160,
+              "distance": 359.1,
+              "speed": 191.3,
+              "mode": "break",
+              "ammo": 384
+            },
+            {
+              "t": 170,
+              "distance": 798.6,
+              "speed": 134,
+              "mode": "attack",
+              "ammo": 354
+            },
+            {
+              "t": 180,
+              "distance": 538,
+              "speed": 253,
+              "mode": "break",
+              "ammo": 336
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 10.5,
+                "hostile_hits": 5,
+                "distance_flown": 37994.5,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 36252.1,
+                "structure": 24,
+                "shield": 7.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.9,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                972.1,
+                1162.6,
+                573.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36392.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                366.7,
+                1009.3,
+                164.7
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 36574.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 54,
+              "speed": 252.7,
+              "mode": "break",
+              "ammo": 1152
+            },
+            {
+              "t": 20,
+              "distance": 620.4,
+              "speed": 257.2,
+              "mode": "break",
+              "ammo": 1096
+            },
+            {
+              "t": 30,
+              "distance": 410.6,
+              "speed": 235.5,
+              "mode": "break",
+              "ammo": 1008
+            },
+            {
+              "t": 40,
+              "distance": 576.3,
+              "speed": 196.2,
+              "mode": "attack",
+              "ammo": 928
+            },
+            {
+              "t": 50,
+              "distance": 893.6,
+              "speed": 111.9,
+              "mode": "break",
+              "ammo": 858
+            },
+            {
+              "t": 60,
+              "distance": 472.4,
+              "speed": 249.7,
+              "mode": "break",
+              "ammo": 778
+            },
+            {
+              "t": 70,
+              "distance": 340.4,
+              "speed": 218,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 80,
+              "distance": 503.2,
+              "speed": 204.9,
+              "mode": "attack",
+              "ammo": 660
+            },
+            {
+              "t": 90,
+              "distance": 544.3,
+              "speed": 199.9,
+              "mode": "attack",
+              "ammo": 614
+            },
+            {
+              "t": 100,
+              "distance": 892.8,
+              "speed": 159.9,
+              "mode": "attack",
+              "ammo": 582
+            },
+            {
+              "t": 110,
+              "distance": 354.6,
+              "speed": 231.2,
+              "mode": "break",
+              "ammo": 530
+            },
+            {
+              "t": 120,
+              "distance": 523.2,
+              "speed": 204.2,
+              "mode": "attack",
+              "ammo": 484
+            },
+            {
+              "t": 130,
+              "distance": 753.7,
+              "speed": 164.2,
+              "mode": "attack",
+              "ammo": 436
+            },
+            {
+              "t": 140,
+              "distance": 804.2,
+              "speed": 90.1,
+              "mode": "attack",
+              "ammo": 394
+            },
+            {
+              "t": 150,
+              "distance": 593.4,
+              "speed": 256.4,
+              "mode": "break",
+              "ammo": 358
+            },
+            {
+              "t": 160,
+              "distance": 438.6,
+              "speed": 213.4,
+              "mode": "break",
+              "ammo": 334
+            },
+            {
+              "t": 170,
+              "distance": 742.2,
+              "speed": 170.8,
+              "mode": "attack",
+              "ammo": 316
+            },
+            {
+              "t": 180,
+              "distance": 746.4,
+              "speed": 259.4,
+              "mode": "break",
+              "ammo": 294
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 36574.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 36392.1,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.05,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -1642.5,
+                -547.1,
+                -1414.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 37237.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -1315.2,
+                -542.5,
+                -1199.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 38059
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 717.2,
+              "speed": 183.8,
+              "mode": "attack",
+              "ammo": 1128
+            },
+            {
+              "t": 20,
+              "distance": 875.4,
+              "speed": 246.4,
+              "mode": "break",
+              "ammo": 1050
+            },
+            {
+              "t": 30,
+              "distance": 334.7,
+              "speed": 223.4,
+              "mode": "break",
+              "ammo": 956
+            },
+            {
+              "t": 40,
+              "distance": 716.9,
+              "speed": 180.5,
+              "mode": "attack",
+              "ammo": 880
+            },
+            {
+              "t": 50,
+              "distance": 1295.4,
+              "speed": 471.8,
+              "mode": "evade",
+              "ammo": 806
+            },
+            {
+              "t": 60,
+              "distance": 136.9,
+              "speed": 251.8,
+              "mode": "attack",
+              "ammo": 782
+            },
+            {
+              "t": 70,
+              "distance": 218.4,
+              "speed": 89.1,
+              "mode": "attack",
+              "ammo": 766
+            },
+            {
+              "t": 80,
+              "distance": 643.9,
+              "speed": 193.6,
+              "mode": "attack",
+              "ammo": 740
+            },
+            {
+              "t": 90,
+              "distance": 1290.2,
+              "speed": 471.5,
+              "mode": "evade",
+              "ammo": 696
+            },
+            {
+              "t": 100,
+              "distance": 440.9,
+              "speed": 164.2,
+              "mode": "break",
+              "ammo": 682
+            },
+            {
+              "t": 110,
+              "distance": 684.7,
+              "speed": 184.7,
+              "mode": "attack",
+              "ammo": 640
+            },
+            {
+              "t": 120,
+              "distance": 875.4,
+              "speed": 232.2,
+              "mode": "attack",
+              "ammo": 598
+            },
+            {
+              "t": 130,
+              "distance": 560.7,
+              "speed": 254.5,
+              "mode": "break",
+              "ammo": 554
+            },
+            {
+              "t": 140,
+              "distance": 478.6,
+              "speed": 207.1,
+              "mode": "attack",
+              "ammo": 498
+            },
+            {
+              "t": 150,
+              "distance": 847,
+              "speed": 98.6,
+              "mode": "break",
+              "ammo": 466
+            },
+            {
+              "t": 160,
+              "distance": 768.1,
+              "speed": 259.9,
+              "mode": "break",
+              "ammo": 422
+            },
+            {
+              "t": 170,
+              "distance": 346.4,
+              "speed": 227.4,
+              "mode": "break",
+              "ammo": 364
+            },
+            {
+              "t": 180,
+              "distance": 391.8,
+              "speed": 208.9,
+              "mode": "break",
+              "ammo": 340
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 38059,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 37237.4,
+                "structure": 24,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 2.95,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                1833.3,
+                77.1,
+                -243.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 32590.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1190,
+                4.1,
+                -420.3
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37196
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 158.6,
+              "speed": 260,
+              "mode": "break",
+              "ammo": 1170
+            },
+            {
+              "t": 20,
+              "distance": 493,
+              "speed": 250.1,
+              "mode": "break",
+              "ammo": 1090
+            },
+            {
+              "t": 30,
+              "distance": 348.5,
+              "speed": 200.4,
+              "mode": "break",
+              "ammo": 1010
+            },
+            {
+              "t": 40,
+              "distance": 483.2,
+              "speed": 206.4,
+              "mode": "attack",
+              "ammo": 924
+            },
+            {
+              "t": 50,
+              "distance": 713,
+              "speed": 184.6,
+              "mode": "attack",
+              "ammo": 856
+            },
+            {
+              "t": 60,
+              "distance": 763.2,
+              "speed": 259.9,
+              "mode": "break",
+              "ammo": 786
+            },
+            {
+              "t": 70,
+              "distance": 340.7,
+              "speed": 214,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 80,
+              "distance": 685.3,
+              "speed": 186.6,
+              "mode": "attack",
+              "ammo": 664
+            },
+            {
+              "t": 90,
+              "distance": 826.8,
+              "speed": 105.1,
+              "mode": "attack",
+              "ammo": 620
+            },
+            {
+              "t": 100,
+              "distance": 810.7,
+              "speed": 465.5,
+              "mode": "evade",
+              "ammo": 576
+            },
+            {
+              "t": 110,
+              "distance": 168.4,
+              "speed": 147.9,
+              "mode": "break",
+              "ammo": 562
+            },
+            {
+              "t": 120,
+              "distance": 179.8,
+              "speed": 207.5,
+              "mode": "break",
+              "ammo": 562
+            },
+            {
+              "t": 130,
+              "distance": 834.9,
+              "speed": 139.9,
+              "mode": "attack",
+              "ammo": 518
+            },
+            {
+              "t": 140,
+              "distance": 370.7,
+              "speed": 238.9,
+              "mode": "break",
+              "ammo": 476
+            },
+            {
+              "t": 150,
+              "distance": 452.2,
+              "speed": 203.5,
+              "mode": "attack",
+              "ammo": 434
+            },
+            {
+              "t": 160,
+              "distance": 653.2,
+              "speed": 181,
+              "mode": "attack",
+              "ammo": 398
+            },
+            {
+              "t": 170,
+              "distance": 622.7,
+              "speed": 134.9,
+              "mode": "attack",
+              "ammo": 364
+            },
+            {
+              "t": 180,
+              "distance": 671.2,
+              "speed": 141.4,
+              "mode": "attack",
+              "ammo": 348
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 19.5,
+                "hostile_hits": 12,
+                "distance_flown": 37196,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 32590.7,
+                "structure": 22.5,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 28.55,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                1133.4,
+                997.3,
+                -477.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36718.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                721.2,
+                1012.5,
+                -537.9
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37073.3
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 490.6,
+              "speed": 199.9,
+              "mode": "attack",
+              "ammo": 1126
+            },
+            {
+              "t": 20,
+              "distance": 704.1,
+              "speed": 178.2,
+              "mode": "attack",
+              "ammo": 1054
+            },
+            {
+              "t": 30,
+              "distance": 746.5,
+              "speed": 259.3,
+              "mode": "break",
+              "ammo": 978
+            },
+            {
+              "t": 40,
+              "distance": 350,
+              "speed": 201.9,
+              "mode": "break",
+              "ammo": 894
+            },
+            {
+              "t": 50,
+              "distance": 709.5,
+              "speed": 166,
+              "mode": "attack",
+              "ammo": 828
+            },
+            {
+              "t": 60,
+              "distance": 849.8,
+              "speed": 260.9,
+              "mode": "break",
+              "ammo": 756
+            },
+            {
+              "t": 70,
+              "distance": 339.9,
+              "speed": 225.7,
+              "mode": "break",
+              "ammo": 692
+            },
+            {
+              "t": 80,
+              "distance": 649.9,
+              "speed": 190.3,
+              "mode": "attack",
+              "ammo": 652
+            },
+            {
+              "t": 90,
+              "distance": 687.9,
+              "speed": 173.8,
+              "mode": "attack",
+              "ammo": 608
+            },
+            {
+              "t": 100,
+              "distance": 863.6,
+              "speed": 193.2,
+              "mode": "attack",
+              "ammo": 568
+            },
+            {
+              "t": 110,
+              "distance": 531.7,
+              "speed": 253.5,
+              "mode": "break",
+              "ammo": 516
+            },
+            {
+              "t": 120,
+              "distance": 545.4,
+              "speed": 204.3,
+              "mode": "attack",
+              "ammo": 472
+            },
+            {
+              "t": 130,
+              "distance": 792.1,
+              "speed": 136.4,
+              "mode": "attack",
+              "ammo": 426
+            },
+            {
+              "t": 140,
+              "distance": 866.3,
+              "speed": 227.6,
+              "mode": "attack",
+              "ammo": 382
+            },
+            {
+              "t": 150,
+              "distance": 337.5,
+              "speed": 209.2,
+              "mode": "break",
+              "ammo": 350
+            },
+            {
+              "t": 160,
+              "distance": 231,
+              "speed": 256.1,
+              "mode": "break",
+              "ammo": 334
+            },
+            {
+              "t": 170,
+              "distance": 552.2,
+              "speed": 257.1,
+              "mode": "break",
+              "ammo": 318
+            },
+            {
+              "t": 180,
+              "distance": 416.9,
+              "speed": 213.7,
+              "mode": "break",
+              "ammo": 296
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 37073.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 36718.3,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 40.05,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -89.3,
+                -278.6,
+                -891.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35805.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -388.4,
+                -339,
+                -220.7
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37630.3
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 637.2,
+              "speed": 194.9,
+              "mode": "attack",
+              "ammo": 1134
+            },
+            {
+              "t": 20,
+              "distance": 849.7,
+              "speed": 260.8,
+              "mode": "break",
+              "ammo": 1068
+            },
+            {
+              "t": 30,
+              "distance": 342.5,
+              "speed": 217.8,
+              "mode": "break",
+              "ammo": 988
+            },
+            {
+              "t": 40,
+              "distance": 581.4,
+              "speed": 196.8,
+              "mode": "attack",
+              "ammo": 924
+            },
+            {
+              "t": 50,
+              "distance": 790.2,
+              "speed": 135.9,
+              "mode": "attack",
+              "ammo": 852
+            },
+            {
+              "t": 60,
+              "distance": 596.3,
+              "speed": 256.4,
+              "mode": "break",
+              "ammo": 772
+            },
+            {
+              "t": 70,
+              "distance": 339.5,
+              "speed": 205.7,
+              "mode": "break",
+              "ammo": 706
+            },
+            {
+              "t": 80,
+              "distance": 725.5,
+              "speed": 177.1,
+              "mode": "attack",
+              "ammo": 666
+            },
+            {
+              "t": 90,
+              "distance": 858.2,
+              "speed": 260.6,
+              "mode": "break",
+              "ammo": 620
+            },
+            {
+              "t": 100,
+              "distance": 357.2,
+              "speed": 197.1,
+              "mode": "break",
+              "ammo": 574
+            },
+            {
+              "t": 110,
+              "distance": 651.9,
+              "speed": 434.1,
+              "mode": "attack",
+              "ammo": 544
+            },
+            {
+              "t": 120,
+              "distance": 872.7,
+              "speed": 201.4,
+              "mode": "attack",
+              "ammo": 506
+            },
+            {
+              "t": 130,
+              "distance": 695.3,
+              "speed": 258.5,
+              "mode": "break",
+              "ammo": 462
+            },
+            {
+              "t": 140,
+              "distance": 351.5,
+              "speed": 198.1,
+              "mode": "break",
+              "ammo": 402
+            },
+            {
+              "t": 150,
+              "distance": 789,
+              "speed": 158.8,
+              "mode": "attack",
+              "ammo": 368
+            },
+            {
+              "t": 160,
+              "distance": 589.4,
+              "speed": 255.5,
+              "mode": "break",
+              "ammo": 344
+            },
+            {
+              "t": 170,
+              "distance": 476.6,
+              "speed": 206.7,
+              "mode": "attack",
+              "ammo": 320
+            },
+            {
+              "t": 180,
+              "distance": 737.3,
+              "speed": 146.2,
+              "mode": "attack",
+              "ammo": 304
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 4,
+                "distance_flown": 37630.3,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 35805.7,
+                "structure": 24,
+                "shield": 9.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 16.35,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                117.3,
+                45.6,
+                -2498.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36650.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -180.4,
+                -48.6,
+                -1849.5
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 36667
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 175.8,
+              "speed": 173.5,
+              "mode": "attack",
+              "ammo": 1176
+            },
+            {
+              "t": 20,
+              "distance": 568.3,
+              "speed": 198.3,
+              "mode": "attack",
+              "ammo": 1130
+            },
+            {
+              "t": 30,
+              "distance": 872,
+              "speed": 137.7,
+              "mode": "attack",
+              "ammo": 1062
+            },
+            {
+              "t": 40,
+              "distance": 425,
+              "speed": 244.5,
+              "mode": "break",
+              "ammo": 972
+            },
+            {
+              "t": 50,
+              "distance": 561.8,
+              "speed": 203.3,
+              "mode": "attack",
+              "ammo": 882
+            },
+            {
+              "t": 60,
+              "distance": 739,
+              "speed": 177.1,
+              "mode": "attack",
+              "ammo": 808
+            },
+            {
+              "t": 70,
+              "distance": 820,
+              "speed": 260.7,
+              "mode": "attack",
+              "ammo": 730
+            },
+            {
+              "t": 80,
+              "distance": 337.3,
+              "speed": 210.1,
+              "mode": "break",
+              "ammo": 674
+            },
+            {
+              "t": 90,
+              "distance": 613.5,
+              "speed": 181,
+              "mode": "attack",
+              "ammo": 632
+            },
+            {
+              "t": 100,
+              "distance": 833.9,
+              "speed": 132.6,
+              "mode": "attack",
+              "ammo": 598
+            },
+            {
+              "t": 110,
+              "distance": 454.7,
+              "speed": 249.5,
+              "mode": "break",
+              "ammo": 548
+            },
+            {
+              "t": 120,
+              "distance": 335.7,
+              "speed": 210.6,
+              "mode": "break",
+              "ammo": 508
+            },
+            {
+              "t": 130,
+              "distance": 725.9,
+              "speed": 176.1,
+              "mode": "attack",
+              "ammo": 470
+            },
+            {
+              "t": 140,
+              "distance": 853.3,
+              "speed": 208.3,
+              "mode": "attack",
+              "ammo": 432
+            },
+            {
+              "t": 150,
+              "distance": 720.4,
+              "speed": 258.9,
+              "mode": "break",
+              "ammo": 382
+            },
+            {
+              "t": 160,
+              "distance": 408.6,
+              "speed": 214.1,
+              "mode": "break",
+              "ammo": 348
+            },
+            {
+              "t": 170,
+              "distance": 807.4,
+              "speed": 125.5,
+              "mode": "attack",
+              "ammo": 336
+            },
+            {
+              "t": 180,
+              "distance": 720.3,
+              "speed": 259,
+              "mode": "break",
+              "ammo": 312
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 36667,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 36650.2,
+                "structure": 24,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 77.35,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                68.3,
+                -97.7,
+                -1029.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36488.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                708.3,
+                -251.2,
+                -801
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37068
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 735.7,
+              "speed": 151.7,
+              "mode": "attack",
+              "ammo": 1138
+            },
+            {
+              "t": 20,
+              "distance": 784.9,
+              "speed": 260.1,
+              "mode": "break",
+              "ammo": 1062
+            },
+            {
+              "t": 30,
+              "distance": 335.6,
+              "speed": 211.5,
+              "mode": "break",
+              "ammo": 970
+            },
+            {
+              "t": 40,
+              "distance": 619.2,
+              "speed": 199.2,
+              "mode": "attack",
+              "ammo": 894
+            },
+            {
+              "t": 50,
+              "distance": 836.8,
+              "speed": 111.4,
+              "mode": "attack",
+              "ammo": 828
+            },
+            {
+              "t": 60,
+              "distance": 423.4,
+              "speed": 246.4,
+              "mode": "break",
+              "ammo": 738
+            },
+            {
+              "t": 70,
+              "distance": 511.1,
+              "speed": 203.2,
+              "mode": "attack",
+              "ammo": 688
+            },
+            {
+              "t": 80,
+              "distance": 767.6,
+              "speed": 135.2,
+              "mode": "attack",
+              "ammo": 644
+            },
+            {
+              "t": 90,
+              "distance": 895.8,
+              "speed": 218.1,
+              "mode": "break",
+              "ammo": 602
+            },
+            {
+              "t": 100,
+              "distance": 797.4,
+              "speed": 207.9,
+              "mode": "attack",
+              "ammo": 558
+            },
+            {
+              "t": 110,
+              "distance": 547.7,
+              "speed": 254.5,
+              "mode": "break",
+              "ammo": 514
+            },
+            {
+              "t": 120,
+              "distance": 771,
+              "speed": 200.6,
+              "mode": "attack",
+              "ammo": 472
+            },
+            {
+              "t": 130,
+              "distance": 676.4,
+              "speed": 191.2,
+              "mode": "attack",
+              "ammo": 442
+            },
+            {
+              "t": 140,
+              "distance": 871,
+              "speed": 261.1,
+              "mode": "break",
+              "ammo": 406
+            },
+            {
+              "t": 150,
+              "distance": 470.6,
+              "speed": 250.7,
+              "mode": "break",
+              "ammo": 360
+            },
+            {
+              "t": 160,
+              "distance": 415.8,
+              "speed": 213,
+              "mode": "break",
+              "ammo": 340
+            },
+            {
+              "t": 170,
+              "distance": 689,
+              "speed": 187.4,
+              "mode": "attack",
+              "ammo": 320
+            },
+            {
+              "t": 180,
+              "distance": 696.8,
+              "speed": 258.4,
+              "mode": "break",
+              "ammo": 304
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 37068,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 36488.9,
+                "structure": 24,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.25,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -196.7,
+                -697.4,
+                -1687.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 31523.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                105.4,
+                -770.7,
+                -1195
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 36511.1
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 704,
+              "speed": 183.1,
+              "mode": "attack",
+              "ammo": 1132
+            },
+            {
+              "t": 20,
+              "distance": 673.7,
+              "speed": 157.5,
+              "mode": "attack",
+              "ammo": 1050
+            },
+            {
+              "t": 30,
+              "distance": 810.4,
+              "speed": 208,
+              "mode": "attack",
+              "ammo": 980
+            },
+            {
+              "t": 40,
+              "distance": 658.2,
+              "speed": 257.9,
+              "mode": "break",
+              "ammo": 894
+            },
+            {
+              "t": 50,
+              "distance": 364.4,
+              "speed": 195.3,
+              "mode": "break",
+              "ammo": 808
+            },
+            {
+              "t": 60,
+              "distance": 704.9,
+              "speed": 188.7,
+              "mode": "attack",
+              "ammo": 734
+            },
+            {
+              "t": 70,
+              "distance": 761.3,
+              "speed": 135.7,
+              "mode": "attack",
+              "ammo": 690
+            },
+            {
+              "t": 80,
+              "distance": 609,
+              "speed": 257.2,
+              "mode": "break",
+              "ammo": 642
+            },
+            {
+              "t": 90,
+              "distance": 436,
+              "speed": 213.3,
+              "mode": "break",
+              "ammo": 590
+            },
+            {
+              "t": 100,
+              "distance": 818.5,
+              "speed": 89.8,
+              "mode": "attack",
+              "ammo": 560
+            },
+            {
+              "t": 110,
+              "distance": 567.8,
+              "speed": 255.4,
+              "mode": "break",
+              "ammo": 518
+            },
+            {
+              "t": 120,
+              "distance": 339.7,
+              "speed": 204.2,
+              "mode": "break",
+              "ammo": 462
+            },
+            {
+              "t": 130,
+              "distance": 677.6,
+              "speed": 192.2,
+              "mode": "attack",
+              "ammo": 418
+            },
+            {
+              "t": 140,
+              "distance": 721.4,
+              "speed": 217.4,
+              "mode": "attack",
+              "ammo": 372
+            },
+            {
+              "t": 150,
+              "distance": 570.9,
+              "speed": 90.4,
+              "mode": "attack",
+              "ammo": 352
+            },
+            {
+              "t": 160,
+              "distance": 681.1,
+              "speed": 208.8,
+              "mode": "break",
+              "ammo": 336
+            },
+            {
+              "t": 170,
+              "distance": 626.7,
+              "speed": 259.7,
+              "mode": "break",
+              "ammo": 314
+            },
+            {
+              "t": 180,
+              "distance": 582.6,
+              "speed": 186.1,
+              "mode": "attack",
+              "ammo": 296
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 6,
+                "distance_flown": 36511.1,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 31523.4,
+                "structure": 24,
+                "shield": 5.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 35.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                395.7,
+                29.7,
+                -1735
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 37027.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                248.1,
+                -4.2,
+                -2466.4
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37456.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 285.3,
+              "speed": 76.6,
+              "mode": "attack",
+              "ammo": 1168
+            },
+            {
+              "t": 20,
+              "distance": 121.5,
+              "speed": 163.1,
+              "mode": "break",
+              "ammo": 1144
+            },
+            {
+              "t": 30,
+              "distance": 690.7,
+              "speed": 259.3,
+              "mode": "break",
+              "ammo": 1082
+            },
+            {
+              "t": 40,
+              "distance": 340.1,
+              "speed": 210.9,
+              "mode": "break",
+              "ammo": 996
+            },
+            {
+              "t": 50,
+              "distance": 598.4,
+              "speed": 199.4,
+              "mode": "attack",
+              "ammo": 920
+            },
+            {
+              "t": 60,
+              "distance": 838,
+              "speed": 111.8,
+              "mode": "attack",
+              "ammo": 854
+            },
+            {
+              "t": 70,
+              "distance": 490.1,
+              "speed": 250.2,
+              "mode": "break",
+              "ammo": 764
+            },
+            {
+              "t": 80,
+              "distance": 591.2,
+              "speed": 200.9,
+              "mode": "attack",
+              "ammo": 702
+            },
+            {
+              "t": 90,
+              "distance": 825.5,
+              "speed": 79.8,
+              "mode": "attack",
+              "ammo": 664
+            },
+            {
+              "t": 100,
+              "distance": 473.5,
+              "speed": 250.7,
+              "mode": "break",
+              "ammo": 614
+            },
+            {
+              "t": 110,
+              "distance": 398.1,
+              "speed": 267.4,
+              "mode": "evade",
+              "ammo": 564
+            },
+            {
+              "t": 120,
+              "distance": 416.2,
+              "speed": 215.6,
+              "mode": "break",
+              "ammo": 534
+            },
+            {
+              "t": 130,
+              "distance": 456.2,
+              "speed": 207.2,
+              "mode": "attack",
+              "ammo": 512
+            },
+            {
+              "t": 140,
+              "distance": 742.4,
+              "speed": 175.3,
+              "mode": "attack",
+              "ammo": 472
+            },
+            {
+              "t": 150,
+              "distance": 858.8,
+              "speed": 252.7,
+              "mode": "attack",
+              "ammo": 430
+            },
+            {
+              "t": 160,
+              "distance": 482.4,
+              "speed": 240.3,
+              "mode": "break",
+              "ammo": 380
+            },
+            {
+              "t": 170,
+              "distance": 361.8,
+              "speed": 193.1,
+              "mode": "break",
+              "ammo": 350
+            },
+            {
+              "t": 180,
+              "distance": 746.9,
+              "speed": 151.2,
+              "mode": "attack",
+              "ammo": 336
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 37456.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 37027.1,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 41.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -472.1,
+                421.3,
+                -286.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 37519.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -517.8,
+                494.3,
+                -190.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": null,
+              "distance_flown": 38382.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 136.1,
+              "speed": 260.5,
+              "mode": "break",
+              "ammo": 1170
+            },
+            {
+              "t": 20,
+              "distance": 390.9,
+              "speed": 207,
+              "mode": "break",
+              "ammo": 1108
+            },
+            {
+              "t": 30,
+              "distance": 835.4,
+              "speed": 111.9,
+              "mode": "attack",
+              "ammo": 1048
+            },
+            {
+              "t": 40,
+              "distance": 832.7,
+              "speed": 92.2,
+              "mode": "attack",
+              "ammo": 966
+            },
+            {
+              "t": 50,
+              "distance": 825.3,
+              "speed": 226.4,
+              "mode": "attack",
+              "ammo": 886
+            },
+            {
+              "t": 60,
+              "distance": 340.6,
+              "speed": 226.8,
+              "mode": "break",
+              "ammo": 794
+            },
+            {
+              "t": 70,
+              "distance": 592.5,
+              "speed": 198.3,
+              "mode": "attack",
+              "ammo": 726
+            },
+            {
+              "t": 80,
+              "distance": 810,
+              "speed": 111,
+              "mode": "attack",
+              "ammo": 692
+            },
+            {
+              "t": 90,
+              "distance": 691.1,
+              "speed": 258.5,
+              "mode": "break",
+              "ammo": 646
+            },
+            {
+              "t": 100,
+              "distance": 347.6,
+              "speed": 227.8,
+              "mode": "break",
+              "ammo": 600
+            },
+            {
+              "t": 110,
+              "distance": 700.7,
+              "speed": 191.9,
+              "mode": "attack",
+              "ammo": 556
+            },
+            {
+              "t": 120,
+              "distance": 698.9,
+              "speed": 167.7,
+              "mode": "attack",
+              "ammo": 512
+            },
+            {
+              "t": 130,
+              "distance": 857.2,
+              "speed": 259.5,
+              "mode": "break",
+              "ammo": 476
+            },
+            {
+              "t": 140,
+              "distance": 184.9,
+              "speed": 129.1,
+              "mode": "break",
+              "ammo": 448
+            },
+            {
+              "t": 150,
+              "distance": 417.7,
+              "speed": 245.8,
+              "mode": "break",
+              "ammo": 446
+            },
+            {
+              "t": 160,
+              "distance": 405.9,
+              "speed": 213.2,
+              "mode": "break",
+              "ammo": 392
+            },
+            {
+              "t": 170,
+              "distance": 633.2,
+              "speed": 198.6,
+              "mode": "attack",
+              "ammo": 354
+            },
+            {
+              "t": 180,
+              "distance": 128.7,
+              "speed": 255,
+              "mode": "break",
+              "ammo": 346
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 4,
+                "distance_flown": 38382.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 37519.8,
+                "structure": 24,
+                "shield": 9.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG DARTER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 32.95,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -1061.8,
+                -1205.9,
+                1013.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 36694.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -403.7,
+                -1111.1,
+                950.3
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37980.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 81.6,
+              "speed": 208.3,
+              "mode": "attack",
+              "ammo": 1174
+            },
+            {
+              "t": 20,
+              "distance": 454.9,
+              "speed": 207.3,
+              "mode": "attack",
+              "ammo": 1108
+            },
+            {
+              "t": 30,
+              "distance": 362.4,
+              "speed": 196.1,
+              "mode": "break",
+              "ammo": 1024
+            },
+            {
+              "t": 40,
+              "distance": 586.4,
+              "speed": 202.5,
+              "mode": "attack",
+              "ammo": 954
+            },
+            {
+              "t": 50,
+              "distance": 850,
+              "speed": 257.6,
+              "mode": "break",
+              "ammo": 884
+            },
+            {
+              "t": 60,
+              "distance": 137.9,
+              "speed": 226.1,
+              "mode": "break",
+              "ammo": 830
+            },
+            {
+              "t": 70,
+              "distance": 434.3,
+              "speed": 247.4,
+              "mode": "break",
+              "ammo": 792
+            },
+            {
+              "t": 80,
+              "distance": 503.4,
+              "speed": 205.9,
+              "mode": "attack",
+              "ammo": 714
+            },
+            {
+              "t": 90,
+              "distance": 650.5,
+              "speed": 189.3,
+              "mode": "attack",
+              "ammo": 674
+            },
+            {
+              "t": 100,
+              "distance": 873.9,
+              "speed": 187.8,
+              "mode": "attack",
+              "ammo": 630
+            },
+            {
+              "t": 110,
+              "distance": 427.9,
+              "speed": 246,
+              "mode": "break",
+              "ammo": 580
+            },
+            {
+              "t": 120,
+              "distance": 369.4,
+              "speed": 235,
+              "mode": "break",
+              "ammo": 532
+            },
+            {
+              "t": 130,
+              "distance": 361.3,
+              "speed": 202.6,
+              "mode": "break",
+              "ammo": 488
+            },
+            {
+              "t": 140,
+              "distance": 578.4,
+              "speed": 204.5,
+              "mode": "attack",
+              "ammo": 442
+            },
+            {
+              "t": 150,
+              "distance": 923.7,
+              "speed": 472.1,
+              "mode": "evade",
+              "ammo": 400
+            },
+            {
+              "t": 160,
+              "distance": 357.3,
+              "speed": 163.4,
+              "mode": "attack",
+              "ammo": 386
+            },
+            {
+              "t": 170,
+              "distance": 704,
+              "speed": 185.7,
+              "mode": "attack",
+              "ammo": 352
+            },
+            {
+              "t": 180,
+              "distance": 667.9,
+              "speed": 156.2,
+              "mode": "attack",
+              "ammo": 328
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 37980.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 36694.9,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 18.2,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                1264.8,
+                369.9,
+                -728.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 29861
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                1039,
+                313.6,
+                -462.5
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37827.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 747.5,
+              "speed": 167,
+              "mode": "attack",
+              "ammo": 1138
+            },
+            {
+              "t": 20,
+              "distance": 638.6,
+              "speed": 257.1,
+              "mode": "break",
+              "ammo": 1056
+            },
+            {
+              "t": 30,
+              "distance": 355.1,
+              "speed": 231.7,
+              "mode": "break",
+              "ammo": 970
+            },
+            {
+              "t": 40,
+              "distance": 455.7,
+              "speed": 205.9,
+              "mode": "attack",
+              "ammo": 878
+            },
+            {
+              "t": 50,
+              "distance": 227.1,
+              "speed": 256.1,
+              "mode": "break",
+              "ammo": 820
+            },
+            {
+              "t": 60,
+              "distance": 252.9,
+              "speed": 409.8,
+              "mode": "evade",
+              "ammo": 782
+            },
+            {
+              "t": 70,
+              "distance": 803.9,
+              "speed": 138.2,
+              "mode": "attack",
+              "ammo": 722
+            },
+            {
+              "t": 80,
+              "distance": 515.8,
+              "speed": 243.5,
+              "mode": "break",
+              "ammo": 676
+            },
+            {
+              "t": 90,
+              "distance": 336.9,
+              "speed": 215.2,
+              "mode": "break",
+              "ammo": 632
+            },
+            {
+              "t": 100,
+              "distance": 526.1,
+              "speed": 205.9,
+              "mode": "attack",
+              "ammo": 582
+            },
+            {
+              "t": 110,
+              "distance": 844.3,
+              "speed": 189.5,
+              "mode": "attack",
+              "ammo": 550
+            },
+            {
+              "t": 120,
+              "distance": 340.8,
+              "speed": 227.5,
+              "mode": "break",
+              "ammo": 500
+            },
+            {
+              "t": 130,
+              "distance": 436.8,
+              "speed": 255.5,
+              "mode": "break",
+              "ammo": 472
+            },
+            {
+              "t": 140,
+              "distance": 493.2,
+              "speed": 258.7,
+              "mode": "break",
+              "ammo": 434
+            },
+            {
+              "t": 150,
+              "distance": 629.1,
+              "speed": 260.6,
+              "mode": "break",
+              "ammo": 402
+            },
+            {
+              "t": 160,
+              "distance": 371.2,
+              "speed": 246.7,
+              "mode": "break",
+              "ammo": 360
+            },
+            {
+              "t": 170,
+              "distance": 397.1,
+              "speed": 252,
+              "mode": "break",
+              "ammo": 344
+            },
+            {
+              "t": 180,
+              "distance": 353.6,
+              "speed": 205,
+              "mode": "break",
+              "ammo": 320
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 14.7,
+                "hostile_hits": 7,
+                "distance_flown": 37827.6,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 29861,
+                "structure": 24,
+                "shield": 3.3,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 19.9,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -858.4,
+                -504.2,
+                -279.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 37489.9
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -1475.9,
+                -574.1,
+                298.6
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 38086.1
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 222.5,
+              "speed": 261.6,
+              "mode": "break",
+              "ammo": 1176
+            },
+            {
+              "t": 20,
+              "distance": 403.1,
+              "speed": 208.9,
+              "mode": "break",
+              "ammo": 1144
+            },
+            {
+              "t": 30,
+              "distance": 716.6,
+              "speed": 156.4,
+              "mode": "attack",
+              "ammo": 1074
+            },
+            {
+              "t": 40,
+              "distance": 696.8,
+              "speed": 259.2,
+              "mode": "break",
+              "ammo": 994
+            },
+            {
+              "t": 50,
+              "distance": 432.2,
+              "speed": 244.2,
+              "mode": "break",
+              "ammo": 906
+            },
+            {
+              "t": 60,
+              "distance": 491.5,
+              "speed": 204.9,
+              "mode": "attack",
+              "ammo": 822
+            },
+            {
+              "t": 70,
+              "distance": 615.7,
+              "speed": 201.5,
+              "mode": "attack",
+              "ammo": 738
+            },
+            {
+              "t": 80,
+              "distance": 670,
+              "speed": 185.4,
+              "mode": "attack",
+              "ammo": 692
+            },
+            {
+              "t": 90,
+              "distance": 821.5,
+              "speed": 86.6,
+              "mode": "attack",
+              "ammo": 648
+            },
+            {
+              "t": 100,
+              "distance": 896.3,
+              "speed": 248.2,
+              "mode": "attack",
+              "ammo": 606
+            },
+            {
+              "t": 110,
+              "distance": 341.8,
+              "speed": 228.5,
+              "mode": "break",
+              "ammo": 558
+            },
+            {
+              "t": 120,
+              "distance": 400.3,
+              "speed": 277.6,
+              "mode": "evade",
+              "ammo": 504
+            },
+            {
+              "t": 130,
+              "distance": 157.6,
+              "speed": 253.7,
+              "mode": "break",
+              "ammo": 492
+            },
+            {
+              "t": 140,
+              "distance": 432.9,
+              "speed": 238.6,
+              "mode": "break",
+              "ammo": 462
+            },
+            {
+              "t": 150,
+              "distance": 461.7,
+              "speed": 205.9,
+              "mode": "attack",
+              "ammo": 414
+            },
+            {
+              "t": 160,
+              "distance": 242.2,
+              "speed": 255.4,
+              "mode": "break",
+              "ammo": 386
+            },
+            {
+              "t": 170,
+              "distance": 782.3,
+              "speed": 207.4,
+              "mode": "attack",
+              "ammo": 366
+            },
+            {
+              "t": 180,
+              "distance": 848.8,
+              "speed": 260.7,
+              "mode": "break",
+              "ammo": 344
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 38086.1,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 37489.9,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 14.6,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                650,
+                407.4,
+                -1260.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35067.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                851.8,
+                331.8,
+                -997.3
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 37544.9
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 711.6,
+              "speed": 182.5,
+              "mode": "attack",
+              "ammo": 1140
+            },
+            {
+              "t": 20,
+              "distance": 735.3,
+              "speed": 249.2,
+              "mode": "break",
+              "ammo": 1068
+            },
+            {
+              "t": 30,
+              "distance": 375.2,
+              "speed": 202.1,
+              "mode": "break",
+              "ammo": 982
+            },
+            {
+              "t": 40,
+              "distance": 683.5,
+              "speed": 186.3,
+              "mode": "attack",
+              "ammo": 904
+            },
+            {
+              "t": 50,
+              "distance": 876.4,
+              "speed": 253.6,
+              "mode": "break",
+              "ammo": 836
+            },
+            {
+              "t": 60,
+              "distance": 395.8,
+              "speed": 206.1,
+              "mode": "break",
+              "ammo": 752
+            },
+            {
+              "t": 70,
+              "distance": 580.7,
+              "speed": 188.1,
+              "mode": "attack",
+              "ammo": 696
+            },
+            {
+              "t": 80,
+              "distance": 889.5,
+              "speed": 99,
+              "mode": "break",
+              "ammo": 664
+            },
+            {
+              "t": 90,
+              "distance": 882.6,
+              "speed": 259.7,
+              "mode": "break",
+              "ammo": 614
+            },
+            {
+              "t": 100,
+              "distance": 347.5,
+              "speed": 226,
+              "mode": "break",
+              "ammo": 560
+            },
+            {
+              "t": 110,
+              "distance": 651.6,
+              "speed": 188.7,
+              "mode": "attack",
+              "ammo": 526
+            },
+            {
+              "t": 120,
+              "distance": 803.4,
+              "speed": 134.2,
+              "mode": "attack",
+              "ammo": 490
+            },
+            {
+              "t": 130,
+              "distance": 426.1,
+              "speed": 245.1,
+              "mode": "break",
+              "ammo": 448
+            },
+            {
+              "t": 140,
+              "distance": 573.5,
+              "speed": 202.8,
+              "mode": "attack",
+              "ammo": 404
+            },
+            {
+              "t": 150,
+              "distance": 763.1,
+              "speed": 135.4,
+              "mode": "attack",
+              "ammo": 362
+            },
+            {
+              "t": 160,
+              "distance": 882.7,
+              "speed": 156.1,
+              "mode": "break",
+              "ammo": 340
+            },
+            {
+              "t": 170,
+              "distance": 411.9,
+              "speed": 240.4,
+              "mode": "break",
+              "ammo": 320
+            },
+            {
+              "t": 180,
+              "distance": 340.1,
+              "speed": 203.8,
+              "mode": "break",
+              "ammo": 298
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 4,
+                "distance_flown": 37544.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 35067.6,
+                "structure": 24,
+                "shield": 9.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 17.2,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                1210.3,
+                411,
+                -353.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35568.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                657.1,
+                479,
+                -960.3
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 38015
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 277.7,
+              "speed": 170.8,
+              "mode": "break",
+              "ammo": 1172
+            },
+            {
+              "t": 20,
+              "distance": 534.4,
+              "speed": 198.5,
+              "mode": "attack",
+              "ammo": 1090
+            },
+            {
+              "t": 30,
+              "distance": 903.7,
+              "speed": 89.5,
+              "mode": "attack",
+              "ammo": 1028
+            },
+            {
+              "t": 40,
+              "distance": 544.2,
+              "speed": 203.6,
+              "mode": "attack",
+              "ammo": 948
+            },
+            {
+              "t": 50,
+              "distance": 770.5,
+              "speed": 108.2,
+              "mode": "attack",
+              "ammo": 886
+            },
+            {
+              "t": 60,
+              "distance": 699.8,
+              "speed": 259.1,
+              "mode": "attack",
+              "ammo": 806
+            },
+            {
+              "t": 70,
+              "distance": 470.3,
+              "speed": 250.8,
+              "mode": "break",
+              "ammo": 720
+            },
+            {
+              "t": 80,
+              "distance": 580.9,
+              "speed": 201.4,
+              "mode": "attack",
+              "ammo": 678
+            },
+            {
+              "t": 90,
+              "distance": 881.1,
+              "speed": 81.5,
+              "mode": "attack",
+              "ammo": 640
+            },
+            {
+              "t": 100,
+              "distance": 450.2,
+              "speed": 248.4,
+              "mode": "break",
+              "ammo": 594
+            },
+            {
+              "t": 110,
+              "distance": 898.3,
+              "speed": 145.6,
+              "mode": "attack",
+              "ammo": 562
+            },
+            {
+              "t": 120,
+              "distance": 478.2,
+              "speed": 250.6,
+              "mode": "break",
+              "ammo": 518
+            },
+            {
+              "t": 130,
+              "distance": 565.2,
+              "speed": 202.9,
+              "mode": "attack",
+              "ammo": 470
+            },
+            {
+              "t": 140,
+              "distance": 866.7,
+              "speed": 93.4,
+              "mode": "break",
+              "ammo": 432
+            },
+            {
+              "t": 150,
+              "distance": 722.8,
+              "speed": 259,
+              "mode": "break",
+              "ammo": 390
+            },
+            {
+              "t": 160,
+              "distance": 332.1,
+              "speed": 217.7,
+              "mode": "break",
+              "ammo": 346
+            },
+            {
+              "t": 170,
+              "distance": 640.8,
+              "speed": 195.7,
+              "mode": "attack",
+              "ammo": 330
+            },
+            {
+              "t": 180,
+              "distance": 823.9,
+              "speed": 260.8,
+              "mode": "break",
+              "ammo": 312
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.2,
+                "hostile_hits": 2,
+                "distance_flown": 38015,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 35568.7,
+                "structure": 24,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -711.1,
+                -161,
+                4.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 35273.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -43.8,
+                -123.1,
+                -77
+              ],
+              "target": {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 36436.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 264.9,
+              "speed": 205.2,
+              "mode": "break",
+              "ammo": 1166
+            },
+            {
+              "t": 20,
+              "distance": 537.8,
+              "speed": 202.9,
+              "mode": "attack",
+              "ammo": 1084
+            },
+            {
+              "t": 30,
+              "distance": 886.6,
+              "speed": 143.7,
+              "mode": "attack",
+              "ammo": 1016
+            },
+            {
+              "t": 40,
+              "distance": 385.8,
+              "speed": 237.1,
+              "mode": "break",
+              "ammo": 924
+            },
+            {
+              "t": 50,
+              "distance": 470.1,
+              "speed": 208.1,
+              "mode": "attack",
+              "ammo": 832
+            },
+            {
+              "t": 60,
+              "distance": 770.9,
+              "speed": 160.2,
+              "mode": "attack",
+              "ammo": 760
+            },
+            {
+              "t": 70,
+              "distance": 493.9,
+              "speed": 243.1,
+              "mode": "break",
+              "ammo": 702
+            },
+            {
+              "t": 80,
+              "distance": 340.6,
+              "speed": 196.8,
+              "mode": "break",
+              "ammo": 648
+            },
+            {
+              "t": 90,
+              "distance": 680.4,
+              "speed": 192,
+              "mode": "attack",
+              "ammo": 608
+            },
+            {
+              "t": 100,
+              "distance": 852.4,
+              "speed": 79.1,
+              "mode": "attack",
+              "ammo": 572
+            },
+            {
+              "t": 110,
+              "distance": 591.6,
+              "speed": 255.6,
+              "mode": "break",
+              "ammo": 518
+            },
+            {
+              "t": 120,
+              "distance": 368.6,
+              "speed": 234.9,
+              "mode": "break",
+              "ammo": 472
+            },
+            {
+              "t": 130,
+              "distance": 602.9,
+              "speed": 199.9,
+              "mode": "attack",
+              "ammo": 428
+            },
+            {
+              "t": 140,
+              "distance": 799.4,
+              "speed": 94.7,
+              "mode": "attack",
+              "ammo": 386
+            },
+            {
+              "t": 150,
+              "distance": 537,
+              "speed": 255,
+              "mode": "break",
+              "ammo": 352
+            },
+            {
+              "t": 160,
+              "distance": 467.8,
+              "speed": 208,
+              "mode": "attack",
+              "ammo": 328
+            },
+            {
+              "t": 170,
+              "distance": 532.3,
+              "speed": 202.7,
+              "mode": "attack",
+              "ammo": 312
+            },
+            {
+              "t": 180,
+              "distance": 673.2,
+              "speed": 166.4,
+              "mode": "attack",
+              "ammo": 290
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 4,
+                "distance_flown": 36436.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 12.56,
+                "hostile_hits": 4,
+                "distance_flown": 35273.2,
+                "structure": 24,
+                "shield": 9.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-darter-fast-uncontrolled",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 0,
+        "win_rate": 0.0,
+        "time_to_kill_human_wins_only": {
+          "median": null,
+          "p25": null,
+          "p75": null
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

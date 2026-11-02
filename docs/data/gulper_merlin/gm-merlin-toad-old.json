@@ -1,0 +1,4488 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "ba1025cd5e4b26d4eae06cdf61c135c16d62615a",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "gm-merlin-toad-old": {
+      "name": "Merlin vs toad: old",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.55,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                947.4,
+                151.9,
+                1157.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12646.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                907.4,
+                147.2,
+                1022.1
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 21604.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 447.7,
+              "speed": 166.9,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 339.2,
+              "speed": 60.3,
+              "mode": "attack",
+              "ammo": 1102
+            },
+            {
+              "t": 30,
+              "distance": 156,
+              "speed": 139.9,
+              "mode": "break",
+              "ammo": 1058
+            },
+            {
+              "t": 40,
+              "distance": 89.1,
+              "speed": 133,
+              "mode": "break",
+              "ammo": 1046
+            },
+            {
+              "t": 50,
+              "distance": 224.8,
+              "speed": 75.2,
+              "mode": "break",
+              "ammo": 1030
+            },
+            {
+              "t": 60,
+              "distance": 293.4,
+              "speed": 171.4,
+              "mode": "break",
+              "ammo": 1026
+            },
+            {
+              "t": 70,
+              "distance": 60.1,
+              "speed": 168.5,
+              "mode": "break",
+              "ammo": 996
+            },
+            {
+              "t": 80,
+              "distance": 106.2,
+              "speed": 169.6,
+              "mode": "break",
+              "ammo": 984
+            },
+            {
+              "t": 90,
+              "distance": 174.2,
+              "speed": 147.3,
+              "mode": "break",
+              "ammo": 946
+            },
+            {
+              "t": 100,
+              "distance": 140.5,
+              "speed": 166.6,
+              "mode": "break",
+              "ammo": 936
+            },
+            {
+              "t": 110,
+              "distance": 142.5,
+              "speed": 46.2,
+              "mode": "break",
+              "ammo": 920
+            },
+            {
+              "t": 120,
+              "distance": 157.2,
+              "speed": 57.8,
+              "mode": "break",
+              "ammo": 904
+            },
+            {
+              "t": 130,
+              "distance": 303.6,
+              "speed": 86.1,
+              "mode": "attack",
+              "ammo": 836
+            },
+            {
+              "t": 140,
+              "distance": 324,
+              "speed": 72,
+              "mode": "attack",
+              "ammo": 778
+            },
+            {
+              "t": 150,
+              "distance": 250,
+              "speed": 87,
+              "mode": "break",
+              "ammo": 720
+            },
+            {
+              "t": 160,
+              "distance": 264.2,
+              "speed": 83.4,
+              "mode": "attack",
+              "ammo": 690
+            },
+            {
+              "t": 170,
+              "distance": 276.5,
+              "speed": 81.5,
+              "mode": "attack",
+              "ammo": 658
+            },
+            {
+              "t": 180,
+              "distance": 141.2,
+              "speed": 56.4,
+              "mode": "break",
+              "ammo": 624
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 200.93,
+                "hostile_hits": 126,
+                "distance_flown": 21604.2,
+                "structure": 33.38,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 94.42,
+                "hostile_hits": 32,
+                "distance_flown": 12646.3,
+                "structure": 109.07,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 8.6,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -571.1,
+                494.6,
+                -4749.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13523
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -672.7,
+                543.8,
+                -4828.9
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24813.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 180.6,
+              "speed": 159.7,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 496.8,
+              "speed": 121.9,
+              "mode": "attack",
+              "ammo": 1100
+            },
+            {
+              "t": 30,
+              "distance": 90.9,
+              "speed": 134.1,
+              "mode": "break",
+              "ammo": 1074
+            },
+            {
+              "t": 40,
+              "distance": 100.7,
+              "speed": 112.8,
+              "mode": "break",
+              "ammo": 1048
+            },
+            {
+              "t": 50,
+              "distance": 285.9,
+              "speed": 167.5,
+              "mode": "attack",
+              "ammo": 1002
+            },
+            {
+              "t": 60,
+              "distance": 114.9,
+              "speed": 159.8,
+              "mode": "break",
+              "ammo": 986
+            },
+            {
+              "t": 70,
+              "distance": 134.9,
+              "speed": 154.8,
+              "mode": "break",
+              "ammo": 974
+            },
+            {
+              "t": 80,
+              "distance": 112.9,
+              "speed": 150.7,
+              "mode": "break",
+              "ammo": 960
+            },
+            {
+              "t": 90,
+              "distance": 117.5,
+              "speed": 170.6,
+              "mode": "break",
+              "ammo": 950
+            },
+            {
+              "t": 100,
+              "distance": 175,
+              "speed": 136,
+              "mode": "break",
+              "ammo": 936
+            },
+            {
+              "t": 110,
+              "distance": 216.9,
+              "speed": 89.6,
+              "mode": "attack",
+              "ammo": 926
+            },
+            {
+              "t": 120,
+              "distance": 172.7,
+              "speed": 59,
+              "mode": "attack",
+              "ammo": 910
+            },
+            {
+              "t": 130,
+              "distance": 164.8,
+              "speed": 145.7,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 140,
+              "distance": 67.9,
+              "speed": 156.1,
+              "mode": "break",
+              "ammo": 886
+            },
+            {
+              "t": 150,
+              "distance": 101.2,
+              "speed": 150.4,
+              "mode": "break",
+              "ammo": 872
+            },
+            {
+              "t": 160,
+              "distance": 155,
+              "speed": 126.9,
+              "mode": "break",
+              "ammo": 858
+            },
+            {
+              "t": 170,
+              "distance": 118.7,
+              "speed": 170.9,
+              "mode": "break",
+              "ammo": 848
+            },
+            {
+              "t": 180,
+              "distance": 138,
+              "speed": 152.1,
+              "mode": "break",
+              "ammo": 834
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 176.59,
+                "hostile_hits": 90,
+                "distance_flown": 24813.6,
+                "structure": 35,
+                "shield": 80.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 53.46,
+                "hostile_hits": 17,
+                "distance_flown": 13523,
+                "structure": 133.41,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.65,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -6475.6,
+                171.2,
+                226.8
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13862.1
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -6627.3,
+                149,
+                158.2
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24995.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 462.1,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 111.5,
+              "speed": 153.8,
+              "mode": "break",
+              "ammo": 1114
+            },
+            {
+              "t": 30,
+              "distance": 45.3,
+              "speed": 166.9,
+              "mode": "break",
+              "ammo": 1102
+            },
+            {
+              "t": 40,
+              "distance": 81.6,
+              "speed": 148.7,
+              "mode": "break",
+              "ammo": 1094
+            },
+            {
+              "t": 50,
+              "distance": 113.7,
+              "speed": 133,
+              "mode": "break",
+              "ammo": 1066
+            },
+            {
+              "t": 60,
+              "distance": 236.5,
+              "speed": 55.7,
+              "mode": "attack",
+              "ammo": 1052
+            },
+            {
+              "t": 70,
+              "distance": 170.9,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 1036
+            },
+            {
+              "t": 80,
+              "distance": 203.8,
+              "speed": 89.2,
+              "mode": "break",
+              "ammo": 1018
+            },
+            {
+              "t": 90,
+              "distance": 171,
+              "speed": 174.4,
+              "mode": "break",
+              "ammo": 1006
+            },
+            {
+              "t": 100,
+              "distance": 65,
+              "speed": 150.9,
+              "mode": "break",
+              "ammo": 990
+            },
+            {
+              "t": 110,
+              "distance": 121,
+              "speed": 163.7,
+              "mode": "break",
+              "ammo": 978
+            },
+            {
+              "t": 120,
+              "distance": 131,
+              "speed": 170.4,
+              "mode": "break",
+              "ammo": 968
+            },
+            {
+              "t": 130,
+              "distance": 152.7,
+              "speed": 134.6,
+              "mode": "break",
+              "ammo": 952
+            },
+            {
+              "t": 140,
+              "distance": 186.4,
+              "speed": 174.5,
+              "mode": "break",
+              "ammo": 942
+            },
+            {
+              "t": 150,
+              "distance": 116.7,
+              "speed": 169.2,
+              "mode": "break",
+              "ammo": 928
+            },
+            {
+              "t": 160,
+              "distance": 133.5,
+              "speed": 126.6,
+              "mode": "break",
+              "ammo": 914
+            },
+            {
+              "t": 170,
+              "distance": 99.9,
+              "speed": 163.8,
+              "mode": "break",
+              "ammo": 902
+            },
+            {
+              "t": 180,
+              "distance": 168,
+              "speed": 162.6,
+              "mode": "break",
+              "ammo": 824
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 225.19,
+                "hostile_hits": 143,
+                "distance_flown": 24995.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 75.02,
+                "hostile_hits": 19,
+                "distance_flown": 13862.1,
+                "structure": 84.81,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.75,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -4771.4,
+                27.7,
+                -1428.7
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 14088.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -4937,
+                33.8,
+                -1412.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24802
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 63,
+              "speed": 76.2,
+              "mode": "break",
+              "ammo": 1152
+            },
+            {
+              "t": 20,
+              "distance": 218.1,
+              "speed": 170.7,
+              "mode": "break",
+              "ammo": 1136
+            },
+            {
+              "t": 30,
+              "distance": 161.6,
+              "speed": 155,
+              "mode": "break",
+              "ammo": 1130
+            },
+            {
+              "t": 40,
+              "distance": 620.2,
+              "speed": 65.9,
+              "mode": "attack",
+              "ammo": 1120
+            },
+            {
+              "t": 50,
+              "distance": 145.9,
+              "speed": 125,
+              "mode": "attack",
+              "ammo": 1068
+            },
+            {
+              "t": 60,
+              "distance": 73.9,
+              "speed": 91.8,
+              "mode": "break",
+              "ammo": 1030
+            },
+            {
+              "t": 70,
+              "distance": 260.2,
+              "speed": 139.7,
+              "mode": "break",
+              "ammo": 978
+            },
+            {
+              "t": 80,
+              "distance": 141.8,
+              "speed": 108.5,
+              "mode": "break",
+              "ammo": 948
+            },
+            {
+              "t": 90,
+              "distance": 185,
+              "speed": 174.4,
+              "mode": "break",
+              "ammo": 936
+            },
+            {
+              "t": 100,
+              "distance": 150.3,
+              "speed": 165.3,
+              "mode": "break",
+              "ammo": 920
+            },
+            {
+              "t": 110,
+              "distance": 101.3,
+              "speed": 152.1,
+              "mode": "break",
+              "ammo": 908
+            },
+            {
+              "t": 120,
+              "distance": 135.1,
+              "speed": 162,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 130,
+              "distance": 208.7,
+              "speed": 98,
+              "mode": "break",
+              "ammo": 880
+            },
+            {
+              "t": 140,
+              "distance": 100.5,
+              "speed": 160.3,
+              "mode": "break",
+              "ammo": 866
+            },
+            {
+              "t": 150,
+              "distance": 148.7,
+              "speed": 164.1,
+              "mode": "break",
+              "ammo": 852
+            },
+            {
+              "t": 160,
+              "distance": 168,
+              "speed": 146.9,
+              "mode": "break",
+              "ammo": 836
+            },
+            {
+              "t": 170,
+              "distance": 252.8,
+              "speed": 161.1,
+              "mode": "attack",
+              "ammo": 824
+            },
+            {
+              "t": 180,
+              "distance": 166.5,
+              "speed": 62.3,
+              "mode": "attack",
+              "ammo": 804
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 203.31,
+                "hostile_hits": 115,
+                "distance_flown": 24802,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 95.89,
+                "hostile_hits": 21,
+                "distance_flown": 14088.6,
+                "structure": 106.69,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.1,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -4907.2,
+                280.9,
+                -5292.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13394.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -5054.9,
+                284.5,
+                -5306.7
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24571.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 511,
+              "speed": 160.9,
+              "mode": "attack",
+              "ammo": 1154
+            },
+            {
+              "t": 20,
+              "distance": 313.6,
+              "speed": 160.4,
+              "mode": "break",
+              "ammo": 1128
+            },
+            {
+              "t": 30,
+              "distance": 364.7,
+              "speed": 131.4,
+              "mode": "break",
+              "ammo": 1076
+            },
+            {
+              "t": 40,
+              "distance": 92.2,
+              "speed": 159.4,
+              "mode": "break",
+              "ammo": 1064
+            },
+            {
+              "t": 50,
+              "distance": 229.6,
+              "speed": 145.2,
+              "mode": "attack",
+              "ammo": 1028
+            },
+            {
+              "t": 60,
+              "distance": 229,
+              "speed": 169,
+              "mode": "attack",
+              "ammo": 1016
+            },
+            {
+              "t": 70,
+              "distance": 348,
+              "speed": 117,
+              "mode": "attack",
+              "ammo": 998
+            },
+            {
+              "t": 80,
+              "distance": 57.7,
+              "speed": 170.1,
+              "mode": "break",
+              "ammo": 990
+            },
+            {
+              "t": 90,
+              "distance": 107.2,
+              "speed": 127.7,
+              "mode": "break",
+              "ammo": 984
+            },
+            {
+              "t": 100,
+              "distance": 137.3,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 974
+            },
+            {
+              "t": 110,
+              "distance": 177.4,
+              "speed": 160.3,
+              "mode": "break",
+              "ammo": 962
+            },
+            {
+              "t": 120,
+              "distance": 141.8,
+              "speed": 92.5,
+              "mode": "break",
+              "ammo": 948
+            },
+            {
+              "t": 130,
+              "distance": 187.9,
+              "speed": 61.2,
+              "mode": "break",
+              "ammo": 934
+            },
+            {
+              "t": 140,
+              "distance": 195.1,
+              "speed": 163.9,
+              "mode": "attack",
+              "ammo": 924
+            },
+            {
+              "t": 150,
+              "distance": 112.3,
+              "speed": 172.6,
+              "mode": "break",
+              "ammo": 908
+            },
+            {
+              "t": 160,
+              "distance": 132,
+              "speed": 169,
+              "mode": "break",
+              "ammo": 894
+            },
+            {
+              "t": 170,
+              "distance": 57.2,
+              "speed": 141.9,
+              "mode": "break",
+              "ammo": 882
+            },
+            {
+              "t": 180,
+              "distance": 148.5,
+              "speed": 53.4,
+              "mode": "break",
+              "ammo": 866
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 152.26,
+                "hostile_hits": 94,
+                "distance_flown": 24571.2,
+                "structure": 35,
+                "shield": 80.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.79,
+                "hostile_hits": 27,
+                "distance_flown": 13394.5,
+                "structure": 111.34,
+                "shield": 46.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.75,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -817.5,
+                52,
+                1807
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 11341.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -917.2,
+                161.3,
+                2141.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24526.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 255.3,
+              "speed": 165.3,
+              "mode": "break",
+              "ammo": 1148
+            },
+            {
+              "t": 20,
+              "distance": 302.5,
+              "speed": 169.4,
+              "mode": "break",
+              "ammo": 1054
+            },
+            {
+              "t": 30,
+              "distance": 136.4,
+              "speed": 130.5,
+              "mode": "break",
+              "ammo": 1012
+            },
+            {
+              "t": 40,
+              "distance": 155.9,
+              "speed": 163.3,
+              "mode": "break",
+              "ammo": 964
+            },
+            {
+              "t": 50,
+              "distance": 75.7,
+              "speed": 142.8,
+              "mode": "break",
+              "ammo": 952
+            },
+            {
+              "t": 60,
+              "distance": 253.8,
+              "speed": 138.2,
+              "mode": "attack",
+              "ammo": 940
+            },
+            {
+              "t": 70,
+              "distance": 150.6,
+              "speed": 62.5,
+              "mode": "break",
+              "ammo": 922
+            },
+            {
+              "t": 80,
+              "distance": 216.4,
+              "speed": 92.9,
+              "mode": "attack",
+              "ammo": 912
+            },
+            {
+              "t": 90,
+              "distance": 108.8,
+              "speed": 118.7,
+              "mode": "break",
+              "ammo": 900
+            },
+            {
+              "t": 100,
+              "distance": 387.2,
+              "speed": 74.5,
+              "mode": "attack",
+              "ammo": 872
+            },
+            {
+              "t": 110,
+              "distance": 150.9,
+              "speed": 172.8,
+              "mode": "break",
+              "ammo": 836
+            },
+            {
+              "t": 120,
+              "distance": 165.4,
+              "speed": 144.2,
+              "mode": "attack",
+              "ammo": 820
+            },
+            {
+              "t": 130,
+              "distance": 102.5,
+              "speed": 119.7,
+              "mode": "break",
+              "ammo": 812
+            },
+            {
+              "t": 140,
+              "distance": 173.5,
+              "speed": 164.1,
+              "mode": "break",
+              "ammo": 732
+            },
+            {
+              "t": 150,
+              "distance": 183.3,
+              "speed": 134.3,
+              "mode": "break",
+              "ammo": 664
+            },
+            {
+              "t": 160,
+              "distance": 306.8,
+              "speed": 173.9,
+              "mode": "break",
+              "ammo": 622
+            },
+            {
+              "t": 170,
+              "distance": 312.4,
+              "speed": 136.3,
+              "mode": "attack",
+              "ammo": 564
+            },
+            {
+              "t": 180,
+              "distance": 365.7,
+              "speed": 133.1,
+              "mode": "attack",
+              "ammo": 520
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 181.55,
+                "hostile_hits": 105,
+                "distance_flown": 24526.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65.75,
+                "hostile_hits": 21,
+                "distance_flown": 11341.8,
+                "structure": 77.35,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.65,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                1333.7,
+                -1233,
+                788.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12482.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                992.7,
+                -1247,
+                707.5
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24972.7
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 186.8,
+              "speed": 164.2,
+              "mode": "break",
+              "ammo": 1148
+            },
+            {
+              "t": 20,
+              "distance": 206.9,
+              "speed": 94.4,
+              "mode": "break",
+              "ammo": 1140
+            },
+            {
+              "t": 30,
+              "distance": 374.1,
+              "speed": 52.5,
+              "mode": "attack",
+              "ammo": 1132
+            },
+            {
+              "t": 40,
+              "distance": 29.5,
+              "speed": 139.7,
+              "mode": "break",
+              "ammo": 1092
+            },
+            {
+              "t": 50,
+              "distance": 525.2,
+              "speed": 160.8,
+              "mode": "break",
+              "ammo": 1072
+            },
+            {
+              "t": 60,
+              "distance": 236.7,
+              "speed": 146.6,
+              "mode": "break",
+              "ammo": 986
+            },
+            {
+              "t": 70,
+              "distance": 174.6,
+              "speed": 172.2,
+              "mode": "break",
+              "ammo": 934
+            },
+            {
+              "t": 80,
+              "distance": 239.5,
+              "speed": 152.2,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 90,
+              "distance": 286.3,
+              "speed": 168,
+              "mode": "break",
+              "ammo": 834
+            },
+            {
+              "t": 100,
+              "distance": 168.5,
+              "speed": 173.9,
+              "mode": "break",
+              "ammo": 794
+            },
+            {
+              "t": 110,
+              "distance": 159.1,
+              "speed": 109.7,
+              "mode": "attack",
+              "ammo": 782
+            },
+            {
+              "t": 120,
+              "distance": 310.7,
+              "speed": 138.8,
+              "mode": "attack",
+              "ammo": 692
+            },
+            {
+              "t": 130,
+              "distance": 276.9,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 644
+            },
+            {
+              "t": 140,
+              "distance": 212,
+              "speed": 150.9,
+              "mode": "break",
+              "ammo": 592
+            },
+            {
+              "t": 150,
+              "distance": 377.1,
+              "speed": 161.1,
+              "mode": "attack",
+              "ammo": 560
+            },
+            {
+              "t": 160,
+              "distance": 389.6,
+              "speed": 133.1,
+              "mode": "attack",
+              "ammo": 518
+            },
+            {
+              "t": 170,
+              "distance": 285.5,
+              "speed": 172.9,
+              "mode": "break",
+              "ammo": 476
+            },
+            {
+              "t": 180,
+              "distance": 350.7,
+              "speed": 126.1,
+              "mode": "attack",
+              "ammo": 434
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 273.83,
+                "hostile_hits": 144,
+                "distance_flown": 24972.7,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 50.21,
+                "hostile_hits": 16,
+                "distance_flown": 12482.7,
+                "structure": 26.65,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.4,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -399.4,
+                316.9,
+                -5701.3
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 13623.3
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -311.5,
+                322.8,
+                -5700.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24815.6
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 498.3,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 167.3,
+              "speed": 154.7,
+              "mode": "break",
+              "ammo": 1100
+            },
+            {
+              "t": 30,
+              "distance": 190.5,
+              "speed": 157.1,
+              "mode": "break",
+              "ammo": 1046
+            },
+            {
+              "t": 40,
+              "distance": 166.5,
+              "speed": 121.2,
+              "mode": "attack",
+              "ammo": 1022
+            },
+            {
+              "t": 50,
+              "distance": 420.7,
+              "speed": 100.3,
+              "mode": "attack",
+              "ammo": 1006
+            },
+            {
+              "t": 60,
+              "distance": 171.9,
+              "speed": 167.8,
+              "mode": "attack",
+              "ammo": 984
+            },
+            {
+              "t": 70,
+              "distance": 153.8,
+              "speed": 172.5,
+              "mode": "break",
+              "ammo": 972
+            },
+            {
+              "t": 80,
+              "distance": 153,
+              "speed": 167,
+              "mode": "attack",
+              "ammo": 962
+            },
+            {
+              "t": 90,
+              "distance": 110,
+              "speed": 135.9,
+              "mode": "break",
+              "ammo": 948
+            },
+            {
+              "t": 100,
+              "distance": 119.2,
+              "speed": 104.5,
+              "mode": "break",
+              "ammo": 936
+            },
+            {
+              "t": 110,
+              "distance": 171.1,
+              "speed": 150.5,
+              "mode": "break",
+              "ammo": 924
+            },
+            {
+              "t": 120,
+              "distance": 102.2,
+              "speed": 162.4,
+              "mode": "break",
+              "ammo": 912
+            },
+            {
+              "t": 130,
+              "distance": 205,
+              "speed": 103.5,
+              "mode": "break",
+              "ammo": 882
+            },
+            {
+              "t": 140,
+              "distance": 193.3,
+              "speed": 174.7,
+              "mode": "attack",
+              "ammo": 872
+            },
+            {
+              "t": 150,
+              "distance": 136.8,
+              "speed": 138.6,
+              "mode": "break",
+              "ammo": 856
+            },
+            {
+              "t": 160,
+              "distance": 150.8,
+              "speed": 103.4,
+              "mode": "break",
+              "ammo": 844
+            },
+            {
+              "t": 170,
+              "distance": 162.5,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 832
+            },
+            {
+              "t": 180,
+              "distance": 88.1,
+              "speed": 155.9,
+              "mode": "break",
+              "ammo": 818
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 195.24,
+                "hostile_hits": 114,
+                "distance_flown": 24815.6,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 43.79,
+                "hostile_hits": 14,
+                "distance_flown": 13623.3,
+                "structure": 114.76,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 11.45,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                512.1,
+                -42.8,
+                1540.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 14958.8
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                448.7,
+                -87.7,
+                1678.2
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24918.2
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 425.2,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 42.6,
+              "speed": 163.4,
+              "mode": "break",
+              "ammo": 1108
+            },
+            {
+              "t": 30,
+              "distance": 332.4,
+              "speed": 129.1,
+              "mode": "break",
+              "ammo": 1102
+            },
+            {
+              "t": 40,
+              "distance": 90.6,
+              "speed": 122.6,
+              "mode": "break",
+              "ammo": 1088
+            },
+            {
+              "t": 50,
+              "distance": 83.3,
+              "speed": 136.9,
+              "mode": "break",
+              "ammo": 1076
+            },
+            {
+              "t": 60,
+              "distance": 65.6,
+              "speed": 128.5,
+              "mode": "break",
+              "ammo": 1064
+            },
+            {
+              "t": 70,
+              "distance": 99.9,
+              "speed": 168.6,
+              "mode": "break",
+              "ammo": 1056
+            },
+            {
+              "t": 80,
+              "distance": 150.1,
+              "speed": 152.5,
+              "mode": "break",
+              "ammo": 1044
+            },
+            {
+              "t": 90,
+              "distance": 256.2,
+              "speed": 89.1,
+              "mode": "attack",
+              "ammo": 1032
+            },
+            {
+              "t": 100,
+              "distance": 126.1,
+              "speed": 147.6,
+              "mode": "break",
+              "ammo": 1012
+            },
+            {
+              "t": 110,
+              "distance": 126.4,
+              "speed": 126.7,
+              "mode": "attack",
+              "ammo": 976
+            },
+            {
+              "t": 120,
+              "distance": 163.3,
+              "speed": 90.1,
+              "mode": "attack",
+              "ammo": 968
+            },
+            {
+              "t": 130,
+              "distance": 143.5,
+              "speed": 91.1,
+              "mode": "break",
+              "ammo": 952
+            },
+            {
+              "t": 140,
+              "distance": 160.2,
+              "speed": 89.7,
+              "mode": "attack",
+              "ammo": 940
+            },
+            {
+              "t": 150,
+              "distance": 78.7,
+              "speed": 162.8,
+              "mode": "break",
+              "ammo": 930
+            },
+            {
+              "t": 160,
+              "distance": 182.3,
+              "speed": 87.8,
+              "mode": "break",
+              "ammo": 916
+            },
+            {
+              "t": 170,
+              "distance": 192.9,
+              "speed": 167.8,
+              "mode": "break",
+              "ammo": 904
+            },
+            {
+              "t": 180,
+              "distance": 158.2,
+              "speed": 174.1,
+              "mode": "break",
+              "ammo": 892
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 153.99,
+                "hostile_hits": 94,
+                "distance_flown": 24918.2,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 87.47,
+                "hostile_hits": 28,
+                "distance_flown": 14958.8,
+                "structure": 105.41,
+                "shield": 50.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 7.65,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -5175.9,
+                -86.1,
+                1634.5
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15034.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -5147.1,
+                -126.1,
+                1704.6
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24772.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 84.6,
+              "speed": 174.2,
+              "mode": "attack",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 155.2,
+              "speed": 169.9,
+              "mode": "break",
+              "ammo": 1132
+            },
+            {
+              "t": 30,
+              "distance": 141.8,
+              "speed": 172.2,
+              "mode": "attack",
+              "ammo": 1124
+            },
+            {
+              "t": 40,
+              "distance": 195.8,
+              "speed": 166.9,
+              "mode": "break",
+              "ammo": 1098
+            },
+            {
+              "t": 50,
+              "distance": 184.3,
+              "speed": 174.3,
+              "mode": "break",
+              "ammo": 1086
+            },
+            {
+              "t": 60,
+              "distance": 184.1,
+              "speed": 69.3,
+              "mode": "break",
+              "ammo": 1068
+            },
+            {
+              "t": 70,
+              "distance": 229.2,
+              "speed": 119.2,
+              "mode": "break",
+              "ammo": 1052
+            },
+            {
+              "t": 80,
+              "distance": 147.7,
+              "speed": 151.2,
+              "mode": "break",
+              "ammo": 1010
+            },
+            {
+              "t": 90,
+              "distance": 417.6,
+              "speed": 139.5,
+              "mode": "attack",
+              "ammo": 962
+            },
+            {
+              "t": 100,
+              "distance": 224.4,
+              "speed": 142.1,
+              "mode": "break",
+              "ammo": 944
+            },
+            {
+              "t": 110,
+              "distance": 96.4,
+              "speed": 57.1,
+              "mode": "break",
+              "ammo": 932
+            },
+            {
+              "t": 120,
+              "distance": 115.4,
+              "speed": 162.9,
+              "mode": "break",
+              "ammo": 922
+            },
+            {
+              "t": 130,
+              "distance": 115.7,
+              "speed": 129.3,
+              "mode": "break",
+              "ammo": 908
+            },
+            {
+              "t": 140,
+              "distance": 84.5,
+              "speed": 165.5,
+              "mode": "break",
+              "ammo": 900
+            },
+            {
+              "t": 150,
+              "distance": 168.9,
+              "speed": 160.8,
+              "mode": "attack",
+              "ammo": 888
+            },
+            {
+              "t": 160,
+              "distance": 123.7,
+              "speed": 132.3,
+              "mode": "break",
+              "ammo": 876
+            },
+            {
+              "t": 170,
+              "distance": 162.2,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 866
+            },
+            {
+              "t": 180,
+              "distance": 85.8,
+              "speed": 148,
+              "mode": "break",
+              "ammo": 854
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 158.72,
+                "hostile_hits": 87,
+                "distance_flown": 24772.8,
+                "structure": 35,
+                "shield": 77.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 79.78,
+                "hostile_hits": 20,
+                "distance_flown": 15034.4,
+                "structure": 106.98,
+                "shield": 44.3,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.25,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -2231,
+                -25,
+                1769.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12321.6
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -2337.5,
+                1.3,
+                1866.3
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 25033.7
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 495.7,
+              "speed": 62.5,
+              "mode": "attack",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 103.2,
+              "speed": 133.9,
+              "mode": "attack",
+              "ammo": 1108
+            },
+            {
+              "t": 30,
+              "distance": 228.5,
+              "speed": 164.5,
+              "mode": "break",
+              "ammo": 1090
+            },
+            {
+              "t": 40,
+              "distance": 50.2,
+              "speed": 167.9,
+              "mode": "break",
+              "ammo": 1080
+            },
+            {
+              "t": 50,
+              "distance": 117,
+              "speed": 152.8,
+              "mode": "break",
+              "ammo": 1054
+            },
+            {
+              "t": 60,
+              "distance": 65.3,
+              "speed": 164.9,
+              "mode": "break",
+              "ammo": 1016
+            },
+            {
+              "t": 70,
+              "distance": 111.9,
+              "speed": 170.9,
+              "mode": "break",
+              "ammo": 978
+            },
+            {
+              "t": 80,
+              "distance": 252.3,
+              "speed": 158.4,
+              "mode": "break",
+              "ammo": 944
+            },
+            {
+              "t": 90,
+              "distance": 238.5,
+              "speed": 88.1,
+              "mode": "attack",
+              "ammo": 898
+            },
+            {
+              "t": 100,
+              "distance": 257.9,
+              "speed": 90.4,
+              "mode": "attack",
+              "ammo": 880
+            },
+            {
+              "t": 110,
+              "distance": 188.9,
+              "speed": 173.3,
+              "mode": "break",
+              "ammo": 856
+            },
+            {
+              "t": 120,
+              "distance": 225.6,
+              "speed": 160.2,
+              "mode": "break",
+              "ammo": 826
+            },
+            {
+              "t": 130,
+              "distance": 198.7,
+              "speed": 87.9,
+              "mode": "break",
+              "ammo": 800
+            },
+            {
+              "t": 140,
+              "distance": 175.5,
+              "speed": 173.1,
+              "mode": "break",
+              "ammo": 778
+            },
+            {
+              "t": 150,
+              "distance": 190.8,
+              "speed": 164,
+              "mode": "break",
+              "ammo": 752
+            },
+            {
+              "t": 160,
+              "distance": 131.9,
+              "speed": 147.1,
+              "mode": "break",
+              "ammo": 728
+            },
+            {
+              "t": 170,
+              "distance": 214.2,
+              "speed": 104.7,
+              "mode": "break",
+              "ammo": 716
+            },
+            {
+              "t": 180,
+              "distance": 146.5,
+              "speed": 142.7,
+              "mode": "break",
+              "ammo": 704
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 215.75,
+                "hostile_hits": 149,
+                "distance_flown": 25033.7,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 25.2,
+                "hostile_hits": 8,
+                "distance_flown": 12321.6,
+                "structure": 94.25,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.75,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                242.5,
+                -632,
+                -2290.6
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15732.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                572.7,
+                -601.9,
+                -2393.3
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 20432.5
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 299.4,
+              "speed": 170.1,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 321.8,
+              "speed": 164.8,
+              "mode": "break",
+              "ammo": 1106
+            },
+            {
+              "t": 30,
+              "distance": 113.4,
+              "speed": 169,
+              "mode": "attack",
+              "ammo": 1064
+            },
+            {
+              "t": 40,
+              "distance": 299.8,
+              "speed": 156.9,
+              "mode": "break",
+              "ammo": 1040
+            },
+            {
+              "t": 50,
+              "distance": 124.5,
+              "speed": 164.7,
+              "mode": "break",
+              "ammo": 986
+            },
+            {
+              "t": 60,
+              "distance": 280.6,
+              "speed": 122.6,
+              "mode": "attack",
+              "ammo": 966
+            },
+            {
+              "t": 70,
+              "distance": 79.7,
+              "speed": 124.2,
+              "mode": "break",
+              "ammo": 920
+            },
+            {
+              "t": 80,
+              "distance": 56.4,
+              "speed": 75.2,
+              "mode": "break",
+              "ammo": 888
+            },
+            {
+              "t": 90,
+              "distance": 126.7,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 860
+            },
+            {
+              "t": 100,
+              "distance": 104.7,
+              "speed": 167.1,
+              "mode": "break",
+              "ammo": 854
+            },
+            {
+              "t": 110,
+              "distance": 123.4,
+              "speed": 72,
+              "mode": "break",
+              "ammo": 838
+            },
+            {
+              "t": 120,
+              "distance": 50.3,
+              "speed": 83.5,
+              "mode": "break",
+              "ammo": 836
+            },
+            {
+              "t": 130,
+              "distance": 106.8,
+              "speed": 96.7,
+              "mode": "break",
+              "ammo": 802
+            },
+            {
+              "t": 140,
+              "distance": 138.5,
+              "speed": 90.8,
+              "mode": "break",
+              "ammo": 784
+            },
+            {
+              "t": 150,
+              "distance": 75.7,
+              "speed": 93.3,
+              "mode": "break",
+              "ammo": 768
+            },
+            {
+              "t": 160,
+              "distance": 196.9,
+              "speed": 59.4,
+              "mode": "break",
+              "ammo": 768
+            },
+            {
+              "t": 170,
+              "distance": 123.2,
+              "speed": 51.4,
+              "mode": "break",
+              "ammo": 738
+            },
+            {
+              "t": 180,
+              "distance": 347.1,
+              "speed": 44.1,
+              "mode": "attack",
+              "ammo": 678
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 219.68,
+                "hostile_hits": 147,
+                "distance_flown": 20432.5,
+                "structure": 29.19,
+                "shield": 24.91,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 118.25,
+                "hostile_hits": 44,
+                "distance_flown": 15732.5,
+                "structure": 90.32,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.7,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                3040.7,
+                674.3,
+                -3882.4
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15755.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                3047.2,
+                703.3,
+                -3747
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 25196.7
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 109.3,
+              "speed": 173.4,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 469.8,
+              "speed": 128.5,
+              "mode": "attack",
+              "ammo": 1124
+            },
+            {
+              "t": 30,
+              "distance": 395.7,
+              "speed": 123.5,
+              "mode": "attack",
+              "ammo": 1062
+            },
+            {
+              "t": 40,
+              "distance": 119.4,
+              "speed": 172.2,
+              "mode": "break",
+              "ammo": 1042
+            },
+            {
+              "t": 50,
+              "distance": 133.8,
+              "speed": 164.8,
+              "mode": "break",
+              "ammo": 1028
+            },
+            {
+              "t": 60,
+              "distance": 153.8,
+              "speed": 152.8,
+              "mode": "break",
+              "ammo": 1010
+            },
+            {
+              "t": 70,
+              "distance": 189.6,
+              "speed": 155,
+              "mode": "attack",
+              "ammo": 996
+            },
+            {
+              "t": 80,
+              "distance": 210.3,
+              "speed": 167.2,
+              "mode": "attack",
+              "ammo": 990
+            },
+            {
+              "t": 90,
+              "distance": 326.3,
+              "speed": 113.2,
+              "mode": "break",
+              "ammo": 980
+            },
+            {
+              "t": 100,
+              "distance": 219.4,
+              "speed": 132.3,
+              "mode": "attack",
+              "ammo": 962
+            },
+            {
+              "t": 110,
+              "distance": 185.7,
+              "speed": 128.2,
+              "mode": "attack",
+              "ammo": 946
+            },
+            {
+              "t": 120,
+              "distance": 113.6,
+              "speed": 154.1,
+              "mode": "break",
+              "ammo": 916
+            },
+            {
+              "t": 130,
+              "distance": 158.4,
+              "speed": 168.4,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 140,
+              "distance": 126.6,
+              "speed": 172.3,
+              "mode": "break",
+              "ammo": 884
+            },
+            {
+              "t": 150,
+              "distance": 260.4,
+              "speed": 72.4,
+              "mode": "attack",
+              "ammo": 876
+            },
+            {
+              "t": 160,
+              "distance": 183.3,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 858
+            },
+            {
+              "t": 170,
+              "distance": 211.4,
+              "speed": 133.3,
+              "mode": "attack",
+              "ammo": 846
+            },
+            {
+              "t": 180,
+              "distance": 138.6,
+              "speed": 58.4,
+              "mode": "attack",
+              "ammo": 834
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 158.12,
+                "hostile_hits": 90,
+                "distance_flown": 25196.7,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 81.69,
+                "hostile_hits": 26,
+                "distance_flown": 15755.7,
+                "structure": 124.38,
+                "shield": 27.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 158.3,
+          "winner": "human",
+          "time_to_kill": 158.3,
+          "first_hit": {
+            "time": 8.05,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 168.5,
+              "speed": 166.6,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 108.1,
+              "speed": 81.8,
+              "mode": "break",
+              "ammo": 1144
+            },
+            {
+              "t": 30,
+              "distance": 152.7,
+              "speed": 125.9,
+              "mode": "break",
+              "ammo": 1094
+            },
+            {
+              "t": 40,
+              "distance": 72.9,
+              "speed": 85.3,
+              "mode": "break",
+              "ammo": 1086
+            },
+            {
+              "t": 50,
+              "distance": 149.7,
+              "speed": 76.7,
+              "mode": "break",
+              "ammo": 1078
+            },
+            {
+              "t": 60,
+              "distance": 113.3,
+              "speed": 135.4,
+              "mode": "attack",
+              "ammo": 1072
+            },
+            {
+              "t": 70,
+              "distance": 86,
+              "speed": 85.6,
+              "mode": "break",
+              "ammo": 1060
+            },
+            {
+              "t": 80,
+              "distance": 113.4,
+              "speed": 58,
+              "mode": "attack",
+              "ammo": 1052
+            },
+            {
+              "t": 90,
+              "distance": 147,
+              "speed": 167.6,
+              "mode": "attack",
+              "ammo": 1042
+            },
+            {
+              "t": 100,
+              "distance": 431.1,
+              "speed": 86.6,
+              "mode": "attack",
+              "ammo": 1018
+            },
+            {
+              "t": 110,
+              "distance": 178.9,
+              "speed": 137.2,
+              "mode": "attack",
+              "ammo": 964
+            },
+            {
+              "t": 120,
+              "distance": 164.3,
+              "speed": 31.1,
+              "mode": "attack",
+              "ammo": 960
+            },
+            {
+              "t": 130,
+              "distance": 18.3,
+              "speed": 37.1,
+              "mode": "break",
+              "ammo": 950
+            },
+            {
+              "t": 140,
+              "distance": 31.7,
+              "speed": 39.7,
+              "mode": "break",
+              "ammo": 924
+            },
+            {
+              "t": 150,
+              "distance": 70.6,
+              "speed": 44,
+              "mode": "attack",
+              "ammo": 924
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 234.74,
+                "hostile_hits": 188,
+                "distance_flown": 16503.6,
+                "structure": 7.16,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 128.88,
+                "hostile_hits": 48,
+                "distance_flown": 11247.2,
+                "structure": 75.26,
+                "shield": 0,
+                "death_time": 158.3,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 158.3,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.7,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -978,
+                -303,
+                -2371.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 17631.5
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -978.7,
+                -320.1,
+                -2493
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24965.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 243.7,
+              "speed": 142.4,
+              "mode": "break",
+              "ammo": 1146
+            },
+            {
+              "t": 20,
+              "distance": 353.2,
+              "speed": 133.7,
+              "mode": "break",
+              "ammo": 1092
+            },
+            {
+              "t": 30,
+              "distance": 390.1,
+              "speed": 122.2,
+              "mode": "attack",
+              "ammo": 1066
+            },
+            {
+              "t": 40,
+              "distance": 94.5,
+              "speed": 153,
+              "mode": "break",
+              "ammo": 1032
+            },
+            {
+              "t": 50,
+              "distance": 54.7,
+              "speed": 156.7,
+              "mode": "break",
+              "ammo": 1024
+            },
+            {
+              "t": 60,
+              "distance": 108.2,
+              "speed": 143.5,
+              "mode": "break",
+              "ammo": 1016
+            },
+            {
+              "t": 70,
+              "distance": 298.2,
+              "speed": 150.1,
+              "mode": "break",
+              "ammo": 962
+            },
+            {
+              "t": 80,
+              "distance": 192.4,
+              "speed": 62.9,
+              "mode": "attack",
+              "ammo": 948
+            },
+            {
+              "t": 90,
+              "distance": 289.8,
+              "speed": 171.4,
+              "mode": "break",
+              "ammo": 898
+            },
+            {
+              "t": 100,
+              "distance": 456.4,
+              "speed": 137.3,
+              "mode": "attack",
+              "ammo": 850
+            },
+            {
+              "t": 110,
+              "distance": 104.7,
+              "speed": 152.9,
+              "mode": "break",
+              "ammo": 830
+            },
+            {
+              "t": 120,
+              "distance": 584.8,
+              "speed": 125.5,
+              "mode": "attack",
+              "ammo": 776
+            },
+            {
+              "t": 130,
+              "distance": 333,
+              "speed": 132.2,
+              "mode": "break",
+              "ammo": 708
+            },
+            {
+              "t": 140,
+              "distance": 186.8,
+              "speed": 173.1,
+              "mode": "attack",
+              "ammo": 704
+            },
+            {
+              "t": 150,
+              "distance": 142.6,
+              "speed": 142.2,
+              "mode": "break",
+              "ammo": 694
+            },
+            {
+              "t": 160,
+              "distance": 129.4,
+              "speed": 164.3,
+              "mode": "break",
+              "ammo": 688
+            },
+            {
+              "t": 170,
+              "distance": 164.6,
+              "speed": 73.2,
+              "mode": "attack",
+              "ammo": 688
+            },
+            {
+              "t": 180,
+              "distance": 123.1,
+              "speed": 166.3,
+              "mode": "break",
+              "ammo": 674
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 171.98,
+                "hostile_hits": 70,
+                "distance_flown": 24965.8,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65.58,
+                "hostile_hits": 16,
+                "distance_flown": 17631.5,
+                "structure": 102.12,
+                "shield": 35.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 12.9,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -232.4,
+                -34.9,
+                -6165.9
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 12388.7
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -268.7,
+                -17.3,
+                -6270
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24750
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 97.5,
+              "speed": 162,
+              "mode": "attack",
+              "ammo": 1152
+            },
+            {
+              "t": 20,
+              "distance": 489.5,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 1130
+            },
+            {
+              "t": 30,
+              "distance": 263.8,
+              "speed": 168.5,
+              "mode": "break",
+              "ammo": 1046
+            },
+            {
+              "t": 40,
+              "distance": 137.2,
+              "speed": 162.4,
+              "mode": "break",
+              "ammo": 1016
+            },
+            {
+              "t": 50,
+              "distance": 89.8,
+              "speed": 135,
+              "mode": "break",
+              "ammo": 1000
+            },
+            {
+              "t": 60,
+              "distance": 98.5,
+              "speed": 167.6,
+              "mode": "break",
+              "ammo": 992
+            },
+            {
+              "t": 70,
+              "distance": 148.9,
+              "speed": 58,
+              "mode": "attack",
+              "ammo": 984
+            },
+            {
+              "t": 80,
+              "distance": 125.4,
+              "speed": 107.5,
+              "mode": "break",
+              "ammo": 970
+            },
+            {
+              "t": 90,
+              "distance": 232.7,
+              "speed": 65.1,
+              "mode": "attack",
+              "ammo": 956
+            },
+            {
+              "t": 100,
+              "distance": 290.7,
+              "speed": 124.7,
+              "mode": "attack",
+              "ammo": 926
+            },
+            {
+              "t": 110,
+              "distance": 270.1,
+              "speed": 154.6,
+              "mode": "break",
+              "ammo": 876
+            },
+            {
+              "t": 120,
+              "distance": 206.6,
+              "speed": 154.9,
+              "mode": "attack",
+              "ammo": 844
+            },
+            {
+              "t": 130,
+              "distance": 184,
+              "speed": 173.7,
+              "mode": "break",
+              "ammo": 826
+            },
+            {
+              "t": 140,
+              "distance": 152.1,
+              "speed": 172.3,
+              "mode": "break",
+              "ammo": 810
+            },
+            {
+              "t": 150,
+              "distance": 267.2,
+              "speed": 85,
+              "mode": "attack",
+              "ammo": 790
+            },
+            {
+              "t": 160,
+              "distance": 124.7,
+              "speed": 57.1,
+              "mode": "break",
+              "ammo": 772
+            },
+            {
+              "t": 170,
+              "distance": 101.6,
+              "speed": 168.2,
+              "mode": "break",
+              "ammo": 762
+            },
+            {
+              "t": 180,
+              "distance": 111.7,
+              "speed": 162.5,
+              "mode": "break",
+              "ammo": 742
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 215.45,
+                "hostile_hits": 85,
+                "distance_flown": 24750,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 34.56,
+                "hostile_hits": 11,
+                "distance_flown": 12388.7,
+                "structure": 94.55,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 96.7,
+          "winner": "human",
+          "time_to_kill": 96.7,
+          "first_hit": {
+            "time": 12.7,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 518.1,
+              "speed": 58.4,
+              "mode": "attack",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 101.1,
+              "speed": 103.1,
+              "mode": "attack",
+              "ammo": 1112
+            },
+            {
+              "t": 30,
+              "distance": 443.4,
+              "speed": 168.6,
+              "mode": "attack",
+              "ammo": 1108
+            },
+            {
+              "t": 40,
+              "distance": 76.5,
+              "speed": 61.3,
+              "mode": "break",
+              "ammo": 1044
+            },
+            {
+              "t": 50,
+              "distance": 139.8,
+              "speed": 168,
+              "mode": "break",
+              "ammo": 1036
+            },
+            {
+              "t": 60,
+              "distance": 109.3,
+              "speed": 128,
+              "mode": "break",
+              "ammo": 1030
+            },
+            {
+              "t": 70,
+              "distance": 290.4,
+              "speed": 53.8,
+              "mode": "attack",
+              "ammo": 998
+            },
+            {
+              "t": 80,
+              "distance": 130.6,
+              "speed": 55.1,
+              "mode": "attack",
+              "ammo": 930
+            },
+            {
+              "t": 90,
+              "distance": 61.2,
+              "speed": 37.4,
+              "mode": "break",
+              "ammo": 930
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 210.85,
+                "hostile_hits": 145,
+                "distance_flown": 10275.9,
+                "structure": 16.85,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 81.14,
+                "hostile_hits": 24,
+                "distance_flown": 9845.6,
+                "structure": 99.15,
+                "shield": 0,
+                "death_time": 96.7,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 96.7,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 12,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                -2059.3,
+                747.6,
+                -6901.2
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 14682.4
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                -2288.3,
+                824.3,
+                -6867.3
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 24175.9
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 62.7,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 1152
+            },
+            {
+              "t": 20,
+              "distance": 180.5,
+              "speed": 160.7,
+              "mode": "break",
+              "ammo": 1094
+            },
+            {
+              "t": 30,
+              "distance": 175.7,
+              "speed": 174.7,
+              "mode": "break",
+              "ammo": 1070
+            },
+            {
+              "t": 40,
+              "distance": 296,
+              "speed": 169.4,
+              "mode": "break",
+              "ammo": 996
+            },
+            {
+              "t": 50,
+              "distance": 548.2,
+              "speed": 134.4,
+              "mode": "attack",
+              "ammo": 954
+            },
+            {
+              "t": 60,
+              "distance": 135.7,
+              "speed": 143.2,
+              "mode": "break",
+              "ammo": 918
+            },
+            {
+              "t": 70,
+              "distance": 104.4,
+              "speed": 157.6,
+              "mode": "break",
+              "ammo": 914
+            },
+            {
+              "t": 80,
+              "distance": 158.6,
+              "speed": 128,
+              "mode": "attack",
+              "ammo": 908
+            },
+            {
+              "t": 90,
+              "distance": 126.8,
+              "speed": 146.6,
+              "mode": "break",
+              "ammo": 902
+            },
+            {
+              "t": 100,
+              "distance": 72.6,
+              "speed": 138.2,
+              "mode": "break",
+              "ammo": 896
+            },
+            {
+              "t": 110,
+              "distance": 170.6,
+              "speed": 142.7,
+              "mode": "break",
+              "ammo": 884
+            },
+            {
+              "t": 120,
+              "distance": 121.3,
+              "speed": 159.4,
+              "mode": "break",
+              "ammo": 876
+            },
+            {
+              "t": 130,
+              "distance": 172,
+              "speed": 120.6,
+              "mode": "break",
+              "ammo": 860
+            },
+            {
+              "t": 140,
+              "distance": 144.4,
+              "speed": 174,
+              "mode": "break",
+              "ammo": 852
+            },
+            {
+              "t": 150,
+              "distance": 97.8,
+              "speed": 87.6,
+              "mode": "break",
+              "ammo": 840
+            },
+            {
+              "t": 160,
+              "distance": 147.5,
+              "speed": 166.8,
+              "mode": "break",
+              "ammo": 828
+            },
+            {
+              "t": 170,
+              "distance": 194,
+              "speed": 72.6,
+              "mode": "attack",
+              "ammo": 814
+            },
+            {
+              "t": 180,
+              "distance": 243.8,
+              "speed": 174.9,
+              "mode": "break",
+              "ammo": 800
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 176.77,
+                "hostile_hits": 110,
+                "distance_flown": 24175.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 84.43,
+                "hostile_hits": 27,
+                "distance_flown": 14682.4,
+                "structure": 99.43,
+                "shield": 33.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 155.85,
+          "winner": "human",
+          "time_to_kill": 155.85,
+          "first_hit": {
+            "time": 7.75,
+            "attacker": "toad",
+            "attacker_callsign": "FROGG TOAD",
+            "target": "merlin",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 129.6,
+              "speed": 173.6,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 68.1,
+              "speed": 151.4,
+              "mode": "break",
+              "ammo": 1138
+            },
+            {
+              "t": 30,
+              "distance": 228,
+              "speed": 102.9,
+              "mode": "break",
+              "ammo": 1112
+            },
+            {
+              "t": 40,
+              "distance": 148.5,
+              "speed": 153.2,
+              "mode": "break",
+              "ammo": 1086
+            },
+            {
+              "t": 50,
+              "distance": 151.3,
+              "speed": 174.1,
+              "mode": "break",
+              "ammo": 1074
+            },
+            {
+              "t": 60,
+              "distance": 96.1,
+              "speed": 169,
+              "mode": "break",
+              "ammo": 1060
+            },
+            {
+              "t": 70,
+              "distance": 206,
+              "speed": 59.2,
+              "mode": "attack",
+              "ammo": 1044
+            },
+            {
+              "t": 80,
+              "distance": 187,
+              "speed": 67.6,
+              "mode": "break",
+              "ammo": 1034
+            },
+            {
+              "t": 90,
+              "distance": 161.5,
+              "speed": 150.2,
+              "mode": "attack",
+              "ammo": 1022
+            },
+            {
+              "t": 100,
+              "distance": 143.3,
+              "speed": 171.8,
+              "mode": "break",
+              "ammo": 1008
+            },
+            {
+              "t": 110,
+              "distance": 72.5,
+              "speed": 167.5,
+              "mode": "break",
+              "ammo": 998
+            },
+            {
+              "t": 120,
+              "distance": 36.3,
+              "speed": 170.9,
+              "mode": "break",
+              "ammo": 994
+            },
+            {
+              "t": 130,
+              "distance": 469.3,
+              "speed": 74,
+              "mode": "attack",
+              "ammo": 900
+            },
+            {
+              "t": 140,
+              "distance": 277.6,
+              "speed": 173.2,
+              "mode": "attack",
+              "ammo": 776
+            },
+            {
+              "t": 150,
+              "distance": 298.4,
+              "speed": 108.7,
+              "mode": "attack",
+              "ammo": 716
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 220.83,
+                "hostile_hits": 169,
+                "distance_flown": 21646.9,
+                "structure": 35,
+                "shield": 84,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 53.39,
+                "hostile_hits": 17,
+                "distance_flown": 11833,
+                "structure": 89.17,
+                "shield": 0,
+                "death_time": 155.85,
+                "killed_by": {
+                  "id": "merlin",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 155.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.3,
+            "attacker": "merlin",
+            "attacker_callsign": "H1",
+            "target": "toad",
+            "target_callsign": "FROGG TOAD"
+          },
+          "at_180_seconds": [
+            {
+              "team": "frogg",
+              "id": "toad",
+              "callsign": "FROGG TOAD",
+              "position": [
+                4325.6,
+                -183.5,
+                2929.1
+              ],
+              "target": {
+                "id": "merlin",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "merlin",
+                "callsign": "H1"
+              },
+              "distance_flown": 15230.2
+            },
+            {
+              "team": "human",
+              "id": "merlin",
+              "callsign": "H1",
+              "position": [
+                4398,
+                -168.8,
+                2996.2
+              ],
+              "target": {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "toad",
+                "callsign": "FROGG TOAD"
+              },
+              "distance_flown": 25038.8
+            }
+          ],
+          "flight_telemetry": [
+            {
+              "t": 10,
+              "distance": 291.3,
+              "speed": 169.4,
+              "mode": "break",
+              "ammo": 1150
+            },
+            {
+              "t": 20,
+              "distance": 169.2,
+              "speed": 165.4,
+              "mode": "break",
+              "ammo": 1124
+            },
+            {
+              "t": 30,
+              "distance": 60,
+              "speed": 156.3,
+              "mode": "break",
+              "ammo": 1106
+            },
+            {
+              "t": 40,
+              "distance": 501.1,
+              "speed": 107.2,
+              "mode": "attack",
+              "ammo": 1078
+            },
+            {
+              "t": 50,
+              "distance": 357,
+              "speed": 159.7,
+              "mode": "break",
+              "ammo": 1050
+            },
+            {
+              "t": 60,
+              "distance": 307.8,
+              "speed": 174.5,
+              "mode": "break",
+              "ammo": 988
+            },
+            {
+              "t": 70,
+              "distance": 306.8,
+              "speed": 144.1,
+              "mode": "break",
+              "ammo": 950
+            },
+            {
+              "t": 80,
+              "distance": 115,
+              "speed": 168.7,
+              "mode": "break",
+              "ammo": 924
+            },
+            {
+              "t": 90,
+              "distance": 157.2,
+              "speed": 168.8,
+              "mode": "break",
+              "ammo": 908
+            },
+            {
+              "t": 100,
+              "distance": 190.8,
+              "speed": 65.4,
+              "mode": "break",
+              "ammo": 898
+            },
+            {
+              "t": 110,
+              "distance": 187.6,
+              "speed": 174.2,
+              "mode": "break",
+              "ammo": 888
+            },
+            {
+              "t": 120,
+              "distance": 126.2,
+              "speed": 142.3,
+              "mode": "break",
+              "ammo": 872
+            },
+            {
+              "t": 130,
+              "distance": 108.6,
+              "speed": 172.4,
+              "mode": "break",
+              "ammo": 864
+            },
+            {
+              "t": 140,
+              "distance": 126.4,
+              "speed": 75.2,
+              "mode": "break",
+              "ammo": 852
+            },
+            {
+              "t": 150,
+              "distance": 137.1,
+              "speed": 157.2,
+              "mode": "break",
+              "ammo": 838
+            },
+            {
+              "t": 160,
+              "distance": 117.9,
+              "speed": 170.6,
+              "mode": "break",
+              "ammo": 828
+            },
+            {
+              "t": 170,
+              "distance": 144.2,
+              "speed": 173.5,
+              "mode": "break",
+              "ammo": 814
+            },
+            {
+              "t": 180,
+              "distance": 99.9,
+              "speed": 169.1,
+              "mode": "break",
+              "ammo": 800
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "merlin",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 165.87,
+                "hostile_hits": 113,
+                "distance_flown": 25038.8,
+                "structure": 35,
+                "shield": 80.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "toad",
+                "callsign": "FROGG TOAD",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 69.13,
+                "hostile_hits": 22,
+                "distance_flown": 15230.2,
+                "structure": 99.83,
+                "shield": 21.94,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "gm-merlin-toad-old",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 3,
+        "win_rate": 0.15,
+        "time_to_kill_human_wins_only": {
+          "median": 155.85,
+          "p25": 126.275,
+          "p75": 157.075
+        },
+        "human_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}
