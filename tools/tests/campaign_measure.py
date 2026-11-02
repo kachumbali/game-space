@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure all nine authored missions with the existing campaign pilot bot.
+"""Measure all thirteen authored missions with the existing campaign pilot bot.
 
 One page at a time. Results include unfinished runs separately from losses.
 Usage: python3 tools/tests/campaign_measure.py [seed-count] [output.json]
@@ -20,7 +20,7 @@ count = int(sys.argv[1]) if len(sys.argv) > 1 else 20
 output = Path(sys.argv[2]) if len(sys.argv) > 2 else Path('campaign_measure.json')
 results = []
 with Runner() as runner:
-    for campaign, number in [('prologue', 4), ('severed_node', 5)]:
+    for campaign, number in [('prologue', 4), ('long_retreat', 4), ('severed_node', 5)]:
         for mission in range(1, number + 1):
             for seed in range(1, count + 1):
                 for context in list(runner.b.contexts): context.close()
@@ -37,7 +37,7 @@ with Runner() as runner:
                 results.append(result)
                 output.write_text(json.dumps(results, indent=2))
                 print(result, flush=True)
-for campaign, number in [('prologue', 4), ('severed_node', 5)]:
+for campaign, number in [('prologue', 4), ('long_retreat', 4), ('severed_node', 5)]:
     for mission in range(1, number + 1):
         rows = [r for r in results if r['campaign'] == campaign and r['mission'] == mission]
         losses = sum(r['ended'] and r['result'] == 'lose' for r in rows)
