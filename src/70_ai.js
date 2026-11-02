@@ -138,6 +138,23 @@ function leadPoint(s, t, speed) {
   const tt = d / Math.max(50, speed);
   return _ao.copy(t.group.position).addScaledVector(rel, tt).addScaledVector(s.vel, 0);
 }
+// Optional exact intercept for a fixed projectile inheriting 90% of the
+// shooter's velocity (spawnBolt). Return null when no positive solution exists.
+function projectileInterceptTime(offset, relativeVel, speed) {
+  const a = relativeVel.dot(relativeVel) - speed * speed;
+  const b = 2 * offset.dot(relativeVel), c = offset.dot(offset);
+  if (Math.abs(a) < 1e-9) return b < 0 ? -c / b : null;
+  const disc = b * b - 4 * a * c;
+  if (disc < 0) return null;
+  const r = Math.sqrt(disc), t1 = (-b - r) / (2 * a), t2 = (-b + r) / (2 * a);
+  return t1 > 0 && t2 > 0 ? Math.min(t1, t2) : t1 > 0 ? t1 : t2 > 0 ? t2 : null;
+}
+function projectileInterceptPoint(s, t, speed) {
+  const offset = t.group.position.clone().sub(s.group.position);
+  const relativeVel = t.vel.clone().addScaledVector(s.vel, -0.9);
+  const seconds = projectileInterceptTime(offset, relativeVel, speed);
+  return seconds === null ? leadPoint(s, t, speed) : t.group.position.clone().addScaledVector(relativeVel, seconds);
+}
 const AI_TUNE = TUNE.ai;
 function primaryRange(s) {
   let r = 0;
@@ -396,7 +413,7 @@ function capitalAI(s, dt) {
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
   const want = isCapital(t) ? 1100 : 900;
   const rng = primaryRange(s);
-  const lp = leadPoint(s, t, primarySpeed(s));
+  const lp = s.def.ai?.interceptLead ? projectileInterceptPoint(s, t, primarySpeed(s)) : leadPoint(s, t, primarySpeed(s));
   if (!(sp && sp.st === 'lock')) turnToward(s, sAim ?? lp, dt, 1);   // charging: steer onto the XL aim point; heading frozen from the lock on
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);

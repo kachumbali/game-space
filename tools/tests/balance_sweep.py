@@ -115,6 +115,33 @@ for option in ('hp-shield', 'aim'):
         'gulper_option': option,
     }
 
+# Factorial isolation: each one-change cell starts from the same v0.5-era
+# hulls except the three explicitly toggled factors, so seed comparisons do
+# not silently conflate the fighter HP pass with the Gulper/PD changes.
+for variant in ('parent','hull-only','battery-only','fighter-pd-only','all-v05'):
+    SCENARIOS[f'gm-isolate-{variant}'] = {
+        'name': f'1 Falchion vs Gulper: {variant}',
+        'player_ship': 'falchion', 'wship': 'falchion', 'wing': 0,
+        'rows': [['gulper', 1]], 'human': [['falchion', 1]], 'frogg': [['gulper', 1]],
+        'gm_variant': variant,
+    }
+for count in (1,2):
+    for option in ('baseline','lead-shield','lead-regen'):
+        SCENARIOS[f'gm-falchion{count}-{option}'] = {
+            'name': f'{count} Falchion vs Gulper: {option}',
+            'player_ship':'falchion', 'wship':'falchion', 'wing':count-1,
+            'rows':[['gulper',1]], 'human':[['falchion',count]], 'frogg':[['gulper',1]],
+            'gm_option':option,
+        }
+for enemy in ('darter','leaper','spitter','reaver','toad'):
+    for speed in ('old','fast-uncontrolled','fast-controlled'):
+        SCENARIOS[f'gm-merlin-{enemy}-{speed}'] = {
+            'name':f'Merlin vs {enemy}: {speed}',
+            'player_ship':'merlin', 'wship':'merlin', 'wing':0,
+            'rows':[[enemy,1]], 'human':[['merlin',1]], 'frogg':[[enemy,1]],
+            'merlin_speed':speed, 'flight_telemetry':True,
+        }
+
 for wing in (0, 2):
   count = wing + 1
   scenario_id = f"g{count}"
@@ -282,6 +309,30 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
   }
   if(spec.no_missiles) for(const s of g.ships) if(s!==player && s.team===0)
     for(const id of Object.keys(s.stores)) if(g.WEAPONS[id]?.kind==='msl') s.stores[id]=0;
+  if(spec.merlin_speed) for(const s of g.ships) if(s!==player && s.team===0 && s.def.id==='merlin') {
+    s.def={...s.def, maxSpeed:spec.merlin_speed==='old'?175:262.5};
+    if(spec.merlin_speed==='fast-controlled') s.def.aiSpeed=140;
+    else delete s.def.aiSpeed;
+  }
+  if(spec.gm_variant) {
+    const v=spec.gm_variant;
+    for(const s of g.ships) {
+      if(s.def.id==='gulper') {
+        if(v!=='hull-only' && v!=='all-v05') {s.def={...s.def,structure:380};s.structure=380;}
+        if(v!=='battery-only' && v!=='all-v05') {
+          for(const t of s.turrets.filter(t=>['pd1','pd2','pd3'].includes(t.comp))) s.group.remove(t.group);
+          s.turrets=s.turrets.filter(t=>!['pd1','pd2','pd3'].includes(t.comp));
+        }
+      }
+      if(s!==player && s.team===0 && s.def.id==='falchion' && v!=='fighter-pd-only' && v!=='all-v05')
+        for(const t of s.turrets) if(t.wid==='pdS') {t.w=g.WEAPONS.pd;t.wid='pd';t.ammo=t.ammoMax=400;}
+    }
+  }
+  if(spec.gm_option && spec.gm_option!=='baseline') for(const s of g.ships) if(s.def.id==='gulper') {
+    const shield=spec.gm_option==='lead-shield' ? {fore:s.def.shield.fore*2,aft:s.def.shield.aft*2} : {...s.def.shield};
+    s.def={...s.def,shield,shieldRegen:spec.gm_option==='lead-regen' ? 6 : s.def.shieldRegen,ai:{...s.def.ai,interceptLead:true}};
+    s.shield={...shield};
+  }
   for(const s of g.ships) if(s.def.id==='gulper') {
     // Experimental harness-only candidates: no data or gameplay changes.
     if(spec.gulper_option==='hp-shield') {
@@ -292,6 +343,7 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
   }
   const roster=new Map(),damage=new Map(),hostileHits=new Map(),travel=new Map(),deathTime=new Map(),deathSource=new Map(),lastWeapons=new Map(),deathWeapons=new Map();
   let uid=0,sim=0,enemyKilledAt=null,humanKilledAt=null,firstHit=null,snapshot180=null;
+  const flightTelemetry=[];
   const register=()=>{
     for(const s of g.ships) if(s!==g.player&&!roster.has(s)){
       const key=`${s.team}:${s.def.id}:${s.callsign||'ship'}:${uid++}`;
@@ -315,6 +367,11 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
       before.set(s,{hp:hp(s),hits:s.hitsTaken||0,pos:s.group.position.clone(),alive:s.alive&&!s.dying});
     }
     g.update(0.05);sim=+(sim+0.05).toFixed(4);register();
+    if(spec.flight_telemetry && Math.round(sim*20)%200===0) {
+      const m=g.ships.find(x=>x.team===0&&x.def.id==='merlin'&&x.alive), e=m&&g.ships.find(x=>x.team===1&&x.alive&&!x.dying);
+      if(m&&e) flightTelemetry.push({t:sim,distance:+m.group.position.distanceTo(e.group.position).toFixed(1),
+        speed:+m.vel.length().toFixed(1),mode:m.ai.mode,ammo:Object.values(m.ammo||{}).reduce((a,b)=>a+b,0)});
+    }
     for(const h of g.ships.filter(s=>s.def.id==='hecla')){
       h.turrets.forEach((t,i)=>{
         if(t.fired>(turretCounts.get(`${i}`)||0)&&t.w.kind==='beam')
@@ -389,7 +446,7 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
       else if(f.survivors===0)winner='human';
       else if(h.survivors===0)winner='FROGG';
       return {sim_time:+sim.toFixed(2),winner,time_to_kill:enemyKilledAt,first_hit:firstHit,
-        at_180_seconds:snapshot180,human:h,frogg:f,enemy_killed_at:enemyKilledAt,human_killed_at:humanKilledAt};
+        at_180_seconds:snapshot180,flight_telemetry:flightTelemetry,human:h,frogg:f,enemy_killed_at:enemyKilledAt,human_killed_at:humanKilledAt};
     }
   };
   window.__balanceSweep=controller;

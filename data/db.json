@@ -445,7 +445,8 @@
         "rating": 0.3
       },
       "structure": 35,
-      "maxSpeed": 175,
+      "maxSpeed": 262.5,
+      "aiSpeed": 140,
       "accel": 95,
       "turn": 2.5,
       "shieldRegen": 0.8,

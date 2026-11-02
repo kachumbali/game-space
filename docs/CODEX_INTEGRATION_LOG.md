@@ -1,5 +1,22 @@
 # Codex local integration log — 2026-11-01
 
+## Gulper / Merlin experiments (Codex, `codex/gulper-merlin`)
+
+- Merlin max speed is 262.5; an authored AI cruise of 140 preserves the old
+  normal attack-speed command while leaving break/boost and player maximum at
+  the new value. The previously observed no-kill stall is not yet proven fixed.
+- Added a projectile intercept solver gated by an optional AI data flag;
+  Gulper default remains unchanged. Paired test-only lead+shield and lead+regen
+  candidates add no launchers or missiles. Five one-change isolation scenarios
+  cover the v0.5 Gulper hull, added R-5s and Falchion PD. Fifteen Merlin
+  scenarios include range/speed/mode/ammo telemetry.
+- Local build, DB validation, JS syntax, Python compilation and lead solver
+  positive/negative controls pass. No Chromium, 20-seed sweep, real-device
+  check or full gate was run locally, per owner instruction. Claude: execute
+  `merlin_speed_t.py`, `touch_qa_t.py`, `tools/check_branch.sh` and the 26
+  matching-seed experiments in `docs/GULPER_MERLIN_EXPERIMENTS.md`; report
+  effects and confirm no regressions before choosing either candidate.
+
 ## Balance v0.5 (Codex, `codex/balance-v05`)
 
 - Applied the exact structure table; component HP is independent of structure
