@@ -80,7 +80,8 @@ def t_friendly(R):
     r=pg.evaluate(js('''
       const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
       freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;
-      const gu=g.spawnShip('gulper',1,V(0,0,-700),V(0,0,-3000),{});freeze(gu);gu.ai.escort=null;
+      for(const c of ex.comps)if(c.role==='turret'||c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // dummy's guns off: after the M2 retune its turrets destroy the Bullfrog emitter (state 'off') or the friendly dummy before the test question is asked
+      const gu=g.spawnShip('gulper',1,V(0,0,-700),V(0,0,-3000),{});freeze(gu);gu.ai.escort=null;gu.structure=1e6;   // invulnerable dummy: the Exeter's turrets (M2 retune) would otherwise kill it within 70 s and clear the line by themselves
       g.update(0.05);const sp=bf.spine;const o={};
       stepN(70,()=>{ex.vel.set(0,0,0);gu.vel.set(0,0,0);gu.group.position.set(0,0,-700);bf.group.position.set(0,0,0);bf.vel.set(0,0,0);});
       o.stBlocked=sp.st;o.shots1=sp.shots.length;o.guHp=Math.round(gu.structure);
@@ -89,10 +90,10 @@ def t_friendly(R):
       stepN(30,()=>{ex.vel.set(0,0,0);bf.group.position.set(0,0,0);bf.vel.set(0,0,0);if(sp.st==='lock')return false;});
       o.stAfter=sp.st;
       // friendly enters the line during the lock: the shot must be held, then fizzle, never hit the friendly
-      const gu2=g.spawnShip('gulper',1,V(300,0,-700),V(0,0,-3000),{});freeze(gu2);gu2.ai.escort=null;
-      gu2.group.position.set(0,0,-700);const hp0=gu2.structure+gu2.shield.fore;
+      const gu2=g.spawnShip('gulper',1,V(300,0,-700),V(0,0,-3000),{});freeze(gu2);gu2.ai.escort=null;gu2.structure=1e6;
+      gu2.group.position.set(0,0,-700);const hp0=gu2.structure;
       stepN(20,()=>{ex.vel.set(0,0,0);gu2.vel.set(0,0,0);gu2.group.position.set(0,0,-700);bf.group.position.set(0,0,0);bf.vel.set(0,0,0);});
-      o.stFinal=sp.st;o.shots2=sp.shots.length;o.gu2hp=gu2.structure+gu2.shield.fore-hp0;o.log=__bf.log.filter(l=>l.ev==='fizzle');
+      o.stFinal=sp.st;o.shots2=sp.shots.length;o.gu2hp=gu2.structure-hp0;o.log=__bf.log.filter(l=>l.ev==='fizzle');
       return o;'''))
     print(json.dumps(r))
     check('no charge while a friendly is in the line', r['stBlocked']=='ready' and r['shots1']==0, f"st={r['stBlocked']} shots={r['shots1']}")
@@ -258,7 +259,8 @@ def t_warn(R):
     r=pg.evaluate(js('''
       g.player.team=0;g.player.group.position.set(0,0,-1500);g.player.vel.set(0,0,0);
       const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});bf.hangarCfg={count:0};const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
-      freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;g.update(0.05);const sp=bf.spine;const o={kinds:[]};
+      freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;for(const c of ex.comps)if(c.role==='turret'||c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // dummy's guns off: after the M2 retune its turrets destroy the Bullfrog emitter (state 'off') or the friendly dummy before the test question is asked
+      g.update(0.05);const sp=bf.spine;const o={kinds:[]};
       stepN(40,()=>{ex.vel.set(0,0,0);g.player.vel.set(0,0,0);g.player.group.position.set(0,0,-1500);bf.vel.set(0,0,0);bf.group.position.set(0,0,0);
         const w=g.warnState.spine;if(w&&!o.kinds.includes(w.kind+':'+w.lock))o.kinds.push(w.kind+':'+w.lock);if(sp.st==='lock')return false;});
       o.st=sp.st;return o;'''))
@@ -266,7 +268,7 @@ def t_warn(R):
     txt=pg.evaluate("(()=>{__game.updateHud();return document.getElementById('warn').textContent})()")
     print(json.dumps(r),repr(txt))
     check('warnState.spine set while charging at a friendly', len(r['kinds'])>0, str(r['kinds']))
-    check('HUD text during the lock', 'SPINE' in txt, repr(txt))
+    check('HUD text during the lock', 'LANCE' in txt or 'SPINE' in txt, repr(txt))   # the Bullfrog's weapon is named LANCE (warnName in the db)
 
 SC={'warn':t_warn,'spine':t_spine,'exeter':t_exeter,'xl_filter':t_xl_filter,'friendly':t_friendly,'arcs':t_arcs,'pd':t_pd,'hangar':t_hangar,'inst':t_inst,'blast':t_blast,'m3':t_m3}
 if __name__=='__main__':
