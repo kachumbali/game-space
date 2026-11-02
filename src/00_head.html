@@ -213,6 +213,7 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #bpause{left:8px;border-color:#ffd24a;color:#ffd24a}
   #brad{left:60px}
   #btur{left:112px;top:8px;width:44px;height:44px;font-size:11px;transform-origin:0 0}
+  #bdock{left:164px;top:8px;width:48px;height:44px;font-size:10px;transform-origin:0 0}
   #bsub{right:70px;top:30px;width:44px;height:44px;font-size:10px;transform-origin:100% 0}
   #thr{position:fixed;right:14px;bottom:30px;width:44px;height:160px;z-index:7;
     border:2px solid rgba(143,255,208,.7);border-radius:10px;background:rgba(10,30,24,.45)}
@@ -259,7 +260,7 @@ body.phone #pauseOv{padding:10px 14px;min-width:240px}body.phone #pauseOv .pt{fo
   #ets .er[data-pw=w] s.on{background:#ffb04a}#ets .er[data-pw=s] s.on{background:#6ac8ff}#ets .er[data-pw=e] s.on{background:#8fffa0}
   #ets .er span{width:14px;text-align:right}
   body:not(.touch) #ets{pointer-events:none}
-  body.touch #ets{bottom:146px}body.touch.phone #ets{bottom:122px;font-size:8px;min-width:116px}
+  body.touch #ets{bottom:146px;z-index:9;pointer-events:auto;touch-action:none}body.touch.phone #ets{bottom:122px;font-size:8px;min-width:116px}
 
   body.touch #tg,body.cine #tg{display:none}
   body.phone #tg{left:calc(50% + 66px);height:108px}
@@ -325,6 +326,7 @@ body.phone #opts .panel{padding:12px 16px;font-size:12px}body.phone #opts .orow{
   <div class="tbtn" id="bpause">&#10073;&#10073;</div>
   <div class="tbtn" id="brad">RAD</div>
   <div class="tbtn" id="btur">TUR</div>
+  <div class="tbtn" id="bdock">DOCK</div>
   <div class="tbtn" id="bmsl">MSL</div>
   <div class="tbtn" id="bflr">FLARE</div>
   <div class="tbtn" id="bboost">BOOST</div>

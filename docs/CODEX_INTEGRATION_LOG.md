@@ -1,5 +1,13 @@
 # Codex local integration log — 2026-11-01
 
+## Lane A touch parity — 2026-11-02 (work in progress)
+
+- Added a touch DOCK control bound to the existing docking action and raised the
+  ETS power widget above touch overlays so its controls can receive pointer input.
+- Build, database validation and input source syntax pass. Touch and Bullfrog
+  browser tests and real-device layout remain unverified; Bullfrog fixes are
+  still outstanding. Do not merge this partial lane as a completed fix.
+
 ## Purpose and branch
 
 This is a local-only integration branch for the Gemini handoff. It was created from
