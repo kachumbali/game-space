@@ -18,6 +18,22 @@
   `docs/CAMPAIGN_MEASUREMENT.md` for the remaining 180 runs and balance gate.
 - Wave sizes remain unmodified; there are no measured loss rates yet. The
   owner device-play gate remains outstanding.
+## C interim ordnance controls — 2026-11-02
+
+- Based on `origin/main` 5cbef17. Briefing buttons allow the player to load or
+  leave each authored missile magazine empty, including by touch. AI keeps its
+  database default. No capacities or balance values changed.
+- This is **not the requested individual station system**: existing database
+  entries have aggregate stores and generic launch points, with no physical
+  station capacities or eligible weapons. Existing fighter torpedoes are shown
+  as legacy fits, rather than silently removed. Physical station data, compatible
+  substitutions, launch geometry, stock validation and in-flight help remain.
+- Briefing integration is in `src/75_mission.js`, overlapping lane B. Merge
+  carefully, rebuild `index.html`, and run the branch gate. No device playtest.
+
+## Lane C finished by cloud session — 2026-11-02
+
+Per-station ordnance replaces the interim magazine toggle: `hardpoints` for Kestrel, Falchion, Merlin, Bittern in the db (validator checks ids, sizes, caps, allow lists, default load == stores, legacy torpedo flag), `src/77_ordnance.js`, `tools/tests/ordnance_t.py` (9 checks, green). AI keeps authored stores. Launch geometry, stock limits, models: not built. Swaps are unmeasured.
 
 ## Purpose and branch
 
