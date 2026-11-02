@@ -27,10 +27,15 @@ function ordnanceApply(p) {                                   // called at LAUNC
   if (ordnanceOverStock(p.def.id).length) return false;
   const touched = new Set(hp.flatMap(st => st.allow)), tot = ordnanceTotals(p.def.id);
   for (const w of touched) p.stores[w] = tot[w] || 0;
-  p.ordnanceLoad = hp.map(st => ({ id: st.id, wid: ordnanceChoice(p.def.id, st), remaining: ordnanceChoice(p.def.id, st) ? st.cap : 0, pos: st.pos.slice() }));
+  p.ordnanceLoad = hp.map(st => ({ id: st.id, wid: ordnanceChoice(p.def.id, st), allow: st.allow.slice(), cap: st.cap, remaining: ordnanceChoice(p.def.id, st) ? st.cap : 0, pos: st.pos.slice() }));
   return true;
 }
 function ordnanceLaunchStation(p, wid) {
+  // Tender rearm replenishes aggregate stores; restore only the selected
+  // stations, never capacity on an empty or differently configured rack.
+  const stations = p.ordnanceLoad.filter(x => x.wid === wid);
+  let refill = Math.max(0, Math.floor(p.stores[wid]) - stations.reduce((n, x) => n + x.remaining, 0));
+  for (const x of stations) { const n = Math.min(refill, x.cap - x.remaining); x.remaining += n; refill -= n; }
   const st = p.ordnanceLoad.find(x => x.wid === wid && x.remaining > 0);
   if (st) st.remaining--;
   return st;

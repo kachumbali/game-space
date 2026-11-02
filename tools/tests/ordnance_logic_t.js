@@ -13,8 +13,12 @@ vm.runInContext(`
   if (!ordnanceApply(p)) throw Error('valid load rejected');
   const a = ordnanceLaunchStation(p, 'ir');
   if (!a || a.id !== 'S1' || a.pos[0] !== 2.25) throw Error('wrong rail');
-  for (let i = 0; i < 3; i++) ordnanceLaunchStation(p, 'ir');
+  p.stores.ir--;
+  for (let i = 0; i < 3; i++) { ordnanceLaunchStation(p, 'ir'); p.stores.ir--; }
+  p.stores.ir = 0;
   if (ordnanceLaunchStation(p, 'ir') !== undefined) throw Error('empty station fired');
+  p.stores.ir = 1;
+  if (!ordnanceLaunchStation(p, 'ir')) throw Error('selected rail not rearmed');
   if (!ordnanceLaunchStation(p, 'rf')) throw Error('other station lost');
 `, ctx);
 assert.ok(db.ships.kestrel.hardpoints.every(s => s.pos.length === 3));

@@ -231,8 +231,9 @@ function launchMissile(s, wid) {
   const w = WEAPONS[wid];
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
-  const station = s === player && s.ordnanceLoad ? ordnanceLaunchStation(s, wid) : null;
-  if (s === player && s.ordnanceLoad && !station) return false;
+  const stationManaged = s === player && s.ordnanceLoad && s.ordnanceLoad.some(st => st.allow.includes(wid));
+  const station = stationManaged ? ordnanceLaunchStation(s, wid) : null;
+  if (stationManaged && !station) return false;
   const L = s.lock;
   const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;
   s.stores[wid]--;
