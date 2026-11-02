@@ -524,3 +524,6 @@ Re-ran every red test of the post-merge sweep one at a time on the merged build.
 
 ## P5 review by cloud session — 2026-11-02
 Codex's red-team AI pass (`7927281`: FROGG fighters prefer a nearby tender, AI big guns hold fire on fighters beyond 900 m, AI holds HE when a friendly is in the blast radius) verified with `tools/tests/p5_t.py` (9 checks, with positive controls). Fixed a missing semicolon. Not covered: R-12 pierce-vs-rail decision, GX-1-vs-hard-armour decision; no seeded balance run of the tender rule.
+
+## Capital ordnance P0-P3: Claude cloud verification (2026-11-02)
+Gate PASS on branch + main; `capital_schema_t`, `missile_budget_t` (caps 20/32/48, refusals, flat resources), `msl_t`, `ordnance_t` PASS. P0 damage table inserted in `docs/WEAPONS.md`, raw data in `docs/data/capital_missile_damage*`. Not run: real iPad/phone performance, drone/campaign suites.

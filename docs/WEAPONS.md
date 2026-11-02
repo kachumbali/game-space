@@ -185,3 +185,22 @@ Open, in priority order:
    an AP-rod XL.
 7. **HE splash + no AI blast awareness**: friendly fire at 50% in 8 m furballs, and `fireGuns` checks the line
    but not the neighbourhood.
+
+
+## Measured missile damage against capitals (P0, Claude cloud run 2026-11-02)
+
+Method: `python3 tools/tests/ttk_matrix.py ceiling --seeds 20 --jobs 1 --inpage --jitter --weapons ir,rf,tick,torp,tad --targets exeter,halberd,destroyer,gulper,bullfrog`, then `capital_damage_report.py`. Median net shield-plus-structure pool loss of the first missile over 20 seeds (misses count as zero), head / side aspect. This is the ceiling rig, not a duel, and it excludes component-only damage. Raw: `docs/data/capital_missile_damage_raw.json`, `docs/data/capital_missile_damage.csv`.
+
+| Weapon | exeter head/side | halberd head/side | destroyer head/side | gulper head/side | bullfrog head/side |
+|---|---|---|---|---|---|
+| ir | 210 / 210 | 210 / 210 | 210 / 210 | 202 / 202 | 210 / 210 |
+| rf | 240 / 240 | 225 / 236 | 240 / 240 | 209 / 215 | 240 / 240 |
+| tick | 228 / 228 | 221 / 226 | 228 / 228 | 205 / 206 | 228 / 228 |
+| torp | 280 / 280 | 227 / 251 | 280 / 280 | 217 / 212 | 280 / 280 |
+| tad | 310 / 310 | 235 / 278 | 310 / 310 | 248 / 225 | 310 / 310 |
+
+Pools (structure + fore/aft shield): exeter: 1800+900/800 | halberd: 460+220/220 | destroyer: 2700+1400/1200 | gulper: 480+200/160 | bullfrog: 3200+2000/1600.
+
+The old note that IR missiles cannot hurt an Exeter is out of date: one IR missile removes 210 pool points from it.
+
+Consequence: `tuning.missile.dmgCls` (capital 0.15) and `pierceCls` are in the database but unused, so every missile does full damage to every hull class. Whether to restore a class-damage rule is an open owner decision (see `docs/DESIGN_CAPITAL_ORDNANCE.md`, Q7).
