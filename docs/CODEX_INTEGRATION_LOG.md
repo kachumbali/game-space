@@ -1,5 +1,18 @@
 # Codex local integration log — 2026-11-01
 
+## C interim ordnance controls — 2026-11-02
+
+- Based on `origin/main` 5cbef17. Briefing buttons allow the player to load or
+  leave each authored missile magazine empty, including by touch. AI keeps its
+  database default. No capacities or balance values changed.
+- This is **not the requested individual station system**: existing database
+  entries have aggregate stores and generic launch points, with no physical
+  station capacities or eligible weapons. Existing fighter torpedoes are shown
+  as legacy fits, rather than silently removed. Physical station data, compatible
+  substitutions, launch geometry, stock validation and in-flight help remain.
+- Briefing integration is in `src/75_mission.js`, overlapping lane B. Merge
+  carefully, rebuild `index.html`, and run the branch gate. No device playtest.
+
 ## Purpose and branch
 
 This is a local-only integration branch for the Gemini handoff. It was created from

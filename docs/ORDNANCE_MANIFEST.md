@@ -1,7 +1,9 @@
 # Ordnance manifest and hardpoint rules
 
-Status: approved design contract; the current game displays fixed stores in a
-briefing but does not yet offer a pre-sortie selection screen.
+Status: approved design contract. The briefing offers interim magazine-level
+load/empty controls; individual physical station selection is not yet built.
+Existing fighter torpedoes are labelled legacy fits and retain their authored
+capacity pending a physical-station migration.
 
 ## Physical size classes
 
