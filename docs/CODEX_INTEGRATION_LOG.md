@@ -384,3 +384,6 @@ Re-ran every red test of the post-merge sweep one at a time on the merged build.
 - Build, database validation and JavaScript syntax pass. Browser behavior,
   seeded combat measurements and the full branch gate remain outstanding.
   Rebase on the newly merged main before publishing as instructed by owner.
+
+## P5 review by cloud session — 2026-11-02
+Codex's red-team AI pass (`7927281`: FROGG fighters prefer a nearby tender, AI big guns hold fire on fighters beyond 900 m, AI holds HE when a friendly is in the blast radius) verified with `tools/tests/p5_t.py` (9 checks, with positive controls). Fixed a missing semicolon. Not covered: R-12 pierce-vs-rail decision, GX-1-vs-hard-armour decision; no seeded balance run of the tender rule.
