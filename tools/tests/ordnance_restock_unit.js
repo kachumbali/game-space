@@ -1,0 +1,14 @@
+const fs = require('fs'), vm = require('vm'), assert = require('assert');
+const db = JSON.parse(fs.readFileSync('data/db.json', 'utf8'));
+const source = fs.readFileSync('src/55_ships.js', 'utf8');
+const code = source.slice(source.indexOf('function ordnanceRestock('), source.indexOf('function tenderTick('));
+const context = {}; vm.createContext(context); vm.runInContext(code, context);
+const cfg = db.tuning.ordnance.restock;
+const stores = {ir:0, rf:0, torp:0, nuke:0};
+const limits = {ir:1, rf:2, torp:2, nuke:1}, hold = {missile:2, torpedo:1};
+context.ordnanceRestock(stores, limits, hold, cfg, 4);
+assert.equal(stores.ir, 1); assert.equal(stores.rf, 1); assert.equal(stores.torp, 0.375);
+assert.equal(hold.missile, 0); assert.equal(stores.nuke, 0);
+context.ordnanceRestock(stores, limits, hold, cfg, 100);
+assert.equal(stores.rf, 1); assert.equal(stores.torp, 1); assert.equal(hold.torpedo, 0);
+console.log('finite tender restock, point budget, exhaustion and nuclear exclusion: OK');
