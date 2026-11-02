@@ -188,6 +188,32 @@ HECLA_INIT_SCRIPT = r"""(() => {
   });
 })();"""
 
+GULPER_PD_INIT_SCRIPT = r"""(() => {
+  const v = new URL(location.href).searchParams.get('sk_gulper_pd');
+  if (v === null) return;
+  Object.defineProperty(window, '__game', {
+    configurable: true,
+    set(g) {
+      const G = g.SHIPS.gulper;
+      const extra = [[8,14,-30],[-8,14,-30],[0,16,30],[0,-14,0],[12,10,50],[-12,10,50]];
+      const add = n => extra.slice(0, n).map((p, i) => ({ w: 'thorn', pos: p, comp: 'tur' + (i % 4 + 1), side: 1 }));
+      if (v === 'thorn4') G.turrets = G.turrets.map(t => ({ ...t, w: 'thorn' }));
+      if (v === 'plus3') G.turrets = G.turrets.concat(add(3));
+      if (v === 'plus6') G.turrets = G.turrets.concat(add(6));
+      Object.defineProperty(window, '__game', { configurable: true, writable: true, value: g });
+    },
+  });
+})();"""
+
+for _g in (1, 2):
+  for _v in ("base", "thorn4", "plus3", "plus6"):
+    SCENARIOS[f"gpd-g{_g}-{_v}"] = {
+      "name": f"2 Falchion vs {_g} Gulper (PD variant {_v})",
+      "player_ship": "falchion", "wship": "falchion", "wing": 1,
+      "gulper_pd": _v, "rows": [["gulper", _g]],
+      "human": [["falchion", 2]], "frogg": [["gulper", _g]],
+    }
+
 SETUP_JS = r"""([spec,seed,range,cap]) => {
   const g=__game,T=g.THREE;
   if(g.game.mode!=='skirmish') throw new Error('skirmish URL did not initialize');
@@ -502,10 +528,12 @@ def main() -> int:
                                     q["sk_ally"] = spec["ally"]
                                 if "hecla_laser_turrets" in spec:
                                     q["sk_hecla_lasers"] = str(spec["hecla_laser_turrets"])
+                                if "gulper_pd" in spec:
+                                    q["sk_gulper_pd"] = spec["gulper_pd"]
                                 err_start = len(runner.errs)
                                 page = runner.page(
                                     640, 360, "?" + urlencode(q),
-                                    init_script="window.requestAnimationFrame=()=>0;" + HECLA_INIT_SCRIPT,
+                                    init_script="window.requestAnimationFrame=()=>0;" + HECLA_INIT_SCRIPT + GULPER_PD_INIT_SCRIPT,
                                 )
                                 try:
                                     page.wait_for_function("window.__game?.game?.mode==='skirmish'", timeout=120000)
