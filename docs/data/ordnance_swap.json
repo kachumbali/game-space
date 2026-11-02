@@ -1,0 +1,4845 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "39c2bfdcec7852eb9372fdee92fc6769c2939725",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "ordnance-kestrel-ir": {
+      "name": "3 Kestrel vs 3 Darter + 3 Leaper + 3 Spitter (M1 ir)",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 63.7,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.25,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 39.87,
+                "hostile_hits": 9,
+                "distance_flown": 8120,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 63.7,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5147.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 35.65,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 44.59,
+                "hostile_hits": 8,
+                "distance_flown": 3135.6,
+                "structure": 0,
+                "shield": 12.65,
+                "death_time": 30.75,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 93.84,
+                "hostile_hits": 12,
+                "distance_flown": 9444,
+                "structure": 12.94,
+                "shield": 3.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 107.83,
+                "hostile_hits": 19,
+                "distance_flown": 9616.9,
+                "structure": 13.92,
+                "shield": 3.63,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 40.55,
+                "hostile_hits": 14,
+                "distance_flown": 9486.5,
+                "structure": 10.93,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6800.8,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 50.51,
+                "hostile_hits": 1,
+                "distance_flown": 7455.9,
+                "structure": 24.38,
+                "shield": 1.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32.75,
+                "hostile_hits": 1,
+                "distance_flown": 7738.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 6459.5,
+                "structure": 38,
+                "shield": 30.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 28.81,
+                "hostile_hits": 1,
+                "distance_flown": 6078.4,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1.25,
+                "hostile_hits": 1,
+                "distance_flown": 6226.3,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 63.7,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 63.7s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.5,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 9.8,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3225.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 21.15,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 10.6,
+                "hostile_hits": 4,
+                "distance_flown": 4139.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.5,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3221.9,
+                "structure": 0,
+                "shield": 36.85,
+                "death_time": 25.7,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 75.7,
+                "hostile_hits": 9,
+                "distance_flown": 5360.1,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 6363.2,
+                "structure": 13.4,
+                "shield": 8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 52.33,
+                "hostile_hits": 8,
+                "distance_flown": 5552.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 51.35,
+                "hostile_hits": 1,
+                "distance_flown": 3609.6,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 61.65,
+                "hostile_hits": 1,
+                "distance_flown": 3831.6,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 38.65,
+                "hostile_hits": 1,
+                "distance_flown": 3334.2,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2719.8,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3006.1,
+                "structure": 38,
+                "shield": 52.42,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2639.3,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 31.5,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 31.5s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 31.5s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 31.5s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 67.9,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.6,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 48.68,
+                "hostile_hits": 13,
+                "distance_flown": 3388.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 25.05,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 35.32,
+                "hostile_hits": 7,
+                "distance_flown": 6793.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 67.9,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 48.56,
+                "hostile_hits": 29,
+                "distance_flown": 4972.2,
+                "structure": 0,
+                "shield": 5.09,
+                "death_time": 46.55,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 67.48,
+                "hostile_hits": 15,
+                "distance_flown": 11511.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 87.5,
+                "hostile_hits": 18,
+                "distance_flown": 12373,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 35.66,
+                "hostile_hits": 17,
+                "distance_flown": 12385.1,
+                "structure": 14,
+                "shield": 16.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1.18,
+                "hostile_hits": 1,
+                "distance_flown": 7154.4,
+                "structure": 25,
+                "shield": 21.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 56.93,
+                "hostile_hits": 3,
+                "distance_flown": 8366.7,
+                "structure": 25,
+                "shield": 11.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 48.37,
+                "hostile_hits": 4,
+                "distance_flown": 6330.7,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 4899.7,
+                "structure": 4.48,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.18,
+                "hostile_hits": 3,
+                "distance_flown": 6019.5,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 41.46,
+                "hostile_hits": 3,
+                "distance_flown": 6723.2,
+                "structure": 31.5,
+                "shield": 40.35,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 67.9,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 67.9s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.9,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -153.7,
+                175.9,
+                -525.3
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 19745.9
+            },
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -213.4,
+                211,
+                -258.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": null,
+              "distance_flown": 33377.7
+            },
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                18.2,
+                189,
+                -617.3
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": null,
+              "distance_flown": 34087.1
+            },
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                268.3,
+                204.1,
+                -528.8
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 18746.2
+            },
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                132.9,
+                177.5,
+                -642.1
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 14182.8
+            },
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -3.5,
+                197.8,
+                -493.7
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 15246.1
+            },
+            {
+              "team": "frogg",
+              "id": "spitter",
+              "callsign": "FROGG SPITTER",
+              "position": [
+                -438.2,
+                283.4,
+                -638.2
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 17932.6
+            },
+            {
+              "team": "frogg",
+              "id": "spitter",
+              "callsign": "FROGG SPITTER",
+              "position": [
+                9901.6,
+                -167.8,
+                -15313.2
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "H1"
+              },
+              "distance_flown": 19536.4
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 67.81,
+                "hostile_hits": 26,
+                "distance_flown": 6423.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 53.25,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 85.76,
+                "hostile_hits": 37,
+                "distance_flown": 19745.9,
+                "structure": 11.03,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 139.46,
+                "hostile_hits": 30,
+                "distance_flown": 9440.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 78.2,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 1,
+            "losses": 2
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 12.6,
+                "hostile_hits": 4,
+                "distance_flown": 7824.2,
+                "structure": 1.05,
+                "shield": 0,
+                "death_time": 58.9,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 37.74,
+                "hostile_hits": 11,
+                "distance_flown": 33377.7,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 83.97,
+                "hostile_hits": 10,
+                "distance_flown": 34087.1,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32.62,
+                "hostile_hits": 5,
+                "distance_flown": 18746.2,
+                "structure": 25,
+                "shield": 27.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 67.92,
+                "hostile_hits": 2,
+                "distance_flown": 14182.8,
+                "structure": 4.65,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 38.54,
+                "hostile_hits": 2,
+                "distance_flown": 15246.1,
+                "structure": 17.97,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 61.46,
+                "hostile_hits": 4,
+                "distance_flown": 17932.6,
+                "structure": 38,
+                "shield": 33,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.5,
+                "hostile_hits": 1,
+                "distance_flown": 19536.4,
+                "structure": 3.6,
+                "shield": 13.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3037.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 40.45,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 7,
+            "losses": 2
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 68.55,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.6,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 87.48,
+                "hostile_hits": 8,
+                "distance_flown": 8251.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 68.55,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 14.67,
+                "hostile_hits": 2,
+                "distance_flown": 6694.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 49.35,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3079.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 21.45,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 57.12,
+                "hostile_hits": 8,
+                "distance_flown": 12889.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.45,
+                "hostile_hits": 18,
+                "distance_flown": 13028.2,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 23.33,
+                "hostile_hits": 5,
+                "distance_flown": 12851.8,
+                "structure": 13.95,
+                "shield": 7.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.98,
+                "hostile_hits": 2,
+                "distance_flown": 6981.5,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.39,
+                "hostile_hits": 2,
+                "distance_flown": 6958.2,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 24.74,
+                "hostile_hits": 1,
+                "distance_flown": 7075.6,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 27.69,
+                "hostile_hits": 1,
+                "distance_flown": 6621.8,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 3064,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 27,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 80.63,
+                "hostile_hits": 3,
+                "distance_flown": 6628.5,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 68.55,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 56.4,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.2,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "spitter",
+            "target_callsign": "FROGG SPITTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 54.98,
+                "hostile_hits": 15,
+                "distance_flown": 7612.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 56.4,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 21,
+                "hostile_hits": 4,
+                "distance_flown": 3699.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 29.35,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 37.32,
+                "hostile_hits": 12,
+                "distance_flown": 4959.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 39.95,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 80.94,
+                "hostile_hits": 16,
+                "distance_flown": 9877.7,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 131.48,
+                "hostile_hits": 17,
+                "distance_flown": 9036,
+                "structure": 14,
+                "shield": 13.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 44.55,
+                "hostile_hits": 20,
+                "distance_flown": 9168.3,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 41.5,
+                "hostile_hits": 2,
+                "distance_flown": 6772.5,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 4063.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 25.35,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 65.03,
+                "hostile_hits": 4,
+                "distance_flown": 6772.8,
+                "structure": 19.79,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5616.8,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 20.26,
+                "hostile_hits": 1,
+                "distance_flown": 5310.9,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5543.8,
+                "structure": 38,
+                "shield": 35.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 56.4,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 56.4s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 56.4s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 61.15,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.05,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 40.83,
+                "hostile_hits": 20,
+                "distance_flown": 7113.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 61.15,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 38.08,
+                "hostile_hits": 11,
+                "distance_flown": 5820.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 40.9,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 36.54,
+                "hostile_hits": 11,
+                "distance_flown": 2805.3,
+                "structure": 0,
+                "shield": 30.55,
+                "death_time": 18,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 57.02,
+                "hostile_hits": 7,
+                "distance_flown": 11045.9,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.39,
+                "hostile_hits": 8,
+                "distance_flown": 11577.7,
+                "structure": 14,
+                "shield": 10.13,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 38.66,
+                "hostile_hits": 17,
+                "distance_flown": 11241.4,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 91.79,
+                "hostile_hits": 2,
+                "distance_flown": 6069.6,
+                "structure": 16.42,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 21.01,
+                "hostile_hits": 1,
+                "distance_flown": 6408.6,
+                "structure": 23.22,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55.57,
+                "hostile_hits": 2,
+                "distance_flown": 6126.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6422.5,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5797.4,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 6264.2,
+                "structure": 32.88,
+                "shield": 20.32,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 61.15,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 61.1s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 61.1s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 80.5,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.9,
+            "attacker": "kestrel",
+            "attacker_callsign": "WING2",
+            "target": "leaper",
+            "target_callsign": "FROGG LEAPER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 77.35,
+                "hostile_hits": 7,
+                "distance_flown": 7101.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 60.2,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 54.98,
+                "hostile_hits": 17,
+                "distance_flown": 10501.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 80.5,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 10.5,
+                "hostile_hits": 3,
+                "distance_flown": 4094,
+                "structure": 19.36,
+                "shield": 40,
+                "death_time": 32.25,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 61.13,
+                "hostile_hits": 6,
+                "distance_flown": 15738.5,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 49.04,
+                "hostile_hits": 8,
+                "distance_flown": 11192,
+                "structure": 12.94,
+                "shield": 4.34,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 81.1,
+                "hostile_hits": 8,
+                "distance_flown": 15052.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 8018.7,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 60.26,
+                "hostile_hits": 2,
+                "distance_flown": 7689,
+                "structure": 23.73,
+                "shield": 3.33,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.65,
+                "hostile_hits": 4,
+                "distance_flown": 9847.1,
+                "structure": 19.98,
+                "shield": 1.4,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 9.88,
+                "hostile_hits": 4,
+                "distance_flown": 7798.7,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 11.77,
+                "hostile_hits": 1,
+                "distance_flown": 8220.9,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2768.7,
+                "structure": 0,
+                "shield": 24,
+                "death_time": 24.15,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 80.5,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 80.5s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 46.05,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.6,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 54.37,
+                "hostile_hits": 20,
+                "distance_flown": 4379.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 35.7,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.6,
+                "hostile_hits": 17,
+                "distance_flown": 6355,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 46.05,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 55.41,
+                "hostile_hits": 18,
+                "distance_flown": 2020.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 17.45,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 57.4,
+                "hostile_hits": 17,
+                "distance_flown": 8231.3,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 66.76,
+                "hostile_hits": 20,
+                "distance_flown": 8456.9,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.47,
+                "hostile_hits": 6,
+                "distance_flown": 8840.5,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1.95,
+                "hostile_hits": 1,
+                "distance_flown": 4844.4,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 20.01,
+                "hostile_hits": 1,
+                "distance_flown": 3969.6,
+                "structure": 21.46,
+                "shield": 9.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 44.52,
+                "hostile_hits": 2,
+                "distance_flown": 5580.1,
+                "structure": 24.85,
+                "shield": 1.3,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 110.54,
+                "hostile_hits": 3,
+                "distance_flown": 4571.2,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 43.12,
+                "hostile_hits": 2,
+                "distance_flown": 4478.7,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 1990.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 16.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 46.05,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 47.05,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.45,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 3,
+                "distance_flown": 3246.8,
+                "structure": 0,
+                "shield": 40,
+                "death_time": 25.55,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 36.99,
+                "hostile_hits": 9,
+                "distance_flown": 5383.7,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 41.75,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 65.3,
+                "hostile_hits": 14,
+                "distance_flown": 6338.1,
+                "structure": 0,
+                "shield": 1.79,
+                "death_time": 47.05,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 68.77,
+                "hostile_hits": 8,
+                "distance_flown": 8027.7,
+                "structure": 14,
+                "shield": 16.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 62.66,
+                "hostile_hits": 5,
+                "distance_flown": 8595.6,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 124.16,
+                "hostile_hits": 17,
+                "distance_flown": 9528.7,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 4846.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 40.8,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 30.59,
+                "hostile_hits": 1,
+                "distance_flown": 5557.2,
+                "structure": 22.41,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5185.3,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.13,
+                "hostile_hits": 1,
+                "distance_flown": 4806.6,
+                "structure": 38,
+                "shield": 35.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.15,
+                "hostile_hits": 1,
+                "distance_flown": 4780.7,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 47.14,
+                "hostile_hits": 3,
+                "distance_flown": 4221.3,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 47.05,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 47.0s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 10,
+          "console_errors": []
+        },
+        {
+          "sim_time": 57.8,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.4,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 34.4,
+                "hostile_hits": 10,
+                "distance_flown": 6974.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 57.8,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 28.47,
+                "hostile_hits": 4,
+                "distance_flown": 7207.7,
+                "structure": 0,
+                "shield": 40,
+                "death_time": 52.95,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 1,
+                "distance_flown": 2623.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 18.15,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 18.5,
+                "hostile_hits": 13,
+                "distance_flown": 6668.3,
+                "structure": 10.89,
+                "shield": 5.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 83.93,
+                "hostile_hits": 4,
+                "distance_flown": 10390,
+                "structure": 11.38,
+                "shield": 8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 69.82,
+                "hostile_hits": 11,
+                "distance_flown": 11085.2,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6025.8,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.7,
+                "hostile_hits": 1,
+                "distance_flown": 7197.8,
+                "structure": 25,
+                "shield": 26.85,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 52.59,
+                "hostile_hits": 2,
+                "distance_flown": 8038,
+                "structure": 1.85,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 56.45,
+                "hostile_hits": 3,
+                "distance_flown": 5809.5,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5172.4,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.13,
+                "hostile_hits": 1,
+                "distance_flown": 5712.6,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 57.8,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 57.8s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 57.8s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 11,
+          "console_errors": []
+        },
+        {
+          "sim_time": 180,
+          "winner": "time_cap",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.7,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": [
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "WING2",
+              "position": [
+                -917,
+                -559.6,
+                460.6
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER"
+              },
+              "distance_flown": 22564.4
+            },
+            {
+              "team": "frogg",
+              "id": "darter",
+              "callsign": "FROGG DARTER",
+              "position": [
+                -174.8,
+                -430.2,
+                492.9
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": null,
+              "distance_flown": 32644.2
+            },
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -672.3,
+                -532,
+                534.5
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 15526.3
+            },
+            {
+              "team": "frogg",
+              "id": "leaper",
+              "callsign": "FROGG LEAPER",
+              "position": [
+                -703,
+                -566.3,
+                395.4
+              ],
+              "target": {
+                "id": "kestrel",
+                "callsign": "H1",
+                "team": "human"
+              },
+              "last_attacker": {
+                "id": "kestrel",
+                "callsign": "WING2"
+              },
+              "distance_flown": 13127.2
+            },
+            {
+              "team": "human",
+              "id": "kestrel",
+              "callsign": "H1",
+              "position": [
+                -570.7,
+                -525.2,
+                489.6
+              ],
+              "target": {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "team": "frogg"
+              },
+              "last_attacker": {
+                "id": "darter",
+                "callsign": "FROGG DARTER"
+              },
+              "distance_flown": 22199.7
+            }
+          ],
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 62.5,
+                "hostile_hits": 24,
+                "distance_flown": 7985.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 57.25,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 194.83,
+                "hostile_hits": 84,
+                "distance_flown": 22564.4,
+                "structure": 40.18,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 169.64,
+                "hostile_hits": 45,
+                "distance_flown": 22199.7,
+                "structure": 50,
+                "shield": 80,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 2,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 91.22,
+                "hostile_hits": 17,
+                "distance_flown": 9123.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 50.55,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 54.44,
+                "hostile_hits": 14,
+                "distance_flown": 21248.3,
+                "structure": 0,
+                "shield": 8,
+                "death_time": 119.6,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 90.86,
+                "hostile_hits": 29,
+                "distance_flown": 32644.2,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 50.24,
+                "hostile_hits": 2,
+                "distance_flown": 10579.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 108.05,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.75,
+                "hostile_hits": 1,
+                "distance_flown": 15526.3,
+                "structure": 17.2,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 13127.2,
+                "structure": 5.26,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1862.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 12.85,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 48.48,
+                "hostile_hits": 2,
+                "distance_flown": 4515.6,
+                "structure": 6.28,
+                "shield": 0,
+                "death_time": 54.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3181.7,
+                "structure": 0,
+                "shield": 15.6,
+                "death_time": 26.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 3,
+            "losses": 6
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": null,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 180.0s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 12,
+          "console_errors": []
+        },
+        {
+          "sim_time": 48.8,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.3,
+            "attacker": "kestrel",
+            "attacker_callsign": "H1",
+            "target": "darter",
+            "target_callsign": "FROGG DARTER"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 2.1,
+                "hostile_hits": 1,
+                "distance_flown": 3294.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 25.75,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 55.5,
+                "hostile_hits": 10,
+                "distance_flown": 5902,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 48.8,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 74.09,
+                "hostile_hits": 9,
+                "distance_flown": 5299.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 40.3,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 19.49,
+                "hostile_hits": 7,
+                "distance_flown": 9765.3,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.75,
+                "hostile_hits": 5,
+                "distance_flown": 9677.7,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 124.24,
+                "hostile_hits": 27,
+                "distance_flown": 9037.3,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 47.08,
+                "hostile_hits": 1,
+                "distance_flown": 6329.3,
+                "structure": 25,
+                "shield": 11.1,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 58.79,
+                "hostile_hits": 1,
+                "distance_flown": 5339.3,
+                "structure": 25,
+                "shield": 28.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 56.73,
+                "hostile_hits": 1,
+                "distance_flown": 5663.9,
+                "structure": 25,
+                "shield": 28.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 25.18,
+                "hostile_hits": 2,
+                "distance_flown": 4975.7,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.97,
+                "hostile_hits": 2,
+                "distance_flown": 5127.6,
+                "structure": 36.05,
+                "shield": 10.95,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.62,
+                "hostile_hits": 1,
+                "distance_flown": 4626.7,
+                "structure": 18.06,
+                "shield": 10.35,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 48.8,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 13,
+          "console_errors": []
+        },
+        {
+          "sim_time": 94.75,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.2,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 66.81,
+                "hostile_hits": 22,
+                "distance_flown": 11410.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 91.35,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 68.3,
+                "hostile_hits": 26,
+                "distance_flown": 6014.9,
+                "structure": 0,
+                "shield": 30.55,
+                "death_time": 41.8,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 45.73,
+                "hostile_hits": 9,
+                "distance_flown": 12096.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 94.75,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 77.9,
+                "hostile_hits": 8,
+                "distance_flown": 18368.6,
+                "structure": 14,
+                "shield": 7.5,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 6.3,
+                "hostile_hits": 2,
+                "distance_flown": 4274.5,
+                "structure": 0,
+                "shield": 5.9,
+                "death_time": 19.9,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 94.14,
+                "hostile_hits": 16,
+                "distance_flown": 17480.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 49.43,
+                "hostile_hits": 1,
+                "distance_flown": 9386.4,
+                "structure": 23.72,
+                "shield": 5.87,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 11858,
+                "structure": 25,
+                "shield": 28.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 111.5,
+                "hostile_hits": 8,
+                "distance_flown": 8303.8,
+                "structure": 13.24,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3283.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 33,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 51.07,
+                "hostile_hits": 4,
+                "distance_flown": 8899.7,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 55.69,
+                "hostile_hits": 2,
+                "distance_flown": 9510.6,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 7,
+            "losses": 2
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 94.75,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 94.8s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 14,
+          "console_errors": []
+        },
+        {
+          "sim_time": 31.05,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.6,
+            "attacker": "spitter",
+            "attacker_callsign": "FROGG SPITTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 31.51,
+                "hostile_hits": 10,
+                "distance_flown": 2746.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 21.15,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 33.95,
+                "hostile_hits": 9,
+                "distance_flown": 4330.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.05,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 1587.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 13.9,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 29.99,
+                "hostile_hits": 13,
+                "distance_flown": 5693.1,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 40.98,
+                "hostile_hits": 6,
+                "distance_flown": 5984.8,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 51.7,
+                "hostile_hits": 10,
+                "distance_flown": 5460,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 32.75,
+                "hostile_hits": 1,
+                "distance_flown": 3598.6,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 40.34,
+                "hostile_hits": 1,
+                "distance_flown": 3707.2,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 52.82,
+                "hostile_hits": 1,
+                "distance_flown": 4523.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3384.3,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 46.75,
+                "hostile_hits": 1,
+                "distance_flown": 2828,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 60.9,
+                "hostile_hits": 3,
+                "distance_flown": 2981.5,
+                "structure": 21.74,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 31.05,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 31.1s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 15,
+          "console_errors": []
+        },
+        {
+          "sim_time": 61.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.65,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "WING2"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 28.99,
+                "hostile_hits": 8,
+                "distance_flown": 4210.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.1,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 28.41,
+                "hostile_hits": 14,
+                "distance_flown": 7584.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 61.65,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 40.47,
+                "hostile_hits": 16,
+                "distance_flown": 3214.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 24.75,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 5569.1,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 43.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 91.09,
+                "hostile_hits": 17,
+                "distance_flown": 11481.4,
+                "structure": 13.01,
+                "shield": 6.68,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 77.09,
+                "hostile_hits": 13,
+                "distance_flown": 11490.4,
+                "structure": 13.22,
+                "shield": 10,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 36.65,
+                "hostile_hits": 3,
+                "distance_flown": 7035.7,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1.87,
+                "hostile_hits": 1,
+                "distance_flown": 6920.7,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 50.9,
+                "hostile_hits": 1,
+                "distance_flown": 7764.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 38.23,
+                "hostile_hits": 4,
+                "distance_flown": 5234.2,
+                "structure": 9.87,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0.59,
+                "hostile_hits": 1,
+                "distance_flown": 6935.8,
+                "structure": 20.37,
+                "shield": 24,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 49.5,
+                "hostile_hits": 2,
+                "distance_flown": 5907.9,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 61.65,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 16,
+          "console_errors": []
+        },
+        {
+          "sim_time": 95.2,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.9,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 2103.6,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 18.55,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 38.82,
+                "hostile_hits": 15,
+                "distance_flown": 8797.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 95.2,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 57.33,
+                "hostile_hits": 34,
+                "distance_flown": 6188.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 46.5,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 22.38,
+                "hostile_hits": 14,
+                "distance_flown": 18338.1,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 67.88,
+                "hostile_hits": 31,
+                "distance_flown": 17575.3,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 116.92,
+                "hostile_hits": 30,
+                "distance_flown": 17770.6,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 26.23,
+                "hostile_hits": 6,
+                "distance_flown": 10678.6,
+                "structure": 23.13,
+                "shield": 16,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 59.41,
+                "hostile_hits": 11,
+                "distance_flown": 7111.9,
+                "structure": 21,
+                "shield": 16,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 86.73,
+                "hostile_hits": 3,
+                "distance_flown": 9428.6,
+                "structure": 25,
+                "shield": 28.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 15.27,
+                "hostile_hits": 8,
+                "distance_flown": 9498.1,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 33.09,
+                "hostile_hits": 2,
+                "distance_flown": 3984,
+                "structure": 6.04,
+                "shield": 0,
+                "death_time": 37.1,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 3.74,
+                "hostile_hits": 2,
+                "distance_flown": 8629.3,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 95.2,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 17,
+          "console_errors": []
+        },
+        {
+          "sim_time": 77.25,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 3.85,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 2,
+                "distance_flown": 6917.3,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 53.45,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 102.13,
+                "hostile_hits": 37,
+                "distance_flown": 7163.4,
+                "structure": 0,
+                "shield": 4.99,
+                "death_time": 58.9,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 94.65,
+                "hostile_hits": 33,
+                "distance_flown": 10089.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 77.25,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 118.59,
+                "hostile_hits": 23,
+                "distance_flown": 13104.6,
+                "structure": 14,
+                "shield": 15.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 19.49,
+                "hostile_hits": 7,
+                "distance_flown": 14512.1,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 145.79,
+                "hostile_hits": 27,
+                "distance_flown": 14740.3,
+                "structure": 14,
+                "shield": 11.7,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 4.55,
+                "hostile_hits": 2,
+                "distance_flown": 8382.8,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 74.95,
+                "hostile_hits": 2,
+                "distance_flown": 8206.6,
+                "structure": 25,
+                "shield": 15.13,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 3777.9,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 29.4,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 53.46,
+                "hostile_hits": 3,
+                "distance_flown": 5675.3,
+                "structure": 11.6,
+                "shield": 0,
+                "death_time": 54,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING2"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 8.01,
+                "hostile_hits": 1,
+                "distance_flown": 7900.1,
+                "structure": 38,
+                "shield": 45.6,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 45.49,
+                "hostile_hits": 4,
+                "distance_flown": 7832.2,
+                "structure": 36.05,
+                "shield": 13.05,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 7,
+            "losses": 2
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 77.25,
+          "odd": [],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 18,
+          "console_errors": []
+        },
+        {
+          "sim_time": 59.15,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 4.35,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "WING2"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 24,
+                "hostile_hits": 2,
+                "distance_flown": 3089,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 22.4,
+                "killed_by": {
+                  "id": "darter",
+                  "callsign": "FROGG DARTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 25.34,
+                "hostile_hits": 9,
+                "distance_flown": 8514.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 59.15,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 30.36,
+                "hostile_hits": 6,
+                "distance_flown": 5265.6,
+                "structure": 0,
+                "shield": 20.94,
+                "death_time": 40.2,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.45,
+                "hostile_hits": 3,
+                "distance_flown": 3823.4,
+                "structure": 0,
+                "shield": 8,
+                "death_time": 15.95,
+                "killed_by": {
+                  "id": "kestrel",
+                  "callsign": "WING1"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 78.39,
+                "hostile_hits": 10,
+                "distance_flown": 10193.4,
+                "structure": 14,
+                "shield": 14.32,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 90.65,
+                "hostile_hits": 11,
+                "distance_flown": 9720.3,
+                "structure": 14,
+                "shield": 8.88,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 1.9,
+                "hostile_hits": 1,
+                "distance_flown": 5501.1,
+                "structure": 22.64,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 39.88,
+                "hostile_hits": 1,
+                "distance_flown": 7544,
+                "structure": 21.01,
+                "shield": 0.26,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 73.23,
+                "hostile_hits": 2,
+                "distance_flown": 6209.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 48.17,
+                "hostile_hits": 1,
+                "distance_flown": 6058,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5516.9,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5453,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 8,
+            "losses": 1
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 59.15,
+          "odd": [
+            "frogg:FROGG SPITTER recorded no hostile hits in 59.1s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 59.1s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 19,
+          "console_errors": []
+        },
+        {
+          "sim_time": 60.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 5.8,
+            "attacker": "darter",
+            "attacker_callsign": "FROGG DARTER",
+            "target": "kestrel",
+            "target_callsign": "H1"
+          },
+          "at_180_seconds": null,
+          "human": {
+            "ships": [
+              {
+                "id": "kestrel",
+                "callsign": "WING1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 8.4,
+                "hostile_hits": 2,
+                "distance_flown": 3863.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 31.55,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "WING2",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 9.78,
+                "hostile_hits": 5,
+                "distance_flown": 7944.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 60.65,
+                "killed_by": {
+                  "id": "leaper",
+                  "callsign": "FROGG LEAPER"
+                },
+                "killing_weapons": []
+              },
+              {
+                "id": "kestrel",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 10.22,
+                "hostile_hits": 11,
+                "distance_flown": 7304.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 49.05,
+                "killed_by": {
+                  "id": "spitter",
+                  "callsign": "FROGG SPITTER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 3,
+            "survivors": 0,
+            "losses": 3
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 85.3,
+                "hostile_hits": 16,
+                "distance_flown": 10667.5,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 10.63,
+                "hostile_hits": 5,
+                "distance_flown": 9304.1,
+                "structure": 3.6,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "darter",
+                "callsign": "FROGG DARTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 82.93,
+                "hostile_hits": 14,
+                "distance_flown": 10192.5,
+                "structure": 14,
+                "shield": 18,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6162.1,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 81.92,
+                "hostile_hits": 2,
+                "distance_flown": 7243.4,
+                "structure": 25,
+                "shield": 28.43,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "leaper",
+                "callsign": "FROGG LEAPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 6419.3,
+                "structure": 25,
+                "shield": 30,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 9.06,
+                "hostile_hits": 1,
+                "distance_flown": 6236.8,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 0,
+                "hostile_hits": 0,
+                "distance_flown": 5989.2,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              },
+              {
+                "id": "spitter",
+                "callsign": "FROGG SPITTER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 57.04,
+                "hostile_hits": 4,
+                "distance_flown": 5636.4,
+                "structure": 38,
+                "shield": 54,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 9,
+            "survivors": 9,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 60.65,
+          "odd": [
+            "frogg:FROGG LEAPER recorded no hostile hits in 60.6s",
+            "frogg:FROGG LEAPER recorded no hostile hits in 60.6s",
+            "frogg:FROGG SPITTER recorded no hostile hits in 60.6s"
+          ],
+          "scenario": "ordnance-kestrel-ir",
+          "seed": 20,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 20,
+        "human_wins": 0,
+        "win_rate": 0.0,
+        "time_to_kill_human_wins_only": {
+          "median": null,
+          "p25": null,
+          "p75": null
+        },
+        "human_losses": {
+          "median": 3.0,
+          "p25": 3.0,
+          "p75": 3.0
+        },
+        "frogg_losses": {
+          "median": 1.0,
+          "p25": 0.0,
+          "p75": 1.0
+        }
+      }
+    }
+  }
+}
