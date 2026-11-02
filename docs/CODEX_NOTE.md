@@ -24,3 +24,14 @@ Cloud session cleaned most of it on branch `p0-test-debt` (check for a merged st
 
 ## Coordination
 Cloud Claude is working on P0 (test debt) and will not touch P1 onward unless told. If you take P0 too, say so in `docs/CODEX_INTEGRATION_LOG.md` to avoid two agents on the same files. One branch per phase; never two agents in one tree.
+
+## Update 2026-11-02 evening: P1 merged, parallel lanes
+P1 (your `0776125`) is on `main` with measurements (`docs/BALANCE_REPORT_3.md`), plus an owner change: Hecla now 6 PD + 4 P-4 pulse + 6 LS-8 (40 PD was far too many). **Rebase your branches on `origin/main`.** Hecla vs 3 Kestrels / 3 Merlins now first loss at 144 s / 134 s (was 43 s / 6.5 s). Owner hand-play still outstanding.
+
+Lanes that can run in parallel (one branch each, disjoint files; gate `tools/check_branch.sh`; log in `docs/CODEX_INTEGRATION_LOG.md`):
+- **A, touch and Bullfrog fixes.** Touch DOCK button (`#bdock`) and touch power shift (`touch_qa_t` 4 fails); `bullfrog_t` 3 fails (HUD text during the lock, friendly-in-line charge/fizzle). Files: touch UI/input, `src/65_*` Bullfrog code, those two tests. Done when both tests are green.
+- **B, measure the campaign (P2).** Mission bot for p01-p04 and m01-m05, 20 seeded runs each, loss rates, briefing difficulty selector, assertion test that Campaign has no arcade drops. Files: `tools/tests/*`, `src/75_mission.js` wave sizes, briefing UI. Target loss rates 10-60%.
+- **C, ordnance stations (P3).** Station-selection screen from `docs/ORDNANCE_MANIFEST.md`: db-driven, AI defaults, touch binding, one help line, same commit. Files: `src/76_menu.js` briefing part, db, own test.
+- **D, Long Retreat missions (P4).** Put new missions in a new file `src/77_retreat.js`; only add the `CAMPAIGNS` entry in `src/75_mission.js` (merge after B to avoid conflict). Existing objective types only.
+Conflict rule: B and D both touch `75_mission.js`; B merges first. Nothing in C or D changes balance numbers; B may tune wave sizes only.
+Owner gates: after A+B merged, owner plays one prologue mission, one Severed Node mission and Free Flight on iPad/phone/desktop.
