@@ -1,5 +1,27 @@
 # Codex local integration log — 2026-11-01
 
+## Experimental ejection and SAR (Codex, `codex/ejection-sar`)
+
+- Behind `tuning.rescue.enabled` (default false), pilots can eject into
+  damageable drifting capsules; the existing cause-based roll is retained for
+  automatic ejection. At 25% hull the player gets an alarm and SHIFT+E / touch
+  EJECT; deliberate ejection avoids the destruction roll. Capsules have life
+  support, a cap, a radar beacon, rescue/capture outcomes and crew notes.
+- SAR cutters route to capsules; designated ships recover/capture them only
+  after an uninterrupted safe pickup. Two optional Long Retreat and Skirmish
+  SAR scenarios cover the cutter and timed survivor recovery. Mission end
+  handles unresolved capsules and preserves a pending result after player
+  recovery. No new Campaign arcade pickups are introduced.
+- Local build, DB validation, rescue mechanics and SAR outcome unit controls,
+  and Python compilation passed. Claude: run `rescue_t.py`,
+  `sar_missions_t.py`, `eject_touch_t.py`, existing campaign/crew, AI, damage,
+  HUD and touch regressions, then `tools/check_branch.sh` and mission bots.
+  Check default-off outcomes against main; test flagged recovery, capture,
+  expiry, player and wingman deaths, restart, mission-end ordering, cutter
+  routing and 390x844 / 844x390 / desktop layouts. These browser tests and the
+  gate were not run locally. Owner must hear the alarm and play the scenarios
+  on iPad/phone/desktop; do not enable by default before that review.
+
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
 - `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated

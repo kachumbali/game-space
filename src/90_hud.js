@@ -465,12 +465,12 @@ function drawRadar(alive) {
         const sy = syBase - clamp(_rel.y / range, -1, 1) * R * 0.38;
         if (rf <= 0.5 && Math.random() < 0.3) return;
         const behind = _rel.z > 0;
-        const col = kind === 'pod' ? label : kind === 'msl' ? (hostile ? '#ff3a2a' : '#ffd24a') : hostile ? '#ff5a5a' : '#6ac8ff';
+        const col = kind === 'rescue' ? '#fff29a' : kind === 'pod' ? label : kind === 'msl' ? (hostile ? '#ff3a2a' : '#ffd24a') : hostile ? '#ff5a5a' : '#6ac8ff';
         c.globalAlpha = off ? 0.55 : 1;
         if (!off) { c.strokeStyle = hostile ? 'rgba(255,90,90,.45)' : 'rgba(106,200,255,.45)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(sx, syBase); c.lineTo(sx, sy); c.stroke(); }
         c.fillStyle = col; c.strokeStyle = col; c.lineWidth = 2.5;
         if (kind === 'msl') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy + 5); c.lineTo(sx - 5, sy + 5); c.closePath(); c.fill(); }
-        else if (kind === 'pod') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy); c.lineTo(sx, sy + 6); c.lineTo(sx - 5, sy); c.closePath(); c.fill(); }
+        else if (kind === 'pod' || kind === 'rescue') { c.beginPath(); c.moveTo(sx, sy - 6); c.lineTo(sx + 5, sy); c.lineTo(sx, sy + 6); c.lineTo(sx - 5, sy); c.closePath(); c.fill(); }
         else if (kind === 'cap') { const z = 8; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
         else { const z = kind === 'big' ? 6 : 5; if (behind) c.strokeRect(sx - z, sy - z, z * 2, z * 2); else c.fillRect(sx - z, sy - z, z * 2, z * 2); }
         if (isT) {
@@ -482,7 +482,7 @@ function drawRadar(alive) {
       for (const s of ships) {
         if (!s.alive || s === p) continue;
         const hostile = s.team !== p.team;
-        draw(s.group.position, s.def.cls !== 'fighter' ? 'cap' : (s.def.ai?.role === 'bomber' || s.def.id === 'reaver' || s.def.id === 'spitter') ? 'big' : 'fgt', hostile, s === target);
+        draw(s.group.position, s.rescueCapsule ? 'rescue' : s.def.cls !== 'fighter' ? 'cap' : (s.def.ai?.role === 'bomber' || s.def.id === 'reaver' || s.def.id === 'spitter') ? 'big' : 'fgt', hostile, s === target);
       }
       for (const m of missiles) if (!m.dead) draw(m.pos, 'msl', m.team !== p.team && m.target === p);
       for (const o of lootPods) draw(o.pos, 'pod', false, false, o.col);
@@ -501,6 +501,10 @@ function updateHud() {
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
+  if (rescueEnabled()) {
+    const beacons = rescueCapsules().filter(s => s.team === p?.team);
+    if (beacons.length) hudTxt.textContent += '\nSAR BEACONS: ' + beacons.map(s => `${s.callsign} ${Math.ceil(s.rescueCapsule.life)}s`).join(' · ');
+  }
   drawDamage();
   hitEl.style.opacity = hitFlash;
 
@@ -508,7 +512,7 @@ function updateHud() {
   const engaged = isTouch ? touchStarted : document.pointerLockElement === canvas;
   const showMsg = state === 'dead' ? true : (state === 'play' && !engaged && !briefing && game.mode !== 'none' && !userPause);
   msg.style.display = showMsg ? 'flex' : 'none';
-  if (state === 'dead') msg.textContent = (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
+  if (state === 'dead') msg.textContent = player?.rescueCapsule?.outcome === 'recovered' ? 'PILOT RECOVERED' : (game.mode === 'free') ? (isTouch ? 'HULL BREACH\ntap here to relaunch' : 'HULL BREACH\npress R to relaunch') : 'HULL BREACH';
   else msg.textContent = isTouch ? 'PAUSED\ntouch to take controls' : 'click to take controls';
   if (isTouch && alive) {
     document.querySelector('#thr>i').style.height = (p.throttle * 100) + '%';

@@ -79,6 +79,7 @@ function orderFly(s, dt) {
   return true;
 }
 function pickTarget(s) {
+  if (rescueEnabled() && s.sarTarget?.alive && !s.sarTarget.dying) return s.sarTarget;
   const role = s.ai.role;
   if (role === 'lancer') return lancerPick(s);                              // 79_bullfrog.js
   if (s.ai.escort && s.ai.escort.alive) { const et = escortPick(s); if (et) return et; }
@@ -233,6 +234,7 @@ function powerAI(s, dt) {
 }
 
 function aiUpdate(s, dt) {
+  if (rescueShipAI(s, dt)) return;
   powerAI(s, dt);
   if (s.def.drone) return droneAI(s, dt);        // unmanned: orders and controller logic in 56_drones.js
   const ai = s.ai;

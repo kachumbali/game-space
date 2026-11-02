@@ -105,6 +105,7 @@ Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSY
 Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
+Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
 if (params.has('diag')) {

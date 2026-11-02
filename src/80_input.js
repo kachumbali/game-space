@@ -4,6 +4,7 @@
 const keys = new Set();
 const stick = { x: 0, y: 0 };
 let mouseFire = false, touchStarted = false, radarIdx = 1;
+if (rescueEnabled()) document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">When HULL CRITICAL appears, press SHIFT+E or tap EJECT to abandon ship. Protect survivor beacons until SAR recovers them.</div>');
 const RADAR_RANGES = [1500, 3000, 6000];
 const msg = document.getElementById('msg');
 
@@ -58,6 +59,9 @@ addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
   if (comsKey(e)) { e.preventDefault(); return; }
+  if (e.code === 'KeyE' && e.shiftKey && state === 'play' && !userPause && rescueCritical(player)) {
+    e.preventDefault(); rescueRequestEject(player); return;
+  }
   keys.add(e.code);
   if (!player) return;
   switch (e.code) {
@@ -153,6 +157,11 @@ if (isTouch) {
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
   hold('bpause', () => pauseToggle(), () => {});   // S1 touch parity: the pause button
   hold('bdock', () => { if (player && player.alive && state === 'play' && !userPause) dockTry(); }, () => {});
+  const ejectButton = document.createElement('button');
+  ejectButton.id = 'beject'; ejectButton.textContent = 'EJECT';
+  ejectButton.style.cssText = 'display:none;position:fixed;top:58px;left:164px;z-index:25;padding:10px;background:#6b100d;color:white;border:2px solid #ff634a;font:bold 14px monospace;touch-action:manipulation';
+  ejectButton.addEventListener('pointerdown', e => { e.preventDefault(); if (state === 'play' && !userPause) rescueRequestEject(player); });
+  $('touch').appendChild(ejectButton);
   hold('btur', () => { if (player.alive && state === 'play' && !userPause) { player.turretsHold = !player.turretsHold; log(player.turretsHold ? 'TURRETS HOLD FIRE' : 'TURRETS AUTO', '#ffd24a'); } }, () => {});   // touch parity for key U
   hold('brad', () => { radarIdx = (radarIdx + 1) % RADAR_RANGES.length; }, () => {});   // S2 touch parity: radar range (desktop key K)
   hold('bview', () => setView(view === 'cockpit' ? 'chase' : 'cockpit'), () => {});

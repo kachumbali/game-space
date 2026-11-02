@@ -78,6 +78,8 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  game.rescueLog = [];
+  ejectAlarmAt = -Infinity;
   beamsClear();
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
