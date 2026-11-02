@@ -13,16 +13,20 @@
 - Four paired `capital-exeter-{off,on}` and `capital-hecla-{off,on}` sweep
   scenarios record missiles launched by side and the peak live count. They
   have not been run and cannot yet measure the intended launcher behavior.
+- The nuclear option is in OPTIONS for the next quick-play sortie and defaults
+  off. With the feature flag enabled, an eligible player ship trades one
+  conventional torpedo for a nuclear torpedo; AI cannot launch one. Campaign
+  launch requires the scripted release and is limited to one shot. Existing
+  warhead effects are unchanged. The browser/UI test is unrun.
 - **Outstanding:** per-launcher runtime, component damage and AI, the
-  data-driven torpedo hold, hangar and drone AI, quick-play nuclear option
-  and AI/campaign nuclear restrictions, and launcher/magazine HUD. Do not
+  data-driven torpedo hold, hangar and drone AI, and launcher/magazine HUD. Do not
   interpret the opted-in sweep as the requested completed system.
 - Locally: build, DB validation, JavaScript unit controls for class factors,
   tender stock and sweep counter, and Python compilation passed. No Chromium,
   device tests, seeded sweeps or full `tools/check_branch.sh` gate were run,
   per the owner's instruction to leave browser work to the cloud.
 - Claude cloud verification: run `missile_class_t.py`,
-  `launcher_direction_t.py`, `tender_ordnance_t.py`, `tender_pd_t.py`,
+  `launcher_direction_t.py`, `tender_ordnance_t.py`, `tender_pd_t.py`, `nuclear_authority_t.py`,
   `missile_budget_t.py`, existing missile/ordnance/campaign regression tests,
   and `tools/check_branch.sh`. After the missing systems are implemented,
   run each paired capital scenario in `balance_sweep.py` with seeds 1–20,
