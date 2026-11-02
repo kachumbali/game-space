@@ -1,5 +1,34 @@
 # Codex local integration log — 2026-11-01
 
+## Capital ordnance runtime — partial handoff (Codex, `codex/capital-ordnance-runtime`)
+
+- This branch is **not complete or merge-ready**. Class scaling and the gated
+  aimed-launch primitive are described in the two entries below. The P0
+  damage table is historical: it has not been remeasured after class scaling.
+- Gated tender service now has finite missile, torpedo and drone holds, a
+  shared per-tender transfer budget, per-round point costs, and no nuclear
+  replenishment. Hecla can provide proximity service using its `ordn`
+  component. The disabled path preserves the old tender behavior. There is
+  no persistent campaign ledger. The tender browser control has not run.
+- Four paired `capital-exeter-{off,on}` and `capital-hecla-{off,on}` sweep
+  scenarios record missiles launched by side and the peak live count. They
+  have not been run and cannot yet measure the intended launcher behavior.
+- **Outstanding:** per-launcher runtime, component damage and AI, the
+  data-driven torpedo hold, hangar and drone AI, quick-play nuclear option
+  and AI/campaign nuclear restrictions, and launcher/magazine HUD. Do not
+  interpret the opted-in sweep as the requested completed system.
+- Locally: build, DB validation, JavaScript unit controls for class factors,
+  tender stock and sweep counter, and Python compilation passed. No Chromium,
+  device tests, seeded sweeps or full `tools/check_branch.sh` gate were run,
+  per the owner's instruction to leave browser work to the cloud.
+- Claude cloud verification: run `missile_class_t.py`,
+  `launcher_direction_t.py`, `tender_ordnance_t.py`, `tender_pd_t.py`,
+  `missile_budget_t.py`, existing missile/ordnance/campaign regression tests,
+  and `tools/check_branch.sh`. After the missing systems are implemented,
+  run each paired capital scenario in `balance_sweep.py` with seeds 1–20,
+  and regenerate the P0 missile damage table. Check touch and desktop on
+  real hardware before enabling the feature by default.
+
 ## Capital ordnance step 1: class damage (Codex)
 
 - Restored always-on `dmgCls` and `pierceCls` scaling for missile blasts,
