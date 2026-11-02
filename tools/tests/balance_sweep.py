@@ -143,7 +143,7 @@ for gulper_count in (1, 2, 3):
 
 _hecla_rows = [["hecla", 1]]
 for side_ship in ("kestrel", "merlin"):
-  for laser_count, variant in ((12, "12"), (0, "0"), (4, "4")):
+  for laser_count, variant in ((12, "12"), (0, "0"), (4, "4"), (6, "6")):
     scenario_id = f"m-{side_ship}-laser{variant}"
     human = [[side_ship, 3]]
     SCENARIOS[scenario_id] = {
