@@ -14,6 +14,16 @@
   tests, and the seeded P0 commands in `CAPITAL_ORDNANCE_CLOUD_RUN.md`; replace
   the historical table only with actual results. Full branch gate is pending.
 
+## Capital ordnance step 2: cold launch (Codex)
+
+- `launchMissile` accepts a local launch position, world direction and hostile
+  target only with `tuning.ordnance.enabled`. Without the flag, the old
+  signature, heading and lock continue unchanged; zero or invalid direction
+  falls back to forward. The existing seeker cone/lost-lock logic is untouched.
+- Local build, DB validation, JS syntax and browser-test compilation passed.
+  Cloud: run `launcher_direction_t.py`, existing missile/station regression
+  tests and ten seeded off-axis intercepts; no browser test ran locally.
+
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
 - `rg` found `dmgCls` / `pierceCls` in DB only, with no source readers. Updated
