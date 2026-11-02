@@ -152,7 +152,7 @@ function showCampaignList() {
   menuFocus();
 }
 function showMissionList(campaign) {
-  const c = campaign || CAMPAIGNS[1];
+  const c = campaign || CAMPAIGNS.find(c => c.id === 'severed_node');
   menuView = 'missions';
   menuShell(`<div class="sub">CAMPAIGN · ${c.title}</div><h1>SELECT MISSION</h1><h2>Opens the briefing</h2>
     <div class="mlist">${c.missions.map((m, i) => `<button class="mi" data-a="mission:${c.id}:${i}"><b>${i + 1}. ${m.title}</b><span>${m.subtitle}</span></button>`).join('')}<button class="mi alt" data-a="campaign"><b>BACK TO CAMPAIGNS</b></button></div>`, 'main');

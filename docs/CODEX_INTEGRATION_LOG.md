@@ -34,6 +34,19 @@
 ## Lane C finished by cloud session — 2026-11-02
 
 Per-station ordnance replaces the interim magazine toggle: `hardpoints` for Kestrel, Falchion, Merlin, Bittern in the db (validator checks ids, sizes, caps, allow lists, default load == stores, legacy torpedo flag), `src/77_ordnance.js`, `tools/tests/ordnance_t.py` (9 checks, green). AI keeps authored stores. Launch geometry, stock limits, models: not built. Swaps are unmeasured.
+## D Long Retreat — 2026-11-02
+
+- Added four authored missions in `src/77_retreat.js` and registered the arc
+  between prologue and Severed Node after the campaign table is initialized.
+  This avoids changing `75_mission.js`, which lane B owns. Uses only existing
+  spawn, objectives, timer, transit, comms and end actions.
+- R1 TERNs are non-vital fleet objects; R3 convoy departure is narrated; R4
+  launch waves and jump are scripted. There is no passenger persistence,
+  partial-success outcome, physical convoy jump or nuclear release. The design
+  note records these limits. Timers and waves are unbalanced placeholders.
+- Branch is based on `5cbef17`; integrate after B, rebuild generated output,
+  run the branch gate, seeded mission checks and desktop/touch hand-play before
+  treating these sorties as complete.
 
 ## Purpose and branch
 

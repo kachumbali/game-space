@@ -1,11 +1,17 @@
 # Campaign draft: The Long Retreat
 
-Status: **design-ready, not yet wired into the mission menu.** This is the
+Status: **four scripted missions implemented; unmeasured and not hand-played.** This is the
 missing G3 campaign draft from `docs/GEMINI_WORKPLAN.md`. It follows the
 prologue and precedes `docs/CAMPAIGN.md` (*The Severed Node*). Every battle
 uses ships already in `data/db.json`; campaign-specific convoy survival,
 evacuation capacity, and nuclear release remain explicitly marked as engine
 work instead of being implied to exist.
+
+Implementation note: R1's two TERNs are non-vital fleet objects without jump
+or partial-success state. R3's evacuation is narrated, not a simulated convoy.
+R4's timed launch waves are scripted rather than produced by a carrier hangar.
+No nuclear reserve is issued. All four sorties require seeded and device play
+validation before campaign balance or evacuation persistence can be claimed.
 
 ## Arc and player knowledge
 

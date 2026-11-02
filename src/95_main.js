@@ -5,7 +5,7 @@ if (!params.has('yard')) {
   if (params.has('scene')) {
     startScene(params.get('scene') || 'intro_test');
   } else {
-    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS[1];
+    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS.find(c => c.id === 'severed_node');
     startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))]);
     if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
     else if (params.has('sk')) startSkirmish(skFromParams());

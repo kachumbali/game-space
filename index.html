@@ -6890,7 +6890,7 @@ const CAMPAIGNS = [
   { id: 'prologue', title: 'UNCHARTED VANGUARD', subtitle: 'Four sorties from customs patrol to first contact', missions: PROLOGUE_MISSIONS },
   { id: 'severed_node', title: 'THE SEVERED NODE', subtitle: 'Five sorties against the FROGG vanguard', missions: MISSIONS },
 ];
-function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS[1]; }
+function campaignOf(M) { return CAMPAIGNS.find(c => c.missions.includes(M)) || CAMPAIGNS.find(c => c.id === 'severed_node'); }
 function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); return c.missions[i + 1] || null; }
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
@@ -7318,7 +7318,7 @@ function showCampaignList() {
   menuFocus();
 }
 function showMissionList(campaign) {
-  const c = campaign || CAMPAIGNS[1];
+  const c = campaign || CAMPAIGNS.find(c => c.id === 'severed_node');
   menuView = 'missions';
   menuShell(`<div class="sub">CAMPAIGN · ${c.title}</div><h1>SELECT MISSION</h1><h2>Opens the briefing</h2>
     <div class="mlist">${c.missions.map((m, i) => `<button class="mi" data-a="mission:${c.id}:${i}"><b>${i + 1}. ${m.title}</b><span>${m.subtitle}</span></button>`).join('')}<button class="mi alt" data-a="campaign"><b>BACK TO CAMPAIGNS</b></button></div>`, 'main');
@@ -7664,6 +7664,63 @@ function bindOrdnanceBriefing(el, mission) {
     };
   });
 }
+// The Long Retreat: scripted missions use existing campaign actions only.
+const RETREAT_MISSIONS = [
+  {
+    id: 'r01', look: 'reed', title: 'LAST FREIGHT OUT', subtitle: 'Cover the outer-belt departure',
+    briefing: 'The last scheduled freight is leaving the outer-belt Hollow. Cover the HALBERD while two TERN shuttles take the lane. Break the incoming pickets, bombers and corvette. The HALBERD and Eagle Flight must survive.',
+    debriefWin: 'Freight crews report that the FROGGs ignored ore and targeted the lane beacon itself.',
+    debriefLose: 'The screen has collapsed. Freight traffic must find another route.',
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0] }, fleet: [{ ship: 'tern', id: 'freight1', callsign: 'TERN ONE', pos: [-220,0,180] }, { ship: 'tern', id: 'freight2', callsign: 'TERN TWO', pos: [220,0,180] }], player: { ship: 'kestrel', pos: [90,15,110], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,20,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ obj: ['r1a','Destroy the lane pickets','open'] }, { spawn: { grp: 'A', ships: [['darter',3],['leaper',2]], bearing: [0.2,0,-1], dist: 2600, spread: 220 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['r1a',null,'done'] }, { obj: ['r1b','Stop the bomber strike','open'] }, { spawn: { grp: 'B', ships: [['toad',2],['spitter',1],['leaper',2]], bearing: [-1,0,-0.2], dist: 2800, spread: 240 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['r1b',null,'done'] }, { obj: ['r1c','Destroy the corvette screen','open'] }, { spawn: { grp: 'C', ships: [['gulper',1],['reaver',2]], bearing: [0,0,1], dist: 2500, spread: 200 } }] },
+      { when: { dead: 'C', delay: 10 }, do: [{ obj: ['r1c',null,'done'] }, { comm: ['CONTROL','Departure window open. Eagle, return to the Halberd.'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'r02', look: 'ao2', title: 'GHOST RELAY', subtitle: 'Recover the navigation burst',
+    briefing: 'Clear the Bog Relay pickets and cover EXETER while her crew copies the navigation burst. Then jump to the dark relay spur and break the Gulper screen.',
+    debriefWin: 'The burst is a repeating route-selection pattern pointing toward Lily, not a destination list.', debriefLose: 'The burst is lost with the relay screen.',
+    areas: { spur: { name: 'DARK RELAY SPUR', look: 'ao3', arrive: 'Spur reached. Watch for the Gulper screen.' } },
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0] }, fleet: [{ ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [-500,0,160] }], player: { ship: 'kestrel', pos: [90,15,110], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,20,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ obj: ['r2a','Clear the relay pickets','open'] }, { spawn: { grp: 'A', ships: [['leaper',4],['darter',2]], bearing: [0.2,0,-1], dist: 2600, spread: 220 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['r2a',null,'done'] }, { obj: ['r2b','Cover the burst copy','open',90] }, { spawn: { grp: 'B', ships: [['toad',2],['spitter',1],['darter',2]], bearing: [-1,0,-0.2], dist: 2800, spread: 240 } }] },
+      { when: { after: 90 }, do: [{ obj: ['r2b',null,'done'] }, { comm: ['CONTROL','Copy complete. Form up for the spur.'] }, { transit: { to: 'DARK RELAY SPUR', dur: 22, area: 'spur', lines: [[5,'HAWK','Watch your fuel and missile count.'],[16,'CONTROL','Contacts ahead.']] } }] },
+      { when: { after: 3 }, do: [{ obj: ['r2c','Break the Gulper screen','open'] }, { spawn: { grp: 'C', ships: [['gulper',1],['reaver',2],['spitter',2]], bearing: [0.2,0,-1], dist: 2600, spread: 220 } }] },
+      { when: { dead: 'C', delay: 3 }, do: [{ obj: ['r2c',null,'done'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'r03', look: 'ao2', title: 'HOLLOW NINE', subtitle: 'Defend the evacuation window',
+    briefing: 'Evacuation traffic is leaving Hollow Nine. Fly Merlins and defend EXETER for six minutes while the convoy prepares its jump. HALBERD screens the frigate.',
+    debriefWin: 'The evacuation left, but a habitat unable to reach the lane was abandoned.', debriefLose: 'The jump screen failed before the evacuation could leave.',
+    setup: { anchor: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [0,0,0] }, fleet: [{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [-450,0,150] }], player: { ship: 'merlin', pos: [150,30,250], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'merlin', callsign: 'HAWK', pos: [190,30,280] }, { pilot: 'sparrow', ship: 'merlin', callsign: 'SPARROW', pos: [110,20,280] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ obj: ['r3a','Defend EXETER until the evacuation window','open',360] }, { spawn: { grp: 'A', ships: [['darter',4],['leaper',3]], bearing: [0.2,0,-1], dist: 2800, spread: 240 } }] },
+      { when: { after: 100 }, do: [{ comm: ['CONTROL','Second strike wave. Bombers inbound.'] }, { spawn: { grp: 'B', ships: [['toad',2],['spitter',2],['reaver',2]], bearing: [-1,0,-0.2], dist: 3000, spread: 250 } }] },
+      { when: { after: 120 }, do: [{ comm: ['CONTROL','Jump flash: corvette and strike craft.'] }, { spawn: { grp: 'C', ships: [['gulper',1],['toad',2],['reaver',3]], bearing: [0,0,1], dist: 3000, spread: 250, jump: true } }] },
+      { when: { after: 140 }, do: [{ obj: ['r3a',null,'done'] }, { comm: ['CONTROL','The convoy has its window. All ships withdraw.'] }, { end: 'win' }] },
+    ],
+  },
+  {
+    id: 'r04', look: 'ao3', title: 'NO SAFE VECTOR', subtitle: 'Withdraw through the dark anchorage',
+    briefing: 'Break the forward screen and escort EXETER to the dark anchorage. Survive the Bullfrog launch cycle and withdraw on the jump window. Destroying the carrier is not required. A sealed nuclear reserve is not released for this sortie.',
+    debriefWin: 'A distant hive carrier arrives after the task group leaves. The retreat delays the advance but cannot stop it.', debriefLose: 'The task group did not clear the anchorage.',
+    areas: { anchorage: { name: 'DARK ANCHORAGE', look: 'oasis', arrive: 'Anchorage reached. Stand by for launch signatures.' } },
+    setup: { anchor: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [0,0,0] }, fleet: [{ ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [-450,0,150] }, { ship: 'halberd', id: 'talon', callsign: 'CSS TALON', pos: [450,0,150] }], player: { ship: 'kestrel', pos: [150,30,250], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [190,30,280] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [110,20,280] }] },
+    stages: [
+      { when: { t: 4 }, do: [{ obj: ['r4a','Break the forward screen','open'] }, { spawn: { grp: 'A', ships: [['leaper',4],['darter',3],['spitter',2],['gulper',1]], bearing: [0.2,0,-1], dist: 2900, spread: 260 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['r4a',null,'done'] }, { transit: { to: 'DARK ANCHORAGE', dur: 24, area: 'anchorage', lines: [[6,'SPARROW','Are we leaving them behind?'],[13,'HAWK','We are keeping the route open.'],[20,'CONTROL','Contacts ahead.']] } }] },
+      { when: { after: 3 }, do: [{ obj: ['r4b','Survive until EXETER can withdraw','open',120] }, { spawn: { grp: 'C', ships: [['bullfrog',1]], bearing: [0.1,0,-1], dist: 3600, spread: 0, jump: true } }, { spawn: { grp: 'B1', ships: [['darter',4],['reaver',3],['toad',2]], bearing: [-0.4,0,-1], dist: 2700, spread: 260 } }] },
+      { when: { after: 60 }, do: [{ comm: ['CONTROL','Another launch. Keep them off EXETER.'] }, { spawn: { grp: 'B2', ships: [['reaver',3],['spitter',3]], bearing: [0.7,0,-1], dist: 2700, spread: 260 } }] },
+      { when: { after: 60 }, do: [{ obj: ['r4b',null,'done'] }, { comm: ['CONTROL','Jump window open. All ships withdraw.'] }, { end: 'win' }] },
+    ],
+  },
+];
+CAMPAIGNS.splice(1, 0, { id: 'long_retreat', title: 'THE LONG RETREAT', subtitle: 'Four sorties covering the withdrawal', missions: RETREAT_MISSIONS });
 // ======================================================================
 //  COMMS MENU (key J, touch COMMS button) — orders and requests to wingmen, capital ships, drones, and the targeted ship.
 //  Orders are stored as ai.order = {type, tgt, slot} and read by pickTarget / orderFly in 70_ai.js; ai.hold blocks guns and missiles.
@@ -9826,7 +9883,7 @@ if (!params.has('yard')) {
   if (params.has('scene')) {
     startScene(params.get('scene') || 'intro_test');
   } else {
-    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS[1];
+    const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS.find(c => c.id === 'severed_node');
     startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))]);
     if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
     else if (params.has('sk')) startSkirmish(skFromParams());
