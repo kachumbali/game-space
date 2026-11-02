@@ -2,8 +2,9 @@ const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const src=fs.readFileSync('src/13_music.js','utf8');
 const files=src.slice(src.indexOf('const MUSIC_FILES = '),src.indexOf('const MUS = '));
 const context={};vm.createContext(context);vm.runInContext(files+'globalThis.files=MUSIC_FILES;',context);
-for(const [mood,path] of Object.entries(context.files)) assert.ok(fs.existsSync(path),`${mood}: missing ${path}`);
-assert.ok(!fs.existsSync('audio/definitely-not-a-real-track.mp3'));
+function checkFiles(files) { for(const [mood,path] of Object.entries(files)) assert.ok(fs.existsSync(path),`${mood}: missing ${path}`); }
+checkFiles(context.files);
+assert.throws(()=>checkFiles({missing:'audio/definitely-not-a-real-track.mp3'}),/missing/);
 const code=src.slice(src.indexOf('function musicMood('),src.indexOf('function musicTick('));
 const c={state:'play',player:{team:0,group:{position:{}}},ships:[],game:{mstate:{},mission:null},MUS:{combatT:0,mood:null,titleDone:true},menuView:'main',$id:()=>({style:{display:'none'}})};
 vm.createContext(c);vm.runInContext(code,c);
