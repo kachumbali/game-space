@@ -47,6 +47,23 @@ for sid, ship in raw['ships'].items():
             if w.get('kind')!='msl' or bool(w.get('torp')) != (launcher.get('role')=='torpedo') or w.get('nuclear'): err(f'{loc}: incompatible store {wid!r}')
     plan=ship.get('ordnancePlan')
     if not isinstance(plan,dict) or plan.get('enabled') is not False: err(f'ships.{sid}.ordnancePlan must remain disabled')
+    if isinstance(plan,dict):
+        h=plan.get('hangar',{})
+        if h.get('total',0):
+            refs=h.get('bayComponents',[]); extra=h.get('extraComponents',[])
+            if not isinstance(extra,list): err(f'ships.{sid}.hangar: invalid extra components'); extra=[]
+            components={c.get('id'):c for c in ship.get('comps',[])}
+            for c in extra:
+                if not isinstance(c,dict) or not isinstance(c.get('id'),str) or c['id'] in components:
+                    err(f'ships.{sid}.hangar: invalid extra component'); continue
+                components[c['id']]=c
+            if not isinstance(refs,list) or any(not isinstance(r,str) for r in refs) or len(refs)!=h.get('bays') or len(set(refs))!=len(refs): err(f'ships.{sid}.hangar: bay references must match bay count')
+            elif any(ref not in components or components[ref].get('role') not in ('bay','dock') for ref in refs): err(f'ships.{sid}.hangar: missing bay component')
+            manifest=h.get('manifest',{})
+            if not isinstance(manifest,dict) or any(k not in raw['ships'] or not isinstance(v,int) or isinstance(v,bool) or v < 0 for k,v in manifest.items()) or sum(manifest.values()) != h.get('total'):
+                err(f'ships.{sid}.hangar: invalid manifest or total')
+            if not isinstance(h.get('airborneCap'),int) or not 0 < h['airborneCap'] <= h['total']: err(f'ships.{sid}.hangar: invalid airborne cap')
+            if not isinstance(h.get('interval'),(int,float)) or h['interval'] <= 0: err(f'ships.{sid}.hangar: invalid interval')
 for sid, s in raw['ships'].items():
     hp = s.get('hardpoints')
     if hp is None: continue

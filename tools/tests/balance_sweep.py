@@ -75,6 +75,22 @@ SCENARIOS = {
     },
 }
 
+# Match the seed and formation so the feature flag is the only scenario change.
+for enabled in (False, True):
+    suffix = 'on' if enabled else 'off'
+    SCENARIOS[f'capital-exeter-{suffix}'] = {
+        **SCENARIOS['d2'], 'name': f'Exeter + 2 Kestrels vs Bullfrog (ordnance {suffix})',
+        'ordnance_enabled': enabled,
+    }
+    SCENARIOS[f'capital-hecla-{suffix}'] = {
+        'name': f'Hecla group vs 3 Gulpers + 12 fighters (ordnance {suffix})',
+        'player_ship': 'kestrel', 'wship': 'kestrel', 'wing': 0, 'range': 6000,
+        'rows': [['gulper', 3], ['darter', 6], ['leaper', 6]],
+        'human': [['hecla', 1], ['halberd', 2], ['kestrel', 12]],
+        'frogg': [['gulper', 3], ['darter', 6], ['leaper', 6]],
+        'ordnance_enabled': enabled,
+    }
+
 # Kestrel M1 carries two radar missiles by default or two IR missiles when
 # swapped. Merlin has no M1 station; compare the actual selectable Kestrel fit.
 for load in ('default', 'ir'):
@@ -273,6 +289,7 @@ for _g in (1, 2):
 SETUP_JS = r"""([spec,seed,range,cap]) => {
   const g=__game,T=g.THREE;
   if(g.game.mode!=='skirmish') throw new Error('skirmish URL did not initialize');
+  if(spec.ordnance_enabled!==undefined) g.TUNE.ordnance.enabled=spec.ordnance_enabled;
   g.__paused=true;
   window.requestAnimationFrame=()=>0;
   if(spec.hecla_laser_turrets!==undefined){
@@ -287,6 +304,17 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
   });
   g.setLod('off',true);
   const player=g.player,playerStart=player.group.position.clone();
+  // Only count insertions into the current live-missile array; warning lists
+  // also push missile objects, and updateMissiles replaces the array each tick.
+  const missileShots={human:0,frogg:0}; let peakMissiles=0;
+  const originalArrayPush=Array.prototype.push;
+  Array.prototype.push=function(...items){
+    const launchArray=this===g.missiles;
+    if(launchArray) for(const m of items) if(m.team===0) missileShots.human++; else if(m.team===1) missileShots.frogg++;
+    const n=originalArrayPush.apply(this,items);
+    if(launchArray) peakMissiles=Math.max(peakMissiles,this.filter(m=>!m.dead).length);
+    return n;
+  };
   player.team=2;player.group.position.set(50000,0,50000);player.vel.set(0,0,0);player.group.visible=false;
   const present=new Map();
   for(const s of g.ships)if(s.team===0&&s!==player)present.set(s.def.id,(present.get(s.def.id)||0)+1);
@@ -446,6 +474,7 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
       else if(f.survivors===0)winner='human';
       else if(h.survivors===0)winner='FROGG';
       return {sim_time:+sim.toFixed(2),winner,time_to_kill:enemyKilledAt,first_hit:firstHit,
+        missiles_expended:{...missileShots},peak_live_missiles:peakMissiles,
         at_180_seconds:snapshot180,flight_telemetry:flightTelemetry,human:h,frogg:f,enemy_killed_at:enemyKilledAt,human_killed_at:humanKilledAt};
     }
   };
