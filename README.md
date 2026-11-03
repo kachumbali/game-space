@@ -145,3 +145,5 @@ See `docs/FUN_UPDATE.md` (diagnosis, design, tunables, what was and was not veri
 Hitmarkers, damage arcs, kill chains and medals; salvage pods; **GAUNTLET** survival mode (waves, aces, bosses, perks, mutators, daily seed, career rank);
 difficulty on every briefing; wing strip, objective counters, onboarding tips. URL flags: `?sv=1&sv_seed=42&sv_diff=hard&sv_wing=1&sv_mut=glass,swarm&sv_daily=1`, `?tips`.
 Tests: `tools/tests/fun_t.py [feel|shot|loot|survival|missions]`, `tools/tests/sv_calib.py N RUNS` (wave calibration with an AI proxy pilot).
+
+When the optional rescue feature is enabled, the Long Retreat mission list includes SAR sorties. Protect the cutter: it evades attackers and cannot recover a capsule while it is being engaged or immediately after taking a hit. The objective shows when it needs cover. Rescue music reacts to threats near the cutter as well as the player, and a short cue marks each recovery.

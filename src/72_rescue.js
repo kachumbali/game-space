@@ -44,6 +44,7 @@ function rescueResolve(p, outcome, rescuer = null) {
   const r = p.rescueCapsule;
   if (!r || r.outcome !== 'adrift') return false;
   r.outcome = outcome; r.rescuer = rescuer;
+  if (outcome === 'recovered' && p.team === rescuer?.team) musicRescueSting();
   if (rosterEnabled()) rosterOnRescue(p,outcome,rescuer);
   const rec = r.pilot && CREW[r.pilot];
   if (rec && !rosterEnabled()) {
@@ -71,6 +72,12 @@ function rescueCanPickup(rescuer, p, now, cfg) {
     !ships.some(e => e.alive && !e.dying && e.team !== rescuer.team && e.target === rescuer &&
       e.group.position.distanceTo(rescuer.group.position) <= cfg.safeThreatRange);
 }
+function rescueThreat(s) {
+  const enemy = ships.find(e => e.alive && !e.dying && e.team !== s.team && e.target === s &&
+    e.group.position.distanceTo(s.group.position) <= TUNE.rescue.safeThreatRange);
+  const missile = missiles.find(m => !m.dead && m.target === s);
+  return enemy || (missile ? {group:{position:missile.pos}} : null);
+}
 // Return true when this ship has a rescue-specific flight task and normal fighter AI must not run.
 function rescueShipAI(s, dt) {
   if (!rescueEnabled()) return false;
@@ -79,6 +86,15 @@ function rescueShipAI(s, dt) {
   if ((!s.def.sar && !enemyRecovery) || !s.def.rescue) return false;
   if (enemyRecovery && ships.some(e => e.alive && !e.dying && !e.rescueCapsule && e.team !== s.team &&
       e.group.position.distanceTo(s.group.position) < TUNE.rescue.hostileSearchRadius)) return false;
+  const threat = rescueThreat(s);
+  if (threat) {
+    if (missiles.some(m => !m.dead && m.target === s && m.pos.distanceTo(s.group.position) < 520)) deployCM(s);
+    const away = s.group.position.clone().sub(threat.group.position).normalize();
+    const destination = s.group.position.clone().addScaledVector(away, TUNE.rescue.safeThreatRange);
+    turnToward(s, destination, dt, 1);
+    aiFly(s, {throttle:1}, dt);
+    return true;
+  }
   const targets = rescueCapsules().filter(p => enemyRecovery ? p.team !== s.team : p.team === s.team);
   if (!targets.length) return false;
   targets.sort((a,b) => s.group.position.distanceToSquared(a.group.position) - s.group.position.distanceToSquared(b.group.position));

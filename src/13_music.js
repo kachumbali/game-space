@@ -50,7 +50,8 @@ function musicMood(dtReal) {
   if (state !== 'play' || !player) return 'menu';
   let n = 0, distant = 0, capital = false, boss = false, hive = false;
   for (const s of ships) if (s.alive && !s.dying && s.team !== player.team) {
-    const d = s.group.position.distanceTo(player.group.position);
+    const cutter = game.mstate?.sar?.cutter;
+    const d = Math.min(s.group.position.distanceTo(player.group.position), cutter?.alive ? s.group.position.distanceTo(cutter.group.position) : Infinity);
     if (d < 5000) distant++;
     if (d < 1800) n++;
     if (d < 6000 && s.def.id === 'bullfrog') boss = true;
@@ -59,13 +60,12 @@ function musicMood(dtReal) {
   }
   const mission = game.mission?.id || '';
   if (boss) return 'boss';
-  if (game.mission?.music === 'rescue' || mission.startsWith('sar')) return 'rescue';
   if (hive || game.mstate?.area === 'oasis') return 'hive';
   if (capital) return 'capital';
   if (mission.startsWith('r0')) return 'retreat';
   if (n > 0) MUS.combatT = 8; else MUS.combatT = Math.max(0, MUS.combatT - dtReal);
   if (MUS.combatT > 0) return n >= 6 || MUS.mood === 'heavy' && n >= 3 ? 'heavy' : 'combat';
-  return distant ? 'tension' : 'patrol';
+  return distant ? 'tension' : (game.mission?.music === 'rescue' || mission.startsWith('sar')) ? 'rescue' : 'patrol';
 }
 function musicTick(dtReal) {
   if (!MUS.started) return;
@@ -84,6 +84,19 @@ function musicTick(dtReal) {
     if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
   if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;
+}
+// A short original recovery cue overlays the current situation track without changing its mood.
+function musicRescueSting() {
+  const C = AUDIO.ctx;
+  if (!C || AUDIO.muted || !AOPT.music || AOPT.musicVol <= 0 || !MUS.started) return;
+  const gain = C.createGain(), t = C.currentTime;
+  gain.gain.setValueAtTime(AOPT.musicVol * 0.12, t);
+  gain.gain.exponentialRampToValueAtTime(0.0008, t + 1.2);
+  gain.connect(C.destination);
+  for (const [frequency, delay] of [[523.25,0],[659.25,0.18],[783.99,0.36]]) {
+    const osc = C.createOscillator(); osc.type = 'sine'; osc.frequency.value = frequency;
+    osc.connect(gain); osc.start(t + delay); osc.stop(t + 1.2);
+  }
 }
 // ---- sound samples layered under the procedural effects ----
 const SMP = { buf: {}, ready: false };

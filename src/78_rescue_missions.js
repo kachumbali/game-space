@@ -2,7 +2,7 @@
 const SAR_MISSIONS = [
   {
     id:'sar01', title:'BEACONS IN THE DARK', subtitle:'Cover the cutter', look:'reed', music:'rescue',
-    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the SAR cutter while it locates and recovers both beacons. Keep the cutter alive.',
+    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the SAR cutter while it locates and recovers both beacons. It cannot pick up survivors while under attack; draw fire away and keep it alive.',
     debriefWin:'The cutter returned with both survivors.', debriefLose:'The rescue window closed before the survivors could be brought aboard.',
     sar:{ cutter:'sar1', deadline:220, survivors:[[-450,0,-700],[450,0,-900]] },
     setup:{anchor:{ship:'halberd',id:'halberd',callsign:'CSS HALBERD',pos:[0,0,300]},fleet:[{ship:'sar',id:'sar1',callsign:'RESCUE ONE',pos:[0,0,0]}],player:{ship:'kestrel',pos:[100,0,140],speed:30},wingmen:[]},
@@ -45,7 +45,12 @@ function sarScenarioOutcome(S, required) {
 function sarScenarioTick(M, S) {
   if (!M.sar || !S.sar) return;
   const recovered = S.sar.records.filter(r => r.outcome === 'recovered').length;
-  objective('sar-recovery', `Recover survivors: ${recovered}/${M.sar.survivors.length} · ${Math.ceil(Math.max(0,S.sar.deadline-S.t))}s`, 'open');
+  const threatened = !!S.sar.cutter?.alive && !!rescueThreat(S.sar.cutter);
+  if (threatened && !S.sar.warned) comm('SAR', 'Hostile engaging — cover the cutter! Pickup is on hold.', '#ffd080');
+  S.sar.warned = threatened;
+  const recentlyHit = time - (S.sar.cutter?.lastHit ?? -Infinity) < TUNE.rescue.safeAfterHit;
+  const cover = threatened ? ' · HOSTILE ENGAGING — COVER THE CUTTER' : recentlyHit ? ' · RECENT DAMAGE — WAITING FOR SAFE PICKUP' : '';
+  objective('sar-recovery', `Recover survivors: ${recovered}/${M.sar.survivors.length} · ${Math.ceil(Math.max(0,S.sar.deadline-S.t))}s${cover}`, 'open');
   const result = sarScenarioOutcome(S, M.sar.survivors.length);
   if (result) { objective('sar-recovery', null, result === 'win' ? 'done' : 'failed'); endMission(result, result === 'win' ? 'SURVIVORS RECOVERED' : 'RESCUE FAILED'); }
 }

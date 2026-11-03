@@ -585,7 +585,8 @@ function musicMood(dtReal) {
   if (state !== 'play' || !player) return 'menu';
   let n = 0, distant = 0, capital = false, boss = false, hive = false;
   for (const s of ships) if (s.alive && !s.dying && s.team !== player.team) {
-    const d = s.group.position.distanceTo(player.group.position);
+    const cutter = game.mstate?.sar?.cutter;
+    const d = Math.min(s.group.position.distanceTo(player.group.position), cutter?.alive ? s.group.position.distanceTo(cutter.group.position) : Infinity);
     if (d < 5000) distant++;
     if (d < 1800) n++;
     if (d < 6000 && s.def.id === 'bullfrog') boss = true;
@@ -594,13 +595,12 @@ function musicMood(dtReal) {
   }
   const mission = game.mission?.id || '';
   if (boss) return 'boss';
-  if (game.mission?.music === 'rescue' || mission.startsWith('sar')) return 'rescue';
   if (hive || game.mstate?.area === 'oasis') return 'hive';
   if (capital) return 'capital';
   if (mission.startsWith('r0')) return 'retreat';
   if (n > 0) MUS.combatT = 8; else MUS.combatT = Math.max(0, MUS.combatT - dtReal);
   if (MUS.combatT > 0) return n >= 6 || MUS.mood === 'heavy' && n >= 3 ? 'heavy' : 'combat';
-  return distant ? 'tension' : 'patrol';
+  return distant ? 'tension' : (game.mission?.music === 'rescue' || mission.startsWith('sar')) ? 'rescue' : 'patrol';
 }
 function musicTick(dtReal) {
   if (!MUS.started) return;
@@ -619,6 +619,19 @@ function musicTick(dtReal) {
     if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
   if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;
+}
+// A short original recovery cue overlays the current situation track without changing its mood.
+function musicRescueSting() {
+  const C = AUDIO.ctx;
+  if (!C || AUDIO.muted || !AOPT.music || AOPT.musicVol <= 0 || !MUS.started) return;
+  const gain = C.createGain(), t = C.currentTime;
+  gain.gain.setValueAtTime(AOPT.musicVol * 0.12, t);
+  gain.gain.exponentialRampToValueAtTime(0.0008, t + 1.2);
+  gain.connect(C.destination);
+  for (const [frequency, delay] of [[523.25,0],[659.25,0.18],[783.99,0.36]]) {
+    const osc = C.createOscillator(); osc.type = 'sine'; osc.frequency.value = frequency;
+    osc.connect(gain); osc.start(t + delay); osc.stop(t + 1.2);
+  }
 }
 // ---- sound samples layered under the procedural effects ----
 const SMP = { buf: {}, ready: false };
@@ -6502,6 +6515,7 @@ function rescueResolve(p, outcome, rescuer = null) {
   const r = p.rescueCapsule;
   if (!r || r.outcome !== 'adrift') return false;
   r.outcome = outcome; r.rescuer = rescuer;
+  if (outcome === 'recovered' && p.team === rescuer?.team) musicRescueSting();
   if (rosterEnabled()) rosterOnRescue(p,outcome,rescuer);
   const rec = r.pilot && CREW[r.pilot];
   if (rec && !rosterEnabled()) {
@@ -6529,6 +6543,12 @@ function rescueCanPickup(rescuer, p, now, cfg) {
     !ships.some(e => e.alive && !e.dying && e.team !== rescuer.team && e.target === rescuer &&
       e.group.position.distanceTo(rescuer.group.position) <= cfg.safeThreatRange);
 }
+function rescueThreat(s) {
+  const enemy = ships.find(e => e.alive && !e.dying && e.team !== s.team && e.target === s &&
+    e.group.position.distanceTo(s.group.position) <= TUNE.rescue.safeThreatRange);
+  const missile = missiles.find(m => !m.dead && m.target === s);
+  return enemy || (missile ? {group:{position:missile.pos}} : null);
+}
 // Return true when this ship has a rescue-specific flight task and normal fighter AI must not run.
 function rescueShipAI(s, dt) {
   if (!rescueEnabled()) return false;
@@ -6537,6 +6557,15 @@ function rescueShipAI(s, dt) {
   if ((!s.def.sar && !enemyRecovery) || !s.def.rescue) return false;
   if (enemyRecovery && ships.some(e => e.alive && !e.dying && !e.rescueCapsule && e.team !== s.team &&
       e.group.position.distanceTo(s.group.position) < TUNE.rescue.hostileSearchRadius)) return false;
+  const threat = rescueThreat(s);
+  if (threat) {
+    if (missiles.some(m => !m.dead && m.target === s && m.pos.distanceTo(s.group.position) < 520)) deployCM(s);
+    const away = s.group.position.clone().sub(threat.group.position).normalize();
+    const destination = s.group.position.clone().addScaledVector(away, TUNE.rescue.safeThreatRange);
+    turnToward(s, destination, dt, 1);
+    aiFly(s, {throttle:1}, dt);
+    return true;
+  }
   const targets = rescueCapsules().filter(p => enemyRecovery ? p.team !== s.team : p.team === s.team);
   if (!targets.length) return false;
   targets.sort((a,b) => s.group.position.distanceToSquared(a.group.position) - s.group.position.distanceToSquared(b.group.position));
@@ -8756,7 +8785,7 @@ function comsTick(dt) {
 const SAR_MISSIONS = [
   {
     id:'sar01', title:'BEACONS IN THE DARK', subtitle:'Cover the cutter', look:'reed', music:'rescue',
-    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the SAR cutter while it locates and recovers both beacons. Keep the cutter alive.',
+    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the SAR cutter while it locates and recovers both beacons. It cannot pick up survivors while under attack; draw fire away and keep it alive.',
     debriefWin:'The cutter returned with both survivors.', debriefLose:'The rescue window closed before the survivors could be brought aboard.',
     sar:{ cutter:'sar1', deadline:220, survivors:[[-450,0,-700],[450,0,-900]] },
     setup:{anchor:{ship:'halberd',id:'halberd',callsign:'CSS HALBERD',pos:[0,0,300]},fleet:[{ship:'sar',id:'sar1',callsign:'RESCUE ONE',pos:[0,0,0]}],player:{ship:'kestrel',pos:[100,0,140],speed:30},wingmen:[]},
@@ -8799,7 +8828,12 @@ function sarScenarioOutcome(S, required) {
 function sarScenarioTick(M, S) {
   if (!M.sar || !S.sar) return;
   const recovered = S.sar.records.filter(r => r.outcome === 'recovered').length;
-  objective('sar-recovery', `Recover survivors: ${recovered}/${M.sar.survivors.length} · ${Math.ceil(Math.max(0,S.sar.deadline-S.t))}s`, 'open');
+  const threatened = !!S.sar.cutter?.alive && !!rescueThreat(S.sar.cutter);
+  if (threatened && !S.sar.warned) comm('SAR', 'Hostile engaging — cover the cutter! Pickup is on hold.', '#ffd080');
+  S.sar.warned = threatened;
+  const recentlyHit = time - (S.sar.cutter?.lastHit ?? -Infinity) < TUNE.rescue.safeAfterHit;
+  const cover = threatened ? ' · HOSTILE ENGAGING — COVER THE CUTTER' : recentlyHit ? ' · RECENT DAMAGE — WAITING FOR SAFE PICKUP' : '';
+  objective('sar-recovery', `Recover survivors: ${recovered}/${M.sar.survivors.length} · ${Math.ceil(Math.max(0,S.sar.deadline-S.t))}s${cover}`, 'open');
   const result = sarScenarioOutcome(S, M.sar.survivors.length);
   if (result) { objective('sar-recovery', null, result === 'win' ? 'done' : 'failed'); endMission(result, result === 'win' ? 'SURVIVORS RECOVERED' : 'RESCUE FAILED'); }
 }

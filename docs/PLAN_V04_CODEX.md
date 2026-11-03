@@ -39,7 +39,7 @@ Known test debt on main: tur_aim_t ("BAD 2"), roster_t HUD (HOLD/SAR), view_t/pl
 After P1 and after P2: iPad + phone + desktop play of one prologue mission, one Severed Node mission, Free Flight. Report: touch controls, music, Hecla performance, damage feel. Nothing after P2 starts before this feedback.
 
 ## Rules for Codex
-- Read `AGENTS.md` first. Commit author `Jonas Koll <178489347+kachumbali@users.noreply.github.com>`; no personal email anywhere. Never edit `index.html` by hand.
+- Read `AGENTS.md` first. Commit author `the owner <178489347+kachumbali@users.noreply.github.com>`; no personal email anywhere. Never edit `index.html` by hand.
 - Balance claims need >= 20 seeded runs. Numbers live in `data/db.json`.
 - New player-facing system = touch binding + AI default + help line in the same commit.
 - Update `docs/CODEX_INTEGRATION_LOG.md` per phase; one short summary per phase, no running commentary.

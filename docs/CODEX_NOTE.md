@@ -10,7 +10,7 @@ Read in this order: `AGENTS.md`, this note, `docs/PLAN_V04_CODEX.md`, `docs/BRIE
 
 ## Owner rules that must hold
 - Four modes stay: Free Flight, Skirmish, Campaign, Gauntlet; plus Shipyard and the intro cutscene. **No arcade drops, pods, perks or score bonuses in Campaign**; they stay in Free Flight and Gauntlet.
-- Commit author `Jonas Koll <178489347+kachumbali@users.noreply.github.com>`. The owner's personal email must never appear (the gate checks).
+- Commit author `the owner <178489347+kachumbali@users.noreply.github.com>`. The owner's personal email must never appear (the gate checks).
 - Do not edit `index.html` by hand; run `python3 build.py`. Balance claims need >= 20 seeded runs. Numbers live in `data/db.json`.
 - Gate before any merge: `tools/check_branch.sh`. Its image rule fires on `assets/` (owner art); that failure is accepted until P0 exempts `assets/`.
 

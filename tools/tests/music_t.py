@@ -30,7 +30,7 @@ def el_src(pg,k):
 with Runner() as R:
     print('Checking audio assets and mission music...', flush=True)
     # every shipped track is served (urgent/pulse are kept as fallbacks)
-    for f in ['menu-frontier.mp3','situation-patrol.mp3','combat-dogfight.mp3','combat-bombast.mp3','situation-victory-new.mp3','transmission.mp3','urgent.mp3','pulse.mp3']:
+    for f in ['menu-frontier.mp3','situation-patrol.mp3','situation-rescue.mp3','situation-tension.mp3','situation-loss.mp3','combat-dogfight.mp3','combat-bombast.mp3','situation-victory-new.mp3','transmission.mp3','urgent.mp3','pulse.mp3']:
         try: code=urllib.request.urlopen('http://localhost:'+PORT+'/audio/'+f).status
         except Exception as e: code=str(e)
         if code!=200: fails.append('audio/%s not served (HTTP %s)'%(f,code))
