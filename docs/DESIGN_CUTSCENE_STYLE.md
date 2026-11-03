@@ -1,7 +1,9 @@
 # Cutscene style and cast — proposals for owner selection
 
-**Status:** visual proposals only. No cutscene, gameplay, character identity or
-faction design is approved by this document. The eight PNGs in
+**Status:** the owner selected **Direction C** for its gritty look on 2026-11-03.
+This approves the starting art direction only; individual cast designs, queen
+anatomy, storyboards and production assets remain proposals for review. No
+cutscene or gameplay implementation is approved by this document. The eight PNGs in
 `assets/proposals/` are AI-generated concept studies made for this project with
 OpenAI image generation; they are not runtime assets. They contain no intended
 likenesses, borrowed characters or copied game art. Review all art, including
@@ -17,10 +19,12 @@ written brief and requested stockier, bulkier dragon-like FROGGs.
 | B | [Capsule / recovery](../assets/proposals/direction-b.png) | **Service-record engraving.** Charcoal, ivory and copper-red, coarse ordered grain, harder industrial silhouettes. | Clearest low-resolution staging and the most tactile hardware. Human skin and expression need warmer accents. |
 | C | [Capture / interrogation](../assets/proposals/direction-c.png) | **Hive chiaroscuro.** Olive-black silhouettes, cyan heat seams, rust-orange reflected light, deep environmental negative space. | Strong contrast between factions and strong atmosphere. Keep faces larger than this wide composition on phones. The slender commander in this early palette study is superseded by the bulkier cast concepts. |
 
-These are alternatives, not three stages of one mandatory style. A is the
-recommended overall direction; borrow B's readable machinery and C's faction
-palette only if the owner chooses that combination. None is an imitation of any
-particular franchise image or character.
+The owner chose C for its gritty atmosphere. Carry its hard shadows, low-key
+lighting and restrained faction colours into future studies while retaining
+the 320×200 readability and stocky, bulky dragon-like FROGG silhouettes shown
+in the revised cast sheet. The slender commander in the early C frame is not
+the target build. None of these concepts is an imitation of a particular
+franchise image or character.
 
 ## Shared art rules
 
