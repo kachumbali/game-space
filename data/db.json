@@ -1119,7 +1119,7 @@
           ],
           "comp": "tur1",
           "side": 1,
-          "visualScale": 0.55
+          "aimScale": 0.55
         },
         {
           "w": "pulseS",
@@ -1130,7 +1130,7 @@
           ],
           "comp": "tur2",
           "side": 1,
-          "visualScale": 0.55
+          "aimScale": 0.55
         },
         {
           "w": "pd",
@@ -9755,6 +9755,13 @@
       }
     },
     "turret": {
+      "targetReferenceDiameter": {"S": 5, "M": 11, "L": 30},
+      "targetReferenceLengthCap": 0.12,
+      "visual": {
+        "S": {"fraction": 0.005555556, "min": 2.4, "max": 5, "barrel": 1.1},
+        "M": {"fraction": 0.011111111, "min": 2.4, "max": 10, "barrel": 1.1},
+        "L": {"fraction": 0.022222222, "min": 3.5, "max": 20, "barrel": 1.1}
+      },
       "reserveShip": 0.25,
       "reserveMsl": 0.05,
       "attackerBias": 0.5,

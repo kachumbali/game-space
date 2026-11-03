@@ -538,27 +538,49 @@ function updateFlashes(dt) {
 }
 
 // ---- turrets (point defence / anti-fighter) -------------------------------------------------------------
-// Turret classes by absolute diameter of the visible assembly (owner spec 2026-10-22): S about 5 m, M 10-15 m, L 20-40 m; barrels 1.2x (S) to 1.7-1.8x (M, L) the diameter.
-// `cls` on the turret data entry; default by weapon: pd/sting = S, everything else = M. Clamp: never more than 12% of the hull length (small hulls).
-const TUR_DIA = { S: 5, M: 11, L: 30 }, TUR_BARREL = { S: 1.2, M: 1.7, L: 1.8 };
+// Visual dimensions are fractions of the final in-game hull length, bounded per class.
 function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'pdS' || t.w === 'sting' || t.w === 'thorn') ? 'S' : 'M'); }
-function turretDia(s, t) { return Math.min(TUR_DIA[turretCls(t)] || 5, 0.12 * s.def.length); }
+function turretDia(s, t) {
+  const cfg = TUNE.turret.visual[turretCls(t)];
+  const scale = Number.isFinite(t.visualScale) ? clamp(t.visualScale, 0.35, 1) : 1;
+  return clamp(s.def.length * cfg.fraction, cfg.min, cfg.max) * scale;
+}
+// Raise the visible head on its base when the shortened barrel would start inside the hull.
+// Sampling the existing voxel hull does not modify the ship's collision or component data.
+function turretClearanceLift(s, t, D, bl, xs) {
+  const V = s.vox, A = V?.data;
+  if (!A || !V.solid) return 0;
+  const vs = A.vs, step = vs / 4;
+  const solid = (x, y, z) => {
+    const i = Math.floor((x + A.hx) / vs), j = Math.floor((y + A.hy) / vs), k = Math.floor((z + A.hz) / vs);
+    return i >= 0 && j >= 0 && k >= 0 && i < A.nx && j < A.ny && k < A.nz && !!V.solid[(i * A.ny + j) * A.nz + k];
+  };
+  let lift = 0;
+  for (const x of xs) {
+    const px = t.pos[0] + x * D * (t.side < 0 ? -1 : 1);
+    const py = t.pos[1] + t.side * 0.3 * D;
+    const pz = t.pos[2] - (0.35 * D + bl);
+    let d = 0;
+    while (d < s.def.radius && solid(px, py + t.side * d, pz)) d += step;
+    if (d > 0) lift = Math.max(lift, d + step);
+  }
+  return lift;
+}
 function makeTurret(s, t) {
   const w = WEAPONS[t.w], cls = turretCls(t);
-  // Gameplay class still controls tracking and weapon role.  Some authored
-  // hulls have a compact embedded housing, so their live rotating rig must
-  // fit that seat instead of becoming a second, oversized ship feature.
-  const visualScale = Number.isFinite(t.visualScale) ? clamp(t.visualScale, 0.35, 1) : 1;
-  const D = turretDia(s, t) * visualScale, bl = (TUR_BARREL[cls] || 1.5) * D;
+  const D = turretDia(s, t), bl = TUNE.turret.visual[cls].barrel * D;
+  const beam = w.kind === 'beam', xs = beam ? [0] : [-0.17, 0.17];
+  const lift = turretClearanceLift(s, t, D, bl, xs);
+  // Preserve the old target/range reference point independently of the visible rig.
+  const referenceD = Math.min(TUNE.turret.targetReferenceDiameter[cls], TUNE.turret.targetReferenceLengthCap * s.def.length) * (t.aimScale ?? 1);
   const g = new THREE.Group();
   const fr = s.def.fac === 'frogg';
   const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
   const mBase = mat(fr ? 0x4a3a24 : 0x8b949f, 0.6, 0.25), mHead = mat(fr ? 0x5a4630 : 0xa4acb6, 0.5, 0.3), mBar = mat(fr ? 0x24190f : 0x2c3138, 0.5, 0.4);
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D, 14), mBase);
-  base.position.y = 0.08 * D; g.add(base);                                  // pos = hull surface: the ring sits mostly proud of it
-  const head = new THREE.Group(); head.position.y = 0.3 * D * t.side; g.add(head);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D + lift, 14), mBase);
+  base.position.y = 0.08 * D + lift / 2; g.add(base);                                  // pos = hull surface: the ring sits mostly proud of it
+  const head = new THREE.Group(); head.position.y = 0.3 * D + lift; g.add(head);
   const hb = new THREE.Mesh(new THREE.BoxGeometry(0.72 * D, 0.38 * D, 0.82 * D), mHead); head.add(hb);
-  const beam = w.kind === 'beam', xs = beam ? [0] : [-0.17, 0.17];
   const muzzles = [];
   for (const x of xs) {
     const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
@@ -572,7 +594,7 @@ function makeTurret(s, t) {
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, group: g, head, mats: [mBase, mHead, mBar], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
@@ -606,7 +628,7 @@ function updateTurrets(s, dt) {
     }
     T.cool -= dt; T.thinkT -= dt;
     const tcd = compEff(comp, 'turret', 'cd'), ttr = compEff(comp, 'turret', 'track');      // M5: a damaged turret fires slower and slews slower
-    const tp = T.head.getWorldPosition(_w1.clone());
+    const tp = T.group.localToWorld(_w1.set(0, T.aimY, 0).clone());
     if (T.thinkT <= 0) {
       T.thinkT = 0.2 + Math.random() * 0.1;
       let best = null, bs = 1e9;

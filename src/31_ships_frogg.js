@@ -314,10 +314,10 @@ SHIPS.gulper = {
     // dorsal crest of spikes
     ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
     // sting turret bases
-    ell([3.6, 7.0, -2], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 5.5, 14], [1.7, 0.9, 1.7], N.mt, { rust: N.ru, streak: 1 }),
-    ell([0, 7.2, -19], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
-    ell([0, -5.9, -20], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
-    ell([0, -7, 16], [1.6, 0.8, 1.6], N.mt, { rust: N.ru, noMirror: true }),
+    ell([3.6, 7.0, -2], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 5.5, 14], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, streak: 1 }),
+    ell([0, 7.2, -19], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
+    ell([0, -5.9, -20], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
+    ell([0, -7, 16], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
     // trailing blades
     nBlade([8, 0.5, 6], [16.5, 0.2, 34], 0.9), nBlade([7, -3, 12], [14, -3.8, 36], 0.7), nBlade([6, 3.5, 4], [12, 5.6, 30], 0.6),
     // engine nacelles
@@ -387,8 +387,8 @@ SHIPS.bullfrog = {
     // heart dome (dorsal) over the reactor
     ell([0, 30, 150], [36, 14, 34], N.dk2, nSt(5, 0.1)),
     // turret housings: L barbette (dorsal; owner decision 2026-10-22 removed the ventral L blister - carrier keeps one lance), M mounts ~12 m, S/PD ~5 m
-    ell([0, 31, -150], [19, 9, 20], N.mt, nSt(3, 0.1)),
-    ...[[44, 33, -70], [54, 28, 80], [46, -30, -20]].map(([x, y, z]) => ell([x, y, z], [6.5, 3, 6.5], N.mt, nSt(2, 0))),
+    ell([0, 31, -150], [7.47, 2, 7.47], N.mt, nSt(3, 0.1)),
+    ...[[44, 33, -70], [54, 28, 80], [46, -30, -20]].map(([x, y, z]) => ell([x, y, z], [3.74, 1.5, 3.74], N.mt, nSt(2, 0))),
     // shield gland blisters
     ell([0, 33, -40], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }), ell([0, 31, 170], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }),
     // rib arches to the bow, flank spikes

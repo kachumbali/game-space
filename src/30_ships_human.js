@@ -231,13 +231,9 @@ SHIPS.bittern = {
       tap([x, -1.86, z], 0.42, [0.34, 0.2], [0.34, 0.2], K.panel, { sh: 'e', noMirror: true, lod: 2 }),
       seg([x, -2.08, z - 0.25], [x, -2.08, z - 0.82], 0.16, 0.12, 0xc8c8c0, { noMirror: true, lod: 2 }),
     ])),
-    // Dorsal and ventral PD turret seats (the barrels are built by makeTurret)
-    tap([0, 1.63, 5.6], 0.52, [1.25, 0.55], [1.25, 0.55], K.dark, { sh: 'e' }),
-    tap([0, 1.86, 5.6], 0.28, [1.05, 0.32], [1.05, 0.32], K.hull3, { sh: 'e' }),
-    ...ringSegs(0, 1.85, 5.1, 6.1, 0.72, 8, 0.06, K.dark, { lod: 2 }),
-    tap([0, -1.63, 5.0], 0.52, [1.25, 0.55], [1.25, 0.55], K.dark, { sh: 'e' }),
-    tap([0, -1.86, 5.0], 0.28, [1.05, 0.32], [1.05, 0.32], K.hull3, { sh: 'e' }),
-    ...ringSegs(0, -1.85, 4.5, 5.5, 0.72, 8, 0.06, K.dark, { lod: 2 }),
+    // Dorsal and ventral seats sized to the S turret base.
+    ell([0, 1.63, 5.6], [1.344, 0.36, 1.344], K.dark, {noMirror:true}),
+    ell([0, -1.63, 5.0], [1.344, 0.36, 1.344], K.dark, {noMirror:true}),
     // Avionics/shield block and reactor housing mark the other major components
     tap([0, 1.02, 0.4], 2.0, [1.1, 0.32], [1.35, 0.38], K.dark, { sh: 'h' }),
     tap([0, 1.26, 0.4], 1.1, [0.72, 0.16], [0.92, 0.18], K.hull3, { sh: 'h', dots: { col: K.amber, p: 0.22 } }),
@@ -258,17 +254,13 @@ SHIPS.bittern = {
 
 // ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
 // ---- Halberd surface-detail prims (authored at 64 m, scaled with the ship) ---------------------------------------------
-const hTur = (x, y, z, dy = 1) => [                              // armoured turret seat + ammo drum for each PD turret
-  tap([x, y - 0.25 * dy, z], 0.55, [1.5, 0.5], [1.5, 0.5], H.panel, { sh: 'e', lod: 2 }),
-  tap([x, y - 0.05 * dy, z], 0.45, [1.1, 0.35], [1.1, 0.35], H.dark, { sh: 'e', lod: 2 }),
-  // Compact twin barrels are part of the voxel hull, rooted in the seat rather
-  // than borrowed from the live-combat turret rig (whose free rotation is not
-  // meaningful in an engineering inspection view).
-  seg([x - 0.42, y + 0.28 * dy, z - 0.25], [x - 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
-  seg([x + 0.42, y + 0.28 * dy, z - 0.25], [x + 0.42, y + 0.28 * dy, z - 2.65], 0.17, 0.13, H.dark, { lod: 2 }),
-];
+// These seats are authored at 64 m and doubled with the 128 m hull.
+const hTur = (x, y, z, dy = 1, cls = 'S') => {
+  const D = turretDia({def:{length:128}}, {cls}) / 2;
+  return [ell([x, y - 0.08 * dy, z], [D * 0.56, D * 0.15, D * 0.56], H.panel, {noMirror:true})];
+};
 const halberdDetail = [
-  ...hTur(2.6, 1.85, -12), ...hTur(-2.6, 1.85, -12), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
+  ...hTur(2.6, 1.85, -12, 1, 'M'), ...hTur(-2.6, 1.85, -12, 1, 'M'), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
   // Railgun detail sits inside the low dorsal spine; nothing is an unsupported tower.
   ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 2.75, z], 0.12, [1.32, 0.38], [1.32, 0.38], H.panel, { sh: 'e', lod: 2 })),
   ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 2.75, z - 0.3], 0.05, [1.37, 0.43], [1.37, 0.43], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
@@ -406,17 +398,12 @@ SHIPS.tern = {
     ell([8.45, 0.3, 7.65], [0.15, 0.15, 0.15], 0xff3030, { glow: true, noMirror: true }),
   ],
 };
-const eTur = (x, y, z, dy = 1) => [                       // turret seat only: the barrels are the real turret meshes (makeTurret, cls S/M)
-  tap([x, y, z], 5, [6, 2.4], [6, 2.4], E.grey2, { sh: 'h' }),
-];
+const eTur = (x, y, z, dy = 1, cls = 'S') => {
+  const D = turretDia({def:{length:450}}, {cls});
+  return [ell([x, y - dy * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], E.grey2, {noMirror:true})];
+};
 // ---- Exeter surface-detail prims (metres; voxel size at high detail is about 1 m) --------------------------------------
-const eTurD = (x, y, z, dy = 1) => [
-  tap([x, y - 1.2 * dy, z], 7, [8, 1.6], [8, 1.6], E.panel, { sh: 'e', lod: 2 }),
-  ell([x, y + 1.0 * dy, z + 1], [3.2, 1.5, 3.2], E.grey2, { lod: 2 }),
-  ...ringSegs(x, y + 0.2 * dy, z - 4, z + 5, 5.2, 8, 0.35, E.dark, { lod: 3 }),
-];
 const exeterDetail = [
-  ...eTurD(0, 22, -110), ...eTurD(24, 21, -40), ...eTurD(-24, 21, -40), ...eTurD(20, 26, 110), ...eTurD(-20, 26, 110), ...eTurD(0, -20, -80, -1), ...eTurD(0, -21, 60, -1),
   // dorsal slab: VLS lattices, long trench with ribs, comm farm
   ...paintGrid(-14, 17, -12, 5, 10, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
   ...paintGrid(-14, 17, 100, 5, 9, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
@@ -487,9 +474,9 @@ SHIPS.exeter = {
     ell([0, 0, 214.5], [20, 12, 2.5], E.glow, { glow: true }),
     ...eTur(0, 22, -110), ...eTur(24, 21, -40), ...eTur(-24, 21, -40), ...eTur(20, 26, 110), ...eTur(-20, 26, 110),
     ...eTur(0, -20, -80, -1), ...eTur(0, -21, 60, -1),
-    ...eTur(40, 21, -90), ...eTur(-40, 21, -90), ...eTur(36, -23, 30, -1), ...eTur(-36, -23, 30, -1),      // L mass driver seats
-    ...eTur(48, 19, 0), ...eTur(-48, 19, 0), ...eTur(14, 24, 130), ...eTur(-14, 24, 130),                  // M laser seats (dorsal)
-    ...eTur(44, -19.2, 60, -1), ...eTur(-44, -19.2, 60, -1), ...eTur(14, -24.5, 120, -1), ...eTur(-14, -24.5, 120, -1),  // M laser seats (ventral)
+    ...eTur(40, 21, -90, 1, 'L'), ...eTur(-40, 21, -90, 1, 'L'), ...eTur(36, -23, 30, -1, 'L'), ...eTur(-36, -23, 30, -1, 'L'),      // L mass driver seats
+    ...eTur(48, 19, 0, 1, 'M'), ...eTur(-48, 19, 0, 1, 'M'), ...eTur(14, 24, 130, 1, 'M'), ...eTur(-14, 24, 130, 1, 'M'),                  // M laser seats (dorsal)
+    ...eTur(44, -19.2, 60, -1, 'M'), ...eTur(-44, -19.2, 60, -1, 'M'), ...eTur(14, -24.5, 120, -1, 'M'), ...eTur(-14, -24.5, 120, -1, 'M'),  // M laser seats (ventral)
     seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle: collar and glow on the bow face, between the prongs
     ...exeterDetail,
   ],
@@ -577,12 +564,12 @@ SHIPS.hecla = {
       const side = Math.sign(t.pos[1] || 1);
       const baseY = side * (Math.abs(t.pos[1]) > 40 ? 41 : 18.75);
       const gap = Math.abs(t.pos[1] - baseY);
-      const pad = (t.cls === 'M' ? 12 : 15) * HECLA_SCALE;
+      const pad = 0.56 * turretDia({def:{length:1000}}, t);
       return [
         ...(gap > 0 ? [tap([t.pos[0], (t.pos[1] + baseY) / 2, t.pos[2]], gap / 2,
-          [4.5, 4.5], [4.5, 4.5], E.grey2, { ax: 'y', sh: 'h', noMirror: true })] : []),
-        tap(t.pos, pad, [pad, pad], [pad, pad],
-          t.w === 'laserM' ? E.panel : E.grey2, { sh: 'h', noMirror: true }),
+          [pad, pad], [pad, pad], E.grey2, { ax: 'y', sh: 'h', noMirror: true })] : []),
+        ell([t.pos[0], t.pos[1] - side * pad * 0.08 / 0.56, t.pos[2]],
+          [pad, pad * 0.15 / 0.56, pad], t.w === 'laserM' ? E.panel : E.grey2, {noMirror:true}),
       ];
     }),
     ...DB.ships.hecla.comps.filter(c => c.role === 'shield' || c.role === 'radar').flatMap(c => {
@@ -678,11 +665,10 @@ SHIPS.tender = {
 //  Numbers live in data/db.json; this is geometry only. Every mount / launch / turret position below sits on a visible barrel, rack or seat.
 // ======================================================================
 // ---- FALCHION: two-seat heavy fighter (19.5 m): tandem canopy, two nose cannons, two MD-9 mag drivers on wing-root booms, wing pylons, 3 PD seats ----
-const falSeat = (z, y, dy) => [                          // PD turret seat (the barrels are the real turret meshes)
-  tap([0, y, z], 0.55, [1.2, 0.5], [1.2, 0.5], K.dark, { sh: 'e' }),
-  tap([0, y + 0.25 * dy, z], 0.3, [1.0, 0.3], [1.0, 0.3], K.hull3, { sh: 'e' }),
-  ...ringSegs(0, y + 0.25 * dy, z - 0.55, z + 0.55, 0.7, 8, 0.05, K.dark, { lod: 2 }),
-];
+const falSeat = (z, y, dy) => {
+  const D = turretDia({def:{length:19.5}}, {cls:'S'});
+  return [ell([0, y - dy * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], K.dark, {noMirror:true})];
+};
 SHIPS.falchion = {
   ...DB.ships.falchion,
   prims: [
@@ -820,7 +806,7 @@ SHIPS.liner = {
     tap([0, 28, -170], 12, [8, 5], [10, 6], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),
     seg([0, 33, -170], [0, 47, -170], 0.9, 0.3, E.grey2), ell([0, 47.5, -170], [5, 0.8, 5], E.white),
     // PD seats (six S turrets; the barrels are the real turret meshes)
-    ...linTurPos.map(([z, sd]) => tap([0, sd * (24 + 2 * z / 200 + 0.8), z], 3.2, [3.6, 1.4], [3.6, 1.4], E.dark, { sh: 'e' })),
+    ...linTurPos.map(([z, sd]) => ell([0, sd * (24 + 2 * z / 200 + 0.8), z], [1.4, 0.4, 1.4], E.dark, {noMirror:true})),
     // aft engine block with four nozzles
     tap([0, 0, 212], 12, [26, 26], [30, 30], E.grey2, { sh: 'e' }),
     ...[[15, 0], [0, 15], [0, -15]].flatMap(([x, y]) => [
@@ -835,7 +821,10 @@ SHIPS.liner = {
 };
 
 // ---- CLAYMORE: 600 m destroyer (between the 450 m Exeter and the 1 km Hecla): 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
-const dstSeat = (x, y, z, hz, hx, hy) => tap([x, y, z], hz, [hx, hy], [hx, hy], E.grey2, { sh: 'h' });
+const dstSeat = (x, y, z, cls) => {
+  const D = turretDia({def:{length:600}}, {cls});
+  return ell([x, y - Math.sign(y) * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], E.grey2);
+};
 const dstDetail = [
   // dorsal deck: VLS lattices and the long trench
   ...paintGrid(-14, 22, -60, 5, 8, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
@@ -881,11 +870,11 @@ SHIPS.destroyer = {
     seg([22, -3, -258], [22, -3, -254], 2.2, 3.0, 0xd04a3a),
     seg([14, -2, -250], [22, -3, -250], 1.2, 1.2, E.grey2), seg([17, -2, -232], [22, -3, -232], 1.2, 1.2, E.grey2),
     // turret seats: L mass drivers, M lasers, S point defence (the barrels are the real turret meshes)
-    dstSeat(0, 22, -140, 15, 16, 2.6), dstSeat(0, 22, 20, 15, 16, 2.6), dstSeat(0, -20.6, -60, 15, 16, 2.6), dstSeat(0, -20.6, 90, 15, 16, 2.6),
-    ...[[30, 16.95, -90], [38, 18.4, 60]].map(([x, y, z]) => dstSeat(x, y, z, 6.5, 7, 2.2)),
-    ...[[30, -16.95, -60], [36, -18.9, 120]].map(([x, y, z]) => dstSeat(x, y, z, 6.5, 7, 2.2)),
-    ...[[12, 22, -190], [14, 22, 110]].map(([x, y, z]) => dstSeat(x, y, z, 3.2, 3.4, 1.4)),
-    ...[[8, -20.6, -150], [8, -20.6, 150]].map(([x, y, z]) => dstSeat(x, y, z, 3.2, 3.4, 1.4)),
+    dstSeat(0, 22, -140, 'L'), dstSeat(0, 22, 20, 'L'), dstSeat(0, -20.6, -60, 'L'), dstSeat(0, -20.6, 90, 'L'),
+    ...[[30, 16.95, -90], [38, 18.4, 60]].map(([x, y, z]) => dstSeat(x, y, z, 'M')),
+    ...[[30, -16.95, -60], [36, -18.9, 120]].map(([x, y, z]) => dstSeat(x, y, z, 'M')),
+    ...[[12, 22, -190], [14, 22, 110]].map(([x, y, z]) => dstSeat(x, y, z, 'S')),
+    ...[[8, -20.6, -150], [8, -20.6, 150]].map(([x, y, z]) => dstSeat(x, y, z, 'S')),
     // radiator panels
     tap([64, 12, 205], 24, [30, 0.5], [20, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([64, 12.2, 205], 24, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
