@@ -10,8 +10,8 @@ function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT
 // The menu cue and combat tracks are original GM-MIDI loops (tools/gen/music). The menu remains opt-in:
 // musicUnlock is called only inside the existing first pointer/key gesture, as required by browser audio policies.
 // urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
-const MUSIC_FILES = { menu: 'audio/menu-frontier.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
-const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, status: 'waiting for the first tap or key' };
+const MUSIC_FILES = { menu:'audio/menu-frontier.mp3', title:'audio/situation-title-sting.mp3', patrol:'audio/situation-patrol.mp3', tension:'audio/situation-tension.mp3', hive:'audio/situation-hive.mp3', capital:'audio/situation-capital-duel.mp3', boss:'audio/situation-bullfrog.mp3', retreat:'audio/situation-retreat.mp3', rescue:'audio/situation-rescue.mp3', loss:'audio/situation-loss.mp3', win:'audio/situation-victory-new.mp3', combat:'audio/combat-dogfight.mp3', heavy:'audio/combat-bombast.mp3', story:'audio/transmission.mp3' };
+const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, titleDone:false, status: 'waiting for the first tap or key' };
 // Routing: over http(s) every track goes <audio> -> GainNode -> speakers. iOS ignores element.volume and only lets a media element play()
 // if that element itself was started inside a user gesture, so (a) volume and crossfades use the gain node, and (b) the first tap/key
 // starts every track silently and pauses the ones not wanted (musicUnlock). Over file:// a media-element source is silenced by the browser
@@ -19,7 +19,8 @@ const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0,
 const musRouted = () => !!AUDIO.ctx && /^https?:$/.test(location.protocol);
 function musEl(k) {
   if (!MUS.el[k]) {
-    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'win'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'title'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    if (k === 'title') a.onended = () => { MUS.titleDone = true; };
     if (musRouted()) {
       try {
         const g = AUDIO.ctx.createGain(); g.gain.value = 0;
@@ -43,15 +44,28 @@ function sfxGain() { return AUDIO.muted ? 0 : 0.55 * AOPT.sfxVol; }
 function musicWant(k) { if (MUS.want !== k) { MUS.want = k; if (k === 'win') { const a = musEl(k); try { a.currentTime = 0; } catch (e) { /* not loaded yet */ } } } }
 // which track fits the situation: briefing/debrief = menu, flight = patrol, hostile fighters close = combat (heavy when many)
 function musicMood(dtReal) {
-  if (state === 'brief' || $id('brief').style.display === 'flex') return game.mstate && game.mstate.result === 'win' ? 'win' : 'menu';
+  if (state === 'brief' || $id('brief').style.display === 'flex') return game.mstate?.result ? (game.mstate.result === 'win' ? 'win' : 'loss') : (menuView === 'main' && !MUS.titleDone ? 'title' : 'menu');
   if (state === 'cine') return 'story';
-  if (state === 'done' || state === 'dead') return game.mstate && game.mstate.result === 'win' ? 'win' : 'menu';
+  if (state === 'done' || state === 'dead') return game.mstate && game.mstate.result === 'win' ? 'win' : 'loss';
   if (state !== 'play' || !player) return 'menu';
-  let n = 0;
-  for (const s of ships) if (s.alive && s.team !== player.team && s.group.position.distanceTo(player.group.position) < 1800) n++;
+  let n = 0, distant = 0, capital = false, boss = false, hive = false;
+  for (const s of ships) if (s.alive && !s.dying && s.team !== player.team) {
+    const d = s.group.position.distanceTo(player.group.position);
+    if (d < 5000) distant++;
+    if (d < 1800) n++;
+    if (d < 6000 && s.def.id === 'bullfrog') boss = true;
+    if (d < 6000 && s.def.id === 'hivecarrier') hive = true;
+    if (d < 3500 && s.def.cls !== 'fighter') capital = true;
+  }
+  const mission = game.mission?.id || '';
+  if (boss) return 'boss';
+  if (game.mission?.music === 'rescue' || mission.startsWith('sar')) return 'rescue';
+  if (hive || game.mstate?.area === 'oasis') return 'hive';
+  if (capital) return 'capital';
+  if (mission.startsWith('r0')) return 'retreat';
   if (n > 0) MUS.combatT = 8; else MUS.combatT = Math.max(0, MUS.combatT - dtReal);
   if (MUS.combatT > 0) return n >= 6 || MUS.mood === 'heavy' && n >= 3 ? 'heavy' : 'combat';
-  return 'patrol';
+  return distant ? 'tension' : 'patrol';
 }
 function musicTick(dtReal) {
   if (!MUS.started) return;
@@ -61,11 +75,12 @@ function musicTick(dtReal) {
   if (!on) MUS.status = AUDIO.muted ? 'sound is muted (?mute or no audio support)' : 'off';
   for (const k in MUSIC_FILES) {
     if (k !== MUS.want && !MUS.el[k]) continue;
-    const a = musEl(k), tv = k === MUS.want ? AOPT.musicVol : 0;
+    const critical = AUDIO.ctx && AUDIO.ctx.currentTime < (AUDIO.criticalUntil || 0);
+    const a = musEl(k), tv = k === MUS.want && !critical ? AOPT.musicVol : 0;
     if (tv > 0 && a.paused) a.play().then(() => { if (k === MUS.want) MUS.status = 'playing: ' + k; }).catch(() => { MUS.status = 'blocked by the browser: tap the screen once more'; });
     const step = dtReal / 1.6;                         // ~1.6 s crossfade
     const cur = MUS.vol[k] ?? 0;
-    musSetVol(k, clamp(cur + clamp(tv - cur, -step, step), 0, 1));
+    musSetVol(k, critical ? 0 : clamp(cur + clamp(tv - cur, -step, step), 0, 1));
     if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
   if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;
@@ -83,17 +98,18 @@ function samplesLoad() {
     } catch (e) { /* skip */ }
   }
 }
-function samplePlay(k, vol, rate = 1) {
+function samplePlay(k, vol, rate = 1, dist = 0) {
   const b = SMP.buf[k]; if (!b || !AOPT.samples || AUDIO.muted) return;
-  const C = AUDIO.ctx, s = C.createBufferSource(), g = C.createGain();
+  const C = AUDIO.ctx, s = C.createBufferSource(), g = C.createGain(), f = C.createBiquadFilter();
   s.buffer = b; s.playbackRate.value = rate * (0.94 + Math.random() * 0.12); g.gain.value = vol;
-  s.connect(g); g.connect(AUDIO.master); s.start();
+  f.type = 'lowpass'; f.frequency.value = Math.max(500, 18000 / (1 + Math.max(0, dist) / 800));
+  s.connect(f); f.connect(g); g.connect(AUDIO.master); s.start(C.currentTime + Math.min(0.8, Math.max(0, dist) / 5000));
 }
 const SAMPLE_MAP = {
-  boom: v => { const big = v > 0.75; samplePlay(big ? 'expl3' : ['expl1', 'expl2', 'expl4'][Math.floor(Math.random() * 3)], big ? 0.5 : 0.35, big ? 0.8 : 1); },
-  pulse: () => samplePlay('pulse', 0.16, 1.1),
-  fang: () => samplePlay('fang', 0.12, 1.3),
-  jump: () => samplePlay('warp', 0.45),
+  boom: (v, d, size) => { const big = size > 0.75; samplePlay(big ? 'expl3' : ['expl1', 'expl2', 'expl4'][Math.floor(Math.random() * 3)], (big ? 0.5 : 0.35) * v, big ? 0.8 : 1, d); },
+  pulse: (v, d) => samplePlay('pulse', 0.16 * v, 1.1, d),
+  fang: (v, d) => samplePlay('fang', 0.12 * v, 1.3, d),
+  jump: (v, d) => samplePlay('warp', 0.45 * v, 1, d),
 };
 // ---- options panel ----
 let optsOpen = false;

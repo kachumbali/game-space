@@ -222,7 +222,7 @@ function dockTry() {
     const t = dock.t;
     dock = null;
     player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
-    log('UNDOCKED', '#ffd24a'); sfx('click');
+    log('UNDOCKED', '#ffd24a'); sfx('dock');
     return;
   }
   let best = null, bd = DOCK_R;
@@ -234,7 +234,7 @@ function dockTry() {
   if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
   if (subEff(best, 'bay', 'service') <= 0) { log('TENDER BAYS DESTROYED - NO DOCKING', '#ff5a4a'); return; }
   dock = { t: best, phase: 'approach', t0: time };
-  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
+  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('dock');
 }
 function dockTick(dt) {
   if (!dock) return;
@@ -260,6 +260,6 @@ function dockTick(dt) {
     const t = dock.t;
     player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
     dock = null;
-    log('REARM COMPLETE', '#ffd24a'); sfx('click');
+    log('REARM COMPLETE', '#ffd24a'); sfx('dock');
   }
 }

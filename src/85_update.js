@@ -84,6 +84,19 @@ function updateShieldsAndFx(s, dt) {
   }
 }
 
+// Defer lower-priority cockpit cautions while an incoming missile, lock or beam is warning.
+function cockpitConditionWarnings(p, dt, urgent) {
+  AUDIO.energyT = Math.max(0, AUDIO.energyT - dt);
+  AUDIO.hullT = Math.max(0, AUDIO.hullT - dt);
+  AUDIO.conditionT = Math.max(0, AUDIO.conditionT - dt);
+  const lowEnergy = p.energyMax > 0 && p.energy / p.energyMax < 0.25;
+  const lowHull = p.def.structure > 0 && p.structure / p.def.structure < 0.25;
+  if (!lowEnergy) AUDIO.energyT = 0;
+  if (!lowHull) AUDIO.hullT = 0;
+  if (urgent || AUDIO.conditionT > 0) return;
+  if (lowHull && AUDIO.hullT <= 0) { sfx('hullalarm'); AUDIO.hullT = 5; AUDIO.conditionT = 1; }
+  else if (lowEnergy && AUDIO.energyT <= 0) { sfx('lowenergy'); AUDIO.energyT = 5; AUDIO.conditionT = 1; }
+}
 function updateWarnings(dt) {
   const inc = [], p = player;
   warnState.lockedBy = 0;
@@ -94,10 +107,11 @@ function updateWarnings(dt) {
   warnState.incoming = inc;
   warnState.beam = p && p.alive && time - playerTrack.last < 0.4 ? playerTrack : null;      // a hostile laser is tracking or burning us
   if (!p || !p.alive || state !== 'play') { if (AUDIO.lockGain) AUDIO.lockGain.gain.value = 0; return; }
+  cockpitConditionWarnings(p, dt, !!(inc.length || warnState.lockedBy || warnState.beam));
   AUDIO.warnT -= dt;
   if (inc.length) { if (AUDIO.warnT <= 0) { sfx('alarm'); AUDIO.warnT = 0.55; } }
   else if (warnState.lockedBy) { if (AUDIO.warnT <= 0) { sfx('warn'); AUDIO.warnT = 0.5; } }
-  else if (warnState.beam) { const B = warnState.beam; if (AUDIO.warnT <= 0) { tone(B.live ? 1500 : 900 + 500 * B.prog, B.live ? 1500 : 900 + 500 * B.prog, 0.05, 'square', 0.07); AUDIO.warnT = B.live ? 0.1 : 0.4 - 0.28 * B.prog; } }
+  else if (warnState.beam) { const B = warnState.beam; if (AUDIO.warnT <= 0) { if (AUDIO.ctx) AUDIO.criticalUntil = Math.max(AUDIO.criticalUntil, AUDIO.ctx.currentTime + 1.5); tone(B.live ? 1500 : 900 + 500 * B.prog, B.live ? 1500 : 900 + 500 * B.prog, 0.05, 'triangle', 0.07); AUDIO.warnT = B.live ? 0.1 : 0.4 - 0.28 * B.prog; } }
   // own lock tone
   const L = p.lock;
   if (AUDIO.lockGain) AUDIO.lockGain.gain.value = L.state === 'locked' ? 0.05 : 0;

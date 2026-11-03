@@ -425,8 +425,8 @@ let FS = 1;      // HUD canvas font scale (phones use a smaller one)
 // ======================================================================
 //  AUDIO — tiny WebAudio synth (no assets). Starts on first user gesture. ?mute disables.
 // ======================================================================
-let SV = 1;
-const AUDIO = { ctx: null, master: null, noise: null, muted: params.has('mute'), lockOsc: null, lockGain: null, warnT: 0, lockT: 0 };
+let SV = 1, SF = 1, SD = 0, SP = 1, ST = 1;
+const AUDIO = { ctx: null, master: null, noise: null, muted: params.has('mute'), lockOsc: null, lockGain: null, engineOsc: null, engineGain: null, criticalUntil: 0, warnT: 0, lockT: 0, energyT: 0, hullT: 0, conditionT: 0 };
 function audioInit() {
   if (AUDIO.ctx || AUDIO.muted) { AUDIO.ctx?.state === 'suspended' && AUDIO.ctx.resume(); return; }
   try {
@@ -440,28 +440,44 @@ function audioInit() {
     AUDIO.lockOsc = C.createOscillator(); AUDIO.lockGain = C.createGain(); AUDIO.lockGain.gain.value = 0;
     AUDIO.lockOsc.type = 'sine'; AUDIO.lockOsc.frequency.value = 1150;
     AUDIO.lockOsc.connect(AUDIO.lockGain); AUDIO.lockGain.connect(AUDIO.master); AUDIO.lockOsc.start();
+    AUDIO.engineOsc = C.createOscillator(); AUDIO.engineGain = C.createGain(); AUDIO.engineGain.gain.value = 0;
+    AUDIO.engineOsc.type = 'triangle'; AUDIO.engineOsc.frequency.value = 65;
+    AUDIO.engineOsc.connect(AUDIO.engineGain); AUDIO.engineGain.connect(AUDIO.master); AUDIO.engineOsc.start();
     if (typeof samplesLoad === 'function') samplesLoad();
   } catch (e) { AUDIO.muted = true; }
 }
-['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; if (typeof musicUnlock === 'function') musicUnlock(); }));
+['pointerdown', 'touchend', 'keydown'].forEach(ev => addEventListener(ev, () => { audioInit(); MUS.started = true; if (typeof musicUnlock === 'function') musicUnlock(); }));
+// A single cockpit engine bed, updated by the flight loop; no per-ship oscillator swarm.
+function audioEngineUpdate(s, active = true) {
+  const C = AUDIO.ctx, g = AUDIO.engineGain, o = AUDIO.engineOsc;
+  if (!C || !g || !o) return;
+  const on = active && s && s.alive && !s.dying && !AUDIO.muted && AOPT.samples;
+  const size = ({fighter: 1, corvette: 0.7, frigate: 0.5, capital: 0.4})[s?.def?.cls] || 1;
+  const throttle = Math.max(0, Math.min(1, s?.throttle || 0));
+  const boost = on && s.ab ? 1 : 0;
+  o.frequency.setTargetAtTime((48 + throttle * 40 + boost * 25) * size, C.currentTime, 0.12);
+  g.gain.setTargetAtTime(on ? 0.025 + throttle * 0.025 + boost * 0.035 : 0, C.currentTime, 0.15);
+}
 function tone(f0, f1, dur, type = 'sine', vol = 0.2, delay = 0) {
   const C = AUDIO.ctx; if (!C) return;
-  const o = C.createOscillator(), g = C.createGain(), t = C.currentTime + delay;
-  o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur);
+  dur *= ST; const o = C.createOscillator(), g = C.createGain(), t = C.currentTime + delay + SD;
+  o.type = type; o.frequency.setValueAtTime(Math.max(20, f0 * SP), t); o.frequency.exponentialRampToValueAtTime(Math.max(20, f1 * SP), t + dur);
   g.gain.setValueAtTime(vol * SV, t); g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
   o.connect(g); g.connect(AUDIO.master); o.start(t); o.stop(t + dur + 0.02);
 }
 function noiseBurst(dur, vol, f0, f1, type = 'lowpass', q = 0.7, delay = 0) {
   const C = AUDIO.ctx; if (!C) return;
-  const s = C.createBufferSource(), f = C.createBiquadFilter(), g = C.createGain(), t = C.currentTime + delay;
-  s.buffer = AUDIO.noise; f.type = type; f.Q.value = q;
-  f.frequency.setValueAtTime(f0, t); f.frequency.exponentialRampToValueAtTime(Math.max(30, f1), t + dur);
+  dur *= ST; const s = C.createBufferSource(), f = C.createBiquadFilter(), g = C.createGain(), t = C.currentTime + delay + SD;
+  s.buffer = AUDIO.noise; s.loop = dur > 0.5; f.type = type; f.Q.value = q;
+  f.frequency.setValueAtTime(Math.max(30, f0 * SF), t); f.frequency.exponentialRampToValueAtTime(Math.max(30, f1 * SF), t + dur);
   g.gain.setValueAtTime(vol * SV, t); g.gain.exponentialRampToValueAtTime(0.0008, t + dur);
   s.connect(f); f.connect(g); g.connect(AUDIO.master); s.start(t, Math.random() * 0.5); s.stop(t + dur + 0.02);
 }
 const SFX = {
   cannon: () => { noiseBurst(0.07, 0.35, 2600, 500, 'bandpass', 1.2); tone(140, 50, 0.07, 'sine', 0.3); },
-  pulse: () => tone(1500, 260, 0.13, 'sawtooth', 0.09),
+  pulse: () => { tone(420, 190, 0.11, 'triangle', 0.12); noiseBurst(0.08, 0.08, 1800, 450, 'bandpass'); },
+  laser: () => { tone(570, 290, 0.14, 'triangle', 0.10); noiseBurst(0.10, 0.06, 2200, 550, 'bandpass'); },
+  maser: () => { tone(235, 120, 0.3, 'triangle', 0.16); noiseBurst(0.22, 0.12, 1200, 240, 'lowpass'); },
   fang: () => { tone(820, 300, 0.07, 'square', 0.07); noiseBurst(0.04, 0.12, 3000, 900, 'bandpass'); },
   spit: () => { tone(330, 110, 0.18, 'sine', 0.2); noiseBurst(0.12, 0.12, 900, 200, 'lowpass'); },
   spitbig: () => { tone(200, 55, 0.4, 'sine', 0.32); noiseBurst(0.35, 0.22, 1200, 150, 'lowpass'); },
@@ -470,23 +486,52 @@ const SFX = {
   lash: () => { tone(260, 50, 0.7, 'sawtooth', 0.22); noiseBurst(0.6, 0.3, 2000, 120, 'lowpass'); },
   pd: () => noiseBurst(0.025, 0.1, 4000, 2000, 'bandpass'),
   msl: () => { noiseBurst(0.7, 0.3, 500, 2800, 'bandpass', 0.8); tone(180, 90, 0.5, 'triangle', 0.15); },
+  torp: () => { noiseBurst(0.9, 0.35, 650, 180, 'lowpass'); tone(100, 43, 0.8, 'sine', 0.22); },
   flare: () => noiseBurst(0.35, 0.18, 6000, 1500, 'highpass'),
   hit: () => { noiseBurst(0.05, 0.25, 1800, 400, 'bandpass'); },
   shield: () => tone(1100, 600, 0.08, 'sine', 0.12),
   boom: (n = 1) => { noiseBurst(0.5 + n * 0.5, 0.6 + n * 0.1, 900, 60, 'lowpass'); tone(90, 25, 0.5 + n * 0.4, 'sine', 0.5); },
+  blip: () => tone(600, 570, 0.055, 'sine', 0.04),
+  alarm: () => { tone(650, 650, 0.12, 'triangle', 0.07); tone(480, 480, 0.12, 'triangle', 0.07, 0.14); },
+  warn: () => tone(850, 850, 0.1, 'triangle', 0.06),
+  lowenergy: () => { tone(460, 410, 0.13, 'triangle', 0.065); },
+  hullalarm: () => { tone(540, 540, 0.17, 'triangle', 0.08); tone(410, 410, 0.17, 'triangle', 0.08, 0.2); },
+  launchwarn: () => { tone(1050, 1050, 0.10, 'triangle', 0.09); tone(1050, 1050, 0.10, 'triangle', 0.09, 0.13); },
+  jump: () => { tone(60, 900, 0.9, 'sawtooth', 0.15); noiseBurst(0.9, 0.2, 200, 6000, 'bandpass', 2); },
+  dock: () => { noiseBurst(0.2, 0.12, 450, 120, 'lowpass'); tone(90, 55, 0.24, 'sine', 0.1); },
+  comms: () => noiseBurst(0.09, 0.08, 1800, 700, 'bandpass'),
+  click: () => tone(480, 440, 0.025, 'sine', 0.04),
+};
+// Existing procedural fallback remains available with the sample/enhancement layer off.
+const SFX_FALLBACK = {
+  pulse: () => tone(1500, 260, 0.13, 'sawtooth', 0.09),
+  laser: () => tone(1500, 260, 0.13, 'sawtooth', 0.09),
+  maser: () => { tone(330, 110, 0.18, 'sine', 0.2); noiseBurst(0.12, 0.12, 900, 200); },
+  torp: () => { noiseBurst(0.7, 0.3, 500, 2800, 'bandpass', 0.8); tone(180, 90, 0.5, 'triangle', 0.15); },
   blip: () => tone(1400, 1400, 0.04, 'square', 0.05),
   alarm: () => { tone(900, 900, 0.12, 'square', 0.07); tone(700, 700, 0.12, 'square', 0.07, 0.14); },
   warn: () => tone(1900, 1900, 0.09, 'square', 0.07),
+  lowenergy: () => tone(1900, 1900, 0.09, 'square', 0.07),
+  hullalarm: () => { tone(900, 900, 0.12, 'square', 0.07); tone(700, 700, 0.12, 'square', 0.07, 0.14); },
   launchwarn: () => { tone(1200, 1200, 0.08, 'square', 0.08); tone(1200, 1200, 0.08, 'square', 0.08, 0.12); },
-  jump: () => { tone(60, 900, 0.9, 'sawtooth', 0.15); noiseBurst(0.9, 0.2, 200, 6000, 'bandpass', 2); },
   click: () => tone(600, 600, 0.03, 'square', 0.05),
+  dock: () => tone(600, 600, 0.03, 'square', 0.05),
+  comms: () => tone(1400, 1400, 0.04, 'square', 0.05),
 };
-function sfx(name, dist = 0, vol = 1) {
+function sfx(name, dist = 0, vol = 1, shipClass = 'fighter') {
   if (!AUDIO.ctx || AUDIO.muted) return;
+  if (['alarm', 'warn', 'launchwarn', 'hullalarm', 'lowenergy'].includes(name)) AUDIO.criticalUntil = Math.max(AUDIO.criticalUntil, AUDIO.ctx.currentTime + 1.5);
   const a = 1 / (1 + dist / 220);
   if (a * vol < 0.04) return;
-  SV = Math.min(1, a * vol); SFX[name]?.(); SV = 1;
-  if (SAMPLE_MAP[name] && a * vol > 0.15) SAMPLE_MAP[name](vol);
+  SV = Math.min(1, a * vol);
+  // Stylised remote-feed latency/filtering: vacuum has no transmitted sound.
+  const enhanced = AOPT.samples;
+  SD = enhanced ? Math.min(0.8, Math.max(0, dist) / 5000) : 0;
+  SF = enhanced ? 1 / (1 + Math.max(0, dist) / 900) : 1;
+  SP = enhanced ? (({fighter: 1, corvette: 0.78, frigate: 0.62, capital: 0.52})[shipClass] || 1) : 1;
+  ST = 1 / SP;
+  (enhanced ? SFX[name] : (SFX_FALLBACK[name] || SFX[name]))?.(vol); SV = SF = SP = ST = 1; SD = 0;
+  if (SAMPLE_MAP[name] && a * vol > 0.15) SAMPLE_MAP[name](a * vol, dist, vol, shipClass);
 }
 // ======================================================================
 //  MUSIC + AUDIO OPTIONS (owner 2026-10-21)
@@ -500,8 +545,8 @@ function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT
 // The menu cue and combat tracks are original GM-MIDI loops (tools/gen/music). The menu remains opt-in:
 // musicUnlock is called only inside the existing first pointer/key gesture, as required by browser audio policies.
 // urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
-const MUSIC_FILES = { menu: 'audio/menu-frontier.mp3', patrol: 'audio/sector.mp3', combat: 'audio/combat-dogfight.mp3', heavy: 'audio/combat-bombast.mp3', win: 'audio/victory.mp3', story: 'audio/transmission.mp3' };
-const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, status: 'waiting for the first tap or key' };
+const MUSIC_FILES = { menu:'audio/menu-frontier.mp3', title:'audio/situation-title-sting.mp3', patrol:'audio/situation-patrol.mp3', tension:'audio/situation-tension.mp3', hive:'audio/situation-hive.mp3', capital:'audio/situation-capital-duel.mp3', boss:'audio/situation-bullfrog.mp3', retreat:'audio/situation-retreat.mp3', rescue:'audio/situation-rescue.mp3', loss:'audio/situation-loss.mp3', win:'audio/situation-victory-new.mp3', combat:'audio/combat-dogfight.mp3', heavy:'audio/combat-bombast.mp3', story:'audio/transmission.mp3' };
+const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, titleDone:false, status: 'waiting for the first tap or key' };
 // Routing: over http(s) every track goes <audio> -> GainNode -> speakers. iOS ignores element.volume and only lets a media element play()
 // if that element itself was started inside a user gesture, so (a) volume and crossfades use the gain node, and (b) the first tap/key
 // starts every track silently and pauses the ones not wanted (musicUnlock). Over file:// a media-element source is silenced by the browser
@@ -509,7 +554,8 @@ const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0,
 const musRouted = () => !!AUDIO.ctx && /^https?:$/.test(location.protocol);
 function musEl(k) {
   if (!MUS.el[k]) {
-    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'win'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'title'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    if (k === 'title') a.onended = () => { MUS.titleDone = true; };
     if (musRouted()) {
       try {
         const g = AUDIO.ctx.createGain(); g.gain.value = 0;
@@ -533,15 +579,28 @@ function sfxGain() { return AUDIO.muted ? 0 : 0.55 * AOPT.sfxVol; }
 function musicWant(k) { if (MUS.want !== k) { MUS.want = k; if (k === 'win') { const a = musEl(k); try { a.currentTime = 0; } catch (e) { /* not loaded yet */ } } } }
 // which track fits the situation: briefing/debrief = menu, flight = patrol, hostile fighters close = combat (heavy when many)
 function musicMood(dtReal) {
-  if (state === 'brief' || $id('brief').style.display === 'flex') return game.mstate && game.mstate.result === 'win' ? 'win' : 'menu';
+  if (state === 'brief' || $id('brief').style.display === 'flex') return game.mstate?.result ? (game.mstate.result === 'win' ? 'win' : 'loss') : (menuView === 'main' && !MUS.titleDone ? 'title' : 'menu');
   if (state === 'cine') return 'story';
-  if (state === 'done' || state === 'dead') return game.mstate && game.mstate.result === 'win' ? 'win' : 'menu';
+  if (state === 'done' || state === 'dead') return game.mstate && game.mstate.result === 'win' ? 'win' : 'loss';
   if (state !== 'play' || !player) return 'menu';
-  let n = 0;
-  for (const s of ships) if (s.alive && s.team !== player.team && s.group.position.distanceTo(player.group.position) < 1800) n++;
+  let n = 0, distant = 0, capital = false, boss = false, hive = false;
+  for (const s of ships) if (s.alive && !s.dying && s.team !== player.team) {
+    const d = s.group.position.distanceTo(player.group.position);
+    if (d < 5000) distant++;
+    if (d < 1800) n++;
+    if (d < 6000 && s.def.id === 'bullfrog') boss = true;
+    if (d < 6000 && s.def.id === 'hivecarrier') hive = true;
+    if (d < 3500 && s.def.cls !== 'fighter') capital = true;
+  }
+  const mission = game.mission?.id || '';
+  if (boss) return 'boss';
+  if (game.mission?.music === 'rescue' || mission.startsWith('sar')) return 'rescue';
+  if (hive || game.mstate?.area === 'oasis') return 'hive';
+  if (capital) return 'capital';
+  if (mission.startsWith('r0')) return 'retreat';
   if (n > 0) MUS.combatT = 8; else MUS.combatT = Math.max(0, MUS.combatT - dtReal);
   if (MUS.combatT > 0) return n >= 6 || MUS.mood === 'heavy' && n >= 3 ? 'heavy' : 'combat';
-  return 'patrol';
+  return distant ? 'tension' : 'patrol';
 }
 function musicTick(dtReal) {
   if (!MUS.started) return;
@@ -551,11 +610,12 @@ function musicTick(dtReal) {
   if (!on) MUS.status = AUDIO.muted ? 'sound is muted (?mute or no audio support)' : 'off';
   for (const k in MUSIC_FILES) {
     if (k !== MUS.want && !MUS.el[k]) continue;
-    const a = musEl(k), tv = k === MUS.want ? AOPT.musicVol : 0;
+    const critical = AUDIO.ctx && AUDIO.ctx.currentTime < (AUDIO.criticalUntil || 0);
+    const a = musEl(k), tv = k === MUS.want && !critical ? AOPT.musicVol : 0;
     if (tv > 0 && a.paused) a.play().then(() => { if (k === MUS.want) MUS.status = 'playing: ' + k; }).catch(() => { MUS.status = 'blocked by the browser: tap the screen once more'; });
     const step = dtReal / 1.6;                         // ~1.6 s crossfade
     const cur = MUS.vol[k] ?? 0;
-    musSetVol(k, clamp(cur + clamp(tv - cur, -step, step), 0, 1));
+    musSetVol(k, critical ? 0 : clamp(cur + clamp(tv - cur, -step, step), 0, 1));
     if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
   if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;
@@ -573,17 +633,18 @@ function samplesLoad() {
     } catch (e) { /* skip */ }
   }
 }
-function samplePlay(k, vol, rate = 1) {
+function samplePlay(k, vol, rate = 1, dist = 0) {
   const b = SMP.buf[k]; if (!b || !AOPT.samples || AUDIO.muted) return;
-  const C = AUDIO.ctx, s = C.createBufferSource(), g = C.createGain();
+  const C = AUDIO.ctx, s = C.createBufferSource(), g = C.createGain(), f = C.createBiquadFilter();
   s.buffer = b; s.playbackRate.value = rate * (0.94 + Math.random() * 0.12); g.gain.value = vol;
-  s.connect(g); g.connect(AUDIO.master); s.start();
+  f.type = 'lowpass'; f.frequency.value = Math.max(500, 18000 / (1 + Math.max(0, dist) / 800));
+  s.connect(f); f.connect(g); g.connect(AUDIO.master); s.start(C.currentTime + Math.min(0.8, Math.max(0, dist) / 5000));
 }
 const SAMPLE_MAP = {
-  boom: v => { const big = v > 0.75; samplePlay(big ? 'expl3' : ['expl1', 'expl2', 'expl4'][Math.floor(Math.random() * 3)], big ? 0.5 : 0.35, big ? 0.8 : 1); },
-  pulse: () => samplePlay('pulse', 0.16, 1.1),
-  fang: () => samplePlay('fang', 0.12, 1.3),
-  jump: () => samplePlay('warp', 0.45),
+  boom: (v, d, size) => { const big = size > 0.75; samplePlay(big ? 'expl3' : ['expl1', 'expl2', 'expl4'][Math.floor(Math.random() * 3)], (big ? 0.5 : 0.35) * v, big ? 0.8 : 1, d); },
+  pulse: (v, d) => samplePlay('pulse', 0.16 * v, 1.1, d),
+  fang: (v, d) => samplePlay('fang', 0.12 * v, 1.3, d),
+  jump: (v, d) => samplePlay('warp', 0.45 * v, 1, d),
 };
 // ---- options panel ----
 let optsOpen = false;
@@ -656,6 +717,7 @@ const CREDITS = [
     ['"Dark Sci-Fi Audio Pack" by SRG774', 'CC0 1.0 Universal. https://opengameart.org/content/dark-sci-fi-audio-pack. Tracks airy, sector, victory, transmission (and the fallback combat tracks urgent, pulse), re-encoded to 96 kbps MP3.'],
     ['Combat loops (dogfight, bombast)', 'Composed for this game with the Google Gemini code tools (owner-commissioned, 2026-10-22; generators in tools/gen/music). GM MIDI rendered offline with FluidSynth and the GeneralUser GS soundfont by S. Christian Collins (GeneralUser GS License v2.0: free for private and commercial music use). Rendered files remain ours; the soundfont is not shipped.'],
     ['"Frontier Overture" (menu)', 'Original project score, 2026-11-01. Hand-written MIDI generator and sample-free additive-synthesis renderer in tools/gen/music; an original D-minor cue with no sampled material or melody from existing games.'],
+    ['Original situation score', 'Composed for game-space using Codex, 2026. Reproducible MIDI and sample-free synthesis: tools/gen/music/generate-situation-score.py. No third-party themes or samples.'],
   ]],
   ['SOUND SAMPLES', [
     ['"Space Sound Effects" by messersm', 'CC0 1.0. https://opengameart.org/content/space-sound-effects (explosions, laser bolts)'],
@@ -3867,7 +3929,7 @@ function dockTry() {
     const t = dock.t;
     dock = null;
     player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
-    log('UNDOCKED', '#ffd24a'); sfx('click');
+    log('UNDOCKED', '#ffd24a'); sfx('dock');
     return;
   }
   let best = null, bd = DOCK_R;
@@ -3879,7 +3941,7 @@ function dockTry() {
   if (!best) { log('NO TENDER IN DOCKING RANGE', '#ff5a4a'); return; }
   if (subEff(best, 'bay', 'service') <= 0) { log('TENDER BAYS DESTROYED - NO DOCKING', '#ff5a4a'); return; }
   dock = { t: best, phase: 'approach', t0: time };
-  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('click');
+  log('DOCKING CLEARANCE GRANTED', '#ffd24a'); sfx('dock');
 }
 function dockTick(dt) {
   if (!dock) return;
@@ -3905,7 +3967,7 @@ function dockTick(dt) {
     const t = dock.t;
     player.vel.copy(t.vel).addScaledVector(player.group.position.clone().sub(t.group.position).normalize(), 40);
     dock = null;
-    log('REARM COMPLETE', '#ffd24a'); sfx('click');
+    log('REARM COMPLETE', '#ffd24a'); sfx('dock');
   }
 }
 // ======================================================================
@@ -4329,6 +4391,12 @@ function burstCooldown(slot, w, cooldown) {
   slot.burstShots = 0;
   return cooldown + w.burstPause;
 }
+function weaponAudioId(w) {
+  if ((w.name || '').includes('MASER')) return 'maser';
+  if (w.kind !== 'beam') return w.sfx;
+  if ((w.name || '').includes('LASER')) return 'laser';
+  return 'pulse';
+}
 function fireMount(s, m) {
   const w = WEAPONS[m.w], comp = compOf(s, m.comp);
   if (comp && comp.hp <= 0) return false;
@@ -4349,7 +4417,7 @@ function fireMount(s, m) {
   m.cool = burstCooldown(m, w, w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1)));
   sparksAt(wp, 1, 6, [2.4, 2.0, 1.0, 1]);
   const dist = s === player ? 0 : wp.distanceTo(camera.position);
-  sfx(w.sfx, dist, s === player ? 0.9 : 0.7);
+  sfx(weaponAudioId(w), dist, s === player ? 0.9 : 0.7, s.def.cls);
   return true;
 }
 // fire every ready mount in the groups of mask (bit1 = group 1, bit2 = group 2, bit4 = group 3)
@@ -4461,7 +4529,7 @@ function launchMissile(s, wid, opts = null) {
   });
   if (TUNE.ordnance?.enabled) PLOG.cnt['missile.highWater'] = Math.max(PLOG.cnt['missile.highWater'] || 0, missiles.filter(m=>!m.dead).length);
   if (guidedTarget) L.p = 0;
-  sfx('msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9);
+  sfx(w.torp ? 'torp' : 'msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9, s.def.cls);
   if (s.team !== player?.team && guidedTarget === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
   return true;
 }
@@ -4830,7 +4898,7 @@ function updateTurrets(s, dt) {
           fireBeam(s, T.w, mp, fwd, T.focus ||= { tgt: null, t: 0, last: -9 }, T, T.head, mLocal);
           T.fired++; T.lastErr = err;
           plogN('shots.turretbeam');
-          if (Math.random() < 0.3) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
+          if (Math.random() < 0.3) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
         }
       }
     } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
@@ -4842,7 +4910,7 @@ function updateTurrets(s, dt) {
       T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
       if (Math.random() < 0.35) sparksAt(mp, 1, 5, [2.4, 2.0, 1.0, 1]);
-      if (Math.random() < 0.25) sfx(T.w.sfx, mp.distanceTo(camera.position), 0.5);
+      if (Math.random() < 0.25) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
     }
   }
 }
@@ -5122,10 +5190,15 @@ juiceReset();
 const CHAIN_NAMES = ['', '', 'DOUBLE KILL', 'TRIPLE KILL', 'QUAD KILL', 'RAMPAGE', 'RAMPAGE', 'UNSTOPPABLE', 'UNSTOPPABLE'];
 
 // ---- sounds (same synth as the rest of the game) ----------------------------------------------------------
-SFX.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
-SFX.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
-SFX.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
-SFX.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
+// Restrained sensor/impact feedback rather than a musical kill reward.
+SFX.hitmark = () => noiseBurst(0.035, 0.06, 1500, 650, 'bandpass');
+SFX.hitshield = () => { tone(480, 320, 0.05, 'sine', 0.045); noiseBurst(0.045, 0.035, 1200, 500, 'lowpass'); };
+SFX.kill = () => { noiseBurst(0.13, 0.05, 1000, 300, 'bandpass'); tone(220, 150, 0.12, 'sine', 0.04); };
+SFX.subkill = () => { noiseBurst(0.19, 0.11, 1100, 240, 'bandpass'); tone(160, 65, 0.18, 'sine', 0.09); };
+SFX_FALLBACK.hitmark = () => tone(1900, 1500, 0.03, 'square', 0.05);
+SFX_FALLBACK.hitshield = () => tone(1300, 900, 0.04, 'sine', 0.06);
+SFX_FALLBACK.kill = () => { const k = Math.min(juice.chain, 8); tone(520 + 40 * k, 780 + 60 * k, 0.10, 'triangle', 0.18); tone(780 + 60 * k, 1170 + 80 * k, 0.14, 'triangle', 0.14, 0.07); };
+SFX_FALLBACK.subkill = () => { tone(300, 90, 0.18, 'sawtooth', 0.14); tone(900, 1500, 0.06, 'square', 0.07, 0.02); };
 SFX.pickup = () => { tone(700, 1400, 0.10, 'sine', 0.14); tone(1050, 2100, 0.12, 'sine', 0.1, 0.06); };
 SFX.perk = () => [523, 659, 784, 1047].forEach((f, i) => tone(f, f * 1.01, 0.18, 'triangle', 0.14, i * 0.07));
 SFX.wave = () => { tone(110, 90, 0.5, 'sawtooth', 0.2); tone(165, 140, 0.5, 'sawtooth', 0.12, 0.1); };
@@ -6714,7 +6787,7 @@ function comm(from, text, color) {
   const mine = from !== 'FROGG';
   comms.push({ from, text, color: color || (from === 'CONTROL' ? '#ffd080' : '#7fe0ff'), t: time });
   if (comms.length > 5) comms.shift();
-  if (mine) sfx('blip');
+  if (mine) sfx('comms');
 }
 const objectives = [];       // {id, text, state:'open'|'done'|'failed'}
 function objective(id, text, st = 'open') {
@@ -9548,6 +9621,19 @@ function updateShieldsAndFx(s, dt) {
   }
 }
 
+// Defer lower-priority cockpit cautions while an incoming missile, lock or beam is warning.
+function cockpitConditionWarnings(p, dt, urgent) {
+  AUDIO.energyT = Math.max(0, AUDIO.energyT - dt);
+  AUDIO.hullT = Math.max(0, AUDIO.hullT - dt);
+  AUDIO.conditionT = Math.max(0, AUDIO.conditionT - dt);
+  const lowEnergy = p.energyMax > 0 && p.energy / p.energyMax < 0.25;
+  const lowHull = p.def.structure > 0 && p.structure / p.def.structure < 0.25;
+  if (!lowEnergy) AUDIO.energyT = 0;
+  if (!lowHull) AUDIO.hullT = 0;
+  if (urgent || AUDIO.conditionT > 0) return;
+  if (lowHull && AUDIO.hullT <= 0) { sfx('hullalarm'); AUDIO.hullT = 5; AUDIO.conditionT = 1; }
+  else if (lowEnergy && AUDIO.energyT <= 0) { sfx('lowenergy'); AUDIO.energyT = 5; AUDIO.conditionT = 1; }
+}
 function updateWarnings(dt) {
   const inc = [], p = player;
   warnState.lockedBy = 0;
@@ -9558,10 +9644,11 @@ function updateWarnings(dt) {
   warnState.incoming = inc;
   warnState.beam = p && p.alive && time - playerTrack.last < 0.4 ? playerTrack : null;      // a hostile laser is tracking or burning us
   if (!p || !p.alive || state !== 'play') { if (AUDIO.lockGain) AUDIO.lockGain.gain.value = 0; return; }
+  cockpitConditionWarnings(p, dt, !!(inc.length || warnState.lockedBy || warnState.beam));
   AUDIO.warnT -= dt;
   if (inc.length) { if (AUDIO.warnT <= 0) { sfx('alarm'); AUDIO.warnT = 0.55; } }
   else if (warnState.lockedBy) { if (AUDIO.warnT <= 0) { sfx('warn'); AUDIO.warnT = 0.5; } }
-  else if (warnState.beam) { const B = warnState.beam; if (AUDIO.warnT <= 0) { tone(B.live ? 1500 : 900 + 500 * B.prog, B.live ? 1500 : 900 + 500 * B.prog, 0.05, 'square', 0.07); AUDIO.warnT = B.live ? 0.1 : 0.4 - 0.28 * B.prog; } }
+  else if (warnState.beam) { const B = warnState.beam; if (AUDIO.warnT <= 0) { if (AUDIO.ctx) AUDIO.criticalUntil = Math.max(AUDIO.criticalUntil, AUDIO.ctx.currentTime + 1.5); tone(B.live ? 1500 : 900 + 500 * B.prog, B.live ? 1500 : 900 + 500 * B.prog, 0.05, 'triangle', 0.07); AUDIO.warnT = B.live ? 0.1 : 0.4 - 0.28 * B.prog; } }
   // own lock tone
   const L = p.lock;
   if (AUDIO.lockGain) AUDIO.lockGain.gain.value = L.state === 'locked' ? 0.05 : 0;
@@ -10363,6 +10450,7 @@ function frame(t) {
   if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
   if (!params.has('yard')) {
+    audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
     musicTick(dt);
     if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
@@ -10389,6 +10477,7 @@ Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSY
 Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
+Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(SFX), musicFiles: MUSIC_FILES });
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
 

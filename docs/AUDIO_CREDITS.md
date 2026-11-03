@@ -1,7 +1,15 @@
 # Audio credits and how the audio is built
 
-All audio currently in the game is **CC0 (public domain dedication)**; no attribution is legally required, credits are given anyway.
-Licence statements were taken from each source page on 2026-10-21 (see the URLs); `docs/AUDIO_SOURCES.md` holds the wider research and the shortlist.
+The original situation score (`audio/situation-*.mp3`) was composed for
+game-space using Codex in 2026. MIDI and sample-free oscillator synthesis are
+reproducible with `tools/gen/music/generate-situation-score.py`. It uses no
+third-party themes, soundfonts or sampled recordings. Ear and iOS checks are
+still required; MP3 encoder padding may affect loop boundaries.
+
+The third-party audio currently shipped is **CC0 (public domain dedication)**;
+the original project scores are credited separately and are not represented
+as CC0. Licence statements were taken from each source page on 2026-10-21 (see
+the URLs); `docs/AUDIO_SOURCES.md` holds the wider research and the shortlist.
 
 ## Music (files in `audio/`, played via `<audio>`; the CC0 tracks were re-encoded to 96 kbps MP3 from the 320 kbps originals)
 Source: "Dark Sci-Fi Audio Pack" by SRG774, CC0, https://opengameart.org/content/dark-sci-fi-audio-pack
