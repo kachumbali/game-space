@@ -1,10 +1,11 @@
 // Run the actual rescue primitives in isolation, with positive and negative controls.
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const cfg=JSON.parse(fs.readFileSync('data/db.json','utf8')).tuning.rescue;
+cfg.enabled=false; // The committed hand-play preset may enable rescue.
 const vec=x=>({x,clone(){return vec(this.x)},distanceTo(b){return Math.abs(this.x-b.x)},distanceToSquared(b){return (this.x-b.x)**2}});
 const group=x=>({position:vec(x),quaternion:{clone(){return {}}},visible:true});
 const C={TUNE:{rescue:cfg},ships:[],missiles:[],time:10,game:{},CREW:{hawk:{notes:[]}},SHIPS:{sar:{armor:{}}},
-  ell:()=>({}),comm:()=>{},saveCrew:()=>{},player:null,state:'play',view:'cockpit',
+  ell:()=>({}),comm:()=>{},saveCrew:()=>{},rosterEnabled:()=>false,player:null,state:'play',view:'cockpit',
   destroy:s=>{s.alive=false},turnToward:()=>{},aiFly:()=>{},
   makeShip:(id,team,pos,q,opts)=>{const s={team,alive:true,dying:0,def:{id},group:group(pos.x),vel:{copy(){}},callsign:opts.callsign};C.ships.push(s);return s;}};
 vm.createContext(C);vm.runInContext(fs.readFileSync('src/72_rescue.js','utf8'),C);

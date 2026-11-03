@@ -533,6 +533,7 @@ function updateHud() {
     `SPD ${alive ? p.vel.length().toFixed(0) : 0}  THR ${alive ? Math.round(p.throttle * 100) : 0}%  ${flightMode.toUpperCase()}  AB ${alive && p.def.abMax ? Math.round(100 * p.abFuel / abMaxOf(p)) : 0}%  PWR ${alive ? p.pw.w + '/' + p.pw.s + '/' + p.pw.e : '-'}\n` +
     `VOX ${DETAIL_STEPS[detailIdx]}  ${PIXEL_STEPS[pixelIdx] < 1 ? 'SS 2x' : 'PX ' + PIXEL_STEPS[pixelIdx] + 'x'}  Q ${qualityName.toUpperCase()}  LOD ${lodLevel.toUpperCase()}  BLOOM ${composer && bloomOn ? 'ON' : 'OFF'}\n` +
     (game.mode === 'mission' ? `T+${Math.floor((S?.t || 0) / 60)}:${String(Math.floor((S?.t || 0) % 60)).padStart(2, '0')}  KILLS ${kills}  FROGGS ${enemies.length}` : game.mode === 'survival' && sv ? svHudLine(enemies.length) : `WAVE ${wave}  KILLS ${kills}  FROGGS ${enemies.length}`);
+  if (rosterEnabled() && game.mode==='mission') { const pilot=rosterFind(game.mstate?.rosterPlayer); if (pilot) { const r=rosterRank(pilot); hudTxt.textContent += `\n${r.insignia} ${r.name.toUpperCase()}`; } }
   if (rescueEnabled()) {
     const beacons = rescueCapsules().filter(s => s.team === p?.team);
     if (beacons.length) hudTxt.textContent += '\nSAR BEACONS: ' + beacons.map(s => `${s.callsign} ${Math.ceil(s.rescueCapsule.life)}s`).join(' · ');

@@ -44,8 +44,9 @@ function rescueResolve(p, outcome, rescuer = null) {
   const r = p.rescueCapsule;
   if (!r || r.outcome !== 'adrift') return false;
   r.outcome = outcome; r.rescuer = rescuer;
+  if (rosterEnabled()) rosterOnRescue(p,outcome,rescuer);
   const rec = r.pilot && CREW[r.pilot];
-  if (rec) {
+  if (rec && !rosterEnabled()) {
     rec.status = outcome === 'recovered' ? 'recovering' : outcome === 'captured' ? 'captured' : 'KIA';
     rec.notes.push(outcome === 'recovered' ? 'ejected and recovered' : outcome === 'captured' ? 'capsule captured by FROGG' : `capsule lost: ${outcome}`);
     saveCrew();

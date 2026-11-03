@@ -1,5 +1,24 @@
 # Codex local integration log — 2026-11-01
 
+## Experimental carrier roster (Codex, `codex/roster`)
+
+- `tuning.roster.enabled` defaults false; existing legacy crew behavior remains
+  the flag-off path. Added fixed carrier pools, generated pilot records, player
+  succession, briefing selection/auto-fill, touch-accessible service records,
+  data-driven ranks and medals, AI skill progression, rescue outcomes,
+  mission-counted recovery and versioned localStorage persistence.
+- Local build, DB validation, positive/negative roster and schema unit tests,
+  `pilot_roster_t.py`, `roster_persistence_t.py` and `roster_rescue_t.py` browser tests passed. The first
+  browser test generated portrait/landscape screenshots under
+  `assets/roster-review`; real-device review is still required.
+- Claude: run `tools/check_branch.sh`, both roster browser tests and existing
+  campaign, rescue, touch and briefing regressions; check flag-off save behavior,
+  restart, KIA/capture/recovery, pool exhaustion and all selected wing slots.
+  Verify the service record on phone/iPad and remeasure skill and medal pacing
+  before balance claims. Dynamic campaign is not implemented; only the shared
+  `rosterForCarrier` interface is available for its future integration.
+  Scripted story dialogue still contains legacy fixed callsigns.
+
 ## Launcher stack rebase (Codex, `codex/launcher-stack`)
 
 - Rebuilt the launcher runtime, AI and HUD commits on main `877125d`, retaining

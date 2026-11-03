@@ -12,6 +12,44 @@ errs, warns = [], []
 def err(m): errs.append(m)
 def warn(m): warns.append(m)
 
+# Experimental roster: validate even while disabled so it can be enabled safely.
+roster = raw.get('tuning', {}).get('roster', {})
+if not isinstance(roster,dict) or not isinstance(roster.get('enabled'),bool):
+    err('tuning.roster.enabled must be boolean')
+else:
+    for key in ('version','defaultCapacity','recoveryMissions','skillEveryRanks'):
+        v=roster.get(key)
+        if not isinstance(v,int) or isinstance(v,bool) or v<1: err(f'tuning.roster.{key} must be a positive integer')
+    w=roster.get('woundHullRatio')
+    if not isinstance(w,(int,float)) or isinstance(w,bool) or not 0<w<=1: err('tuning.roster.woundHullRatio must be in (0, 1]')
+    ranks=roster.get('ranks',[])
+    if not isinstance(ranks,list) or not ranks: err('tuning.roster.ranks must not be empty'); ranks=[]
+    ids=set(); prev=(-1,-1,-1)
+    for r in ranks:
+        if not isinstance(r,dict): err('tuning.roster.ranks entries must be objects'); continue
+        ident=r.get('id'); values=tuple(r.get(k) for k in ('kills','missions','medals'))
+        if not isinstance(ident,str) or not ident or ident in ids: err('tuning.roster.ranks ids must be unique')
+        ids.add(ident)
+        if not isinstance(r.get('name'),str) or not r['name'] or not isinstance(r.get('insignia'),str) or not r['insignia']: err('tuning.roster.ranks need a name and insignia')
+        if any(not isinstance(x,int) or isinstance(x,bool) or x<0 for x in values): err('tuning.roster.ranks thresholds must be non-negative integers')
+        elif any(x<y for x,y in zip(values,prev)): err('tuning.roster.ranks thresholds must be non-decreasing')
+        else: prev=values
+    medals=roster.get('medals',[]); seen=set()
+    if not isinstance(medals,list): err('tuning.roster.medals must be a list'); medals=[]
+    for m in medals:
+        if not isinstance(m,dict): err('tuning.roster.medals entries must be objects'); continue
+        ident=m.get('id'); typ=m.get('type')
+        if not isinstance(ident,str) or not ident or ident in seen: err('tuning.roster.medals ids must be unique')
+        seen.add(ident)
+        if typ not in ('kills','wounded','rescued','sar_cover','capture_survivor','mission'): err(f'tuning.roster.medals {ident}: unknown type')
+        if not isinstance(m.get('name'),str) or not m['name'] or not isinstance(m.get('citation'),str) or not m['citation']: err(f'tuning.roster.medals {ident}: name and citation required')
+        if typ=='kills' and (not isinstance(m.get('threshold'),int) or isinstance(m.get('threshold'),bool) or m['threshold']<1): err(f'tuning.roster.medals {ident}: invalid threshold')
+        if typ=='mission' and (not isinstance(m.get('mission'),str) or not m['mission']): err(f'tuning.roster.medals {ident}: mission required')
+    ao=roster.get('aoRecovery',{})
+    if not isinstance(ao,dict) or any(not isinstance(ao.get(k),(int,float)) or isinstance(ao.get(k),bool) or not math.isfinite(ao[k]) or ao[k]<=0 for k in ('friendlyWeight','enemyWeight')) or not isinstance(ao.get('unopposedRecovery'),(int,float)) or not 0<=ao['unopposedRecovery']<=1: err('tuning.roster.aoRecovery invalid')
+for sid, ship in raw['ships'].items():
+    if 'rosterCapacity' in ship and (not isinstance(ship['rosterCapacity'],int) or isinstance(ship['rosterCapacity'],bool) or ship['rosterCapacity']<1): err(f'ships.{sid}.rosterCapacity must be a positive integer')
+
 # ---- ordnance hardpoints (docs/ORDNANCE_MANIFEST.md) ----
 SIZES = ('S', 'M', 'L', 'XL')
 for sid, ship in raw['ships'].items():

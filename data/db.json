@@ -1026,6 +1026,7 @@
     },
     "halberd": {
       "id": "halberd",
+      "rosterCapacity": 12,
       "launchers": [
         {"id":"FT-M", "kind":"fixed", "role":"missile", "count":4, "reload":20, "cap":4, "stores":["ir","rf"], "mountHp":70, "mountRadius":0.7, "positions":[[-0.8,3,12.6],[0.8,3,12.6],[-0.8,3,14.8],[0.8,3,14.8]]},
         {"id":"FT-T", "kind":"fixed", "role":"torpedo", "count":2, "reload":14, "cap":4, "stores":["torp"], "mountHp":90, "mountRadius":0.7, "positions":[[-0.8,3,17.0],[0.8,3,17.0]]}
@@ -1379,6 +1380,7 @@
     },
     "exeter": {
       "id": "exeter",
+      "rosterCapacity": 18,
       "rescue": true,
       "launchers": [
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":100, "mountRadius":3, "positions":[[-11,18,-45],[11,18,-45],[-11,18,-30],[11,18,-30],[-11,18,-15],[11,18,-15]]},
@@ -2104,6 +2106,7 @@
     },
     "hecla": {
       "id": "hecla",
+      "rosterCapacity": 24,
       "launchers": [
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":16, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":150, "mountRadius":3, "positions":[[-8,18,-300],[8,18,-300],[-8,18,-280],[8,18,-280],[-8,18,-260],[8,18,-260],[-8,18,-240],[8,18,-240],[-8,18,-220],[8,18,-220],[-8,18,-200],[8,18,-200],[-8,18,-180],[8,18,-180],[-8,18,-160],[8,18,-160]]},
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":180, "mountRadius":3, "positions":[[-8,18,180],[8,18,180],[-8,18,200],[8,18,200],[-8,18,220],[8,18,220],[-8,18,240],[8,18,240]]}
@@ -6852,6 +6855,7 @@
     },
     "destroyer": {
       "id": "destroyer",
+      "rosterCapacity": 18,
       "launchers": [
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":8, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":120, "mountRadius":3, "positions":[[-11,22,-60],[11,22,-60],[-11,22,-48],[11,22,-48],[-11,22,-36],[11,22,-36],[-11,22,-24],[11,22,-24]]},
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":140, "mountRadius":3, "positions":[[-11,22,30],[11,22,30],[-11,22,42],[11,22,42],[-11,22,54],[11,22,54],[-11,22,66],[11,22,66]]}
@@ -9606,6 +9610,7 @@
     }
   },
   "tuning": {
+    "roster": {"enabled":false,"version":1,"defaultCapacity":12,"recoveryMissions":2,"skillEveryRanks":2,"woundHullRatio":0.5,"ranks":[{"id":"ensign","name":"Ensign","insignia":"|","kills":0,"missions":0,"medals":0},{"id":"lieutenant_jg","name":"Lieutenant JG","insignia":"||","kills":2,"missions":3,"medals":1},{"id":"lieutenant","name":"Lieutenant","insignia":"|||","kills":5,"missions":6,"medals":2},{"id":"lt_commander","name":"Lt. Commander","insignia":"◆|","kills":10,"missions":10,"medals":3},{"id":"commander","name":"Commander","insignia":"◆||","kills":20,"missions":16,"medals":4}],"medals":[{"id":"first_kill","name":"First Contact","type":"kills","threshold":1,"citation":"First confirmed victory."},{"id":"ace5","name":"Ace Star","type":"kills","threshold":5,"citation":"Five confirmed victories."},{"id":"ace10","name":"Double Ace","type":"kills","threshold":10,"citation":"Ten confirmed victories."},{"id":"ace20","name":"Veteran Ace","type":"kills","threshold":20,"citation":"Twenty confirmed victories."},{"id":"wounded","name":"Wound Ribbon","type":"wounded","citation":"Wounded during a combat sortie."},{"id":"rescued","name":"Rescue Cross","type":"rescued","citation":"Recovered a pilot under operational conditions."},{"id":"sar_cover","name":"SAR Cover","type":"sar_cover","citation":"Protected a successful rescue operation."},{"id":"capture_survivor","name":"Return from Captivity","type":"capture_survivor","citation":"Returned after capture."},{"id":"mission_sar02","name":"Last Light Citation","type":"mission","mission":"sar02","citation":"Completed the Last Light rescue."}],"aoRecovery":{"friendlyWeight":1,"enemyWeight":1,"unopposedRecovery":0.9}},
     "rescue": {"enabled": true, "lifeSupport": 240, "maxCapsules": 6, "ejectHullRatio":0.25, "pickupRadius": 100, "pickupTime": 8, "safeAfterHit": 5, "hostileSearchRadius":1000, "safeThreatRange":1000, "routeBrake": 2, "routeThrottle": 0.55, "capsule": {"length": 3, "radius": 1.8, "half": [1.3,1.2,1.5], "structure": 35, "vs": 0.2, "maxSpeed":20, "accel":2, "turn":0.2}},
     "_about": "Combat balance constants that used to be hard-coded in src/*. Read through TUNE (src/16_db.js). Edit here; with ?db=data/db.json a reload is enough.",
     "dmgx": {

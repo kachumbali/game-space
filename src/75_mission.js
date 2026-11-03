@@ -22,7 +22,7 @@ try {
   if (!params.has('newcrew')) { const j = JSON.parse(localStorage.getItem('gs_crew') || 'null'); if (j) for (const k in CREW) if (j[k]) CREW[k] = { ...CREW[k], ...j[k] }; }
 } catch (e) { /* storage unavailable: crew just lives for this session */ }
 function saveCrew() { try { localStorage.setItem('gs_crew', JSON.stringify(CREW)); } catch (e) { /* ignore */ } }
-function newCampaign() { CREW = freshCrew(); saveCrew(); }
+function newCampaign() { CREW = freshCrew(); saveCrew(); if (rosterEnabled()) rosterReset(); }
 
 // ---- comms + objectives (HUD feeds) -------------------------------------------------------------------
 const comms = [];
@@ -455,7 +455,7 @@ function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); r
 
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
-function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } }
+function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } if (rosterEnabled() && game.rosterSnap) { rosterState=JSON.parse(game.rosterSnap); rosterSave(); } }
 function startMission(M, seg) {
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
   if (cine) cancelTransit();
@@ -467,16 +467,19 @@ function startMission(M, seg) {
   game.mode = 'mission'; game.mission = M;
   applyLook(M.look || 'lilypad'); cine = null; document.body.classList.remove('cine');
   game.mstate = { t: 0, stage: 0, stageT: 0, spawned: {}, ended: false, endT: 0, result: null, jumpDone: false, stats: {} };
+  rosterBegin(M);
   const su = M.setup;
   const hal = makeShip(su.anchor.ship, 0, new THREE.Vector3(...su.anchor.pos), new THREE.Quaternion(), { id: su.anchor.id, callsign: su.anchor.callsign, vital: true, ai: 'capital' });
   hal.vel.set(0, 0, -4);
   game.anchor = hal;
   const p = makeShip(su.player.ship || 'kestrel', 0, new THREE.Vector3(...su.player.pos), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player', pilot: 'player' });
+  if (rosterEnabled()) { p.pilot=game.mstate.rosterPlayer; p.callsign=p.pilot ? rosterFind(p.pilot).callsign : 'UNASSIGNED'; }
   p.modBase = { take: diffCfg().take }; recalcMods(p);
   p.vel.set(0, 0, -su.player.speed); p.throttle = 0.4;
   p.shots = 0; p.hitsLanded = 0;
   for (const f of su.fleet || []) makeShip(f.ship, 0, new THREE.Vector3(...f.pos), new THREE.Quaternion(), { callsign: f.callsign, id: f.id, ai: 'capital', hold: true }).vel.set(0, 0, -4);
-  for (const w of su.wingmen) {
+  if (rosterEnabled()) rosterSpawnWing(M);
+  else for (const w of su.wingmen) {
     if (CREW[w.pilot].status !== 'active') continue;
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
@@ -636,13 +639,16 @@ function endMission(result, why) {
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome
-  const involved = { player: true };
-  for (const s of ships) if (s.pilot) involved[s.pilot] = true;
-  for (const k in CREW) {
-    if (!(k in involved) && CREW[k].status === 'active') continue;
-    CREW[k].sorties++;
+  if (rosterEnabled()) rosterFinish(game.mission,S);
+  else {
+    const involved = { player: true };
+    for (const s of ships) if (s.pilot) involved[s.pilot] = true;
+    for (const k in CREW) {
+      if (!(k in involved) && CREW[k].status === 'active') continue;
+      CREW[k].sorties++;
+    }
+    saveCrew();
   }
-  saveCrew();
 }
 function rescuePlayerResolved(p, outcome) {
   const S = game.mstate;
@@ -653,25 +659,32 @@ function rescuePlayerResolved(p, outcome) {
 }
 function onShipDestroyed(s) {
   const S = game.mstate;
+  if (rosterEnabled() && s.pilot && s.team===0) { const p=rosterFind(s.pilot); if(p && s.structure/s.def.structure<=TUNE.roster.woundHullRatio) p.woundedThisSortie=true; }
   if (rescueOnDestroyed(s)) return;
   if (rescueEnabled() && s.team === 0 && (s.pilot || s === player) && !s.def.drone) {
     const wasPlayer = s === player;
     const dc = s.deathCause || { dtype: 'kin', overkill: 0.3, reactor: false };
-    const chance = clamp(0.75 - dc.overkill * 1.2 - (dc.reactor ? 0.25 : 0) - (dc.dtype === 'nuke' ? 0.3 : 0) + 0.05 * ((PILOT_DEFS[s.pilot]?.skill || 3) - 3), 0.05, 0.9);
+    const chance = clamp(0.75 - dc.overkill * 1.2 - (dc.reactor ? 0.25 : 0) - (dc.dtype === 'nuke' ? 0.3 : 0) + 0.05 * (((rosterEnabled() ? s.skill : PILOT_DEFS[s.pilot]?.skill) || 3) - 3), 0.05, 0.9);
     const capsule = (s.rescueManualRequested || Math.random() < chance) ? rescueSpawnCapsule(s, {pilot:s.pilot, player:wasPlayer}) : null;
     const crew = CREW[s.pilot];
-    if (crew) { crew.status = capsule ? 'missing' : 'KIA'; crew.notes.push(capsule ? 'ejected; awaiting recovery' : `lost in action (${dc.reactor ? 'reactor breach' : 'cockpit destroyed or unable to eject'})`); saveCrew(); }
-    if (!capsule && wasPlayer) comm('CONTROL', 'MEOW lost. No capsule detected.', '#ff8a6a');
+    if (rosterEnabled()) rosterMarkPilot(s.pilot || 'player',capsule ? 'MIA' : 'KIA');
+    else if (crew) { crew.status = capsule ? 'missing' : 'KIA'; crew.notes.push(capsule ? 'ejected; awaiting recovery' : `lost in action (${dc.reactor ? 'reactor breach' : 'cockpit destroyed or unable to eject'})`); saveCrew(); }
+    if (!capsule && wasPlayer) comm('CONTROL', `${rosterEnabled() ? s.callsign : 'MEOW'} lost. No capsule detected.`, '#ff8a6a');
     return;
   }
   if (s.team === 1) {
     const a = s.lastAttacker;
     if (a && a.pilot) {
-      CREW[a.pilot].kills++;
+      if (rosterEnabled()) { const p=rosterFind(a.pilot); if (p) { p.kills++; rosterSave(); } }
+      else CREW[a.pilot].kills++;
       if (a !== player && Math.random() < 0.6) comm(a.callsign, ['Splash one!', 'Tally one down.', 'Got him!', 'FROGG down.'][Math.floor(Math.random() * 4)]);
       else if (a === player && Math.random() < 0.3) { const w = ships.find(x => x.pilot === 'hawk' && x.alive); if (w) comm('HAWK', ['Nice shooting, Echo.', 'Good kill.', 'That is how it is done.'][Math.floor(Math.random() * 3)]); }
     }
     if (S && s.def.cls === 'corvette') comm('CONTROL', 'Corvette is breaking up! Good kill!');
+  } else if (rosterEnabled() && s.team===0 && s.pilot) {
+    const dc=s.deathCause || {dtype:'kin',overkill:0.3,reactor:false}, p=rosterFind(s.pilot);
+    const chance=clamp(0.75-dc.overkill*1.2-(dc.reactor?0.25:0)-(dc.dtype==='nuke'?0.3:0)+0.05*((p?.skill||3)-3),0.05,0.9);
+    rosterMarkPilot(s.pilot,Math.random()<chance?'MIA':'KIA');
   } else if (s.pilot && s !== player) {
     comm('CONTROL', `${s.callsign} is down.`, '#ff8a6a');
     if (CREW[s.pilot]) {                    // death is decided by how the ship died, not a flat roll (owner 2026-10-21)
@@ -722,11 +735,11 @@ function briefingLoadout(shipId) {
 function showBriefing(M) {
   const el = $id('brief');
   const ship = M.setup.player.ship || 'kestrel';
-  const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
+  const crew = rosterEnabled() ? rosterBriefHtml(M) : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   const campaign = campaignOf(M), missionList = campaign.missions;
   el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
     <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
-    <div class="cols"><div><div class="sub">YOUR WING</div>${crew}</div>
+    <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
     <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
@@ -734,12 +747,14 @@ function showBriefing(M) {
     <div class="dim keys">Briefing: tap an ordnance station to swap or empty it. W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
   el.style.display = 'flex';
   bindOrdnanceBriefing(el, M);
+  if (rosterEnabled()) rosterBindBriefing(el,M);
   el.querySelectorAll('[data-fm]').forEach(b => { b.onclick = () => { fmSet(b.dataset.fm, true); showBriefing(M); }; });
   el.querySelectorAll('[data-d]').forEach(b => { b.onclick = () => { diffSet(b.dataset.d); startMission(M); }; });
   $id('bgo').onclick = () => { if (!ordnanceApply(player)) { showBriefing(M); return; } el.style.display = 'none'; state = 'play'; if (!isTouch) lockPointer(); touchStarted = true; audioInit(); comm('CONTROL', 'Eagle flight, you are cleared hot. Good hunting.'); };
+  if (rosterEnabled() && !game.mstate.rosterPlayer) $id('bgo').disabled=true;
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); touchStarted = true; audioInit(); };
   el.querySelectorAll('.bm').forEach(b => { b.onclick = () => startMission(missionList[+b.dataset.i]); });
-  $id('bnew').onclick = () => { newCampaign(); showBriefing(M); };
+  $id('bnew').onclick = () => { newCampaign(); if (rosterEnabled()) startMission(M); else showBriefing(M); };
   $id('bcred').onclick = () => showCredits(true);
   $id('bmenu').onclick = () => showMainMenu();
 }
@@ -749,7 +764,7 @@ function showDebrief() {
   if (!S.careerDone) { S.careerDone = true; const rb = careerRank(careerGet().xp), ca = careerAdd((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4), kills), ra = careerRank(ca.xp); S.careerTxt = `+${Math.round((st.total + juice.bonus) / 10 * (S.result === 'win' ? 1 : 0.4))} XP · <b>${ra.name}</b>${ra.level > rb.level ? ' <span class="ok">PROMOTED</span>' : ''} · difficulty ${diffCfg().name}`; }
   const career = S.careerTxt;
   const rows = Object.keys(killLog).map(k => `<div>${SHIPS[k].name} <b>× ${killLog[k]}</b> <span class="dim">${(SCORE[k] || 100) * killLog[k]}</span></div>`).join('') || '<div class="dim">none</div>';
-  const crew = ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
+  const crew = rosterEnabled() ? rosterServiceHtml(M) + (S.rosterAwards||[]).map(a=>`<div>AWARDED ${rosterEscape(a.pilot)}: ${rosterEscape(a.citation)}</div>`).join('') : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills total</span></div>`).join('');
   const next = campaignNext(M);
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : S.result === 'partial' ? 'PARTIAL SUCCESS' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
