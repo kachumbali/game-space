@@ -261,7 +261,7 @@ function quickNukeLoad(s) {
   return rounds > 0;
 }
 function nuclearLaunchAllowed(enabled, isPlayer, campaign, released, fired) {
-  return !enabled || (isPlayer && (!campaign || (released && !fired)));
+  return isPlayer && (!enabled || !campaign || (released && !fired));
 }
 function launchMissile(s, wid, opts = null) {
   const w = WEAPONS[wid];

@@ -1,5 +1,28 @@
 # Codex local integration log — 2026-11-01
 
+## Launcher stack rebase (Codex, `codex/launcher-stack`)
+
+- Rebuilt the launcher runtime, AI and HUD commits on main `877125d`, retaining
+  nuclear release and firing authority, aimed launch, current sound effects,
+  missile class scaling, rescue hooks, tender configuration and all debug
+  exports. The duplicate unmanaged-ordnance fix appears only once. Nuclear
+  weapons explicitly reject AI launches even with the feature flag off;
+  campaign release and one-shot restrictions remain gated as on main.
+- Preserved the insertion-based sweep counter, with the AI branch's guard that
+  counts only the live missile array (warning lists also contain missiles).
+  Its positive/negative counter unit test is included.
+- Updated `music_t.py` for the current patrol, victory and menu tracks and
+  routed gain; headless autoplay blocking no longer fails the playback-only
+  check. The cine case tests routing directly, not mission transit.
+- Local build, database validation, launcher/AI/HUD, nuclear, missile-class,
+  counter and music unit controls passed. Browser tests passed locally:
+  `launcher_runtime_t.py`, `capital_ai_t.py`, `launcher_hud_t.py`,
+  `nuclear_authority_t.py`, `missile_class_t.py`, `hull_carve_t.py`, and
+  `music_t.py`. The nuclear and runtime browser tests were repeated after the
+  player-only rule was tightened. No 20-seed sweeps, real-device checks,
+  visual launcher inspection or listening tests were performed. The main
+  ordnance and rescue feature flags remain off by default.
+
 ## Audio overhaul (Codex, `codex/audio-overhaul`)
 
 - `docs/AUDIO_AUDIT.md` inventories the prior music and every procedural and
