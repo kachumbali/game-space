@@ -102,6 +102,19 @@
   Cloud: run `launcher_direction_t.py`, existing missile/station regression
   tests and ten seeded off-axis intercepts; no browser test ran locally.
 
+## Launcher HUD (Codex, `codex/launcher-hud`, based on `codex/launcher-ai`)
+
+- The opt-in launcher HUD reports ready/total missile and torpedo cells,
+  loaded rounds, damaged cells, remaining reload seconds and magazine reserves. It is hidden
+  for ships without launchers and when the feature flag is off; the help
+  overlay explains the readout. No additional player control is required.
+- Local build, DB validation, syntax and the readout unit test with flag-off,
+  damage and reload controls passed. Claude: run `launcher_hud_t.py` at desktop,
+  tablet and phone portrait/landscape, `launcher_runtime_t.py`, `capital_ai_t.py`,
+  existing touch/HUD tests and `tools/check_branch.sh`. Browser tests and
+  real-device readability were not run locally. All launcher AI and balance
+  cloud checks from the preceding entry still apply.
+
 ## Launcher AI (Codex, `codex/launcher-ai`, based on `codex/launcher-runtime`)
 
 - With `tuning.ordnance.enabled`, human capitals acquire fighter and capital

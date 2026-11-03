@@ -112,6 +112,7 @@ Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regress
 
 
 Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
