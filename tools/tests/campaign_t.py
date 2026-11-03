@@ -25,7 +25,7 @@ ALIVE = "(g)=>__game.ships.some(s=>s.grp===g&&s.alive)"
 def newpage(R, q):
     for c in list(R.b.contexts): c.close()      # one heavy page at a time: old renderers starve the next load
     pg = R.page(640, 360, q); pg.wait_for_timeout(800)
-    pg.evaluate("()=>{__paused=true}")
+    pg.evaluate("()=>{__paused=true; __game.TUNE.rescue.enabled=false}")      # these checks assert the plain player-loss ending; with rescue on a dying player may eject by chance (covered by rescue_t / roster_rescue_t)
     return pg
 def step(pg, n): pg.evaluate(STEP, n)
 def info(pg): return pg.evaluate(INFO)
