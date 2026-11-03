@@ -1379,6 +1379,7 @@
     },
     "exeter": {
       "id": "exeter",
+      "rescue": true,
       "launchers": [
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"]},
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":4, "reload":10, "cap":1, "stores":["torp"]}
@@ -3302,6 +3303,7 @@
     },
     "tender": {
       "id": "tender",
+      "rescue": true,
       "name": "TENDER",
       "cls": "frigate",
       "fac": "human",
@@ -3327,6 +3329,7 @@
       "repair": false,
       "tender": true,
       "serviceR": 600,
+      "ordnanceHold": {"missile": 400, "torpedo": 120, "drone": 96},
       "engines": [
         {
           "pos": [
@@ -4525,6 +4528,7 @@
     },
     "gulper": {
       "id": "gulper",
+      "rescue": true,
       "name": "FROGG GULPER",
       "cls": "corvette",
       "fac": "frogg",
@@ -6319,6 +6323,7 @@
     },
     "sar": {
       "id": "sar",
+      "rescue": true,
       "name": "SAR CUTTER",
       "cls": "fighter",
       "shuttle": true,
@@ -8236,6 +8241,7 @@
     },
     "torp": {
       "kind": "msl",
+      "classScale": false,
       "name": "HM-1 HAMMER TORPEDO",
       "seeker": "ir",
       "v0": 40,
@@ -8297,6 +8303,7 @@
     },
     "nuke": {
       "kind": "msl",
+      "classScale": false,
       "name": "NK-1 TAC WARHEAD (0.5 kT)",
       "seeker": "ir",
       "v0": 40,
@@ -8324,6 +8331,7 @@
     },
     "tad": {
       "kind": "msl",
+      "classScale": false,
       "name": "ST-2 TORPEDO",
       "seeker": "ir",
       "v0": 35,
@@ -9598,6 +9606,7 @@
     }
   },
   "tuning": {
+    "rescue": {"enabled": false, "lifeSupport": 240, "maxCapsules": 6, "ejectHullRatio":0.25, "pickupRadius": 100, "pickupTime": 8, "safeAfterHit": 5, "hostileSearchRadius":1000, "safeThreatRange":1000, "routeBrake": 2, "routeThrottle": 0.55, "capsule": {"length": 3, "radius": 1.8, "half": [1.3,1.2,1.5], "structure": 35, "vs": 0.2, "maxSpeed":20, "accel":2, "turn":0.2}},
     "_about": "Combat balance constants that used to be hard-coded in src/*. Read through TUNE (src/16_db.js). Edit here; with ?db=data/db.json a reload is enough.",
     "dmgx": {
       "kin": [
@@ -9665,7 +9674,7 @@
       "shieldDelay": 4,
       "energyDefault": 17
     },
-    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}},
+    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}, "quickNukeRounds":1, "restock":{"points":{"ir":1,"rf":1.5,"torp":4,"drone":3},"proximityRate":2,"dockedRate":4,"serviceRange":600}},
     "missile": {
       "steerMinSpeed": 80,
       "leadMax": 3,

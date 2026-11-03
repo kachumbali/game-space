@@ -4,9 +4,23 @@
 const _dq = new THREE.Quaternion();
 const _eu = new THREE.Euler();
 let gunMsgT = 0;
+let ejectAlarmAt = -Infinity, ejectWarningEl = null;
+function ejectWarningTick() {
+  const critical = state === 'play' && !userPause && rescueCritical(player);
+  if (!ejectWarningEl && critical) {
+    ejectWarningEl = document.createElement('div');
+    ejectWarningEl.id = 'ejectWarning';
+    ejectWarningEl.style.cssText = 'position:fixed;top:15%;left:50%;transform:translateX(-50%);z-index:20;color:#fff;background:#8b1009;border:2px solid #ffb49a;padding:10px;font:bold 17px monospace;text-align:center';
+    document.body.appendChild(ejectWarningEl);
+  }
+  if (ejectWarningEl) { ejectWarningEl.style.display = critical ? 'block' : 'none'; ejectWarningEl.textContent = isTouch ? 'HULL CRITICAL — TAP EJECT' : 'HULL CRITICAL — SHIFT + E TO EJECT'; }
+  const b = document.getElementById('beject'); if (b) b.style.display = critical ? 'block' : 'none';
+  if (critical && time >= ejectAlarmAt) { sfx('alarm'); ejectAlarmAt = time + 0.7; }
+}
 
 function updatePlayer(dt) {
   const s = player;
+  if (s.rescueCapsule) return; // unpowered survival capsule drifts with its inherited velocity
   const kb = (a, b) => (keys.has(a) ? 1 : 0) - (keys.has(b) ? 1 : 0);
   const pitch = clamp(-stick.y + kb('ArrowUp', 'ArrowDown'), -1, 1);
   const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
@@ -137,6 +151,7 @@ function update(dt) {
   collideShips(dt);
   dockTick(dt);   // docking glue runs after the ship loop so it wins over flight controls
   tenderTick(dt);
+  rescueTick(dt);
   ships = ships.filter(s => s.alive || (disposeShip(s), false));
 
   lodTick(dt); comsTick(dt); juiceTick(dt); lootTick(dt);
@@ -160,6 +175,7 @@ function update(dt) {
     lockUpdate(player, dt);
   }
   updateWarnings(dt);
+  ejectWarningTick();
   if (game.mission) missionUpdate(dt);
   if (game.mode === 'skirmish') skirmishUpdate(dt);
   else if (game.mode === 'survival') survivalUpdate(dt);

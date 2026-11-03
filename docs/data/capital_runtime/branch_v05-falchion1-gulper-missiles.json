@@ -1,0 +1,777 @@
+{
+  "date": "2026-11-02",
+  "source_commit": "3c8cc958d72305e8bf637b25772110294f98b57c",
+  "harness": "tools/tests/balance_sweep.py",
+  "seed_range": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "time_cap_sim_seconds": 180,
+  "scenario_time_cap_overrides_seconds": {},
+  "default_initial_separation_m": 2000,
+  "scenario_separation_overrides_m": {
+    "d0": 4000,
+    "d2": 4000
+  },
+  "setup": "Seeded skirmish URL; requestAnimationFrame disabled before load, game setup reseeded, LOD off; player parked off-stage and requested rosters are AI-vs-AI.",
+  "damage_metric": "Net shield+structure loss attributed to latest hostile attacker in a simulation update; excludes armour absorption and component-only damage.",
+  "scenarios": {
+    "v05-falchion1-gulper-missiles": {
+      "name": "1 Falchion vs Gulper (missiles)",
+      "initial_separation_m": 2000,
+      "time_cap_sim_seconds": 180,
+      "enemy_skill": 3,
+      "hecla_laser_turrets": null,
+      "results": [
+        {
+          "sim_time": 18.2,
+          "winner": "human",
+          "time_to_kill": 18.2,
+          "first_hit": {
+            "time": 6.05,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 680,
+                "hostile_hits": 281,
+                "distance_flown": 1494.5,
+                "structure": 52.2,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": false,
+                "dying": true,
+                "damage_dealt": 207.8,
+                "hostile_hits": 107,
+                "distance_flown": 323.4,
+                "structure": 0,
+                "shield": 160,
+                "death_time": 18.2,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 18.2,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 1,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.85,
+          "winner": "human",
+          "time_to_kill": 20.85,
+          "first_hit": {
+            "time": 6.5,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 682.1,
+                "hostile_hits": 285,
+                "distance_flown": 1410,
+                "structure": 36.96,
+                "shield": 0,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": false,
+                "dying": true,
+                "damage_dealt": 223.04,
+                "hostile_hits": 120,
+                "distance_flown": 344.2,
+                "structure": 0,
+                "shield": 157.9,
+                "death_time": 20.85,
+                "killed_by": {
+                  "id": "falchion",
+                  "callsign": "H1"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "enemy_killed_at": 20.85,
+          "human_killed_at": null,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 2,
+          "console_errors": []
+        },
+        {
+          "sim_time": 21.2,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.25,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 636.79,
+                "hostile_hits": 275,
+                "distance_flown": 1476.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 21.2,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 112,
+                "distance_flown": 340.8,
+                "structure": 43.21,
+                "shield": 160,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 21.2,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 3,
+          "console_errors": []
+        },
+        {
+          "sim_time": 19.9,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 662.2,
+                "hostile_hits": 294,
+                "distance_flown": 1345.2,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 19.9,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 118,
+                "distance_flown": 332.9,
+                "structure": 22,
+                "shield": 155.8,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 19.9,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 4,
+          "console_errors": []
+        },
+        {
+          "sim_time": 20.5,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.1,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 519.87,
+                "hostile_hits": 262,
+                "distance_flown": 1477,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 20.5,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 135,
+                "distance_flown": 335,
+                "structure": 162.23,
+                "shield": 157.9,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 20.5,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 5,
+          "console_errors": []
+        },
+        {
+          "sim_time": 23.65,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.25,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 625.38,
+                "hostile_hits": 360,
+                "distance_flown": 1658.8,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 23.65,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 143,
+                "distance_flown": 351.7,
+                "structure": 76.67,
+                "shield": 137.95,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 23.65,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 6,
+          "console_errors": []
+        },
+        {
+          "sim_time": 23.25,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.15,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 518.59,
+                "hostile_hits": 277,
+                "distance_flown": 1667.4,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 23.25,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 138,
+                "distance_flown": 350.2,
+                "structure": 161.41,
+                "shield": 160,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 23.25,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 7,
+          "console_errors": []
+        },
+        {
+          "sim_time": 22,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 637.71,
+                "hostile_hits": 282,
+                "distance_flown": 1889.5,
+                "structure": 0,
+                "shield": 0,
+                "death_time": 22,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 260,
+                "hostile_hits": 101,
+                "distance_flown": 346.5,
+                "structure": 42.29,
+                "shield": 160,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 22,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 8,
+          "console_errors": []
+        },
+        {
+          "sim_time": 22.85,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.7,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 1,
+            "frogg": 0
+          },
+          "peak_live_missiles": 1,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 465.61,
+                "hostile_hits": 239,
+                "distance_flown": 2006.8,
+                "structure": 4.58,
+                "shield": 0,
+                "death_time": 22.85,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 255.42,
+                "hostile_hits": 153,
+                "distance_flown": 342.8,
+                "structure": 214.39,
+                "shield": 160,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 22.85,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 9,
+          "console_errors": []
+        },
+        {
+          "sim_time": 27.05,
+          "winner": "FROGG",
+          "time_to_kill": null,
+          "first_hit": {
+            "time": 6.3,
+            "attacker": "falchion",
+            "attacker_callsign": "H1",
+            "target": "gulper",
+            "target_callsign": "FROGG GULPER"
+          },
+          "missiles_expended": {
+            "human": 0,
+            "frogg": 0
+          },
+          "peak_live_missiles": 0,
+          "at_180_seconds": null,
+          "flight_telemetry": [],
+          "human": {
+            "ships": [
+              {
+                "id": "falchion",
+                "callsign": "H1",
+                "born": 0,
+                "alive": false,
+                "dying": false,
+                "damage_dealt": 568.44,
+                "hostile_hits": 277,
+                "distance_flown": 2354.6,
+                "structure": 5.52,
+                "shield": 0,
+                "death_time": 27.05,
+                "killed_by": {
+                  "id": "gulper",
+                  "callsign": "FROGG GULPER"
+                },
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 0,
+            "losses": 1
+          },
+          "frogg": {
+            "ships": [
+              {
+                "id": "gulper",
+                "callsign": "FROGG GULPER",
+                "born": 0,
+                "alive": true,
+                "dying": false,
+                "damage_dealt": 254.48,
+                "hostile_hits": 152,
+                "distance_flown": 370.2,
+                "structure": 111.56,
+                "shield": 160,
+                "death_time": null,
+                "killed_by": null,
+                "killing_weapons": []
+              }
+            ],
+            "total": 1,
+            "survivors": 1,
+            "losses": 0
+          },
+          "enemy_killed_at": null,
+          "human_killed_at": 27.05,
+          "odd": [],
+          "scenario": "v05-falchion1-gulper-missiles",
+          "seed": 10,
+          "console_errors": []
+        }
+      ],
+      "summary": {
+        "runs": 10,
+        "human_wins": 2,
+        "win_rate": 0.2,
+        "time_to_kill_human_wins_only": {
+          "median": 19.525,
+          "p25": 18.8625,
+          "p75": 20.1875
+        },
+        "human_losses": {
+          "median": 1.0,
+          "p25": 1.0,
+          "p75": 1.0
+        },
+        "frogg_losses": {
+          "median": 0.0,
+          "p25": 0.0,
+          "p75": 0.0
+        }
+      }
+    }
+  }
+}

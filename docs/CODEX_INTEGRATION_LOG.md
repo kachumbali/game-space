@@ -24,6 +24,83 @@
   capital duel, Bullfrog, retreat, rescue, loss, victory and title sting;
   check every loop seam and music suppression during warnings on desktop,
   phone and iPad, with the enhanced sample layer both on and off.
+## Experimental ejection and SAR (Codex, `codex/ejection-sar`)
+
+- Behind `tuning.rescue.enabled` (default false), pilots can eject into
+  damageable drifting capsules; the existing cause-based roll is retained for
+  automatic ejection. At 25% hull the player gets an alarm and SHIFT+E / touch
+  EJECT; deliberate ejection avoids the destruction roll. Capsules have life
+  support, a cap, a radar beacon, rescue/capture outcomes and crew notes.
+- SAR cutters route to capsules; designated ships recover/capture them only
+  after an uninterrupted safe pickup. Two optional Long Retreat and Skirmish
+  SAR scenarios cover the cutter and timed survivor recovery. Mission end
+  handles unresolved capsules and preserves a pending result after player
+  recovery. No new Campaign arcade pickups are introduced.
+- Local build, DB validation, rescue mechanics and SAR outcome unit controls,
+  and Python compilation passed. Claude: run `rescue_t.py`,
+  `sar_missions_t.py`, `eject_touch_t.py`, existing campaign/crew, AI, damage,
+  HUD and touch regressions, then `tools/check_branch.sh` and mission bots.
+  Check default-off outcomes against main; test flagged recovery, capture,
+  expiry, player and wingman deaths, restart, mission-end ordering, cutter
+  routing and 390x844 / 844x390 / desktop layouts. These browser tests and the
+  gate were not run locally. Owner must hear the alarm and play the scenarios
+  on iPad/phone/desktop; do not enable by default before that review.
+## Capital ordnance runtime — partial handoff (Codex, `codex/capital-ordnance-runtime`)
+
+- This branch is **not complete or merge-ready**. Class scaling and the gated
+  aimed-launch primitive are described in the two entries below. The P0
+  damage table is historical: it has not been remeasured after class scaling.
+- Gated tender service now has finite missile, torpedo and drone holds, a
+  shared per-tender transfer budget, per-round point costs, and no nuclear
+  replenishment. Hecla can provide proximity service using its `ordn`
+  component. The disabled path preserves the old tender behavior. There is
+  no persistent campaign ledger. The tender browser control has not run.
+- Four paired `capital-exeter-{off,on}` and `capital-hecla-{off,on}` sweep
+  scenarios record missiles launched by side and the peak live count. They
+  have not been run and cannot yet measure the intended launcher behavior.
+- The nuclear option is in OPTIONS for the next quick-play sortie and defaults
+  off. With the feature flag enabled, an eligible player ship trades one
+  conventional torpedo for a nuclear torpedo; AI cannot launch one. Campaign
+  launch requires the scripted release and is limited to one shot. Existing
+  warhead effects are unchanged. The browser/UI test is unrun.
+- **Outstanding:** per-launcher runtime, component damage and AI, the
+  data-driven torpedo hold, hangar and drone AI, and launcher/magazine HUD. Do not
+  interpret the opted-in sweep as the requested completed system.
+- Locally: build, DB validation, JavaScript unit controls for class factors,
+  tender stock and sweep counter, and Python compilation passed. No Chromium,
+  device tests, seeded sweeps or full `tools/check_branch.sh` gate were run,
+  per the owner's instruction to leave browser work to the cloud.
+- Claude cloud verification: run `missile_class_t.py`,
+  `launcher_direction_t.py`, `tender_ordnance_t.py`, `tender_pd_t.py`, `nuclear_authority_t.py`,
+  `missile_budget_t.py`, existing missile/ordnance/campaign regression tests,
+  and `tools/check_branch.sh`. After the missing systems are implemented,
+  run each paired capital scenario in `balance_sweep.py` with seeds 1–20,
+  and regenerate the P0 missile damage table. Check touch and desktop on
+  real hardware before enabling the feature by default.
+
+## Capital ordnance step 1: class damage (Codex)
+
+- Restored always-on `dmgCls` and `pierceCls` scaling for missile blasts,
+  including splash. Torpedoes and nukes explicitly opt out; tandem precursor
+  behavior is unchanged. `WEAPONS.md` marks the previous P0 table historical.
+- `ttk_matrix.py` now identifies its expected class-rule behavior; historical
+  ceiling data must be regenerated. Existing missile/TTK and balance outcomes
+  can change; no existing test assertions were weakened or re-baselined.
+- Local build, DB validation, JS syntax, Python compilation and four-class
+  plus torpedo/nuke/projectile positive/negative unit controls passed. Cloud:
+  run `missile_class_t.py`, `bullfrog_t.py m3`, `p0_t.py`, missile and ordnance
+  tests, and the seeded P0 commands in `CAPITAL_ORDNANCE_CLOUD_RUN.md`; replace
+  the historical table only with actual results. Full branch gate is pending.
+
+## Capital ordnance step 2: cold launch (Codex)
+
+- `launchMissile` accepts a local launch position, world direction and hostile
+  target only with `tuning.ordnance.enabled`. Without the flag, the old
+  signature, heading and lock continue unchanged; zero or invalid direction
+  falls back to forward. The existing seeker cone/lost-lock logic is untouched.
+- Local build, DB validation, JS syntax and browser-test compilation passed.
+  Cloud: run `launcher_direction_t.py`, existing missile/station regression
+  tests and ten seeded off-axis intercepts; no browser test ran locally.
 
 ## Capital ordnance P0–P3 (Codex, `codex/capital-ordnance`)
 
@@ -552,3 +629,8 @@ Codex's red-team AI pass (`7927281`: FROGG fighters prefer a nearby tender, AI b
 
 ## Capital ordnance P0-P3: Claude cloud verification (2026-11-02)
 Gate PASS on branch + main; `capital_schema_t`, `missile_budget_t` (caps 20/32/48, refusals, flat resources), `msl_t`, `ordnance_t` PASS. P0 damage table inserted in `docs/WEAPONS.md`, raw data in `docs/data/capital_missile_damage*`. Not run: real iPad/phone performance, drone/campaign suites.
+
+## Capital ordnance runtime (partial): Claude cloud verification (2026-11-02)
+Merged as partial: class damage scaling (always on), aimed-launch primitive, finite tender budgets, nuclear controls (quick-play option off by default, player-only fire, one scripted campaign release), paired capital sweep scenarios, missile-count instrumentation. Gate PASS; `missile_class_t` (IR: fighter 231, corvette 104, frigate 58, capital 35), `launcher_direction_t`, `tender_ordnance_t`, `nuclear_authority_t` and the four unit scripts PASS; `msl_t`, `ordnance_t` PASS.
+Sweeps, 10 seeds, parent (main) vs branch with the new flag off: Exeter + 2 Kestrels vs Bullfrog 0/10 both; Halberd vs 2 Gulpers 0/10 both; 1 Falchion vs Gulper 2/10 both; identical medians, so the damage rule does not change these fights. Branch only: `capital-exeter-on` 0/10, `capital-hecla-off` 5/10 (median TTK 109 s), `capital-hecla-on` 2/10; the "on" cases enable the unfinished flag, so they say nothing about the finished design. Raw: `docs/data/capital_runtime/`.
+NOT done (still to build): per-launcher runtime and AI, torpedo hold rule, hangar and drone launches, launcher HUD, launcher positions and damageable mounts on the hull models. Do not enable `tuning.ordnance.enabled` in play.

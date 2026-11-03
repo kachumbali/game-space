@@ -102,10 +102,12 @@ HUD warning: `MASS DRIVER CHARGING / LOCK - BREAK`.
 | ST-2 TORPEDO | 310 | 28 | 2600 | 8 | IR (wetware) | 0.05 flare | Toad 12, Gulper 36 (four 9-round cassettes), Bullfrog 16; tandem warhead |
 
 These are base database damage inputs, not measured damage to a specific hull.
-The `dmgCls` and `pierceCls` tables are currently not read by runtime source;
-the per-hull measurements requested in `DESIGN_CAPITAL_ORDNANCE.md` remain
-pending cloud execution. Torpedo tandem shield drain and penetration affect
-actual outcomes; no damage values were changed in this documentation update.
+IR, RF and Tick now apply `dmgCls` and their base piercing share multiplied by
+`pierceCls` for each affected hull. Damage multipliers are 1 / 0.45 / 0.25 /
+0.15 for fighter / corvette / frigate / capital; pierce multipliers are
+1 / 0.25 / 0.08 / 0.05. Torpedoes and nukes are exempt; tandem drain is
+unchanged. The measured table below is the **pre-rule baseline**, not a
+measurement of these new outcomes. A matching-seed re-run is required.
 
 ## 5. Fits and doctrine
 
@@ -187,7 +189,7 @@ Open, in priority order:
    but not the neighbourhood.
 
 
-## Measured missile damage against capitals (P0, Claude cloud run 2026-11-02)
+## Historical missile damage against capitals (P0, before class rule)
 
 Method: `python3 tools/tests/ttk_matrix.py ceiling --seeds 20 --jobs 1 --inpage --jitter --weapons ir,rf,tick,torp,tad --targets exeter,halberd,destroyer,gulper,bullfrog`, then `capital_damage_report.py`. Median net shield-plus-structure pool loss of the first missile over 20 seeds (misses count as zero), head / side aspect. This is the ceiling rig, not a duel, and it excludes component-only damage. Raw: `docs/data/capital_missile_damage_raw.json`, `docs/data/capital_missile_damage.csv`.
 
@@ -201,6 +203,6 @@ Method: `python3 tools/tests/ttk_matrix.py ceiling --seeds 20 --jobs 1 --inpage 
 
 Pools (structure + fore/aft shield): exeter: 1800+900/800 | halberd: 460+220/220 | destroyer: 2700+1400/1200 | gulper: 480+200/160 | bullfrog: 3200+2000/1600.
 
-The old note that IR missiles cannot hurt an Exeter is out of date: one IR missile removes 210 pool points from it.
-
-Consequence: `tuning.missile.dmgCls` (capital 0.15) and `pierceCls` are in the database but unused, so every missile does full damage to every hull class. Whether to restore a class-damage rule is an open owner decision (see `docs/DESIGN_CAPITAL_ORDNANCE.md`, Q7).
+Before restoration, one IR missile removed 210 pool points from an Exeter in
+this rig. The class rule now applies, so that historical number is not current;
+re-measure the table before citing a new per-hull value.

@@ -113,6 +113,7 @@ const SAMPLE_MAP = {
 };
 // ---- options panel ----
 let optsOpen = false;
+let quickNukeEnabled = false; // session option, deliberately defaults off
 function toggleOpts(force) {
   const el = $id('opts'); if (!el) return;
   const open = force !== undefined ? force : !optsOpen;
@@ -128,6 +129,7 @@ function toggleOpts(force) {
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
       + row('o_fm', 'Flight model [F]', `<select id="o_fm">${FM_ORDER.map(k => `<option value="${k}" ${flightMode === k ? 'selected' : ''}>${FM_NAMES[k]}</option>`).join('')}</select>`)
       + row('o_pur', 'Sim purist (no hit markers, kill banners, pods or hit-stop)', `<input type="checkbox" id="o_pur" ${AOPT.purist ? 'checked' : ''}>`)
+      + (TUNE.ordnance?.enabled ? row('o_nuke', 'Quick-play nuclear torpedo (next sortie)', `<input type="checkbox" id="o_nuke" ${quickNukeEnabled ? 'checked' : ''}>`) : '')
       + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
       + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
@@ -143,6 +145,7 @@ function toggleOpts(force) {
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
     $id('o_fm').onchange = e => fmSet(e.target.value);
     $id('o_pur').onchange = e => { AOPT.purist = e.target.checked; aoptSave(); };
+    if ($id('o_nuke')) $id('o_nuke').onchange = e => { quickNukeEnabled = e.target.checked; };
     $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
     $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);

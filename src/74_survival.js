@@ -263,6 +263,7 @@ function startSurvival(cfgIn) {
   applyLook(cfg.look);
   wave = 0; state = 'play'; flightMode = mut.newton ? 'newton' : fmLoad();
   const p = makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
+  quickNukeLoad(p);
   p.shots = 0; p.hitsLanded = 0;
   const D = DIFFS[cfg.diff];
   juice.scoreMul = D.score * cfg.mut.reduce((a, k) => a * MUTATORS[k].score, 1);

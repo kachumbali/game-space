@@ -78,6 +78,8 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  game.rescueLog = [];
+  ejectAlarmAt = -Infinity;
   beamsClear();
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
@@ -97,6 +99,7 @@ function resetGame() {
   game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
   makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
   benchSetup();
+  quickNukeLoad(player);
   spawnWave();
 }
 
@@ -150,14 +153,30 @@ function lodTick(dt) {
 // ---- fleet tender service (owner decision 2026-10-22: tender ships resupply the magazine rule) ----
 // Rearms friendly ships within `def.serviceR`: gun ammo pools toward `ammoMax`, missile/flare stores toward the def, XL slugs toward the weapon's magazine.
 // Binding rule kept (AGENTS.md, "docking does not repair"): rearm is not repair - no structure, component or shield restoration.
+// One shared point budget per tender, not an independent budget per recipient.
+function ordnanceRestock(stores, limits, hold, cfg, points) {
+  const initial = points;
+  for (const [id, cost] of Object.entries(cfg.points)) {
+    if (!(id in limits)) continue;
+    const pool = id === 'torp' ? 'torpedo' : id === 'drone' ? 'drone' : 'missile';
+    const amount = Math.max(0, Math.min((limits[id] || 0) - (stores[id] || 0), hold[pool] || 0, points / cost));
+    stores[id] = (stores[id] || 0) + amount;
+    hold[pool] = (hold[pool] || 0) - amount;
+    points -= amount * cost;
+  }
+  return initial - points;
+}
 function tenderTick(dt) {
   for (const t of ships) {
-    if (!t.alive || !t.def.tender) continue;
-    const R = t.def.serviceR || 600;
+    const heclaService = TUNE.ordnance?.enabled && t.def.ordnancePlan?.hold;
+    if (!t.alive || (!t.def.tender && !heclaService)) continue;
+    const R = t.def.serviceR || TUNE.ordnance?.restock?.serviceRange || 600;
+    let serviceTime = dt;
     for (const s of ships) {
       if (s === t || !s.alive || s.dying > 0 || s.team !== t.team) continue;
       if (s.group.position.distanceTo(t.group.position) > R) continue;
-      const m = ((dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5) * subEff(t, 'bay', 'service');   // M5: damaged service bays slow the rearm, dead ones stop it  // docked: full cassette rate; hovering AI: the slow shuttle trickle (docs/SHIP_CLASSES.md 4)
+      const serviceEff = heclaService ? compEff(t.comps.find(c => c.id === 'ordn'), 'bay', 'service') : subEff(t, 'bay', 'service');
+      const m = ((dock && dock.phase === 'docked' && dock.t === t && s === player) ? 1 : 0.5) * serviceEff;   // rearming never repairs
       for (const k in s.ammoMax) s.ammo[k] = Math.min(s.ammoMax[k], s.ammo[k] + 40 * m * dt);
       for (const T of s.turrets) {
         if (!Number.isFinite(T.ammo)) continue;
@@ -167,7 +186,17 @@ function tenderTick(dt) {
           if (!T.dead) for (const mat of T.mats) mat.color.multiplyScalar(1 / 0.55);
         }
       }
-      for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
+      if (TUNE.ordnance?.enabled) {
+        const cfg = TUNE.ordnance.restock;
+        t.ordnanceHold ||= { ...(heclaService || t.def.ordnanceHold) };
+        const docked = dock && dock.phase === 'docked' && dock.t === t && s === player;
+        const rate = (docked ? cfg.dockedRate : cfg.proximityRate) * serviceEff;
+        const spent = ordnanceRestock(s.stores, { ...s.def.stores, ...(s.def.ordnancePlan?.stores || {}) }, t.ordnanceHold, cfg, rate * serviceTime);
+        if (rate > 0) serviceTime = Math.max(0, serviceTime - spent / rate);
+        // Other consumables retain their prior behavior; nuclear weapons are never resupplied.
+        for (const k in s.def.stores || {}) if (!(k in cfg.points) && !WEAPONS[k]?.nuclear)
+          s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
+      } else for (const k in s.def.stores || {}) s.stores[k] = Math.min(s.def.stores[k], s.stores[k] + 0.5 * m * dt);
       if (s.spine) { const M = spineW(s).mag ?? Infinity; s.spine.mag = Math.min(M, s.spine.mag + dt * m / 3); }
     }
   }

@@ -461,6 +461,7 @@ function startMission(M, seg) {
   if (cine) cancelTransit();
   plogReset(M.title);
   clearWorld();
+  game.rescueLog = [];
   lootClear();                                          // never carry free-flight pickups into a campaign sortie
   comms.length = 0; objectives.length = 0;
   game.mode = 'mission'; game.mission = M;
@@ -480,6 +481,7 @@ function startMission(M, seg) {
     const s = makeShip(w.ship, 0, new THREE.Vector3(...w.pos), new THREE.Quaternion(), { callsign: w.callsign, id: w.pilot, pilot: w.pilot, ai: 'fighter', skill: CREW[w.pilot].skill });
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
   }
+  sarScenarioInit(M, game.mstate);
   game.seg = null;
   if (seg) {                       // resume at a checkpoint: the start of the current segment (after the last transit)
     const S = game.mstate;
@@ -556,6 +558,7 @@ function spawnGroup(sp) {
     const pos = anchor.clone().addScaledVector(dir, sp.dist + (kind === 'gulper' ? 0 : n * 40))
       .addScaledVector(side, (Math.random() - 0.5) * sp.spread * 2).add(new THREE.Vector3(0, (Math.random() - 0.5) * sp.spread, 0));
     const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), D.skill ? { grp: sp.grp, skill: clamp((SHIPS[kind].ai?.skill ?? 3) + D.skill, 1, 5) } : { grp: sp.grp });
+    if (rescueEnabled() && game.mission?.sar && game.mstate?.sar?.cutter) e.sarTarget = game.mstate.sar.cutter;
     if (sp.jump) { flashAt(pos, e.def.radius * 2.2, 0.8); }
   }
   if (sp.jump) sfx('jump');
@@ -586,6 +589,8 @@ function missionUpdate(dt) {
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
   S.t += dt; S.stageT += dt;
+  sarScenarioTick(M, S);
+  if (S.ended) return;
   if (S.convoy) {
     convoyAdvance(S.convoy, dt);
     const escaped = S.convoy.entries.filter(e => e.status === 'escaped').length;
@@ -621,6 +626,12 @@ function missionUpdate(dt) {
 }
 function endMission(result, why) {
   const S = game.mstate; if (!S || S.ended) return;
+  if (rescueEnabled() && player?.rescueCapsule?.outcome === 'adrift' && result !== 'lose') { S.pendingRescueEnd = {result, why}; return; }
+  if (rescueEnabled()) {
+    S.resolvingRescue = true;
+    for (const pod of rescueCapsules()) rescueResolve(pod, 'mission ended before recovery');
+    S.resolvingRescue = false;
+  }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
@@ -633,8 +644,26 @@ function endMission(result, why) {
   }
   saveCrew();
 }
+function rescuePlayerResolved(p, outcome) {
+  const S = game.mstate;
+  if (game.mode === 'mission' && S && !S.ended && !S.resolvingRescue) {
+    const pending = S.pendingRescueEnd; S.pendingRescueEnd = null;
+    endMission(outcome === 'recovered' ? (pending?.result || 'partial') : 'lose', outcome === 'recovered' ? (pending?.why || 'MEOW RECOVERED') : `MEOW ${outcome.toUpperCase()}`);
+  }
+}
 function onShipDestroyed(s) {
   const S = game.mstate;
+  if (rescueOnDestroyed(s)) return;
+  if (rescueEnabled() && s.team === 0 && (s.pilot || s === player) && !s.def.drone) {
+    const wasPlayer = s === player;
+    const dc = s.deathCause || { dtype: 'kin', overkill: 0.3, reactor: false };
+    const chance = clamp(0.75 - dc.overkill * 1.2 - (dc.reactor ? 0.25 : 0) - (dc.dtype === 'nuke' ? 0.3 : 0) + 0.05 * ((PILOT_DEFS[s.pilot]?.skill || 3) - 3), 0.05, 0.9);
+    const capsule = (s.rescueManualRequested || Math.random() < chance) ? rescueSpawnCapsule(s, {pilot:s.pilot, player:wasPlayer}) : null;
+    const crew = CREW[s.pilot];
+    if (crew) { crew.status = capsule ? 'missing' : 'KIA'; crew.notes.push(capsule ? 'ejected; awaiting recovery' : `lost in action (${dc.reactor ? 'reactor breach' : 'cockpit destroyed or unable to eject'})`); saveCrew(); }
+    if (!capsule && wasPlayer) comm('CONTROL', 'MEOW lost. No capsule detected.', '#ff8a6a');
+    return;
+  }
   if (s.team === 1) {
     const a = s.lastAttacker;
     if (a && a.pilot) {

@@ -1,0 +1,15 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const src=fs.readFileSync('src/60_weapons.js','utf8');
+const code=src.slice(src.indexOf('function quickNukeLoad('),src.indexOf('function launchMissile('));
+const context={TUNE:{ordnance:{enabled:true,quickNukeRounds:1}},quickNukeEnabled:true};
+vm.createContext(context);vm.runInContext(code,context);
+assert.equal(context.nuclearLaunchAllowed(true,false,false,false,false),false);
+assert.equal(context.nuclearLaunchAllowed(true,true,true,false,false),false);
+assert.equal(context.nuclearLaunchAllowed(true,true,true,true,false),true);
+assert.equal(context.nuclearLaunchAllowed(true,true,true,true,true),false);
+assert.equal(context.nuclearLaunchAllowed(false,false,true,false,false),true);
+const bomber={stores:{torp:2}};assert.equal(context.quickNukeLoad(bomber),true);
+assert.equal(bomber.stores.torp,1);assert.equal(bomber.stores.nuke,1);
+const fighter={stores:{ir:2}};assert.equal(context.quickNukeLoad(fighter),false);
+context.quickNukeEnabled=false;assert.equal(context.quickNukeLoad({stores:{torp:2}}),false);
+console.log('nuclear quick-play, player-only and campaign release controls: OK');
