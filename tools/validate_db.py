@@ -46,7 +46,7 @@ for sid, ship in raw['ships'].items():
             w=raw['weapons'].get(wid,{}) if isinstance(wid,str) else {}
             if w.get('kind')!='msl' or bool(w.get('torp')) != (launcher.get('role')=='torpedo') or w.get('nuclear'): err(f'{loc}: incompatible store {wid!r}')
     plan=ship.get('ordnancePlan')
-    if not isinstance(plan,dict) or plan.get('enabled') is not False: err(f'ships.{sid}.ordnancePlan must remain disabled')
+    if not isinstance(plan,dict) or not isinstance(plan.get('enabled'),bool): err(f'ships.{sid}.ordnancePlan.enabled must be boolean')
     if isinstance(plan,dict):
         h=plan.get('hangar',{})
         if h.get('total',0):
