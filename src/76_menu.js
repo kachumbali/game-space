@@ -211,7 +211,7 @@ function showSkirmishSetup(focus) {
       <div class="sub">STARTING RANGE</div><div class="skrow">${skSeg('range', SK_RANGES.map(([l, v]) => [`${l} ${v / 1000 < 1 ? v + ' m' : v / 1000 + ' km'}`, v]), c.range)}</div>
       <div class="sub">ENVIRONMENT</div><div class="skrow"><select data-f="look" id="sk_look">${Object.keys(LOOKS).map(k => `<option value="${k}" ${k === c.look ? 'selected' : ''}>${k.toUpperCase()}</option>`).join('')}</select></div>
     </div></div>
-    <div class="btns stick"><button data-f="go" id="sk_go">LAUNCH</button><button class="alt" data-f="back" id="sk_back">BACK</button></div>`, 'sk');
+    <div class="btns stick"><button data-f="go" id="sk_go">LAUNCH</button>${rescueEnabled() ? '<button id="sk_sar1">SAR: BEACONS</button><button id="sk_sar2">SAR: LAST LIGHT</button>' : ''}<button class="alt" data-f="back" id="sk_back">BACK</button></div>`, 'sk');
   const el = $id('brief'), P = el.querySelector('.panel');
   P.scrollTop = sc;
   const redo = f => { skSave(); showSkirmishSetup(f); };
@@ -227,6 +227,7 @@ function showSkirmishSetup(focus) {
   $id('sk_ship').onchange = e => { skCfg.ship = e.target.value; skSave(); };
   $id('sk_look').onchange = e => { skCfg.look = e.target.value; skSave(); };
   $id('sk_back').onclick = showMainMenu;
+  if (rescueEnabled()) for (const [id, i] of [['sk_sar1',0],['sk_sar2',1]]) $id(id).onclick = () => { menuLeave(); startMission(SAR_MISSIONS[i]); };
   $id('sk_go').onclick = () => {
     if (!skCfg.rows.length) { skCfg.rows = SK_DEFAULT.rows.map(r => [...r]); }
     skSave(); menuLeave(); startSkirmish(skCfg); launchLock();
@@ -285,7 +286,7 @@ function skirmishUpdate(dt) {
   const S = game.skS; if (!S) return;
   if (S.ended) { S.endT += dt; if (S.endT > (S.result === 'win' ? 3 : 2.5) && !S.shown) { S.shown = true; showSkirmishDebrief(); } return; }
   S.t += dt;
-  if (state === 'dead') return skEnd('lose', 'MEOW DOWN');
+  if (state === 'dead') return skEnd('lose', player?.rescueCapsule?.outcome === 'recovered' ? 'MEOW RECOVERED; AIRCRAFT LOST' : 'MEOW DOWN');
   if (state !== 'play') return;
   if (ships.some(s => s.team === 1 && s.alive)) { S.respawnT = -1; return; }
   if (game.sk.respawn) { if (S.respawnT < 0) S.respawnT = 3; S.respawnT -= dt; if (S.respawnT <= 0) { S.respawnT = -1; skSpawnForce(); log(`WAVE ${wave}`, '#ffd080'); } }

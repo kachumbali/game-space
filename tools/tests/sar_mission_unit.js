@@ -1,0 +1,12 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const src=fs.readFileSync('src/78_rescue_missions.js','utf8');
+const code=src.slice(src.indexOf('function sarScenarioOutcome('),src.indexOf('function sarScenarioTick('));
+const c={};vm.createContext(c);vm.runInContext(code,c);
+const record=(outcome)=>({outcome});
+const s={t:20,sar:{cutter:{alive:true,dying:0},deadline:100,records:[record('recovered'),record('adrift')]}};
+assert.equal(c.sarScenarioOutcome(s,2),null);
+s.sar.records[1].outcome='recovered';assert.equal(c.sarScenarioOutcome(s,2),'win');
+s.sar.records[1].outcome='destroyed';assert.equal(c.sarScenarioOutcome(s,2),'lose');
+s.sar.records[1].outcome='adrift';s.sar.cutter.alive=false;assert.equal(c.sarScenarioOutcome(s,2),'lose');
+s.sar.cutter.alive=true;s.t=100;assert.equal(c.sarScenarioOutcome(s,2),'lose');
+console.log('SAR mission win, active, survivor loss, cutter loss and timeout: OK');
