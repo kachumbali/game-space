@@ -117,6 +117,9 @@ Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSal
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
+// Preview a cutscene from the title screen: ?cutscene=ejection|recovered|captured|missing (plays regardless of the 'seen' marker)
+if (params.has('cutscene')) setTimeout(() => { try { for (const k of ['ejection','recovered','captured','missing']) localStorage.removeItem('gs_ejection_scene_'+k); } catch (_) {} playEjectionSequence(params.get('cutscene')); }, 1500);
+
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
 if (params.has('diag')) {
   const diag = document.createElement('pre');
