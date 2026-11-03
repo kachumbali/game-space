@@ -102,6 +102,29 @@
   Cloud: run `launcher_direction_t.py`, existing missile/station regression
   tests and ten seeded off-axis intercepts; no browser test ran locally.
 
+## Launcher AI (Codex, `codex/launcher-ai`, based on `codex/launcher-runtime`)
+
+- With `tuning.ordnance.enabled`, human capitals acquire fighter and capital
+  contacts independently, fire ready cells in ripples, and commit torpedo
+  salvos only when their ready tubes meet the data-driven PD rule or the
+  target's PD is sufficiently degraded. Damaged cells cannot fire. Friendly
+  and own-hull line checks guard each shot. FROGG launcher behavior is unchanged.
+- The human ordnance plans now drive hangar manifests and contact-triggered
+  drone launches, subject to their configured live limits and bay components.
+  Paired `capital-exeter-{off,on}` and `capital-hecla-{off,on}` sweep scenarios
+  collect expenditure and peak live missile counts.
+- Local build, database validation, PD/clearance/hangar controls, hangar
+  schema negative controls and sweep-counter controls passed. Browser tests,
+  visual inspection and 20-seed sweeps are pending; no balance claim is made.
+  Claude: run `launcher_runtime_t.py`, `capital_ai_t.py`, existing drone,
+  capital AI, hangar, missile and campaign tests, and `tools/check_branch.sh`.
+  Then run each paired sweep with seeds 1–20 and compare time to kill,
+  survival, expenditure and peak live missiles. Inspect launch points and
+  verify launch paths clear the hull in runtime and Shipyard, including iPad.
+- The earlier always-on missile class scaling lives separately on
+  `codex/capital-ordnance-runtime`; it is not included in this lane. Integrate
+  or reimplement it deliberately before treating measurements as final.
+
 ## Launcher runtime, lane 3a (Codex, `codex/launcher-runtime`)
 
 - Experimental only: `tuning.ordnance.enabled` remains false. Human Halberd,

@@ -242,6 +242,7 @@ function aiUpdate(s, dt) {
   if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
   if (ai.tgtT <= 0 || !s.target || !s.target.alive || s.target.dying) { s.target = pickTarget(s); ai.tgtT = 3 + Math.random() * 3; }
   sense(s);
+  if (s.launcherRuntime) capitalOrdnanceAI(s, dt);
   // crippled ships that run far enough away break contact and are removed (so waves can end)
   if (ai.mode === 'flee' && s.team === 1 && game.anchor && s.group.position.distanceTo(game.anchor.group.position) > 2600) {
     ai.fleeT = (ai.fleeT || 0) + dt;
@@ -423,7 +424,7 @@ function capitalAI(s, dt) {
   if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
   else if (err < 0.03 && dist < rng * 1.4) { if (gunBurstOK(s, dt)) fireGuns(s, 0b1); }                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
-  if (s.stores.tad > 0 || s.stores.torp > 0) {
+  if (!s.launcherRuntime && (s.stores.tad > 0 || s.stores.torp > 0)) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
     if (isCapital(t)) { s.sel = missileIds(s).indexOf(wid); lockUpdate(s, dt); if (s.lock.state === 'locked' && ai.mslT <= 0 && torpsStillNeeded(s, t) > 0) { launchMissile(s, wid); ai.mslT = 5; } }
   }

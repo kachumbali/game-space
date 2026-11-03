@@ -901,6 +901,11 @@ SHIPS.destroyer = {
 // Recessed cell covers are paint on existing hull voxels: they cannot float
 // independently of the pressure hull. Positions are the same as the runtime
 // damageable launchers, authored in the database and scaled with the ship.
+if (TUNE.ordnance?.enabled) {
+  const d = SHIPS.destroyer;
+  d.comps = [...d.comps, ...(d.ordnancePlan.hangar.extraComponents || [])];
+  d.prims.push({t:'paint', box:[-8,-21,-12,8,-17,12], col:E.dark, side:'bottom', noMirror:true, mix:0.95});
+}
 if (TUNE.ordnance?.enabled) for (const id of ['halberd', 'exeter', 'destroyer', 'hecla']) {
   const d = SHIPS[id];
   for (const bank of d.launchers || []) for (const [x,y,z] of bank.positions) {

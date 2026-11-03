@@ -304,14 +304,15 @@ SETUP_JS = r"""([spec,seed,range,cap]) => {
   });
   g.setLod('off',true);
   const player=g.player,playerStart=player.group.position.clone();
-  // Count launches at insertion rather than store changes: tenders can rearm mid-step.
+  // Only count insertions into the current live-missile array; warning lists
+  // also push missile objects, and updateMissiles replaces the array each tick.
   const missileShots={human:0,frogg:0}; let peakMissiles=0;
   const originalArrayPush=Array.prototype.push;
   Array.prototype.push=function(...items){
-    const launches=items.filter(m=>m?.w?.kind==='msl' && m.owner && m.pos && m.mesh);
-    for(const m of launches) if(m.team===0) missileShots.human++; else if(m.team===1) missileShots.frogg++;
+    const launchArray=this===g.missiles;
+    if(launchArray) for(const m of items) if(m.team===0) missileShots.human++; else if(m.team===1) missileShots.frogg++;
     const n=originalArrayPush.apply(this,items);
-    if(launches.length) peakMissiles=Math.max(peakMissiles,this.filter(m=>!m.dead).length);
+    if(launchArray) peakMissiles=Math.max(peakMissiles,this.filter(m=>!m.dead).length);
     return n;
   };
   player.team=2;player.group.position.set(50000,0,50000);player.vel.set(0,0,0);player.group.visible=false;
