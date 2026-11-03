@@ -3498,6 +3498,8 @@ function buildVox(s) {
 const _lv = new THREE.Vector3();
 function chip(s, lp, r, sr, replay) {
   const V = s.vox, D = V.data, vs = D.vs, { nx, ny, nz } = D;
+  // A carve radius that scales with raw damage (hit: 0.35+0.08*d) reached 14 m for a 210-damage missile, wider than a whole fighter, so one hit deleted every voxel of the hull (only exhaust and hit boxes stayed). Cap it relative to the ship.
+  if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
   if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
   const R = Math.max(r, sr);
   const ci = Math.floor((lp.x + D.hx) / vs), cj = Math.floor((lp.y + D.hy) / vs), ck = Math.floor((lp.z + D.hz) / vs);
@@ -10167,6 +10169,7 @@ Object.assign(globalThis.__game, { speedMul, turnMul, powerMul, compState, SUBSY
 Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsClear, get beamPool() { return beamPool; }, renderBeams, dronesOf, launchDrones, droneOrder, droneLimitOf, DRONE_ORDERS });   // drone API for the comms menu
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
+Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
 if (params.has('diag')) {
