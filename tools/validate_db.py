@@ -12,6 +12,14 @@ errs, warns = [], []
 def err(m): errs.append(m)
 def warn(m): warns.append(m)
 
+cutscenes=raw.get('tuning',{}).get('cutscenes')
+if not isinstance(cutscenes,dict) or not isinstance(cutscenes.get('enabled'),bool) or not isinstance(cutscenes.get('autoSkipRepeat'),bool): err('tuning.cutscenes must contain boolean enabled and autoSkipRepeat')
+outcome=raw.get('tuning',{}).get('roster',{}).get('aoRecovery',{})
+for key in ('rescuerWeight','sarWeight','hostileDistanceScale','hostileProximityWeight','beatSeconds'):
+    value=outcome.get(key)
+    if not isinstance(value,(int,float)) or isinstance(value,bool) or not math.isfinite(value) or value<=0: err(f'tuning.roster.aoRecovery.{key} must be positive and finite')
+if isinstance(outcome.get('beatSeconds'),(int,float)) and outcome['beatSeconds']>20: err('tuning.roster.aoRecovery.beatSeconds must not exceed 20')
+
 # Experimental roster: validate even while disabled so it can be enabled safely.
 roster = raw.get('tuning', {}).get('roster', {})
 if not isinstance(roster,dict) or not isinstance(roster.get('enabled'),bool):

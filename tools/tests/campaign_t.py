@@ -160,7 +160,7 @@ def lose(R, m, anchor_name, snippet, has_transit):
     else: step(pg, 60)
     pg.evaluate("()=>__game.destroy(__game.player)")
     i = wait_end(pg, 30)
-    check(f'm{m} player loss -> lose', i['ended'] and i['result'] == 'lose' and i['why'] == 'MEOW DOWN', str(i)[:160])
+    check(f'm{m} player loss -> lose', i['ended'] and i['result'] == 'lose' and str(i['why']).endswith(' DOWN'), str(i)[:160])
     step(pg, 100)
     t = brief_txt(pg)
     check(f'm{m} player-loss debrief text', 'MISSION FAILED' in t and snippet in t, t[:80])

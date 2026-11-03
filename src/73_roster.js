@@ -69,6 +69,23 @@ function rosterFind(id) {
   for (const pool of Object.values(state.pools)) { const p=pool.find(x=>x.id===id); if (p) return p; }
   return null;
 }
+// Scripted callsigns identify mission slots, never permanent speakers.
+function rosterSlotShip(slot) {
+  if (!rosterEnabled() || game.mode!=='mission' || !game.mstate) return null;
+  const id=game.mstate.rosterSelected?.[slot];
+  return id ? ships.find(s=>s.pilot===id && s.alive && !s.dying && !s.rescueCapsule) || null : null;
+}
+function rosterScriptCallsign(token) {
+  if (!rosterEnabled() || game.mode!=='mission') return token;
+  const key=String(token).toUpperCase();
+  if (key==='ECHO' || key==='MEOW') return player?.callsign || 'PLAYER';
+  if (key==='HAWK' || key==='SPARROW') return rosterSlotShip(key==='HAWK'?0:1)?.callsign || null;
+  return token;
+}
+function rosterDialogueText(text) {
+  if (!rosterEnabled() || game.mode!=='mission') return text;
+  return String(text).replace(/\b(HAWK|SPARROW|MEOW|ECHO)\b/gi, word=>rosterScriptCallsign(word) || 'WINGMATE');
+}
 // The only runtime addition to a fixed pool is an explicit scripted arrival.
 function rosterStoryArrival(key, pilot) {
   if (!rosterEnabled() || !pilot || typeof pilot.id!=='string' || rosterFind(pilot.id)) return false;
@@ -89,13 +106,20 @@ function rosterTransition(p, status, cfg = TUNE.roster) {
   if (p.status==='CAPTURED' && status==='RECOVERING') p.returnedFromCapture=true;
   p.status=status; p.recoveryLeft=status==='RECOVERING' ? cfg.recoveryMissions : 0; return true;
 }
-// Single post-sortie hook; empty battlespace leaves the pilot missing.
+// One outcome policy for live player capsules and unresolved AI pilots.
+// The game's seeded Math.random is the default; tests can supply a random source.
+function rescueOutcomeRoll(ctx) {
+  const cfg=ctx.cfg || TUNE.roster.aoRecovery, random=ctx.random || Math.random;
+  const friendly=Math.max(0,ctx.friendly || 0), enemy=Math.max(0,ctx.enemy || 0);
+  if (!friendly && !enemy) return 'MIA';
+  if (!enemy) return random()<cfg.unopposedRecovery ? 'RECOVERING' : 'MIA';
+  const proximity=Number.isFinite(ctx.nearestHostile) ? 1/(1+Math.max(0,ctx.nearestHostile)/cfg.hostileDistanceScale) : 0;
+  const f=friendly*cfg.friendlyWeight + (ctx.rescuers || 0)*cfg.rescuerWeight + (ctx.sarEnRoute ? cfg.sarWeight : 0);
+  const e=enemy*cfg.enemyWeight*(1+proximity*cfg.hostileProximityWeight);
+  return random() < f/(f+e) ? 'RECOVERING' : 'CAPTURED';
+}
 function rosterResolveMissing(friendly, enemy, random = Math.random, cfg = TUNE.roster) {
-  if (!(friendly>0) && !(enemy>0)) return 'MIA';
-  if (!(enemy>0)) return random()<cfg.aoRecovery.unopposedRecovery ? 'RECOVERING' : 'MIA';
-  const a=friendly*cfg.aoRecovery.friendlyWeight, b=enemy*cfg.aoRecovery.enemyWeight;
-  const chance=a/(a+b);
-  return random()<chance ? 'RECOVERING' : 'CAPTURED';
+  return rescueOutcomeRoll({friendly,enemy,random,cfg:cfg.aoRecovery});
 }
 function rosterUpdateAwards(p, facts, cfg = TUNE.roster) {
   const earned=[];
@@ -130,14 +154,17 @@ function rosterSpawnWing(M) {
   }
 }
 function rosterMarkPilot(id,status) { if (!rosterEnabled()) return; const p=rosterFind(id); if (rosterTransition(p,status)) rosterSave(); }
+function rosterFlagCapture(p) {
+  const state=rosterLoad(); state.capturePending ||= [];
+  if (!state.capturePending.some(x=>x.pilot===p.id && !x.resolved)) state.capturePending.push({pilot:p.id,mission:game.mission?.id || null,resolved:false});
+}
 function rosterOnRescue(pod,outcome,rescuer) {
   if (!rosterEnabled() || !pod.rescueCapsule?.pilot) return;
   const p=rosterFind(pod.rescueCapsule.pilot); if (!p) return;
   if (outcome==='mission ended before recovery') {
-    const humans=ships.filter(s=>s.alive&&!s.dying&&s.team===0&&!s.rescueCapsule).length;
-    const enemies=ships.filter(s=>s.alive&&!s.dying&&s.team===1).length;
-    rosterTransition(p,rosterResolveMissing(humans,enemies));
-  } else rosterTransition(p,outcome==='recovered'?'RECOVERING':outcome==='captured'?'CAPTURED':'KIA');
+    rosterTransition(p,rescueOutcomeRoll(rescueOutcomeContext(pod)));
+  } else rosterTransition(p,outcome==='recovered'?'RECOVERING':outcome==='captured'?'CAPTURED':outcome==='missing'?'MIA':'KIA');
+  if (p.status==='CAPTURED') rosterFlagCapture(p);
   if (outcome==='recovered' && rescuer?.pilot) { const rp=rosterFind(rescuer.pilot); if(rp) rp.rescuedThisSortie=true; }
   rosterSave();
 }
@@ -146,10 +173,11 @@ function rosterFinish(M,S) {
   for (const id of S.rosterRecovering || []) { const p=rosterFind(id); if(p?.status==='RECOVERING' && --p.recoveryLeft<=0) rosterTransition(p,'ACTIVE'); }
   for (const id of S.rosterParticipants || []) {
     const p=rosterFind(id); if (!p) continue;
-    if (p.status==='MIA') {
-      const friendly=ships.filter(s=>s.alive&&!s.dying&&s.team===0&&!s.rescueCapsule).length;
-      const enemy=ships.filter(s=>s.alive&&!s.dying&&s.team===1).length;
-      rosterTransition(p,rosterResolveMissing(friendly,enemy));
+    if (p.status==='MIA' && !(game.rescueLog || []).some(r=>r.pilot===id && r.outcome==='missing')) {
+      const point=game.anchor || player;
+      const ctx=point?.group ? rescueOutcomeContext(point) : {friendly:0,enemy:0};
+      rosterTransition(p,rescueOutcomeRoll(ctx));
+      if (p.status==='CAPTURED') rosterFlagCapture(p);
     }
     p.missions++;
     const ship=ships.find(s=>s.pilot===id && !s.rescueCapsule);

@@ -6,7 +6,7 @@ function checkFiles(files) { for(const [mood,path] of Object.entries(files)) ass
 checkFiles(context.files);
 assert.throws(()=>checkFiles({missing:'audio/definitely-not-a-real-track.mp3'}),/missing/);
 const code=src.slice(src.indexOf('function musicMood('),src.indexOf('function musicTick('));
-const c={state:'play',player:{team:0,group:{position:{}}},ships:[],game:{mstate:{},mission:null},MUS:{combatT:0,mood:null,titleDone:true},menuView:'main',$id:()=>({style:{display:'none'}})};
+const c={state:'play',player:{team:0,group:{position:{}}},ships:[],game:{mstate:{},mission:null},MUS:{combatT:0,mood:null,titleDone:true},menuView:'main',ejectionSceneActive:()=>false,$id:()=>({style:{display:'none'}})};
 vm.createContext(c);vm.runInContext(code,c);
 const enemy=(id,cls,dist)=>({alive:true,team:1,def:{id,cls},group:{position:{distanceTo:()=>dist}}});
 assert.equal(c.musicMood(.1),'patrol');

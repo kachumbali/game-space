@@ -80,8 +80,8 @@ function frame(t) {
   last = t;
   if (!params.has('yard')) {
     audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
-    musicTick(dt);
-    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
+    ejectionSceneTick(dt); musicTick(dt);
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen && !ejectionSceneActive()) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
     updateHud();
   }
@@ -109,6 +109,7 @@ Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => m
 Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(SFX), musicFiles: MUSIC_FILES });
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
+Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, rescueReachable, rescueResolveBeat, rosterScriptCallsign, rosterDialogueText, rosterSlotShip, comms, getEjectionScene:()=>EJSCENE, playEjectionSequence, ejectionSceneSkip });
 Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, rosterFind, rosterRank, rosterSkill, rosterTransition, rosterResolveMissing, rosterStoryArrival, rosterUpdateAwards });
 
 

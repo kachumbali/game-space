@@ -1,0 +1,13 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert');
+const cfg=JSON.parse(fs.readFileSync('data/db.json','utf8')).tuning.roster;
+const src=fs.readFileSync('src/73_roster.js','utf8');
+const code=src.slice(src.indexOf('function rescueOutcomeRoll('),src.indexOf('function rosterUpdateAwards('));
+const c={TUNE:{roster:cfg}};vm.createContext(c);vm.runInContext(code,c);
+assert.equal(c.rescueOutcomeRoll({friendly:0,enemy:0,random:()=>0}),'MIA');
+assert.equal(c.rescueOutcomeRoll({friendly:1,enemy:1,random:()=>0}),'RECOVERING');
+assert.equal(c.rescueOutcomeRoll({friendly:1,enemy:1,random:()=>0.999}),'CAPTURED');
+const common={friendly:1,enemy:1,random:()=>0.4};
+assert.equal(c.rescueOutcomeRoll({...common,nearestHostile:0}),'CAPTURED');
+assert.equal(c.rescueOutcomeRoll({...common,nearestHostile:1e9}),'RECOVERING');
+assert.equal(c.rescueOutcomeRoll({...common,nearestHostile:0,rescuers:1,sarEnRoute:true}),'RECOVERING');
+console.log('ejection outcome weighting, proximity, SAR and deterministic controls: OK');
