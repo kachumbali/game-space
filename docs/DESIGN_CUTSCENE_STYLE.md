@@ -26,6 +26,29 @@ in the revised cast sheet. The slender commander in the early C frame is not
 the target build. None of these concepts is an imitation of a particular
 franchise image or character.
 
+## Reusable Direction C image prompt
+
+Use this as a starting point for new **original** concept images; change the
+scene and cast details for each shot. The owner chose the gritty atmosphere,
+not the slender proportions of the first commander sample.
+
+> An original hard military science-fiction game cutscene, illustrated as a
+> gritty realistic comic. Use believable proportions and equipment, strong
+> silhouettes, hard black inked shadow shapes, dramatic low-key lighting and
+> a limited olive-black and graphite palette with restrained cyan coolant and
+> rust-orange heat accents. Stage one clear action in a cockpit, briefing room,
+> rescue bay or alien compartment; frame faces and gestures so they remain
+> readable at a 320×200-era scale. FROGG characters are stocky, bulky,
+> dragon-like reptilians with broad shoulders, thick necks, lamellar scales,
+> short rugged horns and intelligent expressions; their ships and interiors
+> use ribbed organic architecture and hoses. Clearly illustrated, not
+> photorealistic or chibi. No text, logos, real people or existing franchise
+> characters; leave space for captions to be added separately.
+
+For the queen, use a distinct low, broad quadrupedal silhouette, layered
+armour and a visibly connected, ribbed egg sac in a heat-managed chamber.
+Treat the queen's final anatomy as a proposal until separately approved.
+
 ## Shared art rules
 
 - **Humans:** ink `#101820`, deep navy `#26384A`, steel `#738694`, bone
