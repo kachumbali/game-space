@@ -106,6 +106,7 @@ Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsCle
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
 Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.

@@ -10142,9 +10142,41 @@ function drawRadar(alive) {
   c.fillStyle = '#8fffd0'; c.beginPath(); c.moveTo(cx, cy - 9); c.lineTo(cx + 7, cy + 7); c.lineTo(cx - 7, cy + 7); c.closePath(); c.fill();
 }
 
+function launcherHudText(s, enabled) {
+  if (!enabled || !s?.alive || !s.launcherRuntime?.length) return '';
+  const lines = [];
+  for (const [role, label] of [['missile','MISSILE'], ['torpedo','TORPEDO']]) {
+    const cells = s.launcherRuntime.filter(c => c.role === role);
+    if (!cells.length) continue;
+    const healthy = c => { const part = s.comps.find(x => x.id === c.comp); return part && part.hp > part.max * 0.5; };
+    const ready = cells.filter(c => healthy(c) && c.ready > 0 && c.timer <= 0).length;
+    const damaged = cells.filter(c => !healthy(c)).length;
+    const timers = {};
+    for (const c of cells) if (healthy(c) && c.timer > 0) { const t = Math.ceil(c.timer); timers[t] = (timers[t] || 0) + 1; }
+    const reload = Object.entries(timers).map(([t,n]) => `${t}s×${n}`).join(' ') || '—';
+    const ids = [...new Set(cells.flatMap(c => c.allowed))];
+    const mags = ids.map(id => `${id.toUpperCase()} ${Math.floor(s.launcherMagazine?.[id] || 0)}`).join(' ');
+    const loaded = cells.reduce((total, c) => total + (c.ready || 0), 0);
+    lines.push(`${label} ${ready}/${cells.length} READY · ${loaded} LOADED${damaged ? ` · ${damaged} DAMAGED` : ''} · RELOAD ${reload} · MAG ${mags}`);
+  }
+  return lines.join('\n');
+}
+let launcherHudEl = null;
+function updateLauncherHud(s) {
+  const text = launcherHudText(s, !!TUNE.ordnance?.enabled);
+  if (!launcherHudEl && text) {
+    launcherHudEl = document.createElement('div'); launcherHudEl.id = 'launcherHud';
+    launcherHudEl.style.cssText = 'position:fixed;top:16%;left:50%;transform:translateX(-50%);z-index:7;max-width:94vw;padding:5px 8px;white-space:pre-wrap;text-align:center;font:600 clamp(9px,1.1vw,13px)/1.35 monospace;color:#d5fff1;background:rgba(3,18,17,.78);border:1px solid #4a8;pointer-events:none';
+    document.body.appendChild(launcherHudEl);
+  }
+  if (launcherHudEl) { launcherHudEl.textContent = text; launcherHudEl.style.display = text ? 'block' : 'none'; }
+}
+if (TUNE.ordnance?.enabled) document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">LAUNCHERS: READY shows available cells; RELOAD shows seconds and MAG shows rounds in reserve.</div>');
+
 function updateHud() {
   const po = $id('pauseOv'); if (po) { const on = userPause && state === 'play'; po.style.display = on ? 'block' : 'none'; if (on) pauseMenuRefresh(); }   // S1
   const p = player, alive = !!(p && p.alive);
+  updateLauncherHud(p);
   const enemies = ships.filter(s => s.team === 1 && s.alive);
   const S = game.mstate;
   hudTxt.textContent =
@@ -10349,6 +10381,7 @@ Object.assign(globalThis.__game, { DB, TUNE, DB_SRC, beamRec, beamStat, beamsCle
 Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harness (tools/tests/ttk_matrix.py): drive the XL spine shot directly
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
 Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
 // Opt-in device diagnostics: no per-frame traversal in ordinary gameplay.
