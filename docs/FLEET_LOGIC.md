@@ -229,3 +229,7 @@ type-level flags such as warp-push for big ships, `objecttypes.tbl`). Capital "w
 - **Kills:** `destroy()` credits a kill by a drone to `drone.ctrl.droneKills` (even if the controller has died), separate from `kills`/`CREW` records. Play log counters: `drone.launch`, `drone.order.*`, `drone.kills`, `drone.lost`, `drone.ram`, `drone.ramdmg`, `drone.contacts`, `drone.orphan`.
 - **Test flags / HUD:** `?free&drones=N[&dlimit=N][&nolaunch]`; the weapon panel shows `DRONES live/stock ORDER`. Comms menu integration is separate; the API is `dronesOf`, `launchDrones`, `droneOrder`, `droneLimitOf`, `DRONE_ORDERS` on `__game`.
 - **Not done:** jamming/link degradation, heavy fighter and logistics ship, drone assignment in the roster/save, dock slots, FROGG hacking, recovery, a UI to give orders.
+
+### Drone engagement and recall
+
+`tuning.drone.leashFighters` sets the 2,000 m shooting-order leash relative to the carrier’s current position. Fighter orders seek non-capital targets within that radius, while one drone remains on close carrier defense when more than one is available; drones break off outside it and return to formation. Recall returns drones to formation; it does not restock them. When a controller is destroyed, its drones retain the existing orphan behavior: defend against nearby hostiles, then seek the nearest friendly capital hull or hold if none exists.

@@ -189,6 +189,8 @@ S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only
 # ---- tuning: every section the game reads must exist ----
 for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret'):
     if not isinstance(db.get('tuning', {}).get(k), dict): err(f'tuning.{k} missing')
+leash = db.get('tuning', {}).get('drone', {}).get('leashFighters')
+if not isinstance(leash, (int, float)) or isinstance(leash, bool) or not math.isfinite(leash) or leash <= 0: err('tuning.drone.leashFighters must be positive and finite')
 ordnance = db.get('tuning', {}).get('ordnance')
 if not isinstance(ordnance, dict) or not isinstance(ordnance.get('enabled'), bool): err('tuning.ordnance.enabled must be boolean')
 else:
