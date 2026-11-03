@@ -4,7 +4,7 @@
 const _dq = new THREE.Quaternion();
 const _eu = new THREE.Euler();
 let gunMsgT = 0;
-let ejectAlarmAt = -Infinity, ejectWarningEl = null;
+let ejectAlarmAt = -Infinity, ejectWarningEl = null, rescueBeatEl = null;
 function ejectWarningTick() {
   const critical = state === 'play' && !userPause && rescueCritical(player);
   if (!ejectWarningEl && critical) {
@@ -16,6 +16,13 @@ function ejectWarningTick() {
   if (ejectWarningEl) { ejectWarningEl.style.display = critical ? 'block' : 'none'; ejectWarningEl.textContent = isTouch ? 'HULL CRITICAL — TAP EJECT' : 'HULL CRITICAL — SHIFT + E TO EJECT'; }
   const b = document.getElementById('beject'); if (b) b.style.display = critical ? 'block' : 'none';
   if (critical && time >= ejectAlarmAt) { sfx('alarm'); ejectAlarmAt = time + 0.7; }
+  const waiting = rosterEnabled() && state==='play' && !userPause && player?.rescueCapsule?.player && player.rescueCapsule.outcome==='adrift';
+  if (waiting && !rescueBeatEl) {
+    rescueBeatEl=document.createElement('button');rescueBeatEl.id='rescueBeatSkip';
+    rescueBeatEl.style.cssText='position:fixed;left:50%;bottom:15%;transform:translateX(-50%);z-index:18;padding:10px;background:#102822;color:#fff;border:1px solid #9dc;font:14px monospace;touch-action:manipulation';
+    rescueBeatEl.onclick=()=>rescueResolveBeat(player);document.body.appendChild(rescueBeatEl);
+  }
+  if (rescueBeatEl) { rescueBeatEl.style.display=waiting?'block':'none';rescueBeatEl.textContent=isTouch?'RESOLVE NOW':'SPACE: RESOLVE NOW'; }
 }
 
 function updatePlayer(dt) {

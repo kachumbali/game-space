@@ -58,6 +58,7 @@ function playerFireMissile() {
 addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
+  if (e.code === 'Space' && player?.rescueCapsule?.player && rescueEnabled() && rosterEnabled() && state==='play') { e.preventDefault(); rescueResolveBeat(player); return; }
   if (comsKey(e)) { e.preventDefault(); return; }
   if (e.code === 'KeyE' && e.shiftKey && state === 'play' && !userPause && rescueCritical(player)) {
     e.preventDefault(); rescueRequestEject(player); return;

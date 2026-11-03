@@ -79,6 +79,7 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  ejectionSceneSkip();
   game.rescueLog = [];
   ejectAlarmAt = -Infinity;
   beamsClear();
@@ -98,7 +99,7 @@ function resetGame() {
   plogReset("free");
   clearWorld();
   game.mode = 'free'; game.mission = null; wave = 0; state = 'play';
-  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: 'MEOW', id: 'player' });
+  makeShip('kestrel', 0, new THREE.Vector3(), new THREE.Quaternion(), { player: true, callsign: rosterEnabled() ? rosterLoad().player.callsign : 'MEOW', id: 'player' });
   benchSetup();
   quickNukeLoad(player);
   spawnWave();

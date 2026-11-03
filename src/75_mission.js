@@ -26,7 +26,11 @@ function newCampaign() { CREW = freshCrew(); saveCrew(); if (rosterEnabled()) ro
 
 // ---- comms + objectives (HUD feeds) -------------------------------------------------------------------
 const comms = [];
-function comm(from, text, color) {
+function comm(from, text, color, exact = false) {
+  if (rosterEnabled() && game.mode==='mission') {
+    if (!exact) { from=rosterScriptCallsign(from); if (!from) return; }
+    text=rosterDialogueText(text);
+  }
   const mine = from !== 'FROGG';
   comms.push({ from, text, color: color || (from === 'CONTROL' ? '#ffd080' : '#7fe0ff'), t: time });
   if (comms.length > 5) comms.shift();
@@ -617,12 +621,12 @@ function missionUpdate(dt) {
     runActions(st.do);
   }
   if (game.anchor && !game.anchor.alive) { const an = anchorName(game.anchor); comm('CONTROL', `${an} is lost. All ships, abort. Abort.`); objective('o1', null, 'failed'); endMission('lose', `THE ${an} WAS DESTROYED`); }
-  if (state === 'dead') endMission('lose', 'MEOW DOWN');
+  if (state === 'dead') endMission('lose', rosterEnabled() ? `${player?.callsign || 'PILOT'} DOWN` : 'MEOW DOWN');
   // optional chatter: missile warnings
   if (player && player.alive) {
     if (warnState.incoming.length && time - (S.lastMslCall || -99) > 9) {
       S.lastMslCall = time;
-      const w = ships.find(s => s.callsign === 'HAWK' && s.alive);
+      const w = rosterEnabled() ? rosterSlotShip(0) : ships.find(s => s.callsign === 'HAWK' && s.alive);
       if (w) comm('HAWK', 'Echo, missile on you! Flares, flares!');
     }
   }
@@ -654,7 +658,8 @@ function rescuePlayerResolved(p, outcome) {
   const S = game.mstate;
   if (game.mode === 'mission' && S && !S.ended && !S.resolvingRescue) {
     const pending = S.pendingRescueEnd; S.pendingRescueEnd = null;
-    endMission(outcome === 'recovered' ? (pending?.result || 'partial') : 'lose', outcome === 'recovered' ? (pending?.why || 'MEOW RECOVERED') : `MEOW ${outcome.toUpperCase()}`);
+    const continued = outcome==='recovered' || (rosterEnabled() && (outcome==='captured' || outcome==='missing'));
+    endMission(outcome === 'recovered' ? (pending?.result || 'partial') : continued ? 'partial' : 'lose', outcome === 'recovered' ? (pending?.why || 'PILOT RECOVERED') : `PILOT ${outcome.toUpperCase()}`);
   }
 }
 function onShipDestroyed(s) {
@@ -677,8 +682,8 @@ function onShipDestroyed(s) {
     if (a && a.pilot) {
       if (rosterEnabled()) { const p=rosterFind(a.pilot); if (p) { p.kills++; rosterSave(); } }
       else CREW[a.pilot].kills++;
-      if (a !== player && Math.random() < 0.6) comm(a.callsign, ['Splash one!', 'Tally one down.', 'Got him!', 'FROGG down.'][Math.floor(Math.random() * 4)]);
-      else if (a === player && Math.random() < 0.3) { const w = ships.find(x => x.pilot === 'hawk' && x.alive); if (w) comm('HAWK', ['Nice shooting, Echo.', 'Good kill.', 'That is how it is done.'][Math.floor(Math.random() * 3)]); }
+      if (a !== player && (!rosterEnabled() || (a.alive && !a.dying)) && Math.random() < 0.6) comm(a.callsign, ['Splash one!', 'Tally one down.', 'Got him!', 'FROGG down.'][Math.floor(Math.random() * 4)], undefined, true);
+      else if (a === player && Math.random() < 0.3) { const w = rosterEnabled() ? rosterSlotShip(0) : ships.find(x => x.pilot === 'hawk' && x.alive); if (w) comm('HAWK', ['Nice shooting, Echo.', 'Good kill.', 'That is how it is done.'][Math.floor(Math.random() * 3)]); }
     }
     if (S && s.def.cls === 'corvette') comm('CONTROL', 'Corvette is breaking up! Good kill!');
   } else if (rosterEnabled() && s.team===0 && s.pilot) {
@@ -738,7 +743,7 @@ function showBriefing(M) {
   const crew = rosterEnabled() ? rosterBriefHtml(M) : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   const campaign = campaignOf(M), missionList = campaign.missions;
   el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
-    <p>${M.briefing.replace(/\n\n/g, '</p><p>')}</p>
+    <p>${rosterDialogueText(M.briefing).replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
@@ -768,7 +773,7 @@ function showDebrief() {
   const next = campaignNext(M);
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : S.result === 'partial' ? 'PARTIAL SUCCESS' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
-    ${(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || 'Some convoy ships escaped; others were lost.') : M.debriefLose) ? `<p>${S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || 'Some convoy ships escaped; others were lost.') : M.debriefLose}</p>` : ''}
+    ${(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || (S.why?.startsWith('PILOT ') ? S.why : 'Some convoy ships escaped; others were lost.')) : M.debriefLose) ? `<p>${rosterDialogueText(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || (S.why?.startsWith('PILOT ') ? S.why : 'Some convoy ships escaped; others were lost.')) : M.debriefLose)}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div>${S.convoy ? `<div>Passengers evacuated <b>${S.convoy.passengers}</b></div>` : ''}<div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>

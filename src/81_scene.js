@@ -277,6 +277,7 @@ function handleSceneEvent(ev) {
       blinkPhase: 0,
     };
   } else if (ev.do === 'say') {
+    if (rosterEnabled() && ev.who==='hawk' && !rosterSlotShip(0)) return;
     sceneState.dialogue = {
       who: ev.who,
       fullText: ev.text,
@@ -465,7 +466,7 @@ function renderSceneFrame() {
     ctx.strokeRect(16.5, 138.5, 287, 53);
 
     // Header label (Speaker name)
-    const speakerName = (d.who === 'imani' ? 'CDR. IMANI' : d.who === 'hawk' ? 'LT. OKAFOR [HAWK]' : 'LT. TOM CAT [MEOW]');
+    const speakerName = rosterEnabled() ? (d.who === 'imani' ? 'COMMAND' : d.who === 'hawk' ? (rosterSlotShip(0)?.callsign || 'WING LEAD') : rosterLoad().player.callsign) : (d.who === 'imani' ? 'CDR. IMANI' : d.who === 'hawk' ? 'LT. OKAFOR [HAWK]' : 'LT. TOM CAT [MEOW]');
     ctx.font = '10px ui-monospace, Menlo, Consolas, monospace';
     ctx.fillStyle = '#ffb830';
     ctx.fillText(speakerName, 26, 152);

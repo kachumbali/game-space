@@ -33,11 +33,12 @@ function rescueSpawnCapsule(origin, opts = {}) {
   const isPlayer = !!opts.player;
   const p = makeShip('rescue_capsule', origin.team, origin.group.position.clone(), origin.group.quaternion.clone(),
     {player:isPlayer, callsign:opts.callsign || origin.callsign || 'PILOT'});
-  p.rescueCapsule = {pilot:opts.pilot || origin.pilot || null, life:TUNE.rescue.lifeSupport, pickup:0, rescuer:null, outcome:'adrift', player:isPlayer};
+  p.rescueCapsule = {pilot:opts.pilot || origin.pilot || null, life:TUNE.rescue.lifeSupport, pickup:0, rescuer:null, outcome:'adrift', player:isPlayer, outcomeElapsed:0};
   (game.rescueLog ||= []).push(p.rescueCapsule);
   p.vel.copy(origin.vel);
   if (isPlayer) { state = 'play'; view = 'chase'; p.group.visible = true; }
   comm('CONTROL', `${p.callsign} capsule beacon detected. Rescue required.`, '#ffd080');
+  if (isPlayer && rosterEnabled()) playEjectionSequence('ejection');
   return p;
 }
 function rescueResolve(p, outcome, rescuer = null) {
@@ -53,12 +54,30 @@ function rescueResolve(p, outcome, rescuer = null) {
   }
   if (outcome !== 'destroyed') { p.alive = false; p.group.visible = false; }
   comm(outcome === 'recovered' ? 'SAR' : 'CONTROL', `${p.callsign}: ${outcome.toUpperCase()}.`, outcome === 'recovered' ? '#9ad7ff' : '#ff8a6a');
-  if (r.player) { state = 'dead'; if (typeof rescuePlayerResolved === 'function') rescuePlayerResolved(p, outcome); }
+  if (r.player) { if (rosterEnabled()) playEjectionSequence(outcome==='recovered'?'recovered':outcome==='captured'?'captured':'missing'); state = 'dead'; if (typeof rescuePlayerResolved === 'function') rescuePlayerResolved(p, outcome); }
   return true;
 }
 function rescueOnDestroyed(s) {
   if (!rescueEnabled() || !s.rescueCapsule) return false;
   rescueResolve(s, 'destroyed'); return true;
+}
+function rescueOutcomeContext(p) {
+  const candidates=ships.filter(s=>s.alive&&!s.dying&&!s.rescueCapsule);
+  const allies=candidates.filter(s=>s.team===p.team), foes=candidates.filter(s=>s.team!==p.team);
+  const rescuers=allies.filter(s=>s.def.rescue);
+  return {friendly:allies.length,enemy:foes.length,rescuers:rescuers.length,
+    sarEnRoute:rescuers.some(s=>s.def.sar && rescueCapsules().filter(c=>c.team===s.team).sort((a,b)=>s.group.position.distanceToSquared(a.group.position)-s.group.position.distanceToSquared(b.group.position))[0]===p),
+    nearestHostile:foes.reduce((d,s)=>Math.min(d,s.group.position.distanceTo(p.group.position)),Infinity)};
+}
+function rescueReachable(p) {
+  return ships.some(s=>s.alive&&!s.dying&&s.team===p.team&&s.def.rescue &&
+    (rescueSurfaceDistance(s,p)<=TUNE.rescue.pickupRadius ||
+      (!!s.def.sar && rescueSurfaceDistance(s,p)/Math.max(1,s.def.maxSpeed) + TUNE.rescue.pickupTime < p.rescueCapsule.life)));
+}
+function rescueResolveBeat(p) {
+  if (!p?.rescueCapsule?.player || p.rescueCapsule.outcome!=='adrift') return false;
+  const result=rescueOutcomeRoll(rescueOutcomeContext(p));
+  return rescueResolve(p,result==='RECOVERING'?'recovered':result==='CAPTURED'?'captured':'missing');
 }
 function rescueSurfaceDistance(rescuer, p) {
   return Math.max(0, rescuer.group.position.distanceTo(p.group.position) - (rescuer.def.radius || 0));
@@ -94,6 +113,10 @@ function rescueTick(dt) {
   for (const p of rescueCapsules()) {
     const r = p.rescueCapsule;
     r.life = Math.max(0, r.life - dt);
+    if (r.player && rosterEnabled()) {
+      r.outcomeElapsed += dt;
+      if (r.outcomeElapsed >= TUNE.roster.aoRecovery.beatSeconds && !rescueReachable(p)) { rescueResolveBeat(p); continue; }
+    }
     if (r.life <= 0) { rescueResolve(p, 'life support expired'); continue; }
     const candidates = ships.filter(s => !used.has(s) && rescueCanPickup(s, p, time, cfg));
     candidates.sort((a,b) => a.group.position.distanceToSquared(p.group.position) - b.group.position.distanceToSquared(p.group.position));

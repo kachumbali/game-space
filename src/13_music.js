@@ -44,6 +44,7 @@ function sfxGain() { return AUDIO.muted ? 0 : 0.55 * AOPT.sfxVol; }
 function musicWant(k) { if (MUS.want !== k) { MUS.want = k; if (k === 'win') { const a = musEl(k); try { a.currentTime = 0; } catch (e) { /* not loaded yet */ } } } }
 // which track fits the situation: briefing/debrief = menu, flight = patrol, hostile fighters close = combat (heavy when many)
 function musicMood(dtReal) {
+  if (ejectionSceneActive()) return EJSCENE.shots[EJSCENE.index]?.music || (EJSCENE.kind==='captured'?'hive':EJSCENE.kind==='recovered'?'rescue':'tension');
   if (state === 'brief' || $id('brief').style.display === 'flex') return game.mstate?.result ? (game.mstate.result === 'win' ? 'win' : 'loss') : (menuView === 'main' && !MUS.titleDone ? 'title' : 'menu');
   if (state === 'cine') return 'story';
   if (state === 'done' || state === 'dead') return game.mstate && game.mstate.result === 'win' ? 'win' : 'loss';

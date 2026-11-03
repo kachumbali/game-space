@@ -45,7 +45,7 @@ const comsWing = () => ships.filter(s => s.alive && !s.dying && player && s.team
 const comsCaps = () => ships.filter(s => s.alive && !s.dying && player && s.team === player.team && isCapital(s));
 const nameOf = (s, i) => s.callsign || (s.def.name + (i != null ? ' ' + (i + 1) : ''));
 const hostileTarget = () => (target && target.alive && !target.dying && player && target.team !== player.team ? target : null);
-function comsSay(from, text, color, delay = 0.5) { comsQ.push({ t: time + delay + Math.random() * 0.5, from, text, color }); }
+function comsSay(from, text, color, delay = 0.5) { const actor=rosterEnabled() && game.mode==='mission' ? ships.find(s=>s.callsign===from && s.team===0 && s.pilot) : null; comsQ.push({ t: time + delay + Math.random() * 0.5, from, text, color, actor }); }
 const pct = (a, b) => Math.round(100 * Math.max(0, a) / Math.max(1, b));
 
 // in-character one-liners; kind = ack | refuse | status-style text built by caller
@@ -199,7 +199,7 @@ function comsKey(e) {       // returns true when the key was consumed
 }
 function comsTick(dt) {
   for (let i = comsQ.length - 1; i >= 0; i--) {
-    if (comsQ[i].t <= time) { const q = comsQ.splice(i, 1)[0]; comm(q.from, q.text, q.color); }
+    if (comsQ[i].t <= time) { const q = comsQ.splice(i, 1)[0]; if (!q.actor || (q.actor.alive && !q.actor.dying)) comm(q.from, q.text, q.color, !!q.actor); }
   }
   if (coms.open) {
     if (!(player && player.alive) || state !== 'play' || time - coms.t > 12) comsToggle(false);
