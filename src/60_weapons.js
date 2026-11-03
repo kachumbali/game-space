@@ -247,8 +247,19 @@ function missileLiveCap() {
   const device=deviceName(), key=device==='phone'?'phone':device==='tablet'?'tablet':'desktop';
   return cfg.liveCap[key];
 }
-function launchMissile(s, wid) {
+if (TUNE.ordnance?.enabled) document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">Quick-play nuclear load: enable it in OPTIONS before launch; it replaces one torpedo. Cycle missiles with G or the touch weapon control.</div>');
+function quickNukeLoad(s) {
+  if (!TUNE.ordnance?.enabled || !quickNukeEnabled || !s || !(s.stores.torp > 0) || s.stores.nuke > 0) return false;
+  const rounds = Math.min(Math.floor(s.stores.torp), TUNE.ordnance.quickNukeRounds);
+  s.stores.torp -= rounds; s.stores.nuke = rounds;
+  return rounds > 0;
+}
+function nuclearLaunchAllowed(enabled, isPlayer, campaign, released, fired) {
+  return !enabled || (isPlayer && (!campaign || (released && !fired)));
+}
+function launchMissile(s, wid, opts = null) {
   const w = WEAPONS[wid];
+  if (w?.nuclear && !nuclearLaunchAllowed(!!TUNE.ordnance?.enabled, s === player, game.mode === 'mission', !!game.mstate?.nuclearReleased, !!game.mstate?.nuclearFired)) return false;
   if (s !== player && s.ai && s.ai.hold) return false;
   if (!(s.stores[wid] > 0)) return false;
   if (missiles.reduce((n,m)=>n+(!m.dead?1:0),0) >= missileLiveCap()) { plogN('missile.capRefused'); return false; }
@@ -256,25 +267,31 @@ function launchMissile(s, wid) {
   const station = stationManaged ? ordnanceLaunchStation(s, wid) : null;
   if (stationManaged && !station) return false;
   const L = s.lock;
-  const guided = L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive;
+  const custom = TUNE.ordnance?.enabled && opts;
+  const customTarget = custom && opts.target && opts.target.alive && !opts.target.dying && opts.target.team !== s.team ? opts.target : null;
+  const guidedTarget = customTarget || (L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive ? L.tgt : null);
   s.stores[wid]--;
+  if (TUNE.ordnance?.enabled && w.nuclear && game.mode === 'mission') game.mstate.nuclearFired = true;
   s.group.updateMatrixWorld(true);
   const half = s.def.half;
   const points = s.def.launches?.length ? s.def.launches : s.def.launch ? [s.def.launch] : null;
   const side = (s.launchAlt = -(s.launchAlt || 1));
-  const lp = station ? station.pos : points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5];
+  const customPos = custom && Array.isArray(opts.pos) && opts.pos.length === 3 && opts.pos.every(Number.isFinite) ? opts.pos : null;
+  const lp = customPos || (station ? station.pos : points ? points[(s.launchIndex = ((s.launchIndex || 0) + 1) % points.length)] : [side * Math.min(half[0] * 0.3, 2.5), -0.4, w.torp ? -half[2] * 0.2 : 0.5]);
   const pos = s.group.localToWorld(new THREE.Vector3(lp[0], lp[1], lp[2]));
   const q = s.group.quaternion.clone();
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(q);
-  const mesh = missileMesh(w); mesh.position.copy(pos); mesh.quaternion.copy(q); scene.add(mesh);
+  const aimed = custom && opts.dir?.isVector3 && Number.isFinite(opts.dir.lengthSq()) && opts.dir.lengthSq() > 1e-12;
+  if (aimed) dir.copy(opts.dir).normalize();
+  const mesh = missileMesh(w); mesh.position.copy(pos); if (aimed) mesh.quaternion.setFromUnitVectors(NEGZ, dir); else mesh.quaternion.copy(q); scene.add(mesh);
   missiles.push({
     wid, w, team: s.team, owner: s, pos, vel: dir.clone().multiplyScalar(w.v0).add(s.vel), dir, mesh, age: 0,
-    target: guided ? L.tgt : null, hp: w.hp, dead: false, lostT: 0,
+    target: guidedTarget, hp: w.hp, dead: false, lostT: 0,
   });
   if (TUNE.ordnance?.enabled) PLOG.cnt['missile.highWater'] = Math.max(PLOG.cnt['missile.highWater'] || 0, missiles.filter(m=>!m.dead).length);
-  if (guided) L.p = 0;
+  if (guidedTarget) L.p = 0;
   sfx('msl', s === player ? 0 : pos.distanceTo(camera.position), 0.9);
-  if (s.team !== player?.team && guided && L.tgt === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
+  if (s.team !== player?.team && guidedTarget === player) { warnState.launchT = time; sfx('launchwarn'); log('MISSILE LAUNCH', '#ff5a4a'); }
   return true;
 }
 function steerMissile(m, dt) {
@@ -336,6 +353,10 @@ function tandemStrike(s, lp, w) {
   }
   return t.pierce || 0;
 }
+function missileClassFactors(w, cls) {
+  if (w.kind !== 'msl' || w.classScale === false || w.torp || w.nuclear) return { damage: 1, pierce: 1 };
+  return { damage: TUNE.missile.dmgCls[cls] ?? 1, pierce: TUNE.missile.pierceCls[cls] ?? 1 };
+}
 function blastAt(pos, w, team, owner, direct, skip) {
   flashAt(pos, w.blast * 0.55, 0.45);
   sparksAt(pos, 40, 30); fireAt(pos, 14, 14); smokeAt(pos, 8, 6);
@@ -363,8 +384,10 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    const pierce = direct === s ? tandemStrike(s, lp, w) : 0;
-    applyHit(s, lp, w.dmg * f * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
+    const factors = missileClassFactors(w, s.def.cls);
+    const pierce = w.kind === 'msl' && w.classScale !== false && !w.torp && !w.nuclear
+      ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, lp, w) : 0;
+    applyHit(s, lp, w.dmg * f * factors.damage * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }

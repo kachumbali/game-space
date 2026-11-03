@@ -3329,6 +3329,7 @@
       "repair": false,
       "tender": true,
       "serviceR": 600,
+      "ordnanceHold": {"missile": 400, "torpedo": 120, "drone": 96},
       "engines": [
         {
           "pos": [
@@ -8240,6 +8241,7 @@
     },
     "torp": {
       "kind": "msl",
+      "classScale": false,
       "name": "HM-1 HAMMER TORPEDO",
       "seeker": "ir",
       "v0": 40,
@@ -8301,6 +8303,7 @@
     },
     "nuke": {
       "kind": "msl",
+      "classScale": false,
       "name": "NK-1 TAC WARHEAD (0.5 kT)",
       "seeker": "ir",
       "v0": 40,
@@ -8328,6 +8331,7 @@
     },
     "tad": {
       "kind": "msl",
+      "classScale": false,
       "name": "ST-2 TORPEDO",
       "seeker": "ir",
       "v0": 35,
@@ -9670,7 +9674,7 @@
       "shieldDelay": 4,
       "energyDefault": 17
     },
-    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}},
+    "ordnance": {"enabled":false, "liveCap":{"desktop":48,"tablet":32,"phone":20}, "quickNukeRounds":1, "restock":{"points":{"ir":1,"rf":1.5,"torp":4,"drone":3},"proximityRate":2,"dockedRate":4,"serviceRange":600}},
     "missile": {
       "steerMinSpeed": 80,
       "leadMax": 3,

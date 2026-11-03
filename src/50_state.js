@@ -160,6 +160,8 @@ function buildVox(s) {
 const _lv = new THREE.Vector3();
 function chip(s, lp, r, sr, replay) {
   const V = s.vox, D = V.data, vs = D.vs, { nx, ny, nz } = D;
+  // A carve radius that scales with raw damage (hit: 0.35+0.08*d) reached 14 m for a 210-damage missile, wider than a whole fighter, so one hit deleted every voxel of the hull (only exhaust and hit boxes stayed). Cap it relative to the ship.
+  if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
   if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
   const R = Math.max(r, sr);
   const ci = Math.floor((lp.x + D.hx) / vs), cj = Math.floor((lp.y + D.hy) / vs), ck = Math.floor((lp.z + D.hz) / vs);

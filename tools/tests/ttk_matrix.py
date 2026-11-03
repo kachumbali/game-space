@@ -32,6 +32,9 @@ TARGETS = [  # (id, class label)
     ('halberd', 'corvette'), ('gulper', 'corvette'), ('exeter', 'frigate'), ('bullfrog', 'capital')]
 SKIP = {'nuke', 'flare'}
 FIGHTERS = {'merlin', 'darter', 'kestrel', 'leaper', 'bittern', 'toad', 'reaver'}
+# Expected anti-fighter missile scaling is class-dependent. Do not reuse P0
+# (pre-rule) ceiling numbers as post-rule assertions; record a new 20-seed run.
+MISSILE_CLASS_RULE = 'ir/rf/tick: dmgCls and pierceCls; torp/tad/nuke exempt'
 W = DB['weapons']
 def wmode(wid):
     w = W[W[wid].get('base', wid)]
