@@ -87,12 +87,13 @@ Rules (all from Codex, accepted):
 5. **Content**: the 15 missions, then measurement with the mission bots; the owner hand-plays for balance.
 6. **Cutscenes** (about 8 to 12): after the cast sheets are approved; the FROGG commander and queen concept are not approved.
 
-## 7. Open items for the owner
+## 7. Decisions taken on the owner's delegation ("go for whatever you think is good", 2026-11-04)
 
-1. Names: keep HAWK, SPARROW and Cdr. Vance, with Codex's new officers added?
-2. Third scripted death: SPARROW at mission 6, or only two scripted deaths (Halberd commander, Sorn)?
-3. Whether m01/m02 stay as standalone practice missions.
-4. First character art sheets (needs Codex tokens; look is Direction C).
+Open to overrule at any time.
+1. **Names:** keep the canon names MEOW, HAWK, SPARROW and Cdr. Vance; add Codex's officers (Arden, Veyr, Sorn, Morrow, Ilex). Codex's IDs rake/wisp/brack are dropped.
+2. **Three scripted deaths:** SPARROW (mission 6, a cutscene beat outside a sortie), **Cdr. Vance** (mission 10, aboard the traffic-control lighter; chosen over a new officer because she is established for nine missions, so the loss has weight), and Maj. Sorn (mission 14). Everyone else dies only through play.
+3. **m01 Lilypad and m02 Reedbed** stay as standalone practice missions outside the spine.
+4. **Act I scripts** for missions 1 to 4 are drafted in `docs/SCRIPTS_ACT1.md` for the owner to edit.
 
 ## 8. Codex prompts, in order (each docs-and-code with tests; do not merge)
 
