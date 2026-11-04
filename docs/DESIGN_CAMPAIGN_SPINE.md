@@ -1,6 +1,6 @@
 # Campaign spine, mission variety and story: design draft v0.1
 
-Status: **draft by Claude, 2026-11-04, for owner review.** Nothing here is implemented. A second, independent draft is to be
+Status: **v0.2, 2026-11-04: owner decisions of the same day are folded in (section 8).** Nothing here is implemented. A second, independent draft is to be
 produced by Codex agents (prompt at the end); the two are then reconciled in `docs/DESIGN_CAMPAIGN_RECONCILE.md`.
 Owner decisions behind this draft (2026-11-04): (1) the three existing campaign drafts become one spine in the order
 *Prologue -> The Long Retreat -> The Severed Node*; (2) this pass is about **scripted** campaigns; a *dynamic theatre* (multi-system, evolving
@@ -45,12 +45,13 @@ the player has not used yet. Difficulty and balance remain owner/hand-play matte
 
 | Act | Campaign | Tone beat | Existing | New proposals (verb) |
 |---|---|---|---|---|
-| I | Uncharted Vanguard (prologue) | customs and corporate friction, unease | P1 Contraband Sun (intercept/inspect-lite), P2 Chokepoint (blockade), P3 Siderite Veil (ambush), P4 Bio-Signature Zero (first contact) | **NEW P1b** Inspection: really scan the shuttle's cargo (verb 2), secondary goal: do not fire first. Secret goal in P3: recover the survey buoy |
-| II | The Long Retreat | loss, evacuation, civilians | R1 Last Freight Out, R2 Ghost Relay, R3 Hollow Nine, R4 No Safe Vector | **NEW R2b** Salvage: recover a black box from a wreck under harassment (verb 6). **NEW R3b** Hollow axis defence with limited ordnance and a tender (verb 8) |
+| I | Uncharted Vanguard (prologue) | customs and corporate friction, unease | P1 Contraband Sun, P2 Chokepoint (blockade), P3 Siderite Veil (ambush), P4 Bio-Signature Zero (first contact) | **Rework P1** into a real inspection (verb 2); secondary goal: do not fire first. Secret goal in P3: recover the survey buoy. No new missions |
+| II | The Long Retreat | loss, evacuation, civilians | R1 Last Freight Out, R2 Ghost Relay, R3 Hollow Nine, R4 No Safe Vector | **NEW R2b** Salvage: recover a black box from a wreck under harassment (verb 6). Hollow-axis defence (verb 8) becomes an optional segment of R3 instead of its own mission |
 | III | The Severed Node | counter-attack, cost | m01 Lilypad, m02 Reedbed, m03 Severed Node, m04 Short Leash, m05 The Spine | **NEW m02b** Disable and capture a FROGG scout cutter for the intel officer (verb 3, prisoner thread). **NEW m04b** Subsystem strike on a FROGG tug/relay before m04 (verb 4). Stealth approach as an optional opening of m05 (verb 5) |
 
 Notes:
-- That is 13 existing missions plus about 7 new: 20 in total. Each new mission is a candidate, not a commitment; verbs 3 and 5 are the expensive ones.
+- **Target: 16 missions** (owner: 14-16 are enough): 13 existing plus three new (R2b, m02b, m04b). If hand-play shows m01/m02 duplicate the prologue, merge them and land at 14-15. Stealth (verb 5) stays an optional opener of m05, not a mission.
+- Every mission is **multi-area** (see section 10): the player travels to nav points; nothing just spawns on top of a stationary player.
 - Every mission gets **primary, secondary (and one secret)** goals, a briefing that explains the *reason* for the secondary goal, and a debrief that changes with the outcome.
 - **Fail forward** (WC2/TIE): failing a mission does not end the campaign, it changes the next briefing and the fleet state; losing the player ends the sortie, not the campaign (ejection outcomes: recovered, captured, missing).
 - **Branch graph, minimal:** each mission has three outcomes (success, partial, failure) that choose the next *briefing variant* and set flags; only a few missions have a different next mission. Game over only when the carrier is lost or the roster has no flyable pilot.
@@ -119,13 +120,18 @@ Rule: every principal has an introduced mission, an arc beat in each act, and a 
 5. **Narrative (mixed):** briefings and debriefs drafted by me, reviewed by the owner, optionally cross-drafted by Codex; cutscene storyboards by Codex agents in Direction C.
 6. **Hub and epilogue screens (Codex).**
 
-## 8. Open questions for the owner
+## 8. Owner decisions (2026-11-04) and what is still open
 
-1. How many missions are enough? Twenty is a lot of content; do you prefer 14-16 sharp ones over 20?
-2. Is permanent death of **named story characters** wanted (scripted), in addition to roster pilots?
-3. How much should a lost mission matter? Strict fail-forward (always continue) or real game-over states?
-4. Do you want a **VAC corporate antagonist** inside the fleet (my proposal) or keep the conflict human-vs-FROGG with politics offstage?
-5. Medals and ranks: reuse the roster ladder as is, or add campaign-specific decorations?
+Decided:
+1. **14-16 missions**, not 20 (section 2).
+2. **Deaths:** two or three core characters die **by script**; the other named characters are named but **can die through play** (a mission event, an ejection outcome, a lost ship). Roster pilots keep the dice-weighted outcomes. Author the fate switches accordingly (section 5).
+3. **Mission failure** (my recommendation, pending answer): fail-forward almost everywhere; only a few campaign-ending conditions (flagship lost in the finale, no flyable pilot); a single mission can always be restarted.
+4. **Politics in the fleet:** the VAC liaison and the command-versus-liaison conflict are in; missions should be shaped by it (secondary goals that command and the liaison want differently, orders the player can follow or bend).
+5. **Medals and ranks:** both the roster ladder and campaign-specific decorations; Codex produces the visuals (ribbons, medal art, ceremony and service-record screens) in Direction C.
+6. **Briefing windows and ship interiors**, not an immediate drop into action (section 10).
+7. **Travel between areas of operation** like WC2 (section 10).
+
+Still open: the failure model (3), the exact new-mission list once hand-play judges m01/m02, and the first character art sheets.
 
 ## 9. Prompt for the independent Codex draft (to cross-check this one)
 
@@ -140,3 +146,22 @@ campaign-state/fleet-database schema (ships, pilots, ordnance stores, supply, fl
 primary/secondary/secret goals, setup using existing ships and weapons, what is new, branching outcomes; (5) 3 ideas the Claude draft is missing; (6) 3 weaknesses you see in it.
 Push, report, do not merge.
 ```
+
+## 10. Briefing and interiors, and travel between areas (owner decisions)
+
+**Interiors (the ship as a place).** Between missions the player is on a ship, not on a menu: a small set of authored interior scenes in Direction C, navigated by a hub screen
+with hotspots, not a free-roam 3D level (cost and tablet performance):
+- **Briefing room:** map, objectives, primary/secondary/secret goals, the officer who briefs, the liaison present or absent.
+- **Flight deck / hangar:** pilot assignment, fighter and ordnance loadout, the deck chief's stock report, damaged and missing fighters visible by state.
+- **Ready room / mess:** roster, service records, memorial wall, one conversation per mission with a character; this is where the grim tone lives.
+- **Bridge / CIC window:** command orders, the capital's condition, the jump platform.
+- **Quarters / personal log (optional):** player's log, decorations.
+Each room is one illustrated panel with state variants (day, damaged, empty seats) rather than animation; one or two animated transitions (launch, return). Visual style, room sheets and the
+character continuity set are a Codex proposal task first (owner approves the look, then build), as with the cutscenes.
+
+**Travel (areas of operation).** WC2's rhythm: briefing, launch, **fly to nav points**, events at each, return. Rules proposed:
+1. Every mission has two to four areas (nav points) with an **autopilot transit** between them (existing cine transit and `ao2` areas), and something to find or do at each: an empty one is allowed, a pure spawn-on-player one is not.
+2. Events are tied to the place, not to a timer on the player: the convoy is at nav 2, the relay at nav 3, the ambush at the jump point.
+3. Transit can be **interrupted** (interdiction, distress call, a lost wingman) and the nav map shows what the player knows and does not.
+4. A **nav map** screen (briefing and in flight) shows areas, distances and what has been scouted.
+5. Return and recovery are part of the sortie: land on the carrier, resolve the roster and store changes, then debrief.
