@@ -23,7 +23,7 @@ JS = r'''id=>{
  }
  return {id,length:s.def.length,voxel:vs,turrets:s.turrets.map(t=>{
   const tip=s.group.worldToLocal(t.head.localToWorld(t.muzzles[0].clone())),aim=s.group.worldToLocal(t.aimY===undefined?t.head.getWorldPosition(new T.Vector3()):t.group.localToWorld(new T.Vector3(0,t.aimY,0)));
-  const brake=t.head.children.find(o=>o.isMesh&&o.geometry?.parameters?.depth===.1*t.dia);
+  const brake=t.head.children.find(o=>o.isMesh&&o.userData.turretMuzzleFace);
   const barrelTip=brake?brake.position.z-brake.geometry.parameters.depth/2:null;
   let lift=0;for(;lift<40;lift+=vs*.25){const q=tip.clone();q.y+=t.def.side*lift;const i=Math.floor((q.x+A.hx)/vs),j=Math.floor((q.y+A.hy)/vs),k=Math.floor((q.z+A.hz)/vs);if(i<0||j<0||k<0||i>=A.nx||j>=A.ny||k>=A.nz||!V.solid[(i*A.ny+j)*A.nz+k])break;}
   return {cls:t.cls,weapon:t.wid,dia:+t.dia.toFixed(4),cssPixelsAt300:+(t.dia*390/(600*Math.tan(75*Math.PI/360))).toFixed(3),lowRenderPixelsAt300:+(t.dia*390/(1800*Math.tan(75*Math.PI/360))).toFixed(3),tip:tip.toArray(),aim:aim.toArray(),clearance:clearance(tip),lift:+lift.toFixed(3),tipMatch:barrelTip===null?false:Math.abs(barrelTip-t.muzzles[0].z)<1e-6};
