@@ -1,7 +1,7 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
 const cfg=JSON.parse(fs.readFileSync('data/db.json','utf8')).tuning.roster;
 cfg.enabled=false; // Exercise the opt-out path even when the hand-play preset is on.
-const storage={};const c={TUNE:{roster:cfg},SHIPS:{exeter:{rosterCapacity:3}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},document:{getElementById:()=>({insertAdjacentHTML(){}})}};
+const storage={};const c={game:{mode:'mission'},TUNE:{roster:cfg},SHIPS:{exeter:{rosterCapacity:3}},localStorage:{getItem:k=>storage[k]||null,setItem:(k,v)=>storage[k]=v,removeItem:k=>delete storage[k]},document:{getElementById:()=>({insertAdjacentHTML(){}})}};
 c.rescueOutcomeContext=()=>({friendly:0,enemy:0});
 vm.createContext(c);vm.runInContext(fs.readFileSync('src/73_roster.js','utf8'),c);
 assert.equal(c.rosterEnabled(),false);cfg.enabled=true;
