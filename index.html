@@ -6546,18 +6546,24 @@ function rescueOnDestroyed(s) {
   if (!rescueEnabled() || !s.rescueCapsule) return false;
   rescueResolve(s, 'destroyed'); return true;
 }
+function rescueSarApproaching(s, p) {
+  if (!s.def.sar || rescueThreat(s)) return false;
+  const targets=rescueCapsules().filter(c=>c.team===s.team);
+  targets.sort((a,b)=>s.group.position.distanceToSquared(a.group.position)-s.group.position.distanceToSquared(b.group.position));
+  return targets[0]===p;
+}
 function rescueOutcomeContext(p) {
   const candidates=ships.filter(s=>s.alive&&!s.dying&&!s.rescueCapsule);
   const allies=candidates.filter(s=>s.team===p.team), foes=candidates.filter(s=>s.team!==p.team);
   const rescuers=allies.filter(s=>s.def.rescue);
   return {friendly:allies.length,enemy:foes.length,rescuers:rescuers.length,
-    sarEnRoute:rescuers.some(s=>s.def.sar && rescueCapsules().filter(c=>c.team===s.team).sort((a,b)=>s.group.position.distanceToSquared(a.group.position)-s.group.position.distanceToSquared(b.group.position))[0]===p),
+    sarEnRoute:rescuers.some(s=>rescueSarApproaching(s,p)),
     nearestHostile:foes.reduce((d,s)=>Math.min(d,s.group.position.distanceTo(p.group.position)),Infinity)};
 }
 function rescueReachable(p) {
-  return ships.some(s=>s.alive&&!s.dying&&s.team===p.team&&s.def.rescue &&
+  return ships.some(s=>s.alive&&!s.dying&&s.team===p.team&&s.def.rescue && !rescueThreat(s) &&
     (rescueSurfaceDistance(s,p)<=TUNE.rescue.pickupRadius ||
-      (!!s.def.sar && rescueSurfaceDistance(s,p)/Math.max(1,s.def.maxSpeed) + TUNE.rescue.pickupTime < p.rescueCapsule.life)));
+      (rescueSarApproaching(s,p) && rescueSurfaceDistance(s,p)/Math.max(1,s.def.maxSpeed) + TUNE.rescue.pickupTime < p.rescueCapsule.life)));
 }
 function rescueResolveBeat(p) {
   if (!p?.rescueCapsule?.player || p.rescueCapsule.outcome!=='adrift') return false;

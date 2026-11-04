@@ -5,7 +5,7 @@ cfg.enabled=false; // The committed hand-play preset may enable rescue.
 const vec=x=>({x,clone(){return vec(this.x)},distanceTo(b){return Math.abs(this.x-b.x)},distanceToSquared(b){return (this.x-b.x)**2}});
 const group=x=>({position:vec(x),quaternion:{clone(){return {}}},visible:true});
 const C={TUNE:{rescue:cfg},ships:[],missiles:[],time:10,game:{},CREW:{hawk:{notes:[]}},SHIPS:{sar:{armor:{}}},
-  ell:()=>({}),comm:()=>{},saveCrew:()=>{},rosterEnabled:()=>false,player:null,state:'play',view:'cockpit',
+  ell:()=>({}),comm:()=>{},saveCrew:()=>{},musicRescueSting:()=>{},rosterEnabled:()=>false,player:null,state:'play',view:'cockpit',
   destroy:s=>{s.alive=false},turnToward:()=>{},aiFly:()=>{},
   makeShip:(id,team,pos,q,opts)=>{const s={team,alive:true,dying:0,def:{id},group:group(pos.x),vel:{copy(){}},callsign:opts.callsign};C.ships.push(s);return s;}};
 vm.createContext(C);vm.runInContext(fs.readFileSync('src/72_rescue.js','utf8'),C);
@@ -17,8 +17,18 @@ pilot.structure=20;assert.equal(C.rescueRequestEject(pilot),true);assert.equal(p
 const pod=C.rescueSpawnCapsule(pilot,{pilot:'hawk'});assert(pod&&pod.alive);assert.equal(C.game.rescueLog.length,1);
 const sar={alive:true,dying:0,team:0,def:{rescue:true,sar:{}},group:group(50),lastHit:-99}; C.ships.push(sar);
 const threat={alive:true,dying:0,team:1,target:sar,group:group(500)};C.ships.push(threat);
-assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),false);threat.target=null;
-assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),true);C.ships.pop();
+assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),false);
+assert.equal(C.rescueReachable(pod),false, 'a rescuer evading attackers cannot promise an in-play pickup');
+assert.equal(C.rescueOutcomeContext(pod).sarEnRoute,false, 'an evading SAR ship is not on approach');
+threat.target=null;
+assert.equal(C.rescueReachable(pod),true, 'a safe rescuer within pickup range is reachable');
+assert.equal(C.rescueOutcomeContext(pod).sarEnRoute,true, 'an unthreatened SAR ship approaches the nearest capsule');
+sar.group.position=vec(500);sar.def.maxSpeed=100;
+const other=C.rescueSpawnCapsule({...pilot,group:group(490)},{});
+assert.equal(C.rescueReachable(pod),false, 'SAR assigned to a closer capsule cannot promise this pickup');
+assert.equal(C.rescueReachable(other),true, 'the nearer capsule has a rescuer');
+other.alive=false;sar.group.position=vec(50);
+assert.equal(C.rescueCanPickup(sar,pod,C.time,cfg),true);C.ships=C.ships.filter(s=>s!==threat&&s!==other);
 sar.lastHit=10;C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'adrift');
 sar.lastHit=-99;C.missiles.push({target:sar,dead:false});C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'adrift');
 C.missiles=[];C.rescueTick(cfg.pickupTime);assert.equal(pod.rescueCapsule.outcome,'recovered');assert.equal(C.CREW.hawk.status,'recovering');
