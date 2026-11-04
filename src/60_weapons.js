@@ -602,30 +602,54 @@ function makeTurret(s, t) {
     instance.rotation.set(0, side * 0.16, 0); instance.updateMatrix(); cheeks.setMatrixAt(i, instance.matrix);
   });
   head.add(cheeks);
-  const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
-  const receivers = new THREE.InstancedMesh(new THREE.BoxGeometry(th * 1.55, th * 1.55, bl * 0.32), mTrim, xs.length);
-  const collars = new THREE.InstancedMesh(new THREE.BoxGeometry(th * 1.25, th * 1.25, 0.045 * D), mHead, xs.length * 2);
-  instance.rotation.set(0, 0, 0);
-  xs.forEach((x, i) => {
-    instance.position.set(x * D, 0, -(0.3 * D + bl * 0.16)); instance.updateMatrix(); receivers.setMatrixAt(i, instance.matrix);
-    [0.48, 0.72].forEach((along, j) => {
-      instance.position.set(x * D, 0, -(0.3 * D + bl * along)); instance.updateMatrix(); collars.setMatrixAt(i * 2 + j, instance.matrix);
-    });
-  });
-  head.add(receivers, collars);
-  const muzzles = [];
-  for (const x of xs) {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(th, th, bl), mBar);
-    b.position.set(x * D, 0, -(0.3 * D + bl / 2)); head.add(b);
-    const brake = new THREE.Mesh(new THREE.BoxGeometry(th * 1.5, th * 1.5, 0.1 * D), mBar);
-    brake.position.set(x * D, 0, -(0.3 * D + bl)); head.add(brake);
-    muzzles.push(new THREE.Vector3(x * D, 0, -(0.3 * D + bl + 0.05 * D)));
+  // One faceted weapon pod replaces the exposed barrels and muzzle brakes.
+  // Its front plane is exactly the existing firing plane; the dark apertures
+  // mark the individual emitters without moving their logical muzzle points.
+  const front = -(0.3 * D + bl + 0.05 * D), rear = -0.22 * D;
+  const podFront = front + 0.004 * D; // keep the apertures just ahead of the armor face
+  const podWidth = (beam ? 0.32 : 0.64) * D, podHeight = 0.26 * D, podLength = rear - podFront;
+  const podGeometry = new THREE.BoxGeometry(podWidth, podHeight, podLength);
+  const vertices = podGeometry.attributes.position;
+  for (let i = 0; i < vertices.count; i++) {
+    // Taper the forward armor to create a compact, directional silhouette.
+    if (vertices.getZ(i) < 0) {
+      vertices.setX(i, vertices.getX(i) * 0.84);
+      vertices.setY(i, vertices.getY(i) * 0.78);
+    }
+    if (vertices.getY(i) > 0) vertices.setX(i, vertices.getX(i) * 0.82);
   }
-  if (beam) { const lens = new THREE.Mesh(new THREE.BoxGeometry(0.1 * D, 0.1 * D, 0.1 * D), new THREE.MeshBasicMaterial({ color: new THREE.Color(w.color).multiplyScalar(1.6) })); lens.position.copy(muzzles[0]).z += 0.02 * D; head.add(lens); }
+  vertices.needsUpdate = true; podGeometry.computeVertexNormals();
+  const pod = new THREE.Mesh(podGeometry, mHead);
+  pod.position.z = (podFront + rear) / 2; head.add(pod);
+  const sidePanels = new THREE.InstancedMesh(new THREE.BoxGeometry(0.025 * D, 0.1 * D, podLength * 0.55), mTrim, 2);
+  instance.rotation.set(0, 0, 0);
+  [-1, 1].forEach((side, i) => {
+    instance.position.set(side * podWidth * 0.42, -0.015 * D, (front + rear) / 2);
+    instance.updateMatrix(); sidePanels.setMatrixAt(i, instance.matrix);
+  });
+  head.add(sidePanels);
+  const rail = new THREE.Mesh(new THREE.BoxGeometry(podWidth * 0.28, 0.035 * D, podLength * 0.7), mBar);
+  rail.position.set(0, podHeight / 2 + 0.01 * D, (front + rear) / 2); head.add(rail);
+  const vents = new THREE.InstancedMesh(new THREE.BoxGeometry(0.06 * D, 0.025 * D, 0.08 * D), mBar, 4);
+  instance.rotation.set(0, 0, 0);
+  for (let i = 0; i < 4; i++) {
+    instance.position.set((i < 2 ? -1 : 1) * podWidth * 0.31, podHeight / 2 + 0.008 * D, rear - podLength * (0.25 + (i % 2) * 0.17));
+    instance.updateMatrix(); vents.setMatrixAt(i, instance.matrix);
+  }
+  head.add(vents);
+  const muzzles = [];
+  const mEmitter = beam ? new THREE.MeshBasicMaterial({ color: new THREE.Color(w.color).multiplyScalar(1.6) }) : mBar;
+  for (const x of xs) {
+    const width = (beam ? 0.16 : 0.12) * D;
+    const aperture = new THREE.Mesh(new THREE.BoxGeometry(width, 0.11 * D, 0.06 * D), mEmitter);
+    aperture.position.set(x * D, 0, front + 0.03 * D);
+    aperture.userData.turretMuzzleFace = true; head.add(aperture);
+    muzzles.push(new THREE.Vector3(x * D, 0, front));
+  }
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar, mTrim, mLight], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar, mTrim, mLight, ...(beam ? [mEmitter] : [])], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
