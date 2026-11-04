@@ -76,7 +76,7 @@ Every mission lists: briefing, in-flight beats, debrief for **W**in / **P**artia
 
 **Debrief.**
 - **Win (sample returned, Halberd up):** Sorn plays a blurred frame in the dark: a toothed prow. "Classified. This is the first image of what is on the other side of the corridor." `evidence+1`.
-- **Partial (sample lost with the carrier loss option / or recorded but not returned):** "A trace. Enough to know it is alive and fast."
+- **Partial (sample recorded but lost with the carrier):** "A trace. Enough to know it is alive and fast."
 - **Fail:** "Visual estimates. Eyewitnesses." The briefing for mission 4 has no telemetry.
 - **Secret (second weapon signature):** Sorn adds one line: "The weapon is not a gun. It is wet." Extra intelligence line only; no damage bonus.
 
