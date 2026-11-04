@@ -189,8 +189,12 @@ S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only
 # ---- tuning: every section the game reads must exist ----
 for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret'):
     if not isinstance(db.get('tuning', {}).get(k), dict): err(f'tuning.{k} missing')
-leash = db.get('tuning', {}).get('drone', {}).get('leashFighters')
+drone = db.get('tuning', {}).get('drone')
+if not isinstance(drone, dict): err('tuning.drone must be an object'); drone = {}
+leash = drone.get('leashFighters')
 if not isinstance(leash, (int, float)) or isinstance(leash, bool) or not math.isfinite(leash) or leash <= 0: err('tuning.drone.leashFighters must be positive and finite')
+ret, resume = drone.get('returnFraction'), drone.get('resumeFraction')
+if any(not isinstance(x, (int, float)) or isinstance(x, bool) or not math.isfinite(x) for x in (ret, resume)) or not 0 < resume < ret <= 1: err('tuning.drone requires 0 < resumeFraction < returnFraction <= 1')
 ordnance = db.get('tuning', {}).get('ordnance')
 if not isinstance(ordnance, dict) or not isinstance(ordnance.get('enabled'), bool): err('tuning.ordnance.enabled must be boolean')
 else:

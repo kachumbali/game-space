@@ -35,5 +35,7 @@ cells[0].ready=1;C.torpedo.queue=[cells[0].id];C.torpedo.target=target;C.torpedo
 owner.comps.find(c=>c.id===cells[0].comp).hp=0;ctx.capitalFireRole(owner,C,'torpedo',0.1);assert.equal(C.torpedo.queue,null);
 owner.comps.find(c=>c.id===cells[0].comp).hp=100;ctx.capitalFireRole(owner,C,'torpedo',2);assert.equal(shots.length,5);
 assert.equal(owner.stores.drone,7);assert.equal(owner.dlimit,6);
+owner.droneRecalling=true; owner.drones=[]; C.droneWait=0; ctx.capitalOrdnanceAI(owner,1); assert.equal(owner.drones.length,0);
+owner.droneRecalling=false; ctx.capitalOrdnanceAI(owner,1); assert(owner.drones.length>0);
 ctx.TUNE.ordnance.enabled=false;const old=owner.capitalOrdnance;ctx.capitalOrdnanceAI(owner,1);assert.strictEqual(owner.capitalOrdnance,old);
 console.log('PD hold, live health, committed salvo, friendly/self hull clearance, hangar cap and feature flag: OK');

@@ -119,7 +119,7 @@ function capitalOrdnanceAI(s, dt) {
   if (!C.contact) C.contact = ships.some(t => t.alive && !t.dying && t.team !== s.team && s.group.position.distanceTo(t.group.position) <= cfg.contactRange);
   if (!C.contact) return;
   C.droneWait -= dt;
-  if (C.droneWait <= 0 && s.stores.drone > 0) {
+  if (C.droneWait <= 0 && s.stores.drone > 0 && !s.droneRecalling) {
     const need = Math.max(0, Math.min(cfg.droneInitial, s.dlimit || 0) - dronesOf(s).length);
     if (need) launchDrones(s, C.droneWait === -dt ? need : 1);
     C.droneWait = cfg.droneInterval;

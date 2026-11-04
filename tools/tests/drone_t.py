@@ -12,7 +12,7 @@ SC={}
 SC['kite_carriers']=('?free&n=0','''()=>{'''+PRE+'''
  const result=[];
  for(const [id, x, stock] of [['halberd',3000,2], ['falchion',6000,2]]){
-   const c=g.spawnShip(id,0,V(x,0,0),V(x,0,-1000),{}); c.stores.drone=stock;
+   const c=g.spawnShip(id,0,V(x,0,0),V(x,0,-1000),{}); if(id==='halberd') g.capitalOrdnanceAI(c,0); c.stores.drone=stock;
    const launched=g.launchDrones(c,1), d=launched[0];
    step(20);
    result.push({id, count:launched.length, type:d?.def.id, ctrl:d?.ctrl===c,
@@ -43,8 +43,9 @@ SC['protect_return']=('?free&drones=3&dlimit=3','''()=>{'''+PRE+'''
  const r={};
  const ds=g.dronesOf(P); ds.forEach(d=>d.group.position.set(500,0,-500));
  r.nRet=g.droneOrder(P,'return'); step(260);
- r.retDist=Math.round(Math.max(...g.dronesOf(P).map(d=>d.group.position.length())));
- ds.forEach(d=>d.group.position.set(0,0,-1000));
+ r.retDist=live(P) ? Math.round(Math.max(...g.dronesOf(P).map(d=>d.group.position.length()))) : 0;
+ r.recovered=3-live(P); g.launchDrones(P,r.recovered);
+ g.dronesOf(P).forEach(d=>d.group.position.set(0,0,-1000));
  r.nProt=g.droneOrder(P,'protect'); step(260);
  r.protDist=Math.round(Math.max(...g.dronesOf(P).map(d=>d.group.position.length())));
  const E=g.spawnShip('leaper',1,V(150,0,-300),V(0,0,0),{}); E.ai.role='hold'; E.shield.fore=E.shield.aft=0; E.structure=3;
@@ -75,7 +76,8 @@ SC['pd']=('?free&drones=6&dlimit=6','''()=>{'''+PRE+'''
  // PD must shoot drones: a Halberd 450 m away, drones on 'protect' around the player (inside its PD range), no player-side fire
  const H=g.spawnShip('halberd',1,V(0,0,-450),V(0,0,0),{}); H.vel.set(0,0,0);
  for(const c of H.comps) if(c.role==='turret'&&c.id.startsWith('tur')) {}
- r.n=g.droneOrder(P,'return');
+ r.n=g.droneOrder(P,'protect');
+ for(const d of g.dronesOf(P)) for(const m of d.mounts) m.cool=1e9;
  const before=g.dronesOf(P).map(d=>d.structure+d.shield.fore+d.shield.aft).reduce((a,b)=>a+b,0);
  step(200,()=>{H.vel.set(0,0,0);H.group.position.set(0,0,-450);});
  const after=g.dronesOf(P).map(d=>d.structure+d.shield.fore+d.shield.aft).reduce((a,b)=>a+b,0);
@@ -102,9 +104,9 @@ SC['ctrl_death']=('?free','''()=>{'''+PRE+'''
  return r}''')
 CHK={
  'kite_carriers':lambda r:len(r)==2 and all(x['count']==1 and x['type']=='kite6' and x['ctrl'] and x['order']=='protect' and x['alive'] and x['stock']==1 and x['length']==6 and x['rails']==2 and x['missiles']==2 for x in r),
- 'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==6 and r['corvLaunch']==6 and r['exStock']==48,
+ 'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==6 and r['corvLaunch']==6 and r['exStock']==48 and r['exLimit']==12,
  'engage':lambda r:r['n']==3 and r['targetDead'] and r['droneKills']>=1 and r['personal']==0 and r['nAll']>0 and r['allTgt']>=1 and r['allKills']>=2,
- 'protect_return':lambda r:r['retDist']<400 and r['protDist']<400 and r['attackerDead'],
+ 'protect_return':lambda r:r['recovered']>0 and r['retDist']<400 and r['protDist']<400 and r['attackerDead'],
  'scout':lambda r:r['detected'] and r['contacts']>=1 and max(r['fwd'])>1400,
  'ram_corvette':lambda r:r['rams']>=1 and r['structureLoss']>20 and len(r['compLoss'])>=1,
  'pd':lambda r:r['hitsOnDrones']>=3 and r['hpAfter']<r['hpBefore'],

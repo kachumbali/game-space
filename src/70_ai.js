@@ -242,6 +242,12 @@ function aiUpdate(s, dt) {
   if (s.lastHit && time - s.lastHit < 0.12 && s.target !== s.lastAttacker) ai.tgtT = Math.min(ai.tgtT, 0);
   if (ai.tgtT <= 0 || !s.target || !s.target.alive || s.target.dying) { s.target = pickTarget(s); ai.tgtT = 3 + Math.random() * 3; }
   sense(s);
+  // Fighter carriers have no capital ordnance controller; launch their own stock on contact.
+  if (!isCapital(s) && s.stores.drone > 0 && !s.droneRecalling && time >= (s.droneAutoTime || 0) &&
+      validHostile(s, s.target) && s.group.position.distanceToSquared(s.target.group.position) <= TUNE.ordnance.ai.contactRange ** 2 &&
+      dronesOf(s).length < droneLimitOf(s)) {
+    launchDrones(s, 99); s.droneAutoTime = time + TUNE.ordnance.ai.droneInterval;
+  }
   if (s.launcherRuntime) capitalOrdnanceAI(s, dt);
   // crippled ships that run far enough away break contact and are removed (so waves can end)
   if (ai.mode === 'flee' && s.team === 1 && game.anchor && s.group.position.distanceTo(game.anchor.group.position) > 2600) {

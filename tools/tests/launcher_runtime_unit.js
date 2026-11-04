@@ -14,6 +14,7 @@ let component=s.comps.find(x=>x.id===a.comp);component.hp=50;assert.equal(ctx.fi
 blocked=true;assert.equal(ctx.fireLauncher(s,a,'ir',t),false);assert.equal(a.ready,1);assert.equal(s.stores.ir,1);blocked=false;
 assert.equal(ctx.fireLauncher(s,a,'ir',t),true);assert.equal(s.stores.ir,0);
 ctx.launcherTick(s,5);assert.equal(a.ready,0);s.stores.ir=1;ctx.launcherTick(s,0);assert.equal(a.ready,1);assert.equal(s.launcherMagazine.ir,0);
+const carrier=ship(); carrier.def.ordnancePlan.stores.drone=12; carrier.def.ordnancePlan.droneLimit=6; ctx.initLaunchers(carrier); assert.equal(carrier.stores.drone,12); assert.equal(carrier.dlimit,6);
 TUNE.ordnance.enabled=false;const off=ship();ctx.initLaunchers(off);assert.equal(off.launcherRuntime,undefined);assert.equal(ctx.fireLauncher(s,a,'ir',t),false);
 TUNE.ordnance.enabled=true;const enemy=ship();enemy.def.fac='frogg';ctx.initLaunchers(enemy);assert.equal(enemy.launcherRuntime,undefined);
 const fixed=ship();fixed.def.launchers=[{...bank,id:'FT',kind:'fixed',count:1,positions:[[0,1,2]],cap:4,reload:14,stores:['ir']}];fixed.def.ordnancePlan={stores:{ir:4}};

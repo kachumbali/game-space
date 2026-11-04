@@ -11,6 +11,9 @@ function launcherMounts(def) {
 function initLaunchers(s) {
   if (!TUNE.ordnance?.enabled || s.def.fac !== 'human' || !s.def.launchers?.length) return;
   const banks = s.def.launchers, plan = s.def.ordnancePlan;
+  // Drone manifests apply to player-controlled carriers as well as AI carriers.
+  if (plan?.stores?.drone !== undefined) s.stores.drone = plan.stores.drone;
+  if (plan?.droneLimit !== undefined) s.dlimit = plan.droneLimit;
   const ids = new Set(banks.flatMap(b => b.stores));
   for (const wid of ids) if (plan?.stores?.[wid] !== undefined) s.stores[wid] = plan.stores[wid];
   s.launcherRuntime = [];

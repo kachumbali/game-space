@@ -23,7 +23,7 @@ def chromium():
 class Runner:
     def __enter__(self):
         prep()
-        self.srv=subprocess.Popen(['python3','-m','http.server',PORT,'-d',SP],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        self.srv=subprocess.Popen(['python3',os.path.join(REPO,'tools','tests','serve.py'),SP,PORT],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         time.sleep(1)
         self.pw=sync_playwright().start()
         self.b=self.pw.chromium.launch(executable_path=chromium(),

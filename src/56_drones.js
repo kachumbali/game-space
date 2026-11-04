@@ -1,16 +1,16 @@
 // ======================================================================
 //  DRONES — unmanned 6 m wingmen slaved to one controller (docs/FLEET_LOGIC.md 9, 9a)
 //  Controller side: ctrl.drones[] (live drones), ctrl.stores.drone (stock aboard), control limit per class, ctrl.droneKills / dronesLost.
-//  Drone side: s.ctrl, s.dOrder ('engage'|'all'|'protect'|'return'|'scout'|'ram'|'orphan'), s.dTgt, s.dIdx.
+//  Drone side: s.ctrl, s.dOrder ('engage'|'all'|'fighters'|'protect'|'return'|'scout'|'ram'|'orphan'), s.dTgt, s.dIdx.
 //  API (also on globalThis.__game): dronesOf(ctrl), launchDrones(ctrl, n), droneOrder(ctrl, order, tgt).
 //  AI runs through fighterAI (70_ai.js) for the shooting orders; scout, return and ram are drone-only flight laws below.
 // ======================================================================
 const DRONE_ORDERS = ['engage', 'all', 'fighters', 'protect', 'return', 'scout', 'ram'];
-document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">KITE-6: open COMMS (J or touch COMMS), select DRONES to launch or give orders; its default is PROTECT.</div>');
-const DRONE_LIMIT = { fighter: 1, corvette: 6, frigate: 6, capital: 6 };   // heavy fighter 2 = def.droneLimit; frigate: assumed 6 slaved (stock 48)
+document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">DRONES: open COMMS (J or touch COMMS), then DRONES for your ship or select a friendly carrier under CAPITAL / CONTROL or WINGMEN; launch, recall, or give orders.</div>');
+const DRONE_LIMIT = { fighter: 1, corvette: 6, frigate: 6, capital: 6 };   // class fallbacks; individual ships and enabled ordnance plans override these
 const RAM_K = 0.002, RAM_VMAX = 250;      // ram damage = K x closing speed^2 (drone mass 1): ~72 at the 190 m/s top speed (6 rams ~ one Halberd), see docs/FLEET_LOGIC.md
 const SCOUT_RANGE = 2500, SCOUT_SENSE = 1800;
-const DRONE_LABEL = { engage: 'ENGAGE TARGET', all: 'ENGAGE ALL', fighters: 'ATTACK FIGHTERS', protect: 'PROTECT ME', return: 'RETURN', scout: 'SCOUT', ram: 'RAM', orphan: 'NO CONTROLLER' };
+const DRONE_LABEL = { engage: 'ENGAGE TARGET', all: 'ENGAGE ALL', fighters: 'ATTACK FIGHTERS', protect: 'DEFEND CARRIER', return: 'RETURN', scout: 'SCOUT', ram: 'RAM', orphan: 'NO CONTROLLER' };
 const _dqq = new THREE.Quaternion(), _dv = new THREE.Vector3(), _dw = new THREE.Vector3(), _dz = new THREE.Vector3();
 
 const droneLimitOf = c => (c.dlimit ?? c.def.droneLimit ?? DRONE_LIMIT[c.def.cls] ?? 0);
@@ -24,9 +24,12 @@ const validHostile = (s, t) => !!t && t.alive && !t.dying && t.team !== s.team;
 // spawn up to n drones from ctrl.stores.drone, never beyond the control limit; returns the new drones
 function launchDrones(ctrl, n = 1) {
   if (!ctrl || !ctrl.alive || ctrl.dying) return [];
+  // Initialise the AI carrier's manifest once before touching its stock.
+  if (ctrl !== player && TUNE.ordnance?.enabled && ctrl.def.fac === 'human' && ctrl.launcherRuntime && !ctrl.capitalOrdnance) capitalPrepare(ctrl);
   const live = dronesOf(ctrl);
   const k = Math.max(0, Math.min(Math.floor(n), ctrl.stores.drone | 0, droneLimitOf(ctrl) - live.length));
   const out = [];
+  if (k) { if (!live.length) { ctrl.droneWarning = false; ctrl.droneCommand = null; } ctrl.droneRecalling = false; }
   ctrl.group.updateMatrixWorld(true);
   const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(ctrl.group.quaternion);
   const side = new THREE.Vector3(1, 0, 0).applyQuaternion(ctrl.group.quaternion);
@@ -37,15 +40,20 @@ function launchDrones(ctrl, n = 1) {
       .addScaledVector(side, ((idx % 8) - 3.5) * 11).addScaledVector(up, (idx % 2 ? 1 : -1) * 4);
     const d = makeShip('kite6', ctrl.team, pos, ctrl.group.quaternion.clone(), { callsign: `${ctrl.callsign || ctrl.def.name} D${idx + 1}` });
     d.vel.copy(ctrl.vel);
+    // Recovery is not repair or rearm: use the saved airframe before untouched stock.
+    const saved = ctrl.droneRecovered?.shift();
+    if (saved) {
+      d.structure = saved.structure; Object.assign(d.shield, saved.shield);
+      d.abl = { ...saved.abl }; d.stores = { ...saved.stores }; d.ammo = { ...saved.ammo };
+      d.energy = saved.energy; d.abFuel = saved.abFuel;
+      for (const component of d.comps) if (saved.comps[component.id] !== undefined) component.hp = saved.comps[component.id];
+    }
     d.ctrl = ctrl; d.dOrder = ctrl !== player && idx > 0 ? 'fighters' : 'protect'; d.dIdx = idx; d.dTgt = null; d.hitCool = 1;
     ctrl.drones.push(d); out.push(d);
   }
   if (k) {
-    if (time >= (ctrl.droneLaunchRadioAt || 0)) {
-      droneRadio(ctrl, 'Launching drones');
-      droneRadio(ctrl, `${k} drones away`);
-      ctrl.droneLaunchRadioAt = time + 5;
-    }
+    droneRadio(ctrl, 'Launching drones');
+    droneRadio(ctrl, `${k} drones away`);
     ctrl.stores.drone -= k;
     plogN('drone.launch', k); plogEvent('drones launched ×' + k);
     if (ctrl === player) log(`DRONES LAUNCHED ×${k}`, '#9ad7ff');
@@ -53,7 +61,7 @@ function launchDrones(ctrl, n = 1) {
   return out;
 }
 
-// order = 'engage'|'all'|'protect'|'return'|'scout'|'ram'; tgt = ship for engage/ram (default: the controller's target),
+// order = 'engage'|'all'|'fighters'|'protect'|'return'|'scout'|'ram'; tgt = ship for engage/ram (default: the controller's target),
 // for scout a range in m (or {range}); returns the number of drones tasked
 function droneOrder(ctrl, order, tgt) {
   if (!DRONE_ORDERS.includes(order) || !ctrl || !ctrl.alive || ctrl.dying) return 0;
@@ -66,21 +74,27 @@ function droneOrder(ctrl, order, tgt) {
   const range = order === 'scout' ? (typeof tgt === 'number' ? tgt : tgt?.range ?? SCOUT_RANGE) : 0;
   const dir = new THREE.Vector3(0, 0, -1).applyQuaternion(ctrl.group.quaternion);
   ds.forEach((d, i) => {
-    d.dOrder = order === 'fighters' && ds.length > 1 && i === 0 ? 'protect' : order; d.dTgt = (order === 'engage' || order === 'ram') ? tgt : null;
+    d.dOrder = (order === 'fighters' || order === 'all' || order === 'engage') && ds.length > 1 && i === 0 ? 'protect' : order; d.dTgt = (order === 'engage' || order === 'ram') ? tgt : null;
     d.target = d.dTgt; d.ai.tgtT = 0;
     if (order === 'scout') { d.dDir = dir.clone(); d.dOrg = ctrl.group.position.clone(); d.dRange = range; }
   });
   ctrl.droneCommand = order;
+  ctrl.droneRecalling = order === 'return';
   if (order === 'return') droneRadio(ctrl, 'Recalling drones');
   plogN('drone.order.' + order); plogEvent(`drone order ${order} ×${ds.length}`);
   if (ctrl === player) log(`DRONES: ${DRONE_LABEL[order]}${tgt && tgt.def ? ' ' + tgt.def.name : ''}`, '#9ad7ff');
   return ds.length;
 }
 
+const droneCurrentOrder = c => {
+  const ds = dronesOf(c);
+  if (!ds.length) return '';
+  return DRONE_LABEL[ds.some(d => d.dOrder === c.droneCommand) ? c.droneCommand : ds[0].dOrder] || '';
+};
 const droneHudLine = p => {
   const live = dronesOf(p).length, stock = p.stores.drone | 0;
   if (!live && !stock) return '';
-  const o = live ? DRONE_LABEL[p.droneCommand || p.drones[0].dOrder] || '' : '';
+  const o = droneCurrentOrder(p);
   return `<div class="${live ? 'sel' : 'dim'}">DRONES ${live}/${stock}${o ? ' ' + o : ''}</div>`;
 };
 
@@ -90,7 +104,11 @@ function droneOnDestroy(s) {
     if (s.ctrl) {
       const c = s.ctrl; c.dronesLost = (c.dronesLost | 0) + 1;
       if (time >= (c.droneLossRadioAt || 0)) { droneRadio(c, 'Drone lost'); c.droneLossRadioAt = time + 5; }
-      if (!c.drones.some(d => d !== s && d.alive && !d.dying)) droneRadio(c, 'All drones expended');
+      const remaining = c.drones.filter(d => d !== s && d.alive && !d.dying);
+      if (!remaining.length) droneRadio(c, 'All drones recovered/expended');
+      else if (((c.droneCommand === 'fighters' || c.droneCommand === 'all' || c.droneCommand === 'engage') || (!c.droneCommand && c !== player)) && !remaining.some(d => d.dOrder === 'protect')) {
+        remaining[0].dOrder = 'protect'; remaining[0].target = null; remaining[0].ai.tgtT = 0;
+      }
     }
     plogN('drone.lost');
   }
@@ -168,10 +186,28 @@ function droneAI(s, dt) {
   // Shooting orders are bounded around the controller's current position, including while it moves.
   const leash = TUNE.drone.leashFighters;
   const orderLeash = o === 'protect' ? Math.min(800, leash) : leash;
-  if (['protect', 'fighters', 'all', 'engage'].includes(o) && ep.distanceToSquared(c.group.position) >= orderLeash * orderLeash) {
-    s.target = null; return droneFormation(s, c, dt);
+  if (o === 'protect' || o === 'fighters' || o === 'all' || o === 'engage' || o === 'ram') {
+    const dist2 = ep.distanceToSquared(c.group.position);
+    // Turn back before the boundary to account for turning and relative motion; hysteresis avoids oscillation.
+    if (dist2 >= (orderLeash * TUNE.drone.returnFraction) ** 2) s.dLeashReturning = true;
+    else if (dist2 < (orderLeash * TUNE.drone.resumeFraction) ** 2) s.dLeashReturning = false;
+    if (s.dLeashReturning) { s.target = null; return droneFormation(s, c, dt); }
   }
-  if (o === 'return') { s.target = null; return droneFormation(s, c, dt); }
+  if (o === 'return') {
+    s.target = null;
+    // Return to the existing formation envelope, then transfer the surviving craft to stock.
+    const recoveryRange = 70 + c.def.radius * 0.5;
+    if (ep.distanceToSquared(c.group.position) <= recoveryRange * recoveryRange) {
+      (c.droneRecovered ||= []).push({ structure:s.structure, shield:{...s.shield}, abl:{...s.abl},
+        stores:{...s.stores}, ammo:{...s.ammo}, energy:s.energy, abFuel:s.abFuel,
+        comps:Object.fromEntries((s.comps || []).map(component => [component.id, component.hp])) });
+      s.alive = false; c.stores.drone = (c.stores.drone | 0) + 1;
+      plogN('drone.recovered');
+      if (!dronesOf(c).length) droneRadio(c, 'All drones recovered/expended');
+      return;
+    }
+    return droneFormation(s, c, dt);
+  }
   if (o === 'scout') {
     s.target = null;
     _dv.copy(s.dDir).multiplyScalar(s.dRange).add(s.dOrg);
@@ -184,7 +220,7 @@ function droneAI(s, dt) {
   }
   if (o === 'ram') {
     const t = s.dTgt;
-    if (!validHostile(s, t)) { s.dOrder = 'protect'; s.dTgt = null; return droneFormation(s, c, dt); }
+    if (!validHostile(s, t) || t.group.position.distanceToSquared(c.group.position) > leash * leash) { s.dOrder = 'protect'; s.dTgt = null; return droneFormation(s, c, dt); }
     s.target = t;
     const lead = leadPoint(s, t, s.def.maxSpeed).clone();
     turnToward(s, lead, dt, 1.2); aiFly(s, { throttle: 1 }, dt);

@@ -9,7 +9,7 @@ class V {
   distanceTo(v){return Math.sqrt(this.distanceToSquared(v));}
 }
 const ctx={THREE:{Vector3:V,Quaternion:class{}},document:{getElementById:()=>({insertAdjacentHTML(){}})},
- TUNE:{drone:{leashFighters:2000}},ships:[],player:null,time:10,Math,
+ TUNE:{drone:{leashFighters:2000,returnFraction:.8,resumeFraction:.5}},ships:[],player:null,time:10,Math,
  sense(){},isCapital:s=>s.def.cls!=='fighter',fighterAI(s){s.action='fight';},
  plogN(){},plogEvent(){},log(){},droneRadio(){},hostilesOf:s=>ctx.ships.filter(t=>t.team!==s.team),
  turnToward(){},aiFly(){},clamp:(x,a,b)=>Math.max(a,Math.min(b,x))};
@@ -19,9 +19,17 @@ const c=ship(0,'corvette',0), d=ship(0,'fighter',0), f=ship(1,'fighter',1800), f
 c.drones=[d];c.stores={drone:0};d.ctrl=c;d.dOrder='fighters';ctx.ships=[c,d,f,far,cap];
 ctx.droneAI(d,.1);assert.strictEqual(d.target,f);assert.equal(d.action,'fight');
 d.action='';d.group.position.x=2100;ctx.droneAI(d,.1);assert.equal(d.target,null);assert.notEqual(d.action,'fight');
+d.group.position.x=1500;d.action='';ctx.droneAI(d,.1);assert.equal(d.target,null);assert.notEqual(d.action,'fight');
+d.group.position.x=900;d.ai.tgtT=0;ctx.droneAI(d,.1);assert.strictEqual(d.target,f);
+c.group.position.x=-800;d.action='';ctx.droneAI(d,.1);assert.equal(d.target,null);assert.notEqual(d.action,'fight');
 d.group.position.x=0;c.group.position.x=-500;d.ai.tgtT=0;ctx.droneAI(d,.1);assert.equal(d.target,null);
 c.group.position.x=0;f.alive=false;d.ai.tgtT=0;ctx.droneAI(d,.1);assert.equal(d.target,null);
 const d2=ship(0,'fighter',0); d2.ctrl=c; c.drones.push(d2);
 ctx.droneOrder(c,'fighters'); assert.equal(d.dOrder,'protect'); assert.equal(d2.dOrder,'fighters');
-ctx.droneOrder(c,'engage',cap);assert.strictEqual(d.dTgt,cap);ctx.droneOrder(c,'return');assert.equal(d.dOrder,'return');
+ctx.droneOrder(c,'engage',cap);assert.strictEqual(d.dTgt,cap);assert.equal(d.dOrder,'protect');assert.equal(d2.dOrder,'engage');
+ctx.droneOrder(c,'all');assert.equal(d.dOrder,'protect');assert.equal(d2.dOrder,'all');
+ctx.droneOrder(c,'ram',far);ctx.droneAI(d2,.1);assert.equal(d2.dOrder,'protect');
+ctx.droneOrder(c,'fighters'); d.def.drone=true; d.alive=false; ctx.droneOnDestroy(d); assert.equal(d2.dOrder,'protect');
+ctx.droneOrder(c,'return');assert.equal(d2.dOrder,'return'); ctx.droneAI(d2,.1);
+assert.equal(c.stores.drone,1); assert.equal(ctx.dronesOf(c).length,0); assert(c.droneRecalling);
 console.log('fighter preference, carrier-relative leash, moving carrier, no targets and orders: OK');

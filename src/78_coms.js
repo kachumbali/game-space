@@ -18,12 +18,15 @@ let comsEl = null;
   #coms .ci:hover{background:rgba(143,255,208,.12)}
   #coms .ci.off{opacity:.38;cursor:default}
   #coms .ci small{opacity:.6;margin-left:auto;padding-left:8px;white-space:nowrap}
-  #coms .ft{margin-top:6px;opacity:.5;font-size:10px}
-  body.touch #coms{top:60px;transform:none;font-size:13px}
-  body.phone #coms{font-size:10px;min-width:190px;max-width:240px;top:44px}
+  #coms .ft{margin-top:6px;opacity:.8;font-size:11px;display:flex;gap:12px;align-items:center}
+  #coms .ft button{font:inherit;color:#ffd24a;background:transparent;border:1px solid #3a8a6c;padding:6px;min-height:40px;min-width:56px;cursor:pointer}
+  body.touch #coms{top:60px;transform:none;font-size:13px;max-height:calc(100dvh - 70px);overflow-y:auto;box-sizing:border-box;touch-action:pan-y;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  body.touch #coms .ci{min-height:40px;box-sizing:border-box;align-items:center}
+  body.phone #coms{font-size:12px;min-width:190px;max-width:240px;top:44px;max-height:calc(100dvh - 54px)}
   body.touch.phone #coms .ci{padding:3px 4px}
   body.cine #coms,body.cine #bcom{display:none!important}
-  #bcom{left:138px;bottom:10px;width:54px;height:54px;font-size:10px;transform-origin:0 100%;border-color:#ffd24a;color:#ffd24a}
+  #bcom{z-index:8;left:138px;bottom:10px;width:54px;height:54px;font-size:10px;transform-origin:0 100%;border-color:#ffd24a;color:#ffd24a}
+  @media (orientation:portrait){body.phone #bcom{left:120px}}
   `;
   document.head.appendChild(st);
   comsEl = document.createElement('div'); comsEl.id = 'coms'; document.body.appendChild(comsEl);
@@ -32,10 +35,21 @@ let comsEl = null;
     const b = document.createElement('div'); b.className = 'tbtn'; b.id = 'bcom'; b.textContent = 'COMMS'; tb.appendChild(b);
     b.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); touchStarted = true; comsToggle(); });
   }
+  function activateComs(e) {
+    if (e.target.closest('[data-close]')) { comsToggle(false); return; }
+    if (e.target.closest('[data-back]')) { if (coms.stack.length) coms.stack.pop(); comsRender(); return; }
+    const r = e.target.closest('[data-ci]'); if (r) comsPick(+r.dataset.ci);
+  }
   comsEl.addEventListener('pointerdown', e => {
-    const r = e.target.closest('[data-ci]'); if (!r) return;
-    e.stopPropagation(); e.preventDefault();
-    comsPick(+r.dataset.ci);
+    e.stopPropagation();
+    if (isTouch) { coms.t = time; coms.interactionUntil = time + 1; }
+    else { e.preventDefault(); activateComs(e); }
+  });
+  comsEl.addEventListener('scroll', () => { if (isTouch) { coms.t = time; coms.interactionUntil = time + 1; } }, { passive: true });
+  // Native click distinguishes a tap from a scroll gesture; do not cancel the touch down.
+  comsEl.addEventListener('click', e => {
+    if (!isTouch) return;
+    e.stopPropagation(); e.preventDefault(); activateComs(e);
   });
 }
 
@@ -88,6 +102,7 @@ function ordersFor(list, label) {
       { label: hold ? 'WEAPONS FREE' : 'WEAPONS HOLD', fn: () => { for (const s of list) { s.ai.hold = !hold; comsSay(nameOf(s), voice(s, hold ? 'free' : 'hold')); } } },
       { label: 'RETURN TO BASE', fn: send('rtb') },
       { label: 'STATUS REPORT', fn: () => { for (const s of list) comsSay(nameOf(s), (s.ai.order ? '[' + s.ai.order.type.toUpperCase() + '] ' : '') + wingStatus(s), undefined, 0.4); } },
+      ...(one && one.stores.drone != null ? [{ label: 'DRONES', hint: dronesOf(one).length + ' / ' + one.stores.drone + ' stock', sub: () => droneMenu(one) }] : []),
     ],
   };
 }
@@ -136,9 +151,9 @@ function droneMenu(carrier = player) {
   const d = dronesOf(carrier), ord = o => () => { droneOrder(carrier, o, hostileTarget()); log('DRONES: ' + o.toUpperCase(), '#7fe0ff'); };
   const tgt = hostileTarget();
   return {
-    title: 'DRONES (' + d.length + ' / ' + (carrier.stores.drone | 0) + ') ' + (d.length ? DRONE_LABEL[carrier.droneCommand || d[0].dOrder] : ''),
+    title: 'DRONES (' + d.length + ' / ' + (carrier.stores.drone | 0) + ') ' + droneCurrentOrder(carrier),
     items: [
-      { label: 'LAUNCH', on: typeof launchDrones === 'function', fn: () => { if (carrier !== player && TUNE.ordnance?.enabled && carrier.def.fac === 'human' && !carrier.capitalOrdnance) capitalPrepare(carrier); const n = launchDrones(carrier, 99).length; log(n ? `${n} DRONES LAUNCHED` : 'NO DRONES TO LAUNCH', '#7fe0ff'); } },
+      { label: 'LAUNCH', on: typeof launchDrones === 'function', fn: () => { const n = launchDrones(carrier, 99).length; log(n ? `${n} DRONES LAUNCHED` : 'NO DRONES TO LAUNCH', '#7fe0ff'); } },
       { label: 'ENGAGE MY TARGET', on: !!tgt && d.length > 0, fn: ord('engage') },
       { label: 'ENGAGE ALL', on: d.length > 0, fn: ord('all') },
       { label: 'ATTACK FIGHTERS', on: d.length > 0, fn: ord('fighters') },
@@ -173,13 +188,14 @@ function targetMenu() {
 
 // ---- state machine + rendering -------------------------------------------------------------------------------
 const comsNode = () => (coms.stack.length ? coms.stack[coms.stack.length - 1]() : comsRoot());
-function comsRender() {
+function comsRender(preserveScroll = false) {
+  const scroll = preserveScroll ? comsEl.scrollTop : 0;
   if (!coms.open) { comsEl.style.display = 'none'; return; }
   const n = comsNode();
   comsEl.innerHTML = `<h4>${n.title}${coms.stack.length ? '' : '  [J]'}</h4>` + n.items.map((it, i) =>
     `<div class="ci${it.on === false ? ' off' : ''}" data-ci="${i + 1}"><b>${i + 1}</b><span>${it.label}</span>${it.hint ? `<small>${it.hint}</small>` : ''}</div>`).join('') +
-    `<div class="ft">${isTouch ? 'tap an entry · tap COMMS to close' : '0 back · J close'}</div>`;
-  comsEl.style.display = 'block';
+    `<div class="ft">${isTouch ? '<button data-back>BACK</button><button data-close>CLOSE</button>' : '0 back · J close'}</div>`;
+  comsEl.style.display = 'block'; comsEl.scrollTop = scroll;
 }
 function comsToggle(force) {
   const want = force !== undefined ? force : !coms.open;
@@ -210,6 +226,6 @@ function comsTick(dt) {
   }
   if (coms.open) {
     if (!(player && player.alive) || state !== 'play' || time - coms.t > 12) comsToggle(false);
-    else if (Math.floor(time * 2) !== coms._r) { coms._r = Math.floor(time * 2); comsRender(); }     // keep hints / health live
+    else if (time >= (coms.interactionUntil || 0) && Math.floor(time * 2) !== coms._r) { coms._r = Math.floor(time * 2); comsRender(true); }     // keep hints / health live
   }
 }

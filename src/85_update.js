@@ -151,6 +151,7 @@ function update(dt) {
     } else if (state === 'cine') cineDrive(s, dt);
     else if (s === player) { if (state === 'play' && !dock) updatePlayer(dt); }   // while docking the dock autopilot owns the ship (owner 2026-10-22)
     else if (state !== 'brief') aiUpdate(s, dt);
+    if (!s.alive) continue; // recovered drones are removed after this loop
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
     if (s.dying <= 0) updateTurrets(s, dt);
