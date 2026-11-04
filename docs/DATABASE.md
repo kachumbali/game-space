@@ -47,3 +47,7 @@ directory so tests can use `?db=`. Run `python3 tools/validate_db.py [file]` on 
 ## Next step (not started)
 
 See `docs/POWER.md` (step 1 done: `power` fields in the database).
+
+## Turret geometry
+
+`tuning.turret.visual` maps S, M and L to a fraction of final in-game hull length, a minimum and maximum diameter in metres, and a barrel-length-to-diameter ratio. An optional turret `visualScale` multiplies the bounded diameter. The independent `targetReferenceDiameter` and `targetReferenceLengthCap`, plus the optional `aimScale`, preserve the existing targeting origin while a visible muzzle remains at its barrel tip. Muzzle launch positions necessarily follow the visual geometry. When a shortened barrel tip would intersect the existing voxel hull, the visual base extends outward until both tips clear it; this sampling does not alter components or hull collision data.

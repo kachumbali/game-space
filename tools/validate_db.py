@@ -195,6 +195,26 @@ leash = drone.get('leashFighters')
 if not isinstance(leash, (int, float)) or isinstance(leash, bool) or not math.isfinite(leash) or leash <= 0: err('tuning.drone.leashFighters must be positive and finite')
 ret, resume = drone.get('returnFraction'), drone.get('resumeFraction')
 if any(not isinstance(x, (int, float)) or isinstance(x, bool) or not math.isfinite(x) for x in (ret, resume)) or not 0 < resume < ret <= 1: err('tuning.drone requires 0 < resumeFraction < returnFraction <= 1')
+visual = db.get('tuning', {}).get('turret', {}).get('visual', {})
+for cls in ('S', 'M', 'L'):
+    spec = visual.get(cls, {}) if isinstance(visual, dict) else {}
+    if not isinstance(spec, dict):
+        err(f'tuning.turret.visual.{cls} must be an object'); spec = {}
+    for key in ('fraction', 'min', 'max', 'barrel'):
+        v = spec.get(key)
+        if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0:
+            err(f'tuning.turret.visual.{cls}.{key} must be positive and finite')
+    if all(isinstance(spec.get(k), (int,float)) and not isinstance(spec[k],bool) for k in ('min','max')) and spec['min'] > spec['max']:
+        err(f'tuning.turret.visual.{cls}: min must not exceed max')
+turret_tune = db.get('tuning', {}).get('turret', {})
+references = turret_tune.get('targetReferenceDiameter', {})
+for cls in ('S', 'M', 'L'):
+    v = references.get(cls) if isinstance(references, dict) else None
+    if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0:
+        err(f'tuning.turret.targetReferenceDiameter.{cls} must be positive and finite')
+v = turret_tune.get('targetReferenceLengthCap')
+if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or v <= 0:
+    err('tuning.turret.targetReferenceLengthCap must be positive and finite')
 ordnance = db.get('tuning', {}).get('ordnance')
 if not isinstance(ordnance, dict) or not isinstance(ordnance.get('enabled'), bool): err('tuning.ordnance.enabled must be boolean')
 else:
@@ -211,6 +231,10 @@ for sid, s in S.items():
     comps = {c['id'] for c in s.get('comps', [])}
     for kind in ('mounts', 'turrets'):
         for m in s.get(kind, []):
+            for key in ('visualScale', 'aimScale') if kind == 'turrets' else ():
+                v = m.get(key, 1)
+                if not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) or not 0.35 <= v <= 1:
+                    err(f'{sid}.{kind}: {key} must be finite and in [0.35, 1]')
             if m['w'] not in W: err(f'{sid}.{kind}: unknown weapon {m["w"]}')
             if m['comp'] not in comps: err(f'{sid}.{kind}: weapon {m["w"]} mounted on missing component {m["comp"]}')
             st = m.get('store')

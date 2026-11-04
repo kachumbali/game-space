@@ -1,0 +1,1839 @@
+[
+  {
+    "id": "bittern",
+    "length": 22,
+    "voxel": 0.2682926829268293,
+    "turrets": [
+      {
+        "cls": "S",
+        "weapon": "pdS",
+        "dia": 2.64,
+        "tip": [
+          -0.4488,
+          2.642,
+          1.508
+        ],
+        "aim": [
+          0,
+          2.642,
+          5.6
+        ],
+        "clearance": 0.37,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pdS",
+        "dia": 2.64,
+        "tip": [
+          0.4488000000000001,
+          -1.0580000000000003,
+          0.9080000000000004
+        ],
+        "aim": [
+          9.699202649247037e-17,
+          -1.0580000000000003,
+          5
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "halberd",
+    "length": 128,
+    "voxel": 0.7757575757575758,
+    "turrets": [
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 6.05,
+        "tip": [
+          5.2,
+          5.515000000000001,
+          -36.4025
+        ],
+        "aim": [
+          5.2,
+          5.515000000000001,
+          -24
+        ],
+        "clearance": 2.657,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 6.05,
+        "tip": [
+          -5.2,
+          5.515000000000001,
+          -36.4025
+        ],
+        "aim": [
+          -5.2,
+          5.515000000000001,
+          -24
+        ],
+        "clearance": 2.807,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          3.5500000000000003,
+          7.7,
+          30.25
+        ],
+        "aim": [
+          4.4,
+          7.7,
+          38
+        ],
+        "clearance": 2.556,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -5.25,
+          7.7,
+          30.25
+        ],
+        "aim": [
+          -4.4,
+          7.7,
+          38
+        ],
+        "clearance": 3.023,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -4.1,
+          -19.75
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -4.1,
+          -12
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -5.1,
+          20.25
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -5.1,
+          28
+        ],
+        "clearance": 0.167,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "exeter",
+    "length": 450,
+    "voxel": 2.7439024390243905,
+    "turrets": [
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 11,
+        "tip": [
+          0,
+          27.3,
+          -132.55
+        ],
+        "aim": [
+          0,
+          27.3,
+          -110
+        ],
+        "clearance": 9.446,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 11,
+        "tip": [
+          24,
+          25.7,
+          -62.55
+        ],
+        "aim": [
+          24,
+          25.7,
+          -40
+        ],
+        "clearance": 9.746,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 11,
+        "tip": [
+          -24,
+          25.7,
+          -62.55
+        ],
+        "aim": [
+          -24,
+          25.7,
+          -40
+        ],
+        "clearance": 10.22,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          19.15,
+          30.2,
+          102.25
+        ],
+        "aim": [
+          20,
+          30.2,
+          110
+        ],
+        "clearance": 2.856,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -20.85,
+          30.2,
+          102.25
+        ],
+        "aim": [
+          -20,
+          30.2,
+          110
+        ],
+        "clearance": 2.856,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "pulseS",
+        "dia": 11,
+        "tip": [
+          4.0413344371862655e-16,
+          -19.099999999999998,
+          -102.55
+        ],
+        "aim": [
+          4.0413344371862655e-16,
+          -19.099999999999998,
+          -80
+        ],
+        "clearance": 4.027,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -20.9,
+          52.25
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -20.9,
+          60
+        ],
+        "clearance": 3.083,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          34.9,
+          32,
+          -154.5
+        ],
+        "aim": [
+          40,
+          32,
+          -90
+        ],
+        "clearance": 22.273,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          -45.1,
+          32,
+          -154.5
+        ],
+        "aim": [
+          -40,
+          32,
+          -90
+        ],
+        "clearance": 30.366,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          41.1,
+          -16,
+          -34.5
+        ],
+        "aim": [
+          36,
+          -16,
+          30
+        ],
+        "clearance": 12.954,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          -30.9,
+          -16,
+          -34.5
+        ],
+        "aim": [
+          -36,
+          -16,
+          30
+        ],
+        "clearance": 6.875,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          48,
+          24.3,
+          -22.55
+        ],
+        "aim": [
+          48,
+          24.3,
+          0
+        ],
+        "clearance": 17.936,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -48,
+          24.3,
+          -22.55
+        ],
+        "aim": [
+          -48,
+          24.3,
+          0
+        ],
+        "clearance": 17.936,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          14,
+          29.3,
+          107.45
+        ],
+        "aim": [
+          14,
+          29.3,
+          130
+        ],
+        "clearance": 1.549,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -14,
+          29.3,
+          107.45
+        ],
+        "aim": [
+          -14,
+          29.3,
+          130
+        ],
+        "clearance": 0.85,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          44,
+          -17.9,
+          37.45
+        ],
+        "aim": [
+          44,
+          -17.9,
+          60
+        ],
+        "clearance": 3.151,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -44,
+          -17.9,
+          37.45
+        ],
+        "aim": [
+          -44,
+          -17.9,
+          60
+        ],
+        "clearance": 3.491,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          14,
+          -23.2,
+          97.45
+        ],
+        "aim": [
+          14,
+          -23.2,
+          120
+        ],
+        "clearance": 2.639,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -14,
+          -23.2,
+          97.45
+        ],
+        "aim": [
+          -14,
+          -23.2,
+          120
+        ],
+        "clearance": 2.639,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "hecla",
+    "length": 1000,
+    "voxel": 4.444444444444445,
+    "turrets": [
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          1.15,
+          31,
+          -418.25
+        ],
+        "aim": [
+          2,
+          31,
+          -410.5
+        ],
+        "clearance": 2.694,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          2.85,
+          -24.25,
+          -418.25
+        ],
+        "aim": [
+          2,
+          -24.25,
+          -410.5
+        ],
+        "clearance": 2.694,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -137.35,
+          46,
+          -230.75
+        ],
+        "aim": [
+          -136.5,
+          46,
+          -223
+        ],
+        "clearance": 1.861,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          135.65,
+          46,
+          -230.75
+        ],
+        "aim": [
+          136.5,
+          46,
+          -223
+        ],
+        "clearance": 1.861,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          1.15,
+          22.25,
+          369.25
+        ],
+        "aim": [
+          2,
+          22.25,
+          377
+        ],
+        "clearance": 1.861,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          2.85,
+          -19.25,
+          369.25
+        ],
+        "aim": [
+          2,
+          -19.25,
+          377
+        ],
+        "clearance": 0.361,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pulseS",
+        "dia": 5,
+        "tip": [
+          -136.5,
+          46,
+          69.25
+        ],
+        "aim": [
+          -136.5,
+          46,
+          77
+        ],
+        "clearance": 4.083,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pulseS",
+        "dia": 5,
+        "tip": [
+          140.5,
+          46,
+          69.25
+        ],
+        "aim": [
+          140.5,
+          46,
+          77
+        ],
+        "clearance": 4.083,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pulseS",
+        "dia": 5,
+        "tip": [
+          -136.5,
+          -43,
+          -80.75
+        ],
+        "aim": [
+          -136.5,
+          -43,
+          -73
+        ],
+        "clearance": 1.889,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pulseS",
+        "dia": 5,
+        "tip": [
+          140.5,
+          -43,
+          -80.75
+        ],
+        "aim": [
+          140.5,
+          -43,
+          -73
+        ],
+        "clearance": 1.889,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -17.5,
+          24.05,
+          -385.05
+        ],
+        "aim": [
+          -17.5,
+          24.05,
+          -362.5
+        ],
+        "clearance": 1.389,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          17.5,
+          24.05,
+          -385.05
+        ],
+        "aim": [
+          17.5,
+          24.05,
+          -362.5
+        ],
+        "clearance": 2.5,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -138.5,
+          47.8,
+          -47.55
+        ],
+        "aim": [
+          -138.5,
+          47.8,
+          -25
+        ],
+        "clearance": 8.911,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          138.5,
+          47.8,
+          -47.55
+        ],
+        "aim": [
+          138.5,
+          47.8,
+          -25
+        ],
+        "clearance": 8.911,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -17.5,
+          24.05,
+          302.45
+        ],
+        "aim": [
+          -17.5,
+          24.05,
+          325
+        ],
+        "clearance": 2.43,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          17.5,
+          24.05,
+          302.45
+        ],
+        "aim": [
+          17.5,
+          24.05,
+          325
+        ],
+        "clearance": 3.198,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "gulper",
+    "length": 146,
+    "voxel": 0.8390804597701149,
+    "turrets": [
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          7.113636363636363,
+          17.759090909090908,
+          -12.174242424242424
+        ],
+        "aim": [
+          7.963636363636363,
+          17.759090909090908,
+          -4.424242424242424
+        ],
+        "clearance": 0.443,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -8.813636363636363,
+          17.759090909090908,
+          -12.174242424242424
+        ],
+        "aim": [
+          -7.963636363636363,
+          17.759090909090908,
+          -4.424242424242424
+        ],
+        "clearance": 1.337,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          6.67121212121212,
+          14.44090909090909,
+          23.21969696969697
+        ],
+        "aim": [
+          7.521212121212121,
+          14.44090909090909,
+          30.96969696969697
+        ],
+        "clearance": 0.405,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -8.371212121212121,
+          13.887878787878787,
+          23.21969696969697
+        ],
+        "aim": [
+          -7.521212121212121,
+          13.887878787878787,
+          30.96969696969697
+        ],
+        "clearance": 0.691,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          -0.8500000000000001,
+          18.31212121212121,
+          -49.780303030303024
+        ],
+        "aim": [
+          0,
+          18.31212121212121,
+          -42.030303030303024
+        ],
+        "clearance": 4.662,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -12.215151515151515,
+          -51.992424242424235
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -12.215151515151515,
+          -44.242424242424235
+        ],
+        "clearance": 1.917,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -14.648484848484848,
+          27.64393939393939
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -14.648484848484848,
+          35.39393939393939
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "bullfrog",
+    "length": 600,
+    "voxel": 2.3076923076923075,
+    "turrets": [
+      {
+        "cls": "L",
+        "weapon": "lanceL",
+        "dia": 30,
+        "tip": [
+          0,
+          47,
+          -214.5
+        ],
+        "aim": [
+          0,
+          47,
+          -150
+        ],
+        "clearance": 19.451,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          42.13,
+          36.3,
+          -92.55
+        ],
+        "aim": [
+          44,
+          36.3,
+          -70
+        ],
+        "clearance": 3.293,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          -45.87,
+          36.3,
+          -92.55
+        ],
+        "aim": [
+          -44,
+          36.3,
+          -70
+        ],
+        "clearance": 5.732,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          52.13,
+          31.3,
+          57.45
+        ],
+        "aim": [
+          54,
+          31.3,
+          80
+        ],
+        "clearance": 3.665,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          -55.87,
+          31.3,
+          57.45
+        ],
+        "aim": [
+          -54,
+          31.3,
+          80
+        ],
+        "clearance": 4.944,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          47.87,
+          -26.7,
+          -42.55
+        ],
+        "aim": [
+          46,
+          -26.7,
+          -20
+        ],
+        "clearance": 1.7,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "acidT",
+        "dia": 11,
+        "tip": [
+          -44.13,
+          -26.7,
+          -42.55
+        ],
+        "aim": [
+          -46,
+          -26.7,
+          -20
+        ],
+        "clearance": 1.7,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          31.15,
+          44.5,
+          -207.75
+        ],
+        "aim": [
+          32,
+          44.5,
+          -200
+        ],
+        "clearance": 0.819,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -32.85,
+          44.5,
+          -207.75
+        ],
+        "aim": [
+          -32,
+          44.5,
+          -200
+        ],
+        "clearance": 0.269,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          39.15,
+          36.5,
+          -17.75
+        ],
+        "aim": [
+          40,
+          36.5,
+          -10
+        ],
+        "clearance": 1.53,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -40.85,
+          36.5,
+          -17.75
+        ],
+        "aim": [
+          -40,
+          36.5,
+          -10
+        ],
+        "clearance": 1.943,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          35.15,
+          36.5,
+          102.25
+        ],
+        "aim": [
+          36,
+          36.5,
+          110
+        ],
+        "clearance": 1.898,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -36.85,
+          36.5,
+          102.25
+        ],
+        "aim": [
+          -36,
+          36.5,
+          110
+        ],
+        "clearance": 2.19,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          36.85,
+          -18.5,
+          -137.75
+        ],
+        "aim": [
+          36,
+          -18.5,
+          -130
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -35.15,
+          -18.5,
+          -137.75
+        ],
+        "aim": [
+          -36,
+          -18.5,
+          -130
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          40.85,
+          -25.5,
+          82.25
+        ],
+        "aim": [
+          40,
+          -25.5,
+          90
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "sting",
+        "dia": 5,
+        "tip": [
+          -39.15,
+          -25.5,
+          82.25
+        ],
+        "aim": [
+          -40,
+          -25.5,
+          90
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          15.15,
+          38.5,
+          -117.75
+        ],
+        "aim": [
+          16,
+          38.5,
+          -110
+        ],
+        "clearance": 1.192,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          -16.85,
+          38.5,
+          -117.75
+        ],
+        "aim": [
+          -16,
+          38.5,
+          -110
+        ],
+        "clearance": 1.192,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          23.15,
+          41.5,
+          142.25
+        ],
+        "aim": [
+          24,
+          41.5,
+          150
+        ],
+        "clearance": 0.945,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          -24.85,
+          41.5,
+          142.25
+        ],
+        "aim": [
+          -24,
+          41.5,
+          150
+        ],
+        "clearance": 1.885,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          22.85,
+          -28.5,
+          -67.75
+        ],
+        "aim": [
+          22,
+          -28.5,
+          -60
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          -21.15,
+          -28.5,
+          -67.75
+        ],
+        "aim": [
+          -22,
+          -28.5,
+          -60
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          26.85,
+          -21.5,
+          192.25
+        ],
+        "aim": [
+          26,
+          -21.5,
+          200
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "thorn",
+        "dia": 5,
+        "tip": [
+          -25.15,
+          -21.5,
+          192.25
+        ],
+        "aim": [
+          -26,
+          -21.5,
+          200
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "falchion",
+    "length": 19.5,
+    "voxel": 0.25,
+    "turrets": [
+      {
+        "cls": "S",
+        "weapon": "pdS",
+        "dia": 2.34,
+        "tip": [
+          -0.3978,
+          2.252,
+          -2.4269999999999996
+        ],
+        "aim": [
+          0,
+          2.252,
+          1.2
+        ],
+        "clearance": 0.902,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pdS",
+        "dia": 2.34,
+        "tip": [
+          -0.3978,
+          2.352,
+          3.173
+        ],
+        "aim": [
+          0,
+          2.352,
+          6.8
+        ],
+        "clearance": 1.252,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pdS",
+        "dia": 2.34,
+        "tip": [
+          0.3978000000000001,
+          -0.8480000000000001,
+          -0.6269999999999998
+        ],
+        "aim": [
+          8.597020530014419e-17,
+          -0.8480000000000001,
+          3
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "liner",
+    "length": 450,
+    "voxel": 2.7439024390243905,
+    "turrets": [
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -0.8500000000000001,
+          25.9,
+          -42.75
+        ],
+        "aim": [
+          0,
+          25.9,
+          -35
+        ],
+        "clearance": 2.327,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -0.8500000000000001,
+          26.7,
+          27.25
+        ],
+        "aim": [
+          0,
+          26.7,
+          35
+        ],
+        "clearance": 3.127,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -0.8500000000000001,
+          28.2,
+          182.25
+        ],
+        "aim": [
+          0,
+          28.2,
+          190
+        ],
+        "clearance": 1.883,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -22.9,
+          -42.75
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -22.9,
+          -35
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -23.7,
+          27.25
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -23.7,
+          35
+        ],
+        "clearance": 0.627,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          0.8500000000000003,
+          -25.2,
+          182.25
+        ],
+        "aim": [
+          1.8369701987210297e-16,
+          -25.2,
+          190
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "destroyer",
+    "length": 600,
+    "voxel": 3.5714285714285716,
+    "turrets": [
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          -5.1000000000000005,
+          31,
+          -204.5
+        ],
+        "aim": [
+          0,
+          31,
+          -140
+        ],
+        "clearance": 10.714,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          -5.1000000000000005,
+          31,
+          -44.5
+        ],
+        "aim": [
+          0,
+          31,
+          20
+        ],
+        "clearance": 10.714,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          5.100000000000001,
+          -11.600000000000001,
+          -124.5
+        ],
+        "aim": [
+          1.102182119232618e-15,
+          -11.600000000000001,
+          -60
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "L",
+        "weapon": "mdl",
+        "dia": 30,
+        "tip": [
+          5.100000000000001,
+          -11.600000000000001,
+          25.5
+        ],
+        "aim": [
+          1.102182119232618e-15,
+          -11.600000000000001,
+          90
+        ],
+        "clearance": 0,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          30,
+          20.2,
+          -112.55
+        ],
+        "aim": [
+          30,
+          20.2,
+          -90
+        ],
+        "clearance": 5.714,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -30,
+          20.2,
+          -112.55
+        ],
+        "aim": [
+          -30,
+          20.2,
+          -90
+        ],
+        "clearance": 7.093,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          38,
+          21.7,
+          37.45
+        ],
+        "aim": [
+          38,
+          21.7,
+          60
+        ],
+        "clearance": 9.068,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -38,
+          21.7,
+          37.45
+        ],
+        "aim": [
+          -38,
+          21.7,
+          60
+        ],
+        "clearance": 9.984,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          30,
+          -13.899999999999999,
+          -82.55
+        ],
+        "aim": [
+          30,
+          -13.899999999999999,
+          -60
+        ],
+        "clearance": 2.043,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -30,
+          -13.899999999999999,
+          -82.55
+        ],
+        "aim": [
+          -30,
+          -13.899999999999999,
+          -60
+        ],
+        "clearance": 2.043,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          36,
+          -15.599999999999998,
+          97.45
+        ],
+        "aim": [
+          36,
+          -15.599999999999998,
+          120
+        ],
+        "clearance": 3.743,
+        "tipMatch": true
+      },
+      {
+        "cls": "M",
+        "weapon": "laserM",
+        "dia": 11,
+        "tip": [
+          -36,
+          -15.599999999999998,
+          97.45
+        ],
+        "aim": [
+          -36,
+          -15.599999999999998,
+          120
+        ],
+        "clearance": 3.148,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          11.15,
+          23.5,
+          -197.75
+        ],
+        "aim": [
+          12,
+          23.5,
+          -190
+        ],
+        "clearance": 3.214,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -12.85,
+          23.5,
+          -197.75
+        ],
+        "aim": [
+          -12,
+          23.5,
+          -190
+        ],
+        "clearance": 3.214,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          13.15,
+          23.5,
+          102.25
+        ],
+        "aim": [
+          14,
+          23.5,
+          110
+        ],
+        "clearance": 3.214,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -14.85,
+          23.5,
+          102.25
+        ],
+        "aim": [
+          -14,
+          23.5,
+          110
+        ],
+        "clearance": 3.214,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          8.85,
+          -19.1,
+          -157.75
+        ],
+        "aim": [
+          8,
+          -19.1,
+          -150
+        ],
+        "clearance": 0.1,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -7.15,
+          -19.1,
+          -157.75
+        ],
+        "aim": [
+          -8,
+          -19.1,
+          -150
+        ],
+        "clearance": 0.1,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          8.85,
+          -19.1,
+          142.25
+        ],
+        "aim": [
+          8,
+          -19.1,
+          150
+        ],
+        "clearance": 0.1,
+        "tipMatch": true
+      },
+      {
+        "cls": "S",
+        "weapon": "pd",
+        "dia": 5,
+        "tip": [
+          -7.15,
+          -19.1,
+          142.25
+        ],
+        "aim": [
+          -8,
+          -19.1,
+          150
+        ],
+        "clearance": 0.1,
+        "tipMatch": true
+      }
+    ]
+  },
+  {
+    "id": "hivecarrier",
+    "length": 2500,
+    "voxel": 18.51851851851852,
+    "turrets": []
+  }
+]

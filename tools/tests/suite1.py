@@ -1,5 +1,5 @@
 from lib import *
-CASES=['?free','?free&q=low','?free&q=mid','?free&q=high','?free&wing=2&frigate&q=high','?free&n=6&wing=2&nuke=2&aifm=newton','?go&m=1','?go&m=2','?touch&free','?free&speed=2&nobloom','?m=2','?sk=darter:2,gulper:1&sk_wing=1','']
+CASES=['?free','?free&q=low','?free&q=mid','?free&q=high','?free&wing=2&frigate&q=high','?free&n=6&wing=2&nuke=2&aifm=newton','?go&m=1','?go&m=2','?touch&free','?free&speed=2&nobloom','?m=2','?sk=darter:2,gulper:1&sk_wing=1','?sk=leaper:1&skh=kestrel:2&sk_ally=halberd','?skh=kestrel:2','']
 failures=[]
 for u in CASES:
     with Runner() as R:
