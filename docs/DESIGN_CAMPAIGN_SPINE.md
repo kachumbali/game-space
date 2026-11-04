@@ -1,5 +1,7 @@
 # Campaign spine, mission variety and story: design draft v0.1
 
+Superseded for planning by `docs/DESIGN_CAMPAIGN_RECONCILE.md` (2026-11-04).
+
 Status: **v0.2, 2026-11-04: owner decisions of the same day are folded in (section 8).** Nothing here is implemented. A second, independent draft is to be
 produced by Codex agents (prompt at the end); the two are then reconciled in `docs/DESIGN_CAMPAIGN_RECONCILE.md`.
 Owner decisions behind this draft (2026-11-04): (1) the three existing campaign drafts become one spine in the order
