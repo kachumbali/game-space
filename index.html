@@ -4904,14 +4904,45 @@ function makeTurret(s, t) {
   const g = new THREE.Group();
   const fr = s.def.fac === 'frogg';
   const mat = (c, r, m) => new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m });
-  const mBase = mat(fr ? 0x4a3a24 : 0x8b949f, 0.6, 0.25), mHead = mat(fr ? 0x5a4630 : 0xa4acb6, 0.5, 0.3), mBar = mat(fr ? 0x24190f : 0x2c3138, 0.5, 0.4);
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D + lift, 14), mBase);
-  base.position.y = 0.08 * D + lift / 2; g.add(base);                                  // pos = hull surface: the ring sits mostly proud of it
+  // Layered armoured mount with an angular, low-profile tracking head.
+  // All decorative parts stay on the existing head pivot and leave the physical
+  // firing points, barrel length and targeting reference untouched.
+  const mBase = mat(fr ? 0x39352a : 0x46515b, 0.72, 0.35);
+  const mHead = mat(fr ? 0x655a42 : 0x8a969e, 0.62, 0.45);
+  const mBar = mat(fr ? 0x28251d : 0x232c33, 0.48, 0.55);
+  const mTrim = mat(fr ? 0x877855 : 0x5c6b75, 0.55, 0.5);
+  const mLight = new THREE.MeshBasicMaterial({ color: fr ? 0x4bbfc0 : 0xffbc62 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.5 * D, 0.56 * D, 0.3 * D + lift, 8), mBase);
+  base.rotation.y = Math.PI / 8;
+  base.position.y = 0.08 * D + lift / 2; g.add(base);
   const head = new THREE.Group(); head.position.y = 0.3 * D + lift; g.add(head);
-  const hb = new THREE.Mesh(new THREE.BoxGeometry(0.72 * D, 0.38 * D, 0.82 * D), mHead); head.add(hb);
+  // Bevelled armour shell and a raised sensor spine break up the old box silhouette.
+  const shell = new THREE.Mesh(new THREE.CylinderGeometry(0.34 * D, 0.43 * D, 0.32 * D, 6), mHead);
+  shell.rotation.y = Math.PI / 6; head.add(shell);
+  const spine = new THREE.Mesh(new THREE.BoxGeometry(0.3 * D, 0.1 * D, 0.53 * D), mTrim);
+  spine.position.set(0, 0.19 * D, 0.04 * D); head.add(spine);
+  const sensor = new THREE.Mesh(new THREE.BoxGeometry(0.14 * D, 0.035 * D, 0.07 * D), mLight);
+  sensor.position.set(0, 0.248 * D, -0.19 * D); head.add(sensor);
+  const instance = new THREE.Object3D();
+  const cheeks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.11 * D, 0.18 * D, 0.42 * D), mTrim, 2);
+  [-1, 1].forEach((side, i) => {
+    instance.position.set(side * 0.34 * D, 0.015 * D, 0.01 * D);
+    instance.rotation.set(0, side * 0.16, 0); instance.updateMatrix(); cheeks.setMatrixAt(i, instance.matrix);
+  });
+  head.add(cheeks);
+  const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
+  const receivers = new THREE.InstancedMesh(new THREE.BoxGeometry(th * 1.55, th * 1.55, bl * 0.32), mTrim, xs.length);
+  const collars = new THREE.InstancedMesh(new THREE.BoxGeometry(th * 1.25, th * 1.25, 0.045 * D), mHead, xs.length * 2);
+  instance.rotation.set(0, 0, 0);
+  xs.forEach((x, i) => {
+    instance.position.set(x * D, 0, -(0.3 * D + bl * 0.16)); instance.updateMatrix(); receivers.setMatrixAt(i, instance.matrix);
+    [0.48, 0.72].forEach((along, j) => {
+      instance.position.set(x * D, 0, -(0.3 * D + bl * along)); instance.updateMatrix(); collars.setMatrixAt(i * 2 + j, instance.matrix);
+    });
+  });
+  head.add(receivers, collars);
   const muzzles = [];
   for (const x of xs) {
-    const th = (beam ? 0.2 : cls === 'S' ? 0.1 : 0.14) * D;
     const b = new THREE.Mesh(new THREE.BoxGeometry(th, th, bl), mBar);
     b.position.set(x * D, 0, -(0.3 * D + bl / 2)); head.add(b);
     const brake = new THREE.Mesh(new THREE.BoxGeometry(th * 1.5, th * 1.5, 0.1 * D), mBar);
@@ -4922,7 +4953,7 @@ function makeTurret(s, t) {
   g.position.set(t.pos[0], t.pos[1], t.pos[2]);
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
-  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
+  return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar, mTrim, mLight], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];
