@@ -8,7 +8,7 @@ if (!params.has('yard')) {
     const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS.find(c => c.id === 'severed_node');
     startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))]);
     if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
-    else if (params.has('sk')) startSkirmish(skFromParams());
+    else if (params.has('sk') || params.has('skh')) startSkirmish(skFromParams());
     else if (params.has('sv')) startSurvival(svFromParams());
     else if (params.has('go')) { $id('brief').style.display = 'none'; state = 'play'; }
     else if (!params.has('m')) showMainMenu();          // ?campaign=prologue&m=N opens its briefing directly

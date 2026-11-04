@@ -159,7 +159,7 @@ function rosterFlagCapture(p) {
   if (!state.capturePending.some(x=>x.pilot===p.id && !x.resolved)) state.capturePending.push({pilot:p.id,mission:game.mission?.id || null,resolved:false});
 }
 function rosterOnRescue(pod,outcome,rescuer) {
-  if (!rosterEnabled() || !pod.rescueCapsule?.pilot) return;
+  if (!rosterEnabled() || game.mode !== 'mission' || !pod.rescueCapsule?.pilot) return;
   const p=rosterFind(pod.rescueCapsule.pilot); if (!p) return;
   if (outcome==='mission ended before recovery') {
     rosterTransition(p,rescueOutcomeRoll(rescueOutcomeContext(pod)));

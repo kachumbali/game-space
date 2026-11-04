@@ -11,17 +11,22 @@ def check(name, ok, info=''):
     if not ok: bad += 1
 VIS = "id=>getComputedStyle(document.getElementById(id)).display"
 FIT = "()=>{const p=document.querySelector('#brief .panel');const r=p.getBoundingClientRect();return {h:r.height,top:r.top,bot:r.bottom,vh:innerHeight,vw:innerWidth,sw:p.scrollWidth,cw:p.clientWidth,sh:p.scrollHeight,ch:p.clientHeight}}"
-SIZES = [(1280, 720, False, 'desk'), (844, 390, True, 'land'), (390, 844, True, 'port')]
+SIZES = [(1280, 720, False, 'desk'), (844, 390, True, 'land'), (390, 844, True, 'port'), (768, 1024, True, 'tablet')]
 for w, h, touch, tag in SIZES:
     with Runner() as R:
-        pg = R.page(w, h, '?touch' if touch else '', touch=touch); pg.wait_for_timeout(1500)
+        pg = R.page(w, h, '?q=low&skyres=64&rescap=64' + ('&touch' if touch else ''), touch=touch, init_script='window.__paused=true'); pg.wait_for_timeout(1500)
         check(f'{tag} menu visible', pg.evaluate(VIS, 'brief') == 'flex' and pg.locator('.mi').count() == 8, pg.evaluate("()=>[...document.querySelectorAll('.mi b')].map(b=>b.textContent)"))
         f = pg.evaluate(FIT)
         check(f'{tag} main fits', f['bot'] <= f['vh'] + 1 and f['top'] >= -1 and f['sw'] <= f['cw'] + 1, f)
         pg.screenshot(path=f'{SH}/menu_{tag}_main.png')
         pg.locator('.mi[data-a=skirmish]').click(); pg.wait_for_timeout(300)
+        pg.locator('[data-hadd]').click()
+        pg.select_option('select[data-f=ht0]', 'exeter')
+        pg.locator('[data-f=hp0]').click()
         f = pg.evaluate(FIT)
         check(f'{tag} setup no horizontal overflow', f['sw'] <= f['cw'] + 1, f)
+        targets = pg.evaluate("()=>[...document.querySelectorAll('#brief .menu.sk button,#brief .menu.sk select')].every(e=>{const r=e.getBoundingClientRect();return r.width>=44&&r.height>=44})")
+        check(f'{tag} setup touch targets', targets)
         pg.screenshot(path=f'{SH}/menu_{tag}_setup.png')
         pg.evaluate("()=>document.querySelector('#brief .panel').scrollTo(0,99999)"); pg.wait_for_timeout(100)
         pg.screenshot(path=f'{SH}/menu_{tag}_setup_bottom.png')
@@ -30,7 +35,7 @@ for w, h, touch, tag in SIZES:
 
 # keyboard navigation + launch paths
 with Runner() as R:
-    pg = R.page(1280, 720, ''); pg.wait_for_timeout(1500)
+    pg = R.page(1280, 720, '?q=low&skyres=64&rescap=64', init_script='window.__paused=true'); pg.wait_for_timeout(1500)
     foc = "()=>document.activeElement.dataset.a"
     check('first item focused', pg.evaluate(foc) == 'intro', pg.evaluate(foc))
     pg.keyboard.press('ArrowDown'); check('down -> campaigns', pg.evaluate(foc) == 'campaign')
@@ -99,13 +104,13 @@ with Runner() as R:
 
 # URL form
 with Runner() as R:
-    pg = R.page(640, 360, '?sk=darter:3,leaper:2&sk_skill=3&sk_wing=2&sk_msl=0&sk_range=800'); pg.wait_for_timeout(1500)
+    pg = R.page(640, 360, '?q=low&skyres=64&rescap=64&sk=darter:3,leaper:2&sk_skill=3&sk_wing=2&sk_msl=0&sk_range=800'); pg.wait_for_timeout(1500)
     r = pg.evaluate("()=>{const g=__game;__paused=true;for(let i=0;i<400;i++)g.update(0.05);const e=g.ships.filter(s=>s.team===1);return [g.game.mode,g.ships.filter(s=>s.team===0).length,e.length,e.map(s=>s.def.id).sort().join(','),g.state]}")
     check('?sk form', r[0] == 'skirmish' and r[1] == 3 and r[3].startswith('darter') and r[4] in ('play', 'done'), r)
     check('no console errors', not R.errs, R.errs[:4])
 # __game.startSkirmish from a ?go page + respawn
 with Runner() as R:
-    pg = R.page(640, 360, '?go'); pg.wait_for_timeout(1000)
+    pg = R.page(640, 360, '?go&q=low&skyres=64&rescap=64', init_script='window.__paused=true'); pg.wait_for_timeout(1000)
     r = pg.evaluate("()=>{const g=__game;g.startSkirmish({rows:[['darter',2]],respawn:true,range:600});__paused=true;let w0=g.wave;g.ships.filter(s=>s.team===1).forEach(s=>g.killShip(s));for(let i=0;i<300;i++)g.update(0.05);return [w0,g.wave,g.ships.filter(s=>s.team===1&&s.alive).length,g.state]}")
     check('endless respawn spawns a new wave', r[1] == 2 and r[2] == 2 and r[3] == 'play', r)
     check('no console errors', not R.errs, R.errs[:4])

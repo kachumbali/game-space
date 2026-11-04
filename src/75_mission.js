@@ -672,7 +672,7 @@ function onShipDestroyed(s) {
     const chance = clamp(0.75 - dc.overkill * 1.2 - (dc.reactor ? 0.25 : 0) - (dc.dtype === 'nuke' ? 0.3 : 0) + 0.05 * (((rosterEnabled() ? s.skill : PILOT_DEFS[s.pilot]?.skill) || 3) - 3), 0.05, 0.9);
     const capsule = (s.rescueManualRequested || Math.random() < chance) ? rescueSpawnCapsule(s, {pilot:s.pilot, player:wasPlayer}) : null;
     const crew = CREW[s.pilot];
-    if (rosterEnabled()) rosterMarkPilot(s.pilot || 'player',capsule ? 'MIA' : 'KIA');
+    if (rosterEnabled() && game.mode === 'mission') rosterMarkPilot(s.pilot || 'player',capsule ? 'MIA' : 'KIA');
     else if (crew) { crew.status = capsule ? 'missing' : 'KIA'; crew.notes.push(capsule ? 'ejected; awaiting recovery' : `lost in action (${dc.reactor ? 'reactor breach' : 'cockpit destroyed or unable to eject'})`); saveCrew(); }
     if (!capsule && wasPlayer) comm('CONTROL', `${rosterEnabled() ? s.callsign : 'MEOW'} lost. No capsule detected.`, '#ff8a6a');
     return;
