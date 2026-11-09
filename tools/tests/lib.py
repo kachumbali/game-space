@@ -1,4 +1,4 @@
-import subprocess, time, json, os, glob, shutil
+import subprocess, sys, time, json, os, glob, shutil
 from playwright.sync_api import sync_playwright
 # Portable test harness. Serves a patched copy of index.html (three.js from a local node_modules, because the CDN is not reachable in the sandbox).
 # First run installs three@0.170.0 into GS_TEST_DIR (needs npm). Override GS_TEST_DIR / GS_CHROMIUM if your paths differ.
@@ -23,7 +23,7 @@ def chromium():
 class Runner:
     def __enter__(self):
         prep()
-        self.srv=subprocess.Popen(['python3',os.path.join(REPO,'tools','tests','serve.py'),SP,PORT],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+        self.srv=subprocess.Popen([sys.executable,os.path.join(REPO,'tools','tests','serve.py'),SP,PORT],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
         time.sleep(1)
         self.pw=sync_playwright().start()
         self.b=self.pw.chromium.launch(executable_path=chromium(),
