@@ -595,6 +595,7 @@ function missionUpdate(dt) {
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
+  if (tutorialTick(M, S, dt)) return;
   S.t += dt; S.stageT += dt;
   sarScenarioTick(M, S);
   if (S.ended) return;

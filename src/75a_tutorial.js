@@ -1,0 +1,74 @@
+// Guided opening for the Prologue. The clock below is wall-time-equivalent;
+// mission timers are held until the player completes or skips the lesson.
+const TUTORIAL_STEPS = [
+  ['look', 'Move the mouse or arrow keys to look around.', 'Move the left stick to look around.'],
+  ['throttle', 'Change throttle with W or S.', 'Drag the throttle slider on the right.'],
+  ['target', 'Press T to select the practice contact.', 'Tap TGT to select the practice contact.'],
+  ['guns', 'Fire your guns with SPACE or left mouse.', 'Hold FIRE to fire your guns.'],
+  ['missile', 'Keep the practice contact in the ring until LOCKED, then press ENTER or right mouse.', 'Keep the practice contact in the ring until LOCKED, then tap MSL.'],
+  ['flare', 'SIMULATED LOCK: press Z to release flares.', 'SIMULATED LOCK: tap FLARE to release flares.'],
+  ['boost', 'Hold SHIFT to use the afterburner.', 'Hold BOOST to use the afterburner.'],
+  ['read', 'Read SHD and HULL at the upper left. Press ENTER when ready.', 'Read SHD and HULL at the upper left. Tap READY when ready.'],
+];
+let tutorialEl = null;
+function tutorialStored() { try { return localStorage.getItem('gs_tutorial_p01') === 'done'; } catch (_) { return false; } }
+function tutorialSave() { try { localStorage.setItem('gs_tutorial_p01', 'done'); } catch (_) {} }
+function tutorialPanel() {
+  if (tutorialEl) return tutorialEl;
+  const el = tutorialEl = document.createElement('div'); el.id = 'tutorial';
+  el.style.cssText = 'position:fixed;left:50%;top:7%;transform:translateX(-50%);width:min(560px,70vw);z-index:18;background:rgba(4,18,17,.94);border:1px solid #69c9ad;color:#e0fff3;padding:12px 16px;text-align:center;font:15px/1.4 monospace;box-sizing:border-box';
+  el.innerHTML = '<div id="tutorialText"></div><button id="tutorialReady" style="display:none;margin:8px;padding:8px">READY</button><button id="tutorialSkip" style="margin:8px;padding:8px">SKIP TUTORIAL [I]</button>';
+  document.body.appendChild(el);
+  el.querySelector('#tutorialSkip').onclick = tutorialFinish;
+  el.querySelector('#tutorialReady').onclick = () => tutorialAction('read');
+  return el;
+}
+function tutorialStart(S) {
+  S.tutorial = { step: 0, elapsed: 0, repeat: false, confirm: 0, target: null, stores: {...player.stores}, ammo: {...player.ammo}, stations: player.ordnanceLoad?.map(st => st.remaining) };
+  tutorialPanel().style.display = 'block'; tutorialRender(S.tutorial);
+}
+function tutorialRender(T) {
+  const step = TUTORIAL_STEPS[T.step];
+  if (!step) return tutorialFinish();
+  tutorialPanel().querySelector('#tutorialText').textContent = (T.repeat ? 'AGAIN: ' : '') + (isTouch ? step[2] : step[1]);
+  tutorialEl.querySelector('#tutorialReady').style.display = step[0] === 'read' ? 'inline-block' : 'none';
+}
+function tutorialAction(action) {
+  const T = game.mstate?.tutorial;
+  if (!T || T.confirm || TUTORIAL_STEPS[T.step]?.[0] !== action || state !== 'play' || userPause) return;
+  T.confirm = 0.8; tutorialEl.querySelector('#tutorialText').textContent = 'GOOD';
+}
+function tutorialFinish() {
+  const T = game.mstate?.tutorial; if (!T) return;
+  if (T.target) { T.target.alive = false; if (target === T.target) { target = null; manualTarget = false; } }
+  Object.assign(player.stores, T.stores); Object.assign(player.ammo, T.ammo);
+  if (T.stations && player.ordnanceLoad) player.ordnanceLoad.forEach((st, i) => { st.remaining = T.stations[i]; });
+  for (const m of missiles) if (m.owner === player && m.target === T.target) m.dead = true;
+  tutorialSave(); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
+}
+function tutorialTick(M, S, dt) {
+  if (M.id !== 'p01' || state !== 'play' || S.ended) { if (tutorialEl) tutorialEl.style.display = 'none'; return false; }
+  if (S.tutorialStarted === undefined) {
+    S.tutorialStarted = true;
+    if (params.get('tutorial') === '1' || !tutorialStored()) tutorialStart(S);
+  }
+  const T = S.tutorial; if (!T) return false;
+  tutorialEl.style.display = 'block';
+  if (T.step >= 2 && T.step <= 4 && !T.target) {
+    const p = player.group.position.clone().add(new THREE.Vector3(0,0,-700).applyQuaternion(player.group.quaternion));
+    T.target = makeShip('merlin', 1, p, new THREE.Quaternion(), {id:'tutorial_target', callsign:'PRACTICE'});
+    T.target.tutorialTarget = true;
+  }
+  if (T.target && T.target.alive) {
+    T.target.group.position.copy(player.group.position).add(new THREE.Vector3(0,0,-700).applyQuaternion(player.group.quaternion));
+    T.target.vel.copy(player.vel);
+  }
+  if (T.confirm) {
+    T.confirm -= dt / SIM_SPEED;
+    if (T.confirm <= 0) { T.confirm = 0; T.step++; T.elapsed = 0; T.repeat = false; tutorialRender(T); }
+  } else {
+    T.elapsed += dt / SIM_SPEED;
+    if (T.elapsed >= 20) { T.elapsed = 0; if (T.repeat) { T.step++; T.repeat = false; } else T.repeat = true; tutorialRender(T); }
+  }
+  return !!S.tutorial;
+}

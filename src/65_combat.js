@@ -21,6 +21,7 @@ function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
 function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {
+  if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
   const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
   if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
   hitSrc = null; hitKind = null;
