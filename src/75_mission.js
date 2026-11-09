@@ -641,6 +641,7 @@ function endMission(result, why) {
     S.resolvingRescue = false;
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
+  if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome
@@ -748,9 +749,9 @@ function showBriefing(M) {
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
-    <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
+    <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little.${basicControls() ? '' : ' F switches in flight.'}</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${missionList.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
-    <div class="dim keys">Briefing: tap an ordnance station to swap or empty it. W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
+    <div class="dim keys">${basicControls() ? 'W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · T target · Z flares · SHIFT boost · H help' : 'Briefing: tap an ordnance station to swap or empty it. W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help'}</div></div>`;
   el.style.display = 'flex';
   bindOrdnanceBriefing(el, M);
   if (rosterEnabled()) rosterBindBriefing(el,M);
@@ -802,6 +803,6 @@ function tipsTick(M, S) {
   if (done.m01 && !params.has('tips')) return;
   S.tipN = S.tipN || 0;
   const t = TIPS_M1[S.tipN];
-  if (t && S.t >= t[0]) { comm('CONTROL', isTouch ? t[2] : t[1], '#9adcff'); S.tipN++; }
+  if (t && S.t >= t[0]) { let line = isTouch ? t[2] : t[1]; if (basicControls()) line = line.replace(' Press J any time to give your wingmen orders.', '').replace(' COMMS gives your wingmen orders.', ''); comm('CONTROL', line, '#9adcff'); S.tipN++; }
   if (S.tipN >= TIPS_M1.length) { done.m01 = true; try { localStorage.setItem('gs_tips', JSON.stringify(done)); } catch (e) { /* ignore */ } }
 }

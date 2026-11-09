@@ -206,15 +206,15 @@ function updateWeaponPanel() {
     const gw = [...new Set(p.mounts.filter(mt => !mt.store && mt.grp === g).map(mt => mt.w))];
     if (!gw.length) continue;
     const dry = gw.some(id => p.ammoMax[id] && low(p.ammo[id] | 0, p.ammoMax[id]));
-    h += `<div class="${m(g) ? 'sel' : 'dim'}${dry ? ' bad' : ''}">${g} ${gw.map(id => gname(id) + (p.ammoMax[id] ? ' ×' + (p.ammo[id] | 0) : '')).join(' + ')}</div>`;
+    h += `<div class="${m(g) ? 'sel' : 'dim'}${dry ? ' bad' : ''}">${basicControls() ? '' : g + ' '}${gw.map(id => gname(id) + (p.ammoMax[id] ? ' ×' + (p.ammo[id] | 0) : '')).join(' + ')}</div>`;
   }
   for (const id of ids) h += `<div class="${id === cur ? 'sel' : 'dim'}">${id === cur ? '▶' : ' '} ${WEAPONS[id].name} ×${p.stores[id]}</div>`;
   h += `<div>FLARES ×${p.stores.flare | 0}${p.cmCool > 0 ? ' …' : ''}</div>`;
-  if (dock) h += `<div class="sel">DOCKED - REARMING ${Math.round(rearmFrac(p) * 100)}% (D: UNDOCK)</div>`;
-  else { let tn = null, td = 500; for (const s of ships) { if (!s.alive || !s.def.tender || s.team !== p.team) continue; const d = s.group.position.distanceTo(p.group.position); if (d < td) { td = d; tn = s; } } if (tn) h += `<div class="dim">D: DOCK AT ${tn.def.name} (REARM)</div>`; }
+  if (dock) h += `<div class="sel">DOCKED - REARMING ${Math.round(rearmFrac(p) * 100)}%${basicControls() ? '' : ' (D: UNDOCK)'}</div>`;
+  else if (!basicControls()) { let tn = null, td = 500; for (const s of ships) { if (!s.alive || !s.def.tender || s.team !== p.team) continue; const d = s.group.position.distanceTo(p.group.position); if (d < td) { td = d; tn = s; } } if (tn) h += `<div class="dim">D: DOCK AT ${tn.def.name} (REARM)</div>`; }
   const pdT = (p.turrets || []).filter(T => Number.isFinite(T.ammoMax) && T.w.kind !== 'beam');
-  if (pdT.length) { const fr = pdT.reduce((a, T) => a + T.ammo, 0) / pdT.reduce((a, T) => a + T.ammoMax, 0); h += `<div class="${fr <= 0.05 || p.turretsHold ? 'bad' : 'dim'}">PD ×${pdT.length} ${Math.round(fr * 100)}%${p.turretsHold ? ' · HOLD (U)' : ' (U: hold)'}</div>`; }
-  h += droneHudLine(p);
+  if (pdT.length) { const fr = pdT.reduce((a, T) => a + T.ammo, 0) / pdT.reduce((a, T) => a + T.ammoMax, 0); h += `<div class="${fr <= 0.05 || p.turretsHold ? 'bad' : 'dim'}">PD ×${pdT.length} ${Math.round(fr * 100)}%${basicControls() ? (p.turretsHold ? ' · HOLD' : '') : (p.turretsHold ? ' · HOLD (U)' : ' (U: hold)')}</div>`; }
+  if (!basicControls()) h += droneHudLine(p);
   const L = p.lock;
   const lt = !cur ? '' : L.state === 'locked' ? '<span style="color:#ff5a4a">● LOCKED</span>' : L.state === 'locking' ? `<span style="color:#ffd24a">LOCKING ${Math.round(L.p * 100)}%</span>` :
     L.state === 'range' ? 'OUT OF RANGE' : L.state === 'seek' ? 'SEEKING' : 'NO TARGET';

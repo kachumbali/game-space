@@ -1,6 +1,7 @@
 // ======================================================================
 //  MAIN LOOP
 // ======================================================================
+initControlHelp();
 if (!params.has('yard')) {
   if (params.has('scene')) {
     startScene(params.get('scene') || 'intro_test');
@@ -40,7 +41,7 @@ function pauseToggle(force) {   // S1: pause/resume in flight; dialogs keep thei
   if (userPause) document.exitPointerLock?.(); else if (!isTouch) lockPointer();       // resume re-takes the mouse; if the browser refuses, "click to take controls" shows
 }
 const pmEl = $id('pauseOv');
-pmEl.innerHTML = `<div class="pt">PAUSED</div><div class="ps" id="pm_sub"></div><div class="pbtns"><button id="pm_res">RESUME <small>[ESC]</small></button><button id="pm_rst">RESTART... <small>[R]</small></button><button id="pm_opt">OPTIONS <small>[O]</small></button><button id="pm_exit" class="warn"></button></div>`;
+pmEl.innerHTML = `<div class="pt">PAUSED</div><div class="ps" id="pm_sub"></div><div class="pbtns"><button id="pm_res">RESUME <small>[ESC]</small></button><button id="pm_help">CONTROLS <small>[H]</small></button><button id="pm_rst">RESTART... <small>[R]</small></button><button id="pm_opt">OPTIONS <small>[O]</small></button><button id="pm_exit" class="warn"></button></div>`;
 const pmExitLabel = () => (game.mode === 'mission' ? 'EXIT MISSION' : game.mode === 'skirmish' ? 'EXIT SKIRMISH' : game.mode === 'survival' ? 'END RUN' : 'EXIT TO MENU');
 function pauseMenuRefresh() {
   const armed = pmArm && performance.now() - pmArm < 4000;
@@ -58,6 +59,7 @@ function pauseExit() {                                   // leave the current ru
   openMenu();
 }
 $id('pm_res').onclick = () => pauseToggle(false);
+$id('pm_help').onclick = toggleHelp;
 $id('pm_rst').onclick = () => askRestart();
 $id('pm_opt').onclick = () => toggleOpts(true);
 $id('pm_exit').onclick = () => { if (pmArm && performance.now() - pmArm < 4000) pauseExit(); else { pmArm = performance.now(); pauseMenuRefresh(); } };
