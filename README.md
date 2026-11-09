@@ -5,7 +5,7 @@ The playable build is the single file `index.html` (Three.js from a CDN). Source
 `python3 build.py` concatenates it into `index.html`.
 
 ## Play
-Open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.server`. Phones work: touch controls
+Play online at https://kachumbali.github.io/game-space/ or build locally: run `python3 build.py` (the file is generated, not in the repo), then open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.server`. Phones work: touch controls
 appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS, SKIRMISH, FREE FLIGHT, OPTIONS, CREDITS; arrow keys + Enter or click/tap). Missions open the briefing; the restart dialog (R) and briefing have a MAIN MENU button.
 
 The intended product modes are distinct: **Free Flight** is the sandbox,

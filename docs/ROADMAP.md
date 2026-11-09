@@ -17,8 +17,8 @@ desktop and iPad-sized touch, no console errors). CI runs it on every push and t
 Deeper tests (`tools/tests/*`) are run by whoever touches that area; they are not the gate because they are slow under software rendering.
 
 ## Order of work
-1. **Week 0, consolidation (lead):** the gate, CI publish, author guard, repo cleanup, this roadmap. `index.html` leaves the repo once Pages
-   serves `gh-pages` (it is generated; committing it caused a conflict in nearly every merge).
+1. **Week 0, consolidation (lead):** the gate, CI publish, author guard, repo cleanup, this roadmap. `index.html` left the repo on 2026-11-09 (Pages
+   serves `gh-pages`; it is generated, and committing it caused a conflict in nearly every merge).
 2. **Weeks 1-2, the Prologue slice:** the owner plays one or two missions a week; the lead tunes from the notes through `data/db.json`
    (`?db=data/db.json` reloads without a rebuild) and fixes what was hit. In parallel: Codex builds the in-game tutorial and a simplified default
    control set for mission 1; Gemini delivers final Prologue dialogue and cutscene art in the chosen style (docs/DESIGN_CUTSCENE_STYLE.md).
