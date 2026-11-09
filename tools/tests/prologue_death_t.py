@@ -16,6 +16,14 @@ with Runner() as R:
     assert pg.locator('#bgo').inner_text() == 'RETRY'
     pg.locator('#bgo').click()
     assert pg.evaluate("()=>__game.state === 'brief' && __game.game.mission.id === 'p01' && __game.player.alive")
+    pg.evaluate('''()=>{
+      const g=__game, snapshot=JSON.parse(g.game.crewSnap);
+      snapshot.hawk.status='SENTINEL'; g.game.crewSnap=JSON.stringify(snapshot);
+      g.endMission('win'); g.showDebrief();
+    }''')
+    assert pg.locator('#bgo').inner_text() == 'FLY AGAIN'
+    pg.locator('#bgo').click()
+    assert pg.evaluate("()=>JSON.parse(__game.game.crewSnap).hawk.status !== 'SENTINEL'")
     assert not [e for e in R.errs if e[0] != 'http'], R.errs
-    print('PASS missile feedback and touch retry')
+    print('PASS missile feedback, touch retry and fly-again state')
 print('PROLOGUE DEATH OK')

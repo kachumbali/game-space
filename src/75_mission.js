@@ -783,7 +783,7 @@ function showDebrief() {
     <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result !== 'lose' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
-  $id('bgo').onclick = () => { restoreCrew(); startMission(game.mission); };
+  $id('bgo').onclick = () => { if (S.result !== 'win') restoreCrew(); startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(next);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
