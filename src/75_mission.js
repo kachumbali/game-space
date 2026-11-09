@@ -406,7 +406,7 @@ const PROLOGUE_MISSIONS = [
     debriefLose: 'The rogue transport escaped into deep space. Its cargo and the trail behind it are lost.',
     setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [80,15,100], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [110,20,130] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [50,10,130] }] },
     stages: [
-      { when: { t: 4 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort fighters', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',2]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
+      { when: { t: 8 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',1]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p1a', null, 'done'] }, { comm: ['CONTROL', 'Escorts down. The Tern is making an emergency jump run. Stop it.'] }, { obj: ['p1b', 'Destroy the rogue transport TERN', 'open'] }, { spawn: { grp: 'B', ships: [['tern',1]], bearing: [0.1,0,-1], dist: 1800, spread: 50 } }] },
       { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p1b', null, 'done'] }, { comm: ['SPARROW', 'Control, those pods were not ore.'] }, { end: 'win' }] },
     ],
