@@ -6,7 +6,7 @@ Answer: moderately hard for the physics, hard for the gameplay. Roughly 3-5 sess
 
 ## Cheap (mostly present)
 - Newtonian flight exists (key F); thrust-only movement plus a flip-and-burn controller is small.
-- Missiles, point-defence turrets and railguns exist; torpedo salvos with point defence as the main defence and railguns as heavy hitters are mostly retuning (see docs/REALISM.md, docs/PLAN.md).
+- Missiles, point-defence turrets and railguns exist; torpedo salvos with point defence as the main defence and railguns as heavy hitters are mostly retuning (see docs/REALISM.md, docs/archive/PLAN.md).
 - Subsystem damage model already fits.
 
 ## Medium

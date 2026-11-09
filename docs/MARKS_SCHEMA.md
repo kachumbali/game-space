@@ -1,6 +1,6 @@
 # Marks I-IV: schema
 
-Plan: `docs/PLAN_V03.md` M4. This document fixes **how** a mark is written in `data/db.json`; values require seeded runs before they are called balanced.
+Plan: `docs/archive/PLAN_V03.md` M4. This document fixes **how** a mark is written in `data/db.json`; values require seeded runs before they are called balanced.
 The current database has fighter/bomber, missile/torpedo, and fixed
 direct-fire gun/beam marks. The full campaign technology contract, including
 system marks and Armour Levels, is in `docs/TECHNOLOGY_PROGRESSION.md`.

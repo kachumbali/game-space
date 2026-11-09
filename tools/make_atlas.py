@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Atlas helper & validation tool for cutscene assets (docs/INTRO_TEST_SPEC.md).
+"""Atlas helper & validation tool for cutscene assets (docs/archive/INTRO_TEST_SPEC.md).
 Validates:
 1. Exact image dimensions
 2. Colour counts (<= 32 unique colours per image)

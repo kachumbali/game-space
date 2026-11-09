@@ -15,5 +15,5 @@ Stays at 6 lasers. Re-measure only; no turret count change.
 
 ## Acceptance
 - `tools/check_branch.sh` green (images rule not triggered).
-- `tools/tests/balance_sweep.py` before/after: Exeter+escorts median FROGG kills per Bullfrog fight clearly below ~30 (target 12-18); Hecla vs 3 Kestrels > 60 s; vs 3 Merlins > 20 s. Report numbers in `docs/BALANCE_REPORT_3.md`.
+- `tools/tests/balance_sweep.py` before/after: Exeter+escorts median FROGG kills per Bullfrog fight clearly below ~30 (target 12-18); Hecla vs 3 Kestrels > 60 s; vs 3 Merlins > 20 s. Report numbers in `docs/archive/BALANCE_REPORT_3.md`.
 - No change to arcade/campaign rules. Commit author `the owner <178489347+kachumbali@users.noreply.github.com>`; no personal email.

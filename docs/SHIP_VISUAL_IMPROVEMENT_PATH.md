@@ -43,4 +43,4 @@ Every revised hull must read by silhouette at combat distance, then pass top, si
 
 ## Delivery order
 
-Each hull pass changes its model and matching database mount/component positions together, then is inspected in `?yard=<id>` and in live combat. A completed pass includes the marker sheet and a short entry in `docs/CODEX_INTEGRATION_LOG.md`.
+Each hull pass changes its model and matching database mount/component positions together, then is inspected in `?yard=<id>` and in live combat. A completed pass includes the marker sheet and a short entry in `docs/archive/CODEX_INTEGRATION_LOG.md`.

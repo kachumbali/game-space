@@ -1,9 +1,9 @@
 # AGENTS.md: working on game-space (working title: Claude Space Commander)
 
-Read this before editing. Owner: kachumbali; he tests builds on iPad/phone/desktop and iterates. Tone: sober,
+Read this before editing, then `docs/ROADMAP.md` (current goal, roles, what is parked). Owner: kachumbali; targets are **desktop and iPad** (phones are not a target, owner 2026-11-09). Tone: sober,
 critical, evidence-weighted, no flattery; state what was and was not verified.
 
-> **Codex: read docs/CODEX_NOTE.md first (state, owner rules, coordination).**
+> **Codex: read docs/archive/CODEX_NOTE.md first (state, owner rules, coordination).**
 
 ## Build and run
 - Source is `src/*` (sorted by filename); `python3 build.py` concatenates into the single file `index.html`
@@ -49,6 +49,9 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - `docs/data/*.csv` are generated views (`tools/export_db.py`), never edited by hand.
 
 ## Git
+- **Lead and gate (owner 2026-11-09):** one lead (Claude) merges to `main`; everyone else works on `codex/<task>` or `gemini/<task>` branches and never pushes to `main`. Nothing merges unless `python3 tools/gate.py` passes (build, opsec incl. commit authors, db, browser smoke test).
+- **Commit identity:** before the first commit in any clone or tool: `git config user.name kachumbali` and `git config user.email 178489347+kachumbali@users.noreply.github.com`. `tools/check_opsec.py` fails on any other author after its cutoff commit.
+- **`index.html` is generated.** CI builds it and publishes the game to the `gh-pages` branch. Do not hand-edit it; when it conflicts in a merge, take either side and run `python3 build.py`.
 - **Work in branches** (owner rule 2026-10-22): commit work in progress to a feature branch; merge to main when green. Never let two agents edit the same working tree.
 - **v0.2 note (2026-10-30): the owner lifted the freeze for the fun update** (docs/FUN_UPDATE.md), which met the three conditions below. The rule still stands for anything else.
 - **New player-facing systems are frozen until the owner has hand-played the build on iPad** (owner rule 2026-10-22: power, afterburner, magazines, energy budgets, comms, drones, docking, the nuke dial all shipped with zero hand-play data). Any new player-facing system needs, in the same commit: a touch binding, an AI default so it can be ignored, and a line in the help overlay.
@@ -56,7 +59,7 @@ critical, evidence-weighted, no flattery; state what was and was not verified.
 - Commit small, push to `origin main` (https://github.com/kachumbali/game-space). Do not force push. End each
   commit message with:
   `Co-Authored-By: Mistral Vibe (Mistral AI) <noreply@mistral.ai>`
-  (Earlier commits carry Claude trailers; tool history in docs/MILESTONE_2.md.)
+  (Earlier commits carry Claude trailers; tool history in docs/archive/MILESTONE_2.md.)
 - Do not enable GitHub Pages without approval.
 
 ## Ship model rules
@@ -80,7 +83,7 @@ After a change the owner expects the rebuilt `index.html` plus screenshots. Upda
 behaviour changes.
 
 ## Open items
-See docs/PLAN.md and docs/TIE_FIGHTER_COMPARISON.md. Unverified: real-device performance (sky bake, two
+See docs/archive/PLAN.md and docs/TIE_FIGHTER_COMPARISON.md. Unverified: real-device performance (sky bake, two
 corvettes + Gulper), phone readability, damage balance and turn feel.
 
 ## Credits and licences

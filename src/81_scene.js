@@ -3,7 +3,7 @@
 //  Drives a 320x200 logical timeline at a high-resolution render scale:
 //  painted backgrounds, titles, scaling sprites,
 //  talking heads with blinking and phoneme lip-sync, typewriter dialogue.
-//  Reference: docs/INTRO_TEST_SPEC.md
+//  Reference: docs/archive/INTRO_TEST_SPEC.md
 // ======================================================================
 
 const SCENE_CANVAS_W = 320;

@@ -5,7 +5,7 @@ from pathlib import Path
 from lib import Runner, SP
 
 phase = sys.argv[1] if len(sys.argv)>1 else 'after'
-out = Path('assets/review/turret-scale')
+out = Path(__import__('os').environ.get('GS_SHOTS', '/tmp/gs_shots')) / 'turret-scale'
 out.mkdir(parents=True, exist_ok=True)
 ids=['bittern','halberd','exeter','hecla','gulper','bullfrog','falchion','liner','destroyer','hivecarrier']
 JS = r'''id=>{

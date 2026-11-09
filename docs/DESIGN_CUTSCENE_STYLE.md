@@ -88,15 +88,15 @@ assigned to any character here.
 
 | Role | Visual options | Design distinction / further work |
 |---|---|---|
-| Player pilot, customisable | [Pilot sheet, row 1](../assets/proposals/cast-pilots.png) | 1 helmeted, rounded visor and broad cheek plates; 2 unhelmeted, angular brow and high collar. These are different customisation examples, **not a matched helmet-off portrait of one person**. Produce matched helmet-on/off pairs for each selected player option later; keep visor, collar and harness recognisable. |
-| Wing leader | [Pilot sheet, row 2](../assets/proposals/cast-pilots.png) | 1 broad, weathered face and squared collar; 2 short light hair and narrow profile. Both read as experienced without relying on a rank label. |
-| Recurring wingman one | [Pilot sheet, row 3](../assets/proposals/cast-pilots.png) | 1 slim profile and round eyewear; 2 broader profile and close hair. Test both without glasses/visor glare at thumbnail size. |
+| Player pilot, customisable | [Pilot sheet, row 1](../assets/scenes/ejection/cast-pilots.png) | 1 helmeted, rounded visor and broad cheek plates; 2 unhelmeted, angular brow and high collar. These are different customisation examples, **not a matched helmet-off portrait of one person**. Produce matched helmet-on/off pairs for each selected player option later; keep visor, collar and harness recognisable. |
+| Wing leader | [Pilot sheet, row 2](../assets/scenes/ejection/cast-pilots.png) | 1 broad, weathered face and squared collar; 2 short light hair and narrow profile. Both read as experienced without relying on a rank label. |
+| Recurring wingman one | [Pilot sheet, row 3](../assets/scenes/ejection/cast-pilots.png) | 1 slim profile and round eyewear; 2 broader profile and close hair. Test both without glasses/visor glare at thumbnail size. |
 | Recurring wingman two | [Command sheet, row 1](../assets/proposals/cast-command.png) | 1 dark hair, compact chin and helmet carried at side; 2 copper hair and higher collar. Distinguish from wingman one by outline as well as colour. |
 | Carrier captain | [Command sheet, row 2](../assets/proposals/cast-command.png) | 1 square posture and heavy epaulettes; 2 compact silhouette with swept-back hair and a narrow high collar. Insignia are placeholders, not approved ranks. |
 | Intel / briefing officer | [Command sheet, row 3](../assets/proposals/cast-command.png) | 1 glasses and restrained desk pose; 2 dark asymmetric hair and angular collar. Both should be credible working officers, not exposition icons. |
-| SAR transport pilot | [SAR / FROGG sheet, row 1](../assets/proposals/cast-sar-frogg.png) | 1 compact collar and rescue harness; 2 heavier shoulder rig and stubble. Retain rescue orange as a functional identification mark. |
-| FROGG commander | [SAR / FROGG sheet, row 2](../assets/proposals/cast-sar-frogg.png) | 1 wide jaw, rust mantle and layered brow; 2 broad neck, sharper brow plates and dark armour. Both are stocky and intelligent, with controlled posture rather than animal snarling. |
-| FROGG capture soldier | [SAR / FROGG sheet, row 3](../assets/proposals/cast-sar-frogg.png) | 1 bulky utility armour and compact horns; 2 heavy collar and wider shoulder plating. Their equipment should read as capture gear, not generic human infantry. |
+| SAR transport pilot | [SAR / FROGG sheet, row 1](../assets/scenes/ejection/cast-sar-frogg.png) | 1 compact collar and rescue harness; 2 heavier shoulder rig and stubble. Retain rescue orange as a functional identification mark. |
+| FROGG commander | [SAR / FROGG sheet, row 2](../assets/scenes/ejection/cast-sar-frogg.png) | 1 wide jaw, rust mantle and layered brow; 2 broad neck, sharper brow plates and dark armour. Both are stocky and intelligent, with controlled posture rather than animal snarling. |
+| FROGG capture soldier | [SAR / FROGG sheet, row 3](../assets/scenes/ejection/cast-sar-frogg.png) | 1 bulky utility armour and compact horns; 2 heavy collar and wider shoulder plating. Their equipment should read as capture gear, not generic human infantry. |
 
 **Additional queen concept:** [Hive queen and egg sac](../assets/proposals/hive-queen.png).
 A large low, broad quadrupedal matriarch with lamellar plates, an asymmetric horn
@@ -106,7 +106,7 @@ biology decision; simplify the intricate background and eggs for game-sized art.
 
 ## Storyboard — maximum six shots per outcome
 
-[Thumbnail sheet](../assets/proposals/storyboard-thumbnails.png): four rows,
+[Thumbnail sheet](../assets/scenes/ejection/storyboard-thumbnails.png): four rows,
 four panels per row, left to right. These are **sketches of staging**, not
 final shots or evidence of implementation. Existing game outcomes are not
 changed by this proposal.

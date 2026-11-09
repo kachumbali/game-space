@@ -42,8 +42,8 @@ Unchanged: Kestrel 50, Falchion 110, Bittern 140, Hecla 12000, Argosy 2000. Shie
 1. `tools/check_branch.sh` green.
 2. Seeded 1-vs-1 and 2-vs-1 Falchion-vs-Gulper test (missiles on and off): Gulper no longer dies in a fraction of the time of a Kestrel pair. Report time-to-kill before and after (20 seeds).
 3. Seeded fighter-vs-fighter matrix (Merlin, Kestrel, Falchion, Bittern vs Darter, Leaper, Spitter, Reaver, Toad): report win rates; flag any pairing above 90 % or below 10 %.
-4. Hecla attack-run and Bullfrog acceptance engagements do not regress (compare with the numbers in `docs/BALANCE_REPORT_3.md`).
-5. Write what changed and the measured effects into `docs/CODEX_INTEGRATION_LOG.md`. Do not merge; push the branch for review.
+4. Hecla attack-run and Bullfrog acceptance engagements do not regress (compare with the numbers in `docs/archive/BALANCE_REPORT_3.md`).
+5. Write what changed and the measured effects into `docs/archive/CODEX_INTEGRATION_LOG.md`. Do not merge; push the branch for review.
 
 ## 5. Open / not in this pass
 

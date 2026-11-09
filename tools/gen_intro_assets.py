@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate all assets for docs/INTRO_TEST_SPEC.md intro cutscene test.
+"""Generate all assets for docs/archive/INTRO_TEST_SPEC.md intro cutscene test.
 Outputs:
 - assets/scenes/intro_test/bg_space.png (320x200)
 - assets/scenes/intro_test/bg_briefing.png (320x200)

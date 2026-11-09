@@ -4,7 +4,7 @@ phase=sys.argv[1]
 if phase == 'compare':
  from pathlib import Path
  from PIL import Image, ImageDraw
- root=Path('assets/review/turret-scale')
+ root=Path(__import__('os').environ.get('GS_SHOTS', '/tmp/gs_shots')) / 'turret-scale'
  for before in (root/'before').glob('*.png'):
   after=root/'after'/before.name
   if not after.exists(): continue
@@ -14,7 +14,7 @@ if phase == 'compare':
   draw.text((12,8),'BEFORE',fill='white');draw.text((a.width+12,8),'AFTER',fill='white')
   im.save(root/(before.stem+'-compare.png'),optimize=True)
  sys.exit(0)
-out='assets/review/turret-scale/'+phase
+out=__import__('os').environ.get('GS_SHOTS', '/tmp/gs_shots') + '/turret-scale/'+phase
 os.makedirs(out,exist_ok=True)
 ids=sys.argv[2:] or ['exeter','halberd','hecla','bullfrog','gulper','falchion','liner','destroyer','bittern','hivecarrier']
 with Runner() as R:
@@ -28,7 +28,7 @@ with Runner() as R:
   if not info: print(ship,'missing',flush=True);continue
   open(out+'/'+ship+'.json','w').write(json.dumps(info))
   if info['cls'] not in ('capital','frigate','corvette'):print(ship,'numeric only',flush=True);continue
-  baseline=info if phase=='before' else json.load(open('assets/review/turret-scale/before/'+ship+'.json'))
+  baseline=info if phase=='before' else json.load(open(__import__('os').environ.get('GS_SHOTS', '/tmp/gs_shots') + '/turret-scale/before/'+ship+'.json'))
   base=next((x for x in baseline['turrets'] if ship=='hecla' and x['cls']=='M' and x['pos'][0]>100),None) or next((x for x in baseline['turrets'] if x['cls']=='L'),None) or next((x for x in baseline['turrets'] if x['cls']=='M'),None) or (baseline['turrets'][0] if baseline['turrets'] else None)
   distance=max(25,base['dia']*3) if base else 100
   for label,wh in [('desktop',(1280,720)),('phone',(844,390))]:

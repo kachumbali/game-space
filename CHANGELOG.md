@@ -1,8 +1,11 @@
 # Changelog
 
-Versions are named from the state of `main`. Commit trailers and tool history: docs/MILESTONE_2.md.
+Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
-## 0.3.0 (in progress): Armoury, plan in docs/PLAN_V03.md
+## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Week 0 consolidation (2026-11-09): merge gate `tools/gate.py` with `tools/tests/smoke_t.py` (8 modes, desktop and iPad-sized touch); CI runs the gate and publishes the built game to the `gh-pages` branch; `check_opsec.py` also checks commit authors after its cutoff; 20 stale docs moved to `docs/archive/`; review screenshots removed from the repo (5 MB), the three cutscene images the game loads moved to `assets/scenes/ejection/`; phones dropped as a target. No gameplay change.
+
+## 0.3.0 (in progress): Armoury, plan in docs/archive/PLAN_V03.md
 - M4 roster (ships only, existing weapons): **Falchion** two-seat heavy fighter (player and wingman), **SAR cutter** (unarmed, player list), **Argosy** evacuation liner and **Claymore** destroyer (skirmish escort capitals). Test `tools/tests/roster_t.py`; table in docs/SHIPS.md.
 - M3 missiles and torpedoes (docs/MISSILES_M3.md): fighter missiles are fragmentation warheads (light/medium fighters die to 1-2 hits, heavies to about 3, still evadable); torpedoes carry a tandem warhead (precursor collapses the struck shield facet for 3-3.75 s, main charge goes to the hull; 7-9 torpedoes kill an Exeter, 3 a corvette); missile blasts no longer miss big hulls nose-on; bombers fire salvos of 3 and hold the rest. Tandem fields on the Gemini torpedo marks.
 - Bittern carries 12 torpedoes (owner decision: it is the torpedo bomber). Key **U** (touch: **TUR**) makes your turrets hold fire to save energy and drum rounds; the weapon panel shows `PD ... HOLD (U)`. AI turrets are unaffected. Test: `tools/tests/turret_hold_t.py`.

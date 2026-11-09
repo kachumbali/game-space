@@ -17,7 +17,7 @@ playable; it will generate its own battles without changing the scripted route.
 **Skirmish** (menu SKIRMISH): quick test fight. Choose wingmen (0-3), an optional friendly Halberd/Exeter, the enemy force as rows of ship + count (presets: Waves 1/2/3/5, Heavy, Gulper, vs Halberd, vs Exeter, BULLFROG, BULLFROG + 2 GULPER, Hive Carrier (unarmed catalogue ship)), enemy skill 1-5, friendly flight model, enemy missiles on/off, endless respawn, starting range (800 m / 2 km / 4 km / 10 km) and environment look. The fight ends with a debrief (kills, time, accuracy, damage) and RESTART / SETUP / MAIN MENU. Corvettes and frigates are heavy to voxelise; the 2.5 km Hive Carrier is the heaviest (warning in the UI, not tested on real hardware). Setup is remembered in localStorage `gs_sk`.
 
 URL flags: `?go` skip menu and briefing · `?m=N` skip the menu, open mission N's briefing · `?free` free flight · `?sk=darter:3,leaper:2` skirmish (with `&skh=exeter:1,halberd:2,kestrel:6 &sk_skill=1..5 &sk_wing=0..3 &sk_wskill &sk_fm=newton &sk_msl=0 &sk_respawn=1 &sk_range=800 &sk_look=reed &sk_ally=halberd|exeter`; `__game.startSkirmish(cfg)` takes the same as an object). Friendly rows are additional to your own ship and configurable wingmen; the combined starting fleet is limited to 20 ships on phone, 32 on tablet, and 48 on other presets (enemy rows take priority). The menu warns and clamps excess; the existing live missile limit remains separate. Setups are saved locally, and old `sk_ally` links still work. · `?newcrew` reset crew record · `?touch` force touch UI ·
-`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/MILESTONE_1.md. Drone flags: `?free&drones=N` (player carries N drones and launches up to the control limit; a fighter controls 1, `&dlimit=N` raises it, `&nolaunch` keeps them aboard).
+`?nobloom` · `?mute` · `?m=N` start mission N · `?speed=X` sim speed · `?skyres=N` sky cubemap size. The throttle gauge sits right of the radar (yellow tick = actual speed). Free-flight test flags (`n`, `wing`, `frigate`, `nuke`, `aifm`, `wskill`, `fskill`) are listed in docs/archive/MILESTONE_1.md. Drone flags: `?free&drones=N` (player carries N drones and launches up to the control limit; a fighter controls 1, `&dlimit=N` raises it, `&nolaunch` keeps them aboard).
 
 **Shipyard:** open `index.html?yard` (or `?yard=kestrel`) for the voxel workbench. It edits primitive geometry and a ship database entry without changing normal play; usage is in [docs/SHIP_MANUAL.md](docs/SHIP_MANUAL.md#10-shipyard-workbench).
 
@@ -109,7 +109,7 @@ regenerates the CSV views in `docs/data/`. `tools/render_ships.py` writes indivi
 `python3 tools/render_pack.py` writes one faction contact sheet per faction under the git-ignored `docs/img/ships/`.
 
 ## Roadmap
-See `docs/VISION.md` (long-term), `docs/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
+See `docs/VISION.md` (long-term), `docs/archive/PLAN.md` (next round), `docs/TIE_FIGHTER_COMPARISON.md` and `docs/FREESPACE2_COMPARISON.md` (UX gap analyses,
 prioritised), `docs/REALISM.md`, `docs/EXPANSE_MODEL.md`, `docs/SHIPS.md`. `docs/FS2OPEN_STUDY.md` (FS2 Open source study), `docs/STRATEGY_LAYER.md` (campaign/strategy proposal), `docs/FLEET_LOGIC.md` (ship roles, fleets, pilots, SAR). `docs/SHIP_MANUAL.md` (ship list, scale ladder, blueprints), `docs/LORE.md`, `docs/CAPITAL_COMBAT.md` (discussion). Agents: read `AGENTS.md` first.
 
 - `docs/STAR_MAP.md`: ~20 real star systems within 50 ly for the strategy layer (design proposal; data table `docs/data/stars.csv`).
@@ -133,7 +133,7 @@ The player's damage schematic (top left) shows WC2-style zones instead of dots: 
 - **Bullfrog systems** (src/79_bullfrog.js, 2026-10-22): AI role `lancer`; spine (`spineStep`, ray 12 m wide, refuses to fire with a friendly on the line, HUD `SPINE CHARGING` / `SPINE LOCK - BREAK` / `... AT <ally>`), hangar (`hangarUpdate`: 2 bays x 18, 4.5 s per bay, 12 airborne cap, bay loss = manifest loss, emergency launch), jump spool (20 s), Gulper escort rules (`ai.escort`), fighters keep out of the spine corridor. `applyHit(..., through)` lets spine hits carry through component splits; `blastAt` measures from the hull for radius > 150 (`hullGap`); `EXPOSED.bay`. Skirmish presets BULLFROG and BULLFROG + 2 GULPER, start range 10 km. Test seam `__bf`.
 
 ## Milestone 2
-See `docs/MILESTONE_2.md` for the state of the game, how to work on it locally, what is verified, known problems and next steps.
+See `docs/archive/MILESTONE_2.md` for the state of the game, how to work on it locally, what is verified, known problems and next steps.
 
 ## Flight models (v0.2.1)
 F cycles **ARCADE** (default) / **SIM (TIE style)** / **NEWTONIAN**; also in OPTIONS, on every mission briefing and in the skirmish setup. SIM: speed follows the throttle at real
