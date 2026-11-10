@@ -1,0 +1,23 @@
+# Prologue presentation — owner decision draft
+
+**Status:** proposal, not approved content or an implementation. Scope: the four existing Prologue sorties, one room, text only. The owner selected Direction C's gritty atmosphere, not individual cast identities or assets ([style decision](DESIGN_CUTSCENE_STYLE.md)). The current runtime mission text in `src/75_mission.js` is authoritative where the older [campaign draft](CAMPAIGN_PROLOGUE.md) differs. The objective text, actual waves, outcomes, flight mechanics and balance remain as they are.
+
+**Marking convention:** every proposed piece of staging, dialogue, scene timing, UI wording, identity or art in a section explicitly marked **[NEW]** is a narrative/presentation invention for approval, including every string inside its JSON block. `[NEW]` is an editorial label and is never displayed to a player. Unmarked factual references are grounded in `docs/LORE*.md`, `docs/CAMPAIGN_PROLOGUE.md`, or the current mission/debrief data. Existing art is not thereby approved as final character canon.
+
+## 1. The ready room [NEW]
+
+**One room:** a cramped combined crew ready room and briefing space on the CSS HALBERD, with one scuffed table, four secured chairs, a dark wall display and a cup held by a magnetic ring. Its hatch, pipework and braced furniture make the space plausible inside the existing 128 m corvette. There is no navigable carrier and no second room. Use Direction C's near-black/olive graphite, hard-edged shadows, a restrained cyan display and a rust-amber practical lamp. Two large portrait positions sit over the same still: Imani on the left as a framed command-feed portrait, Hawk on the right only when that exact character is available. The command feed is a presentation device; it does not establish Imani's location, rank over Vance, or survival. Keep the portrait faces and the lower caption area clear at the 320 × 200 logical safe frame. Existing Imani and Hawk portraits are provisional reuse, subject to owner review.
+
+The wall display is a UI layer, not text painted into the background. It has a mission number and three explicit, labelled controls; the room never depends on an invisible hotspot:
+
+| Control | Action and availability |
+|---|---|
+| **BRIEFING** | Open the currently selected Prologue mission's existing briefing and loadout; if there is no current selection, use the next unfinished mission. Selection/launch availability remains the existing game rule. |
+| **ROSTER** | Open the existing roster/service-record panel, read-only where the current game offers only a service record. Return to this same room. Do not add a crew-management mechanic or invent a roster when the feature is disabled. |
+| **CONTINUE** | Use Job C's next-unfinished-mission selection, including its optional `beforeMission` scene, then the existing briefing. When all four are complete, show **PROLOGUE COMPLETE** and a main-menu action instead of inventing a fifth sortie. |
+
+**Flow compatibility:** Job C's victory debrief → **NEXT MISSION** → before-scene → next briefing remains a single direct action. The room is reached from a clearly labelled **READY ROOM** entry at the main menu and an optional **READY ROOM** action on the debrief; it is not an extra mandatory stop or a replacement for CONTINUE. After a loss, the existing debrief and RETRY remain available. After mission 4's win, retain Job C's ending card, then its main menu. The room can show the last result only while a valid snapshot exists; otherwise it shows the neutral state. Persist no new story flags.
+
+**Desktop:** at 1440 × 900, centre a 16:10 stage with the original art cropped only at the outer 16:9 edges. Place portraits left/right, the three large controls as a vertical stack in the central gap, and a separate opaque caption band under the faces. Mouse, Tab, arrows and Enter reach every action; focus is visible and the order is CONTINUE, BRIEFING, ROSTER, BACK. Use existing UI text, not baked labels. The current scene player's two-line 38-character wrapping is a production constraint, not a promise of responsive text.
+
+**iPad landscape:** at 1180 × 820, preserve the same 16:10 composition and keep faces above the caption band. Use at least 44 × 44 CSS-pixel touch targets with spacing; no hover, drag, or precision tap is required. Tap advances/completes text and a persistent SKIP button returns to the correct briefing/debrief. Do not cover the next-action control with the bottom caption. The room is a proposed DOM/UI layer; fitting it, the roster and long/localised labels needs a real iPad test. Do not silently change the existing flight HUD.
