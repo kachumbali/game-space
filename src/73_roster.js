@@ -17,17 +17,20 @@ function rosterSkill(p, cfg = TUNE.roster) {
 function rosterNewPilot(id, i, isPlayer = false) {
   const first = ['Aven','Bren','Cira','Dalen','Eris','Ferin','Galen','Hira','Iven','Jora','Kelan','Lira','Maren','Neris','Orin','Pera','Quin','Riva','Selen','Tarin','Ulen','Vira','Wren','Yara'];
   const last = ['Venn','Korr','Derran','Sorel','Varek','Meren','Tavik','Rellan','Korin','Saven','Darik','Vell','Toren','Mavik','Renn','Sorin','Valen','Kerin','Davor','Tirren','Serek','Voran','Kelan','Merik'];
-  return {id, callsign:isPlayer ? rosterDef('player').callsign : `PILOT-${String(i+1).padStart(2,'0')}`, name:isPlayer ? rosterDef('player').name : `${first[i%first.length]} ${last[(i*7+3)%last.length]}`, rank:'ensign', skill:3, baseSkill:3, kills:0, missions:0, medals:[], status:'ACTIVE', traits:[], recoveryLeft:0};
+  return {id, callsign:isPlayer ? rosterDef('player').callsign : ROSTER_CALLSIGNS[i % ROSTER_CALLSIGNS.length], name:isPlayer ? rosterDef('player').name : `${first[i%first.length]} ${last[(i*7+3)%last.length]}`, rank:'ensign', skill:3, baseSkill:3, kills:0, missions:0, medals:[], status:'ACTIVE', traits:[], recoveryLeft:0};
 }
 // Owner hand-play 2026-11-10: the Prologue wing showed up as PILOT-02 / PILOT-03. The story pilots (HAWK, SPARROW: PILOT_DEFS, the briefings and
 // comms lines name them) take the first two seats of every carrier pool; a seat keeps its record, only the generic name is replaced.
 // PILOT_DEFS lives in 75_mission.js; the unit test evaluates this file alone, so fall back to the callsigns only.
+// generic pilots get bird callsigns like the story wing (owner playtest 2026-11-10: "PILOT-03" read as a placeholder); none is a ship name
+const ROSTER_CALLSIGNS = ['FINCH', 'WREN', 'ROOK', 'HERON', 'PLOVER', 'CURLEW', 'OSPREY', 'SHRIKE', 'LARK', 'ROBIN', 'DUNLIN', 'GREBE', 'MARTIN', 'SISKIN', 'TEAL', 'PIPIT', 'ORIOLE', 'CRANE', 'EGRET', 'IBIS', 'STARLING', 'THRUSH', 'VIREO', 'AVOCET'];
 const rosterDef = id => (typeof PILOT_DEFS !== 'undefined' && PILOT_DEFS[id]) || { callsign: id === 'player' ? 'MEOW' : id.toUpperCase(), name: id === 'player' ? 'MEOW' : id.toUpperCase() };
 function rosterStoryWing(pool) {
   ['hawk', 'sparrow'].forEach((id, i) => {
     const p = pool[i]; if (!p || pool.some(x => x.callsign === id.toUpperCase())) return;
     if (/^PILOT-\d+$/.test(p.callsign)) { p.callsign = rosterDef(id).callsign; p.name = rosterDef(id).name; }
   });
+  pool.forEach((p, i) => { if (/^PILOT-\d+$/.test(p.callsign)) p.callsign = ROSTER_CALLSIGNS[i % ROSTER_CALLSIGNS.length]; });   // older saves
 }
 function rosterLoad() {
   if (rosterState) return rosterState;

@@ -418,9 +418,11 @@ const PROLOGUE_MISSIONS = [
     debriefLose: 'The blockade holds. The outer habitats remain isolated.',
     setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [90,20,110], speed: 65 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,25,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
     stages: [
-      { when: { t: 4 }, do: [{ obj: ['p2a', 'Destroy the blockade picket wave', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',3],['kestrel',1]], bearing: [0.2,0.05,-1], dist: 2800, spread: 240 } }] },
-      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p2a', null, 'done'] }, { comm: ['CONTROL', 'Combat drones are lifting from the depot. Intercept them before they reach the HALBERD.'] }, { obj: ['p2b', 'Destroy the autonomous drone wave', 'open'] }, { spawn: { grp: 'B', ships: [['drone',4],['merlin',2]], bearing: [-0.4,0.1,-1], dist: 2400, spread: 260 } }] },
-      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p2b', null, 'done'] }, { obj: ['p2c', 'Destroy the heavy strike flight', 'open'] }, { spawn: { grp: 'C', ships: [['kestrel',3],['merlin',2]], bearing: [0.1,-0.1,-1], dist: 2200, spread: 200 } }] },
+      { when: { t: 4 }, do: [{ obj: ['p2a', 'Destroy the blockade picket wave', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',2],['kestrel',1]], bearing: [0.2,0.05,-1], dist: 2800, spread: 240, skill: 2 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p2a', null, 'done'] }, { comm: ['CONTROL', 'Pickets down. Regroup on the HALBERD and let your shields come back. Drones are spooling at the depot.'] }] },
+      { when: { dead: 'A', delay: 6 }, do: [{ comm: ['CONTROL', 'Combat drones are lifting from the depot. Intercept them before they reach the HALBERD.'] }, { obj: ['p2b', 'Destroy the autonomous drone wave', 'open'] }, { spawn: { grp: 'B', ships: [['drone',3],['merlin',1]], bearing: [-0.4,0.1,-1], dist: 2400, spread: 260, skill: 3 } }] },
+      { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p2b', null, 'done'] }, { comm: ['HAWK', 'Drones are scrap. Something heavier is coming; get your shields up.'] }] },
+      { when: { dead: 'B', delay: 6 }, do: [{ obj: ['p2c', 'Destroy the heavy strike flight', 'open'] }, { spawn: { grp: 'C', ships: [['kestrel',2],['merlin',1]], bearing: [0.1,-0.1,-1], dist: 2200, spread: 200, skill: 2 } }] },
       { when: { dead: 'C', delay: 3 }, do: [{ obj: ['p2c', null, 'done'] }, { end: 'win' }] },
     ],
   },
@@ -566,7 +568,7 @@ function spawnGroup(sp) {
   for (const [kind, count0] of sp.ships) for (let i = 0, count = SHIPS[kind].cls === 'fighter' ? Math.max(1, Math.round(count0 * D.count)) : count0; i < count; i++, n++) {   // difficulty scales fighter counts (normal = as authored)
     const pos = anchor.clone().addScaledVector(dir, sp.dist + (kind === 'gulper' ? 0 : n * 40))
       .addScaledVector(side, (Math.random() - 0.5) * sp.spread * 2).add(new THREE.Vector3(0, (Math.random() - 0.5) * sp.spread, 0));
-    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), D.skill ? { grp: sp.grp, skill: clamp((SHIPS[kind].ai?.skill ?? 3) + D.skill, 1, 5) } : { grp: sp.grp });
+    const e = spawnShip(kind, 1, pos, anchor.clone().add(new THREE.Vector3((Math.random() - 0.5) * 100, 0, (Math.random() - 0.5) * 100)), (D.skill || sp.skill) ? { grp: sp.grp, skill: clamp((sp.skill ?? SHIPS[kind].ai?.skill ?? 3) + (D.skill || 0), 1, 5) } : { grp: sp.grp });
     if (rescueEnabled() && game.mission?.sar && game.mstate?.sar?.cutter) e.sarTarget = game.mstate.sar.cutter;
     if (sp.jump) { flashAt(pos, e.def.radius * 2.2, 0.8); }
   }

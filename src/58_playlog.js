@@ -69,7 +69,7 @@ function reportText(result = 'in progress', note = '') {
     `Campaign / mission: ${m ? campaignOf(m).id + ' / ' + m.id : game.mode}`,
     `Difficulty: ${game.mode === 'survival' ? sv?.cfg?.diff : game.mode === 'skirmish' ? game.sk?.skill || 'skirmish settings' : diffName} · Flight: ${REPORT.lastFlight || flightMode} · Controls: ${REPORT.lastControls || controlsMode}`,
     `Result: ${result} · Time flown: ${Math.floor(REPORT.elapsed / 60)}:${String(Math.floor(REPORT.elapsed % 60)).padStart(2,'0')}`,
-    `Death cause: ${S?.playerDeathCause || 'not recorded'}`,
+    `Death cause: ${S?.playerDeathCause || (S?.why?.startsWith('PILOT ') ? 'ejected: ' + S.why.toLowerCase() : 'not recorded')}`,
     `Kills: ${kills} (${entries(killLog)})`, `Weapons shots/hits: ${weapons}`,
     `Missiles fired/hit/decoyed: ${REPORT.missiles.fired}/${REPORT.missiles.hit}/${REPORT.missiles.decoyed}`,
     `Damage received by source class: ${entries(REPORT.damage)}`,
