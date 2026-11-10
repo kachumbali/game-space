@@ -22,7 +22,7 @@ try {
   if (!params.has('newcrew')) { const j = JSON.parse(localStorage.getItem('gs_crew') || 'null'); if (j) for (const k in CREW) if (j[k]) CREW[k] = { ...CREW[k], ...j[k] }; }
 } catch (e) { /* storage unavailable: crew just lives for this session */ }
 function saveCrew() { try { localStorage.setItem('gs_crew', JSON.stringify(CREW)); } catch (e) { /* ignore */ } }
-function newCampaign() { CREW = freshCrew(); saveCrew(); if (rosterEnabled()) rosterReset(); }
+function newCampaign() { prologueReset(); CREW = freshCrew(); saveCrew(); if (rosterEnabled()) rosterReset(); }
 
 // ---- comms + objectives (HUD feeds) -------------------------------------------------------------------
 const comms = [];
@@ -641,6 +641,7 @@ function endMission(result, why) {
     S.resolvingRescue = false;
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
+  prologueRecord(game.mission, S);
   if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
@@ -744,7 +745,7 @@ function showBriefing(M) {
   const ship = M.setup.player.ship || 'kestrel';
   const crew = rosterEnabled() ? rosterBriefHtml(M) : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   const campaign = campaignOf(M), missionList = campaign.missions;
-  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
+  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${campaign.id === 'prologue' ? `MISSION ${missionList.indexOf(M) + 1} OF ${missionList.length} · ` : ''}${M.subtitle}</h2>
     <p>${rosterDialogueText(M.briefing).replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>

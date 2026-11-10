@@ -115,7 +115,7 @@ Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, resc
 Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, rosterFind, rosterRank, rosterSkill, rosterTransition, rosterResolveMissing, rosterStoryArrival, rosterUpdateAwards });
 
 
-Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { prologueNextIndex, prologueComplete, prologueReset, capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
