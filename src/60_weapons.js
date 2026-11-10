@@ -698,7 +698,7 @@ function updateTurrets(s, dt) {
       if (!best) {
         bs = 1e9;
         for (const e of ships) {
-          if (!e.alive || e.team === s.team || e.dying) continue;
+          if (!e.alive || e.team === s.team || e.dying || e.tutorialTarget) continue;
           if (!turretAllowsTarget(T, e)) continue;
           const d = e.group.position.distanceTo(tp);
           // a turret cannot aim into the opposite hemisphere (sideOk below); never pick such a target, or target spreading leaves the turret idle while valid targets exist

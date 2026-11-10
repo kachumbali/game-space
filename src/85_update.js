@@ -31,15 +31,20 @@ function updatePlayer(dt) {
   const kb = (a, b) => (keys.has(a) ? 1 : 0) - (keys.has(b) ? 1 : 0);
   const pitch = clamp(-stick.y + kb('ArrowUp', 'ArrowDown'), -1, 1);
   const yaw = clamp(-stick.x + kb('ArrowLeft', 'ArrowRight'), -1, 1);
+  if (Math.abs(pitch) + Math.abs(yaw) > 0.05) tutorialAction('look');
   const roll = kb('KeyQ', 'KeyE');
   const tm = turnMul(s);
   _eu.set(pitch * 1.6 * 2.85 * tm * dt, yaw * 1.1 * 2.85 * tm * dt, roll * 2.2 * 2.85 * tm * dt, 'XYZ');
   s.group.quaternion.multiply(_dq.setFromEuler(_eu)).normalize();
+  const oldThrottle = s.throttle;
   s.throttle = clamp(s.throttle + kb('KeyW', 'KeyS') * 0.6 * dt, 0, 1);
+  if (s.throttle !== oldThrottle) tutorialAction('throttle');
   const ab = keys.has('ShiftLeft') || keys.has('ShiftRight');
   flightModels[flightMode](s, { throttle: s.throttle, thrust: kb('KeyW', 'KeyS'), ab, brake: keys.has('KeyX') }, dt);
+  if (s.ab) tutorialAction('boost');
   if ((keys.has('Space') || mouseFire) && state === 'play') {
     const r = fireGuns(s, s.fireMask);
+    if (r.n) tutorialAction('guns');
     if (r.any && !r.n && time - gunMsgT > 1.5) {
       // distinguish cooldown from a real problem
       const blocked = s.mounts.filter(m => !m.store && (s.fireMask & (1 << (m.grp - 1)))).every(m => {
@@ -110,6 +115,7 @@ function updateWarnings(dt) {
   if (p && p.alive) {
     for (const m of missiles) if (!m.dead && m.target === p) inc.push(m);
     for (const s of ships) if (s.alive && s.team !== p.team && s.lock && s.lock.tgt === p && s.lock.p > 0.35) warnState.lockedBy++;
+    if (game.mstate?.tutorial && TUTORIAL_STEPS[game.mstate.tutorial.step]?.[0] === 'flare') warnState.lockedBy++;
   }
   warnState.incoming = inc;
   warnState.beam = p && p.alive && time - playerTrack.last < 0.4 ? playerTrack : null;      // a hostile laser is tracking or burning us
@@ -150,11 +156,11 @@ function update(dt) {
       s.group.rotateZ(0.06 * dt); s.group.rotateX(0.03 * dt);
     } else if (state === 'cine') cineDrive(s, dt);
     else if (s === player) { if (state === 'play' && !dock) updatePlayer(dt); }   // while docking the dock autopilot owns the ship (owner 2026-10-22)
-    else if (state !== 'brief') aiUpdate(s, dt);
+    else if (state !== 'brief' && !s.tutorialTarget) aiUpdate(s, dt);
     if (!s.alive) continue; // recovered drones are removed after this loop
     s.group.position.addScaledVector(s.vel, dt);
     s.group.updateMatrixWorld(true);
-    if (s.dying <= 0) updateTurrets(s, dt);
+    if (s.dying <= 0 && !s.tutorialTarget) updateTurrets(s, dt);
     updateShieldsAndFx(s, dt);
   }
   collideShips(dt);

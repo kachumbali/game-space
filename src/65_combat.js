@@ -21,7 +21,18 @@ function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
 function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {
+  if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
+  const playerHit = s === player, source = hitSrc, kind = hitKind;
   const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
+  if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
+    let cause = 'Hull destroyed; cause unclear.';
+    if (kind === 'collision') cause = 'Collision with another ship.';
+    else if (kind === 'missile' || kind === 'nuke' || dtype === 'nuke') cause = 'Missile or warhead impact.';
+    else if (source && source.def.cls !== 'fighter') cause = 'Fire from a larger ship.';
+    else if (s.shield.fore + s.shield.aft <= 1) cause = 'Shields depleted under fire.';
+    else if (kind === 'gun' || kind === 'beam') cause = 'Incoming weapons fire.';
+    game.mstate.playerDeathCause = cause;
+  }
   if (out) { s.lastKind = hitKind; juiceHit(s, hitSrc, out, dmg, wp); }
   hitSrc = null; hitKind = null;
   return out;
@@ -310,9 +321,9 @@ function collideShips(dt) {
     const wpA = cp.clone();
     const lpA = a.group.worldToLocal(cp.clone());
     a.lastAttacker = b; b.lastAttacker = a;
-    applyHit(a, lpA, dmgA, wpA, 'kin');
+    hitSrc = b; hitKind = 'collision'; applyHit(a, lpA, dmgA, wpA, 'kin');
     if (mb === ma) b.hitCool = 0.6;
-    if (dmgB >= 1) applyHit(b, b.group.worldToLocal(wpA.clone()), dmgB, wpA, 'kin');
+    if (dmgB >= 1) { hitSrc = a; hitKind = 'collision'; applyHit(b, b.group.worldToLocal(wpA.clone()), dmgB, wpA, 'kin'); }
     if (a.team === b.team && (a === player || b === player)) log(`COLLISION WITH ${(a === player ? b : a).callsign || (a === player ? b : a).def.name}`, '#ffb040');
     a.vel.reflect(n).multiplyScalar(0.6);
     a.group.position.addScaledVector(n, 3);

@@ -79,6 +79,7 @@ function spawnWave() {
 }
 
 function clearWorld() {
+  if (tutorialEl) tutorialEl.style.display = 'none';
   ejectionSceneSkip();
   game.rescueLog = [];
   ejectAlarmAt = -Infinity;

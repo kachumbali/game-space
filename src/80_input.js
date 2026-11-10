@@ -5,6 +5,7 @@ const keys = new Set();
 const stick = { x: 0, y: 0 };
 let mouseFire = false, touchStarted = false, radarIdx = 1;
 if (rescueEnabled()) document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">When HULL CRITICAL appears, press SHIFT+E or tap EJECT to abandon ship. Protect survivor beacons until SAR recovers them.</div>');
+document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">PROLOGUE TUTORIAL: follow each instruction; press I or tap SKIP TUTORIAL to skip.</div>');
 const RADAR_RANGES = [1500, 3000, 6000];
 const msg = document.getElementById('msg');
 
@@ -35,6 +36,7 @@ function cycleTarget() {
   if (!list.length) return;
   const i = list.indexOf(target);
   target = list[(i + 1) % list.length]; manualTarget = true; sfx('click');
+  if (target.tutorialTarget) tutorialAction('target');
 }
 function targetCrosshair() {
   if (!player || !player.alive) return;
@@ -52,12 +54,15 @@ function playerFireMissile() {
   if (!wid) return;
   if (player.stores[wid] <= 0) { log('RACK EMPTY', '#ff5a4a'); return; }
   if (player.lock.p < 1 && !WEAPONS[wid].torp) { log('NO LOCK: DUMB-FIRED', '#ffd24a'); }
-  launchMissile(player, wid);
+  const locked = player.lock.p >= 1 && player.lock.tgt?.tutorialTarget;
+  if (launchMissile(player, wid) && locked) tutorialAction('missile');
 }
 
 addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
+  if (e.code === 'KeyI' && game.mstate?.tutorial) { tutorialFinish(); return; }
+  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && game.mstate?.tutorial && TUTORIAL_STEPS[game.mstate.tutorial.step]?.[0] === 'read') { tutorialAction('read'); return; }
   if (e.code === 'Space' && player?.rescueCapsule?.player && rescueEnabled() && rosterEnabled() && state==='play') { e.preventDefault(); rescueResolveBeat(player); return; }
   if (comsKey(e)) { e.preventDefault(); return; }
   if (e.code === 'KeyE' && e.shiftKey && state === 'play' && !userPause && rescueCritical(player)) {
@@ -80,9 +85,9 @@ addEventListener('keydown', e => {
     case 'KeyG': if (player.alive) cycleMissile(player); break;
     case 'KeyD': if (player.alive && state === 'play') dockTry(); break;   // tactical docking at a tender (owner 2026-10-22)
     case 'Escape': if (performance.now() - pmAutoT > 300) pauseToggle(); break;      // a pause that the lost mouse lock just caused must not be undone by the same Esc   // S1: real pause (Esc exits pointer lock; Esc again resumes)
-    case 'KeyZ': if (player.alive && state === 'play') { if (!deployCM(player)) log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
+    case 'KeyZ': if (player.alive && state === 'play') { if (deployCM(player)) tutorialAction('flare'); else log(player.stores.flare > 0 ? 'COUNTERMEASURES CYCLING' : 'NO FLARES', '#ff5a4a'); } break;
     case 'KeyK': radarIdx = (radarIdx + 1) % RADAR_RANGES.length; break;
-    case 'KeyH': { const h = document.getElementById('help'); h.style.display = h.style.display === 'block' ? 'none' : 'block'; break; }
+    case 'KeyH': toggleHelp(); break;
     case 'KeyM': AUDIO.muted = !AUDIO.muted; if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); break;
     case 'Enter': case 'NumpadEnter': playerFireMissile(); break;
     case 'Digit1': player.fireMask = 1; break;
@@ -152,7 +157,7 @@ if (isTouch) {
   };
   hold('bfire', () => { mouseFire = true; }, () => { mouseFire = false; });
   hold('bmsl', () => playerFireMissile(), () => {});
-  hold('bflr', () => { if (player && player.alive) deployCM(player); }, () => {});
+  hold('bflr', () => { if (player && player.alive && deployCM(player)) tutorialAction('flare'); }, () => {});
   hold('bboost', () => keys.add('ShiftLeft'), () => keys.delete('ShiftLeft'));
   hold('brl', () => keys.add('KeyQ'), () => keys.delete('KeyQ'));
   hold('brr', () => keys.add('KeyE'), () => keys.delete('KeyE'));
@@ -173,7 +178,7 @@ if (isTouch) {
   const thr = $('thr');
   const setThr = e => {
     const r = thr.getBoundingClientRect();
-    if (player) player.throttle = clamp(1 - (e.clientY - r.top) / r.height, 0, 1);
+    if (player) { const before = player.throttle; player.throttle = clamp(1 - (e.clientY - r.top) / r.height, 0, 1); if (Math.abs(before - player.throttle) > 0.01) tutorialAction('throttle'); }
   };
   let lastThrTap = 0;                                  // double-tap the throttle slider = match the target's speed (touch binding for BACKSPACE)
   thr.addEventListener('pointerdown', e => { touchStarted = true; thr.setPointerCapture(e.pointerId); const now = performance.now(); if (now - lastThrTap < 320) matchSpeed(player); else setThr(e); lastThrTap = now; });

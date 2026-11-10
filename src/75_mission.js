@@ -406,7 +406,7 @@ const PROLOGUE_MISSIONS = [
     debriefLose: 'The rogue transport escaped into deep space. Its cargo and the trail behind it are lost.',
     setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [80,15,100], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [110,20,130] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [50,10,130] }] },
     stages: [
-      { when: { t: 4 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort fighters', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',2]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
+      { when: { t: 8 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',1]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p1a', null, 'done'] }, { comm: ['CONTROL', 'Escorts down. The Tern is making an emergency jump run. Stop it.'] }, { obj: ['p1b', 'Destroy the rogue transport TERN', 'open'] }, { spawn: { grp: 'B', ships: [['tern',1]], bearing: [0.1,0,-1], dist: 1800, spread: 50 } }] },
       { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p1b', null, 'done'] }, { comm: ['SPARROW', 'Control, those pods were not ore.'] }, { end: 'win' }] },
     ],
@@ -595,6 +595,7 @@ function missionUpdate(dt) {
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
   if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
+  if (tutorialTick(M, S, dt)) return;
   S.t += dt; S.stageT += dt;
   sarScenarioTick(M, S);
   if (S.ended) return;
@@ -640,6 +641,7 @@ function endMission(result, why) {
     S.resolvingRescue = false;
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
+  if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome
@@ -747,9 +749,9 @@ function showBriefing(M) {
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>
     <div class="sub">DIFFICULTY</div><div class="skrow"><span class="seg">${Object.keys(DIFFS).map(k => `<button data-d="${k}" class="${diffName === k ? 'on' : ''}">${DIFFS[k].name}</button>`).join('')}</span></div><div class="dim">${diffCfg().blurb}. Changes apply when you launch.</div>
-    <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little. F switches in flight.</div>
+    <div class="sub">FLIGHT MODEL</div><div class="skrow"><span class="seg">${FM_ORDER.map(k => `<button data-fm="${k}" class="${flightMode === k ? 'on' : ''}">${FM_NAMES[k]}</button>`).join('')}</span></div><div class="dim">SIM: TIE Fighter style. Speed follows the throttle at real acceleration, the velocity vector trails the nose a little.${basicControls() ? '' : ' F switches in flight.'}</div>
     <div class="btns"><button id="bgo">LAUNCH</button>${missionList.map((m, i) => `<button class="alt bm${m === M ? ' cur' : ''}" data-i="${i}">MISSION ${i + 1}: ${m.title.replace('OPERATION ', '')}</button>`).join('')}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bnew" class="alt">NEW CAMPAIGN</button><button id="bcred" class="alt">CREDITS</button><button id="bmenu" class="alt">MAIN MENU</button></div>
-    <div class="dim keys">Briefing: tap an ordnance station to swap or empty it. W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help</div></div>`;
+    <div class="dim keys">${basicControls() ? 'W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · T target · Z flares · SHIFT boost · H help' : 'Briefing: tap an ordnance station to swap or empty it. W/S throttle · mouse stick · SPACE guns · RMB/ENTER missile · G select · T/Y target · Z flares · V view · H help'}</div></div>`;
   el.style.display = 'flex';
   bindOrdnanceBriefing(el, M);
   if (rosterEnabled()) rosterBindBriefing(el,M);
@@ -773,6 +775,7 @@ function showDebrief() {
   const next = campaignNext(M);
   el.innerHTML = `<div class="panel"><div class="sub">DEBRIEF · ${campaignOf(M).title}</div><h1 class="${S.result === 'win' ? 'ok' : 'bad'}">${S.result === 'win' ? 'MISSION ACCOMPLISHED' : S.result === 'partial' ? 'PARTIAL SUCCESS' : 'MISSION FAILED'}</h1>
     <h2>${S.why || M.title}</h2>
+    ${S.result === 'lose' && S.playerDeathCause ? `<p class="bad">LIKELY CAUSE: ${S.playerDeathCause}</p>` : ''}
     ${(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || (S.why?.startsWith('PILOT ') ? S.why : 'Some convoy ships escaped; others were lost.')) : M.debriefLose) ? `<p>${rosterDialogueText(S.result === 'win' ? M.debriefWin : S.result === 'partial' ? (M.debriefPartial || (S.why?.startsWith('PILOT ') ? S.why : 'Some convoy ships escaped; others were lost.')) : M.debriefLose)}</p>` : ''}
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div>${S.convoy ? `<div>Passengers evacuated <b>${S.convoy.passengers}</b></div>` : ''}<div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
@@ -780,7 +783,7 @@ function showDebrief() {
     <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result !== 'lose' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
-  $id('bgo').onclick = () => { startMission(game.mission); };
+  $id('bgo').onclick = () => { if (S.result !== 'win') restoreCrew(); startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(next);
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
@@ -800,6 +803,6 @@ function tipsTick(M, S) {
   if (done.m01 && !params.has('tips')) return;
   S.tipN = S.tipN || 0;
   const t = TIPS_M1[S.tipN];
-  if (t && S.t >= t[0]) { comm('CONTROL', isTouch ? t[2] : t[1], '#9adcff'); S.tipN++; }
+  if (t && S.t >= t[0]) { let line = isTouch ? t[2] : t[1]; if (basicControls()) line = line.replace(' Press J any time to give your wingmen orders.', '').replace(' COMMS gives your wingmen orders.', ''); comm('CONTROL', line, '#9adcff'); S.tipN++; }
   if (S.tipN >= TIPS_M1.length) { done.m01 = true; try { localStorage.setItem('gs_tips', JSON.stringify(done)); } catch (e) { /* ignore */ } }
 }

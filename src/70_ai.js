@@ -8,7 +8,7 @@ const _up = new THREE.Vector3(0, 1, 0);
 const _pt = new THREE.Vector3();
 const _af = new THREE.Vector3(), _ad = new THREE.Vector3(), _ap = new THREE.Vector3(), _ao = new THREE.Vector3();
 
-const hostilesOf = s => ships.filter(e => e.alive && !e.dying && e.team !== s.team);
+const hostilesOf = s => ships.filter(e => e.alive && !e.dying && !e.tutorialTarget && e.team !== s.team);
 const isCapital = e => e.def.cls !== 'fighter';
 
 // ---- squad tactics: a squad (same team + group; the player's wing is one squad) agrees on one focus target and
