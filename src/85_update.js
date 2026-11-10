@@ -200,6 +200,12 @@ function update(dt) {
     d.life += dt;
     const dur = d.dur || 2.4;
     const k = Math.max(0, 1 - d.life / dur);
+    if (d.chunk) {
+      d.mesh.position.addScaledVector(d.vel, dt);
+      d.mesh.rotateX(d.spin.x*dt); d.mesh.rotateY(d.spin.y*dt); d.mesh.rotateZ(d.spin.z*dt);
+      d.mesh.scale.setScalar(k);
+      continue;
+    }
     for (let n = 0; n < d.pos.length; n++) {
       d.pos[n].addScaledVector(d.vel[n], dt);
       _m.makeScale(k, k, k).setPosition(d.pos[n]);
