@@ -21,6 +21,9 @@ for touch, w, h in [(False,1280,720),(True,1180,820)]:
         p=r.page(w,h,'?campaign=prologue&m=1&go&q=low',touch=touch,init_script="Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async s=>window.copied=s}})")
         p.evaluate("()=>{__game.prologueReset();__game.showCampaignList()}")
         assert p.locator('[data-a="campaign:severed_node"]').is_disabled()
+        if not touch:
+            p.locator('[data-a="campaign:prologue"]').focus(); p.keyboard.press('ArrowDown')
+            assert p.evaluate("document.activeElement.dataset.a") == 'back'
         p.evaluate("()=>{__game.startMission(__game.PROLOGUE_MISSIONS[0]);__game.state='play';__game.endMission('win','test');__game.showDebrief()}")
         p.click('#bnext')
         assert 'MISSION 2 OF 4' in p.locator('#brief h2').inner_text()
@@ -68,3 +71,64 @@ for touch,w,h in [(False,1280,720),(True,1180,820)]:
         assert p.evaluate("()=>document.body.classList.contains('controls-basic')")
         assert_no_console_errors(r)
         print('PASS lessons', 'touch' if touch else 'desktop')
+# Optional scene assets are checked against the build manifest, then played and
+# returned to the correct screen on either normal completion or skip.
+import base64
+with Runner() as r:
+    p=r.page(1280,720,'?q=low')
+    requests=[]
+    p.on('request', lambda q: requests.append(q.url))
+    p.evaluate("()=>{__game.__paused=true;__game.startMission(__game.PROLOGUE_MISSIONS[1])}")
+    assert 'MISSION 2 OF 4' in p.locator('#brief h2').inner_text()
+    assert not any('p02_before/scene.json' in u for u in requests)
+    pixel=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/aN8AAAAASUVORK5CYII=')
+    def scene_route(route):
+        url=route.request.url
+        if url.endswith('/scene.json'):
+            scene_id=url.split('/')[-2]
+            if scene_id == 'p02_before': route.fulfill(json={'id':scene_id})
+            else: route.fulfill(json={'id':scene_id,'size':[320,200],'events':[{'t':60,'do':'end'}]})
+        else: route.fulfill(body=pixel,content_type='image/png')
+    p.route('**/assets/scenes/**',scene_route)
+    p.evaluate("()=>{__game.SCENE_IDS.push('p01_before','p01_after_win','p01_after_lose');__game.startMission(__game.PROLOGUE_MISSIONS[0])}")
+    p.wait_for_function("()=>__game.sceneState.id==='p01_before' && __game.sceneState.active")
+    p.click('#sceneSkip')
+    assert 'MISSION 1 OF 4' in p.locator('#brief h2').inner_text()
+    p.evaluate("()=>{__game.state='play';__game.endMission('win','test');__game.game.mstate.endT=3.5;__game.update(.05)}")
+    p.wait_for_function("()=>__game.sceneState.id==='p01_after_win' && __game.sceneState.active")
+    p.click('#sceneSkip')
+    assert 'MISSION ACCOMPLISHED' in p.locator('#brief h1').inner_text()
+    p.evaluate("()=>__game.startMission(__game.PROLOGUE_MISSIONS[0],null,false,true)")
+    p.wait_for_function("()=>__game.sceneState.id==='p01_before' && __game.sceneState.active")
+    p.click('#sceneSkip')
+    assert p.evaluate("()=>__game.state==='play' && document.getElementById('brief').style.display==='none'")
+    p.evaluate("()=>{__game.SCENE_IDS.push('p02_before','p02_after_lose');__game.startMission(__game.PROLOGUE_MISSIONS[1])}")
+    p.wait_for_function("()=>!__game.sceneState.active && __game.game.mission?.id==='p02'")
+    assert 'MISSION 2 OF 4' in p.locator('#brief h2').inner_text()
+    p.evaluate("()=>{__game.state='play';__game.endMission('lose','test');__game.game.mstate.endT=3.5;__game.update(.05)}")
+    p.wait_for_function("()=>__game.sceneState.id==='p02_after_lose' && __game.sceneState.active")
+    p.evaluate("()=>{__game.sceneState.events=[{t:0,do:'end'}];__game.sceneState.eventIdx=0}")
+    p.wait_for_function("()=>!__game.sceneState.active")
+    assert 'MISSION FAILED' in p.locator('#brief h1').inner_text()
+    assert_no_console_errors(r)
+    print('PASS scene hooks, missing assets and skip')
+
+# Ending a mission while a lesson is open must not leave its panel above the debrief.
+with Runner() as r:
+    p=r.page(1180,820,'?campaign=prologue&m=4&go&q=low',touch=True)
+    p.evaluate("()=>{__game.__paused=true;__game.update(.05)}")
+    assert p.locator('#tutorial').is_visible()
+    p.evaluate("()=>{__game.endMission('lose','test');__game.showDebrief()}")
+    assert not p.locator('#tutorial').is_visible()
+    assert_no_console_errors(r)
+    print('PASS lesson hidden on mission end')
+# Skipping a later lesson persists and does not block a replay.
+with Runner() as r:
+    p=r.page(1180,820,'?campaign=prologue&m=2&go&q=low',touch=True)
+    p.evaluate("()=>{__game.__paused=true;__game.update(.05)}")
+    p.locator('#tutorialSkip').tap()
+    assert p.evaluate("()=>localStorage.getItem('gs_tutorial_p02')") == 'done'
+    p.evaluate("()=>{__game.startMission(__game.PROLOGUE_MISSIONS[1]);document.getElementById('brief').style.display='none';__game.state='play';__game.update(.05)}")
+    assert not p.locator('#tutorial').is_visible()
+    assert_no_console_errors(r)
+    print('PASS lesson skip and replay')

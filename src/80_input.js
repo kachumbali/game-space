@@ -62,7 +62,7 @@ addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
   if (e.code === 'KeyI' && game.mstate?.tutorial) { tutorialFinish(); return; }
-  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && game.mstate?.tutorial && game.mstate.tutorial.steps[game.mstate.tutorial.step]?.[0] === 'read') { tutorialAction('read'); return; }
+  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && game.mstate?.tutorial && TUTORIAL_STEPS[game.mstate.tutorial.step]?.[0] === 'read') { tutorialAction('read'); return; }
   if (e.code === 'Space' && player?.rescueCapsule?.player && rescueEnabled() && rosterEnabled() && state==='play') { e.preventDefault(); rescueResolveBeat(player); return; }
   if (comsKey(e)) { e.preventDefault(); return; }
   if (e.code === 'KeyE' && e.shiftKey && state === 'play' && !userPause && rescueCritical(player)) {

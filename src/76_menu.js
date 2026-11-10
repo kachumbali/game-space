@@ -177,7 +177,8 @@ function showMissionList(campaign) {
 addEventListener('keydown', e => {
   if (!menuView || optsOpen || credOpen || e.ctrlKey || e.metaKey) return;
   if (menuView === 'main' || menuView === 'missions' || menuView === 'yard') {
-    const L = [...$id('brief').querySelectorAll('.mi')], i = L.indexOf(document.activeElement);
+    const L = [...$id('brief').querySelectorAll('.mi:not(:disabled)')], i = L.indexOf(document.activeElement);
+    if (!L.length) return;
     if (e.code === 'ArrowDown' || e.code === 'KeyS') L[(i + 1) % L.length].focus();
     else if (e.code === 'ArrowUp' || e.code === 'KeyW') L[(i - 1 + L.length) % L.length].focus();
     else if (e.code === 'Enter' || e.code === 'NumpadEnter' ) { (i >= 0 ? L[i] : L[0]).click(); }

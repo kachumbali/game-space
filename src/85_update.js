@@ -115,7 +115,7 @@ function updateWarnings(dt) {
   if (p && p.alive) {
     for (const m of missiles) if (!m.dead && m.target === p) inc.push(m);
     for (const s of ships) if (s.alive && s.team !== p.team && s.lock && s.lock.tgt === p && s.lock.p > 0.35) warnState.lockedBy++;
-    if (game.mstate?.tutorial && game.mstate.tutorial.steps[game.mstate.tutorial.step]?.[0] === 'flare') warnState.lockedBy++;
+    if (game.mstate?.tutorial && TUTORIAL_STEPS[game.mstate.tutorial.step]?.[0] === 'flare') warnState.lockedBy++;
   }
   warnState.incoming = inc;
   warnState.beam = p && p.alive && time - playerTrack.last < 0.4 ? playerTrack : null;      // a hostile laser is tracking or burning us

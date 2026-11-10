@@ -10,6 +10,7 @@ const TUTORIAL_STEPS = [
   ['boost', 'Hold SHIFT to use the afterburner.', 'Hold BOOST to use the afterburner.'],
   ['read', 'Read SHD and HULL at the upper left. Press ENTER when ready.', 'Read SHD and HULL at the upper left. Tap READY when ready.'],
 ];
+const TUTORIAL_BASE_STEPS = TUTORIAL_STEPS.slice();
 const PROLOGUE_LESSONS = {
   p02: [['wing_order', 'Press J, choose WINGMEN, ALL WINGMEN, then PROTECT ME. If no wingmen are available, skip.', 'Tap COMMS, WINGMEN, ALL WINGMEN, then PROTECT ME. If no wingmen are available, skip.']],
   p03: [['power', 'Press 4 to move power to weapons. Press 7 to balance it again.', 'Tap WPN on the POWER panel to move power to weapons. Tap POWER to balance it again.']],
@@ -17,8 +18,9 @@ const PROLOGUE_LESSONS = {
 };
 const TUTORIAL_CONTROLS = {p02:'comms', p03:'power', p04:'subsystem'};
 let tutorialEl = null;
-function tutorialStored(id = 'p01') { try { return localStorage.getItem('gs_tutorial_' + id) === 'done'; } catch (_) { return false; } }
-function tutorialSave(id = 'p01') { try { localStorage.setItem('gs_tutorial_' + id, 'done'); } catch (_) {} }
+function tutorialStored(id = game.mission?.id || 'p01') { try { return localStorage.getItem('gs_tutorial_' + id) === 'done'; } catch (_) { return false; } }
+function tutorialSave(id = game.mission?.id || 'p01') { try { localStorage.setItem('gs_tutorial_' + id, 'done'); } catch (_) {} }
+function tutorialHide() { if (tutorialEl) tutorialEl.style.display = 'none'; }
 function tutorialPanel() {
   if (tutorialEl) return tutorialEl;
   const el = tutorialEl = document.createElement('div'); el.id = 'tutorial';
@@ -31,18 +33,19 @@ function tutorialPanel() {
 }
 function tutorialStart(S) {
   const id = game.mission.id; if (TUTORIAL_CONTROLS[id]) teachControl(TUTORIAL_CONTROLS[id]);
-  S.tutorial = { id, steps: id === 'p01' ? TUTORIAL_STEPS : PROLOGUE_LESSONS[id], step: 0, elapsed: 0, repeat: false, confirm: 0, target: null, stores: {...player.stores}, ammo: {...player.ammo}, stations: player.ordnanceLoad?.map(st => st.remaining) };
+  TUTORIAL_STEPS.splice(0, TUTORIAL_STEPS.length, ...(id === 'p01' ? TUTORIAL_BASE_STEPS : PROLOGUE_LESSONS[id]));
+  S.tutorial = { id, steps: TUTORIAL_STEPS, step: 0, elapsed: 0, repeat: false, confirm: 0, target: null, stores: {...player.stores}, ammo: {...player.ammo}, stations: player.ordnanceLoad?.map(st => st.remaining) };
   tutorialPanel().style.display = 'block'; tutorialRender(S.tutorial);
 }
 function tutorialRender(T) {
-  const step = T.steps[T.step];
+  const step = TUTORIAL_STEPS[T.step];
   if (!step) return tutorialFinish();
   tutorialPanel().querySelector('#tutorialText').textContent = (T.repeat ? 'AGAIN: ' : '') + (isTouch ? step[2] : step[1]);
   tutorialEl.querySelector('#tutorialReady').style.display = step[0] === 'read' ? 'inline-block' : 'none';
 }
 function tutorialAction(action) {
   const T = game.mstate?.tutorial;
-  if (!T || T.confirm || T.steps[T.step]?.[0] !== action || state !== 'play' || userPause) return;
+  if (!T || T.confirm || TUTORIAL_STEPS[T.step]?.[0] !== action || state !== 'play' || userPause) return;
   T.confirm = 0.8; tutorialEl.querySelector('#tutorialText').textContent = 'GOOD';
 }
 function tutorialFinish() {
@@ -51,7 +54,7 @@ function tutorialFinish() {
   Object.assign(player.stores, T.stores); Object.assign(player.ammo, T.ammo);
   if (T.stations && player.ordnanceLoad) player.ordnanceLoad.forEach((st, i) => { st.remaining = T.stations[i]; });
   for (const m of missiles) if (m.owner === player && m.target === T.target) m.dead = true;
-  tutorialSave(T.id); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
+  tutorialSave(); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
 }
 function tutorialTick(M, S, dt) {
   if (!(M.id === 'p01' || PROLOGUE_LESSONS[M.id]) || state !== 'play' || S.ended) { if (tutorialEl) tutorialEl.style.display = 'none'; return false; }
