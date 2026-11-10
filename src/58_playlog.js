@@ -36,8 +36,8 @@ function plogDownload() {
 setInterval(plogSave, 15000);
 
 // Session report counters are separate from the diagnostic play log. Reset on each sortie.
-const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '' };
-function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: ''}); }
+const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null };
+function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null}); }
 function reportLog(line) { REPORT.logs.push(String(line)); if (REPORT.logs.length > 20) REPORT.logs.shift(); }
 function reportWeapon(id, field) { const w = REPORT.weapons[id] ||= {shots: 0, hits: 0}; w[field]++; }
 function reportTick(dt) {
@@ -76,19 +76,30 @@ function reportText(result = 'in progress', note = '') {
 // Install the same touch-accessible controls in the pause menu and each debrief.
 function reportControls(host, result) {
   const box = document.createElement('div'); box.className = 'report-controls';
-  box.innerHTML = '<label>WHAT ANNOYED YOU? (optional)<br><textarea rows="2" maxlength="1000" aria-label="What annoyed you?"></textarea></label><div><button type="button" class="report-copy">COPY REPORT</button> <button type="button" class="report-download">DOWNLOAD REPORT</button></div><div class="report-status" role="status"></div>';
+  box.innerHTML = '<label>WHAT ANNOYED YOU? (optional)<br><textarea rows="2" maxlength="1000" aria-label="What annoyed you?"></textarea></label><div><button type="button" class="report-copy">COPY REPORT</button> <button type="button" class="report-download">DOWNLOAD REPORT</button> <button type="button" class="report-history">EXPORT LAST 10</button></div><div class="report-status" role="status"></div>';
   const note = box.querySelector('textarea'); note.value = REPORT.note || '';
   note.addEventListener('keydown', e => e.stopPropagation());
-  note.addEventListener('input', () => { REPORT.note = note.value; });
+  note.addEventListener('input', () => { REPORT.note = note.value; if (REPORT.savedId) reportArchive(REPORT.savedResult); });
   const text = () => reportText(typeof result === 'function' ? result() : result, REPORT.note || '');
   box.querySelector('.report-copy').onclick = async () => {
     try { if (!navigator.clipboard?.writeText) throw new Error('unavailable'); await navigator.clipboard.writeText(text()); box.querySelector('.report-status').textContent = 'Report copied.'; }
     catch (_) { box.querySelector('.report-status').textContent = 'Clipboard unavailable. Tap DOWNLOAD REPORT instead.'; }
   };
   box.querySelector('.report-download').onclick = () => reportDownload(text(), 'space-commander-report.txt');
+  box.querySelector('.report-history').onclick = () => { const rows = reportHistory(); if (!rows.length) { box.querySelector('.report-status').textContent = 'No saved reports available.'; return; } reportDownload(rows.map(r => r.text).join('\n\n--- NEXT SESSION ---\n\n'), 'space-commander-reports.txt'); };
   host.appendChild(box); return box;
 }
 function reportDownload(text, name) {
   const url = URL.createObjectURL(new Blob([text], {type: 'text/plain;charset=utf-8'}));
   const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+let reportSerial = 0;
+function reportHistory() { try { const rows = JSON.parse(localStorage.getItem('gs_reports') || '[]'); return Array.isArray(rows) ? rows.filter(r => r && typeof r.text === 'string').slice(0, 10) : []; } catch (_) { return []; } }
+function reportArchive(result) {
+  if (!REPORT.savedId) REPORT.savedId = Date.now().toString(36) + '-' + (++reportSerial);
+  REPORT.savedResult = result;
+  const row = {id: REPORT.savedId, text: reportText(result, REPORT.note)};
+  const rows = [row, ...reportHistory().filter(r => r.id !== row.id)].slice(0, 10);
+  try { localStorage.setItem('gs_reports', JSON.stringify(rows)); return true; } catch (_) { return false; }
 }

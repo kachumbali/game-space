@@ -43,7 +43,7 @@ function pauseToggle(force) {   // S1: pause/resume in flight; dialogs keep thei
 const pmEl = $id('pauseOv');
 pmEl.innerHTML = `<div class="pt">PAUSED</div><div class="ps" id="pm_sub"></div><div class="pbtns"><button id="pm_res">RESUME <small>[ESC]</small></button><button id="pm_help">CONTROLS <small>[H]</small></button><button id="pm_rst">RESTART... <small>[R]</small></button><button id="pm_opt">OPTIONS <small>[O]</small></button><button id="pm_exit" class="warn"></button></div>`;
 reportControls(pmEl, () => 'in progress');
-document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">COPY REPORT in the pause menu or debrief copies a private session report; DOWNLOAD REPORT saves it on this device.</div>');
+document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">COPY REPORT in the pause menu or debrief copies a private session report; DOWNLOAD REPORT saves it, and EXPORT LAST 10 downloads saved sessions.</div>');
 const pmExitLabel = () => (game.mode === 'mission' ? 'EXIT MISSION' : game.mode === 'skirmish' ? 'EXIT SKIRMISH' : game.mode === 'survival' ? 'END RUN' : 'EXIT TO MENU');
 function pauseMenuRefresh() {
   const note = pmEl.querySelector('textarea'); if (document.activeElement !== note && note.value !== REPORT.note) note.value = REPORT.note;
@@ -58,6 +58,7 @@ function pauseMenuRefresh() {
 function pauseExit() {                                   // leave the current run for the main menu (Gauntlet: end the run, bank the score, show the debrief)
   userPause = false; keys.clear(); pmArm = 0; pmEl.style.display = 'none';
   if (game.mode === 'survival' && sv && !sv.over) { sv.quit = true; svEnd(); sv.overT = 99; return; }
+  reportArchive('exit');
   if (game.mode === 'mission') restoreCrew();           // an abandoned sortie costs the wing nothing (same as a restart)
   openMenu();
 }
@@ -101,7 +102,7 @@ globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
   version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showCampaignList, showMissionList, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, SK_PLAYER, SK_WING, SHIPS, ordnanceStations, ordnanceTotals, ordnanceApply, get skCfg() { return skCfg; }, get skState() { return game.skS; },
-  nukeAt, nukeLog, flightModels, NUKE, REPORT, reportText, reportReset, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
+  nukeAt, nukeLog, flightModels, NUKE, REPORT, reportText, reportReset, reportArchive, reportHistory, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, PROLOGUE_MISSIONS, CAMPAIGNS, campaignOf, campaignNext, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, pauseExit, pauseMenuRefresh, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
