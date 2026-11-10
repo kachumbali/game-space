@@ -53,9 +53,12 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   const facing = (shieldPoint || lp).z < 0 ? 'fore' : 'aft';
   const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? (nz < 0 ? 'fore' : 'aft') : (nx < 0 ? 'left' : 'right');
   let d = dmg;
-  const pdmg = dmg * pierce; d -= pdmg;      // piercing share ignores shields and armour
   const holed = s.shHole && s.shHole[facing] > time;
-  const byp = holed ? 0 : d * shPen; if (!holed) d -= byp;      // tandem bypass: skips the shield only (a collapsed facet has no shield to skip)
+  // A weapon meeting an active facet stops there. Preserve the existing
+  // piercing calculation once that facet is down (including tandem holes).
+  const blocked = shieldPoint && s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed;
+  const pdmg = blocked ? 0 : dmg * pierce; d -= pdmg;
+  const byp = holed || blocked ? 0 : d * shPen; if (!holed) d -= byp;      // a collapsed facet has no shield to skip
   if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed) {
     const raw = d * X[0], a = Math.min(s.shield[facing], raw);
     s.shield[facing] -= a; if (raw > 0) d *= 1 - a / raw;

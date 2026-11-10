@@ -52,11 +52,11 @@ with Runner() as r:
       const a=target.shieldFx.scale, start=target.group.localToWorld(new T.Vector3(0,0,-a.z*2)), end=target.group.localToWorld(new T.Vector3(0,0,0));
       const hit=g.traceWeapon(target,start,end), wp=target.group.localToWorld(hit.point.clone());
       const before={shield:target.shield.fore,structure:target.structure,comps:target.comps.map(c=>c.hp),solid:target.vox.solid.reduce((x,y)=>x+y,0)};
-      const outcome=g.applyHit(target,hit.hull,1,wp,'kin',0,false,0,hit.point);
+      const outcome=g.applyHit(target,hit.hull,1,wp,'kin',0.75,false,0,hit.point);
       if(outcome!=='shield'||target.shield.fore>=before.shield||target.structure!==before.structure||target.comps.some((c,i)=>c.hp!==before.comps[i])||target.vox.solid.reduce((x,y)=>x+y,0)!==before.solid)failures.push('shield absorption');
       target.shield.fore=0;const hull=g.traceWeapon(target,start,end);if(!hull || hull.shield)failures.push('down facet');
       const torp=Object.values(g.WEAPONS).find(w=>w.tandem);if(!torp) failures.push('missing tandem');
-      else {target.shield.fore=target.def.shield.fore;const was=target.shield.fore;g.blastAt(wp,torp,0,g.player,target,null);if(target.shield.fore>=was || !(target.tandemUntil>g.time))failures.push('tandem');}
+      else {target.shield.fore=target.def.shield.fore;const was=target.shield.fore, hullBefore=target.structure;g.blastAt(wp,torp,0,g.player,target,null);if(target.shield.fore!==0 || target.structure>=hullBefore || !(target.shHole?.fore>g.time) || !(target.tandemUntil>g.time))failures.push('tandem');}
       return {checked,failures};
     }''')
     assert out['checked'] > 0 and not out['failures'], out

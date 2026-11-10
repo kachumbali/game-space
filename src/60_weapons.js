@@ -367,6 +367,7 @@ function tandemStrike(s, lp, w) {
     shieldFlash(s, lp, facing);
     flashAt(s.group.localToWorld(lp.clone()), Math.max(4, w.blast * 0.45), 0.2);
     s.tandemUntil = Math.max(s.tandemUntil || 0, time + (t.window || 3));
+    tandemHole(s, facing, t.window || 3, s.group.localToWorld(lp.clone()));
     if (s === player) log('SHIELD FACET COLLAPSED', '#ffb040');
   }
   return t.pierce || 0;
