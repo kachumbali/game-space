@@ -22,7 +22,7 @@ try {
   if (!params.has('newcrew')) { const j = JSON.parse(localStorage.getItem('gs_crew') || 'null'); if (j) for (const k in CREW) if (j[k]) CREW[k] = { ...CREW[k], ...j[k] }; }
 } catch (e) { /* storage unavailable: crew just lives for this session */ }
 function saveCrew() { try { localStorage.setItem('gs_crew', JSON.stringify(CREW)); } catch (e) { /* ignore */ } }
-function newCampaign() { CREW = freshCrew(); saveCrew(); if (rosterEnabled()) rosterReset(); }
+function newCampaign() { if (PROLOGUE_MISSIONS.includes(game.mission)) prologueReset(); CREW = freshCrew(); saveCrew(); if (rosterEnabled()) rosterReset(); }
 
 // ---- comms + objectives (HUD feeds) -------------------------------------------------------------------
 const comms = [];
@@ -400,7 +400,7 @@ MISSIONS.push({
 // story after the main campaign finale.
 const PROLOGUE_MISSIONS = [
   {
-    id: 'p01', look: 'reed', title: 'CONTRABAND SUN', subtitle: 'Stop an unregistered shuttle at Hollow 14', grades: [1500, 1250, 1000, 750],
+    id: 'p01', beforeMission: 'p01_before', afterMission: {win: 'p01_after_win', lose: 'p01_after_lose'}, look: 'reed', title: 'CONTRABAND SUN', subtitle: 'Stop an unregistered shuttle at Hollow 14', grades: [1500, 1250, 1000, 750],
     briefing: `A resupply shuttle with false registry seals has bypassed the customs checkpoint at Hollow 14. It has hired private escorts and is refusing inspection. Protect the HALBERD, break the escort, and stop the transport before it jumps.`,
     debriefWin: 'Smuggler flight neutralized. Salvage crews recovered sealed biological containment canisters marked Project Nursery / Oasis-9. Vanderbilt-Astra legal has already sealed the report.',
     debriefLose: 'The rogue transport escaped into deep space. Its cargo and the trail behind it are lost.',
@@ -412,7 +412,7 @@ const PROLOGUE_MISSIONS = [
     ],
   },
   {
-    id: 'p02', look: 'reed', title: 'THE CHOKEPOINT', subtitle: 'Break the privateer blockade at Relay Beta', grades: [2400, 2000, 1600, 1200],
+    id: 'p02', beforeMission: 'p02_before', afterMission: {win: 'p02_after_win', lose: 'p02_after_lose'}, look: 'reed', title: 'THE CHOKEPOINT', subtitle: 'Break the privateer blockade at Relay Beta', grades: [2400, 2000, 1600, 1200],
     briefing: `Privateers have blockaded Relay Beta, cutting supply traffic to the spun habitats. The HALBERD will draw their attention while Eagle Flight breaks their pickets, drone screen, and strike detachment.`,
     debriefWin: 'Relay Beta is open again. Captured traffic records show the privateers were paid in Vanderbilt-Astra bearer bonds to keep CDF patrols away from the rim.',
     debriefLose: 'The blockade holds. The outer habitats remain isolated.',
@@ -425,7 +425,7 @@ const PROLOGUE_MISSIONS = [
     ],
   },
   {
-    id: 'p03', look: 'ao2', title: 'SIDERITE VEIL', subtitle: 'Survive the ambush at Mining Belt Alpha-9', grades: [2600, 2200, 1800, 1300],
+    id: 'p03', beforeMission: 'p03_before', afterMission: {win: 'p03_after_win', lose: 'p03_after_lose'}, look: 'ao2', title: 'SIDERITE VEIL', subtitle: 'Survive the ambush at Mining Belt Alpha-9', grades: [2600, 2200, 1800, 1300],
     briefing: `A distress beacon inside the abandoned Alpha-9 belt matches a lost survey craft. The HALBERD has stopped to investigate. Keep close, preserve countermeasures, and expect a trap.`,
     debriefWin: 'Eagle Flight survived a military-grade kill box. The attackers used demilitarized human hulls with corporate avionics and knew the patrol frequency.',
     debriefLose: 'The task group was overwhelmed in Alpha-9. The route toward Lily is open to whoever set the trap.',
@@ -437,7 +437,7 @@ const PROLOGUE_MISSIONS = [
     ],
   },
   {
-    id: 'p04', look: 'lilypad', title: 'BIO-SIGNATURE ZERO', subtitle: 'First contact at the Lily Relay approach', grades: [3000, 2500, 2000, 1500],
+    id: 'p04', beforeMission: 'p04_before', afterMission: {win: 'p04_after_win', lose: 'p04_after_lose'}, look: 'lilypad', title: 'BIO-SIGNATURE ZERO', subtitle: 'First contact at the Lily Relay approach', grades: [3000, 2500, 2000, 1500],
     briefing: `Listening posts around Lily went silent thirty minutes ago. Passive arrays show hulls with no seams, no human IFF, and thermal signatures unlike anything in the registry. Protect the HALBERD, collect what telemetry you can, and survive.`,
     debriefWin: 'First contact confirmed: the invaders are designated FROGG. Long-range arrays show an entire vanguard entering the Lily corridor. The HALBERD is falling back to mount the relay defence.',
     debriefLose: 'First contact was catastrophic. The colonies will face the invasion blind.',
@@ -460,7 +460,8 @@ function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); r
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } if (rosterEnabled() && game.rosterSnap) { rosterState=JSON.parse(game.rosterSnap); rosterSave(); } }
-function startMission(M, seg) {
+function startMission(M, seg, sceneDone = false, autoLaunch = false) {
+  if (!seg && !sceneDone && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch)); return; }
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
   if (cine) cancelTransit();
   plogReset(M.title);
@@ -504,6 +505,7 @@ function startMission(M, seg) {
   }
   state = 'brief'; beamsClear();
   showBriefing(M);
+  if (autoLaunch) { $id('brief').style.display = 'none'; state = 'play'; }
 }
 
 function groupAlive(g) { return ships.some(s => s.alive && s.grp === g); }
@@ -594,7 +596,7 @@ function missionUpdate(dt) {
   if (!M || !S || S.ended) hideJumpPrompt();
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
-  if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; showDebrief(); } return; }
+  if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; const id = M.afterMission?.[S.result] || (S.result === 'partial' ? M.afterMission?.lose : null); if (sceneAvailable(id)) startScene(id, showDebrief); else showDebrief(); } return; }
   if (tutorialTick(M, S, dt)) return;
   S.t += dt; S.stageT += dt;
   sarScenarioTick(M, S);
@@ -641,7 +643,8 @@ function endMission(result, why) {
     S.resolvingRescue = false;
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
-  if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');
+  prologueRecord(game.mission, S);
+  tutorialHide();
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome
@@ -744,7 +747,7 @@ function showBriefing(M) {
   const ship = M.setup.player.ship || 'kestrel';
   const crew = rosterEnabled() ? rosterBriefHtml(M) : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
   const campaign = campaignOf(M), missionList = campaign.missions;
-  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${M.subtitle}</h2>
+  el.innerHTML = `<div class="panel"><div class="sub">${GAME_TITLE.toUpperCase()} · ${campaign.title} · EAGLE FLIGHT</div><h1>${M.title}</h1><h2>${campaign.id === 'prologue' ? `MISSION ${missionList.indexOf(M) + 1} OF ${missionList.length} · ` : ''}${M.subtitle}</h2>
     <p>${rosterDialogueText(M.briefing).replace(/\n\n/g, '</p><p>')}</p>
     <div class="cols"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div>
     <div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)}</div></div>
@@ -785,8 +788,15 @@ function showDebrief() {
   reportControls(el.querySelector('.panel'), S.result);
   el.style.display = 'flex';
   document.exitPointerLock?.();
+  if (PROLOGUE_MISSIONS.includes(M)) {
+    const b = $id('bnext');
+    if (S.result !== 'win') b?.remove();
+    else if (M.id === 'p04') { const end = document.createElement('button'); end.id = 'bending'; end.textContent = 'CONTINUE'; $id('bgo').before(end); }
+    else if (b) $id('bgo').before(b);
+  }
   $id('bgo').onclick = () => { if (S.result !== 'win') restoreCrew(); startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(next);
+  if ($id('bending')) $id('bending').onclick = showPrologueEnding;
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
 }

@@ -84,7 +84,9 @@ function openMenu(view) {
 }
 function showMainMenu() {
   menuView = 'main';
+  const nextPrologue = prologueNextIndex();
   const items = [
+    ...(nextPrologue >= 0 ? [['continue', 'CONTINUE PROLOGUE', `Mission ${nextPrologue + 1} of ${PROLOGUE_MISSIONS.length} · ${PROLOGUE_MISSIONS[nextPrologue].title}`]] : []),
     ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
     ['campaign', 'CAMPAIGNS', 'Uncharted Vanguard, then The Severed Node'],
     ['yard', 'SHIPYARD', 'Fleet technical database: inspect hulls, systems, weapons'],
@@ -102,7 +104,8 @@ function showMainMenu() {
   menuFocus();
 }
 function menuAct(a) {
-  if (a === 'intro') { menuLeave(); startScene('intro_test'); }
+  if (a === 'continue') { const i = prologueNextIndex(); if (i >= 0) { menuLeave(); startMission(PROLOGUE_MISSIONS[i]); } }
+  else if (a === 'intro') { menuLeave(); startScene('intro_test'); }
   else if (a === 'campaign') showCampaignList();
   else if (a === 'yard') showShipyardCatalog();
   else if (a === 'survival') showSurvivalSetup();
@@ -112,10 +115,10 @@ function menuAct(a) {
   else if (a === 'credits') showCredits(true);
   else if (a === 'back') showMainMenu();
   else if (a.startsWith('yard:')) showShipyardCatalog(a.slice(5));
-  else if (a.startsWith('campaign:')) showMissionList(CAMPAIGNS.find(c => c.id === a.slice(9)));
+  else if (a.startsWith('campaign:')) { const c = CAMPAIGNS.find(c => c.id === a.slice(9)); if (c && (c.id === 'prologue' || prologueUnlocked())) showMissionList(c); }
   else if (a.startsWith('mission:')) {
     const [, cid, i] = a.split(':'); const c = CAMPAIGNS.find(x => x.id === cid);
-    if (c && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
+    if (c && (c.id === 'prologue' || prologueUnlocked()) && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
   }
 }
 function yardWeaponLine(wid, suffix = '') {
@@ -158,7 +161,7 @@ function showShipyardCatalog(selectedId) {
 function showCampaignList() {
   menuView = 'missions';
   menuShell(`<div class="sub">CAMPAIGNS</div><h1>SELECT CAMPAIGN</h1><h2>Choose a story arc</h2>
-    <div class="mlist">${CAMPAIGNS.map(c => `<button class="mi" data-a="campaign:${c.id}"><b>${c.title}</b><span>${c.subtitle} · ${c.missions.length} missions</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
+    <div class="mlist">${CAMPAIGNS.map(c => `<button class="mi" data-a="campaign:${c.id}" ${c.id !== 'prologue' && !prologueUnlocked() ? 'disabled' : ''}><b>${c.title}</b><span>${c.subtitle} · ${c.missions.length} missions${c.id !== 'prologue' ? (prologueUnlocked() ? ' · UNPOLISHED' : ' · LOCKED UNTIL PROLOGUE 4') : ''}</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }
@@ -174,7 +177,8 @@ function showMissionList(campaign) {
 addEventListener('keydown', e => {
   if (!menuView || optsOpen || credOpen || e.ctrlKey || e.metaKey) return;
   if (menuView === 'main' || menuView === 'missions' || menuView === 'yard') {
-    const L = [...$id('brief').querySelectorAll('.mi')], i = L.indexOf(document.activeElement);
+    const L = [...$id('brief').querySelectorAll('.mi:not(:disabled)')], i = L.indexOf(document.activeElement);
+    if (!L.length) return;
     if (e.code === 'ArrowDown' || e.code === 'KeyS') L[(i + 1) % L.length].focus();
     else if (e.code === 'ArrowUp' || e.code === 'KeyW') L[(i - 1 + L.length) % L.length].focus();
     else if (e.code === 'Enter' || e.code === 'NumpadEnter' ) { (i >= 0 ? L[i] : L[0]).click(); }

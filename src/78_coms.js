@@ -88,7 +88,7 @@ function ordersFor(list, label) {
   const tgt = hostileTarget();
   const hold = list.every(s => s.ai.hold);
   const send = (type, tg) => () => {
-    setOrder(list, type, tg);
+    setOrder(list, type, tg); if (list.length) tutorialAction('wing_order');
     for (const s of list) comsSay(nameOf(s), voice(s, type), undefined);
   };
   return {

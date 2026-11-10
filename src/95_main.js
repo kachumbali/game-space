@@ -7,7 +7,7 @@ if (!params.has('yard')) {
     startScene(params.get('scene') || 'intro_test');
   } else {
     const bootCampaign = CAMPAIGNS.find(c => c.id === params.get('campaign')) || CAMPAIGNS.find(c => c.id === 'severed_node');
-    startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))]);
+    startMission(bootCampaign.missions[Math.max(0, Math.min(bootCampaign.missions.length - 1, (parseInt(params.get('m')) || bootCampaign.missions.length) - 1))], null, false, params.has('go') && !params.has('free') && !params.has('sk') && !params.has('skh') && !params.has('sv'));
     if (params.has('free')) { $id('brief').style.display = 'none'; resetGame(); }
     else if (params.has('sk') || params.has('skh')) startSkirmish(skFromParams());
     else if (params.has('sv')) startSurvival(svFromParams());
@@ -61,6 +61,7 @@ function pauseMenuRefresh() {
 }
 function pauseExit() {                                   // leave the current run for the main menu (Gauntlet: end the run, bank the score, show the debrief)
   userPause = false; keys.clear(); pmArm = 0; pmEl.style.display = 'none';
+  if (game.mode === 'mission') prologueSessionRecord(game.mission, game.mstate, 'exit');
   if (game.mode === 'survival' && sv && !sv.over) { sv.quit = true; svEnd(); sv.overT = 99; return; }
   reportArchive('exit');
   if (game.mode === 'mission') restoreCrew();           // an abandoned sortie costs the wing nothing (same as a restart)
@@ -92,7 +93,7 @@ function frame(t) {
   if (!params.has('yard')) {
     audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
     ejectionSceneTick(dt); musicTick(dt);
-    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen && !ejectionSceneActive()) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
+    if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen && !sceneState.active && !ejectionSceneActive()) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
     const hudStart = FPS_ON ? performance.now() : 0;
     updateHud();
@@ -136,6 +137,7 @@ Object.assign(globalThis.__game, { PERF, perfReset, perfRecord, perfStats, perfS
 }, capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
+Object.assign(globalThis.__game, { SCENE_IDS, sceneState, sceneAvailable, startScene, stopScene, prologueNextIndex, prologueComplete, prologueReset });
 
 // Preview a cutscene from the title screen: ?cutscene=ejection|recovered|captured|missing (plays regardless of the 'seen' marker)
 if (params.has('cutscene')) setTimeout(() => { try { for (const k of ['ejection','recovered','captured','missing']) localStorage.removeItem('gs_ejection_scene_'+k); } catch (_) {} playEjectionSequence(params.get('cutscene')); }, 1500);

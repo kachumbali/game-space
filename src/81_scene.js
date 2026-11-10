@@ -6,6 +6,9 @@
 //  Reference: docs/archive/INTRO_TEST_SPEC.md
 // ======================================================================
 
+// Built from scene.json files at build time, so absent optional scenes make no request.
+const SCENE_IDS = /*@SCENE_IDS@*/[];
+function sceneAvailable(id) { return !!id && SCENE_IDS.includes(id); }
 const SCENE_CANVAS_W = 320;
 const SCENE_CANVAS_H = 200;
 const SCENE_RENDER_SCALE = 4;
@@ -29,6 +32,7 @@ let sceneState = {
   images: {},
   audioCtx: null,
   rafId: null,
+  onDone: null, loadToken: 0,
 };
 
 // Embedded default scene for intro_test (fallback if fetch is offline)
@@ -179,22 +183,27 @@ function advanceSceneDialogue() {
   }
 }
 
-async function startScene(sceneId = 'intro_test') {
+async function startScene(sceneId = 'intro_test', onDone = null) {
   initSceneDOM();
   const wrap = document.getElementById('sceneWrap');
   if (wrap) wrap.style.display = 'flex';
-
+  const token = ++sceneState.loadToken;
+  sceneState.active = true; sceneState.onDone = onDone;
+  document.exitPointerLock?.();
   let sceneData = INTRO_TEST_SCENE;
   try {
     const res = await fetch('assets/scenes/' + sceneId + '/scene.json');
-    if (res.ok) sceneData = await res.json();
+    if (token !== sceneState.loadToken) return;
+    if (res.ok) { sceneData = await res.json(); if (!sceneData || !Array.isArray(sceneData.events)) throw Error('invalid scene'); }
+    else if (onDone) { stopScene(); return; }
   } catch (e) {
+    if (token !== sceneState.loadToken) return;
+    if (onDone) { stopScene(); return; }
     console.warn('Using embedded scene data:', e);
   }
-
-  await preloadSceneAssets(sceneData);
-
-  sceneState.active = true;
+  try { await preloadSceneAssets(sceneData); }
+  catch (e) { if (token === sceneState.loadToken) stopScene(); return; }
+  if (token !== sceneState.loadToken) return;
   sceneState.id = sceneId;
   sceneState.t = 0;
   sceneState.lastFrameT = performance.now();
@@ -213,11 +222,14 @@ async function startScene(sceneId = 'intro_test') {
 }
 
 function stopScene() {
-  sceneState.active = false;
+  if (!sceneState.active) return;
+  sceneState.active = false; sceneState.loadToken++;
+  const onDone = sceneState.onDone; sceneState.onDone = null;
   if (sceneState.rafId) cancelAnimationFrame(sceneState.rafId);
   const wrap = document.getElementById('sceneWrap');
   if (wrap) wrap.style.display = 'none';
 
+  if (onDone) { onDone(); return; }
   // Return to game menu
   if (typeof openMenu === 'function') openMenu();
   else if (typeof showMainMenu === 'function') showMainMenu();
