@@ -68,6 +68,7 @@ function musicMood(dtReal) {
   if (MUS.combatT > 0) return n >= 6 || MUS.mood === 'heavy' && n >= 3 ? 'heavy' : 'combat';
   return distant ? 'tension' : (game.mission?.music === 'rescue' || mission.startsWith('sar')) ? 'rescue' : 'patrol';
 }
+const MUSIC_DUCK = 0.55;                              // music level under a warning cue (1 = no ducking)
 function musicTick(dtReal) {
   if (!MUS.started) return;
   const on = AOPT.music && !AUDIO.muted;
@@ -77,11 +78,13 @@ function musicTick(dtReal) {
   for (const k in MUSIC_FILES) {
     if (k !== MUS.want && !MUS.el[k]) continue;
     const critical = AUDIO.ctx && AUDIO.ctx.currentTime < (AUDIO.criticalUntil || 0);
-    const a = musEl(k), tv = k === MUS.want && !critical ? AOPT.musicVol : 0;
+    // Owner hand-play 2026-11-10: warning cues muted the music outright (and it then needed 1.6 s to return), so in a fight, where low-energy and
+    // lock warnings repeat, the score was effectively gone. Warnings now duck it to MUSIC_DUCK of its level, quickly, and it recovers quickly.
+    const a = musEl(k), tv = k === MUS.want ? AOPT.musicVol * (critical ? MUSIC_DUCK : 1) : 0;
     if (tv > 0 && a.paused) a.play().then(() => { if (k === MUS.want) MUS.status = 'playing: ' + k; }).catch(() => { MUS.status = 'blocked by the browser: tap the screen once more'; });
-    const step = dtReal / 1.6;                         // ~1.6 s crossfade
     const cur = MUS.vol[k] ?? 0;
-    musSetVol(k, critical ? 0 : clamp(cur + clamp(tv - cur, -step, step), 0, 1));
+    const step = dtReal / (k === MUS.want && cur > 0.01 ? 0.35 : 1.6);   // ~1.6 s crossfade between tracks; ducking and its recovery take ~0.35 s
+    musSetVol(k, clamp(cur + clamp(tv - cur, -step, step), 0, 1));
     if (tv === 0 && MUS.vol[k] < 0.01 && !a.paused) a.pause();
   }
   if (on && MUS.want && MUS.el[MUS.want] && !MUS.el[MUS.want].paused) MUS.status = 'playing: ' + MUS.want;

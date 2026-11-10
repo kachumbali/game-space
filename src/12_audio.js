@@ -96,7 +96,7 @@ const SFX_FALLBACK = {
 };
 function sfx(name, dist = 0, vol = 1, shipClass = 'fighter') {
   if (!AUDIO.ctx || AUDIO.muted) return;
-  if (['alarm', 'warn', 'launchwarn', 'hullalarm', 'lowenergy'].includes(name)) AUDIO.criticalUntil = Math.max(AUDIO.criticalUntil, AUDIO.ctx.currentTime + 1.5);
+  if (['alarm', 'launchwarn', 'hullalarm'].includes(name)) AUDIO.criticalUntil = Math.max(AUDIO.criticalUntil, AUDIO.ctx.currentTime + 1.0);   // real danger ducks the music; the routine 'warn' and 'lowenergy' cues no longer do
   const a = 1 / (1 + dist / 220);
   if (a * vol < 0.04) return;
   SV = Math.min(1, a * vol);
