@@ -643,6 +643,7 @@ function endMission(result, why) {
     S.resolvingRescue = false;
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
+  if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');   // finishing the Prologue unlocks the full control list (the other campaigns need it); restored by the lead after the flow merge dropped it
   prologueRecord(game.mission, S);
   tutorialHide();
   if (result === 'lose' && state !== 'dead') state = 'done';
