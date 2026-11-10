@@ -455,7 +455,7 @@ const nukeLog = [];
 function killMissile(m, blast, direct = null) {
   if (m.dead) return;
   m.dead = true;
-  if (m.owner === player && blast && (direct ? direct.team !== m.team : m.target?.group && m.target.team !== m.team)) REPORT.missiles.hit++;
+  if (m.owner === player && blast && (direct || m.reportContact)?.team !== undefined && (direct || m.reportContact).team !== m.team) REPORT.missiles.hit++;
   if (blast && m.w.nuclear) nukeAt(m.pos, (m.owner && m.owner.nukeKt) || m.w.yield, m.owner);   // per-ship yield dial (owner 2026-10-22)
   else if (blast) blastAt(m.pos, m.w, m.team, m.owner, direct);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
@@ -483,7 +483,7 @@ function updateMissiles(dt) {
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true, s); break; }
-      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
+      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { m.reportContact = s; killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); if (!m.mesh.userData.sharedMissileResources) m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }

@@ -36,18 +36,23 @@ function plogDownload() {
 setInterval(plogSave, 15000);
 
 // Session report counters are separate from the diagnostic play log. Reset on each sortie.
-const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null };
-function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null}); }
+const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null, lastControls: null, lastFlight: null };
+function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null, lastControls: null, lastFlight: null}); }
 function reportLog(line) { REPORT.logs.push(String(line)); if (REPORT.logs.length > 20) REPORT.logs.shift(); }
 function reportWeapon(id, field) { const w = REPORT.weapons[id] ||= {shots: 0, hits: 0}; w[field]++; }
 function reportTick(dt) {
   if (state !== 'play' || !player) return;
   REPORT.elapsed += dt / SIM_SPEED;
+  REPORT.lastControls = controlsMode; REPORT.lastFlight = flightMode;
   for (const s of ships) if (s.team === 0 && s !== player && s.pilot) REPORT.wing[s.callsign || s.pilot] = s.alive && !s.dying ? 'active' : 'lost';
+  reportSample();
+}
+function reportSample() {
+  if (!player) return;
   const sh = player.shield.fore + player.shield.aft, hull = Math.max(0, player.structure);
   REPORT.shield = Math.min(REPORT.shield ?? sh, sh); REPORT.hull = Math.min(REPORT.hull ?? hull, hull);
 }
-function reportFrame(ms) { if (state === 'play' && !userPause && !optsOpen && !rdlgOpen) { REPORT.frameSum += ms; REPORT.frameCount++; REPORT.frameWorst = Math.max(REPORT.frameWorst, ms); } }
+function reportFrame(ms) { if (state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused) { REPORT.frameSum += ms; REPORT.frameCount++; REPORT.frameWorst = Math.max(REPORT.frameWorst, ms); } }
 function reportText(result = 'in progress', note = '') {
   const p = player, m = game.mission, S = game.mstate;
   const entries = o => Object.entries(o).map(([k,v]) => `${k}: ${typeof v === 'number' ? Math.round(v) : v}`).join(', ') || 'none';
@@ -59,7 +64,7 @@ function reportText(result = 'in progress', note = '') {
     `SPACE COMMANDER REPORT · v${GAME_VERSION} · build ${BUILD_ID}`,
     `Device: ${isTouch ? 'touch' : 'desktop'} · ${innerWidth}x${innerHeight}`,
     `Campaign / mission: ${m ? campaignOf(m).id + ' / ' + m.id : game.mode}`,
-    `Difficulty: ${game.mode === 'survival' ? sv?.cfg?.diff : game.mode === 'skirmish' ? game.sk?.skill || 'skirmish settings' : diffName} · Flight: ${flightMode} · Controls: ${controlsMode}`,
+    `Difficulty: ${game.mode === 'survival' ? sv?.cfg?.diff : game.mode === 'skirmish' ? game.sk?.skill || 'skirmish settings' : diffName} · Flight: ${REPORT.lastFlight || flightMode} · Controls: ${REPORT.lastControls || controlsMode}`,
     `Result: ${result} · Time flown: ${Math.floor(REPORT.elapsed / 60)}:${String(Math.floor(REPORT.elapsed % 60)).padStart(2,'0')}`,
     `Death cause: ${S?.playerDeathCause || 'not recorded'}`,
     `Kills: ${kills} (${entries(killLog)})`, `Weapons shots/hits: ${weapons}`,
