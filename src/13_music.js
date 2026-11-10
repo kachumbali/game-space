@@ -145,6 +145,8 @@ function toggleOpts(force) {
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
       + row('o_fm', 'Flight model [F]', `<select id="o_fm">${FM_ORDER.map(k => `<option value="${k}" ${flightMode === k ? 'selected' : ''}>${FM_NAMES[k]}</option>`).join('')}</select>`)
+      + row('o_diff', 'Campaign difficulty', `<select id="o_diff">${Object.keys(DIFFS).map(k => `<option value="${k}" ${diffName === k ? 'selected' : ''}>${DIFFS[k].name}</option>`).join('')}</select>`)
+      + `<div class="onote" id="o_diff_note">${diffCfg().blurb}</div>`
       + row('o_pur', 'Sim purist (no hit markers, kill banners, pods or hit-stop)', `<input type="checkbox" id="o_pur" ${AOPT.purist ? 'checked' : ''}>`)
       + (TUNE.ordnance?.enabled ? row('o_nuke', 'Quick-play nuclear torpedo (next sortie)', `<input type="checkbox" id="o_nuke" ${quickNukeEnabled ? 'checked' : ''}>`) : '')
       + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
@@ -161,6 +163,7 @@ function toggleOpts(force) {
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
     $id('o_fm').onchange = e => fmSet(e.target.value);
+    $id('o_diff').onchange = e => { diffSet(e.target.value); $id('o_diff_note').textContent = diffCfg().blurb; };
     $id('o_pur').onchange = e => { AOPT.purist = e.target.checked; aoptSave(); };
     if ($id('o_nuke')) $id('o_nuke').onchange = e => { quickNukeEnabled = e.target.checked; };
     $id('o_sens').oninput = e => { AOPT.sens = e.target.value / 100; aoptSave(); };
