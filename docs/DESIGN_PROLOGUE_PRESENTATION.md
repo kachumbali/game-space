@@ -13,7 +13,7 @@ The wall display is a UI layer, not text painted into the background. It has a m
 | Control | Action and availability |
 |---|---|
 | **BRIEFING** | Open the currently selected Prologue mission's existing briefing and loadout; if there is no current selection, use the next unfinished mission. Selection/launch availability remains the existing game rule. |
-| **ROSTER** | Open the existing roster/service-record panel, read-only where the current game offers only a service record. Return to this same room. Do not add a crew-management mechanic or invent a roster when the feature is disabled. |
+| **ROSTER** | Open the existing roster/service-record view for the selected Prologue mission; return to this same room. If the optional roster is disabled, show the existing legacy CREW statuses read-only. Do not add a crew-management mechanic or invent pilots. |
 | **CONTINUE** | Use Job C's next-unfinished-mission selection, including its optional `beforeMission` scene, then the existing briefing. When all four are complete, show **PROLOGUE COMPLETE** and a main-menu action instead of inventing a fifth sortie. |
 
 **Flow compatibility:** Job C's victory debrief → **NEXT MISSION** → before-scene → next briefing remains a single direct action. The room is reached from a clearly labelled **READY ROOM** entry at the main menu and an optional **READY ROOM** action on the debrief; it is not an extra mandatory stop or a replacement for CONTINUE. After a loss, the existing debrief and RETRY remain available. After mission 4's win, retain Job C's ending card, then its main menu. The room can show the last result only while a valid snapshot exists; otherwise it shows the neutral state. Persist no new story flags.
@@ -35,7 +35,7 @@ The wall display is a UI layer, not text painted into the background. It has a m
 | Input / priority | Exact line or operation | Source and constraint |
 |---|---|---|
 | **t=8 roster**, participating wing slots have KIA/MIA/CAPTURED/RECOVERING | Use `HAWK: KIA. SPARROW: MIA.`-style text, with each participating pilot's *actual* callsign and actual status. [NEW] | Legacy: compare pre-sortie `game.crewSnap` against current `CREW`; roster: use the sortie's `S.rosterSelected` / participants and `rosterFind(id).status` after `rosterFinish`. Only claim KIA for KIA; never convert MIA, captured or recovering to death. If two slots have different outcomes, report both when they fit. Abbreviate a long callsign deterministically or use “Wing slot 1/2”; never fabricate a name. |
-| **t=8**, no relevant loss or no reliable snapshot | `Roster status: see the service record.` [NEW] | The word “returned” is intentionally avoided: active status or absent evidence alone is not a rescue result. |
+| **t=8**, no relevant loss or no reliable snapshot | `Roster status: see the debrief.` [NEW] | The word “returned” is intentionally avoided: active status or absent evidence alone is not a rescue result. |
 | **t=15**, victory | `Grade: A. Flight record filed.` [NEW], substituting the actual S/A/B/C/D from `missionStats().grade` | Resolve while the completed mission and `game.mstate` are still current. This is a result read, not a new award. |
 | **t=15**, loss with a real death-cause line | `Likely cause: ` followed by the exact `S.playerDeathCause` if it fits; otherwise use a two-line-safe, meaning-preserving approved mapping. [NEW] | It is a *likely* cause, not certainty. The game sets this field only for some Prologue player deaths. Missing field or objective failure must not be labelled pilot death. |
 | **t=15**, loss without a cause | `Cause unavailable. Review the debrief.` [NEW] | No claim that the player survived or died. |
@@ -61,7 +61,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 0.4, "do": "head", "id": "hawk", "char": "hawk", "pos": "right"},
-    {"t": 1, "do": "say", "who": "imani", "text": "A shuttle passed Hollow 14 customs.", "cps": 28},
+    {"t": 1, "do": "say", "who": "imani", "text": "A shuttle bypassed Hollow 14 customs.", "cps": 28},
     {"t": 9, "do": "say", "who": "hawk", "text": "They refused inspection. Stay close.", "cps": 28},
     {"t": 17, "do": "say", "who": "imani", "text": "Protect HALBERD and stop the transport.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -77,7 +77,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The canisters say Project Nursery / Oasis-9.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "VAC legal has sealed the report.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -93,7 +93,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The transport escaped. The trail is lost.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "Review the sortie before another attempt.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -127,7 +127,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "Relay Beta is open. The traffic records are in.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "The privateers were paid in VAC bonds.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -143,7 +143,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The blockade holds. The habitats are isolated.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "Review the sortie before another attempt.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -177,7 +177,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The attackers knew our patrol frequency.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "Their hulls carried corporate avionics.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -193,7 +193,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The task group was overwhelmed at Alpha-9.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "The route to Lily remains exposed.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -227,7 +227,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "The contacts are designated FROGG.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "HALBERD falls back to the relay defence.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -243,7 +243,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
     {"t": 0, "do": "bg", "img": "../shared/bg_ready_room.webp", "fade": 0.6},
     {"t": 0.2, "do": "head", "id": "imani", "char": "imani", "pos": "left"},
     {"t": 1, "do": "say", "who": "imani", "text": "First contact failed. The colonies are blind.", "cps": 28},
-    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the service record.", "cps": 28},
+    {"t": 8, "do": "say", "who": "imani", "text": "Roster status: see the debrief.", "cps": 28},
     {"t": 15, "do": "say", "who": "imani", "text": "Flight record available in the debrief.", "cps": 28},
     {"t": 22, "do": "say", "who": "imani", "text": "Review the sortie before another attempt.", "cps": 28},
     {"t": 29, "do": "end"}
@@ -257,7 +257,7 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
 
 **Purpose:** backlog item 2 asks the opening to say what this is: an AI-designed space combat simulator. The first sentence does so. The dry second beat keeps the tone human without borrowing anyone else's artwork or characters. Use only existing Imani and Hawk heads; the existing space illustration establishes the scale before the same ready room appears. No voice, no new music cue, and no instruction hidden in narration.
 
-**When:** on starting a new Prologue, before `p01_before` and the existing mission briefing; skip goes directly to that briefing, not to gameplay. Offer **WATCH OPENING** from the main menu for replay. Do not interrupt an existing CONTINUE, retries, `?go`, `?scene=`, or a direct testing URL. A page-session presentation flag can prevent the opening replaying on every visit; it is not a story flag or progression mechanic. Job C currently supplies no opening hook: this scheduling and replay entry are **[NEEDS CODE]**, subject to the owner choosing the trigger. If Hawk is unavailable or not yet assigned, remove her `head` event and change the `t=13` line to Imani; it has the same text. The opening is not a claim that either character is alive after a subsequent loss.
+**When:** on the first entry to a fresh Prologue in this page session, including an initial CONTINUE when no Prologue victory is recorded, before `p01_before` and the existing mission briefing; skip continues to `p01_before`, then its briefing (or straight to the briefing if that scene is absent), not directly to gameplay. Offer **WATCH OPENING** from the main menu for replay. Do not interrupt CONTINUE for an already-started Prologue, retries in the same session, `?go`, `?scene=`, or a direct testing URL. A local, presentation-only `gs_prologue_opening_seen` flag can prevent replay across reloads; it is not a story flag or progression mechanic. A prior loss without that flag cannot be distinguished from a fresh player, so the opening may be offered once and remains skippable. Job C currently supplies no opening hook: this scheduling and replay entry are **[NEEDS CODE]**, subject to the owner choosing the trigger. If Hawk is unavailable or not yet assigned, remove her `head` event and change the `t=13` line to Imani; it has the same text. The opening is not a claim that either character is alive after a subsequent loss.
 
 #### `prologue_opening` [NEW]
 
@@ -305,7 +305,7 @@ For production, generate the one master, review it against the game's 320 × 200
 
 | Existing file | Actual size | Use / limitation |
 |---|---:|---|
-| `assets/scenes/intro_test/painted/bg_space.webp` | 1280 × 720; 88,404 bytes | Opening establishing image. Existing original art's provenance and prompted purpose are in `docs/ART_CREDITS.md`; its full generation prompt was not recorded there and is not invented here. |
+| `assets/scenes/intro_test/painted/bg_space.webp` | 1280 × 720; 88,404 bytes | Opening establishing image, treated as an illustrative fleet view rather than an exact model of the HALBERD or Kestrel; use a plain dark title card if the owner rejects that mismatch. Existing original art's provenance and prompted purpose are in `docs/ART_CREDITS.md`; its full generation prompt was not recorded there and is not invented here. |
 | `assets/scenes/intro_test/painted/imani.webp` | 768 × 768; 60,162 bytes | Imani command-feed portrait. Reuse subject to owner cast approval; do not equate her with Vance. |
 | `assets/scenes/intro_test/painted/hawk.webp` | 768 × 768; 79,322 bytes | Hawk portrait only when that named pilot is available. Existing image has no expression animation. |
 | `assets/scenes/intro_test/heads/{imani,hawk,meow}/*.png` and `head.json` | 64 × 64 per layer; metadata per head | Existing low-resolution eyes/mouth fallback if a painted card is unavailable. Meow is not required to speak in these drafts; never substitute this portrait for an unidentified player. |
@@ -322,3 +322,39 @@ The four original painted files are documented in `docs/ART_CREDITS.md`; check c
 | `art/bg_ready_room_alert.png` → `bg_ready_room_alert.webp` | **1920 × 1080 PNG** master, **1280 × 720 WebP** target 100–150 KB | `The exact same room and camera as the approved ready-room reference, empty and unchanged furniture and structure, with restrained low amber alert lighting and a dark wall display, no people, no text.` Optional visual treatment only, not a new room or claim that an alert occurred. Do not add a separate branch or asset dependency for launch. |
 
 For any optional portrait, first obtain approval of a neutral master, then use that master as the image reference for later expressions, recording model, seed and date as described in `CUTSCENE_ART_PROMPTS.md`. Portrait expressions, mouth layers, additional stills, and any new roster-specific faces remain outside the one-week must-have list.
+
+## 5. One-week build plan and decision points [NEW]
+
+This is an estimate for **five working days after the owner accepts this proposal and the required branches are available**; it excludes waiting for approval or external art iteration. It is not a promise of physical-iPad coverage. If the single background is rejected, use the existing briefing image as the explicitly temporary stand-in and ship no unapproved replacement.
+
+| Day | Deliverable and exit condition |
+|---|---|
+| 1 | Owner decides the room, command-feed framing, opening trigger, dialogue and one-image budget. Produce/review the single room master and 320 × 200 crop. Convert the twelve drafts and opening to real JSON only after approval; validate JSON, durations and the two-line-safe fallback text. |
+| 2 | Add the small context/line adapter and shared-image loading described below. Exercise every outcome and unavailable-state fallback with test fixtures. Keep scene playback skippable and paused correctly. |
+| 3 | Build one responsive ready-room UI and wire BRIEFING, ROSTER, CONTINUE and BACK to existing paths. For ROSTER, obtain the selected Prologue carrier pool explicitly; the current `rosterServiceHtml` reads `game.mstate.rosterKey` and must not be called with a stale or absent mission. If the roster is disabled, render the existing legacy CREW statuses read-only. Keep Job C's NEXT MISSION and ending route direct; test keyboard and touch navigation. |
+| 4 | Integrate the approved room image, existing portraits, opening and 12 scene files; check per-scene paths, compressed size, opening replay/`?go` bypass, and correct return after normal end, skip, malformed or missing content. Review the after-loss state on screen, not just as JSON. |
+| 5 | Run the project gate and focused branch/scene tests; capture desktop and iPad-sized screenshots, check caption wrap/focus and report copy/download, then reserve time for fixes. Ask the owner for a real iPad landscape pass and a first unaided playthrough; report those as unverified until actually done. |
+
+### Data and art only after approval
+
+- Put each approved block in `assets/scenes/<id>/scene.json`; the twelve IDs match Job C's `p01_before` … `p04_after_lose` names. Put the opening in `assets/scenes/prologue_opening/scene.json`. Set `music` to null. `build.py` on Job C indexes scene IDs with a `scene.json`; rebuild after adding them. This design branch itself adds no scene files or images.
+- Produce one approved `assets/scenes/shared/bg_ready_room.webp`; reuse the cited intro-test portrait and space files. Copying existing assets into every scene folder would technically satisfy today's per-scene loader but would duplicate payload and risk drift. Prefer the shared-loader change below. Record generated-asset provenance and measured compressed size according to `docs/ART_CREDITS.md` and the existing credit rules.
+- Select dynamic variants into an in-memory copy of ordinary scene events before playback. The safe generic text in each file remains readable if no context is available; raw JSON does not pretend to support `if`, arbitrary variables, or new event types. Persist no dialogue outcome or character relationship.
+
+### Code needed; no code is implemented here
+
+1. **Job C integration.** Start from or merge `codex/prologue-flow` through the lead. Its `beforeMission` and `afterMission` hooks already name the twelve IDs, skip missing indexed scenes and return to the briefing/debrief. Extend the hook invocation to pass the intended mission and an immutable, bounded context: pre-sortie assignment/status, post-sortie participant statuses, outcome, grade and nullable player-death-cause. The current before hook can run before the new `game.mission` and roster exist; use a neutral Imani-only version when actual future assignment is unknown. After hooks run before the debrief, with the just-ended `game.mstate` still available. Preserve callbacks on normal end, skip, failed loading and `?go`.
+2. **State-safe scene preparation.** Implement the deterministic t=8/t=15 replacements and Hawk fallback in §2. In roster mode do not equate “slot 0 is occupied” with the named Hawk; compare actual identity, not a generic callsign. Suppress both the Hawk head and speech if identity or availability is uncertain. Distinguish KIA, MIA, captured and recovering; use the neutral fallback if data is absent. Resolve from the frozen context once so a loss/retry or late scene callback cannot re-read a different mission. Avoid unescaped HTML and test long names/unknown grades.
+3. **Shared presentation assets.** Today's `preloadSceneAssets` searches under each scene ID and hard-codes three character directories; the `../shared/` background can resolve as a relative path, but the portrait/legacy-head and `ui_frame.png` lookups still need either shared-path support or deliberate packaged copies. Add a single shared asset lookup/cache and optional-asset fallback; do not claim the current player already has a general shared library. Keep the same approved Imani/Hawk files across all 12 scenes, and do not show the existing painted face as a roster substitute.
+4. **Text-only playback and layout.** `music: null` alone does **not** silence the current player: `updateSceneElements` calls `playSceneBlip` while typing. Add a per-Prologue-scene silent playback option, including transition sounds, without changing unrelated scenes. Preserve SKIP/keyboard/touch and the two-line read time; make full text available to assistive technology, support instant text/reduced motion, and resize/reflow long or translated text instead of drawing beyond the canvas. The current player paints fixed-width 320 × 200 text and does not provide all of these features.
+5. **Hub and opening.** The ready room, its return route, the opening trigger/replay and the proposed ending copy are new UI work; the existing Job C branch does not already implement the room or opening. Use actual Job C progress and session totals; do not create a second campaign save or override debrief/briefing facts. `COPY REPORT` delegates to Job A when present and retains Job C's fallback/download. Opening skip targets `p01_before`, then the existing p01 briefing (or the briefing directly if the scene is absent); tests for `?go` and `?scene=` must show no opening delay.
+
+### Explicitly out of scope
+
+No new ships, boarding, mission objectives, branch mechanics, performance/balance tuning, player-controlled hub navigation, talking-head AI, voice acting, new cast beyond the optional unapproved Sparrow portrait, extra rooms or 16-mission expansion. No plot is advanced after a loss as if it were a win. No new canonical explanation is implied by the art or by the generic record presenter. No network telemetry or automatic report upload.
+
+### Verification and owner decisions
+
+- Walk all 12 scene IDs, both scene-end and skip paths, missing/corrupt scene assets, and opening bypass on direct debug URLs. Check all `say` lines complete and wrap; test at least one active-Hawk case, Hawk absent, replacement roster pilot, both wing slots unavailable, KIA vs MIA/recovering, player loss with each available cause, objective failure with no cause, each win grade, and unavailable/stale context. In every case, a missing pilot must not speak and a loss must not become a win.
+- Run keyboard and 1180 × 820 touch-viewport checks for room, roster return, debrief → next briefing, mission-4 ending and report fallback. Test the combined A/B/C branches as well as this content. Check that loading assets does not write reports, send telemetry, or expose private data. Run `python3 tools/gate.py` before any push or merge. Headless touch emulation is not an iPad.
+- Owner decisions requested at review: approve/alter the ready room and Imani command-feed convention; choose whether the opening is automatic for an untouched Prologue; approve or replace the reused portraits and writing; accept the one-image production scope and the optional state-adapter code. The owner—not this design—decides whether to build it.
