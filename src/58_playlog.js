@@ -10,7 +10,7 @@ function plogBoltHit(b, s, dmg, fr) {
   const tg = s === player ? 'player' : s.team === 0 ? 'ally' : 'enemy';
   plogN(`hit.${o}>${tg}`); plogN(`dmg.${o}>${tg}`, dmg);
 }
-function plogReset(label) { if (Object.keys(PLOG.cnt).length) PLOG.prev = plogSummary(); PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); _plogAcc = 0; }
+function plogReset(label) { if (Object.keys(PLOG.cnt).length) PLOG.prev = plogSummary(); PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); _plogAcc = 0; reportReset(); }
 function plogEvent(e) { if (PLOG.events.length < 400) PLOG.events.push({ t: +(time || 0).toFixed(1), e }); }
 let _plogAcc = 0;
 function plogTick(dt) {
@@ -34,3 +34,41 @@ function plogDownload() {
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'claude-space-commander-playlog.json'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 setInterval(plogSave, 15000);
+
+// Session report counters are separate from the diagnostic play log. Reset on each sortie.
+const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {} };
+function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}}); }
+function reportLog(line) { REPORT.logs.push(String(line)); if (REPORT.logs.length > 20) REPORT.logs.shift(); }
+function reportWeapon(id, field) { const w = REPORT.weapons[id] ||= {shots: 0, hits: 0}; w[field]++; }
+function reportTick(dt) {
+  if (state !== 'play' || !player) return;
+  REPORT.elapsed += dt / SIM_SPEED;
+  for (const s of ships) if (s.team === 0 && s !== player && s.pilot) REPORT.wing[s.callsign || s.pilot] = s.alive && !s.dying ? 'active' : 'lost';
+  const sh = player.shield.fore + player.shield.aft, hull = Math.max(0, player.structure);
+  REPORT.shield = Math.min(REPORT.shield ?? sh, sh); REPORT.hull = Math.min(REPORT.hull ?? hull, hull);
+}
+function reportFrame(ms) { if (state === 'play' && !userPause && !optsOpen && !rdlgOpen) { REPORT.frameSum += ms; REPORT.frameCount++; REPORT.frameWorst = Math.max(REPORT.frameWorst, ms); } }
+function reportText(result = 'in progress', note = '') {
+  const p = player, m = game.mission, S = game.mstate;
+  const entries = o => Object.entries(o).map(([k,v]) => `${k}: ${typeof v === 'number' ? Math.round(v) : v}`).join(', ') || 'none';
+  const wing = entries(REPORT.wing) || 'none recorded';
+  const lost = p?.comps?.filter(c => c.hp <= 0).map(c => c.id).join(', ') || 'none';
+  const weapons = Object.entries(REPORT.weapons).map(([id,w]) => `${id} ${w.shots}/${w.hits}`).join(', ') || 'none';
+  const frame = REPORT.frameCount ? `${(REPORT.frameSum / REPORT.frameCount).toFixed(1)} / ${REPORT.frameWorst.toFixed(1)} ms` : 'not recorded';
+  const lines = [
+    `SPACE COMMANDER REPORT · v${GAME_VERSION} · build ${BUILD_ID}`,
+    `Device: ${isTouch ? 'touch' : 'desktop'} · ${innerWidth}x${innerHeight}`,
+    `Campaign / mission: ${m ? campaignOf(m).id + ' / ' + m.id : game.mode}`,
+    `Difficulty: ${game.mode === 'survival' ? sv?.cfg?.diff : game.mode === 'skirmish' ? game.sk?.skill || 'skirmish settings' : diffName} · Flight: ${flightMode} · Controls: ${controlsMode}`,
+    `Result: ${result} · Time flown: ${Math.floor(REPORT.elapsed / 60)}:${String(Math.floor(REPORT.elapsed % 60)).padStart(2,'0')}`,
+    `Death cause: ${S?.playerDeathCause || 'not recorded'}`,
+    `Kills: ${kills} (${entries(killLog)})`, `Weapons shots/hits: ${weapons}`,
+    `Missiles fired/hit/decoyed: ${REPORT.missiles.fired}/${REPORT.missiles.hit}/${REPORT.missiles.decoyed}`,
+    `Damage received by source class: ${entries(REPORT.damage)}`,
+    `Lowest shield / hull: ${REPORT.shield === null ? 'not recorded' : Math.round(REPORT.shield)} / ${REPORT.hull === null ? 'not recorded' : Math.round(REPORT.hull)}`,
+    `Subsystems lost: ${lost}`, `Wing: ${wing}`, `Tutorial: ${REPORT.tutorial.join(', ') || 'not shown'}`,
+    `Frame time average / worst: ${frame}`, `What annoyed you: ${String(note).replace(/\s+/g, ' ').trim().slice(0, 1000) || '(none)'}`,
+    'Last log lines:', ...REPORT.logs.map(x => String(x).replace(/\s+/g, ' '))
+  ];
+  return lines.join('\n');
+}

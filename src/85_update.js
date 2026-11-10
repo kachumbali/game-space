@@ -141,6 +141,7 @@ function briefCamera(dt) {
 
 function update(dt) {
   time += dt;
+  reportTick(dt);
   shake = Math.max(0, shake - dt * 2.2);
   hitFlash = Math.max(0, hitFlash - dt * 2.5);
   if (state === 'brief') { briefCamera(dt); updateEnv(); return; }

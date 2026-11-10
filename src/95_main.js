@@ -78,6 +78,7 @@ addEventListener('keydown', e => {                       // pause menu: arrows m
 }, true);
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
+  reportFrame(t - last);
   if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
   if (!params.has('yard')) {
@@ -97,7 +98,7 @@ globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
   version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showCampaignList, showMissionList, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, SK_PLAYER, SK_WING, SHIPS, ordnanceStations, ordnanceTotals, ordnanceApply, get skCfg() { return skCfg; }, get skState() { return game.skS; },
-  nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
+  nukeAt, nukeLog, flightModels, NUKE, REPORT, reportText, reportReset, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, PROLOGUE_MISSIONS, CAMPAIGNS, campaignOf, campaignNext, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, pauseExit, pauseMenuRefresh, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },

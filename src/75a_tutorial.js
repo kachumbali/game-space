@@ -36,6 +36,7 @@ function tutorialRender(T) {
 function tutorialAction(action) {
   const T = game.mstate?.tutorial;
   if (!T || T.confirm || TUTORIAL_STEPS[T.step]?.[0] !== action || state !== 'play' || userPause) return;
+  REPORT.tutorial.push(action + ': completed');
   T.confirm = 0.8; tutorialEl.querySelector('#tutorialText').textContent = 'GOOD';
 }
 function tutorialFinish() {
@@ -44,6 +45,7 @@ function tutorialFinish() {
   Object.assign(player.stores, T.stores); Object.assign(player.ammo, T.ammo);
   if (T.stations && player.ordnanceLoad) player.ordnanceLoad.forEach((st, i) => { st.remaining = T.stations[i]; });
   for (const m of missiles) if (m.owner === player && m.target === T.target) m.dead = true;
+  if (T.step < TUTORIAL_STEPS.length && !T.confirm) REPORT.tutorial.push(TUTORIAL_STEPS[T.step][0] + ': skipped');
   tutorialSave(); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
 }
 function tutorialTick(M, S, dt) {
@@ -68,7 +70,7 @@ function tutorialTick(M, S, dt) {
     if (T.confirm <= 0) { T.confirm = 0; T.step++; T.elapsed = 0; T.repeat = false; tutorialRender(T); }
   } else {
     T.elapsed += dt / SIM_SPEED;
-    if (T.elapsed >= 20) { T.elapsed = 0; if (T.repeat) { T.step++; T.repeat = false; } else T.repeat = true; tutorialRender(T); }
+    if (T.elapsed >= 20) { T.elapsed = 0; if (T.repeat) { REPORT.tutorial.push(TUTORIAL_STEPS[T.step][0] + ': timed out'); T.step++; T.repeat = false; } else T.repeat = true; tutorialRender(T); }
   }
   return !!S.tutorial;
 }
