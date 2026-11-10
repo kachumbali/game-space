@@ -462,6 +462,18 @@ function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); r
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } if (rosterEnabled() && game.rosterSnap) { rosterState=JSON.parse(game.rosterSnap); rosterSave(); } }
+// Prepare the existing deterministic voxel cache before flight, so the first
+// hostile wave does not build its geometry inside a simulation frame.
+function prewarmPrologueVoxels(M) {
+  if (M.id !== 'p01' && M.id !== 'p02') return;
+  const kinds = new Set();
+  for (const stage of M.stages) for (const action of stage.do)
+    for (const [kind] of action.spawn?.ships || []) kinds.add(kind);
+  for (const kind of kinds) {
+    const def = SHIPS[kind];
+    if (def) voxelize(def, resFor(def, detailIdx), detailIdx);
+  }
+}
 function startMission(M, seg, sceneDone = false, autoLaunch = false) {
   if (!seg && !sceneDone && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch)); return; }
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
@@ -492,6 +504,7 @@ function startMission(M, seg, sceneDone = false, autoLaunch = false) {
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
   }
   sarScenarioInit(M, game.mstate);
+  prewarmPrologueVoxels(M);
   game.seg = null;
   if (seg) {                       // resume at a checkpoint: the start of the current segment (after the last transit)
     const S = game.mstate;
