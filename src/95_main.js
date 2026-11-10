@@ -16,19 +16,23 @@ if (!params.has('yard')) {
   }
 }
 let last = performance.now();
-const FPS_ON = params.has('fps');   // owner P0 2026-10-22: ?fps = overlay + play-log frame times + a detail governor (opt-in; headless runs unaffected)
-let fpsAcc = 0, fpsN = 0, fpsT = 0, fpsEl = null;
-function fpsTick(ms, dt) {
+const FPS_ON = params.has('fps');
+let fpsEl = null, fpsDisplay = 0, fpsWasActive = false;
+const perfCosts = {hudSum: 0, renderSum: 0, frames: 0, callsSum: 0, callsMax: 0};
+if (FPS_ON) renderer.info.autoReset = false;
+function fpsTick(ms) {
   if (!FPS_ON) return;
-  fpsAcc += ms; fpsN++; fpsT += dt;
-  if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.6);padding:2px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
-  if (fpsT >= 1) {
-    const avg = fpsAcc / fpsN;
-    fpsEl.textContent = avg.toFixed(0) + ' ms/frame  ' + (1000 / avg).toFixed(0) + ' fps';
-    plogN('frame.ms.avg', avg); plogN('frame.count', fpsN);   // frame times in the play log (key L)
-    if (avg > 40 && state === 'play' && detailIdx > 0) changeDetail(-1);   // governor: long frames -> drop a detail step
-    fpsAcc = fpsN = fpsT = 0;
-  }
+  const active = state === 'play' && !userPause && !rdlgOpen && !optsOpen && !globalThis.__paused && !document.hidden;
+  if (active && fpsWasActive) perfRecord(ms);
+  fpsWasActive = active;
+  if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.8);padding:4px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
+  fpsDisplay += ms;
+  if (fpsDisplay >= 1000) { const s = perfSummary(); fpsEl.textContent = s ? `AVG ${s.avg.toFixed(1)} MS · P95 ${s.p95} MS · WORST ${s.worst.toFixed(1)} MS · 10S MIN ${s.windows.length ? Math.min(...s.windows.map(w => w.count / 10)).toFixed(1) : '—'} FPS${s.windows.length && s.windows.at(-1).count ? ` · LAST 10S ${s.windows.at(-1).avg.toFixed(1)}/${s.windows.at(-1).p95.toFixed(1)}/${s.windows.at(-1).worst.toFixed(1)} MS` : ''}` : 'FRAME RECORDER READY'; fpsDisplay = 0; }
+}
+// Job A may be merged independently. When present, include the opt-in recorder in its plain-text report.
+if (typeof reportText === 'function') {
+  const reportTextBase = reportText;
+  reportText = (...args) => reportTextBase(...args) + '\n' + perfReportLine();
 }
 // ---- pause menu (v0.2.2): Esc, losing mouse capture, or the touch II button open it. RESUME / RESTART / OPTIONS / EXIT (confirm; Gauntlet banks the score).
 let pmArm = 0, pmAutoT = 0;                                         // performance.now() of the first EXIT click; a second click within 4 s confirms
@@ -90,9 +94,14 @@ function frame(t) {
     ejectionSceneTick(dt); musicTick(dt);
     if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen && !ejectionSceneActive()) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
+    const hudStart = FPS_ON ? performance.now() : 0;
     updateHud();
+    if (FPS_ON) perfCosts.hudSum += performance.now() - hudStart;
   }
+  if (FPS_ON) renderer.info.reset();
+  const renderStart = FPS_ON ? performance.now() : 0;
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
+  if (FPS_ON) { perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -120,7 +129,11 @@ Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, resc
 Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, rosterFind, rosterRank, rosterSkill, rosterTransition, rosterResolveMissing, rosterStoryArrival, rosterUpdateAwards });
 
 
-Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { PERF, perfReset, perfRecord, perfStats, perfSummary, perfReportLine, Particles, perfCosts, perfDiagnostics() {
+  const shipRows = ships.filter(s => s.alive).map(s => { let instances = 0, meshes = 0; s.group.traverse(o => { if (o.isInstancedMesh) { instances += o.count; meshes++; } }); return {id: s.def.id, callsign: s.callsign, meshes, instances}; });
+  const particles = [sparks, fire, smoke, frag].map(p => ({capacity:p.max, active:p.life.reduce((n,x) => n + (x > 0 ? 1 : 0), 0)}));
+  return {voxelBuilds:PERF.voxelBuilds || [], costs:{...perfCosts}, ships:shipRows, particles, overlay:{width:ov.width,height:ov.height}, quality:qualityName, pixel:PIXEL_STEPS[pixelIdx], detail:DETAIL_STEPS[detailIdx], bloom:!!(composer && bloomOn), heap:performance.memory?.usedJSHeapSize || null};
+}, capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 
