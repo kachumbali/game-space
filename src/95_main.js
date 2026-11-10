@@ -18,6 +18,8 @@ if (!params.has('yard')) {
 let last = performance.now();
 const FPS_ON = params.has('fps');
 let fpsEl = null, fpsDisplay = 0, fpsWasActive = false;
+const perfCosts = {hudSum: 0, renderSum: 0, frames: 0, callsSum: 0, callsMax: 0};
+if (FPS_ON) renderer.info.autoReset = false;
 function fpsTick(ms) {
   if (!FPS_ON) return;
   const active = state === 'play' && !userPause && !rdlgOpen && !optsOpen && !globalThis.__paused && !document.hidden;
@@ -25,7 +27,7 @@ function fpsTick(ms) {
   fpsWasActive = active;
   if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.8);padding:4px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
   fpsDisplay += ms;
-  if (fpsDisplay >= 1000) { const s = perfSummary(); fpsEl.textContent = s ? `AVG ${s.avg.toFixed(1)} MS · P95 ${s.p95} MS · WORST ${s.worst.toFixed(1)} MS · 10S MIN ${s.windows.length ? (1000 / Math.max(...s.windows.map(w => w.avg))).toFixed(1) : '—'} FPS` : 'FRAME RECORDER READY'; fpsDisplay = 0; }
+  if (fpsDisplay >= 1000) { const s = perfSummary(); fpsEl.textContent = s ? `AVG ${s.avg.toFixed(1)} MS · P95 ${s.p95} MS · WORST ${s.worst.toFixed(1)} MS · 10S MIN ${s.windows.length ? Math.min(...s.windows.map(w => w.count / 10)).toFixed(1) : '—'} FPS${s.windows.length && s.windows.at(-1).count ? ` · LAST 10S ${s.windows.at(-1).avg.toFixed(1)}/${s.windows.at(-1).p95.toFixed(1)}/${s.windows.at(-1).worst.toFixed(1)} MS` : ''}` : 'FRAME RECORDER READY'; fpsDisplay = 0; }
 }
 // Job A may be merged independently. When present, include the opt-in recorder in its plain-text report.
 if (typeof reportText === 'function') {
@@ -80,16 +82,21 @@ addEventListener('keydown', e => {                       // pause menu: arrows m
 }, true);
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
-  if (FPS_ON) fpsTick(t - last);   // before last=t: the delta must be this frame's
+  if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
   last = t;
   if (!params.has('yard')) {
     audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
     ejectionSceneTick(dt); musicTick(dt);
     if (!globalThis.__paused && !userPause && !rdlgOpen && !optsOpen && !ejectionSceneActive()) { let k = state === 'cine' ? 1 : SIM_SPEED; if (juice.hitStop > 0) { juice.hitStop -= dt; k *= 0.08; } update(dt * k); }   // S1: userPause freezes the sim for real
     renderBolts(); renderBeams();
+    const hudStart = FPS_ON ? performance.now() : 0;
     updateHud();
+    if (FPS_ON) perfCosts.hudSum += performance.now() - hudStart;
   }
+  if (FPS_ON) renderer.info.reset();
+  const renderStart = FPS_ON ? performance.now() : 0;
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
+  if (FPS_ON) { perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -99,7 +106,7 @@ globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
   version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showCampaignList, showMissionList, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, SK_PLAYER, SK_WING, SHIPS, ordnanceStations, ordnanceTotals, ordnanceApply, get skCfg() { return skCfg; }, get skState() { return game.skS; },
-  nukeAt, nukeLog, flightModels, NUKE, PERF, perfReset, perfRecord, perfStats, perfSummary, perfReportLine, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
+  nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, PROLOGUE_MISSIONS, CAMPAIGNS, campaignOf, campaignNext, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, pauseExit, pauseMenuRefresh, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
@@ -117,7 +124,11 @@ Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, resc
 Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, rosterFind, rosterRank, rosterSkill, rosterTransition, rosterResolveMissing, rosterStoryArrival, rosterUpdateAwards });
 
 
-Object.assign(globalThis.__game, { capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
+Object.assign(globalThis.__game, { PERF, perfReset, perfRecord, perfStats, perfSummary, perfReportLine, Particles, perfCosts, perfDiagnostics() {
+  const shipRows = ships.filter(s => s.alive).map(s => { let instances = 0, meshes = 0; s.group.traverse(o => { if (o.isInstancedMesh) { instances += o.count; meshes++; } }); return {id: s.def.id, callsign: s.callsign, meshes, instances}; });
+  const particles = [sparks, fire, smoke, frag].map(p => ({capacity:p.max, active:p.life.reduce((n,x) => n + (x > 0 ? 1 : 0), 0)}));
+  return {voxelBuilds:PERF.voxelBuilds || [], costs:{...perfCosts}, ships:shipRows, particles, overlay:{width:ov.width,height:ov.height}, quality:qualityName, pixel:PIXEL_STEPS[pixelIdx], detail:DETAIL_STEPS[detailIdx], bloom:!!(composer && bloomOn), heap:performance.memory?.usedJSHeapSize || null};
+}, capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 

@@ -148,11 +148,14 @@ function buildVox(s) {
   fill(body, bodyV); fill(glow, glowV);
   patch.setColorAt(0, _col.setRGB(0, 0, 0)); patch.count = 0;
   for (const m of [body, glow, patch]) { m.frustumCulled = false; s.group.add(m); }
+  // TypedArray.from invokes a JS callback for every grid cell, millions of times
+  // per high-detail ship. Fill the same masks with tight loops on the spawn path.
+  const solid = new Uint8Array(D.grid.length), hasInst = new Uint8Array(D.cellToVox.length);
+  for (let i = 0; i < solid.length; i++) solid[i] = D.grid[i] >= 0 ? 1 : 0;
+  for (let i = 0; i < hasInst.length; i++) hasInst[i] = D.cellToVox[i] >= 0 ? 1 : 0;
   s.vox = {
     data: D, cap, body, glow, patch, patchN: 0, instOf, patchOf: new Map(),
-    solid: Uint8Array.from(D.grid, g => (g >= 0 ? 1 : 0)),
-    hasInst: Uint8Array.from(D.cellToVox, v => (v >= 0 ? 1 : 0)),
-    scorch: new Float32Array(D.voxels.length).fill(1),
+    solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1),
   };
   for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true);
 }

@@ -3,7 +3,7 @@
 // ======================================================================
 class Particles {
   constructor(max, size, additive) {
-    this.max = max; this.i = 0;
+    this.max = max; this.i = 0; this.activeCount = 0;
     this.pos = new Float32Array(max * 3); this.vel = new Float32Array(max * 3);
     this.col = new Float32Array(max * 4);
     this.c0 = new Float32Array(max * 4); this.c1 = new Float32Array(max * 4);
@@ -21,12 +21,15 @@ class Particles {
   }
   emit(p, v, life, c0, c1) {
     const i = this.i; this.i = (this.i + 1) % this.max;
+    if (this.life[i] <= 0 && life > 0) this.activeCount++;
+    else if (this.life[i] > 0 && life <= 0) this.activeCount--;
     this.pos[i * 3] = p.x; this.pos[i * 3 + 1] = p.y; this.pos[i * 3 + 2] = p.z;
     this.vel[i * 3] = v.x; this.vel[i * 3 + 1] = v.y; this.vel[i * 3 + 2] = v.z;
     this.life[i] = life; this.maxLife[i] = life;
     for (let k = 0; k < 4; k++) { this.c0[i * 4 + k] = c0[k]; this.c1[i * 4 + k] = c1[k]; }
   }
   update(dt) {
+    if (!this.activeCount) return;
     const cp = camera.position;
     for (let i = 0; i < this.max; i++) {
       if (this.life[i] <= 0) { this.col[i * 4 + 3] = 0; continue; }
@@ -37,7 +40,7 @@ class Particles {
       // fade out particles that are very close to the camera (they would fill the screen)
       const ex = this.pos[i * 3] - cp.x, ey = this.pos[i * 3 + 1] - cp.y, ez = this.pos[i * 3 + 2] - cp.z;
       this.col[i * 4 + 3] *= Math.min(1, Math.max(0, (Math.sqrt(ex * ex + ey * ey + ez * ez) - 4) / 14));
-      if (this.life[i] <= 0) this.col[i * 4 + 3] = 0;
+      if (this.life[i] <= 0) { this.col[i * 4 + 3] = 0; this.activeCount--; }
     }
     this.geo.attributes.position.needsUpdate = true;
     this.geo.attributes.color.needsUpdate = true;
