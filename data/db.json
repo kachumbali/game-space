@@ -6327,7 +6327,7 @@
     "sar": {
       "id": "sar",
       "rescue": true,
-      "name": "SAR CUTTER",
+      "name": "PETREL SAR CUTTER",
       "cls": "fighter",
       "shuttle": true,
       "fac": "human",
@@ -6493,7 +6493,7 @@
     },
     "liner": {
       "id": "liner",
-      "name": "ARGOSY",
+      "name": "MERIDIAN",
       "cls": "frigate",
       "fac": "human",
       "role": "EVACUATION LINER",
@@ -6861,7 +6861,7 @@
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":140, "mountRadius":3, "positions":[[-11,22,30],[11,22,30],[-11,22,42],[11,22,42],[-11,22,54],[11,22,54],[-11,22,66],[11,22,66]]}
       ],
       "ordnancePlan": {"enabled":true, "stores":{"ir":48,"rf":36,"torp":48,"drone":24}, "droneLimit":12, "hangar":{"total":8,"airborneCap":4,"interval":6,"bays":1,"bayComponents":["hangar"],"extraComponents":[{"id":"hangar","name":"HANGAR","role":"bay","pos":[0,-18,0],"r":10,"hp":300}],"manifest":{"kestrel":4,"bittern":4}}},
-      "name": "CLAYMORE",
+      "name": "GLAIVE",
       "cls": "capital",
       "fac": "human",
       "role": "DESTROYER",
@@ -8198,8 +8198,8 @@
       "name": "SW-9 SWIFT (IR)",
       "seeker": "ir",
       "v0": 70,
-      "vmax": 420,
-      "acc": 300,
+      "vmax": 640,
+      "acc": 450,
       "turn": 3.4,
       "burn": 6.5,
       "life": 9,
@@ -8223,8 +8223,8 @@
       "name": "LN-3 LANCE (RADAR)",
       "seeker": "rf",
       "v0": 70,
-      "vmax": 380,
-      "acc": 240,
+      "vmax": 600,
+      "acc": 380,
       "turn": 2.7,
       "burn": 9,
       "life": 12,
@@ -8284,8 +8284,8 @@
       "name": "SK-1 IR MISSILE",
       "seeker": "ir",
       "v0": 60,
-      "vmax": 460,
-      "acc": 300,
+      "vmax": 700,
+      "acc": 480,
       "turn": 4.2,
       "burn": 7,
       "life": 9,
@@ -8451,7 +8451,7 @@
       "sz": 0.14,
       "sfx": "pd",
       "range": 750,
-      "track": 4,
+      "track": 4.6,
       "turret": true,
       "pdOnly": true,
       "ammo": 1000,
@@ -8461,7 +8461,7 @@
         "frigate": 0.25,
         "capital": 0.25
       },
-      "dmgMsl": 1.2
+      "dmgMsl": 2.0
     },
     "torp_2": {
       "base": "torp",
@@ -9701,7 +9701,8 @@
         "corvette": 0.45,
         "frigate": 0.25,
         "capital": 0.15
-      }
+      },
+      "playerGuard": { "shieldFrac": 0.9, "hullFloor": 0.15 }
     },
     "nuke": {
       "kill": {
@@ -9742,6 +9743,8 @@
     },
     "ai": {
       "tolMul": 1,
+      "ffCone": 0.02,
+      "ffConePlayer": 0.06,
       "rngMul": 0.55,
       "tenderPriority": 0.35,
       "tenderRange": 3500,

@@ -2,7 +2,7 @@
 const SAR_MISSIONS = [
   {
     id:'sar01', title:'BEACONS IN THE DARK', subtitle:'Cover the cutter', look:'reed', music:'rescue',
-    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the SAR cutter while it locates and recovers both beacons. It cannot pick up survivors while under attack; draw fire away and keep it alive.',
+    briefing:'Two Eagle pilots are adrift beyond the departure lane. Cover the Petrel SAR cutter while it locates and recovers both beacons. It cannot pick up survivors while under attack; draw fire away and keep it alive.',
     debriefWin:'The cutter returned with both survivors.', debriefLose:'The rescue window closed before the survivors could be brought aboard.',
     sar:{ cutter:'sar1', deadline:220, survivors:[[-450,0,-700],[450,0,-900]] },
     setup:{anchor:{ship:'halberd',id:'halberd',callsign:'CSS HALBERD',pos:[0,0,300]},fleet:[{ship:'sar',id:'sar1',callsign:'RESCUE ONE',pos:[0,0,0]}],player:{ship:'kestrel',pos:[100,0,140],speed:30},wingmen:[]},
@@ -13,7 +13,7 @@ const SAR_MISSIONS = [
   },
   {
     id:'sar02', title:'LAST LIGHT', subtitle:'Recover the rear guard', look:'ao3', music:'rescue',
-    briefing:'Three capsules remain after the withdrawal. Escort the SAR cutter through a hostile screen and recover the rear guard before life support expires.',
+    briefing:'Three capsules remain after the withdrawal. Escort the Petrel SAR cutter through a hostile screen and recover the rear guard before life support expires.',
     debriefWin:'All three survivors reached the trauma bay.', debriefLose:'The rear guard was lost during the recovery attempt.',
     sar:{cutter:'sar1',deadline:230,survivors:[[-550,40,-850],[50,-40,-1100],[600,0,-900]]},
     setup:{anchor:{ship:'halberd',id:'halberd',callsign:'CSS HALBERD',pos:[0,0,350]},fleet:[{ship:'sar',id:'sar1',callsign:'RESCUE ONE',pos:[0,0,0]}],player:{ship:'falchion',pos:[100,0,140],speed:30},wingmen:[]},

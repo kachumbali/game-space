@@ -433,8 +433,9 @@ const PROLOGUE_MISSIONS = [
     debriefLose: 'The task group was overwhelmed in Alpha-9. The route toward Lily is open to whoever set the trap.',
     setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [85,10,105], speed: 50 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [115,15,135] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [55,5,135] }] },
     stages: [
-      { when: { t: 4 }, do: [{ comm: ['HAWK', 'Ambush. Stay tight on the HALBERD.'] }, { obj: ['p3a', 'Defend the HALBERD against the ambushers', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',4],['kestrel',2]], bearing: [0.3,0.2,-1], dist: 2200, spread: 260 } }] },
-      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p3a', null, 'done'] }, { comm: ['SPARROW', 'More locks from the dark!'] }, { obj: ['p3b', 'Destroy the missile interceptor wave', 'open'] }, { spawn: { grp: 'B', ships: [['merlin',3],['kestrel',3]], bearing: [-0.4,-0.1,-1], dist: 2500, spread: 240 } }] },
+      { when: { t: 4 }, do: [{ comm: ['HAWK', 'Ambush. Stay tight on the HALBERD.'] }, { obj: ['p3a', 'Defend the HALBERD against the ambushers', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',3],['kestrel',1]], bearing: [0.3,0.2,-1], dist: 2200, spread: 260, skill: 2 } }] },
+      { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p3a', null, 'done'] }, { comm: ['HAWK', 'Ambushers down. Regroup on the HALBERD, shields up. That was too easy.'] }] },
+      { when: { dead: 'A', delay: 6 }, do: [{ comm: ['SPARROW', 'More locks from the dark!'] }, { obj: ['p3b', 'Destroy the missile interceptor wave', 'open'] }, { spawn: { grp: 'B', ships: [['merlin',2],['kestrel',2]], bearing: [-0.4,-0.1,-1], dist: 2500, spread: 240, skill: 3 } }] },
       { when: { dead: 'B', delay: 3 }, do: [{ obj: ['p3b', null, 'done'] }, { comm: ['CONTROL', 'All hostile signals dark. Form up; we are falling back to Lily.'] }, { end: 'win' }] },
     ],
   },
@@ -465,7 +466,7 @@ function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); 
 // Prepare the existing deterministic voxel cache before flight, so the first
 // hostile wave does not build its geometry inside a simulation frame.
 function prewarmPrologueVoxels(M) {
-  if (M.id !== 'p01' && M.id !== 'p02') return;
+  if (!/^p0[1-4]$/.test(M.id)) return;   // all four Prologue missions (owner 2026-11-10, D18)
   const kinds = new Set();
   for (const stage of M.stages) for (const action of stage.do)
     for (const [kind] of action.spawn?.ships || []) kinds.add(kind);

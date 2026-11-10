@@ -1,4 +1,4 @@
-"""v0.3 M4 roster smoke test: FALCHION, SAR CUTTER, ARGOSY liner and CLAYMORE destroyer.
+"""v0.3 M4 roster smoke test: FALCHION, PETREL SAR CUTTER, MERIDIAN liner and GLAIVE destroyer.
 For each new ship: spawn it in a skirmish (player ship / ally), step the sim, assert alive + no console errors, mount / turret / component counts,
 the weapon panel and the turret hold key (U), then open it in the Shipyard and save a screenshot (GS_SHOTS/roster, default /tmp/gs_shots/roster).
 Use a unique GS_PORT / GS_TEST_DIR when other runs share the machine."""
@@ -29,7 +29,7 @@ with Runner() as R:
         pg = R.page(1280, 720, c['q'])
         pg.wait_for_timeout(2500)
         info = pg.evaluate("""([sid, who]) => {
-          const g = __game, s = who === 'player' ? g.player : g.ships.find(x => x.id === 'ally');
+          const g = __game, s = who === 'player' ? g.player : g.ships.find(x => x.team === 0 && x !== g.player && x.def.id === sid)   // skirmish fleet select (2026-11-04) migrates sk_ally into a friendly row; the ship no longer has id 'ally';
           return s ? { id: s.def.id, alive: s.alive, mounts: s.mounts.length, turrets: s.turrets.length, comps: s.comps.length, engines: s.def.engines.length,
                        stores: s.def.stores, voxels: s.vox ? s.vox.data.voxels.length : -1, len: s.def.length, structure: s.structure, shield: s.shield } : null;
         }""", [sid, c['who']])
@@ -45,13 +45,13 @@ with Runner() as R:
         # step the sim 40 s, then 5 s with the turrets on hold and a hostile placed right on top of the ship
         res = pg.evaluate("""([sid, who]) => {
           const g = __game; g.__paused = true;
-          const get = () => who === 'player' ? g.player : g.ships.find(x => x.id === 'ally');
+          const get = () => who === 'player' ? g.player : g.ships.find(x => x.team === 0 && x !== g.player && x.def.id === sid)   // skirmish fleet select (2026-11-04) migrates sk_ally into a friendly row; the ship no longer has id 'ally';
           for (let i = 0; i < 800; i++) g.update(0.05);
           const s = get();
           const wpn = document.getElementById('wpn') ? document.getElementById('wpn').innerText : '';
           return { alive: !!(s && s.alive), state: g.state, wpn, turretsFired: s ? s.turrets.reduce((a, t) => a + (t.fired || 0), 0) : 0, hostile: g.ships.filter(x => x.team === 1 && x.alive).length };
         }""", [sid, c['who']])
-        # the SAR cutter is unarmed and the skirmish hostile hunts it; surviving 40 s is not a property of the ship
+        # the Petrel SAR cutter is unarmed and the skirmish hostile hunts it; surviving 40 s is not a property of the ship
         if sid != 'sar': check(f'{sid}: alive after 40 s of sim', res['alive'], str(res)[:300])
         if c['who'] == 'player':
             check(f'{sid}: weapon panel built from mounts', len(res['wpn']) > 0, res['wpn'].replace('\n', ' | ')[:200])
@@ -76,7 +76,7 @@ with Runner() as R:
         check(f'{sid}: no console errors in Shipyard', not R.errs, str(R.errs[:3]))
         pg.close()
 
-    # the SAR cutter and the unarmed liner are not offered as wingmen; the Falchion is
+    # the Petrel SAR cutter and the unarmed liner are not offered as wingmen; the Falchion is
     pg = R.page(1280, 720, '?free&n=0')
     wing = pg.evaluate("() => __game.SK_WING.map(x => x[0])")
     player = pg.evaluate("() => __game.SK_PLAYER.map(x => x[0])")

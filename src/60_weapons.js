@@ -22,7 +22,9 @@ function friendlyInLine(s, maxD = 700) {           // AI holds fire when a frien
     _ff.copy(f.group.position).sub(s.group.position);
     const along = _ff.dot(_fw);
     if (along < 0 || along > maxD) continue;
-    if (_ff.addScaledVector(_fw, -along).length() < f.def.radius * 0.9 + 3) return true;
+    // the gun line is a cone, not a tube: bolts spread and targets move (owner 2026-11-10, D16: HAWK hit the player in Prologue 1). Wider around the player.
+    const cone = f === player ? (TUNE.ai.ffConePlayer ?? 0.06) : (TUNE.ai.ffCone ?? 0.02);
+    if (_ff.addScaledVector(_fw, -along).length() < f.def.radius * 0.9 + 3 + along * cone) return true;
   }
   return false;
 }
@@ -403,7 +405,11 @@ function blastAt(pos, w, team, owner, direct, skip) {
     const factors = missileClassFactors(w, s.def.cls);
     const pierce = w.kind === 'msl' && w.classScale !== false && !w.torp && !w.nuclear
       ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, lp, w) : 0;
+    // Owner decision 2026-11-10 (D15): the player's own ship survives one missile hit taken at (near) full shields; AI fighters still die to one.
+    const G = TUNE.missile.playerGuard, guard = G && s === player && w.kind === 'msl' && !w.torp && !w.nuclear
+      && (s.shield.fore + s.shield.aft) >= G.shieldFrac * ((s.def.shield.fore + s.def.shield.aft) * (s.mod?.shieldCap ?? 1));
     applyHit(s, lp, w.dmg * f * factors.damage * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
+    if (guard && s.structure < G.hullFloor * s.def.structure) { s.structure = G.hullFloor * s.def.structure; if (!s.alive || s.dying) { s.alive = true; s.dying = 0; } }
     if (s.alive && !s.dying) {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }

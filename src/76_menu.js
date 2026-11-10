@@ -19,7 +19,7 @@ const SK_PRESETS = [
   { id: 'bullfrog2', name: 'BULLFROG + 2 GULPER', rows: [['bullfrog', 1], ['gulper', 2]], warn: true },
   { id: 'hive', name: 'HIVE CARRIER (UNARMED)', rows: [['hivecarrier', 1]], warn: true },
 ];
-const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['falchion', 'FALCHION (two-seat heavy fighter)'], ['merlin', 'MERLIN (light fighter)'], ['bittern', 'BITTERN (torpedo bomber)'], ['tern', 'TERN (unarmed resupply shuttle)'], ['sar', 'SAR CUTTER (unarmed rescue ship)']];
+const SK_PLAYER = [['kestrel', 'KESTREL (multirole fighter)'], ['falchion', 'FALCHION (two-seat heavy fighter)'], ['merlin', 'MERLIN (light fighter)'], ['bittern', 'BITTERN (torpedo bomber)'], ['tern', 'TERN (unarmed resupply shuttle)'], ['sar', 'PETREL SAR CUTTER (unarmed rescue ship)']];
 const SK_WING = [...SK_PLAYER.filter(x => x[0] !== 'tern' && x[0] !== 'sar'), ['kite6', 'KITE-6 (loyal wingman)']];
 const SK_FRIENDLY = Object.values(SHIPS).filter(s => s.fac === 'human' && !s.mark && !s.drone && s.id !== 'drone').map(s => s.id);
 // Starting ships, including the player and wingmen. Missile and launched-craft limits remain independent.

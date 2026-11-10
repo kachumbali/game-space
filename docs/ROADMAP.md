@@ -7,7 +7,7 @@ explaining the controls. Phones are not a target: they keep working, nothing is 
 
 ## Roles
 - **Lead: Claude.** Everything reaches `main` through the lead, after `python3 tools/gate.py` passes. Nobody else pushes to `main`.
-- **Codex:** bounded jobs on `codex/<task>` branches, one brief at a time (`docs/CODEX_BRIEF_TUTORIAL.md` done and merged 2026-11-10; now `docs/CODEX_BRIEF_2.md`).
+- **Codex:** bounded jobs on `codex/<task>` branches, one brief at a time (`docs/CODEX_BRIEF_TUTORIAL.md` done and merged 2026-11-10; round 2 merged; now `docs/CODEX_BRIEF_3.md`). Old branches `codex/launcher-ai`, `launcher-hud`, `launcher-runtime` and `ejection-followup` are dropped (owner 2026-11-10); delete them on GitHub.
 - **Gemini:** text and art assets only, on `gemini/<task>` branches.
 - **Owner (kachumbali):** plays and decides. Owner notes (docs/PLAYTEST_CHECKLIST.md, a voice memo, five bullets) are the only input that changes balance.
 

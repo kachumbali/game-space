@@ -84,8 +84,8 @@ Owner: "realistic weapons, no acid spitters - kinetics, mass drivers, shells wit
 | Ship | Class | Length m | Structure | Shield f/a | Speed m/s | Weapons | Notes |
 |---|---|---|---|---|---|---|---|
 | Falchion | heavy fighter, crew 2 (pilot + AI weapons specialist) | 19.5 | 110 | 80/70 | 118 | 2x MK-20 (grp 1), 2x MD-9 (grp 2), 3x PD-30 turrets; 6 SW-9, 2 LN-3, 2 HM-1, 32 flares, 2 drones (limit 2) | player + wingman |
-| SAR cutter | utility, crew 3 | 32 | 150 | 70/60 | 95 | none; 24 flares | pod bay and grapple winch (`bay` comps), `sar` data for the campaign |
-| Argosy | evacuation liner (refit), unarmed | 450 | 2000 | 1100/1000 | 16 | 6x PD-30 turrets; 24 flares | `jump: true`, `ai.role transport`, `ai.passive` (holds a slow course; capitalAI branch); jump coils modelled, spool left to the campaign engine |
-| Claymore | destroyer | 600 | 2400 | 1400/1200 | 28 | 2x RG-90 (bow), 4x MD-55 (L), 8x LS-8 (M), 8x PD-30 (S), 2 torpedo pods (8x HM-1) | `jump: true`, cls capital |
+| Petrel SAR cutter | utility, crew 3 | 32 | 150 | 70/60 | 95 | none; 24 flares | pod bay and grapple winch (`bay` comps), `sar` data for the campaign |
+| Meridian | evacuation liner (refit), unarmed | 450 | 2000 | 1100/1000 | 16 | 6x PD-30 turrets; 24 flares | `jump: true`, `ai.role transport`, `ai.passive` (holds a slow course; capitalAI branch); jump coils modelled, spool left to the campaign engine |
+| Glaive | destroyer | 600 | 2400 | 1400/1200 | 28 | 2x RG-90 (bow), 4x MD-55 (L), 8x LS-8 (M), 8x PD-30 (S), 2 torpedo pods (8x HM-1) | `jump: true`, cls capital |
 
-**Jump decision:** docs/LORE_HISTORY.md section 3 makes the threshold hull size (frigate class, about 450 m, "and larger"), so the 600 m Claymore is jump-capable. Owner may veto (set `jump: false`). The Falchion and SAR cutter cannot jump (dock first). The optional VBC/VAC retrofits were not built (faction names and the lane scheme are pending, no mark system).
+**Jump decision:** docs/LORE_HISTORY.md section 3 makes the threshold hull size (frigate class, about 450 m, "and larger"), so the 600 m Glaive is jump-capable. Owner may veto (set `jump: false`). The Falchion and Petrel SAR cutter cannot jump (dock first). The optional VBC/VAC retrofits were not built (faction names and the lane scheme are pending, no mark system).

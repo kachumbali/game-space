@@ -661,7 +661,7 @@ SHIPS.tender = {
 };
 
 // ======================================================================
-//  v0.3 M4 roster: FALCHION heavy fighter, SAR CUTTER, ARGOSY evacuation liner, CLAYMORE destroyer.
+//  v0.3 M4 roster: FALCHION heavy fighter, PETREL SAR CUTTER, MERIDIAN evacuation liner, GLAIVE destroyer.
 //  Numbers live in data/db.json; this is geometry only. Every mount / launch / turret position below sits on a visible barrel, rack or seat.
 // ======================================================================
 // ---- FALCHION: two-seat heavy fighter (19.5 m): tandem canopy, two nose cannons, two MD-9 mag drivers on wing-root booms, wing pylons, 3 PD seats ----
@@ -737,7 +737,7 @@ SHIPS.falchion = {
   ],
 };
 
-// ---- SAR CUTTER (32 m, unarmed, crew 3: pilot, rescue specialist, trauma medic; docs/LORE_FACTIONS.md section 5) --------------------------
+// ---- PETREL SAR CUTTER (32 m, unarmed, crew 3: pilot, rescue specialist, trauma medic; docs/LORE_FACTIONS.md section 5) --------------------------
 const SR = { red: 0xc8402f, orange: 0xe0702a };
 SHIPS.sar = {
   ...DB.ships.sar,
@@ -780,7 +780,7 @@ SHIPS.sar = {
   ],
 };
 
-// ---- ARGOSY: 450 m evacuation liner (refit passenger liner; two orange jump-coil collars; unarmed, 6 PD) ----------------------------------
+// ---- MERIDIAN: 450 m evacuation liner (refit passenger liner; two orange jump-coil collars; unarmed, 6 PD) ----------------------------------
 const linWin = { col: 0xffd890, p: 0.6, f: 1.5, o: 1, pu: 6, wu: 3, pv: 5 };
 const linTurPos = [[-35, 1], [35, 1], [190, 1], [-35, -1], [35, -1], [190, -1]];
 SHIPS.liner = {
@@ -816,11 +816,11 @@ SHIPS.liner = {
     // markings: navy bow band, orange stern band, name
     { t: 'paint', box: [-30, -30, -185, 30, 30, -180], col: H.navy, mix: 0.9 },
     { t: 'paint', box: [-32, -32, 196, 32, 32, 201], col: E.orange, mix: 0.9 },
-    { t: 'text', c: [25, 0, -35], face: '+x', text: 'ARGOSY', px: 2.0, col: E.dark },
+    { t: 'text', c: [25, 0, -35], face: '+x', text: 'MERIDIAN', px: 2.0, col: E.dark },
   ],
 };
 
-// ---- CLAYMORE: 600 m destroyer (between the 450 m Exeter and the 1 km Hecla): 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
+// ---- GLAIVE: 600 m destroyer (between the 450 m Exeter and the 1 km Hecla): 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
 const dstSeat = (x, y, z, cls) => {
   const D = turretDia({def:{length:600}}, {cls});
   return ell([x, y - Math.sign(y) * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], E.grey2);
@@ -845,7 +845,7 @@ const dstDetail = [
   // markings
   { t: 'paint', box: [-46, -22, -132, 46, 24, -126], col: E.orange, mix: 0.9 },
   { t: 'paint', box: [-46, -22, -112, 46, 24, -108], col: 0x2f4a7a, mix: 0.9 },
-  { t: 'text', c: [38.5, 2, -60], face: '+x', text: 'CLAYMORE', px: 3.0, col: E.dark },
+  { t: 'text', c: [38.5, 2, -60], face: '+x', text: 'GLAIVE', px: 3.0, col: E.dark },
   { t: 'text', c: [38, 3, 70], face: '+x', text: 'D-07', px: 4, col: E.white },
   { t: 'text', c: [0, 22.4, -165], face: '+y', text: 'CDF', px: 3.5, col: 0x2f4a7a, mir: false },
 ];
