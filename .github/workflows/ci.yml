@@ -125,6 +125,7 @@ jobs:
           cp data/db.json _site/data/db.json
           touch _site/.nojekyll
           echo "built from $GITHUB_SHA" > _site/BUILD.txt
+          grep -o "const BUILD_ID = .[0-9a-f]*" index.html >> _site/BUILD.txt
       - name: Push to gh-pages
         run: |
           cd _site

@@ -1,3 +1,4 @@
+const BUILD_ID = '/*@BUILD_ID@*/'; // hash of the built source and embedded database
 // ======================================================================
 //  CREDITS — every third-party item shipped with the game, with its licence. Source of truth for docs/CREDITS.md (keep both in sync).
 //  Licences re-checked against each source page on 2026-10-22.

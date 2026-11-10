@@ -24,6 +24,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, sh
   if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
   const playerHit = s === player, source = hitSrc, kind = hitKind;
   const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
+  if (playerHit && out) { const cls = source?.def?.cls || kind || 'unknown'; REPORT.damage[cls] = (REPORT.damage[cls] || 0) + dmg * (s.mod?.take ?? 1); reportSample(); }
   if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
     let cause = 'Hull destroyed; cause unclear.';
     if (kind === 'collision') cause = 'Collision with another ship.';
@@ -176,6 +177,7 @@ function updateDying(s, dt) {
 function destroy(s) {
   if (!s.alive) return;
   s.alive = false; s.dying = 0;
+  if (s.team === 0 && s !== player && s.pilot) REPORT.wing[s.callsign || s.pilot] = 'lost';
   droneOnDestroy(s);
   explode(s);
   scene.remove(s.group);

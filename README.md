@@ -8,6 +8,8 @@ The playable build is the single file `index.html` (Three.js from a CDN). Source
 Play online at https://kachumbali.github.io/game-space/ or build locally: run `python3 build.py` (the file is generated, not in the repo), then open `index.html` (internet needed for the Three.js CDN), or `python3 -m http.server`. Phones work: touch controls
 appear automatically. The game boots into the **main menu** (CAMPAIGN / MISSIONS, SKIRMISH, FREE FLIGHT, OPTIONS, CREDITS; arrow keys + Enter or click/tap). Missions open the briefing; the restart dialog (R) and briefing have a MAIN MENU button.
 
+The Prologue can be resumed from the main menu. Its progress, lessons, ending, and optional scene hooks are described in [docs/PROLOGUE_FLOW.md](docs/PROLOGUE_FLOW.md).
+
 The intended product modes are distinct: **Free Flight** is the sandbox,
 **Skirmish** is the configurable one-off fight, **Scripted Campaign** is the
 authored persistent-crew story, and **Strategy / Dynamic Campaign** is the
@@ -147,3 +149,9 @@ difficulty on every briefing; wing strip, objective counters, onboarding tips. U
 Tests: `tools/tests/fun_t.py [feel|shot|loot|survival|missions]`, `tools/tests/sv_calib.py N RUNS` (wave calibration with an AI proxy pilot).
 
 When the optional rescue feature is enabled, the Long Retreat mission list includes SAR sorties. Protect the cutter: it evades attackers and cannot recover a capsule while it is being engaged or immediately after taking a hit. The objective shows when it needs cover. Rescue music reacts to threats near the cutter as well as the player, and a short cue marks each recovery.
+
+### Playtest reports
+
+During flight, open the pause menu; at the end of a mission, skirmish or Gauntlet run, use the debrief. **COPY REPORT** copies plain text; if clipboard access is refused, **DOWNLOAD REPORT** saves a text file. The optional “what annoyed you” note is included. The last ten completed or exited sessions stay in this browser's local storage; **EXPORT LAST 10** downloads them together. Reports are not sent anywhere by the game. Browser storage can be cleared or unavailable in private browsing. Frame times are browser measurements, not a real-device performance benchmark.
+
+Run `python3 tools/tests/report_t.py` after building for report-specific desktop and touch checks.

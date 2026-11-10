@@ -103,10 +103,17 @@ db = json.load(open('data/db.json'))
 db.pop('notes', None)                 # design notes stay in the JSON file; they are not needed at runtime
 db.pop('_about', None)
 db_js = json.dumps(db, separators=(',', ':'))
+scene_ids = sorted(os.path.basename(os.path.dirname(f)) for f in glob.glob('assets/scenes/*/scene.json'))
+scene_js = json.dumps(scene_ids, separators=(',', ':'))
 out = []
 for f in parts:
     t = open(f).read().rstrip('\n') + '\n'
     if '/*@DB@*/null' in t: t = t.replace('/*@DB@*/null', db_js)
+    if '/*@SCENE_IDS@*/[]' in t: t = t.replace('/*@SCENE_IDS@*/[]', scene_js)
     out.append(t)
-open('index.html', 'w').write(''.join(out))
+import hashlib
+content = ''.join(out)
+build_id = hashlib.sha256(content.encode()).hexdigest()[:12]
+content = content.replace('/*@BUILD_ID@*/', build_id)
+open('index.html', 'w').write(content)
 print(f'built index.html from {len(out)} parts, {sum(map(len, out)) // 1024} KB, {len(decl)} top-level names checked')
