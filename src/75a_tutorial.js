@@ -10,9 +10,15 @@ const TUTORIAL_STEPS = [
   ['boost', 'Hold SHIFT to use the afterburner.', 'Hold BOOST to use the afterburner.'],
   ['read', 'Read SHD and HULL at the upper left. Press ENTER when ready.', 'Read SHD and HULL at the upper left. Tap READY when ready.'],
 ];
+const PROLOGUE_LESSONS = {
+  p02: [['wing_order', 'Press J, choose WINGMEN, ALL WINGMEN, then PROTECT ME. If no wingmen are available, skip.', 'Tap COMMS, WINGMEN, ALL WINGMEN, then PROTECT ME. If no wingmen are available, skip.']],
+  p03: [['power', 'Press 4 to move power to weapons. Press 7 to balance it again.', 'Tap WPN on the POWER panel to move power to weapons. Tap POWER to balance it again.']],
+  p04: [['subsystem', 'A practice contact is selected. Press N to cycle its subsystems.', 'A practice contact is selected. Tap SUB to cycle its subsystems.']],
+};
+const TUTORIAL_CONTROLS = {p02:'comms', p03:'power', p04:'subsystem'};
 let tutorialEl = null;
-function tutorialStored() { try { return localStorage.getItem('gs_tutorial_p01') === 'done'; } catch (_) { return false; } }
-function tutorialSave() { try { localStorage.setItem('gs_tutorial_p01', 'done'); } catch (_) {} }
+function tutorialStored(id = 'p01') { try { return localStorage.getItem('gs_tutorial_' + id) === 'done'; } catch (_) { return false; } }
+function tutorialSave(id = 'p01') { try { localStorage.setItem('gs_tutorial_' + id, 'done'); } catch (_) {} }
 function tutorialPanel() {
   if (tutorialEl) return tutorialEl;
   const el = tutorialEl = document.createElement('div'); el.id = 'tutorial';
@@ -24,18 +30,19 @@ function tutorialPanel() {
   return el;
 }
 function tutorialStart(S) {
-  S.tutorial = { step: 0, elapsed: 0, repeat: false, confirm: 0, target: null, stores: {...player.stores}, ammo: {...player.ammo}, stations: player.ordnanceLoad?.map(st => st.remaining) };
+  const id = game.mission.id; if (TUTORIAL_CONTROLS[id]) teachControl(TUTORIAL_CONTROLS[id]);
+  S.tutorial = { id, steps: id === 'p01' ? TUTORIAL_STEPS : PROLOGUE_LESSONS[id], step: 0, elapsed: 0, repeat: false, confirm: 0, target: null, stores: {...player.stores}, ammo: {...player.ammo}, stations: player.ordnanceLoad?.map(st => st.remaining) };
   tutorialPanel().style.display = 'block'; tutorialRender(S.tutorial);
 }
 function tutorialRender(T) {
-  const step = TUTORIAL_STEPS[T.step];
+  const step = T.steps[T.step];
   if (!step) return tutorialFinish();
   tutorialPanel().querySelector('#tutorialText').textContent = (T.repeat ? 'AGAIN: ' : '') + (isTouch ? step[2] : step[1]);
   tutorialEl.querySelector('#tutorialReady').style.display = step[0] === 'read' ? 'inline-block' : 'none';
 }
 function tutorialAction(action) {
   const T = game.mstate?.tutorial;
-  if (!T || T.confirm || TUTORIAL_STEPS[T.step]?.[0] !== action || state !== 'play' || userPause) return;
+  if (!T || T.confirm || T.steps[T.step]?.[0] !== action || state !== 'play' || userPause) return;
   T.confirm = 0.8; tutorialEl.querySelector('#tutorialText').textContent = 'GOOD';
 }
 function tutorialFinish() {
@@ -44,20 +51,21 @@ function tutorialFinish() {
   Object.assign(player.stores, T.stores); Object.assign(player.ammo, T.ammo);
   if (T.stations && player.ordnanceLoad) player.ordnanceLoad.forEach((st, i) => { st.remaining = T.stations[i]; });
   for (const m of missiles) if (m.owner === player && m.target === T.target) m.dead = true;
-  tutorialSave(); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
+  tutorialSave(T.id); game.mstate.tutorial = null; tutorialEl.style.display = 'none';
 }
 function tutorialTick(M, S, dt) {
-  if (M.id !== 'p01' || state !== 'play' || S.ended) { if (tutorialEl) tutorialEl.style.display = 'none'; return false; }
+  if (!(M.id === 'p01' || PROLOGUE_LESSONS[M.id]) || state !== 'play' || S.ended) { if (tutorialEl) tutorialEl.style.display = 'none'; return false; }
   if (S.tutorialStarted === undefined) {
     S.tutorialStarted = true;
-    if (params.get('tutorial') === '1' || !tutorialStored()) tutorialStart(S);
+    if (params.get('tutorial') === '1' || !tutorialStored(M.id)) tutorialStart(S);
   }
   const T = S.tutorial; if (!T) return false;
   tutorialEl.style.display = 'block';
-  if (T.step >= 2 && T.step <= 4 && !T.target) {
+  if (((T.id === 'p01' && T.step >= 2 && T.step <= 4) || T.steps[T.step]?.[0] === 'subsystem') && !T.target) {
     const p = player.group.position.clone().add(new THREE.Vector3(0,0,-700).applyQuaternion(player.group.quaternion));
     T.target = makeShip('merlin', 1, p, new THREE.Quaternion(), {id:'tutorial_target', callsign:'PRACTICE'});
     T.target.tutorialTarget = true;
+    if (T.id === 'p04') { target = T.target; manualTarget = true; }
   }
   if (T.target && T.target.alive) {
     T.target.group.position.copy(player.group.position).add(new THREE.Vector3(0,0,-700).applyQuaternion(player.group.quaternion));

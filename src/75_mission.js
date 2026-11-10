@@ -642,7 +642,6 @@ function endMission(result, why) {
   }
   S.ended = true; S.result = result; S.why = why || ''; S.endT = 0;
   prologueRecord(game.mission, S);
-  if (result === 'win' && game.mission?.id === 'p04') setControlsMode('advanced');
   if (result === 'lose' && state !== 'dead') state = 'done';
   if (result === 'win' || result === 'partial') state = 'done';
   // persist crew outcome

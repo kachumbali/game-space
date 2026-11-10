@@ -35,3 +35,36 @@ for touch, w, h in [(False,1280,720),(True,1180,820)]:
         assert b.is_enabled() and 'UNPOLISHED' in b.inner_text()
         assert_no_console_errors(r)
         print('PASS ending and unlock', 'touch' if touch else 'desktop')
+for touch,w,h in [(False,1280,720),(True,1180,820)]:
+    with Runner() as r:
+        p=r.page(w,h,'?campaign=prologue&m=2&go&q=low',touch=touch)
+        p.evaluate("()=>{__game.__paused=true;__game.update(.05);__game.updateHud()}")
+        assert 'WINGMEN' in p.locator('#tutorialText').inner_text()
+        if touch:
+            assert p.locator('#bcom').is_visible()
+            p.locator('#bcom').dispatch_event('pointerdown')
+        else:
+            p.keyboard.press('j')
+        for n in (1,1,3):
+            p.locator(f'#coms [data-ci="{n}"]').click()
+        assert p.locator('#tutorialText').inner_text() == 'GOOD'
+        p.evaluate("()=>{for(let i=0;i<10;i++)__game.update(.05)}")
+        assert p.evaluate("()=>localStorage.getItem('gs_tutorial_p02')") == 'done'
+        p.evaluate("()=>{__game.startMission(__game.PROLOGUE_MISSIONS[2]);document.getElementById('brief').style.display='none';__game.state='play';__game.update(.05);__game.updateHud()}")
+        assert p.locator('#ets').is_visible()
+        if touch: p.locator('#ets [data-pw="w"]').tap()
+        else: p.keyboard.press('4')
+        assert p.locator('#tutorialText').inner_text() == 'GOOD'
+        p.evaluate("()=>{for(let i=0;i<10;i++)__game.update(.05);__game.startMission(__game.PROLOGUE_MISSIONS[3]);document.getElementById('brief').style.display='none';__game.state='play';__game.update(.05);__game.updateHud()}")
+        assert 'practice contact' in p.locator('#tutorialText').inner_text()
+        if touch:
+            assert p.locator('#bsub').is_visible()
+            p.locator('#bsub').tap()
+        else: p.keyboard.press('n')
+        assert p.locator('#tutorialText').inner_text() == 'GOOD'
+        p.evaluate("()=>{for(let i=0;i<10;i++)__game.update(.05);__game.startMission(__game.PROLOGUE_MISSIONS[3]);__game.state='play';__game.update(.05)}")
+        assert not p.locator('#tutorial').is_visible()
+        assert p.evaluate("()=>localStorage.getItem('gs_tutorial_p04')") == 'done'
+        assert p.evaluate("()=>document.body.classList.contains('controls-basic')")
+        assert_no_console_errors(r)
+        print('PASS lessons', 'touch' if touch else 'desktop')

@@ -23,7 +23,7 @@ function cycleSub() {
   if (!l.length) return;
   const i = l.findIndex(c => c.id === subSel);
   subSel = i + 1 < l.length ? l[i + 1].id : (i < 0 ? l[0].id : null);
-  subFor = target; sfx('click');
+  subFor = target; sfx('click'); if (subSel) tutorialAction('subsystem');
 }
 function subComp(t) {
   if (!t || subFor !== t) { subSel = null; subFor = t; return null; }
@@ -62,7 +62,7 @@ addEventListener('keydown', e => {
   if (rdlgOpen || optsOpen) return;
   if (e.repeat) return;
   if (e.code === 'KeyI' && game.mstate?.tutorial) { tutorialFinish(); return; }
-  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && game.mstate?.tutorial && TUTORIAL_STEPS[game.mstate.tutorial.step]?.[0] === 'read') { tutorialAction('read'); return; }
+  if ((e.code === 'Enter' || e.code === 'NumpadEnter') && game.mstate?.tutorial && game.mstate.tutorial.steps[game.mstate.tutorial.step]?.[0] === 'read') { tutorialAction('read'); return; }
   if (e.code === 'Space' && player?.rescueCapsule?.player && rescueEnabled() && rosterEnabled() && state==='play') { e.preventDefault(); rescueResolveBeat(player); return; }
   if (comsKey(e)) { e.preventDefault(); return; }
   if (e.code === 'KeyE' && e.shiftKey && state === 'play' && !userPause && rescueCritical(player)) {
@@ -190,6 +190,7 @@ if (isTouch) {
 function powerKey(s, k) {
   if (!s || !s.alive) return;
   if (k === null) powerReset(s); else if (!powerShift(s, k)) { log(`${PW_NAMES[k]} AT LIMIT`, '#ff5a4a'); return; }
+  if (k !== null) tutorialAction('power');
   sfx('click'); log(`POWER  WPN ${s.pw.w}  SHD ${s.pw.s}  ENG ${s.pw.e}`, '#ffd24a');
 }
 { // touch / mouse: tap a bar of the power widget; tap the title to balance
