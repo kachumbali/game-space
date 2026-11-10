@@ -143,7 +143,7 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
   const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
-  if (!fr) { bestS.lastAttacker = s; if (s === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
+  if (!fr) { bestS.lastAttacker = s; if (s === player) { player.hitsLanded = (player.hitsLanded || 0) + 1; reportWeapon(key?.w || w.name || 'beam', 'hits'); } }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
   hitSrc = s; hitKind = 'beam';
@@ -178,7 +178,7 @@ function fireMount(s, m) {
   const dirW = dl.clone().applyQuaternion(s.group.quaternion);
   if (w.kind === 'beam') fireBeam(s, w, wp, dirW, s.bfocus, m, s.group, new THREE.Vector3(m.pos[0], m.pos[1], m.pos[2])); else spawnBolt(s, m.w, wp, dirW, s.def.cls === 'fighter' ? 1 : 0.6);
   if (w.ammo) s.ammo[m.w]--;
-  if (s === player) s.shots = (s.shots || 0) + 1;
+  if (s === player) { s.shots = (s.shots || 0) + 1; reportWeapon(m.w, 'shots'); }
   plogShot(s);
   if (w.energy) s.energy -= w.energy * (s.mod?.eff ?? 1);
   m.cool = burstCooldown(m, w, w.cd * compEff(comp, 'gun', 'cd') / ((0.6 + 0.4 * powerMul(s)) * (s.mod?.rof ?? 1)));
@@ -286,6 +286,7 @@ function launchMissile(s, wid, opts = null) {
   const customTarget = custom && opts.target && opts.target.alive && !opts.target.dying && opts.target.team !== s.team ? opts.target : null;
   const guidedTarget = customTarget || (L.p >= 1 && L.wid === wid && L.tgt && L.tgt.alive ? L.tgt : null);
   s.stores[wid]--;
+  if (s === player) REPORT.missiles.fired++;
   if (TUNE.ordnance?.enabled && w.nuclear && game.mode === 'mission') game.mstate.nuclearFired = true;
   s.group.updateMatrixWorld(true);
   const half = s.def.half;
@@ -454,6 +455,7 @@ const nukeLog = [];
 function killMissile(m, blast, direct = null) {
   if (m.dead) return;
   m.dead = true;
+  if (m.owner === player && blast && (direct || m.reportContact)?.team !== undefined && (direct || m.reportContact).team !== m.team) REPORT.missiles.hit++;
   if (blast && m.w.nuclear) nukeAt(m.pos, (m.owner && m.owner.nukeKt) || m.w.yield, m.owner);   // per-ship yield dial (owner 2026-10-22)
   else if (blast) blastAt(m.pos, m.w, m.team, m.owner, direct);
   else { flashAt(m.pos, 2.5, 0.25); sparksAt(m.pos, 14, 18); }
@@ -481,7 +483,7 @@ function updateMissiles(dt) {
       if (dc > s.def.radius + m.w.fuze + 12) continue;
       const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
       if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true, s); break; }
-      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { killMissile(m, true); break; }       // proximity fuze (hostile ships only)
+      if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { m.reportContact = s; killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
   for (const m of missiles) if (m.dead) { scene.remove(m.mesh); if (!m.mesh.userData.sharedMissileResources) m.mesh.traverse(o => { o.geometry?.dispose(); o.material?.dispose(); }); }
@@ -507,7 +509,7 @@ function deployCM(s) {
     const chaff = m.w.chaffS;
     const plume = s.ab ? 0.4 : 1.15 - 0.4 * (s.throttle ?? 0.5);      // a burning drive outshines the flare
     const p = (1 - Math.min(0.6, 60 / (d + 60))) * (m.w.seeker === 'ir' ? base * plume : chaff) * (0.55 + 0.45 * compFactor(s, 'engine'));
-    if (Math.random() < p) { m.target = decoys[decoys.length - (m.w.seeker === 'ir' ? 3 : 2)]; m.lostT = 0; }
+    if (Math.random() < p) { if (m.owner === player) REPORT.missiles.decoyed++; m.target = decoys[decoys.length - (m.w.seeker === 'ir' ? 3 : 2)]; m.lostT = 0; }
   }
   return true;
 }
@@ -803,7 +805,7 @@ function updateBolts(dt) {
       const hit = traceShip(s, b.prev, b.pos);
       if (!hit) continue;
       const wp = s.group.localToWorld(hit.clone());
-      if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) player.hitsLanded = (player.hitsLanded || 0) + 1; }
+      if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) { player.hitsLanded = (player.hitsLanded || 0) + 1; reportWeapon(b.wid, 'hits'); } }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       const hd = b.dmg * (fr ? FF.bolt : 1) * (b.w.vsCls?.[s.def.cls] ?? 1);      // M2: `vsCls` = per-target-class damage multiplier (light PD shells barely scratch corvettes and capitals)
       plogBoltHit(b, s, hd, fr);

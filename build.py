@@ -108,5 +108,9 @@ for f in parts:
     t = open(f).read().rstrip('\n') + '\n'
     if '/*@DB@*/null' in t: t = t.replace('/*@DB@*/null', db_js)
     out.append(t)
-open('index.html', 'w').write(''.join(out))
+import hashlib
+content = ''.join(out)
+build_id = hashlib.sha256(content.encode()).hexdigest()[:12]
+content = content.replace('/*@BUILD_ID@*/', build_id)
+open('index.html', 'w').write(content)
 print(f'built index.html from {len(out)} parts, {sum(map(len, out)) // 1024} KB, {len(decl)} top-level names checked')

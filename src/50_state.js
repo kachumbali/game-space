@@ -116,7 +116,7 @@ const flameMats = {};
 const flameMat = c => flameMats[c] ??= new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(1.7) });
 const shieldGeo = new THREE.SphereGeometry(1, 20, 14);
 
-function log(text, color = '#8fffd0') { logs.push({ text, color, t: time }); if (logs.length > 6) logs.shift(); }
+function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color, t: time }); if (logs.length > 6) logs.shift(); }
 
 // ---- voxel mesh build ------------------------------------------------
 function disposeVox(s) {
