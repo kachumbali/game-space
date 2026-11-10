@@ -34,3 +34,31 @@ with Runner() as r:
         if name == 'kestrel': assert 2 <= v['chunks'] <= 4, v
         print('PASS',name,v,flush=True)
     assert_no_console_errors(r)
+with Runner() as r:
+    pg = r.page(1280, 720, '?free&n=0&q=low&rescap=40&seed=8')
+    out = pg.evaluate('''() => {
+      const g=__game,T=g.THREE;g.__paused=true;let failures=[],checked=0;
+      for(const id of Object.keys(g.SHIPS)) {
+        const def=g.SHIPS[id]; if(!def.shield || !def.shield.fore && !def.shield.aft)continue;
+        const s=g.makeShip(id,1,new T.Vector3(1000,0,0),new T.Quaternion());
+        const D=s.vox.data, a=s.shieldFx.scale, h=D.vs*.515;
+        for(const v of D.voxels) if(Math.hypot((Math.abs(v.x)+h)/a.x,(Math.abs(v.y)+h)/a.y,(Math.abs(v.z)+h)/a.z)>1/1.12+1e-6){failures.push(id);break;}
+        const start=s.group.localToWorld(new T.Vector3(0,0,-a.z*2)), end=s.group.localToWorld(new T.Vector3(0,0,0));
+        const hit=g.traceWeapon(s,start,end);
+        if(s.shield.fore>0 && (!hit || !hit.shield || Math.abs(hit.point.z+a.z)>1e-5))failures.push(id+':intersection');
+        checked++;g.scene.remove(s.group);g.ships.splice(g.ships.indexOf(s),1);
+      }
+      const target=g.makeShip('merlin',1,new T.Vector3(3000,0,0),new T.Quaternion());
+      const a=target.shieldFx.scale, start=target.group.localToWorld(new T.Vector3(0,0,-a.z*2)), end=target.group.localToWorld(new T.Vector3(0,0,0));
+      const hit=g.traceWeapon(target,start,end), wp=target.group.localToWorld(hit.point.clone());
+      const before={shield:target.shield.fore,structure:target.structure,comps:target.comps.map(c=>c.hp),solid:target.vox.solid.reduce((x,y)=>x+y,0)};
+      const outcome=g.applyHit(target,hit.hull,1,wp,'kin',0,false,0,hit.point);
+      if(outcome!=='shield'||target.shield.fore>=before.shield||target.structure!==before.structure||target.comps.some((c,i)=>c.hp!==before.comps[i])||target.vox.solid.reduce((x,y)=>x+y,0)!==before.solid)failures.push('shield absorption');
+      target.shield.fore=0;const hull=g.traceWeapon(target,start,end);if(!hull || hull.shield)failures.push('down facet');
+      const torp=Object.values(g.WEAPONS).find(w=>w.tandem);if(!torp) failures.push('missing tandem');
+      else {target.shield.fore=target.def.shield.fore;const was=target.shield.fore;g.blastAt(wp,torp,0,g.player,target,null);if(target.shield.fore>=was || !(target.tandemUntil>g.time))failures.push('tandem');}
+      return {checked,failures};
+    }''')
+    assert out['checked'] > 0 and not out['failures'], out
+    print('PASS shield enclosure and swept intersection',out,flush=True)
+    assert_no_console_errors(r)

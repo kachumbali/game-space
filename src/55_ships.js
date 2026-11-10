@@ -23,7 +23,12 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     const m = new THREE.Mesh(shieldGeo, new THREE.MeshBasicMaterial({
       color: 0x5ac8ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide,
     }));
-    m.scale.set(def.half[0] * 0.95, Math.max(def.half[1], 1.7) * 1.25, def.half[2] * 0.97);
+    m.material.userData.impactDir = {value:new THREE.Vector3(0,0,-1)};
+    m.material.onBeforeCompile = shader => {
+      shader.uniforms.impactDir=m.material.userData.impactDir;
+      shader.vertexShader=shader.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vShieldPos;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvShieldPos = position;');
+      shader.fragmentShader=shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vShieldPos;\nuniform vec3 impactDir;').replace('#include <dithering_fragment>', 'gl_FragColor.a *= smoothstep(0.94, 0.995, dot(normalize(vShieldPos), normalize(impactDir)));\n#include <dithering_fragment>');
+    };
     s.group.add(m); s.shieldFx = m;
   }
   scene.add(s.group);
@@ -87,7 +92,7 @@ function clearWorld() {
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
   for (const f of flashes) scene.remove(f.m);
-  for (const d of debris) { scene.remove(d.mesh); d.mesh.dispose(); if (d.flash) scene.remove(d.flash); }
+  for (const d of debris) { scene.remove(d.mesh); d.mesh.dispose(); if (d.chunk) d.mesh.material.dispose(); if (d.flash) scene.remove(d.flash); }
   ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
   for (const k in killLog) delete killLog[k];
   shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;

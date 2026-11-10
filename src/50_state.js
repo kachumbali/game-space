@@ -157,7 +157,19 @@ function buildVox(s) {
     data: D, cap, body, glow, patch, patchN: 0, instOf, patchOf: new Map(),
     solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1),
   };
+  if (s.shieldFx) sizeShield(s);
   for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true, ev.shallow);
+}
+
+// Fit an ellipsoid around the corners of every rendered voxel, then add the
+// configured clearance. The same axes are used by the collision test.
+function sizeShield(s) {
+  const D=s.vox.data, h=D.vs*0.515, axes=[h,h,h];
+  for (const v of D.voxels) { axes[0]=Math.max(axes[0],Math.abs(v.x)+h); axes[1]=Math.max(axes[1],Math.abs(v.y)+h); axes[2]=Math.max(axes[2],Math.abs(v.z)+h); }
+  let max=1;
+  for (const v of D.voxels) max=Math.max(max,Math.hypot((Math.abs(v.x)+h)/axes[0],(Math.abs(v.y)+h)/axes[1],(Math.abs(v.z)+h)/axes[2]));
+  const margin=1+TUNE.damageVisuals.shieldMargin;
+  s.shieldFx.scale.set(axes[0]*max*margin,axes[1]*max*margin,axes[2]*max*margin);
 }
 
 const _lv = new THREE.Vector3();

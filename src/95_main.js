@@ -129,6 +129,7 @@ Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(S
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
 Object.assign(globalThis.__game, { componentSurface, compEvent }); // damage-visual regression tests
+Object.assign(globalThis.__game, { traceWeapon, sizeShield }); // shield geometry regression tests
 Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, rescueReachable, rescueResolveBeat, rosterScriptCallsign, rosterDialogueText, rosterSlotShip, comms, getEjectionScene:()=>EJSCENE, playEjectionSequence, ejectionSceneSkip });
 Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, rosterFind, rosterRank, rosterSkill, rosterTransition, rosterResolveMissing, rosterStoryArrival, rosterUpdateAwards });
 

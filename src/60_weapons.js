@@ -122,9 +122,9 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   let bestS = null, bestHit = null, bestD = 1e9;
   for (const o of ships) {
     if (!o.alive || o === s || o.dying) continue;
-    if (!segSphere(wp, end, o.group.position, o.def.radius)) continue;
-    const hit = traceShip(o, wp, end); if (!hit) continue;
-    const d = o.group.localToWorld(hit.clone()).distanceTo(wp);
+    if (!segSphere(wp, end, o.group.position, weaponBounds(o))) continue;
+    const hit = traceWeapon(o, wp, end); if (!hit) continue;
+    const d = o.group.localToWorld(hit.point.clone()).distanceTo(wp);
     if (d < bestD) { bestD = d; bestS = o; bestHit = hit; }
   }
   const len = bestS ? bestD : w.range;
@@ -136,7 +136,7 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   // the visible beam is drawn by 61_beams.js (ribbon + flares); `key` identifies the firing mount/turret so one record is refreshed per shot
   const shieldUp = !!bestS && (bestS.shield.fore > 0 || bestS.shield.aft > 0);
   beamNote(key || F || s, s, w, { obj: srcObj || s.group, local: srcLocal || s.group.worldToLocal(wp.clone()) },
-    bestS ? { obj: bestS.group, local: bestHit, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
+    bestS ? { obj: bestS.group, local: bestHit.point, ship: bestS } : { world: end.copy(wp).addScaledVector(dirW, len) },
     live || (!!F && F.t >= w.acq && time - F.last < 1.2), w.acq ? clamp((F ? F.t : 0) / w.acq, 0, 1) : 1, shieldUp,
     F && w.charge && F.t < 0 ? 1 + F.t / w.charge : 1);      // a focused beam that just missed is still drawn as a firing beam
   if (!bestS) { if (F && F.tgt && time - F.last > 0.5) F.tgt = null; return; }
@@ -144,12 +144,12 @@ function fireBeam(s, w, wp, dirW, F, key, srcObj, srcLocal) {
   if (!fr && bestS === player) { playerTrack.last = time; playerTrack.prog = w.acq ? clamp(F.t / w.acq, 0, 1) : 1; playerTrack.live = mult > 0; playerTrack.by = s; }
   plogN(live ? 'beam.live' : 'beam.track');
   if (!live) return;
-  const wpH = bestS.group.localToWorld(bestHit.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
+  const wpH = bestS.group.localToWorld(bestHit.point.clone()), dmg = w.dmg * mult * (fr ? FF.bolt : 1) * (s.mod?.dmg ?? 1);
   if (!fr) { bestS.lastAttacker = s; if (s === player) { player.hitsLanded = (player.hitsLanded || 0) + 1; reportWeapon(key?.w || w.name || 'beam', 'hits'); } }
   else if (bestS === player || s === player) friendlyNote(s, bestS);
   plogBoltHit({ owner: s, team: s.team }, bestS, dmg, fr);
   hitSrc = s; hitKind = 'beam';
-  applyHit(bestS, bestHit, dmg, wpH, w.dt, 0);
+  applyHit(bestS, bestHit.hull, dmg, wpH, w.dt, 0, false, 0, bestHit.shield ? bestHit.point : null);
   sfx(bestS.shield.fore > 0 || bestS.shield.aft > 0 ? 'shield' : 'hit', bestS === player ? 0 : wpH.distanceTo(camera.position), 0.5);
   if (Math.random() < 0.5) sparksAt(wpH, 3, 10, bc);
 }
@@ -389,9 +389,17 @@ function blastAt(pos, w, team, owner, direct, skip) {
     // This matters most for the Halberd/Gulper nose: their scaled hull extends
     // beyond the old 0.62R approximation, causing a bow-on missile to do no damage.
     if (surf > w.blast && dc < s.def.radius + w.blast) surf = hullGap(s, pos, w.blast);
-    if (surf > w.blast) continue;
+    if (surf > w.blast && direct !== s) continue;
     const f = (direct === s ? 1 : Math.max(TUNE.missile.blastFloor, 1 - surf / w.blast)) * (fr ? FF.blast : 1);
     const lp = s.group.worldToLocal(pos.clone());
+    let bubblePoint = null;
+    if (s.shieldFx && compFactor(s, 'shield') > 0) {
+      const facet=lp.z<0?'fore':'aft';
+      if (s.shield[facet]>0 && !(s.shHole && s.shHole[facet]>time)) {
+        const radial=lp.clone().divide(s.shieldFx.scale);
+        if (radial.lengthSq()>1e-9) bubblePoint=radial.normalize().multiply(s.shieldFx.scale);
+      }
+    }
     // pull the contact point onto the hull
     const dir = lp.clone().negate().normalize();
     const hit = traceShipLocal(s, lp, dir, Math.min(dc, 60));
@@ -404,13 +412,14 @@ function blastAt(pos, w, team, owner, direct, skip) {
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
     const factors = missileClassFactors(w, s.def.cls);
     const pierce = w.kind === 'msl' && w.classScale !== false && !w.torp && !w.nuclear
-      ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, lp, w) : 0;
+      ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, bubblePoint || lp, w) : 0;
     // Owner decision 2026-11-10 (D15): the player's own ship survives one missile hit taken at (near) full shields; AI fighters still die to one.
     const G = TUNE.missile.playerGuard, guard = G && s === player && w.kind === 'msl' && !w.torp && !w.nuclear
       && (s.shield.fore + s.shield.aft) >= G.shieldFrac * ((s.def.shield.fore + s.def.shield.aft) * (s.mod?.shieldCap ?? 1));
-    applyHit(s, lp, w.dmg * f * factors.damage * (owner?.mod?.dmg ?? 1), s.group.localToWorld(lp.clone()), 'exp', pierce);
+    const impact = s.group.localToWorld((bubblePoint || lp).clone());
+    const outcome = applyHit(s, lp, w.dmg * f * factors.damage * (owner?.mod?.dmg ?? 1), impact, 'exp', pierce, false, 0, bubblePoint);
     if (guard && s.structure < G.hullFloor * s.def.structure) { s.structure = G.hullFloor * s.def.structure; if (!s.alive || s.dying) { s.alive = true; s.dying = 0; } }
-    if (s.alive && !s.dying) {      // blast also chips hull around the contact
+    if (s.alive && !s.dying && outcome !== 'shield') {      // blast also chips hull around the contact
       chip(s, lp, 0.6 + w.blast * 0.12 * f, 1.8 + w.blast * 0.2 * f, false);
     }
   }
@@ -486,9 +495,10 @@ function updateMissiles(dt) {
       const fr = s.team === m.team;
       if (fr && s === m.owner && m.age < 3) continue;                 // clear the launcher; friendly hulls are otherwise solid (blast and hit damage scaled by FF)
       const dc = s.group.position.distanceTo(m.pos);
-      if (dc > s.def.radius + m.w.fuze + 12) continue;
-      const hit = segSphere(m.prev, m.pos, s.group.position, s.def.radius) ? traceShip(s, m.prev, m.pos) : null;
-      if (hit) { m.pos.copy(s.group.localToWorld(hit.clone())); killMissile(m, true, s); break; }
+      const radius=weaponBounds(s);
+      if (dc > radius + m.w.fuze + 12) continue;
+      const hit = segSphere(m.prev, m.pos, s.group.position, radius) ? traceWeapon(s, m.prev, m.pos) : null;
+      if (hit) { m.pos.copy(s.group.localToWorld(hit.point.clone())); killMissile(m, true, s); break; }
       if (!fr && dc < s.def.radius * 0.55 + (m.fuze ?? m.w.fuze)) { m.reportContact = s; killMissile(m, true); break; }       // proximity fuze (hostile ships only)
     }
   }
@@ -807,19 +817,19 @@ function updateBolts(dt) {
     for (const s of ships) {
       if (!s.alive || s === b.owner || s.dying) continue;
       const fr = s.team === b.team;
-      if (!segSphere(b.prev, b.pos, s.group.position, s.def.radius)) continue;
-      const hit = traceShip(s, b.prev, b.pos);
+      if (!segSphere(b.prev, b.pos, s.group.position, weaponBounds(s))) continue;
+      const hit = traceWeapon(s, b.prev, b.pos);
       if (!hit) continue;
-      const wp = s.group.localToWorld(hit.clone());
+      const wp = s.group.localToWorld(hit.point.clone());
       if (!fr) { s.lastAttacker = b.owner; if (b.owner === player) { player.hitsLanded = (player.hitsLanded || 0) + 1; reportWeapon(b.wid, 'hits'); } }
       else if (s === player || b.owner === player) friendlyNote(b.owner, s);
       const hd = b.dmg * (fr ? FF.bolt : 1) * (b.w.vsCls?.[s.def.cls] ?? 1);      // M2: `vsCls` = per-target-class damage multiplier (light PD shells barely scratch corvettes and capitals)
       plogBoltHit(b, s, hd, fr);
       hitSrc = b.owner; hitKind = 'gun';
-      applyHit(s, hit, hd, wp, b.dt, b.w.pierce || 0);
+      const outcome = applyHit(s, hit.hull, hd, wp, b.dt, b.w.pierce || 0, false, 0, hit.shield ? hit.point : null);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
-      if (b.w.big) { chip(s, hit, 1.2, 3, false); fireAt(wp, 6, 10); }
-      sfx(s.shield[hit.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);
+      if (b.w.big && outcome !== 'shield') { chip(s, hit.hull, 1.2, 3, false); fireAt(wp, 6, 10); }
+      sfx(s.shield[hit.point.z < 0 ? 'fore' : 'aft'] > 0 ? 'shield' : 'hit', s === player ? 0 : wp.distanceTo(camera.position), 0.5);
       b.life = 0; break;
     }
   }

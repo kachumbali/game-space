@@ -7,6 +7,7 @@ const warnState = { launchT: -99, lockT: -99, incoming: [], lockedBy: 0 };
 
 function shieldFlash(s, lp, facing) {
   if (!s.shieldFx) return;
+  s.shieldFx.material.userData.impactDir.value.copy(lp).divide(s.shieldFx.scale).normalize();
   const pct = s.def.shield[facing] ? s.shield[facing] / s.def.shield[facing] : 0;
   s.shieldFx.material.color.setRGB(0.25 + 0.75 * (1 - pct), 0.6 - 0.3 * (1 - pct), 0.9 - 0.7 * (1 - pct));
   s.shieldFx.material.opacity = 0.2;
@@ -20,10 +21,10 @@ const SOFT = TUNE.soft;
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0, shieldPoint = null) {
   if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
   const playerHit = s === player, source = hitSrc, kind = hitKind;
-  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen, shieldPoint);
   if (playerHit && out) { const cls = source?.def?.cls || kind || 'unknown'; REPORT.damage[cls] = (REPORT.damage[cls] || 0) + dmg * (s.mod?.take ?? 1); reportSample(); }
   if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
     let cause = 'Hull destroyed; cause unclear.';
@@ -40,7 +41,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, sh
 }
 // returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
 // shPen (tandem warhead): that share of the hit skips the shield but still meets the armour; a collapsed facet (s.shHole) has no shield at all until it closes
-function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0, shieldPoint = null) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
   if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
   let outcome = 'hull';
@@ -49,8 +50,8 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
   if (s === player) { shake = Math.min(1, shake + 0.16 + dmg * 0.02); hitFlash = Math.min(1, hitFlash + 0.4 + dmg * 0.03); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
   const nz = lp.z / def.half[2], nx = lp.x / def.half[0];
-  const facing = nz < 0 ? 'fore' : 'aft';
-  const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
+  const facing = (shieldPoint || lp).z < 0 ? 'fore' : 'aft';
+  const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? (nz < 0 ? 'fore' : 'aft') : (nx < 0 ? 'left' : 'right');
   let d = dmg;
   const pdmg = dmg * pierce; d -= pdmg;      // piercing share ignores shields and armour
   const holed = s.shHole && s.shHole[facing] > time;
@@ -58,7 +59,7 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed) {
     const raw = d * X[0], a = Math.min(s.shield[facing], raw);
     s.shield[facing] -= a; if (raw > 0) d *= 1 - a / raw;
-    shieldFlash(s, lp, facing);
+    shieldFlash(s, shieldPoint || lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
     outcome = 'shield';
     if (d + pdmg + byp <= 0.01) return outcome;
@@ -247,7 +248,8 @@ function fighterChunks(s) {
   }
   for (let part=0; part<lists.length; part++) {
     const ids=lists[part]; if (!ids.length) continue;
-    const mesh=new THREE.InstancedMesh(boxGeo(D.vs),voxMat,ids.length);
+    const material=voxMat.clone(); material.transparent=true;
+    const mesh=new THREE.InstancedMesh(boxGeo(D.vs),material,ids.length);
     ids.forEach((id,n)=>{const v=D.voxels[id], f=V.scorch[id]; _m.makeTranslation(v.x,v.y,v.z); mesh.setMatrixAt(n,_m); mesh.setColorAt(n,_col.setRGB(v.cr*f,v.cg*f,v.cb*f));});
     mesh.position.copy(s.group.position); mesh.quaternion.copy(s.group.quaternion); mesh.frustumCulled=false; scene.add(mesh);
     const drift=new THREE.Vector3((part-1)*2,1.5, (part-1)*3).applyQuaternion(s.group.quaternion).add(s.vel);
@@ -294,6 +296,34 @@ function traceShip(s, p0, p1) {
   _a.copy(p0); s.group.worldToLocal(_a);
   _b.copy(p1); s.group.worldToLocal(_b);
   return traceLocal(s, _a.x, _a.y, _a.z, _b.x, _b.y, _b.z);
+}
+// Return the first active shield-facet crossing, or the existing voxel hit.
+// A quadratic segment/ellipsoid intersection keeps fast projectiles swept.
+function weaponBounds(s) {
+  const a=s.shieldFx?.scale;
+  return a ? Math.max(s.def.radius,a.x,a.y,a.z) : s.def.radius;
+}
+function traceWeapon(s, p0, p1) {
+  s.group.updateMatrixWorld(true);
+  const a=s.group.worldToLocal(p0.clone()), b=s.group.worldToLocal(p1.clone());
+  const scale=s.shieldFx?.scale;
+  if (scale && compFactor(s,'shield')>0) {
+    const u=a.clone().divide(scale), v=b.clone().sub(a).divide(scale);
+    const A=v.dot(v), B=2*u.dot(v), C=u.dot(u)-1, disc=B*B-4*A*C;
+    if (A>0 && disc>=0) {
+      const t=(-B-Math.sqrt(disc))/(2*A);
+      if (t>=0 && t<=1) {
+        const bubble=a.clone().lerp(b,t), facet=bubble.z<0?'fore':'aft';
+        if (s.shield[facet]>0 && !(s.shHole && s.shHole[facet]>time)) {
+          const dir=b.clone().sub(a).normalize();
+          const hull=traceShipLocal(s,bubble,dir,Math.max(scale.x,scale.y,scale.z)*2.1);
+          return {point:bubble, hull:hull||bubble, shield:true};
+        }
+      }
+    }
+  }
+  const hull=traceLocal(s,a.x,a.y,a.z,b.x,b.y,b.z);
+  return hull ? {point:hull,hull,shield:false} : null;
 }
 function traceLocal(s, ax, ay, az, bx, by, bz) {
   const V = s.vox, D = V.data;
