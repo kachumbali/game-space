@@ -19,6 +19,14 @@ with Runner() as r:
         if(!p) {out[id]={candidate:false};continue;}
         for(let n=0;n<3;n++)g.chip(s,p,D.vs*2,D.vs*3,false);
         let removed=0,interior=0;for(let n=0;n<before.length;n++) if(before[n]&&!V.solid[n]) {removed++;if(D.cellToVox[n]<0)interior++;}
+        if(id==='kestrel') {
+          const index=D.cellToVox.findIndex((v,i)=>v<0 && V.solid[i]);
+          const k=index%D.nz,j=Math.floor(index/D.nz)%D.ny,i=Math.floor(index/(D.ny*D.nz));
+          const inside=new T.Vector3(-D.hx+(i+.5)*D.vs,-D.hy+(j+.5)*D.vs,-D.hz+(k+.5)*D.vs);
+          s.structure=s.def.structure*0.25;g.chip(s,inside,D.vs*.2,0,false);out.atThreshold=V.solid[index];
+          s.structure=s.def.structure*0.249;g.chip(s,inside,D.vs*.2,0,false);out.belowThreshold=V.solid[index];
+          s.structure=s.def.structure;
+        }
         const total=V.solid.reduce((a,b)=>a+b,0);
         const c=s.comps.find(x=>x.role!=='power');g.compEvent(s,c,2);
         const totalAfter=V.solid.reduce((a,b)=>a+b,0);
@@ -28,6 +36,7 @@ with Runner() as r:
       }
       return out;
     }''')
+    assert out.pop('atThreshold')==1 and out.pop('belowThreshold')==0, out
     for name, v in out.items():
         assert v['candidate'] and v['removed'] > 0 and v['interior'] == 0, (name,v)
         assert v['surface'] and v['componentRemoved'] == 0, (name,v)

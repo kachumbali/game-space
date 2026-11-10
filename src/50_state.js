@@ -196,7 +196,7 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
   const V = s.vox, D = V.data, vs = D.vs, { nx, ny, nz } = D;
   // A carve radius that scales with raw damage (hit: 0.35+0.08*d) reached 14 m for a 210-damage missile, wider than a whole fighter, so one hit deleted every voxel of the hull (only exhaust and hit boxes stayed). Cap it relative to the ship.
   if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
-  const shallow = shallowOverride ?? (s.structure > s.def.structure * TUNE.damageVisuals.holeHullFraction);
+  const shallow = shallowOverride ?? (s.structure >= s.def.structure * TUNE.damageVisuals.holeHullFraction);
   if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr, shallow }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
   const R = Math.max(r, sr);
   const ci = Math.floor((lp.x + D.hx) / vs), cj = Math.floor((lp.y + D.hy) / vs), ck = Math.floor((lp.z + D.hz) / vs);
