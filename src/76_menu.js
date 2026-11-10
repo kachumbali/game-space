@@ -328,6 +328,7 @@ function showSkirmishDebrief() {
     <div><div class="sub">REPORT</div><div>Kills <b>${kills}</b></div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${acc}%</b></div><div>Hull damage taken <b>${Math.round(p ? p.dmgTaken || 0 : 0)}</b></div>${game.sk.respawn ? `<div>Waves <b>${S.spawned}</b></div>` : ''}</div></div>
     <div class="btns"><button id="sk_re" data-f="re">RESTART</button><button class="alt" id="sk_set">SETUP</button><button class="alt" id="sk_menu">MAIN MENU</button></div>`, 'sk');
   menuView = 'debrief';
+  reportControls($id('brief').querySelector('.panel'), S.result);
   $id('sk_re').onclick = () => { startSkirmish(game.sk); launchLock(); };
   $id('sk_set').onclick = () => { skCfg = skNorm(game.sk); openMenu('skirmish'); };
   $id('sk_menu').onclick = () => openMenu();

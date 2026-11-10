@@ -377,6 +377,7 @@ function svShowDebrief() {
       <div class="sub">CAREER</div><div>+${Math.round(gain)} XP · <b>${ra.name}</b>${ra.level > rb.level ? ' <span class="ok">PROMOTED</span>' : ''}</div></div></div>
     <div class="btns"><button id="sv_re" data-f="re">RETRY</button><button class="alt" id="sv_set">SETUP</button><button class="alt" id="sv_menu">MAIN MENU</button></div>`, 'sk');
   menuView = 'debrief';
+  reportControls($id('brief').querySelector('.panel'), sv.quit ? 'exit' : 'lose');
   $id('sv_re').onclick = () => { startSurvival(sv.cfg); launchLock(); };
   $id('sv_set').onclick = () => { svCfg = svNorm(sv.cfg); openMenu('survival'); };
   $id('sv_menu').onclick = () => openMenu();

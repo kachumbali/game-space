@@ -42,8 +42,11 @@ function pauseToggle(force) {   // S1: pause/resume in flight; dialogs keep thei
 }
 const pmEl = $id('pauseOv');
 pmEl.innerHTML = `<div class="pt">PAUSED</div><div class="ps" id="pm_sub"></div><div class="pbtns"><button id="pm_res">RESUME <small>[ESC]</small></button><button id="pm_help">CONTROLS <small>[H]</small></button><button id="pm_rst">RESTART... <small>[R]</small></button><button id="pm_opt">OPTIONS <small>[O]</small></button><button id="pm_exit" class="warn"></button></div>`;
+reportControls(pmEl, () => 'in progress');
+document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">COPY REPORT in the pause menu or debrief copies a private session report; DOWNLOAD REPORT saves it on this device.</div>');
 const pmExitLabel = () => (game.mode === 'mission' ? 'EXIT MISSION' : game.mode === 'skirmish' ? 'EXIT SKIRMISH' : game.mode === 'survival' ? 'END RUN' : 'EXIT TO MENU');
 function pauseMenuRefresh() {
+  const note = pmEl.querySelector('textarea'); if (document.activeElement !== note && note.value !== REPORT.note) note.value = REPORT.note;
   const armed = pmArm && performance.now() - pmArm < 4000;
   if (!armed) pmArm = 0;
   const sub = game.mode === 'mission' && game.mission ? game.mission.title : game.mode === 'survival' && sv ? 'GAUNTLET · WAVE ' + sv.n : game.mode === 'skirmish' ? 'SKIRMISH' : 'FREE FLIGHT';
@@ -68,7 +71,7 @@ document.addEventListener('pointerlockchange', () => {   // the mouse was releas
   if (state === 'play' && !userPause && !rdlgOpen && !optsOpen && !credOpen) { userPause = true; pmArm = 0; pmAutoT = performance.now(); log('PAUSED', '#ffd24a'); }
 });
 addEventListener('keydown', e => {                       // pause menu: arrows move the focus, Enter presses; everything else is ignored while paused except Esc, R and O
-  if (!userPause || state !== 'play' || rdlgOpen || optsOpen || e.ctrlKey || e.metaKey) return;
+  if (!userPause || state !== 'play' || rdlgOpen || optsOpen || e.ctrlKey || e.metaKey || e.target.matches('textarea')) return;
   const L = [...pmEl.querySelectorAll('button')], i = L.indexOf(document.activeElement);
   if (e.code === 'ArrowDown') L[(i + 1) % L.length].focus();
   else if (e.code === 'ArrowUp') L[(i - 1 + L.length) % L.length].focus();
