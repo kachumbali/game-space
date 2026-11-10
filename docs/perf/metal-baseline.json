@@ -1,0 +1,3704 @@
+[
+  {
+    "name": "p01",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 185.40000009536743,
+        "renderSum": 340.29999999701977,
+        "frames": 606,
+        "callsSum": 27882,
+        "callsMax": 78
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 305048415
+    },
+    "after": {
+      "perf": {
+        "count": 3010,
+        "avg": 8.474784053156146,
+        "p95": 10,
+        "worst": 366,
+        "windows": [
+          {
+            "count": 1199,
+            "avg": 8.340283569641368,
+            "p95": 9.200000000000728,
+            "worst": 9.400000000001455
+          },
+          {
+            "count": 1149,
+            "avg": 8.703220191470844,
+            "p95": 9.299999999999272,
+            "worst": 366
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 224,
+            "ms": 136.59999999403954
+          },
+          {
+            "id": "kite6",
+            "res": 72,
+            "ms": 3.2000000029802322
+          },
+          {
+            "id": "merlin",
+            "res": 112,
+            "ms": 8.5
+          },
+          {
+            "id": "kite6",
+            "res": 51,
+            "ms": 1
+          }
+        ],
+        "costs": {
+          "hudSum": 1204.4000003933907,
+          "renderSum": 1410.7999999374151,
+          "frames": 3616,
+          "callsSum": 136000,
+          "callsMax": 78
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D1",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 1323
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 15
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 0
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 295130521
+      },
+      "state": "play",
+      "mission": "p01",
+      "stage": 1,
+      "simTime": 11.365272750002099,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 1019.0000002980232,
+      "renderSum": 1070.4999999403954,
+      "frames": 3010,
+      "callsSum": 108118
+    },
+    "errors": []
+  },
+  {
+    "name": "p02",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 208.80000007152557,
+        "renderSum": 361.59999991953373,
+        "frames": 605,
+        "callsSum": 28200,
+        "callsMax": 83
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 279286822
+    },
+    "after": {
+      "perf": {
+        "count": 2909,
+        "avg": 8.768683396356137,
+        "p95": 9,
+        "worst": 1033.6000000000004,
+        "windows": [
+          {
+            "count": 1063,
+            "avg": 9.407337723424272,
+            "p95": 8.800000000001091,
+            "worst": 1033.6000000000004
+          },
+          {
+            "count": 1185,
+            "avg": 8.438818565400844,
+            "p95": 8.700000000000728,
+            "worst": 49.900000000001455
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 224,
+            "ms": 140
+          },
+          {
+            "id": "kite6",
+            "res": 72,
+            "ms": 3
+          },
+          {
+            "id": "merlin",
+            "res": 88,
+            "ms": 8.599999994039536
+          },
+          {
+            "id": "kestrel",
+            "res": 113,
+            "ms": 22
+          },
+          {
+            "id": "kite6",
+            "res": 51,
+            "ms": 1
+          },
+          {
+            "id": "merlin",
+            "res": 112,
+            "ms": 9.5
+          }
+        ],
+        "costs": {
+          "hudSum": 1068.500000268221,
+          "renderSum": 1515.1999998390675,
+          "frames": 3514,
+          "callsSum": 210580,
+          "callsMax": 83
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 1387
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 1323
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 19
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 24
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 326179835
+      },
+      "state": "play",
+      "mission": "p02",
+      "stage": 1,
+      "simTime": 11.100972749997661,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 859.7000001966953,
+      "renderSum": 1153.5999999195337,
+      "frames": 2909,
+      "callsSum": 182380
+    },
+    "errors": []
+  },
+  {
+    "name": "p03",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 191.39999996125698,
+        "renderSum": 336.5999999344349,
+        "frames": 605,
+        "callsSum": 27686,
+        "callsMax": 79
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 280483177
+    },
+    "after": {
+      "perf": {
+        "count": 1753,
+        "avg": 14.54877353108956,
+        "p95": 9,
+        "worst": 9258.2,
+        "windows": [
+          {
+            "count": 666,
+            "avg": 15.015015015015015,
+            "p95": 8.900000000001455,
+            "worst": 41.69999999999891
+          },
+          {
+            "count": 443,
+            "avg": 22.573363431151243,
+            "p95": 9.200000000000728,
+            "worst": 9258.2
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 224,
+            "ms": 741.3999999910593
+          },
+          {
+            "id": "kite6",
+            "res": 72,
+            "ms": 15.700000002980232
+          },
+          {
+            "id": "merlin",
+            "res": 112,
+            "ms": 15.899999991059303
+          },
+          {
+            "id": "kestrel",
+            "res": 113,
+            "ms": 33.400000005960464
+          },
+          {
+            "id": "kite6",
+            "res": 51,
+            "ms": 2.0999999940395355
+          }
+        ],
+        "costs": {
+          "hudSum": 1426.5000000149012,
+          "renderSum": 2617.8999995291233,
+          "frames": 2358,
+          "callsSum": 137130,
+          "callsMax": 94
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9522
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 3379
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 20
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 26
+          },
+          {
+            "capacity": 600,
+            "active": 5
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 367462910
+      },
+      "state": "play",
+      "mission": "p03",
+      "stage": 1,
+      "simTime": 7.586597999995356,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 1235.1000000536442,
+      "renderSum": 2281.2999995946884,
+      "frames": 1753,
+      "callsSum": 109444
+    },
+    "errors": []
+  },
+  {
+    "name": "p04",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 188.50000023841858,
+        "renderSum": 346.89999978244305,
+        "frames": 618,
+        "callsSum": 29546,
+        "callsMax": 84
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 280632821
+    },
+    "after": {
+      "perf": {
+        "count": 1681,
+        "avg": 15.176859012492564,
+        "p95": 9,
+        "worst": 9978.399999999998,
+        "windows": [
+          {
+            "count": 658,
+            "avg": 15.19756838905775,
+            "p95": 9,
+            "worst": 16.600000000000364
+          },
+          {
+            "count": 381,
+            "avg": 26.246719160104988,
+            "p95": 9.299999999999272,
+            "worst": 9978.399999999998
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "darter",
+            "res": 224,
+            "ms": 828
+          },
+          {
+            "id": "leaper",
+            "res": 236,
+            "ms": 632.2000000029802
+          },
+          {
+            "id": "kite6",
+            "res": 72,
+            "ms": 3.199999988079071
+          },
+          {
+            "id": "darter",
+            "res": 112,
+            "ms": 9.5
+          },
+          {
+            "id": "leaper",
+            "res": 118,
+            "ms": 46.1000000089407
+          },
+          {
+            "id": "kite6",
+            "res": 51,
+            "ms": 1.5
+          }
+        ],
+        "costs": {
+          "hudSum": 1496.700000077486,
+          "renderSum": 2558.19999961555,
+          "frames": 2299,
+          "callsSum": 138764,
+          "callsMax": 96
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 1386
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 3379
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 40
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 17
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 440550198
+      },
+      "state": "play",
+      "mission": "p04",
+      "stage": 1,
+      "simTime": 7.406362499999819,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 1308.1999998390675,
+      "renderSum": 2211.299999833107,
+      "frames": 1681,
+      "callsSum": 109218
+    },
+    "errors": []
+  },
+  {
+    "name": "r04",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 135.70000003278255,
+        "renderSum": 566.3000000417233,
+        "frames": 605,
+        "callsSum": 100884,
+        "callsMax": 220
+      },
+      "ships": [
+        {
+          "id": "exeter",
+          "callsign": "CSS EXETER",
+          "meshes": 60,
+          "instances": 125213
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "halberd",
+          "callsign": "CSS TALON",
+          "meshes": 21,
+          "instances": 78547
+        },
+        {
+          "id": "tern",
+          "callsign": "CONVOY ONE",
+          "meshes": 3,
+          "instances": 75232
+        },
+        {
+          "id": "liner",
+          "callsign": "CONVOY TWO",
+          "meshes": 21,
+          "instances": 59676
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 561357027
+    },
+    "after": {
+      "perf": {
+        "count": 2373,
+        "avg": 10.747619047619047,
+        "p95": 9,
+        "worst": 4716.600000000002,
+        "windows": [
+          {
+            "count": 671,
+            "avg": 14.903129657228018,
+            "p95": 8.799999999999272,
+            "worst": 9.300000000001091
+          },
+          {
+            "count": 1042,
+            "avg": 9.596928982725528,
+            "p95": 9.200000000000728,
+            "worst": 4716.600000000002
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "leaper",
+            "res": 236,
+            "ms": 127.3999999910593
+          },
+          {
+            "id": "darter",
+            "res": 224,
+            "ms": 96.6000000089407
+          },
+          {
+            "id": "spitter",
+            "res": 251,
+            "ms": 127.3999999910593
+          },
+          {
+            "id": "gulper",
+            "res": 420,
+            "ms": 551.4000000059605
+          },
+          {
+            "id": "kite6",
+            "res": 72,
+            "ms": 3.9000000059604645
+          },
+          {
+            "id": "leaper",
+            "res": 118,
+            "ms": 14.600000008940697
+          },
+          {
+            "id": "darter",
+            "res": 88,
+            "ms": 4.9000000059604645
+          },
+          {
+            "id": "darter",
+            "res": 112,
+            "ms": 7.5
+          },
+          {
+            "id": "spitter",
+            "res": 126,
+            "ms": 12.300000011920929
+          }
+        ],
+        "costs": {
+          "hudSum": 981.5000002384186,
+          "renderSum": 2830.0999999791384,
+          "frames": 2978,
+          "callsSum": 566258,
+          "callsMax": 266
+        },
+        "ships": [
+          {
+            "id": "exeter",
+            "callsign": "CSS EXETER",
+            "meshes": 60,
+            "instances": 125441
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "halberd",
+            "callsign": "CSS TALON",
+            "meshes": 21,
+            "instances": 78547
+          },
+          {
+            "id": "tern",
+            "callsign": "CONVOY ONE",
+            "meshes": 3,
+            "instances": 75232
+          },
+          {
+            "id": "liner",
+            "callsign": "CONVOY TWO",
+            "meshes": 21,
+            "instances": 59676
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 9675
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 7957
+          },
+          {
+            "id": "spitter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 16554
+          },
+          {
+            "id": "spitter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 16554
+          },
+          {
+            "id": "gulper",
+            "callsign": null,
+            "meshes": 24,
+            "instances": 225937
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 403
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 403
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 428
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D3",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D5",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D7",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D9",
+            "meshes": 3,
+            "instances": 1376
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D11",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 403
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D6",
+            "meshes": 3,
+            "instances": 1323
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS EXETER D3",
+            "meshes": 3,
+            "instances": 3379
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 62
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 136
+          },
+          {
+            "capacity": 600,
+            "active": 52
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 1403379641
+      },
+      "state": "play",
+      "mission": "r04",
+      "stage": 1,
+      "simTime": 9.487799999999753,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 845.800000205636,
+      "renderSum": 2263.799999937415,
+      "frames": 2373,
+      "callsSum": 465374
+    },
+    "errors": []
+  },
+  {
+    "name": "hecla",
+    "width": 1440,
+    "height": 900,
+    "touch": false,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 149.69999991357327,
+        "renderSum": 303.5999999344349,
+        "frames": 469,
+        "callsSum": 39054,
+        "callsMax": 96
+      },
+      "ships": [
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "WING1",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "WING2",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "hecla",
+          "callsign": null,
+          "meshes": 51,
+          "instances": 23272
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 7957
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 40723
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D1",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D3",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D5",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D7",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D9",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D11",
+          "meshes": 3,
+          "instances": 3379
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 61998
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 61998
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 10
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1440,
+        "height": 900
+      },
+      "quality": "desktop",
+      "pixel": 1,
+      "detail": 224,
+      "bloom": true,
+      "heap": 635506227
+    },
+    "after": {
+      "perf": {
+        "count": 2366,
+        "avg": 10.779543533389687,
+        "p95": 10,
+        "worst": 1075,
+        "windows": [
+          {
+            "count": 987,
+            "avg": 10.131712259371835,
+            "p95": 9.199999999998909,
+            "worst": 158.29999999999927
+          },
+          {
+            "count": 964,
+            "avg": 10.37344398340249,
+            "p95": 9.299999999999272,
+            "worst": 1073.9000000000015
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "darter",
+            "res": 160,
+            "ms": 50.400000005960464
+          },
+          {
+            "id": "kestrel",
+            "res": 113,
+            "ms": 6.100000008940697
+          },
+          {
+            "id": "kestrel",
+            "res": 89,
+            "ms": 3.2999999970197678
+          },
+          {
+            "id": "kestrel",
+            "res": 162,
+            "ms": 24.900000005960464
+          }
+        ],
+        "costs": {
+          "hudSum": 802.5000002682209,
+          "renderSum": 1266.0999996215105,
+          "frames": 2835,
+          "callsSum": 249447,
+          "callsMax": 98
+        },
+        "ships": [
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 62273
+          },
+          {
+            "id": "kestrel",
+            "callsign": "WING1",
+            "meshes": 3,
+            "instances": 27179
+          },
+          {
+            "id": "kestrel",
+            "callsign": "WING2",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "hecla",
+            "callsign": null,
+            "meshes": 51,
+            "instances": 23272
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 17144
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 40723
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 40723
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 17144
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 40723
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 40723
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 40723
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 17144
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 7173
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 7173
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D4",
+            "meshes": 3,
+            "instances": 232
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 12513
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D2",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D3",
+            "meshes": 3,
+            "instances": 3379
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 61998
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 39
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 3
+          },
+          {
+            "capacity": 600,
+            "active": 11
+          }
+        ],
+        "overlay": {
+          "width": 1440,
+          "height": 900
+        },
+        "quality": "desktop",
+        "pixel": 1,
+        "detail": 224,
+        "bloom": true,
+        "heap": 739987992
+      },
+      "state": "play",
+      "mission": null,
+      "stage": null,
+      "simTime": null,
+      "viewport": [
+        1440,
+        900,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 652.8000003546476,
+      "renderSum": 962.4999996870756,
+      "frames": 2366,
+      "callsSum": 210393
+    },
+    "errors": []
+  },
+  {
+    "name": "p01",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 197.6000002026558,
+        "renderSum": 340.09999975562096,
+        "frames": 603,
+        "callsSum": 26262,
+        "callsMax": 66
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 30261525
+    },
+    "after": {
+      "perf": {
+        "count": 3059,
+        "avg": 8.338443935926772,
+        "p95": 10,
+        "worst": 16.799999999999272,
+        "windows": [
+          {
+            "count": 1200,
+            "avg": 8.333333333333334,
+            "p95": 9,
+            "worst": 9.400000000000546
+          },
+          {
+            "count": 1198,
+            "avg": 8.347245409015025,
+            "p95": 9.200000000000728,
+            "worst": 16.799999999999272
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 64,
+            "ms": 8.799999997019768
+          }
+        ],
+        "costs": {
+          "hudSum": 1196.9000001847744,
+          "renderSum": 1481.3999998420477,
+          "frames": 3662,
+          "callsSum": 131761,
+          "callsMax": 66
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D1",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 0
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 19
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 0
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 37219112
+      },
+      "state": "play",
+      "mission": "p01",
+      "stage": 1,
+      "simTime": 11.465212499999895,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 999.2999999821186,
+      "renderSum": 1141.3000000864267,
+      "frames": 3059,
+      "callsSum": 105499
+    },
+    "errors": []
+  },
+  {
+    "name": "p02",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 206.89999993145466,
+        "renderSum": 351.49999986588955,
+        "frames": 605,
+        "callsSum": 26270,
+        "callsMax": 67
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 29961919
+    },
+    "after": {
+      "perf": {
+        "count": 3056,
+        "avg": 8.344208115183246,
+        "p95": 10,
+        "worst": 41.600000000000364,
+        "windows": [
+          {
+            "count": 1196,
+            "avg": 8.361204013377927,
+            "p95": 9.200000000000728,
+            "worst": 41.600000000000364
+          },
+          {
+            "count": 1200,
+            "avg": 8.333333333333334,
+            "p95": 8.700000000000728,
+            "worst": 9.400000000001455
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 64,
+            "ms": 7.5
+          },
+          {
+            "id": "kestrel",
+            "res": 41,
+            "ms": 1.2999999970197678
+          }
+        ],
+        "costs": {
+          "hudSum": 1162.8999995142221,
+          "renderSum": 1851.5000002086163,
+          "frames": 3661,
+          "callsSum": 221919,
+          "callsMax": 80
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 0
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 28
+          },
+          {
+            "capacity": 300,
+            "active": 0
+          },
+          {
+            "capacity": 500,
+            "active": 26
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 47767012
+      },
+      "state": "play",
+      "mission": "p02",
+      "stage": 1,
+      "simTime": 11.465587499999858,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 955.9999995827675,
+      "renderSum": 1500.0000003427267,
+      "frames": 3056,
+      "callsSum": 195649
+    },
+    "errors": []
+  },
+  {
+    "name": "p03",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 199.79999995231628,
+        "renderSum": 330.60000006854534,
+        "frames": 604,
+        "callsSum": 25754,
+        "callsMax": 65
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 29212879
+    },
+    "after": {
+      "perf": {
+        "count": 3051,
+        "avg": 8.360603080957063,
+        "p95": 10,
+        "worst": 58.30000000000109,
+        "windows": [
+          {
+            "count": 1194,
+            "avg": 8.375209380234505,
+            "p95": 8.900000000000546,
+            "worst": 58.30000000000109
+          },
+          {
+            "count": 1200,
+            "avg": 8.333333333333334,
+            "p95": 8.900000000001455,
+            "worst": 9.400000000001455
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "merlin",
+            "res": 64,
+            "ms": 7.699999988079071
+          },
+          {
+            "id": "kestrel",
+            "res": 41,
+            "ms": 1
+          }
+        ],
+        "costs": {
+          "hudSum": 1147.8999994844198,
+          "renderSum": 1765.199999883771,
+          "frames": 3655,
+          "callsSum": 254305,
+          "callsMax": 98
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "merlin",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 212
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 97
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 58
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 83
+          },
+          {
+            "capacity": 300,
+            "active": 2
+          },
+          {
+            "capacity": 500,
+            "active": 28
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 45501278
+      },
+      "state": "play",
+      "mission": "p03",
+      "stage": 1,
+      "simTime": 11.462437499999846,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 948.0999995321035,
+      "renderSum": 1434.5999998152256,
+      "frames": 3051,
+      "callsSum": 228551
+    },
+    "errors": []
+  },
+  {
+    "name": "p04",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 203.29999972879887,
+        "renderSum": 383.20000010728836,
+        "frames": 604,
+        "callsSum": 27113,
+        "callsMax": 68
+      },
+      "ships": [
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 30222634
+    },
+    "after": {
+      "perf": {
+        "count": 3047,
+        "avg": 8.371578601903511,
+        "p95": 9,
+        "worst": 66.60000000000036,
+        "windows": [
+          {
+            "count": 1193,
+            "avg": 8.382229673093043,
+            "p95": 8.899999999999636,
+            "worst": 66.60000000000036
+          },
+          {
+            "count": 1193,
+            "avg": 8.382229673093043,
+            "p95": 9,
+            "worst": 66.59999999999854
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "darter",
+            "res": 64,
+            "ms": 9.200000002980232
+          },
+          {
+            "id": "leaper",
+            "res": 67,
+            "ms": 3.8999999910593033
+          },
+          {
+            "id": "kestrel",
+            "res": 41,
+            "ms": 1
+          },
+          {
+            "id": "leaper",
+            "res": 42,
+            "ms": 1.0999999940395355
+          }
+        ],
+        "costs": {
+          "hudSum": 1142.0000000596046,
+          "renderSum": 1991.8000003397465,
+          "frames": 3651,
+          "callsSum": 264873,
+          "callsMax": 102
+        },
+        "ships": [
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 859
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 859
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D11",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 97
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 24
+          },
+          {
+            "capacity": 300,
+            "active": 95
+          },
+          {
+            "capacity": 500,
+            "active": 17
+          },
+          {
+            "capacity": 600,
+            "active": 0
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 41471738
+      },
+      "state": "play",
+      "mission": "p04",
+      "stage": 1,
+      "simTime": 11.453137499999901,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 938.7000003308058,
+      "renderSum": 1608.6000002324581,
+      "frames": 3047,
+      "callsSum": 237760
+    },
+    "errors": []
+  },
+  {
+    "name": "r04",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 129.09999990463257,
+        "renderSum": 662.5000000298023,
+        "frames": 604,
+        "callsSum": 94212,
+        "callsMax": 201
+      },
+      "ships": [
+        {
+          "id": "exeter",
+          "callsign": "CSS EXETER",
+          "meshes": 60,
+          "instances": 16084
+        },
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "halberd",
+          "callsign": "CSS HALBERD",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "halberd",
+          "callsign": "CSS TALON",
+          "meshes": 21,
+          "instances": 7985
+        },
+        {
+          "id": "tern",
+          "callsign": "CONVOY ONE",
+          "meshes": 3,
+          "instances": 4374
+        },
+        {
+          "id": "liner",
+          "callsign": "CONVOY TWO",
+          "meshes": 21,
+          "instances": 17357
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HAWK",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "SPARROW",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 0
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 66372355
+    },
+    "after": {
+      "perf": {
+        "count": 3031,
+        "avg": 8.413032002639392,
+        "p95": 10,
+        "worst": 216.60000000000036,
+        "windows": [
+          {
+            "count": 1173,
+            "avg": 8.525149190110827,
+            "p95": 8.900000000000546,
+            "worst": 216.60000000000036
+          },
+          {
+            "count": 1200,
+            "avg": 8.333333333333334,
+            "p95": 9.200000000000728,
+            "worst": 9.400000000001455
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "leaper",
+            "res": 67,
+            "ms": 8.800000011920929
+          },
+          {
+            "id": "darter",
+            "res": 64,
+            "ms": 1.6000000089406967
+          },
+          {
+            "id": "spitter",
+            "res": 72,
+            "ms": 3.2000000029802322
+          },
+          {
+            "id": "gulper",
+            "res": 174,
+            "ms": 42.8999999910593
+          }
+        ],
+        "costs": {
+          "hudSum": 864.5000002831221,
+          "renderSum": 3568.2999995797873,
+          "frames": 3635,
+          "callsSum": 696527,
+          "callsMax": 262
+        },
+        "ships": [
+          {
+            "id": "exeter",
+            "callsign": "CSS EXETER",
+            "meshes": 60,
+            "instances": 16126
+          },
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "halberd",
+            "callsign": "CSS HALBERD",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "halberd",
+            "callsign": "CSS TALON",
+            "meshes": 21,
+            "instances": 7985
+          },
+          {
+            "id": "tern",
+            "callsign": "CONVOY ONE",
+            "meshes": 3,
+            "instances": 1521
+          },
+          {
+            "id": "liner",
+            "callsign": "CONVOY TWO",
+            "meshes": 21,
+            "instances": 17357
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HAWK",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "SPARROW",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 235
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 241
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 229
+          },
+          {
+            "id": "leaper",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 229
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 214
+          },
+          {
+            "id": "spitter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 419
+          },
+          {
+            "id": "spitter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 419
+          },
+          {
+            "id": "gulper",
+            "callsign": null,
+            "meshes": 24,
+            "instances": 32820
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D9",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D3",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D5",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D7",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D9",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D11",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS EXETER D4",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D5",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS TALON D6",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS EXETER D2",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS HALBERD D6",
+            "meshes": 3,
+            "instances": 58
+          },
+          {
+            "id": "kite6",
+            "callsign": "CSS EXETER D3",
+            "meshes": 3,
+            "instances": 97
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 3323
+          },
+          {
+            "id": "kestrel",
+            "callsign": "CSS EXETER kestrel",
+            "meshes": 3,
+            "instances": 3323
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 459
+          },
+          {
+            "capacity": 300,
+            "active": 134
+          },
+          {
+            "capacity": 500,
+            "active": 127
+          },
+          {
+            "capacity": 600,
+            "active": 46
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 104604204
+      },
+      "state": "play",
+      "mission": "r04",
+      "stage": 1,
+      "simTime": 11.403112499999866,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 735.4000003784895,
+      "renderSum": 2905.799999549985,
+      "frames": 3031,
+      "callsSum": 602315
+    },
+    "errors": []
+  },
+  {
+    "name": "hecla",
+    "width": 1180,
+    "height": 820,
+    "touch": true,
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4 Pro, Unspecified Version)",
+    "before": {
+      "voxelBuilds": [],
+      "costs": {
+        "hudSum": 179.70000004768372,
+        "renderSum": 364.0000000745058,
+        "frames": 601,
+        "callsSum": 51397,
+        "callsMax": 96
+      },
+      "ships": [
+        {
+          "id": "kestrel",
+          "callsign": "ECHO",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "WING1",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "WING2",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "hecla",
+          "callsign": null,
+          "meshes": 51,
+          "instances": 17322
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "darter",
+          "callsign": null,
+          "meshes": 3,
+          "instances": 214
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D1",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D3",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D5",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D7",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D9",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kite6",
+          "callsign": "HECLA D11",
+          "meshes": 3,
+          "instances": 97
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 3323
+        },
+        {
+          "id": "kestrel",
+          "callsign": "HECLA kestrel",
+          "meshes": 3,
+          "instances": 3323
+        }
+      ],
+      "particles": [
+        {
+          "capacity": 700,
+          "active": 18
+        },
+        {
+          "capacity": 300,
+          "active": 0
+        },
+        {
+          "capacity": 500,
+          "active": 0
+        },
+        {
+          "capacity": 600,
+          "active": 0
+        }
+      ],
+      "overlay": {
+        "width": 1180,
+        "height": 820
+      },
+      "quality": "tablet",
+      "pixel": 2,
+      "detail": 64,
+      "bloom": true,
+      "heap": 75659275
+    },
+    "after": {
+      "perf": {
+        "count": 3052,
+        "avg": 8.355406290956749,
+        "p95": 10,
+        "worst": 41.69999999999709,
+        "windows": [
+          {
+            "count": 1196,
+            "avg": 8.361204013377927,
+            "p95": 9,
+            "worst": 41.600000000000364
+          },
+          {
+            "count": 1195,
+            "avg": 8.368200836820083,
+            "p95": 9.299999999999272,
+            "worst": 41.69999999999709
+          }
+        ]
+      },
+      "diag": {
+        "voxelBuilds": [
+          {
+            "id": "darter",
+            "res": 40,
+            "ms": 1
+          }
+        ],
+        "costs": {
+          "hudSum": 1021.4999999403954,
+          "renderSum": 1948.5000003874302,
+          "frames": 3653,
+          "callsSum": 310712,
+          "callsMax": 96
+        },
+        "ships": [
+          {
+            "id": "kestrel",
+            "callsign": "ECHO",
+            "meshes": 3,
+            "instances": 3479
+          },
+          {
+            "id": "kestrel",
+            "callsign": "WING1",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "WING2",
+            "meshes": 3,
+            "instances": 1087
+          },
+          {
+            "id": "hecla",
+            "callsign": null,
+            "meshes": 51,
+            "instances": 17322
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 821
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 2260
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 2260
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 794
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 794
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 868
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 220
+          },
+          {
+            "id": "darter",
+            "callsign": null,
+            "meshes": 3,
+            "instances": 794
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D4",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D2",
+            "meshes": 3,
+            "instances": 0
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kestrel",
+            "callsign": "HECLA kestrel",
+            "meshes": 3,
+            "instances": 272
+          },
+          {
+            "id": "kite6",
+            "callsign": "HECLA D3",
+            "meshes": 3,
+            "instances": 97
+          }
+        ],
+        "particles": [
+          {
+            "capacity": 700,
+            "active": 349
+          },
+          {
+            "capacity": 300,
+            "active": 121
+          },
+          {
+            "capacity": 500,
+            "active": 201
+          },
+          {
+            "capacity": 600,
+            "active": 179
+          }
+        ],
+        "overlay": {
+          "width": 1180,
+          "height": 820
+        },
+        "quality": "tablet",
+        "pixel": 2,
+        "detail": 64,
+        "bloom": true,
+        "heap": 55433585
+      },
+      "state": "play",
+      "mission": null,
+      "stage": null,
+      "simTime": null,
+      "viewport": [
+        1180,
+        820,
+        1
+      ]
+    },
+    "costs": {
+      "hudSum": 841.7999998927116,
+      "renderSum": 1584.5000003129244,
+      "frames": 3052,
+      "callsSum": 259315
+    },
+    "errors": []
+  }
+]

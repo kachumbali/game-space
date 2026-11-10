@@ -1,4 +1,4 @@
-""Headed Chrome/Metal opening-flight sampler. Run from repo root; see docs/PERF_REPORT.md."""
+"""Headed Chrome/Metal opening-flight sampler. Run from repo root; see docs/PERF_REPORT.md."""
 import os,sys,json,time,subprocess
 from pathlib import Path
 os.environ.setdefault('GS_TEST_DIR', '/tmp/gs_perfdata')
