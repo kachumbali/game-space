@@ -781,11 +781,12 @@ function showDebrief() {
     <div class="cols"><div><div class="sub">KILLS</div>${rows}</div>
     <div><div class="sub">REPORT</div><div>Time <b>${Math.floor(S.t / 60)}:${String(Math.floor(S.t % 60)).padStart(2, '0')}</b></div><div>Accuracy <b>${st.acc}%</b></div><div>Hull damage taken <b>${Math.round(player.dmgTaken || 0)}</b></div><div>${anchorName(game.anchor)} hull <b>${st.halPct}%</b></div>${S.convoy ? `<div>Passengers evacuated <b>${S.convoy.passengers}</b></div>` : ''}<div class="grade">${st.grade}<span class="dim"> ${st.total} pts</span></div></div>
     <div><div class="sub">WING</div>${crew}${juiceDebriefHtml(st.acc, player ? player.shots || 0 : 0, kills)}<div class="sub">CAREER</div><div>${career}</div></div></div>
-    <div class="btns"><button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result !== 'lose' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
+    <div class="btns">${S.result === 'win' && M.id === 'p04' ? '<button id="bending">CONTINUE</button>' : S.result === 'win' && next ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bgo">${S.result === 'win' ? 'FLY AGAIN' : 'RETRY'}</button>${S.result === 'partial' && next && !PROLOGUE_MISSIONS.includes(M) ? '<button id="bnext">NEXT MISSION</button>' : ''}<button id="bfree" class="alt">FREE FLIGHT</button><button id="bmenu" class="alt">MAIN MENU</button></div></div>`;
   el.style.display = 'flex';
   document.exitPointerLock?.();
   $id('bgo').onclick = () => { if (S.result !== 'win') restoreCrew(); startMission(game.mission); };
   if ($id('bnext')) $id('bnext').onclick = () => startMission(next);
+  if ($id('bending')) $id('bending').onclick = showPrologueEnding;
   $id('bfree').onclick = () => { el.style.display = 'none'; resetGame(); if (!isTouch) lockPointer(); };
   $id('bmenu').onclick = () => openMenu();
 }

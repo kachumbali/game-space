@@ -115,10 +115,10 @@ function menuAct(a) {
   else if (a === 'credits') showCredits(true);
   else if (a === 'back') showMainMenu();
   else if (a.startsWith('yard:')) showShipyardCatalog(a.slice(5));
-  else if (a.startsWith('campaign:')) showMissionList(CAMPAIGNS.find(c => c.id === a.slice(9)));
+  else if (a.startsWith('campaign:')) { const c = CAMPAIGNS.find(c => c.id === a.slice(9)); if (c && (c.id === 'prologue' || prologueUnlocked())) showMissionList(c); }
   else if (a.startsWith('mission:')) {
     const [, cid, i] = a.split(':'); const c = CAMPAIGNS.find(x => x.id === cid);
-    if (c && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
+    if (c && (c.id === 'prologue' || prologueUnlocked()) && c.missions[+i]) { menuLeave(); startMission(c.missions[+i]); }
   }
 }
 function yardWeaponLine(wid, suffix = '') {
@@ -161,7 +161,7 @@ function showShipyardCatalog(selectedId) {
 function showCampaignList() {
   menuView = 'missions';
   menuShell(`<div class="sub">CAMPAIGNS</div><h1>SELECT CAMPAIGN</h1><h2>Choose a story arc</h2>
-    <div class="mlist">${CAMPAIGNS.map(c => `<button class="mi" data-a="campaign:${c.id}"><b>${c.title}</b><span>${c.subtitle} · ${c.missions.length} missions</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
+    <div class="mlist">${CAMPAIGNS.map(c => `<button class="mi" data-a="campaign:${c.id}" ${c.id !== 'prologue' && !prologueUnlocked() ? 'disabled' : ''}><b>${c.title}</b><span>${c.subtitle} · ${c.missions.length} missions${c.id !== 'prologue' ? (prologueUnlocked() ? ' · UNPOLISHED' : ' · LOCKED UNTIL PROLOGUE 4') : ''}</span></button>`).join('')}<button class="mi alt" data-a="back"><b>BACK</b></button></div>`, 'main');
   $id('brief').querySelectorAll('.mi').forEach(b => { b.onclick = () => menuAct(b.dataset.a); });
   menuFocus();
 }

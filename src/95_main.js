@@ -55,7 +55,7 @@ function pauseMenuRefresh() {
 function pauseExit() {                                   // leave the current run for the main menu (Gauntlet: end the run, bank the score, show the debrief)
   userPause = false; keys.clear(); pmArm = 0; pmEl.style.display = 'none';
   if (game.mode === 'survival' && sv && !sv.over) { sv.quit = true; svEnd(); sv.overT = 99; return; }
-  if (game.mode === 'mission') restoreCrew();           // an abandoned sortie costs the wing nothing (same as a restart)
+  if (game.mode === 'mission') { prologueSessionRecord(game.mission, game.mstate, 'exit'); restoreCrew(); }           // an abandoned sortie costs the wing nothing (same as a restart)
   openMenu();
 }
 $id('pm_res').onclick = () => pauseToggle(false);
