@@ -4,13 +4,23 @@
 //  but the music volume slider may not). Sound samples (CC0) are embedded in 14_samples.js and layered under the procedural SFX.
 //  Options (O key / button): music on/off, music volume, effects volume, sample layer on/off. Saved in localStorage (try/catch).
 // ======================================================================
-const AOPT = { music: true, musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false, purist: false };
+const AOPT = { music: true, score: 'classic', musicVol: 0.5, sfxVol: 1, samples: true, sens: 1, invY: false, purist: false };
 try { Object.assign(AOPT, JSON.parse(localStorage.getItem('gs_audio') || '{}')); } catch (e) { /* private mode: defaults */ }
 function aoptSave() { try { localStorage.setItem('gs_audio', JSON.stringify(AOPT)); } catch (e) { /* ignore */ } }
 // The menu cue and combat tracks are original GM-MIDI loops (tools/gen/music). The menu remains opt-in:
 // musicUnlock is called only inside the existing first pointer/key gesture, as required by browser audio policies.
 // urgent.mp3/pulse.mp3 (CC0) stay in audio/ as fallbacks.
 const MUSIC_FILES = { menu:'audio/menu-frontier.mp3', title:'audio/situation-title-sting.mp3', patrol:'audio/situation-patrol.mp3', tension:'audio/situation-tension.mp3', hive:'audio/situation-hive.mp3', capital:'audio/situation-capital-duel.mp3', boss:'audio/situation-bullfrog.mp3', retreat:'audio/situation-retreat.mp3', rescue:'audio/situation-rescue.mp3', loss:'audio/situation-loss.mp3', win:'audio/situation-victory-new.mp3', combat:'audio/combat-dogfight.mp3', heavy:'audio/combat-bombast.mp3', story:'audio/transmission.mp3' };
+// Optional second score: ten original GM orchestral loops (tools/gen/music/soundtrack/, rendered with GeneralUser GS). Slots it lacks (hive, retreat, rescue, story) keep the classic track.
+const SCORE_FILES = { title:'audio/score-title.mp3', menu:'audio/score-menu.mp3', patrol:'audio/score-patrol.mp3', tension:'audio/score-tension.mp3', combat:'audio/score-combat.mp3', heavy:'audio/score-heavy.mp3', capital:'audio/score-capital.mp3', boss:'audio/score-boss.mp3', win:'audio/score-win.mp3', loss:'audio/score-loss.mp3' };
+const musFile = k => (AOPT.score === 'orchestral' && SCORE_FILES[k]) || MUSIC_FILES[k];
+function musScoreSet(v) {            // drop every cached element so the next musicTick rebuilds them from the other score
+  AOPT.score = v === 'orchestral' ? 'orchestral' : 'classic'; aoptSave();
+  for (const k in MUS.el) { try { MUS.el[k].pause(); MUS.el[k].removeAttribute('src'); MUS.el[k].load(); } catch (e) { /* ignore */ } if (MUS.gain[k]) { try { MUS.gain[k].disconnect(); } catch (e) { /* ignore */ } } }
+  MUS.el = {}; MUS.gain = {}; MUS.vol = {}; MUS.titleDone = false;
+  if (state !== 'play') MUS.want = null;
+  musicUnlock();                      // the select's change event is a user gesture: start the new elements now (iOS)
+}
 const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0, mood: null, titleDone:false, status: 'waiting for the first tap or key' };
 // Routing: over http(s) every track goes <audio> -> GainNode -> speakers. iOS ignores element.volume and only lets a media element play()
 // if that element itself was started inside a user gesture, so (a) volume and crossfades use the gain node, and (b) the first tap/key
@@ -19,7 +29,7 @@ const MUS = { el: {}, gain: {}, vol: {}, want: null, started: false, combatT: 0,
 const musRouted = () => !!AUDIO.ctx && /^https?:$/.test(location.protocol);
 function musEl(k) {
   if (!MUS.el[k]) {
-    const a = new Audio(MUSIC_FILES[k]); a.preload = 'auto'; a.loop = k !== 'title'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
+    const a = new Audio(musFile(k)); a.preload = 'auto'; a.loop = k !== 'title'; a.volume = 0; MUS.el[k] = a; MUS.vol[k] = 0;
     if (k === 'title') a.onended = () => { MUS.titleDone = true; };
     if (musRouted()) {
       try {
@@ -143,6 +153,7 @@ function toggleOpts(force) {
       + row('o_music', 'Music', `<input type="checkbox" id="o_music" ${AOPT.music ? 'checked' : ''}>`)
       + row('o_mv', 'Music volume', `<input type="range" id="o_mv" min="0" max="100" value="${Math.round(AOPT.musicVol * 100)}">`)
       + row('o_sv', 'Effects volume', `<input type="range" id="o_sv" min="0" max="100" value="${Math.round(AOPT.sfxVol * 100)}">`)
+      + row('o_score', 'Music score', `<select id="o_score"><option value="classic" ${AOPT.score !== 'orchestral' ? 'selected' : ''}>Classic</option><option value="orchestral" ${AOPT.score === 'orchestral' ? 'selected' : ''}>Orchestral (new)</option></select>`)
       + row('o_smp', 'Sample layer (explosions, jump, bolts)', `<input type="checkbox" id="o_smp" ${AOPT.samples ? 'checked' : ''}>`)
       + row('o_fm', 'Flight model [F]', `<select id="o_fm">${FM_ORDER.map(k => `<option value="${k}" ${flightMode === k ? 'selected' : ''}>${FM_NAMES[k]}</option>`).join('')}</select>`)
       + row('o_pur', 'Sim purist (no hit markers, kill banners, pods or hit-stop)', `<input type="checkbox" id="o_pur" ${AOPT.purist ? 'checked' : ''}>`)
@@ -159,6 +170,7 @@ function toggleOpts(force) {
     $id('o_music').onchange = e => { AOPT.music = e.target.checked; aoptSave(); };
     $id('o_mv').oninput = e => { AOPT.musicVol = e.target.value / 100; aoptSave(); };
     $id('o_sv').oninput = e => { AOPT.sfxVol = e.target.value / 100; aoptSave(); if (AUDIO.master) AUDIO.master.gain.value = sfxGain(); };
+    $id('o_score').onchange = e => musScoreSet(e.target.value);
     $id('o_smp').onchange = e => { AOPT.samples = e.target.checked; aoptSave(); };
     $id('o_fm').onchange = e => fmSet(e.target.value);
     $id('o_pur').onchange = e => { AOPT.purist = e.target.checked; aoptSave(); };
