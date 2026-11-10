@@ -10,7 +10,7 @@ function plogBoltHit(b, s, dmg, fr) {
   const tg = s === player ? 'player' : s.team === 0 ? 'ally' : 'enemy';
   plogN(`hit.${o}>${tg}`); plogN(`dmg.${o}>${tg}`, dmg);
 }
-function plogReset(label) { if (Object.keys(PLOG.cnt).length) PLOG.prev = plogSummary(); PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); _plogAcc = 0; }
+function plogReset(label) { if (Object.keys(PLOG.cnt).length) PLOG.prev = plogSummary(); PLOG.cnt = {}; PLOG.samples.length = 0; PLOG.events.length = 0; PLOG.mission = label || ''; PLOG.t0 = Date.now(); _plogAcc = 0; perfReset(); }
 function plogEvent(e) { if (PLOG.events.length < 400) PLOG.events.push({ t: +(time || 0).toFixed(1), e }); }
 let _plogAcc = 0;
 function plogTick(dt) {

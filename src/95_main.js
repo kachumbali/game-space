@@ -16,19 +16,21 @@ if (!params.has('yard')) {
   }
 }
 let last = performance.now();
-const FPS_ON = params.has('fps');   // owner P0 2026-10-22: ?fps = overlay + play-log frame times + a detail governor (opt-in; headless runs unaffected)
-let fpsAcc = 0, fpsN = 0, fpsT = 0, fpsEl = null;
-function fpsTick(ms, dt) {
+const FPS_ON = params.has('fps');
+let fpsEl = null, fpsDisplay = 0, fpsWasActive = false;
+function fpsTick(ms) {
   if (!FPS_ON) return;
-  fpsAcc += ms; fpsN++; fpsT += dt;
-  if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.6);padding:2px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
-  if (fpsT >= 1) {
-    const avg = fpsAcc / fpsN;
-    fpsEl.textContent = avg.toFixed(0) + ' ms/frame  ' + (1000 / avg).toFixed(0) + ' fps';
-    plogN('frame.ms.avg', avg); plogN('frame.count', fpsN);   // frame times in the play log (key L)
-    if (avg > 40 && state === 'play' && detailIdx > 0) changeDetail(-1);   // governor: long frames -> drop a detail step
-    fpsAcc = fpsN = fpsT = 0;
-  }
+  const active = state === 'play' && !userPause && !rdlgOpen && !optsOpen && !globalThis.__paused && !document.hidden;
+  if (active && fpsWasActive) perfRecord(ms);
+  fpsWasActive = active;
+  if (!fpsEl) { fpsEl = document.createElement('div'); fpsEl.style.cssText = 'position:fixed;top:6px;right:8px;z-index:60;font:12px monospace;color:#7dffb0;background:rgba(5,12,10,.8);padding:4px 8px;border-radius:4px'; document.body.appendChild(fpsEl); }
+  fpsDisplay += ms;
+  if (fpsDisplay >= 1000) { const s = perfSummary(); fpsEl.textContent = s ? `AVG ${s.avg.toFixed(1)} MS · P95 ${s.p95} MS · WORST ${s.worst.toFixed(1)} MS · 10S MIN ${s.windows.length ? (1000 / Math.max(...s.windows.map(w => w.avg))).toFixed(1) : '—'} FPS` : 'FRAME RECORDER READY'; fpsDisplay = 0; }
+}
+// Job A may be merged independently. When present, include the opt-in recorder in its plain-text report.
+if (typeof reportText === 'function') {
+  const reportTextBase = reportText;
+  reportText = (...args) => reportTextBase(...args) + '\n' + perfReportLine();
 }
 // ---- pause menu (v0.2.2): Esc, losing mouse capture, or the touch II button open it. RESUME / RESTART / OPTIONS / EXIT (confirm; Gauntlet banks the score).
 let pmArm = 0, pmAutoT = 0;                                         // performance.now() of the first EXIT click; a second click within 4 s confirms
@@ -78,7 +80,7 @@ addEventListener('keydown', e => {                       // pause menu: arrows m
 }, true);
 function frame(t) {
   const dt = Math.max(0, Math.min(0.05, (t - last) / 1000));
-  if (FPS_ON) fpsTick(t - last, dt);   // before last=t: the delta must be this frame's
+  if (FPS_ON) fpsTick(t - last);   // before last=t: the delta must be this frame's
   last = t;
   if (!params.has('yard')) {
     audioEngineUpdate(player, state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused);
@@ -97,7 +99,7 @@ globalThis.__game = {
   get hitSrc() { return hitSrc; }, set hitSrc(v) { hitSrc = v; }, set hitKind(v) { hitKind = v; },
   version: GAME_VERSION, fmSet, fmLoad, matchSpeed, FM_ORDER, SIMF, endMission, showDebrief, tipsTick, startSurvival, SV_TUNE, svSkill, svPick, svNextWave, svCompose, svRecalc, PERKS, DIFFS, MUTATORS, diffSet, careerGet, careerRank, get sv() { return sv; }, lootClear, lootPods, lootSpawn, lootApply, lootTick, recalcMods, LOOT, LOOT_CFG, lootState, juice, FUN, juiceHit, juiceKill, juiceMedals, killHooks,
   startSkirmish, showMainMenu, showCampaignList, showMissionList, showSkirmishSetup, openMenu, skFromParams, SK_PRESETS, SK_PLAYER, SK_WING, SHIPS, ordnanceStations, ordnanceTotals, ordnanceApply, get skCfg() { return skCfg; }, get skState() { return game.skS; },
-  nukeAt, nukeLog, flightModels, NUKE, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
+  nukeAt, nukeLog, flightModels, NUKE, PERF, perfReset, perfRecord, perfStats, perfSummary, perfReportLine, PLOG, plogReset, AI_TUNE, MUS, AOPT, SMP, toggleOpts, showCredits, CREDITS, ARMOR, ARMOR_THRESH_CLS, MASS, DMGX, FF,
   THREE, camera, scene, update, applyArea, applyLook, LOOKS, updateHud, resetGame, startMission, MISSIONS, PROLOGUE_MISSIONS, CAMPAIGNS, campaignOf, campaignNext, SHIPS, WEAPONS, voxelize, keys, stick, applyHit, makeShip, spawnShip, compOf, compFactor, setView, get objectives() { return objectives; },
   dockTry, get dock() { return dock; }, pauseToggle, pauseExit, pauseMenuRefresh, get userPause() { return userPause; }, launchMissile, deployCM, fireGuns, killShip, destroy, hostileList, lockUpdate, selectedMissile, cycleMissile, cycleTarget, targetCrosshair, missionUpdate, changeDetail, DETAIL_STEPS, coms, comsToggle, comsPick, comsKey, comsTick, setOrder, comsWing, setDevice, setLod, lodTick, powerKey, powerShift, abTick, pwF, get lodLevel() { return lodLevel; }, comm, game, warnState, CREW,
   get state() { return state; }, set state(v) { state = v; }, get ships() { return ships; }, get bolts() { return bolts; }, get missiles() { return missiles; }, get decoys() { return decoys; },
