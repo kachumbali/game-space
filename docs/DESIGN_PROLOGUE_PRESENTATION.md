@@ -250,3 +250,33 @@ Hawk fallback lines for the `t=9` event in each before scene, spoken by Imani wh
   ]
 }
 ```
+
+## 3. Opening and ending [NEW]
+
+### A skippable 30-second opening [NEW]
+
+**Purpose:** backlog item 2 asks the opening to say what this is: an AI-designed space combat simulator. The first sentence does so. The dry second beat keeps the tone human without borrowing anyone else's artwork or characters. Use only existing Imani and Hawk heads; the existing space illustration establishes the scale before the same ready room appears. No voice, no new music cue, and no instruction hidden in narration.
+
+**When:** on starting a new Prologue, before `p01_before` and the existing mission briefing; skip goes directly to that briefing, not to gameplay. Offer **WATCH OPENING** from the main menu for replay. Do not interrupt an existing CONTINUE, retries, `?go`, `?scene=`, or a direct testing URL. A page-session presentation flag can prevent the opening replaying on every visit; it is not a story flag or progression mechanic. Job C currently supplies no opening hook: this scheduling and replay entry are **[NEEDS CODE]**, subject to the owner choosing the trigger. If Hawk is unavailable or not yet assigned, remove her `head` event and change the `t=13` line to Imani; it has the same text. The opening is not a claim that either character is alive after a subsequent loss.
+
+#### `prologue_opening` [NEW]
+
+```json
+{"id":"prologue_opening","size":[320,200],"music":null,
+ "events":[
+  {"t":0,"do":"bg","img":"../intro_test/painted/bg_space.webp","fade":0.6},
+  {"t":0.5,"do":"title","text":"CLAUDE SPACE COMMANDER","sub":"PROLOGUE","dur":3.5},
+  {"t":4,"do":"bg","img":"../shared/bg_ready_room.webp","fade":0.6},
+  {"t":4.2,"do":"head","id":"imani","char":"imani","pos":"left"},
+  {"t":4.4,"do":"head","id":"hawk","char":"hawk","pos":"right"},
+  {"t":5,"do":"say","who":"imani","text":"An AI-designed space combat simulator.","cps":28},
+  {"t":13,"do":"say","who":"hawk","text":"Four patrols. One corvette. Keep it flying.","cps":28},
+  {"t":21,"do":"say","who":"imani","text":"The paperwork is human. So are the mistakes.","cps":28},
+  {"t":30,"do":"end"}
+ ]
+}
+```
+
+### Ending card [NEW]
+
+Only after the mission 4 **win** debrief and its optional after-scene: hold the existing Job C ending card. Fade the ready-room image to near-black; display **TO BE CONTINUED**, then **The HALBERD is falling back to Lily.** Use the existing actual session totals (sorties, wins, kills, in-game mission time), followed by **COPY REPORT**, **DOWNLOAD REPORT** if clipboard access fails, and **MAIN MENU**. The report is the actual Job A report with Job C's session-total line when the branches are integrated; no network call. The other campaigns are available and labelled unpolished as Job C specifies. The card is not shown for a loss and does not claim the invasion has ended. This proposes a change to the existing ending-card copy and styling; the counts and report must never be mocked or replaced by fixed text.
