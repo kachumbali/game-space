@@ -192,6 +192,7 @@ function powerKey(s, k) {
   if (k === null) powerReset(s); else if (!powerShift(s, k)) { log(`${PW_NAMES[k]} AT LIMIT`, '#ff5a4a'); return; }
   if (k !== null) tutorialAction('power');
   sfx('click'); log(`POWER  WPN ${s.pw.w}  SHD ${s.pw.s}  ENG ${s.pw.e}`, '#ffd24a');
+  if (s === player && typeof teachControl === 'function' && !document.body.classList.contains('taught-power')) teachControl('power');   // owner 2026-11-10: the keys worked in basic mode but the POWER bars stayed hidden
 }
 { // touch / mouse: tap a bar of the power widget; tap the title to balance
   const ets = document.getElementById('ets');

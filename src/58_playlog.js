@@ -36,7 +36,7 @@ function plogDownload() {
 setInterval(plogSave, 15000);
 
 // Session report counters are separate from the diagnostic play log. Reset on each sortie.
-const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null, lastControls: null, lastFlight: null };
+const REPORT = { logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, lost: {}, lost: {}, note: '', savedId: null, savedResult: null, lastControls: null, lastFlight: null };
 function reportReset() { Object.assign(REPORT, {logs: [], weapons: {}, missiles: {fired: 0, hit: 0, decoyed: 0}, damage: {}, tutorial: [], elapsed: 0, shield: null, hull: null, frameSum: 0, frameCount: 0, frameWorst: 0, wing: {}, note: '', savedId: null, savedResult: null, lastControls: null, lastFlight: null}); }
 function reportLog(line) { REPORT.logs.push(String(line)); if (REPORT.logs.length > 20) REPORT.logs.shift(); }
 function reportWeapon(id, field) { const w = REPORT.weapons[id] ||= {shots: 0, hits: 0}; w[field]++; }
@@ -49,15 +49,18 @@ function reportTick(dt) {
 }
 function reportSample() {
   if (!player) return;
-  const sh = player.shield.fore + player.shield.aft, hull = Math.max(0, player.structure);
+  // percentages of the ship's own maximum (owner report 2026-11-10: raw points read as "hull 50" on an undamaged Kestrel)
+  const shMax = Math.max(1, (player.def.shield?.fore || 0) + (player.def.shield?.aft || 0)), sh = 100 * (player.shield.fore + player.shield.aft) / shMax;
+  const hull = 100 * Math.max(0, player.structure) / Math.max(1, player.def.structure);
   REPORT.shield = Math.min(REPORT.shield ?? sh, sh); REPORT.hull = Math.min(REPORT.hull ?? hull, hull);
+  for (const c of player.comps || []) if (c.hp <= 0) REPORT.lost[c.id] = 1;   // remembered: the debrief may run after a respawn or reset
 }
 function reportFrame(ms) { if (state === 'play' && !userPause && !optsOpen && !rdlgOpen && !globalThis.__paused) { REPORT.frameSum += ms; REPORT.frameCount++; REPORT.frameWorst = Math.max(REPORT.frameWorst, ms); } }
 function reportText(result = 'in progress', note = '') {
   const p = player, m = game.mission, S = game.mstate;
   const entries = o => Object.entries(o).map(([k,v]) => `${k}: ${typeof v === 'number' ? Math.round(v) : v}`).join(', ') || 'none';
   const wing = entries(REPORT.wing) || 'none recorded';
-  const lost = p?.comps?.filter(c => c.hp <= 0).map(c => c.id).join(', ') || 'none';
+  const lost = Object.keys({...(REPORT.lost || {}), ...Object.fromEntries((p?.comps || []).filter(c => c.hp <= 0).map(c => [c.id, 1]))}).join(', ') || 'none';
   const weapons = Object.entries(REPORT.weapons).map(([id,w]) => `${id} ${w.shots}/${w.hits}`).join(', ') || 'none';
   const frame = REPORT.frameCount ? `${(REPORT.frameSum / REPORT.frameCount).toFixed(1)} / ${REPORT.frameWorst.toFixed(1)} ms` : 'not recorded';
   const lines = [
@@ -70,7 +73,7 @@ function reportText(result = 'in progress', note = '') {
     `Kills: ${kills} (${entries(killLog)})`, `Weapons shots/hits: ${weapons}`,
     `Missiles fired/hit/decoyed: ${REPORT.missiles.fired}/${REPORT.missiles.hit}/${REPORT.missiles.decoyed}`,
     `Damage received by source class: ${entries(REPORT.damage)}`,
-    `Lowest shield / hull: ${REPORT.shield === null ? 'not recorded' : Math.round(REPORT.shield)} / ${REPORT.hull === null ? 'not recorded' : Math.round(REPORT.hull)}`,
+    `Lowest shield / hull: ${REPORT.shield === null ? 'not recorded' : Math.round(REPORT.shield) + '%'} / ${REPORT.hull === null ? 'not recorded' : Math.round(REPORT.hull) + '%'}`,
     `Subsystems lost: ${lost}`, `Wing: ${wing}`, `Tutorial: ${REPORT.tutorial.join(', ') || 'not shown'}`,
     `Frame time average / worst: ${frame}`, `What annoyed you: ${String(note).replace(/\s+/g, ' ').trim().slice(0, 1000) || '(none)'}`,
     'Last log lines:', ...REPORT.logs.map(x => String(x).replace(/\s+/g, ' '))

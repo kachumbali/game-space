@@ -17,7 +17,17 @@ function rosterSkill(p, cfg = TUNE.roster) {
 function rosterNewPilot(id, i, isPlayer = false) {
   const first = ['Aven','Bren','Cira','Dalen','Eris','Ferin','Galen','Hira','Iven','Jora','Kelan','Lira','Maren','Neris','Orin','Pera','Quin','Riva','Selen','Tarin','Ulen','Vira','Wren','Yara'];
   const last = ['Venn','Korr','Derran','Sorel','Varek','Meren','Tavik','Rellan','Korin','Saven','Darik','Vell','Toren','Mavik','Renn','Sorin','Valen','Kerin','Davor','Tirren','Serek','Voran','Kelan','Merik'];
-  return {id, callsign:isPlayer ? 'ECHO' : `PILOT-${String(i+1).padStart(2,'0')}`, name:`${first[i%first.length]} ${last[(i*7+3)%last.length]}`, rank:'ensign', skill:3, baseSkill:3, kills:0, missions:0, medals:[], status:'ACTIVE', traits:[], recoveryLeft:0};
+  return {id, callsign:isPlayer ? rosterDef('player').callsign : `PILOT-${String(i+1).padStart(2,'0')}`, name:isPlayer ? rosterDef('player').name : `${first[i%first.length]} ${last[(i*7+3)%last.length]}`, rank:'ensign', skill:3, baseSkill:3, kills:0, missions:0, medals:[], status:'ACTIVE', traits:[], recoveryLeft:0};
+}
+// Owner hand-play 2026-11-10: the Prologue wing showed up as PILOT-02 / PILOT-03. The story pilots (HAWK, SPARROW: PILOT_DEFS, the briefings and
+// comms lines name them) take the first two seats of every carrier pool; a seat keeps its record, only the generic name is replaced.
+// PILOT_DEFS lives in 75_mission.js; the unit test evaluates this file alone, so fall back to the callsigns only.
+const rosterDef = id => (typeof PILOT_DEFS !== 'undefined' && PILOT_DEFS[id]) || { callsign: id === 'player' ? 'MEOW' : id.toUpperCase(), name: id === 'player' ? 'MEOW' : id.toUpperCase() };
+function rosterStoryWing(pool) {
+  ['hawk', 'sparrow'].forEach((id, i) => {
+    const p = pool[i]; if (!p || pool.some(x => x.callsign === id.toUpperCase())) return;
+    if (/^PILOT-\d+$/.test(p.callsign)) { p.callsign = rosterDef(id).callsign; p.name = rosterDef(id).name; }
+  });
 }
 function rosterLoad() {
   if (rosterState) return rosterState;
@@ -37,7 +47,8 @@ function rosterLoad() {
     return out;
   };
   data.player=normalise(data.player);
-  for (const k of Object.keys(data.pools)) data.pools[k]=Array.isArray(data.pools[k])?data.pools[k].map(normalise):[];
+  if (data.player.callsign === 'ECHO') { data.player.callsign = rosterDef('player').callsign; data.player.name = rosterDef('player').name; }   // saves from before the pilot rename
+  for (const k of Object.keys(data.pools)) { data.pools[k]=Array.isArray(data.pools[k])?data.pools[k].map(normalise):[]; rosterStoryWing(data.pools[k]); }
   rosterState = data; return data;
 }
 function rosterSave() { if (!rosterEnabled() || !rosterState || rosterReadOnly) return; try { localStorage.setItem(ROSTER_KEY, JSON.stringify(rosterState)); } catch (_) {} }
@@ -54,6 +65,7 @@ function rosterForCarrier(key, shipId) {
   if (!state.pools[key]) {
     const capacity = SHIPS[shipId]?.rosterCapacity ?? TUNE.roster.defaultCapacity;
     state.pools[key] = Array.from({length:capacity}, (_,i)=>rosterNewPilot(`${key}:${i+1}`,i));
+    rosterStoryWing(state.pools[key]);
     if (!state.legacyImported && typeof CREW !== 'undefined') {
       for (const [i,id] of ['hawk','sparrow'].entries()) if (state.pools[key][i] && CREW[id]) {
         rosterImportLegacy(state.pools[key][i],CREW[id],id==='hawk'?4:2);state.pools[key][i].callsign=id.toUpperCase();
