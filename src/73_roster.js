@@ -27,8 +27,10 @@ const ROSTER_CALLSIGNS = ['FINCH', 'WREN', 'ROOK', 'HERON', 'PLOVER', 'CURLEW', 
 const rosterDef = id => (typeof PILOT_DEFS !== 'undefined' && PILOT_DEFS[id]) || { callsign: id === 'player' ? 'MEOW' : id.toUpperCase(), name: id === 'player' ? 'MEOW' : id.toUpperCase() };
 function rosterStoryWing(pool) {
   ['hawk', 'sparrow'].forEach((id, i) => {
-    const p = pool[i]; if (!p || pool.some(x => x.callsign === id.toUpperCase())) return;
-    if (/^PILOT-\d+$/.test(p.callsign)) { p.callsign = rosterDef(id).callsign; p.name = rosterDef(id).name; }
+    const named = pool.find(x => x.callsign === rosterDef(id).callsign);
+    if (named) { named.name = rosterDef(id).name; return; }   // the story pilots keep their canonical names (owner screenshot 2026-11-11: HAWK was "Aven Sorel")
+    const p = pool[i]; if (!p) return;
+    if (/^PILOT-\d+$/.test(p.callsign) || ROSTER_CALLSIGNS.includes(p.callsign)) { p.callsign = rosterDef(id).callsign; p.name = rosterDef(id).name; }
   });
   pool.forEach((p, i) => { if (/^PILOT-\d+$/.test(p.callsign)) p.callsign = ROSTER_CALLSIGNS[i % ROSTER_CALLSIGNS.length]; });   // older saves
 }
@@ -207,7 +209,7 @@ function rosterBriefHtml(M) {
   const S=game.mstate,pool=rosterForCarrier(S.rosterKey,M.setup.anchor.ship), active=rosterAvailable(pool.filter(p=>p.id!==S.rosterPlayer));
   const missing=Math.max(0,M.setup.wingmen.length-active.length);
   const player=S.rosterPlayer && rosterFind(S.rosterPlayer);
-  return `<div>${player ? `PLAYER ${rosterEscape(rosterRank(player).insignia)} ${rosterEscape(rosterRank(player).name)} · ${rosterEscape(player.callsign)}` : 'NO ACTIVE PILOT AVAILABLE — SORTIE CANNOT LAUNCH'}</div><div>${missing ? `SHORT ${missing} WINGMAN SLOT(S) — SORTIE MAY LAUNCH` : 'Select active pilots or auto-fill.'}</div>` + pool.map(p=>`<div><button type="button" data-roster="${rosterEscape(p.id)}" ${p.status!=='ACTIVE'||p.id===S.rosterPlayer?'disabled':''}>${S.rosterSelected.includes(p.id)?'✓ ':''}${rosterEscape(p.callsign)}</button> ${rosterEscape(rosterRank(p).insignia)} ${rosterEscape(rosterRank(p).name)} · ${rosterEscape(p.name)} · SK ${p.skill} · ${p.status} · ${p.kills} kills / ${p.missions} missions</div>`).join('') + '<button id="rosterAuto" type="button">AUTO-FILL</button> <button id="rosterRecord" type="button">SERVICE RECORD</button>';
+  return `<div>${player ? `PLAYER ${rosterEscape(rosterRank(player).insignia)} ${rosterEscape(rosterRank(player).name)} · ${rosterEscape(player.callsign)}` : 'NO ACTIVE PILOT AVAILABLE — SORTIE CANNOT LAUNCH'}</div><div>${missing ? `SHORT ${missing} WINGMAN SLOT(S) — SORTIE MAY LAUNCH` : 'Select active pilots or auto-fill.'}</div>` + (()=>{ const row=p=>`<div><button type="button" data-roster="${rosterEscape(p.id)}" ${p.status!=='ACTIVE'||p.id===S.rosterPlayer?'disabled':''}>${S.rosterSelected.includes(p.id)?'✓ ':''}${rosterEscape(p.callsign)}</button> ${rosterEscape(rosterRank(p).insignia)} ${rosterEscape(rosterRank(p).name)} · ${rosterEscape(p.name)} · SK ${p.skill} · ${p.status} · ${p.kills} kills / ${p.missions} missions</div>`, sel=pool.filter(p=>S.rosterSelected.includes(p.id)), rest=pool.filter(p=>!S.rosterSelected.includes(p.id)); return sel.map(row).join('') + `<details id="rosterMore" ${S.rosterMoreOpen||!sel.length?'open':''}><summary>CHANGE PILOTS (${rest.filter(p=>p.status==='ACTIVE'&&p.id!==S.rosterPlayer).length} available)</summary>${rest.map(row).join('')}</details>`; })() + '<button id="rosterAuto" type="button">AUTO-FILL</button> <button id="rosterRecord" type="button">SERVICE RECORD</button>';
 }
 function rosterServiceHtml(M) {
   const pool=rosterForCarrier(game.mstate.rosterKey,M.setup.anchor.ship), all=[rosterLoad().player,...pool];
@@ -216,6 +218,7 @@ function rosterServiceHtml(M) {
 function rosterBindBriefing(el,M) {
   const S=game.mstate,pool=rosterForCarrier(S.rosterKey,M.setup.anchor.ship);
   el.querySelectorAll('[data-roster]').forEach(b=>b.onclick=()=>{const id=b.dataset.roster,i=S.rosterSelected.indexOf(id);if(i>=0)S.rosterSelected.splice(i,1);else if(S.rosterSelected.length<M.setup.wingmen.length)S.rosterSelected.push(id);rosterSpawnWing(M);showBriefing(M);});
+  const more=document.getElementById('rosterMore'); if (more) more.ontoggle=()=>{ S.rosterMoreOpen=more.open; };   // the full pool stays folded away (owner screenshot 2026-11-11: 24 pilots pushed the loadout off an iPad)
   document.getElementById('rosterAuto').onclick=()=>{S.rosterSelected=rosterAuto(pool.filter(p=>p.id!==S.rosterPlayer),M.setup.wingmen.length);rosterSpawnWing(M);showBriefing(M);};
   document.getElementById('rosterRecord').onclick=()=>{const d=document.getElementById('rosterDetails');d.innerHTML=rosterServiceHtml(M);d.style.display=d.style.display==='block'?'none':'block';};
 }
