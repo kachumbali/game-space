@@ -287,6 +287,7 @@ if __name__=='__main__':
     with Runner() as R:
         for n in names:
             print('====',n,flush=True); SC[n](R)
+            for ctx in list(R.b.contexts): ctx.close()   # free each scenario's pages: ten open SwiftShader pages exhaust the headless browser
         print('ERRS',R.errs[:5])
     print('FAILED:',fails if fails else 'none')
     sys.exit(bool(fails or R.errs))
