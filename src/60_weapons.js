@@ -681,6 +681,20 @@ function turretAllowsTarget(T, e) {
   // inherit it and later L batteries use the same doctrine.
   return !T.w.targetClasses || T.w.targetClasses.includes(e.def.cls);
 }
+// Owner report 2026-11-11: hiding inside the lattice of a HECLA did not help, its turrets shot straight through their own hull (bolts and beams
+// skip the firing ship). A turret now holds fire while its own ship's voxels lie between the mount and the target. The check starts just beyond
+// the barrel so the turret's own seat does not count, looks no further than the hull can reach, and is cached for `losCheck` seconds per turret.
+function turretLineClear(s, T, tp, fwd, dist) {
+  if (!s.vox) return true;
+  if (time < (T.losUntil || 0)) return T.losOk;
+  const vs = s.vox.data.vs, start = Math.max(T.muzzle || 0, T.dia || 0) + vs * TUNE.turret.losStart;
+  const len = Math.min(dist, s.def.radius * 2.2);
+  T.losOk = len <= start || !traceShip(s, _los1.copy(tp).addScaledVector(fwd, start), _los2.copy(tp).addScaledVector(fwd, len));
+  T.losUntil = time + TUNE.turret.losCheck;
+  if (!T.losOk) T.losBlocked = (T.losBlocked || 0) + 1;
+  return T.losOk;
+}
+const _los1 = new THREE.Vector3(), _los2 = new THREE.Vector3();
 function turretTargetLoad(s, e, self) {
   let n = 0;
   for (const other of s.turrets) if (other !== self && other.tgt === e && !other.dead) n++;
@@ -775,7 +789,7 @@ function updateTurrets(s, dt) {
       const angularSpeed = relVel.addScaledVector(_w3, -radial).length() / Math.max(dist, 1);
       const skill = clamp(Math.round(s.skill ?? 3), 1, 5);
       const hitChance = clamp(1 - angularSpeed * TUNE.turret.beamAngularError * (6 - skill) / tol, TUNE.turret.beamMinHit, 1) * TUNE.turret.pdBeamHit;
-      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy + s.energyMax * TUNE.turret.reserveMsl && time - (T.targetAt ?? -99) >= (T.w.charge || 0) + (T.w.acq || 0)) {
+      if (err < tol && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && s.energy >= T.w.energy + s.energyMax * TUNE.turret.reserveMsl && time - (T.targetAt ?? -99) >= (T.w.charge || 0) + (T.w.acq || 0)) {
         const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         T.cool = burstCooldown(T, T.w, T.w.cd * tcd / (0.6 + 0.4 * powerMul(s))); s.energy -= T.w.energy;
         T.fired++; T.lastErr = err;
@@ -792,7 +806,7 @@ function updateTurrets(s, dt) {
       const skill = clamp(Math.round(s.skill ?? 3), 1, 5);
       const trackingError = angularSpeed * TUNE.turret.beamAngularError * (6 - skill);
       const hitChance = clamp(1 - trackingError / Math.max(tol, 0.001), TUNE.turret.beamMinHit, 1);
-      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy && Math.random() < hitChance) {
+      if (err < tol && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && s.energy >= T.w.energy && Math.random() < hitChance) {
         const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
@@ -804,7 +818,7 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
       T.cool = burstCooldown(T, T.w, T.w.cd * tcd);
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
@@ -812,6 +826,7 @@ function updateTurrets(s, dt) {
       const mp = turretMuzzle(T, new THREE.Vector3());
       T.fired++; T.lastErr = err;
       spawnBolt(s, T.wid, mp, fwd, 1);
+      if (s.vox) { const nb = bolts[bolts.length - 1]; nb.org = mp.clone(); nb.ownClear = Math.max(T.muzzle || 0, T.dia || 0) + s.vox.data.vs * TUNE.turret.losStart; }   // a turret shell is stopped by its own ship's hull (below)
       if (Math.random() < 0.35) sparksAt(mp, 1, 5, [2.4, 2.0, 1.0, 1]);
       if (Math.random() < 0.25) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
     }
@@ -847,6 +862,8 @@ function updateBolts(dt) {
     }
     if (b.life <= 0) continue;
     for (const s of ships) {
+      if (s === b.owner && b.org && s.alive && s.vox && b.pos.distanceTo(b.org) > b.ownClear          // turret shells do not pass through the ship that fired them
+        && segSphere(b.prev, b.pos, s.group.position, s.def.radius) && traceShip(s, b.prev, b.pos)) { b.life = 0; break; }
       if (!s.alive || s === b.owner || s.dying) continue;
       const fr = s.team === b.team;
       if (!segSphere(b.prev, b.pos, s.group.position, weaponBounds(s))) continue;

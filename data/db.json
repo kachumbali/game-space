@@ -9772,7 +9772,7 @@
       "reserveShip": 0.25,
       "reserveMsl": 0.05,
       "attackerBias": 0.5,
-      "targetSpread": 0.45, "pdCue": 2, "pdSpread": 1, "pdThink": 0.06, "pdBeamHit": 0.6, "pdDepress": 0.35,
+      "targetSpread": 0.45, "pdCue": 2, "pdSpread": 1, "pdThink": 0.06, "pdBeamHit": 0.6, "pdDepress": 0.35, "losCheck": 0.08, "losStart": 1.6,
       "beamAngularError": 0.018,
       "beamMinHit": 0.08
     },
