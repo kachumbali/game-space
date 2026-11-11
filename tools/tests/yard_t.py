@@ -109,7 +109,7 @@ with Runner() as R:
     halberd_game_size = page.locator('#yard-size').inner_text()
     halberd_game_distance = page.evaluate('Math.hypot(...__game.camera.position.toArray())')
     check('authored and scaleShip in-game sizes are shown', 'Authored: 64 m' in halberd_size and 'in game: 200 m' in halberd_size, halberd_size)
-    check('in-game scale preview scales model framing', 'preview: in-game (2×)' in halberd_game_size and halberd_game_distance > halberd_authored_distance * 1.9, halberd_game_size)
+    check('in-game scale preview scales model framing', 'preview: in-game (3.125×)' in halberd_game_size and halberd_game_distance > halberd_authored_distance * 2.9, halberd_game_size)
     page.locator('#yard-in-game-scale').evaluate('(element) => element.click()')
     check('in-game scale preview can return to authored scale', 'preview: authored (1×)' in page.locator('#yard-size').inner_text())
 
