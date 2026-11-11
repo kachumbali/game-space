@@ -7,6 +7,7 @@ const warnState = { launchT: -99, lockT: -99, incoming: [], lockedBy: 0 };
 
 function shieldFlash(s, lp, facing) {
   if (!s.shieldFx) return;
+  s.shieldFx.material.userData.impactDir.value.copy(lp).divide(s.shieldFx.scale).normalize();
   const pct = s.def.shield[facing] ? s.shield[facing] / s.def.shield[facing] : 0;
   s.shieldFx.material.color.setRGB(0.25 + 0.75 * (1 - pct), 0.6 - 0.3 * (1 - pct), 0.9 - 0.7 * (1 - pct));
   s.shieldFx.material.opacity = 0.2;
@@ -20,10 +21,10 @@ const SOFT = TUNE.soft;
 function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 
 // applyHit = applyHitCore + the feel layer (src/62_juice.js). Callers set hitSrc / hitKind (who shot, with what) just before the call.
-function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {
+function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0, shieldPoint = null) {
   if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
   const playerHit = s === player, source = hitSrc, kind = hitKind;
-  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen);
+  const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen, shieldPoint);
   if (playerHit && out) { const cls = source?.def?.cls || kind || 'unknown'; REPORT.damage[cls] = (REPORT.damage[cls] || 0) + dmg * (s.mod?.take ?? 1); reportSample(); }
   if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
     let cause = 'Hull destroyed; cause unclear.';
@@ -40,7 +41,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, sh
 }
 // returns what the hit did: 'shield' (absorbed), 'armor' (absorbed), 'comp' (a subsystem took it), 'hull' (structure), 'kill'
 // shPen (tandem warhead): that share of the hit skips the shield but still meets the armour; a collapsed facet (s.shHole) has no shield at all until it closes
-function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
+function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0, shieldPoint = null) {      // through (spine lance): components on the line are damaged in addition, the structure still takes the whole hit
   if (!s.alive || s.dying) return;
   if (s.mod && s.mod.take) dmg *= s.mod.take;          // difficulty / perks: damage taken multiplier
   let outcome = 'hull';
@@ -49,16 +50,19 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   const def = s.def, X = DMGX[dtype] || DMGX.kin;
   if (s === player) { shake = Math.min(1, shake + 0.16 + dmg * 0.02); hitFlash = Math.min(1, hitFlash + 0.4 + dmg * 0.03); s.dmgTaken = (s.dmgTaken || 0) + dmg; }
   const nz = lp.z / def.half[2], nx = lp.x / def.half[0];
-  const facing = nz < 0 ? 'fore' : 'aft';
-  const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? facing : (nx < 0 ? 'left' : 'right');
+  const facing = (shieldPoint || lp).z < 0 ? 'fore' : 'aft';
+  const side = Math.abs(nz) >= Math.abs(nx) * 0.9 ? (nz < 0 ? 'fore' : 'aft') : (nx < 0 ? 'left' : 'right');
   let d = dmg;
-  const pdmg = dmg * pierce; d -= pdmg;      // piercing share ignores shields and armour
   const holed = s.shHole && s.shHole[facing] > time;
-  const byp = holed ? 0 : d * shPen; if (!holed) d -= byp;      // tandem bypass: skips the shield only (a collapsed facet has no shield to skip)
+  // A weapon meeting an active facet stops there. Preserve the existing
+  // piercing calculation once that facet is down (including tandem holes).
+  const blocked = shieldPoint && s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed;
+  const pdmg = blocked ? 0 : dmg * pierce; d -= pdmg;
+  const byp = holed || blocked ? 0 : d * shPen; if (!holed) d -= byp;      // a collapsed facet has no shield to skip
   if (s.shield[facing] > 0 && compFactor(s, 'shield') > 0 && !holed) {
     const raw = d * X[0], a = Math.min(s.shield[facing], raw);
     s.shield[facing] -= a; if (raw > 0) d *= 1 - a / raw;
-    shieldFlash(s, lp, facing);
+    shieldFlash(s, shieldPoint || lp, facing);
     sparksAt(wp, 3, 9, [0.6, 1.4, 3, 1]);
     outcome = 'shield';
     if (d + pdmg + byp <= 0.01) return outcome;
@@ -133,6 +137,25 @@ function applyHitCore(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false
   return outcome === 'shield' || outcome === 'armor' ? 'hull' : outcome;
 }
 
+// Project an internal component to an outermost occupied cell on one of the
+// six axis rays; never carve or emit the visual effect inside the hull.
+function componentSurface(s, c) {
+  const D=s.vox.data, {nx,ny,nz,vs,hx,hy,hz,grid}=D;
+  const p=c.pos, base=[Math.floor((p[0]+hx)/vs),Math.floor((p[1]+hy)/vs),Math.floor((p[2]+hz)/vs)];
+  let best=null, bestD=Infinity;
+  for (let axis=0; axis<3; axis++) for (const sign of [-1,1]) {
+    const q=base.slice(); let last=null;
+    while (q[axis]>=0 && q[axis]<[nx,ny,nz][axis]) {
+      if (q[0]>=0 && q[0]<nx && q[1]>=0 && q[1]<ny && q[2]>=0 && q[2]<nz && grid[(q[0]*ny+q[1])*nz+q[2]]>=0) last=q.slice();
+      q[axis]+=sign;
+    }
+    if (!last) continue;
+    const v=new THREE.Vector3(-hx+(last[0]+0.5)*vs,-hy+(last[1]+0.5)*vs,-hz+(last[2]+0.5)*vs);
+    const d=v.distanceToSquared(new THREE.Vector3(...p));
+    if (d<bestD) { best=v; bestD=d; }
+  }
+  return best;
+}
 function compEvent(s, c, st) {
   juiceComp(s, c, st);
   const mine = s === player, tgt = s === target;
@@ -142,9 +165,10 @@ function compEvent(s, c, st) {
     if (mine && st === 2) sfx('alarm');
   }
   if (st === 2 && s.vox) {
-    chip(s, _cp.set(c.pos[0], c.pos[1], c.pos[2]).clone(), c.r * 0.85, c.r * 1.7, false);
+    const surface = componentSurface(s, c);
+    if (surface) chip(s, surface, 0, c.r * 1.7, false);
     s.group.updateMatrixWorld(true);
-    const wp = s.group.localToWorld(_cp.set(c.pos[0], c.pos[1], c.pos[2]).clone());
+    const wp = s.group.localToWorld(surface || _cp.set(c.pos[0], c.pos[1], c.pos[2]).clone());
     const k = Math.max(1, c.r / 1.2);
     sparksAt(wp, 30, 24); fireAt(wp, 8, 8); smokeAt(wp, 6, 5);
     flashAt(wp, c.r * 1.2, 0.3); sfx('boom', mine ? 0 : wp.distanceTo(camera.position), 0.5 * Math.min(2, k));
@@ -191,6 +215,7 @@ function destroy(s) {
 function explode(s) {
   const D = s.vox.data, vs = D.vs;
   const big = s.def.cls !== 'fighter';
+  if (!big) fighterChunks(s);
   const count = Math.min(D.voxels.length, big ? 900 : 180);
   const mesh = new THREE.InstancedMesh(boxGeo(vs * (big ? 2.0 : 2.4)), voxMat, count);
   mesh.frustumCulled = false;
@@ -212,6 +237,27 @@ function explode(s) {
   debris.push({ mesh, flash, pos, vel, life: 0, size: s.def.radius * (big ? 0.8 : 1), dur: big ? 3.4 : 2.4 });
   const k = big ? 4 : 1;
   sparksAt(center, 120 * Math.min(k, 3), 50); fireAt(center, 50 * Math.min(k, 3), big ? 30 : 22); smokeAt(center, 30 * Math.min(k, 3), 10);
+}
+
+// Split the still-visible original voxel instances into three rigid pieces.
+// Matrices are built once on death; only three object transforms animate per frame.
+function fighterChunks(s) {
+  const V=s.vox, D=V.data, lists=[[],[],[]];
+  for (let i=0; i<D.voxels.length; i++) {
+    const v=D.voxels[i];
+    const cell=(Math.floor((v.x+D.hx)/D.vs)*D.ny+Math.floor((v.y+D.hy)/D.vs))*D.nz+Math.floor((v.z+D.hz)/D.vs);
+    if (!V.hasInst[cell]) continue;
+    lists[v.z < -D.hz/3 ? 0 : v.z > D.hz/3 ? 2 : 1].push(i);
+  }
+  for (let part=0; part<lists.length; part++) {
+    const ids=lists[part]; if (!ids.length) continue;
+    const material=voxMat.clone(); material.transparent=true;
+    const mesh=new THREE.InstancedMesh(boxGeo(D.vs),material,ids.length);
+    ids.forEach((id,n)=>{const v=D.voxels[id], f=V.scorch[id]; _m.makeTranslation(v.x,v.y,v.z); mesh.setMatrixAt(n,_m); mesh.setColorAt(n,_col.setRGB(v.cr*f,v.cg*f,v.cb*f));});
+    mesh.position.copy(s.group.position); mesh.quaternion.copy(s.group.quaternion); mesh.frustumCulled=false; scene.add(mesh);
+    const drift=new THREE.Vector3((part-1)*2,1.5, (part-1)*3).applyQuaternion(s.group.quaternion).add(s.vel);
+    debris.push({mesh,chunk:true,vel:drift,spin:new THREE.Vector3(0.25*(part-1),0.2,0.15*(part+1)),life:0,dur:3});
+  }
 }
 
 function segSeg(p1, q1, p2, q2) {   // min distance between segments p1q1 and p2q2 (P0: swept bolt vs swept missile)
@@ -253,6 +299,34 @@ function traceShip(s, p0, p1) {
   _a.copy(p0); s.group.worldToLocal(_a);
   _b.copy(p1); s.group.worldToLocal(_b);
   return traceLocal(s, _a.x, _a.y, _a.z, _b.x, _b.y, _b.z);
+}
+// Return the first active shield-facet crossing, or the existing voxel hit.
+// A quadratic segment/ellipsoid intersection keeps fast projectiles swept.
+function weaponBounds(s) {
+  const a=s.shieldFx?.scale;
+  return a ? Math.max(s.def.radius,a.x,a.y,a.z) : s.def.radius;
+}
+function traceWeapon(s, p0, p1) {
+  s.group.updateMatrixWorld(true);
+  const a=s.group.worldToLocal(p0.clone()), b=s.group.worldToLocal(p1.clone());
+  const scale=s.shieldFx?.scale;
+  if (scale && compFactor(s,'shield')>0) {
+    const u=a.clone().divide(scale), v=b.clone().sub(a).divide(scale);
+    const A=v.dot(v), B=2*u.dot(v), C=u.dot(u)-1, disc=B*B-4*A*C;
+    if (A>0 && disc>=0) {
+      const t=(-B-Math.sqrt(disc))/(2*A);
+      if (t>=0 && t<=1) {
+        const bubble=a.clone().lerp(b,t), facet=bubble.z<0?'fore':'aft';
+        if (s.shield[facet]>0 && !(s.shHole && s.shHole[facet]>time)) {
+          const dir=b.clone().sub(a).normalize();
+          const hull=traceShipLocal(s,bubble,dir,Math.max(scale.x,scale.y,scale.z)*2.1);
+          return {point:bubble, hull:hull||bubble, shield:true};
+        }
+      }
+    }
+  }
+  const hull=traceLocal(s,a.x,a.y,a.z,b.x,b.y,b.z);
+  return hull ? {point:hull,hull,shield:false} : null;
 }
 function traceLocal(s, ax, ay, az, bx, by, bz) {
   const V = s.vox, D = V.data;

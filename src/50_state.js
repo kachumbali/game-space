@@ -157,15 +157,47 @@ function buildVox(s) {
     data: D, cap, body, glow, patch, patchN: 0, instOf, patchOf: new Map(),
     solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1),
   };
-  for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true);
+  if (s.shieldFx) sizeShield(s);
+  for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true, ev.shallow);
+}
+
+// Fit an ellipsoid around the corners of every rendered voxel, then add the
+// configured clearance. The same axes are used by the collision test.
+function sizeShield(s) {
+  const D=s.vox.data, h=D.vs*0.515, axes=[h,h,h];
+  for (const v of D.voxels) { axes[0]=Math.max(axes[0],Math.abs(v.x)+h); axes[1]=Math.max(axes[1],Math.abs(v.y)+h); axes[2]=Math.max(axes[2],Math.abs(v.z)+h); }
+  let max=1;
+  for (const v of D.voxels) max=Math.max(max,Math.hypot((Math.abs(v.x)+h)/axes[0],(Math.abs(v.y)+h)/axes[1],(Math.abs(v.z)+h)/axes[2]));
+  const margin=1+TUNE.damageVisuals.shieldMargin;
+  s.shieldFx.scale.set(axes[0]*max*margin,axes[1]*max*margin,axes[2]*max*margin);
 }
 
 const _lv = new THREE.Vector3();
-function chip(s, lp, r, sr, replay) {
+// A shallow dent removes only an original surface cell with enough material
+// behind it. Repeated hits cannot deepen the dent or perforate thin features.
+function dentCell(D, i, j, k) {
+  const {nx, ny, nz, grid, cellToVox} = D;
+  const cell = (i * ny + j) * nz + k;
+  if (cellToVox[cell] < 0) return false;
+  const need = Math.ceil(1 / TUNE.damageVisuals.dentThicknessFraction);
+  for (const [dx, dy, dz] of [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]) {
+    const outside = (i+dx < 0 || i+dx >= nx || j+dy < 0 || j+dy >= ny || k+dz < 0 || k+dz >= nz) || grid[((i+dx)*ny+j+dy)*nz+k+dz] < 0;
+    if (!outside) continue;
+    let depth = 1;
+    for (; depth < need; depth++) {
+      const x=i-dx*depth, y=j-dy*depth, z=k-dz*depth;
+      if (x<0 || x>=nx || y<0 || y>=ny || z<0 || z>=nz || grid[(x*ny+y)*nz+z]<0) break;
+    }
+    if (depth >= need) return true;
+  }
+  return false;
+}
+function chip(s, lp, r, sr, replay, shallowOverride) {
   const V = s.vox, D = V.data, vs = D.vs, { nx, ny, nz } = D;
   // A carve radius that scales with raw damage (hit: 0.35+0.08*d) reached 14 m for a 210-damage missile, wider than a whole fighter, so one hit deleted every voxel of the hull (only exhaust and hit boxes stayed). Cap it relative to the ship.
   if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
-  if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
+  const shallow = shallowOverride ?? (s.structure >= s.def.structure * TUNE.damageVisuals.holeHullFraction);
+  if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr, shallow }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
   const R = Math.max(r, sr);
   const ci = Math.floor((lp.x + D.hx) / vs), cj = Math.floor((lp.y + D.hy) / vs), ck = Math.floor((lp.z + D.hz) / vs);
   const rr = Math.ceil(R / vs) + 1;
@@ -180,7 +212,7 @@ function chip(s, lp, r, sr, replay) {
         if (!V.solid[cell]) continue;
         const dz = -D.hz + (k + 0.5) * vs - lp.z;
         const d2 = dx * dx + dy * dy + dz * dz;
-        if (r > 0 && d2 <= r * r) {
+        if (r > 0 && d2 <= r * r && ((!shallow && s.def.cls === 'fighter') || dentCell(D, i, j, k))) {
           V.solid[cell] = 0;
           if (V.hasInst[cell]) {
             V.hasInst[cell] = 0;

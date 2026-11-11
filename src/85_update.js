@@ -200,6 +200,12 @@ function update(dt) {
     d.life += dt;
     const dur = d.dur || 2.4;
     const k = Math.max(0, 1 - d.life / dur);
+    if (d.chunk) {
+      d.mesh.position.addScaledVector(d.vel, dt);
+      d.mesh.rotateX(d.spin.x*dt); d.mesh.rotateY(d.spin.y*dt); d.mesh.rotateZ(d.spin.z*dt);
+      d.mesh.material.opacity=k;
+      continue;
+    }
     for (let n = 0; n < d.pos.length; n++) {
       d.pos[n].addScaledVector(d.vel[n], dt);
       _m.makeScale(k, k, k).setPosition(d.pos[n]);
@@ -212,7 +218,7 @@ function update(dt) {
       else { d.flash.scale.setScalar(d.size * (0.3 + f * 1.0)); d.flash.material.opacity = 1 - f; }
     }
   }
-  debris = debris.filter(d => d.life < (d.dur || 2.4) || (scene.remove(d.mesh), d.mesh.dispose(), d.flash && scene.remove(d.flash), false));
+  debris = debris.filter(d => d.life < (d.dur || 2.4) || (scene.remove(d.mesh), d.mesh.dispose(), d.chunk && d.mesh.material.dispose(), d.flash && scene.remove(d.flash), false));
 
   sparks.update(dt); fire.update(dt); smoke.update(dt); frag.update(dt);
   if (state === 'cine') cineCamera(dt); else updateCamera(dt);
