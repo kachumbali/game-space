@@ -55,6 +55,7 @@ const INTRO_TEST_SCENE = {
 };
 
 function playSceneBlip(freq = 240) {
+  if (sceneState.silent) return;
   try {
     if (!sceneState.audioCtx) {
       const AC = window.AudioContext || window.webkitAudioContext;
@@ -97,6 +98,7 @@ function loadSceneImage(url) {
     img.src = url;
   });
 }
+function sceneImageUrl(id, path) { return new URL('assets/scenes/' + id + '/' + path, document.baseURI).href; }
 
 async function preloadSceneAssets(sceneData) {
   // Keep this relative to index.html: GitHub Pages serves the game from
@@ -106,7 +108,14 @@ async function preloadSceneAssets(sceneData) {
 
   // Backgrounds & Sprites
   for (const ev of sceneData.events) {
-    if (ev.img) promises.push(loadSceneImage(base + ev.img));
+    if (ev.img) promises.push(loadSceneImage(sceneImageUrl(sceneData.id, ev.img)));
+  }
+  if (/^(p0[1-4]_|prologue_opening)/.test(sceneData.id)) {
+    for (const [id,file] of [['vance','imani'],['hawk','hawk']]) {
+      sceneState.heads[id]={meta:{name:id==='vance'?'CDR. SARAH VANCE':'HAWK',voiceBlip:240,blink:{min:2,max:5}},eyes:{},mouth:{}};
+      promises.push(loadSceneImage('assets/scenes/intro_test/painted/'+file+'.webp').then(img=>{sceneState.heads[id].portrait=img;}));
+    }
+    await Promise.all(promises); return;
   }
   promises.push(loadSceneImage(base + 'ui_frame.png'));
 
@@ -142,7 +151,8 @@ function initSceneDOM() {
     wrap.style.cssText = 'display:none;position:fixed;inset:0;z-index:90;background:#000;align-items:center;justify-content:center;';
     wrap.innerHTML = `
       <canvas id="sceneCv" width="${SCENE_CANVAS_W * SCENE_RENDER_SCALE}" height="${SCENE_CANVAS_H * SCENE_RENDER_SCALE}" style="width:min(100vw, 160vh);height:min(62.5vw, 100vh);box-shadow:0 0 50px rgba(0,0,0,0.9);cursor:pointer;"></canvas>
-      <button id="sceneSkip" style="position:absolute;top:16px;right:20px;z-index:95;background:rgba(8,16,24,0.88);color:#7fe0b0;border:1px solid #31505c;font:12px monospace;padding:6px 14px;cursor:pointer;letter-spacing:1px;">SKIP [ESC]</button>
+      <button id="sceneSkip" style="position:absolute;top:16px;right:20px;z-index:95;background:rgba(8,16,24,0.88);color:#7fe0b0;border:1px solid #31505c;font:12px monospace;padding:6px 14px;min-height:44px;cursor:pointer;letter-spacing:1px;">SKIP [ESC]</button>
+      <div id="sceneCaption" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);"></div>
     `;
     document.body.appendChild(wrap);
 
@@ -153,6 +163,7 @@ function initSceneDOM() {
     window.addEventListener('keydown', (e) => {
       if (!sceneState.active) return;
       if (e.code === 'Space' || e.code === 'Enter') {
+        if (e.target instanceof HTMLElement && e.target.closest('button')) return;
         e.preventDefault();
         advanceSceneDialogue();
       } else if (e.code === 'Escape') {
@@ -183,12 +194,17 @@ function advanceSceneDialogue() {
   }
 }
 
-async function startScene(sceneId = 'intro_test', onDone = null, context = null) {
+async function startScene(sceneId = 'intro_test', onDone = null, context = null, mount = null) {
   initSceneDOM();
   const wrap = document.getElementById('sceneWrap');
-  if (wrap) wrap.style.display = 'flex';
+  if (wrap) {
+    (mount || document.body).appendChild(wrap);
+    wrap.style.cssText=mount ? 'display:flex;position:relative;inset:auto;width:100%;background:#000;align-items:center;justify-content:center;' : 'display:flex;position:fixed;inset:0;z-index:90;background:#000;align-items:center;justify-content:center;';
+    const canvas=document.getElementById('sceneCv');
+    canvas.style.width=mount?'100%':'min(100vw, 160vh)'; canvas.style.height=mount?'auto':'min(62.5vw, 100vh)';
+  }
   const token = ++sceneState.loadToken;
-  sceneState.active = true; sceneState.onDone = onDone;
+  sceneState.active = true; sceneState.onDone = onDone; sceneState.silent=/^(p0[1-4]_|prologue_opening)/.test(sceneId);
   document.exitPointerLock?.();
   let sceneData = INTRO_TEST_SCENE;
   try {
@@ -201,7 +217,7 @@ async function startScene(sceneId = 'intro_test', onDone = null, context = null)
     if (onDone) { stopScene(); return; }
     console.warn('Using embedded scene data:', e);
   }
-  if (/^p0[1-4]_/.test(sceneId)) sceneData=preparePrologueScene(sceneData, context);
+  if (/^(p0[1-4]_|prologue_opening)/.test(sceneId)) sceneData=preparePrologueScene(sceneData, context);
   try { await preloadSceneAssets(sceneData); }
   catch (e) { if (token === sceneState.loadToken) stopScene(); return; }
   if (token !== sceneState.loadToken) return;
@@ -228,7 +244,8 @@ function stopScene() {
   const onDone = sceneState.onDone; sceneState.onDone = null;
   if (sceneState.rafId) cancelAnimationFrame(sceneState.rafId);
   const wrap = document.getElementById('sceneWrap');
-  if (wrap) wrap.style.display = 'none';
+  if (wrap) { wrap.style.display = 'none'; document.body.appendChild(wrap); }
+  const caption=document.getElementById('sceneCaption'); if (caption) caption.textContent='';
 
   if (onDone) { onDone(); return; }
   // Return to game menu
@@ -258,9 +275,8 @@ function sceneTick(now) {
 }
 
 function handleSceneEvent(ev) {
-  const base = 'assets/scenes/' + sceneState.id + '/';
   if (ev.do === 'bg') {
-    sceneState.bgImg = sceneState.images[base + ev.img] || null;
+    sceneState.bgImg = sceneState.images[sceneImageUrl(sceneState.id, ev.img)] || null;
     if (ev.cut === 'static') {
       sceneState.bgCutStatic = 0.22; // static noise burst duration
       playSceneBlip(120);
@@ -273,7 +289,7 @@ function handleSceneEvent(ev) {
   } else if (ev.do === 'sprite') {
     sceneState.sprites.push({
       id: ev.id,
-      img: sceneState.images[base + ev.img] || null,
+      img: sceneState.images[sceneImageUrl(sceneState.id, ev.img)] || null,
       from: ev.from,
       to: ev.to,
       dur: ev.dur || 3.0,
@@ -290,7 +306,8 @@ function handleSceneEvent(ev) {
       blinkPhase: 0,
     };
   } else if (ev.do === 'say') {
-    if (rosterEnabled() && ev.who==='hawk' && !rosterSlotShip(0)) return;
+    if (!sceneState.silent && rosterEnabled() && ev.who==='hawk' && !rosterSlotShip(0)) return;
+    const caption=document.getElementById('sceneCaption'); if (caption) caption.textContent=ev.text;
     sceneState.dialogue = {
       who: ev.who,
       fullText: ev.text,
@@ -447,7 +464,8 @@ function renderSceneFrame() {
       ctx.save();
       ctx.fillStyle = 'rgba(4, 12, 18, 0.84)';
       ctx.fillRect(hx - 2, hy - 2, 100, 132);
-      ctx.drawImage(headRes.portrait, hx, hy, 96, 128);
+      if (sceneState.silent) ctx.drawImage(headRes.portrait, hx, hy + 16, 96, 96);
+      else ctx.drawImage(headRes.portrait, hx, hy, 96, 128);
       ctx.strokeStyle = '#c48a28';
       ctx.lineWidth = 1;
       ctx.strokeRect(hx - 1.5, hy - 1.5, 99, 131);
@@ -479,7 +497,7 @@ function renderSceneFrame() {
     ctx.strokeRect(16.5, 138.5, 287, 53);
 
     // Header label (Speaker name)
-    const speakerName = rosterEnabled() ? (d.who === 'imani' ? 'COMMAND' : d.who === 'hawk' ? (rosterSlotShip(0)?.callsign || 'WING LEAD') : rosterLoad().player.callsign) : (d.who === 'imani' ? 'CDR. IMANI' : d.who === 'hawk' ? 'LT. OKAFOR [HAWK]' : 'LT. TOM CAT [MEOW]');
+    const speakerName = sceneState.silent ? ({vance:'CDR. SARAH VANCE',hawk:'HAWK',sparrow:'SPARROW',record:'FLIGHT RECORD'}[d.who] || 'FLIGHT RECORD') : rosterEnabled() ? (d.who === 'imani' ? 'COMMAND' : d.who === 'hawk' ? (rosterSlotShip(0)?.callsign || 'WING LEAD') : rosterLoad().player.callsign) : (d.who === 'imani' ? 'CDR. IMANI' : d.who === 'hawk' ? 'LT. OKAFOR [HAWK]' : 'LT. TOM CAT [MEOW]');
     ctx.font = '10px ui-monospace, Menlo, Consolas, monospace';
     ctx.fillStyle = '#ffb830';
     ctx.fillText(speakerName, 26, 152);
@@ -488,16 +506,11 @@ function renderSceneFrame() {
     ctx.font = '11px ui-monospace, Menlo, Consolas, monospace';
     ctx.fillStyle = '#d8f4ff';
 
-    // Word wrap 2 lines
-    const words = d.currentText.split(' ');
-    let line1 = '', line2 = '';
-    for (const w of words) {
-      if ((line1 + ' ' + w).length <= 38) line1 += (line1 ? ' ' : '') + w;
-      else line2 += (line2 ? ' ' : '') + w;
-    }
-
-    ctx.fillText(line1, 26, 168);
-    if (line2) ctx.fillText(line2, 26, 182);
+    // Fit dialogue to the panel rather than letting long callsigns overflow.
+    const words=d.currentText.split(/\s+/), wrap=()=>{const lines=[''];for(const w of words){const n=lines.length-1, v=lines[n] ? lines[n]+' '+w : w;if(ctx.measureText(v).width>265 && lines[n]) lines.push(w);else lines[n]=v;}return lines;};
+    let fontSize=11, lines=wrap();
+    while(lines.length>2 && fontSize>6) {ctx.font=`${--fontSize}px ui-monospace, Menlo, Consolas, monospace`;lines=wrap();}
+    for(let i=0;i<lines.length;i++) ctx.fillText(lines[i],26,168+i*Math.min(14,24/Math.max(1,lines.length-1)));
 
     // Blinking prompt chevron when done
     if (d.done && Math.floor(sceneState.t * 3) % 2 === 0) {

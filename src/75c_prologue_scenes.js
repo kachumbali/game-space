@@ -25,32 +25,40 @@ function prologueSceneContext(M, S, phase) {
 }
 const PROLOGUE_HAWK_FALLBACK={p01:'Stay close to the HALBERD.',p02:'Keep the wing together through the screen.',p03:'Keep your countermeasures ready.',p04:'Stay close and keep the telemetry running.'};
 const PROLOGUE_NO_LOSS={p01:'Take a moment. We move when ready.',p02:'Hold the line. We still have work to do.',p03:'Stay sharp. We are not finished.',p04:'Keep each other close out there.'};
+const PROLOGUE_CAUSES={'Hull destroyed; cause unclear.':'We cannot yet say what broke the hull.', 'Collision with another ship.':'It appears another ship struck the fighter.', 'Missile or warhead impact.':'It appears a missile or warhead hit the fighter.', 'Fire from a larger ship.':'It appears a larger ship hit the fighter.', 'Shields depleted under fire.':'It appears the shields failed under fire.', 'Incoming weapons fire.':'It appears incoming fire hit the fighter.'};
 function prologueSpeakerAvailable(ctx, who) {
   const def=PILOT_DEFS[who];
   return !!def && !!ctx?.participants?.some(p=>!p.player && p.callsign===def.callsign && p.name===def.name && p.available && p.status==='ACTIVE');
 }
 function prologueName(p, index) {
   const name=String(p?.callsign || '').replace(/[^A-Za-z0-9 -]/g,'').trim();
-  return name && name.length<=14 ? name : `WING ${index+1}`;
+  return name && name.length<=14 ? name : (p?.player ? 'PLAYER' : `WING ${index+1}`);
 }
 function prologueOutcomeLines(ctx) {
   const rows=[];
   for (const [i,p] of (ctx?.participants || []).entries()) {
-    const name=p.player?'PLAYER':prologueName(p,i), e=(ctx.ejections || []).find(x=>x.pilot===p.id || (p.player && x.player));
+    const name=prologueName(p,i), e=(ctx.ejections || []).find(x=>x.pilot===p.id || (p.player && x.player));
+    let status='';
+    if (p.status==='KIA') status=`We lost ${name}.`;
+    else if (p.status==='MIA' || p.status==='MISSING') status=`${name} is still missing.`;
+    else if (p.status==='CAPTURED') status=`${name} was captured.`;
+    else if (p.status==='RECOVERING') status=`${name} is recovering.`;
     if (e) {
-      const tail={recovered:'got out; capsule recovered.',captured:'got out; capsule captured.',destroyed:'got out; capsule destroyed.', 'life support expired':'got out; life support expired.'}[e.outcome] || 'got out; outcome unknown.';
-      rows.push(`${name} ${tail}`);
-    }
-    if (p.status==='KIA') rows.push(`We lost ${name}.`);
-    else if (p.status==='MIA' || p.status==='MISSING') rows.push(`${name} is still missing.`);
-    else if (p.status==='CAPTURED' && e?.outcome!=='captured') rows.push(`${name} was captured.`);
-    else if (p.status==='RECOVERING' && e?.outcome!=='recovered') rows.push(`${name} is recovering.`);
+      const tail={recovered:'ejected; recovered.',captured:'ejected; captured.',destroyed:'ejected; capsule destroyed.', 'life support expired':'ejected; life support expired.'}[e.outcome] || 'ejected; outcome unknown.';
+      const covered=(p.status==='CAPTURED' && e.outcome==='captured') || (p.status==='RECOVERING' && e.outcome==='recovered');
+      rows.push(`${name} ${tail}${status && !covered ? ' '+status : ''}`);
+    } else if (status) rows.push(status);
   }
   return rows;
 }
 function preparePrologueScene(data, ctx) {
   const out={...data, events:data.events.map(e=>({...e}))};
   const id=String(data.id || ''), mission=id.slice(0,3), before=/_before$/.test(id), after=/_after_(win|lose)$/.test(id);
+  if (id==='prologue_opening' && !prologueSpeakerAvailable(ctx,'hawk')) {
+    out.events=out.events.filter(e=>!(e.do==='head' && e.char==='hawk'));
+    for (const e of out.events) if (e.do==='say' && e.who==='hawk') e.who='vance';
+    return out;
+  }
   if (!/^p0[1-4]/.test(id) || (!before && !after)) return out;
   const context=ctx?.missionId===mission ? ctx : null;
   if (before && !prologueSpeakerAvailable(context,'hawk')) {
@@ -64,7 +72,7 @@ function preparePrologueScene(data, ctx) {
     else if (t15 && ['hawk','sparrow'].includes(t15.who) && !prologueSpeakerAvailable(context,t15.who)) {t15.who='vance';t15.text='We will take this one step at a time.';}
     if (context?.result==='partial') {const first=out.events.find(e=>e.do==='say' && e.t===1);if(first) first.text='The sortie ended with a partial result.';}
     if (t22 && context?.result==='win' && /^[SABCD]$/.test(context.grade || '')) {t22.who='vance';t22.text=`Grade ${context.grade}. You gave them a chance.`;}
-    else if (t22 && context && context.result!=='win') {t22.who='vance';t22.text=context.cause ? `Likely cause: ${context.cause}` : 'We do not yet know what happened.';}
+    else if (t22 && context && context.result!=='win') {t22.who='vance';t22.text=PROLOGUE_CAUSES[context.cause] || 'We do not yet know what happened.';}
     if (!context?.anchorAvailable) {
       out.events=out.events.filter(e=>!(e.do==='head' && e.char==='vance'));
       for (const e of out.events) if (e.do==='say' && e.who==='vance') e.who='record';

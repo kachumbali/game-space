@@ -88,6 +88,7 @@ function showMainMenu() {
   const items = [
     ...(nextPrologue >= 0 ? [['continue', 'CONTINUE PROLOGUE', `Mission ${nextPrologue + 1} of ${PROLOGUE_MISSIONS.length} · ${PROLOGUE_MISSIONS[nextPrologue].title}`]] : []),
     ['intro', 'WATCH INTRO CUTSCENE', 'WC2-style test animation sequence [?scene=intro_test]'],
+    ['prologue_opening', 'WATCH PROLOGUE OPENING', 'Replay the opening'],
     ['campaign', 'CAMPAIGNS', 'Uncharted Vanguard, then The Severed Node'],
     ['yard', 'SHIPYARD', 'Fleet technical database: inspect hulls, systems, weapons'],
     ['survival', 'GAUNTLET', 'Survive wave after wave: perks, aces, bosses, chains'],
@@ -106,6 +107,7 @@ function showMainMenu() {
 function menuAct(a) {
   if (a === 'continue') { const i = prologueNextIndex(); if (i >= 0) { menuLeave(); startMission(PROLOGUE_MISSIONS[i]); } }
   else if (a === 'intro') { menuLeave(); startScene('intro_test'); }
+  else if (a === 'prologue_opening') { menuLeave(); startScene('prologue_opening', showMainMenu); }
   else if (a === 'campaign') showCampaignList();
   else if (a === 'yard') showShipyardCatalog();
   else if (a === 'survival') showSurvivalSetup();

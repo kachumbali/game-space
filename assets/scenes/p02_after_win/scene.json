@@ -1,0 +1,55 @@
+{
+  "id": "p02_after_win",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 1,
+      "do": "say",
+      "who": "vance",
+      "text": "Relay Beta is open. The traffic records are in.",
+      "cps": 28
+    },
+    {
+      "t": 8,
+      "do": "say",
+      "who": "vance",
+      "text": "Hold the line. We still have work to do.",
+      "cps": 28
+    },
+    {
+      "t": 15,
+      "do": "say",
+      "who": "sparrow",
+      "text": "The relay is open. They can get supplies through.",
+      "cps": 28
+    },
+    {
+      "t": 22,
+      "do": "say",
+      "who": "vance",
+      "text": "The privateers were paid in VAC bonds.",
+      "cps": 28
+    },
+    {
+      "t": 29,
+      "do": "end"
+    }
+  ]
+}

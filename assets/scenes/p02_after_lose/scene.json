@@ -1,0 +1,55 @@
+{
+  "id": "p02_after_lose",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 1,
+      "do": "say",
+      "who": "vance",
+      "text": "The blockade holds. The habitats are isolated.",
+      "cps": 28
+    },
+    {
+      "t": 8,
+      "do": "say",
+      "who": "vance",
+      "text": "Hold the line. We still have work to do.",
+      "cps": 28
+    },
+    {
+      "t": 15,
+      "do": "say",
+      "who": "hawk",
+      "text": "We will find another way through that screen.",
+      "cps": 28
+    },
+    {
+      "t": 22,
+      "do": "say",
+      "who": "vance",
+      "text": "Review the sortie before another attempt.",
+      "cps": 28
+    },
+    {
+      "t": 29,
+      "do": "end"
+    }
+  ]
+}

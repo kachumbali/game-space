@@ -476,7 +476,10 @@ function prewarmPrologueVoxels(M) {
   }
 }
 function startMission(M, seg, sceneDone = false, autoLaunch = false) {
-  if (!seg && !sceneDone && !autoLaunch && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch), prologueSceneContext(M, null, 'before')); return; }
+  if (!seg && !sceneDone && !autoLaunch && M.id==='p01' && !params.has('m') && !params.has('scene') && !prologueOpeningSeen() && prologueNextIndex()===0 && sceneAvailable('prologue_opening')) {
+    startScene('prologue_opening', () => { prologueOpeningMark(); startMission(M,seg,true,autoLaunch); }); return;
+  }
+  if (!seg && !sceneDone && !autoLaunch && !PROLOGUE_MISSIONS.includes(M) && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch)); return; }
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
   if (cine) cancelTransit();
   plogReset(M.title);
@@ -519,7 +522,7 @@ function startMission(M, seg, sceneDone = false, autoLaunch = false) {
     comm('CONTROL', 'Segment restart. Eagle flight, you are cleared hot.');
     return;
   }
-  state = 'brief'; beamsClear();
+  state = 'brief'; beamsClear(); game.mstate.skipBefore=!!autoLaunch;
   showBriefing(M);
   if (autoLaunch) { $id('brief').style.display = 'none'; state = 'play'; }
 }
@@ -808,7 +811,7 @@ function showPrologueBriefing(M) {
   const el=$id('brief'), S=game.mstate, step=S.briefStep || 0, ship=M.setup.player.ship || 'kestrel';
   const objectives={p01:'Protect HALBERD; break the escort; stop the transport.',p02:'Break the pickets, drone screen and strike detachment; protect HALBERD.',p03:'Stay close to HALBERD; preserve countermeasures; be ready for a trap.',p04:'Protect HALBERD; collect telemetry; survive.'};
   let body;
-  if (step===0) body=`<div class="stepgrid"><img class="portrait" src="assets/scenes/intro_test/painted/imani.webp" alt="Cdr. Sarah Vance"><div class="caption"><div class="sub">CDR. SARAH VANCE · SITUATION</div><p>${rosterDialogueText(M.briefing)}</p></div></div>`;
+  if (step===0) body=`<div id="briefScene"></div><div class="stepgrid"><img class="portrait" src="assets/scenes/intro_test/painted/imani.webp" alt="Cdr. Sarah Vance"><div class="caption"><div class="sub">CDR. SARAH VANCE · SITUATION</div><p>${rosterDialogueText(M.briefing)}</p></div></div>`;
   else if (step===1) body=`<div class="stepgrid mapgrid"><div><div class="sub">OBJECTIVES</div><p>${objectives[M.id]}</p></div><div>${briefingMap(M)}</div></div>`;
   else {
     const crew=rosterEnabled()?rosterBriefHtml(M):['hawk','sparrow'].map(k=>`<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b>${CREW[k].status.toUpperCase()}</b></div>`).join('');
@@ -816,10 +819,10 @@ function showPrologueBriefing(M) {
   }
   el.innerHTML=`<div class="panel stepbrief"><div class="sub">${GAME_TITLE.toUpperCase()} · UNCHARTED VANGUARD · MISSION ${PROLOGUE_MISSIONS.indexOf(M)+1} OF 4 · STEP ${step+1} OF 3</div><h1>${M.title}</h1><h2>MISSION ${PROLOGUE_MISSIONS.indexOf(M)+1} OF 4 · ${M.subtitle}</h2><div class="sub">1 SITUATION · 2 OBJECTIVES · 3 WING &amp; LOADOUT</div><div class="stepcontent">${body}</div><div class="actions"><button id="briefMenu" class="alt">MAIN MENU</button><button id="briefOptions" class="alt">OPTIONS</button>${step?'<button id="briefBack" class="alt">BACK</button>':''}${step<2?'<button id="briefNext" class="primary">NEXT</button>':'<button id="bgo" class="primary">LAUNCH</button>'}</div></div>`;
   el.style.display='flex';
-  $id('briefMenu').onclick=()=>showMainMenu();
+  $id('briefMenu').onclick=()=>{if(sceneState.active)stopScene();showMainMenu();};
   $id('briefOptions').onclick=()=>toggleOpts(true);
   if (step) $id('briefBack').onclick=()=>{ S.briefStep=step-1; showBriefing(M); };
-  if (step<2) $id('briefNext').onclick=()=>{ S.briefStep=step+1; showBriefing(M); };
+  if (step<2) $id('briefNext').onclick=()=>{ if(sceneState.active)stopScene(); S.briefStep=step+1; showBriefing(M); };
   else {
     bindOrdnanceBriefing(el,M); if (rosterEnabled()) rosterBindBriefing(el,M);
     if (rosterEnabled() && !S.rosterPlayer) $id('bgo').disabled=true;
@@ -828,6 +831,11 @@ function showPrologueBriefing(M) {
       player.modBase.take=diffCfg().take; recalcMods(player);
       el.style.display='none'; state='play'; if (!isTouch) lockPointer(); touchStarted=true; audioInit(); comm('CONTROL','Eagle flight, you are cleared hot. Good hunting.');
     };
+  }
+  if (step===0 && !S.beforeStarted && !S.skipBefore && sceneAvailable(M.beforeMission)) {
+    S.beforeStarted=true;
+    // Wing selection comes on step 3, so the future assignment is not yet final.
+    startScene(M.beforeMission,()=>{S.beforeDone=true;},prologueSceneContext(M,null,'before'),$id('briefScene'));
   }
 }
 function showDebrief() {
