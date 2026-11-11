@@ -9584,7 +9584,7 @@
     "pilotSkill": {"noise": [0.05, 0.032, 0.018, 0.009, 0.003], "turn": [0.8, 0.9, 1, 1.08, 1.16], "react": [0.35, 0.45, 0.55, 0.7, 0.9], "evade": [300, 420, 560, 650, 720]},
     "droneLimit": {"fighter": 1, "corvette": 6, "frigate": 6, "capital": 6},
     "bullfrog": {"spineDelay": 15, "charge": 6, "freeze": 1.5, "cd": 30, "fizzleCd": 8, "lockHold": 3, "range": 3200, "bandIn": 2300, "bandOut": 2400, "bandMin": 1200, "bandFar": 1500, "hangarInterval": 4.5, "hangarCap": 12, "emergencyInterval": 1.5, "spoolT": 20, "corridorHalf": 0.12, "manifest": {"D": 6, "L": 5, "S": 2, "T": 2, "R": 3}, "kind": {"D": "darter", "L": "leaper", "S": "spitter", "T": "toad", "R": "reaver"}, "seq": ["D", "L", "D", "R", "L", "D", "T", "L", "S", "R"]},
-    "scaleTo": {"halberd": 128, "gulper": 146, "hivecarrier": 2500},
+    "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500},
     "score": {"darter": 100, "leaper": 100, "spitter": 150, "toad": 200, "reaver": 200, "gulper": 800, "bullfrog": 2500, "hivecarrier": 5000},
     "feel": {"chainWindow": 6, "chainMax": 4, "hitStopKill": 0.05, "hitStopBig": 0.16, "pointBlank": 150},
     "loot": {"life": 34, "collectR": 30, "magnetR": 130, "dropFighter": 0.22, "pity": 5, "overdriveT": 12, "maxPods": 14},

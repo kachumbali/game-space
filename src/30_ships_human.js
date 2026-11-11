@@ -162,14 +162,14 @@ SHIPS.bittern = {
   ],
 };
 
-// ---- CSS HALBERD: Aegis-class escort corvette, 2026-11-12 rebuild in the fleet language (authored at 64 m, scaled to 128 m by tuning.scaleTo):
+// ---- CSS HALBERD: Aegis-class escort corvette, 2026-11-12 rebuild in the fleet language (authored at 64 m, scaled to 200 m by tuning.scaleTo, owner 2026-11-12):
 // a long boxy hull with a stepped superstructure, armoured weapon sponsons, a dorsal rail spine and three round nozzles in an aft engine raft.
 // A capital turret seat: an armoured box plinth with a graphite ring. D is the turret diameter at the authored scale; dy is +1 dorsal, -1 ventral.
 const cfSeat = (x, y, z, dy, D, col = CF.g2) => [
   tap([x, y - dy * D * 0.1, z], D * 0.52, [D * 0.58, D * 0.13], [D * 0.58, D * 0.13], col, { sh: 'h', noMirror: true }),
   tap([x, y - dy * D * 0.0, z], D * 0.46, [D * 0.5, D * 0.04], [D * 0.5, D * 0.04], CF.gr, { sh: 'e', noMirror: true }),
 ];
-const hSeat = (x, y, z, dy = 1, cls = 'S') => cfSeat(x, y, z, dy, turretDia({ def: { length: 128 } }, { cls }) / 2);
+const hSeat = (x, y, z, dy = 1, cls = 'S') => { const L = TUNE.scaleTo.halberd || 64; return cfSeat(x, y, z, dy, turretDia({ def: { length: L } }, { cls }) * 64 / L); };
 SHIPS.halberd = {
   ...DB.ships.halberd,
   prims: [
