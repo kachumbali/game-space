@@ -760,6 +760,7 @@ function briefingLoadout(shipId) {
   return `<div>${guns}</div><div>${ordnance}</div><div>${flare}</div>`;
 }
 function showBriefing(M) {
+  if (campaignOf(M).id === 'prologue') { showPrologueBriefing(M); return; }
   const el = $id('brief');
   const ship = M.setup.player.ship || 'kestrel';
   const crew = rosterEnabled() ? rosterBriefHtml(M) : ['hawk', 'sparrow'].map(k => `<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b class="${CREW[k].status === 'active' ? 'ok' : 'bad'}">${CREW[k].status.toUpperCase()}</b> <span class="dim">${CREW[k].kills} kills / ${CREW[k].sorties} sorties</span></div>`).join('');
@@ -784,6 +785,47 @@ function showBriefing(M) {
   $id('bnew').onclick = () => { newCampaign(); if (rosterEnabled()) startMission(M); else showBriefing(M); };
   $id('bcred').onclick = () => showCredits(true);
   $id('bmenu').onclick = () => showMainMenu();
+}
+// Presentation only: the sectors come directly from the authored spawns.
+function briefingSectors(M) {
+  return M.stages.flatMap(stage => stage.do.filter(a => a.spawn).map(a => a.spawn))
+    .filter(s => Array.isArray(s.bearing) && s.bearing.length === 3 && Number.isFinite(s.dist) && Math.hypot(...s.bearing) > 0);
+}
+function briefingMap(M) {
+  const sectors=briefingSectors(M), max=Math.max(1,...sectors.map(s=>s.dist)), scale=112/max, cx=180, cy=140;
+  const player=M.setup.player.pos.map((x,i)=>x-M.setup.anchor.pos[i]);
+  const arrows=sectors.map((s,i)=>{
+    const norm=Math.hypot(...s.bearing), x=cx+s.bearing[0]/norm*s.dist*scale, y=cy+s.bearing[2]/norm*s.dist*scale;
+    return `<g class="approach" data-bearing="${s.bearing.join(',')}" data-distance="${s.dist}"><line x1="${x}" y1="${y}" x2="${cx+(x-cx)*.25}" y2="${cy+(y-cy)*.25}" stroke="#ffb56e" stroke-width="2" marker-end="url(#brief-arrow)"/><circle cx="${x}" cy="${y}" r="4" fill="#ffb56e"/><text x="${x+7}" y="${y-5}" fill="#ffd9aa" font-size="10">SECTOR ${i+1}</text></g>`;
+  }).join('');
+  const legend=sectors.length ? sectors.map((s,i)=>`<li>Sector ${i+1}: bearing [${s.bearing.join(', ')}], ${s.dist} m nominal, spread ${s.spread || 0} m, ${s.bearing[1]>0?'above':s.bearing[1]<0?'below':'on'} the map plane.</li>`).join('') : '<li>Approach data unavailable.</li>';
+  return `<svg class="map" viewBox="0 0 360 280" role="img" aria-label="Schematic map of HALBERD, player and possible approach sectors"><defs><marker id="brief-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#ffb56e"/></marker></defs><circle cx="${cx}" cy="${cy}" r="112" fill="none" stroke="#315747"/><line x1="${cx}" y1="20" x2="${cx}" y2="260" stroke="#25493a"/><line x1="40" y1="${cy}" x2="320" y2="${cy}" stroke="#25493a"/>${arrows}<rect x="${cx-4}" y="${cy-4}" width="8" height="8" fill="#82f3c1"/><text x="${cx+7}" y="${cy+4}" fill="#c8fff0" font-size="10">HALBERD</text><circle cx="${cx+player[0]*scale}" cy="${cy+player[2]*scale}" r="4" fill="#ffd24a"/><text x="${cx+player[0]*scale+8}" y="${cy+player[2]*scale+17}" fill="#ffd24a" font-size="10">PLAYER</text></svg><div class="dim">SCHEMATIC · NOT LIVE · SYMBOLS NOT TO SCALE</div><div>Player relative to HALBERD: [${player.join(', ')}] m.</div><ul>${legend}</ul>`;
+}
+function showPrologueBriefing(M) {
+  const el=$id('brief'), S=game.mstate, step=S.briefStep || 0, ship=M.setup.player.ship || 'kestrel';
+  const objectives={p01:'Protect HALBERD; break the escort; stop the transport.',p02:'Break the pickets, drone screen and strike detachment; protect HALBERD.',p03:'Stay close to HALBERD; preserve countermeasures; be ready for a trap.',p04:'Protect HALBERD; collect telemetry; survive.'};
+  let body;
+  if (step===0) body=`<div class="stepgrid"><img class="portrait" src="assets/scenes/intro_test/painted/imani.webp" alt="Cdr. Sarah Vance"><div class="caption"><div class="sub">CDR. SARAH VANCE · SITUATION</div><p>${rosterDialogueText(M.briefing)}</p></div></div>`;
+  else if (step===1) body=`<div class="stepgrid mapgrid"><div><div class="sub">OBJECTIVES</div><p>${objectives[M.id]}</p></div><div>${briefingMap(M)}</div></div>`;
+  else {
+    const crew=rosterEnabled()?rosterBriefHtml(M):['hawk','sparrow'].map(k=>`<div>${PILOT_DEFS[k].callsign} <span class="dim">${PILOT_DEFS[k].name}</span> <b>${CREW[k].status.toUpperCase()}</b></div>`).join('');
+    body=`<div class="stepgrid winggrid"><div><div class="sub">YOUR WING</div>${crew}${rosterEnabled()?'<div id="rosterDetails" style="display:none"></div>':''}</div><div><div class="sub">LOADOUT · ${SHIPS[ship].name}</div>${briefingLoadout(ship)}${ordnanceBriefing(ship)||'<p>Ordnance stations unavailable.</p>'}</div></div>`;
+  }
+  el.innerHTML=`<div class="panel stepbrief"><div class="sub">${GAME_TITLE.toUpperCase()} · UNCHARTED VANGUARD · MISSION ${PROLOGUE_MISSIONS.indexOf(M)+1} OF 4 · STEP ${step+1} OF 3</div><h1>${M.title}</h1><h2>MISSION ${PROLOGUE_MISSIONS.indexOf(M)+1} OF 4 · ${M.subtitle}</h2><div class="sub">1 SITUATION · 2 OBJECTIVES · 3 WING &amp; LOADOUT</div><div class="stepcontent">${body}</div><div class="actions"><button id="briefMenu" class="alt">MAIN MENU</button><button id="briefOptions" class="alt">OPTIONS</button>${step?'<button id="briefBack" class="alt">BACK</button>':''}${step<2?'<button id="briefNext" class="primary">NEXT</button>':'<button id="bgo" class="primary">LAUNCH</button>'}</div></div>`;
+  el.style.display='flex';
+  $id('briefMenu').onclick=()=>showMainMenu();
+  $id('briefOptions').onclick=()=>toggleOpts(true);
+  if (step) $id('briefBack').onclick=()=>{ S.briefStep=step-1; showBriefing(M); };
+  if (step<2) $id('briefNext').onclick=()=>{ S.briefStep=step+1; showBriefing(M); };
+  else {
+    bindOrdnanceBriefing(el,M); if (rosterEnabled()) rosterBindBriefing(el,M);
+    if (rosterEnabled() && !S.rosterPlayer) $id('bgo').disabled=true;
+    $id('bgo').onclick=()=>{
+      if (!ordnanceApply(player)) { showBriefing(M); return; }
+      player.modBase.take=diffCfg().take; recalcMods(player);
+      el.style.display='none'; state='play'; if (!isTouch) lockPointer(); touchStarted=true; audioInit(); comm('CONTROL','Eagle flight, you are cleared hot. Good hunting.');
+    };
+  }
 }
 function showDebrief() {
   const S = game.mstate, st = missionStats(), M = game.mission;
