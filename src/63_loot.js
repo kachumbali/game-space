@@ -16,7 +16,7 @@ const LOOT = {
   AMO: { name: 'AMMO + CAPACITOR', col: 0xffe45a, hex: '#ffe45a', letter: 'A' },
   OVR: { name: 'OVERDRIVE', col: 0xff5af0, hex: '#ff5af0', letter: 'O' },
 };
-const LOOT_CFG = { life: 34, collectR: 30, magnetR: 130, dropFighter: 0.22, pity: 5, overdriveT: 12, maxPods: 14 };
+const LOOT_CFG = TUNE.loot;   // data: data/db.json tuning.loot (docs/DATABASE.md)
 const lootPods = [];
 const lootState = { dry: 0 };
 const _lg = new THREE.OctahedronGeometry(1, 0), _lh = new THREE.SphereGeometry(1, 10, 8);

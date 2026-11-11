@@ -9,12 +9,7 @@
 // ======================================================================
 let hitSrc = null, hitKind = null;                    // who is shooting, with what class of weapon ('gun' | 'beam' | 'missile' | 'nuke')
 const killHooks = [];                                 // other parts register fn(ship, killedByPlayer) at load time (loot drops, survival perks)
-const FUN = {
-  chainWindow: 6,                                     // sim seconds between kills that keep a chain alive (about 16 s real time at 37.5% sim speed)
-  chainMax: 4,                                        // score multiplier cap; multiplier = 1 + 0.5 per extra kill in the chain
-  hitStopKill: 0.05, hitStopBig: 0.16,                // real seconds the sim crawls after a kill / a capital kill
-  pointBlank: 150,                                    // m: a fighter killed this close gets the POINT BLANK style bonus
-};
+const FUN = TUNE.feel;   // data: data/db.json tuning.feel (docs/DATABASE.md)
 const juice = {};
 function juiceReset() {
   Object.assign(juice, {

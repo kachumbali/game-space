@@ -7,7 +7,7 @@
 // ======================================================================
 const DRONE_ORDERS = ['engage', 'all', 'fighters', 'protect', 'return', 'scout', 'ram'];
 document.getElementById('help').insertAdjacentHTML('beforeend', '<div class="legend">DRONES: open COMMS (J or touch COMMS), then DRONES for your ship or select a friendly carrier under CAPITAL / CONTROL or WINGMEN; launch, recall, or give orders.</div>');
-const DRONE_LIMIT = { fighter: 1, corvette: 6, frigate: 6, capital: 6 };   // class fallbacks; individual ships and enabled ordnance plans override these
+const DRONE_LIMIT = TUNE.droneLimit;   // data: data/db.json tuning.droneLimit (docs/DATABASE.md)   // class fallbacks; individual ships and enabled ordnance plans override these
 const RAM_K = 0.002, RAM_VMAX = 250;      // ram damage = K x closing speed^2 (drone mass 1): ~72 at the 190 m/s top speed (6 rams ~ one Halberd), see docs/FLEET_LOGIC.md
 const SCOUT_RANGE = 2500, SCOUT_SENSE = 1800;
 const DRONE_LABEL = { engage: 'ENGAGE TARGET', all: 'ENGAGE ALL', fighters: 'ATTACK FIGHTERS', protect: 'DEFEND CARRIER', return: 'RETURN', scout: 'SCOUT', ram: 'RAM', orphan: 'NO CONTROLLER' };

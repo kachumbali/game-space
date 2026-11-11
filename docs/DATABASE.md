@@ -51,3 +51,32 @@ See `docs/POWER.md` (step 1 done: `power` fields in the database).
 ## Turret geometry
 
 `tuning.turret.visual` maps S, M and L to a fraction of final in-game hull length, a minimum and maximum diameter in metres, and a barrel-length-to-diameter ratio. An optional turret `visualScale` multiplies the bounded diameter. The independent `targetReferenceDiameter` and `targetReferenceLengthCap`, plus the optional `aimScale`, preserve the existing targeting origin while a visible muzzle remains at its barrel tip. Muzzle launch positions necessarily follow the visual geometry. When a shortened barrel tip would intersect the existing voxel hull, the visual base extends outward until both tips clear it; this sampling does not alter components or hull collision data.
+
+## Where to change what (2026-11-11)
+Everything that decides how a ship, weapon or system performs is in `data/db.json`; `?db=data/db.json` on a local server reloads it without a rebuild.
+`tools/check_central.py` (part of `tools/gate.py`) fails if one of these tables is written into `src/` again.
+
+| To change | Edit in `data/db.json` |
+|---|---|
+| A ship: hull, shields, armour, speed, turn, power, mounts, turrets, stores | `ships.<id>` |
+| A weapon: damage, rate, range, speed, tracking, energy, ammunition, seeker, warhead | `weapons.<id>` |
+| A Mark II-IV variant | `ships.<id>_<n>` / `weapons.<id>_<n>` (`docs/MARKS_SCHEMA.md`) |
+| Armour profiles, mass classes | `armor`, `mass`, `armorThreshCls` |
+| Damage types, hit split, friendly fire, exposed and soft subsystems | `tuning.dmgx`, `hit`, `ff`, `exposed`, `soft` |
+| What a damaged subsystem costs (radar, engine, power, guns, turrets, bay) | `tuning.subsys` |
+| Shields and capacitor regeneration, shield bubble and damage visuals | `tuning.regen`, `tuning.damageVisuals` |
+| Missiles: steering, class scaling, the player's one-hit guard | `tuning.missile` |
+| Turrets and point defence: cueing, spread, depression, line-of-fire check, reserves | `tuning.turret` |
+| Beams, flak, nukes, collisions | `tuning.beam`, `flak`, `nuke`, `crash` |
+| Fighter turn and afterburner rules, SIM flight model | `tuning.fighter`, `afterburner`, `simFlight` |
+| AI: aim, pilot skill table, torpedo salvos, fire discipline near friendlies | `tuning.ai`, `tuning.pilotSkill` |
+| Drones, ordnance and tender restock, roster and ranks | `tuning.drone`, `droneLimit`, `ordnance`, `roster` |
+| Bullfrog spine cycle and hangar | `tuning.bullfrog` |
+| Ship rescale at load | `tuning.scaleTo` |
+| Difficulty levels, score per kill, kill-chain feel, salvage pods, Gauntlet waves and mutators | `tuning.difficulty`, `score`, `feel`, `loot`, `survivalWaves`, `survivalPool`, `mutators` |
+
+Still in code on purpose: mission scripts and their spawn groups (`src/75_mission.js`, `77_retreat.js`), Gauntlet perks (they carry functions), graphics
+quality presets (`src/10_config.js`), audio mix, HUD layout, and ship geometry (`src/3x_ships_*.js`). Known inline numbers that are balance-relevant and
+not yet moved: the AI's aim tolerances and engagement ranges inside `src/70_ai.js`, lock-on timing in `src/60_weapons.js` (`lockUpdate`), and the
+kinetic turret aim tolerance (0.07 rad). Move them when they need tuning.
+

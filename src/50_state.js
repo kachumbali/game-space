@@ -37,7 +37,7 @@ function abTick(s, want, dt) {
 }
 
 const _fwd = new THREE.Vector3(), _simD = new THREE.Vector3(), _simQ = new THREE.Quaternion(), _simI = new THREE.Quaternion();
-const SIMF = { slew: 2.2, capital: 0.35, decel: 1.5 };      // SIM model: velocity-vector slew (rad per sim-second, fighters), capital-ship factor, braking vs accelerating
+const SIMF = TUNE.simFlight;   // data: data/db.json tuning.simFlight (docs/DATABASE.md)      // SIM model: velocity-vector slew (rad per sim-second, fighters), capital-ship factor, braking vs accelerating
 const aiFly = (s, cmd, dt) => (s.fm === 'newton' ? flightModels.newtonAI : s.fm === 'sim' ? flightModels.sim : flightModels.arcade)(s, cmd, dt);
 const flightModels = {
   arcade(s, cmd, dt) {

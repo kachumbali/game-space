@@ -730,7 +730,7 @@ function onTorpLaunch(s) { if (game.mission && s.team === 1) comm('CONTROL', 'To
 function onCompDestroyed() { }
 
 // ---- scoring + overlays -----------------------------------------------------------------------------
-const SCORE = { darter: 100, leaper: 100, spitter: 150, toad: 200, reaver: 200, gulper: 800, bullfrog: 2500, hivecarrier: 5000 };
+const SCORE = TUNE.score;   // data: data/db.json tuning.score (docs/DATABASE.md)
 function anchorName(a) { return (a && a.callsign ? a.callsign.replace(/^CSS\s*/, '') : 'FLAGSHIP'); }
 function missionStats() {
   let score = 0, n = 0;

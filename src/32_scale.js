@@ -29,7 +29,7 @@ for (const id in DB.ships) {
   if (!SHIPS[e.base]) throw new Error(`db mark ${id}: base ship ${e.base} has no model`);
   SHIPS[id] = { ...e, prims: JSON.parse(JSON.stringify(SHIPS[e.base].prims)) };
 }
-const SCALE_TO = { halberd: 128, gulper: 146, hivecarrier: 2500 };    // hive carrier 2.5 km (owner scale ladder: carriers 2-3 km)
+const SCALE_TO = TUNE.scaleTo;   // data: data/db.json tuning.scaleTo (docs/DATABASE.md)    // hive carrier 2.5 km (owner scale ladder: carriers 2-3 km)
 for (const id in SHIPS) { const k = SCALE_TO[SHIPS[id].base || id]; if (k) scaleShip(SHIPS[id], k); }
 // Marker views and combat use the same positions. Dynamic test overrides may
 // still initialise later via initLaunchers without altering the ship schema.

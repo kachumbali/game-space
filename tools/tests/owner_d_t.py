@@ -19,6 +19,7 @@ with Runner() as R:
     check('SW-9 top speed clears an afterburning Merlin by 25 %', r['vmax'] >= 1.25 * r['merlinAB'], f"{r['vmax']} vs {r['merlinAB']:.0f}")
     f = pg.evaluate("""()=>{const g=__game,T=g.THREE,p=g.player;
       const w=g.spawnShip('kestrel',0,new T.Vector3(0,0,0),new T.Vector3(0,0,-1),{});w.group.position.set(0,0,0);w.group.lookAt(0,0,-1);w.group.rotateY(Math.PI);w.group.updateMatrixWorld(true);
+      p.alive=true;p.dying=0;p.structure=p.def.structure;   // the missile checks above may have killed the player; this check is about geometry
       p.group.position.set(18,0,-400);return [g.friendlyInLine(w,800), (p.group.position.set(80,0,-400), g.friendlyInLine(w,800))]}""")
     check('a wingman holds fire with the player 2.6 degrees off its gun line at 400 m, fires at 11 degrees', f == [True, False], f)
     check('no console errors', not [e for e in R.errs if e[0] != 'http'], R.errs[:2])

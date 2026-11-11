@@ -6,7 +6,7 @@ Every step runs with the interpreter that started the gate, so start it from the
   /tmp/gs_venv/bin/python tools/gate.py"""
 import subprocess, sys, os
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-steps = [('build', [sys.executable, 'build.py']), ('opsec', [sys.executable, 'tools/check_opsec.py']), ('db', [sys.executable, 'tools/validate_db.py'])]
+steps = [('build', [sys.executable, 'build.py']), ('opsec', [sys.executable, 'tools/check_opsec.py']), ('db', [sys.executable, 'tools/validate_db.py']), ('central', [sys.executable, 'tools/check_central.py'])]
 if '--quick' not in sys.argv: steps.append(('smoke', [sys.executable, 'tools/tests/smoke_t.py']))
 failed = []
 for name, cmd in steps:

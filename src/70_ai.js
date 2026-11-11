@@ -262,7 +262,7 @@ function aiUpdate(s, dt) {
 }
 
 // ---- pilot skill 1..5 (5 = elite): aim wobble (rad), turn-rate factor, missile-lock speed, missile-warning range ----
-const SKILL = { noise: [0.05, 0.032, 0.018, 0.009, 0.003], turn: [0.8, 0.9, 1, 1.08, 1.16], react: [0.35, 0.45, 0.55, 0.7, 0.9], evade: [300, 420, 560, 650, 720] };
+const SKILL = TUNE.pilotSkill;   // data: data/db.json tuning.pilotSkill (docs/DATABASE.md)
 const skillV = (s, k) => SKILL[k][clamp(Math.round(s.skill || 3), 1, 5) - 1];
 const _an = new THREE.Vector3();
 function aimNoise(s, dist) {          // slowly wandering aim offset: low-skill pilots lead badly and wander off the target

@@ -5,12 +5,7 @@
 //  Test seam: globalThis.__bf.
 // ======================================================================
 // weapons defined in data/db.json (merged into DB.weapons)
-const BF = {
-  spineDelay: 15, charge: 6, freeze: 1.5, cd: 30, fizzleCd: 8, lockHold: 3, range: 3200, bandIn: 2300, bandOut: 2400, bandMin: 1200, bandFar: 1500,
-  hangarInterval: 4.5, hangarCap: 12, emergencyInterval: 1.5, spoolT: 20, corridorHalf: 0.12,
-  manifest: { D: 6, L: 5, S: 2, T: 2, R: 3 }, kind: { D: 'darter', L: 'leaper', S: 'spitter', T: 'toad', R: 'reaver' },
-  seq: ['D', 'L', 'D', 'R', 'L', 'D', 'T', 'L', 'S', 'R'],
-};
+const BF = TUNE.bullfrog;   // data: data/db.json tuning.bullfrog (docs/DATABASE.md)
 const _bv = new THREE.Vector3(), _bw = new THREE.Vector3(), _bf = new THREE.Vector3(), _bu = new THREE.Vector3(), _br = new THREE.Vector3(), _bfm = new THREE.Vector3(), _be = new THREE.Vector3();
 const bfLog = [];      // shot / launch / event log for tests
 const isBullfrog = s => s.ai && s.ai.role === 'lancer';

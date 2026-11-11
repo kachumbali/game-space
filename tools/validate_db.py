@@ -187,8 +187,8 @@ W, S, A = db['weapons'], db['ships'], db['armor']
 S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only when mark errors were reported above)
 
 # ---- tuning: every section the game reads must exist ----
-for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret'):
-    if not isinstance(db.get('tuning', {}).get(k), dict): err(f'tuning.{k} missing')
+for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret', 'subsys', 'simFlight', 'pilotSkill', 'droneLimit', 'bullfrog', 'scaleTo', 'score', 'feel', 'loot', 'difficulty', 'mutators', 'survivalWaves', 'survivalPool', 'damageVisuals'):
+    if not isinstance(db.get('tuning', {}).get(k), (dict, list)): err(f'tuning.{k} missing')
 drone = db.get('tuning', {}).get('drone')
 if not isinstance(drone, dict): err('tuning.drone must be an object'); drone = {}
 leash = drone.get('leashFighters')

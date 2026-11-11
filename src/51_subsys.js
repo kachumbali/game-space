@@ -5,15 +5,7 @@
 //  (lockUpdate, abTick, fireMount, updateTurrets, updateShieldsAndFx, tenderTick), so AI ships obey them exactly like the player.
 //  Older continuous effects (engine speed/turn, shield cap/regen, powerMul, gun gating) stay in 50_state / 65_combat and are listed in the doc.
 // ======================================================================
-const SUBSYS = {
-  radar:    { lockRange: [1, 0.65, 0.35], lockTime: [1, 1.5, 2.6], sensor: [1, 0.6, 0] },   // sensor = share of the 6 km radar range; 0 = scope offline (RF seekers need a live radar)
-  engine:   { abPool: [1, 0.7, 0.35], abBoost: [1, 0.75, 0.4], abRegen: [1, 0.7, 0.4] },     // afterburner pool, boost (top speed and accel gain), refill rate
-  power:    { energyCap: [1, 0.8, 0.6] },                                                    // capacitor size (regen and shield regen: powerMul; destroyed reactor = ship lost)
-  radiator: { energyRegen: [1, 0.85, 0.65] },                                                // heat-limited capacitor refill
-  gun:      { cd: [1, 1.35, 1.35] },                                                         // per mount: cooldown multiplier (destroyed gates the mount)
-  turret:   { cd: [1, 1.4, 1.4], track: [1, 0.6, 0.6] },                                     // per turret: cooldown and slew-rate multipliers (destroyed = dead turret)
-  bay:      { service: [1, 0.5, 0] },                                                        // tender rearm rate and dock clearance (0 = no docking)
-};
+const SUBSYS = TUNE.subsys;   // data: data/db.json tuning.subsys (docs/DATABASE.md)
 const SENSOR_MAX = 6000;                          // longest radar range setting (RADAR_RANGES), the reach a healthy scope shows
 const subGrade = (arr, m) => { const i = Math.min(1, Math.floor(m)); return arr[i] + (arr[i + 1] - arr[i]) * (m - i); };
 function subMean(s, role) {

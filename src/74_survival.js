@@ -7,24 +7,13 @@
 //  perks and pods, wingmen simply fly; help line = the legend under the key map (00_head.html).
 //  Part 74 calls other parts only at run time (menuShell, spawnShip, comm ...), so there are no load-time dependencies on later parts.
 // ======================================================================
-const DIFFS = {
-  easy:   { name: 'EASY',   skill: -1, count: 0.7,  take: 0.7,  score: 0.8,  blurb: 'fewer, softer enemies; you take 30% less damage' },
-  normal: { name: 'NORMAL', skill: 0,  count: 1,    take: 1,    score: 1,    blurb: 'the designed tuning' },
-  hard:   { name: 'HARD',   skill: 1,  count: 1.25, take: 1.2,  score: 1.25, blurb: 'more and better pilots; you take 20% more damage' },
-  ace:    { name: 'ACE',    skill: 2,  count: 1.5,  take: 1.4,  score: 1.6,  blurb: 'a crowd of aces; you take 40% more damage' },
-};
+const DIFFS = TUNE.difficulty;   // data: data/db.json tuning.difficulty (docs/DATABASE.md)
 let diffName = 'normal';
 try { const d = localStorage.getItem('gs_diff'); if (DIFFS[d]) diffName = d; } catch (e) { /* storage unavailable */ }
 const diffCfg = () => DIFFS[diffName] || DIFFS.normal;
 function diffSet(n) { if (!DIFFS[n]) return; diffName = n; try { localStorage.setItem('gs_diff', n); } catch (e) { /* ignore */ } }
 
-const MUTATORS = {
-  glass:  { name: 'GLASS',   score: 1.3, desc: 'every ship has about half the hull and shields, you take +50% damage' },
-  swarm:  { name: 'SWARM',   score: 1.2, desc: '1.8x as many enemies, each 40% softer' },
-  aces:   { name: 'ACES',    score: 1.5, desc: 'every enemy pilot is skill 5' },
-  scarce: { name: 'SCARCE',  score: 1.3, desc: 'half your missiles and flares, 40% fewer pods' },
-  newton: { name: 'NEWTON',  score: 1.6, desc: 'Newtonian flight for everyone' },
-};
+const MUTATORS = TUNE.mutators;   // data: data/db.json tuning.mutators (docs/DATABASE.md)
 const SV_ACE_NAMES = ['CROAKER', 'MIREWARDEN', 'GLIMMERBACK', 'SKULLFLOP', 'BLIGHTTONGUE', 'NIGHTHOP', 'VEXFANG', 'DREDGESPAWN', 'SLUDGEMAW', 'THORNTOAD'];
 const SV_TAUNTS = ['Hss. Fresh meat for the brood.', 'Your wing will sing when it burns.', 'Little flyer. Little light. Mine.', 'The pond remembers every hull you broke.', 'Run. It makes the hunt sweeter.', 'I have eaten better pilots than you.'];
 
@@ -171,8 +160,8 @@ killHooks.push((s, mine) => {
 });
 
 // ---- the wave director ------------------------------------------------------------------------------------------
-const SV_TUNE = { b0: 1.6, b1: 1.1, s0: 1, sStep: 3 };       // wave budget = (b0 + b1 n) x difficulty x swarm (fighter units); pilot skill = s0 + n/sStep + difficulty. First guess; see docs/FUN_UPDATE.md for what was measured
-const SV_POOL = [['darter', 1.0, 1], ['leaper', 1.2, 1], ['spitter', 1.8, 2], ['toad', 2.0, 3], ['reaver', 2.6, 4]];   // kind, budget cost, first wave
+const SV_TUNE = TUNE.survivalWaves;   // data: data/db.json tuning.survivalWaves (docs/DATABASE.md)       // wave budget = (b0 + b1 n) x difficulty x swarm (fighter units); pilot skill = s0 + n/sStep + difficulty. First guess; see docs/FUN_UPDATE.md for what was measured
+const SV_POOL = TUNE.survivalPool;   // data: data/db.json tuning.survivalPool (docs/DATABASE.md)   // kind, budget cost, first wave
 function svCompose(n) {
   const R = sv.rng, D = DIFFS[sv.cfg.diff], M = sv.mut, pick = a => a[Math.floor(R() * a.length)];
   const cm = D.count * (M.swarm ? 1.8 : 1);
