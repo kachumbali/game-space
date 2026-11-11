@@ -41,4 +41,40 @@ Questions for the owner:
 
 ## Decisions log
 
-No new design decisions recorded yet. Record the owner's answer, alternatives considered, affected hulls and weapons, and whether the decision is visual only or needs gameplay/balance work. Preserve existing weapon values and ship behavior until an implementation is requested and the implications are reviewed.
+2026-11-11: owner chose off-white and grey with restrained orange for the shared human-fleet palette. This is a visual direction; it does not change weapon values or gameplay. Record further owner decisions, alternatives, and affected hulls and weapons here. Preserve existing weapon values and ship behavior until an implementation is requested and the implications are reviewed.
+
+## Proposed common human-fleet appearance — 2026-11-11
+
+**Status: draft for discussion.** The owner supplied six reference images showing compact industrial craft, a boxy escort and larger naval-style ships. Use the references to discuss construction, scale and finish; create original silhouettes and details. The owner selected **off-white and grey with restrained orange** as the base palette. No other decision in this section is final, and the concept illustrations are not 3D model specifications or approved loadouts.
+
+A preliminary four-panel concept board (interceptor, multirole fighter, bomber, escort) was generated with OpenAI image generation from five of the owner-supplied references on 2026-11-11. It is a discussion sketch, not a technical blueprint: its apparent turret count, armament, proportions and panel detail do not establish in-game specs. The local preview is `docs/img/concepts/human_fleet_concept.png`; images in `docs/img/` are git-ignored, so that preview is not included in the branch.
+
+### Shared construction language
+
+- **A strong central hull:** a recognizable spine or pressure hull with blocky, bevelled armour sections and a clear front and rear. The hull should look assembled and maintainable, with access points and seams that follow real modules.
+- **Visible structure:** drive pods, wings, weapon housings and other major masses attach through substantial spars, shoulders or pylons. Avoid floating pods and ornamental detail that competes with the ship's role.
+- **Drives as a family:** exposed or partly armoured engine modules with dark, recessed nozzle interiors and a consistent mounting language. Their size, number and location remain specific to each ship and its gameplay components.
+- **Practical surface treatment:** off-white and light-to-medium grey armour; graphite mechanisms, gun housings and heat-stained exhaust areas; restrained orange for identification or maintenance panels. Larger orange patches can distinguish specialist or civilian craft if the owner wants them, but orange does not have to denote a particular gameplay function.
+- **Weapons with physical homes:** fixed guns have visible barrels or emitters; turrets have a seat, a traverse envelope and a plausible field of fire; missiles and torpedoes have visible rails, bay doors or cassette mouths. Shape and quantity must be reconciled with the real `mounts`, `turrets`, `hardpoints` and `stores` before the model is treated as correct. Do not imply that a concept-board detail already exists in data.
+- **Texture serves the shape:** use a few major panels, contrasting joints, vents and service lines first. Fine scratches, labels and tiny greebles can enhance close views but must not be necessary to identify the ship in combat.
+
+### A family, with distinct roles
+
+| Hull/class | Proposed silhouette and scale cues | Existing-data constraint to investigate before building |
+|---|---|---|
+| Merlin, light interceptor | Narrow, compact pressure hull and tightly integrated twin engines; a simple profile reads quickly. Keep the cockpit and two forward guns apparent. | Two MK-20 guns and one S-class station carrying two IR missiles. Check visible station and clear muzzle placement. |
+| Kestrel, multirole fighter | Wider centre body and clearly attached paired drive pods, with a recognizable single-seat cockpit and room for several visibly different weapon mounts. | Its mixed MK-20/MD-9/HE guns and legacy torpedo are current data. Their layout and the torpedo's future remain open decisions. |
+| Falchion, two-seat heavy fighter | Longer, broader and visibly heavier than the Kestrel, with a readable two-person crew volume, larger engine structure and rooted defensive turrets. It should not simply be a scaled-up Kestrel. | Four fixed guns, three PD mounts, two drones and the current missile/torpedo fit all need credible placements and firing arcs. |
+| Bittern, torpedo bomber | A broad load-bearing body with the payload cassette or bay as a primary mass; a protected cockpit and substantial engines make its strike role obvious. | Twelve torpedoes are in the default fit. Establish their storage and launch arrangement at the current 22 m nominal length before claiming it fits; review the two PD positions and approach/release arcs. |
+| Halberd, escort corvette | A compact boxy warship with an elongated central structure, recessed/armoured bridge, connected engine raft and readable turret seats. Small hatches, windows and turrets establish a larger scale than the fighters. | Respect the existing nominal dimensions, collision extents, weapons, hangar and subsystem positions; inspect live and in the yard before deciding what needs to move. |
+| Frigate and larger ships | Extend the same modular engineering into longer major sections, hangar/service zones and multiple weapon stations. Use smaller windows and doors to show scale, with a distinct silhouette for each role. | Use actual class dimensions, capabilities and the project's size exceptions; reference-image naval towers, numbers and markings are inspiration, not required shapes or lore. |
+
+### Before implementation
+
+1. Agree on this common language and select a first hull for a bounded pilot pass. Keep the existing ship sizes, roles, weapon values and gameplay as the baseline until the owner decides otherwise.
+2. For that hull, prepare top, side and three-quarter sketches or renders with the proposed modules, cockpit, engines, major subsystems, weapons and ordnance drawn explicitly. Show current versus proposed, and identify which shapes are decorative versus functional. Confirm the loadout and torpedo decision before treating the drawing as final.
+3. Review the proposed model against `data/db.json`, `docs/ORDNANCE_MANIFEST.md`, shipyard markers, collision extents and muzzle/launch clearances. Any required changes to weapon positions, launch points, stores, hit zones or bounds must be listed explicitly and checked for gameplay effects; do not silently change them to match the illustration.
+4. Only then implement the approved pilot hull on this branch. Inspect top, side, front and three-quarter views in the yard and in play, check subsystem/weapon markers and structural connections, run relevant tests and the full gate, and measure voxel build/render costs. An iPad-sized browser view is not a physical iPad playtest.
+5. Use what the pilot teaches us to refine the family rules before extending them to the other human fighters, corvette and larger ships. FROGG keeps its own established visual language and receives a separate consistency review.
+
+**Next decisions:** whether this is the right amount of industrial detail, which reference has the closest overall proportions for the first hull, and which hull to use as the pilot. The torpedo policy remains undecided.
