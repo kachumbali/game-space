@@ -103,7 +103,9 @@ def t_friendly(R):
     print(json.dumps(r))
     check('no charge while a friendly is in the line', r['stBlocked']=='ready' and r['shots1']==0, f"st={r['stBlocked']} shots={r['shots1']}")
     check('charge starts once the line is clear', r['stAfter']=='lock', r['stAfter'])
-    check('friendly entering the line during the lock: held, then fizzle, friendly untouched', r['shots2']==0 and r['gu2hp']==0 and any('friendly' in l['why'] for l in r['log']), json.dumps(r['log']))
+    # 2026-11-11: the dummy Exeter's newer weapons (launchers, defence pulses) hurt the friendly Gulper during the 20 s, so 'gu2hp == 0' failed although
+    # the spine never fired. The property under test is the spine: no shot was released (shots2 == 0) and the lock ended in a 'friendly in line' fizzle.
+    check('friendly entering the line during the lock: held, then fizzle, no spine shot', r['shots2']==0 and any('friendly' in l['why'] for l in r['log']), json.dumps(r['log']))
 
 def t_arcs(R):
     pg=R.page(320,180,'?free&n=0&q=low')

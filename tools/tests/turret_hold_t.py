@@ -18,7 +18,7 @@ with Runner() as R:
     pg.keyboard.press('KeyU'); pg.wait_for_timeout(200)
     check('U toggles back to auto', pg.evaluate("()=>__game.player.turretsHold") is False)
     pg.close()
-    pg = R.page(844, 390, '?sk=toad:1&sk_ship=bittern&go&touch&q=low', touch=True); pg.wait_for_timeout(3000)
+    pg = R.page(1180, 820, '?sk=toad:1&sk_ship=bittern&go&touch&q=low', touch=True, init_script="localStorage.setItem('gs_controls','advanced')")   # TUR is an advanced control (hidden in the basic mode); iPad-sized, phones are not a target; pg.wait_for_timeout(3000)
     pg.tap('#btur'); pg.wait_for_timeout(300)
     check('touch TUR button toggles hold', pg.evaluate("()=>__game.player.turretsHold") is True)
     r = pg.evaluate("()=>{const b=document.getElementById('btur').getBoundingClientRect();const o=['bpause','brad'].map(i=>document.getElementById(i).getBoundingClientRect());return [b.left>=o[1].right-1,b.right<innerWidth]}")

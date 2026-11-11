@@ -477,6 +477,7 @@ function prewarmPrologueVoxels(M) {
 }
 function startMission(M, seg, sceneDone = false, autoLaunch = false) {
   if (!seg && !sceneDone && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch)); return; }
+  if (!seg) prologueRetryRestore(M);                  // Prologue: a re-flown sortie starts with the wing it had at its first launch
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
   if (cine) cancelTransit();
   plogReset(M.title);

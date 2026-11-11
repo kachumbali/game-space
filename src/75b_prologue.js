@@ -6,7 +6,7 @@ let prologueProgress = (() => {
 })();
 function prologueSave() { try { localStorage.setItem(PROLOGUE_KEY, JSON.stringify(prologueProgress)); } catch (_) {} }
 let prologueSession = {sorties: 0, wins: 0, kills: 0, seconds: 0};
-function prologueReset() { prologueProgress = {wins: {}}; prologueSession = {sorties: 0, wins: 0, kills: 0, seconds: 0}; prologueSave(); }
+function prologueReset() { prologueProgress = {wins: {}}; prologueSession = {sorties: 0, wins: 0, kills: 0, seconds: 0}; prologueSave(); try { localStorage.removeItem('gs_prologue_snap'); } catch (_) {} }
 function prologueNextIndex() { return PROLOGUE_MISSIONS.findIndex(m => !prologueProgress.wins[m.id]); }
 function prologueComplete() { return prologueNextIndex() < 0; }
 function prologueUnlocked() { return !!prologueProgress.wins.p04; }
@@ -15,8 +15,24 @@ function prologueSessionRecord(M, S, result) {
   S.flowCounted = true; prologueSession.sorties++; if (result === 'win') prologueSession.wins++;
   prologueSession.kills += kills; prologueSession.seconds += Math.max(0, S.t || 0);
 }
+// Owner decision 2026-11-11 (option B): in the Prologue a pilot lost in a sortie that is flown again comes back; losses only become permanent
+// when the player moves on (wins the mission, or starts a different one). The wing as it stood at launch is kept across reloads and menus.
+const PROLOGUE_SNAP_KEY = 'gs_prologue_snap';
+function prologueRetryRestore(M) {
+  if (!PROLOGUE_MISSIONS.includes(M)) return;
+  try {
+    const snap = JSON.parse(localStorage.getItem(PROLOGUE_SNAP_KEY) || 'null');
+    if (snap && snap.id === M.id) {
+      if (snap.crew) { CREW = snap.crew; saveCrew(); }
+      if (rosterEnabled() && snap.roster) { rosterState = snap.roster; rosterSave(); }
+    }
+    localStorage.setItem(PROLOGUE_SNAP_KEY, JSON.stringify({ id: M.id, crew: CREW, roster: rosterEnabled() ? rosterLoad() : null }));
+  } catch (_) {}
+}
+function prologueRetryClear(M) { try { const snap = JSON.parse(localStorage.getItem(PROLOGUE_SNAP_KEY) || 'null'); if (snap && snap.id === M.id) localStorage.removeItem(PROLOGUE_SNAP_KEY); } catch (_) {} }
 function prologueRecord(M, S) {
   prologueSessionRecord(M, S, S.result);
+  if (PROLOGUE_MISSIONS.includes(M) && S.result === 'win') prologueRetryClear(M);
   if (!PROLOGUE_MISSIONS.includes(M) || S.result !== 'win' || prologueProgress.wins[M.id]) return;
   prologueProgress.wins[M.id] = {kills, seconds: Math.max(0, S.t || 0)}; prologueSave();
 }

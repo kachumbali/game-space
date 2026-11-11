@@ -142,7 +142,10 @@ with Runner() as R:
           g.state='play'; g.dockTry(); const docked=!!g.dock; if(g.dock) g.dock=null;
           H.kill(r); H.kill(t); return {got, docked}; }""", st)
         print(' bay', st, bay[st])
-    check('bay st0: rearm (hovering trickle 0.25 missiles/s) and docking clearance', abs(bay[0]['got'] - 0.25) < 1e-6 and bay[0]['docked'], bay[0])
+    # 2026-11-11: the ordnance restock model (tuning.ordnance.restock, 2026-11-02) replaced the fixed 0.25 missiles/s trickle with service points:
+    # hovering gives proximityRate points per second and an IR missile costs points.ir, so the expected value is read from the db.
+    exp = pg.evaluate("()=>{const c=__game.TUNE.ordnance; return c&&c.enabled ? c.restock.proximityRate/c.restock.points.ir : 0.25}")
+    check(f'bay st0: rearm (hovering, {exp} IR missiles/s from the restock table) and docking clearance', abs(bay[0]['got'] - exp) < 1e-6 and bay[0]['docked'], bay[0])
     check('bay st1: rearm halves, docking still granted', near(bay[1]['got'] / bay[0]['got'], 0.45, 0.55) and bay[1]['docked'], bay[1])
     check('bay st2: no rearm, docking refused', bay[2]['got'] == 0 and not bay[2]['docked'], bay[2])
 

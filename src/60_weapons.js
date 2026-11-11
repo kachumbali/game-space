@@ -709,11 +709,24 @@ function updateTurrets(s, dt) {
       const beamT = T.w.kind === 'beam';
       const targetValid = T.tgt && T.tgt.alive && !T.tgt.dying && T.tgt.group && turretAllowsTarget(T, T.tgt) && T.tgt.group.position.distanceTo(tp) < T.w.range;
       const retargetLocked = T.w.retarget && time - (T.targetAt ?? -99) < T.w.retarget;
-      if (beamT && targetValid && (retargetLocked || !T.w.retarget)) best = T.tgt;   // beams retain their focus; LS-8s also need time to re-acquire a new hull
-      else if (!beamT && !T.w.noPD) for (const m of hostileMissiles) {   // noPD (acid cannon) never shoots missiles                 // missiles first
-        const d = m.pos.distanceTo(tp);
-        if (d < T.w.range * 0.75 && (m.target === s || d < 500) && d < bs) { bs = d; best = m; }
+      // Point defence (reworked 2026-11-11, owner: "look at PD logic"). Missiles come first for every PD-capable turret: kinetic turrets and
+      // beams flagged `pd` (the P-4 defence pulse could not shoot missiles at all). A turret is cued onto an inbound missile from pdCue x its
+      // range, so it is already pointing when the missile enters range (it used to start slewing at 0.75 x range, about 1 s before impact);
+      // it picks by time to impact, not distance, only inside its own hemisphere, and spreads over a salvo instead of all turrets taking the nearest.
+      if (!T.w.noPD && (!beamT || T.w.pd)) {
+        const cue = T.w.range * TUNE.turret.pdCue;
+        for (const m of hostileMissiles) {
+          const d = m.pos.distanceTo(tp);
+          if (d > cue || !(m.target === s || d < 500)) continue;
+          _w3.copy(m.pos).sub(tp);
+          if (T.def.side && d > 1 && _w4.copy(_w3).applyQuaternion(_wq.copy(sg.quaternion).invert()).y * T.def.side < -TUNE.turret.pdDepress * d) continue;
+          const closing = Math.max(60, -_w4.copy(m.vel).sub(s.vel).dot(_w3) / Math.max(d, 1));
+          const score = d / closing * (1 + TUNE.turret.pdSpread * turretTargetLoad(s, m, T) / Math.max(1, m.hp));
+          if (score < bs) { bs = score; best = m; }
+        }
       }
+      if (best) T.thinkT = TUNE.turret.pdThink;                                    // stay on the missile problem: re-evaluate quickly
+      else if (beamT && targetValid && (retargetLocked || !T.w.retarget)) best = T.tgt;   // beams retain their focus; LS-8s also need time to re-acquire a new hull
       if (!best) {
         bs = 1e9;
         for (const e of ships) {
@@ -741,7 +754,10 @@ function updateTurrets(s, dt) {
     _w3.copy(_w2).sub(tp).normalize();
     // desired orientation in the ship's local space
     const ld = _w3.clone().applyQuaternion(_wq.copy(sg.quaternion).invert());
-    const sideOk = ld.y * T.def.side > -0.05;
+    // A dorsal turret could not follow anything below its own deck plane (-0.05). A missile flying at the hull's centre line drops below that
+    // plane a few hundred metres out, exactly when the turret should fire, so the turret froze (2026-11-11). Against missiles a mount can
+    // depress by pdDepress (sine of the angle); the ship-target rule is unchanged.
+    const sideOk = ld.y * T.def.side > -(tg.group ? 0.05 : TUNE.turret.pdDepress);
     if (!sideOk) continue;
     const up = new THREE.Vector3(0, T.def.side, 0);
     const mat = new THREE.Matrix4().lookAt(new THREE.Vector3(), ld, up);   // Matrix4.lookAt(eye,target): the mesh -Z axis points at target = along ld
@@ -753,7 +769,22 @@ function updateTurrets(s, dt) {
     // aim error
     const fwd = new THREE.Vector3(0, 0, -1).applyQuaternion(T.head.quaternion).applyQuaternion(T.group.quaternion).applyQuaternion(sg.quaternion);
     const err = fwd.angleTo(_w3);
-    if (T.w.kind === 'beam') {
+    if (T.w.kind === 'beam' && !tg.group) {                                       // PD beam on a missile: acquire (charge + focus time), then each pulse that connects burns it
+      const tol = clamp(2.5 / Math.max(dist, 1), 0.006, 0.05);
+      const relVel = _w4.copy(tvel).sub(s.vel), radial = relVel.dot(_w3);
+      const angularSpeed = relVel.addScaledVector(_w3, -radial).length() / Math.max(dist, 1);
+      const skill = clamp(Math.round(s.skill ?? 3), 1, 5);
+      const hitChance = clamp(1 - angularSpeed * TUNE.turret.beamAngularError * (6 - skill) / tol, TUNE.turret.beamMinHit, 1) * TUNE.turret.pdBeamHit;
+      if (err < tol && T.cool <= 0 && dist < T.w.range && s.energy >= T.w.energy + s.energyMax * TUNE.turret.reserveMsl && time - (T.targetAt ?? -99) >= (T.w.charge || 0) + (T.w.acq || 0)) {
+        const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
+        T.cool = burstCooldown(T, T.w, T.w.cd * tcd / (0.6 + 0.4 * powerMul(s))); s.energy -= T.w.energy;
+        T.fired++; T.lastErr = err;
+        const hit = Math.random() < hitChance;
+        beamNote(T, s, T.w, { obj: T.head, local: mLocal }, { world: hit ? tpos.clone() : mp.clone().addScaledVector(fwd, T.w.range) }, true, 1, false, 1);
+        if (hit) { tg.hp -= T.w.dmgMsl ?? T.w.dmg; sparksAt(tpos, 4, 5); if (tg.hp <= 0) killMissile(tg, tg.w.torp ? true : false); }
+        if (Math.random() < 0.3) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
+      }
+    } else if (T.w.kind === 'beam') {
       const tol = clamp(0.8 * (tg.def ? tg.def.radius : 5) / Math.max(dist, 1), 0.004, 0.05);
       const relVel = _w4.copy(tvel).sub(s.vel);
       const radial = relVel.dot(_w3);
