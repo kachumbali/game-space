@@ -576,7 +576,7 @@ SHIPS.tender = {
 // ======================================================================
 // ---- FALCHION: two-seat heavy fighter (19.5 m), 2026-11-12 rebuild after the owner's concept (heavy two-seater with a dorsal turret):
 // long armoured centre body with a tandem canopy, four forward guns (two MK-20 in the nose, two MD-9 on the wing-root booms), one round drive pod per
-// side on a box spar, swept wings carrying the missile rails, three PD-15 seats (two dorsal, one ventral). Data unchanged in data/db.json.
+// side on a box spar, swept wings carrying the missile rails, two PD-15 seats (one dorsal, one ventral). Data unchanged in data/db.json.
 const falSeat = (z, y, dy) => {
   const D = turretDia({def:{length:19.5}}, {cls:'S'});
   return [tap([0, y - dy * D * 0.25, z], D * 0.62, [D * 0.62, D * 0.22], [D * 0.62, D * 0.22], CF.g3, { sh: 'h' })];
@@ -616,8 +616,9 @@ SHIPS.falchion = {
     ...cfPod(4.85, -0.05, 4.4, 10.2, 1.4, 1.65, [[4.0, 0.6, 0.55], [5.7, -0.7, 0.5]], 0.3),
     tap([4.85, 2.25, 8.2], 1.2, [1.1, 0.1], [0.55, 0.07], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
     tap([4.85, 3.35, 8.85], 0.12, [0.55, 0.08], [0.5, 0.07], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
-    // PD-15 seats: dorsal forward and aft, ventral mid
-    ...falSeat(1.2, 1.55, 1), ...falSeat(6.8, 1.65, 1), ...falSeat(3.0, -1.55, -1),
+    // PD-15 seats: one dorsal behind the canopy, one ventral (owner 2026-11-12: one turret on top)
+    ...falSeat(1.2, 1.55, 1), ...falSeat(3.0, -1.55, -1),
+    tap([0, 0.95, 6.6], 1.3, [0.75, 0.22], [0.55, 0.18], CF.g1, { sh: 'h' }),
     // lights, antenna, markings
     ell([-7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0xff3030, { glow: true, noMirror: true }),
     ell([7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0x30ff60, { glow: true, noMirror: true }),
