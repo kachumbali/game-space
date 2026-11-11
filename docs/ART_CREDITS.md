@@ -18,3 +18,14 @@ Before commercial release, the owner should confirm that the selected generation
 tool's then-current output terms meet the intended distribution use. The images
 are part of the game repository, unlike the development-only reference art noted
 elsewhere in `docs/CREDITS.md`.
+
+## Prologue ready room — 2026-11-11
+
+| Asset | Tool | Prompted purpose | File |
+|---|---|---|---|
+| HALBERD ready room | OpenAI built-in image generation | Original empty compact corvette ready room in the approved Direction C illustrated-comic style, based on the section 4 prompt in `docs/DESIGN_PROLOGUE_PRESENTATION.md` | `assets/scenes/shared/bg_ready_room.webp` |
+
+The generated master was 1672 × 941 PNG. It was centre-cropped and downscaled to
+1280 × 720 WebP (79,820 bytes, quality 84). The prompt excluded text, logos,
+watermarks, real people, and existing franchise characters or designs. No seed
+or more specific model identifier was exposed by the built-in tool.

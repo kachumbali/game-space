@@ -1,0 +1,55 @@
+{
+  "id": "p01_after_win",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 1,
+      "do": "say",
+      "who": "vance",
+      "text": "The canisters say Project Nursery / Oasis-9.",
+      "cps": 28
+    },
+    {
+      "t": 8,
+      "do": "say",
+      "who": "vance",
+      "text": "Take a moment. We move when ready.",
+      "cps": 28
+    },
+    {
+      "t": 15,
+      "do": "say",
+      "who": "hawk",
+      "text": "That shuttle made us work for it.",
+      "cps": 28
+    },
+    {
+      "t": 22,
+      "do": "say",
+      "who": "vance",
+      "text": "VAC legal has sealed the report.",
+      "cps": 28
+    },
+    {
+      "t": 29,
+      "do": "end"
+    }
+  ]
+}

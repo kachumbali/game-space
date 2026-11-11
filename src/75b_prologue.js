@@ -1,5 +1,8 @@
 // Prologue progress survives a reload; only victories mark a mission complete.
 const PROLOGUE_KEY = 'gs_prologue_progress';
+const PROLOGUE_OPENING_KEY = 'gs_prologue_opening_seen';
+function prologueOpeningSeen() { try { return localStorage.getItem(PROLOGUE_OPENING_KEY)==='1'; } catch (_) { return false; } }
+function prologueOpeningMark() { try { localStorage.setItem(PROLOGUE_OPENING_KEY,'1'); } catch (_) {} }
 let prologueProgress = (() => {
   try { const p = JSON.parse(localStorage.getItem(PROLOGUE_KEY) || '{}'); return {wins: p.wins && typeof p.wins === 'object' ? p.wins : {}}; }
   catch (_) { return {wins: {}}; }

@@ -1,0 +1,55 @@
+{
+  "id": "p04_after_win",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 1,
+      "do": "say",
+      "who": "vance",
+      "text": "The contacts are designated FROGG.",
+      "cps": 28
+    },
+    {
+      "t": 8,
+      "do": "say",
+      "who": "vance",
+      "text": "Keep each other close out there.",
+      "cps": 28
+    },
+    {
+      "t": 15,
+      "do": "say",
+      "who": "sparrow",
+      "text": "Those ships were alive, weren’t they?",
+      "cps": 28
+    },
+    {
+      "t": 22,
+      "do": "say",
+      "who": "vance",
+      "text": "HALBERD falls back to the relay defence.",
+      "cps": 28
+    },
+    {
+      "t": 29,
+      "do": "end"
+    }
+  ]
+}
