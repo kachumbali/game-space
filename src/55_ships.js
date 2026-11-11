@@ -27,7 +27,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
     m.material.onBeforeCompile = shader => {
       shader.uniforms.impactDir=m.material.userData.impactDir;
       shader.vertexShader=shader.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vShieldPos;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvShieldPos = position;');
-      shader.fragmentShader=shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vShieldPos;\nuniform vec3 impactDir;').replace('#include <dithering_fragment>', 'gl_FragColor.a *= smoothstep(0.94, 0.995, dot(normalize(vShieldPos), normalize(impactDir)));\n#include <dithering_fragment>');
+      shader.fragmentShader=shader.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vShieldPos;\nuniform vec3 impactDir;\n#define SHIELD_GLOW '+TUNE.damageVisuals.shieldGlow.toFixed(3)+'\n#define SHIELD_EDGE '+TUNE.damageVisuals.shieldPatchEdge.toFixed(3)).replace('#include <dithering_fragment>', 'gl_FragColor.a *= SHIELD_GLOW + (1.0 - SHIELD_GLOW) * smoothstep(SHIELD_EDGE, 0.98, dot(normalize(vShieldPos), normalize(impactDir)));\n#include <dithering_fragment>');
     };
     s.group.add(m); s.shieldFx = m;
   }

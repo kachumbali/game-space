@@ -10,7 +10,7 @@ function shieldFlash(s, lp, facing) {
   s.shieldFx.material.userData.impactDir.value.copy(lp).divide(s.shieldFx.scale).normalize();
   const pct = s.def.shield[facing] ? s.shield[facing] / s.def.shield[facing] : 0;
   s.shieldFx.material.color.setRGB(0.25 + 0.75 * (1 - pct), 0.6 - 0.3 * (1 - pct), 0.9 - 0.7 * (1 - pct));
-  s.shieldFx.material.opacity = 0.2;
+  s.shieldFx.material.opacity = TUNE.damageVisuals.shieldFlash;   // owner 2026-11-11: after the bubble refit the flash was a faint 20-degree spot and read as "no shields"
 }
 function compState(c) { const r = Math.max(0, c.hp) / c.max; return r <= 0 ? 2 : r <= 0.5 ? 1 : 0; }
 
