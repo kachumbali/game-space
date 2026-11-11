@@ -170,122 +170,148 @@ const fRef = o => {
   return P;
 };
 
-// ---- FROGG fighters, 2026-11-12 rebuild (owner: "they all look too similar"): one family, one outline per role. Shared: graphite
-// carapace, bone fangs and ridges, organic rounded masses, glowing pores for weapons. Each class has its own carapace tint and accent
-// glow so it reads at combat distance: Darter cyan dart, Leaper amber frog on folded legs, Spitter green acid sac, Toad amber egg-laying
-// ray, Reaver red armoured brute with hooked mandibles. Main shells carry noDetail so the automatic scale greebles do not blur the outline.
-// Data (mounts, engines, comps, launch) is unchanged in data/db.json; these prims are built around those positions.
-const FG = {
-  darter: { b: 0x26313b, b2: 0x34424e, belly: 0x4a5862, acc: 0x35e8ff },
-  leaper: { b: 0x323d2c, b2: 0x415036, belly: 0x6b7352, acc: 0xffb040, bone: 0xd9cfa6 },
-  spitter: { b: 0x283126, b2: 0x364233, sac: 0x4f7f22, acc: 0x9dff3a },
-  toad: { b: 0x3d3428, b2: 0x4d4130, belly: 0x6e5a3a, egg: 0xc9a868, acc: 0xffa030 },
-  reaver: { b: 0x1c1f22, b2: 0x2a2e32, pl: 0x4a2622, acc: 0xff4a30 },
-};
-const ND = { noDetail: true };
-const fgGlow = (c, r, col) => ell(c, [r, r, r * 0.35], col, { glow: true, glowF: 1.4 });
-// a round nacelle ending at the database engine position (z1) with a glow plate in the accent colour
-const fgNoz = (x, y, z0, z1, r, P) => [
-  tap([x, y, (z0 + z1) / 2], (z1 - z0) / 2, [r * 0.75, r * 0.75], [r * 1.05, r * 1.05], P.b2, { sh: 'e', ...ND }),
-  tap([x, y, z1 - 0.06], 0.08, [r * 1.12, r * 1.12], [r * 1.1, r * 1.1], 0x111416, { sh: 'e' }),
-  ell([x, y, z1 + 0.05], [r * 0.85, r * 0.85, 0.08], P.acc, { glow: true }),
+// ---- FROGG fighters, 2026-11-12 bio-mech rebuild (owner direction: Gemini design seed, hybrid language, no glow): a scaled creature
+// hide (the voxeliser's FROGG scale greebles grow on it) with machinery strapped on: gunmetal cages and frames, pipe bundles, clamp-on
+// boxes and chunky round thrusters. Rust-red armour only on the Reaver; the Spitter's acid sac is plain green. Drive flames come from
+// the runtime, so nozzles are dark. Mounts, engines, comps and launch points in data/db.json were moved to match this art.
+const FM = { hide: 0x3b403d, hide2: 0x2e3331, met: 0x5f6467, met2: 0x45494c, dk: 0x1c1e20, cu: 0x7a4e34, bone: 0xa49c8a, rust: 0x6a2c24, rust2: 0x4c2420, sac: 0x5aa62c };
+const NG = { noDetail: true };
+// round thruster: steel housing, band, dark nozzle ending at the database engine position (x, y, z1)
+const fmThr = (x, y, z1, r, len) => [
+  tap([x, y, z1 - len / 2], len / 2, [r * 0.85, r * 0.85], [r, r], FM.met, { sh: 'e', ...NG }),
+  tap([x, y, z1 - len * 0.62], Math.max(0.1, len * 0.07), [r * 1.08, r * 1.08], [r * 1.08, r * 1.08], FM.met2, { sh: 'e', ...NG }),
+  tap([x, y, z1 - 0.05], 0.1, [r * 0.82, r * 0.82], [r * 0.8, r * 0.8], FM.dk, { sh: 'e', ...NG }),
 ];
-// a fang barrel: dark tube from z0 to the muzzle z1 with an accent pore at the tip
-const fgGun = (x, y, z0, z1, r, P) => [seg([x, y, z0], [x, y, z1], r, r * 0.8, 0x111416), ell([x, y, z1], [r * 0.7, r * 0.7, 0.05], P.acc, { glow: true })];
+// a cage ring around an elliptic section (top, bottom and side bars) at z, and longitudinal rails between z0 and z1
+const fmRing = (cx, cy, z, rx, ry, t, col = FM.met2) => [
+  tap([cx, cy + ry, z], t, [rx * 0.75, t], [rx * 0.75, t], col, NG), tap([cx, cy - ry, z], t, [rx * 0.75, t], [rx * 0.75, t], col, NG),
+  tap([cx + rx, cy, z], t, [t, ry * 0.75], [t, ry * 0.75], col, NG),
+  seg([cx + rx * 0.75, cy + ry, z], [cx + rx, cy + ry * 0.75, z], t, t, col, NG), seg([cx + rx * 0.75, cy - ry, z], [cx + rx, cy - ry * 0.75, z], t, t, col, NG),
+];
+const fmRail = (x, y, z0, z1, t, col = FM.met2) => tap([x, y, (z0 + z1) / 2], (z1 - z0) / 2, [t, t], [t, t], col, NG);
+const fmBarrel = (x, y, z0, z1, r) => [seg([x, y, z0], [x, y, z1], r, r, FM.dk, NG), tap([x, y, z1 + r * 0.6], r * 0.6, [r * 1.4, r * 1.4], [r * 1.3, r * 1.3], FM.met2, { sh: 'e', ...NG })];
+const fmPipe = (pts, r, col = FM.cu) => chain(pts, pts.map(() => r), col, NG);
 
-// ---- DARTER: light interceptor (9.5 m) — a thin cyan dart with forward-swept fins
+// ---- DARTER: interceptor (9.5 m) — a needle hull, forward gun and sensor rods, a ribbed heat-sink plate, twin round thrusters
 SHIPS.darter = {
   ...DB.ships.darter,
-  prims: (P => [
-    tap([0, 0, 0.3], 4.6, [0.14, 0.12], [0.62, 0.52], P.b, { sh: 'e', ...ND }),                       // needle hull
-    tap([0, -0.3, 0.8], 3.4, [0.18, 0.12], [0.45, 0.2], P.belly, { sh: 'h', ...ND }),                  // belly keel
-    tap([0, 0.62, 2.6], 1.9, [0.07, 0.05], [0.09, 0.62], P.b2, ND),                                    // dorsal fin rising aft
-    seg([0, 0.44, -2.8], [0, 0.56, 1.6], 0.04, 0.04, P.acc, { glow: true, glowF: 0.6 }),                // cyan spine seam
-    tap([1.6, -0.05, 2.7], 1.25, [0.95, 0.1], [0.5, 0.06], P.b2, { ax: 'x', sweep: -0.55, ...ND }),   // forward-swept fins
-    tap([1.62, 0.04, 2.45], 1.2, [0.1, 0.05], [0.08, 0.04], 0x1f8fa0, { ax: 'x', sweep: -0.55 }),               // fin edge (no glow: it bloomed)
-    ...fgNoz(1, -0.15, 3.0, 5.0, 0.3, P),
-    seg([0.32, -0.08, -2.6], [0.62, -0.12, -4.4], 0.13, 0.03, 0xd9cfa6),                              // bone mandible blades
-    tap([0.4, -0.3, -3.2], 0.5, [0.16, 0.16], [0.18, 0.18], P.b2, { sh: 'e' }),
-    ...fgGun(0.4, -0.3, -3.2, -4.9, 0.08, P),
-    ell([0.62, -0.38, -1.1], [0.14, 0.14, 0.7], P.b2), ell([0.62, -0.38, -1.78], [0.09, 0.09, 0.04], P.acc, { glow: true }),   // launch tube
-  ])(FG.darter),
+  prims: [
+    tap([0, 0, -0.3], 4.0, [0.32, 0.28], [0.78, 0.62], FM.hide, { sh: 'e' }),                          // scaled needle hull
+    tap([0, 0.2, 4.0], 0.9, [0.78, 0.6], [0.95, 0.55], FM.met, { sh: 'h', ...NG }),                     // drive saddle
+    ...fmThr(0.5, 0.35, 5.0, 0.38, 1.6),
+    tap([0, 0.95, 4.2], 0.8, [0.06, 0.05], [0.06, 0.9], FM.met2, NG),                                   // tail fin
+    tap([0.7, 0.5, 4.5], 0.5, [0.3, 0.04], [0.2, 0.04], FM.met2, { ax: 'x', ...NG }),
+    tap([1.0, 0, 0.4], 0.12, [1.3, 0.55], [1.3, 0.55], FM.met, NG),                                    // heat-sink plate
+    ...rungs(1.13, 0, -0.8, 1.6, 7, 0.05, 0.5, 0.04, FM.dk, NG),
+    seg([0.6, 0, -0.4], [0.9, 0, -0.4], 0.08, 0.08, FM.met2, NG), seg([0.6, 0, 1.2], [0.9, 0, 1.2], 0.08, 0.08, FM.met2, NG),
+    ...fmRing(0, 0.05, -1.6, 0.62, 0.5, 0.05), ...fmRing(0, 0.1, 1.8, 0.8, 0.62, 0.05),
+    ...fmBarrel(0.4, -0.3, -3.0, -4.9, 0.08),                                                           // fang rods
+    seg([0.22, 0.28, -3.0], [0.24, 0.3, -5.1], 0.035, 0.03, FM.met, NG), seg([0.55, 0.05, -2.6], [0.62, 0.05, -4.4], 0.035, 0.03, FM.met, NG),
+    seg([0.25, 0.55, 1.0], [0.3, 1.4, 1.2], 0.03, 0.02, FM.met, NG), seg([-0.25, 0.55, 0.2], [-0.3, 1.2, 0.3], 0.03, 0.02, FM.met, { ...NG, noMirror: true }),
+    ...fmPipe([[0.35, 0.45, -2.2], [0.5, 0.55, 0], [0.45, 0.6, 2.6]], 0.06),
+    ell([0.62, -0.38, -1.2], [0.13, 0.13, 0.6], FM.met2, NG),                                          // missile tube (launch -1.75)
+  ],
 };
 
-// ---- LEAPER: line fighter (13.6 m) — a squat frog: wide flat skull, round body, folded hind legs that end in the drives
-const fgLeg = (hip, knee, ankle, r0, r1, rn, P) => [
-  seg(hip, knee, r0, r0 * 0.85, P.b2, ND), ell(knee, [r0 * 0.95, r0 * 0.95, r0 * 0.95], P.b, ND), seg(knee, ankle, r0 * 0.85, r1, P.b2, ND),
-  tap([ankle[0], ankle[1], ankle[2] + rn * 0.5], rn * 0.55, [rn * 0.95, rn * 0.9], [rn * 1.1, rn], P.b, { sh: 'e', ...ND }),
-  ell([ankle[0], ankle[1], ankle[2] + rn * 1.06], [rn * 0.8, rn * 0.75, 0.08], P.acc, { glow: true }),
-  seg([knee[0], knee[1] + r0 * 0.6, knee[2]], [knee[0] + 0.2, knee[1] + r0 * 1.6, knee[2] + 1.0], r0 * 0.3, 0.02, P.bone),   // knee spur
-];
+// ---- LEAPER: fighter (13.6 m) — a blunt scaled frog head and body, rear horns, pipes over the back, big side gun pods
 SHIPS.leaper = {
   ...DB.ships.leaper,
-  prims: (P => [
-    ell([0, 0.15, 0.4], [1.9, 1.25, 4.3], P.b, ND),                                                     // round body
-    ell([0, -0.55, 0.6], [1.5, 0.7, 3.5], P.belly, ND),
-    ell([0, 0.05, -4.3], [2.1, 0.8, 1.9], P.b2, ND),                                                    // wide flat skull
-    ell([0, -0.4, -4.1], [1.7, 0.5, 1.7], P.belly, ND),                                                 // jaw
-    ...[-1.2, 0.6, 2.4].map((z, i) => tap([0, 1.25 - i * 0.12, z], 0.5, [0.5, 0.12], [0.4, 0.1], P.bone, { sh: 'h' })),   // bone ridge plates
-    ...[[1.0, 0.75, -4.6], [1.5, 0.45, -4.1]].map(c => ell(c, [0.16, 0.1, 0.12], P.acc, { glow: true, glowF: 1.4 })),     // sensor pores
-    ...fgLeg([1.5, -0.1, 1.8], [3.7, 1.0, 3.2], [2.2, -0.2, 6.0], 0.55, 0.42, 0.5, P),
-    seg([1.0, -0.6, -2.4], [1.0, -0.62, -4.6], 0.3, 0.26, P.b2, ND),                                    // forelegs carry the guns
-    ...fgGun(0.9, -0.3, -4.6, -6.0, 0.13, P), ...fgGun(0.65, -0.42, -4.8, -6.6, 0.1, P),
-    ell([0.9, -0.72, -2.2], [0.22, 0.22, 0.6], P.b2), ell([0.9, -0.6, -2.8], [0.12, 0.12, 0.05], P.acc, { glow: true }),    // launch pore
-  ])(FG.leaper),
+  prims: [
+    ell([0, 0.3, 0.6], [2.4, 1.6, 5.2], FM.hide),                                                       // body
+    ell([0, -0.1, -4.4], [2.2, 1.15, 2.2], FM.hide2),                                                   // blunt head
+    ...[[0.7, 0.35, -6.45], [0.75, -0.35, -6.4]].map(c => ell(c, [0.3, 0.26, 0.2], FM.met2, NG)),       // nostril ports
+    tap([0, 0.95, -4.6], 1.2, [1.2, 0.2], [1.5, 0.25], FM.hide, { sh: 'e' }),                           // brow
+    seg([1.1, 1.6, 2.2], [1.7, 2.35, 4.6], 0.32, 0.05, FM.bone, NG), seg([1.6, 1.2, 3.4], [2.5, 1.8, 5.2], 0.24, 0.04, FM.bone, NG),   // horns
+    ...fmPipe([[0.5, 1.7, -3.2], [0.6, 1.95, -0.5], [0.8, 1.8, 2.4], [1.2, 1.1, 4.8]], 0.13),
+    ...fmPipe([[1.0, 1.45, -3.0], [1.25, 1.65, -0.2], [1.5, 1.35, 2.6]], 0.11, FM.met2),
+    // gun pods (flaser + spit) on pylons, cable bundles back to the body
+    tap([2.6, -0.8, -4.0], 2.0, [0.6, 0.6], [0.66, 0.66], FM.met, { sh: 'e', ...NG }),
+    ...[-5.2, -3.6, -2.4].map(z => tap([2.6, -0.8, z], 0.14, [0.72, 0.72], [0.72, 0.72], FM.met2, { sh: 'e', ...NG })),
+    seg([1.6, -0.6, -3.4], [2.3, -0.75, -3.6], 0.3, 0.3, FM.met2, NG),
+    ...fmBarrel(2.6, -0.6, -5.8, -6.6, 0.16), ...fmBarrel(2.6, -1.1, -5.6, -6.0, 0.14),
+    ...fmPipe([[2.7, -0.3, -2.2], [2.2, 0.2, -1.0], [1.6, 0.6, 0.2]], 0.09),
+    ...fmThr(2.2, -0.2, 6.8, 0.5, 1.8), seg([1.2, -0.2, 4.6], [2.0, -0.2, 5.4], 0.3, 0.3, FM.met2, NG),
+    ell([0.9, -0.75, -2.2], [0.2, 0.2, 0.6], FM.met2, NG),                                              // missile tube (launch -2.8)
+  ],
 };
 
-// ---- SPITTER: gunship (16 m) — a slim body slung under a long dorsal acid cannon, with a big glowing acid sac
+// ---- SPITTER: gunship (16 m) — a bulbous body in a heavy cage, a green acid sac, a caged acid maw, side gatlings, dorsal masts
 SHIPS.spitter = {
   ...DB.ships.spitter,
-  prims: (P => [
-    ell([0, 0.2, 0], [1.6, 1.15, 6.6], P.b, ND),                                                        // body
-    ell([0, -1.0, 0.6], [2.5, 1.7, 3.6], P.sac, { dots: { col: P.acc, p: 0.18, f: 1.2 }, ...ND }),      // acid sac
-    ...[-1.6, 0.4, 2.4].map(z => tap([0, -1.0, z], 0.12, [2.3, 1.55], [2.3, 1.55], P.b2, { sh: 'e' })), // sac bands
-    seg([0, 1.35, -1.5], [0, 1.35, -8.8], 0.85, 0.5, P.b2, ND),                                         // dorsal acid cannon
-    ...[-3.5, -5.5, -7.5].map(z => tap([0, 1.35, z], 0.15, [0.85, 0.85], [0.8, 0.8], 0x111416, { sh: 'e' })),
-    ell([0, 1.35, -8.85], [0.45, 0.45, 0.12], P.acc, { glow: true, glowF: 1.7 }),
-    ell([1.25, -0.4, -5.2], [0.5, 0.45, 1.6], P.b2, ND), ...fgGun(1.6, -0.5, -6.2, -8.0, 0.14, P),     // cheek fangs
-    tap([2.0, -0.2, 5.0], 1.4, [1.2, 0.16], [0.6, 0.12], P.b2, { ax: 'x', sweep: 0.4, ...ND }),        // stub wings carry the drives
-    ...fgNoz(2.8, -0.3, 6.0, 8.4, 0.72, P),
-    ell([1.9, -1.2, 0.2], [0.4, 0.4, 0.8], P.b2), ell([1.9, -1.1, -0.5], [0.2, 0.2, 0.05], P.acc, { glow: true }),         // spore launcher
-  ])(FG.spitter),
+  prims: [
+    ell([0, 0.4, 0.6], [2.9, 2.3, 7.6], FM.hide),                                                       // body
+    ell([0, -0.8, -2.2], [2.7, 1.9, 3.4], FM.sac, NG),                                                  // acid sac
+    ...[-6.0, -3.6, -1.2, 1.4, 4.0].flatMap(z => { const f = Math.sqrt(1 - ((z - 0.6) / 7.6) ** 2); return fmRing(0, 0.4, z, 2.95 * f + 0.15, 2.35 * f + 0.15, 0.13); }),
+    fmRail(1.0, 2.75, -6.0, 4.0, 0.13), fmRail(2.6, 1.3, -5.0, 3.6, 0.13), fmRail(2.6, -0.9, -5.0, 3.6, 0.13),
+    // caged acid maw at the bow (spitcannon at z -8.6)
+    tap([0, 0.1, -7.6], 0.5, [1.3, 1.1], [1.5, 1.25], FM.met, { sh: 'h', ...NG }),
+    tap([0, 0.1, -8.1], 0.08, [1.0, 0.85], [1.0, 0.85], FM.dk, NG),
+    ...[-0.5, 0, 0.5].map(x => tap([x, 0.1, -8.25], 0.1, [0.07, 0.85], [0.07, 0.85], FM.met2, { ...NG, noMirror: true })),
+    // side gatlings (fang) on pylons
+    tap([3.1, -0.9, -1.8], 1.4, [0.42, 0.42], [0.48, 0.48], FM.met, { sh: 'e', ...NG }), seg([2.4, -0.7, -1.4], [2.9, -0.85, -1.6], 0.24, 0.24, FM.met2, NG),
+    ...[[0.12, 0.12], [-0.12, 0.12], [0, -0.14]].map(([dx, dy]) => seg([3.1 + dx, -0.9 + dy, -3.0], [3.1 + dx, -0.9 + dy, -3.6], 0.07, 0.07, FM.dk, NG)),
+    // dorsal masts and rear thrusters
+    seg([0.6, 2.6, 3.0], [0.6, 3.1, 3.0], 0.08, 0.05, FM.met, NG), seg([0.2, 2.6, 4.2], [0.2, 3.0, 4.2], 0.06, 0.04, FM.met, NG),
+    tap([0, 0.6, 7.2], 1.0, [2.0, 1.3], [2.2, 1.4], FM.met2, { sh: 'h', ...NG }),
+    ...fmThr(1.4, 0.6, 8.6, 0.8, 2.0),
+    ...fmPipe([[1.5, 1.9, -4.5], [2.2, 1.6, -2.0], [2.4, 1.2, 1.0]], 0.12),
+    ell([3.1, -1.5, -3.2], [0.18, 0.18, 0.5], FM.met2, NG),                                             // missile tube (launch -3.8)
+  ],
 };
 
-// ---- TOAD: torpedo bomber (22 m) — a broad flat ray with amber egg clutches (the torpedoes) slung under the belly
+// ---- TOAD: torpedo bomber (22 m) — a compact scaled body under an armoured deck, clamp-on torpedo frames, four round thrusters
 SHIPS.toad = {
   ...DB.ships.toad,
-  prims: (P => [
-    ell([0, 0, 0.6], [4.6, 1.45, 8.2], P.b, ND),                                                        // flat body
-    tap([5.4, -0.2, 1.4], 3.7, [4.6, 0.38], [2.2, 0.22], P.b2, { ax: 'x', sweep: 0.25, ...ND }),       // ray wings
-    ...[3.4, 5.4, 7.4].map(x => ell([x, 0.12, 1.4 + (x - 5.4) * 0.25], [0.16, 0.08, 0.16], P.acc, { glow: true, glowF: 1.3 })),
-    ell([0, 0.1, -5.5], [3.0, 1.1, 2.0], P.b2, ND),                                                     // head
-    tap([0, 1.35, 0], 3.5, [0.6, 0.15], [0.4, 0.12], P.belly, { sh: 'h' }),                             // dorsal plate
-    ...fgGun(1, 0.1, -6.2, -7.6, 0.18, P),
-    tap([3.2, -1.55, -1.7], 3.7, [0.95, 0.5], [0.95, 0.5], P.b2, { sh: 'h', ...ND }),                  // egg cradle
-    ...[-4.1, -3.0, -1.9, 1.2, 2.3, 3.4].map(z => ell([3.2, -2.05, z], [0.58, 0.55, 0.58], P.egg, { dots: { col: P.acc, p: 0.3, f: 1.1 } })),
-    ell([3.2, -2.0, -4.7], [0.3, 0.3, 0.06], P.acc, { glow: true }), ell([3.2, -2.0, 0.6], [0.3, 0.3, 0.06], P.acc, { glow: true }),
-    seg([2.0, -0.2, 5.0], [3.6, -0.3, 6.6], 0.35, 0.35, P.b2, ND),
-    ...fgNoz(3.6, -0.3, 6.6, 9.4, 0.85, P),
-  ])(FG.toad),
+  prims: [
+    ell([0, 0, 0], [3.6, 2.2, 8.4], FM.hide),                                                           // body
+    tap([0, -0.3, -7.2], 1.4, [2.2, 1.2], [3.2, 1.8], FM.met, { sh: 'h', ...NG }),                     // armoured jaw
+    tap([0, -0.3, -8.4], 0.22, [1.8, 0.9], [2.2, 1.2], FM.met2, { sh: 'h', ...NG }),
+    tap([0, 2.25, -0.5], 3.6, [1.6, 0.45], [1.85, 0.55], FM.met, { sh: 'h', ...NG }),                  // dorsal deck module
+    ...rungs(0, 2.75, -2.8, 0.4, 6, 1.1, 0.06, 0.05, FM.dk, NG),
+    tap([1.1, 2.75, 2.2], 0.9, [0.5, 0.25], [0.5, 0.25], FM.met2, { sh: 'h', ...NG }),
+    ...fmBarrel(1.2, -0.8, -8.4, -8.9, 0.16),                                                           // fangs below the jaw
+    // torpedo frames: two clamp-on boxes per side with the tube mouths at z -4.7 and 0.6
+    ...[[-4.8, -0.6], [0.5, 4.0]].flatMap(([z0, z1]) => [
+      tap([3.2, -2.0, (z0 + z1) / 2], (z1 - z0) / 2, [0.75, 0.75], [0.75, 0.75], FM.met, { sh: 'h', ...NG }),
+      tap([3.2, -2.0, z0 + 0.05], 0.08, [0.5, 0.5], [0.5, 0.5], FM.dk, { sh: 'e', ...NG }),
+    ]),
+    fmRail(2.4, -1.35, -4.8, 4.0, 0.14), fmRail(3.95, -1.35, -4.8, 4.0, 0.14),
+    ...fmRing(0, 0, -3.0, 3.2, 2.0, 0.14), ...fmRing(0, 0, 3.0, 3.2, 2.0, 0.14),
+    // four round thrusters (two high, two low) on a frame
+    tap([0, 0.2, 7.4], 1.0, [3.0, 1.9], [3.6, 2.2], FM.met2, { sh: 'h', ...NG }),
+    ...fmThr(1.6, 1.2, 9.6, 1.1, 2.4), ...fmThr(3.4, -0.8, 9.4, 0.9, 2.2),
+    ...fmPipe([[2.2, 1.7, -3.5], [2.8, 1.2, 0.5], [3.0, 1.0, 5.5]], 0.14),
+  ],
 };
 
-// ---- REAVER: heavy assault fighter (19 m) — an angular armoured brute: boxy hull, red plates, hooked mandibles carrying the guns
+// ---- REAVER: heavy fighter (19 m) — a rust-red armoured brick, stepped gun blocks at the bow, side tanks, an open rear truss
+const rvTruss = (x0, x1, y0, y1, z0, z1, t) => {
+  const P = [], xs = [x0, x1], ys = [y0, y1], zs = [z0, z1];
+  for (const y of ys) for (const z of zs) P.push(tap([(x0 + x1) / 2, y, z], t, [(x1 - x0) / 2, t], [(x1 - x0) / 2, t], FM.met2, NG));
+  for (const x of xs) for (const z of zs) P.push(tap([x, (y0 + y1) / 2, z], t, [t, (y1 - y0) / 2], [t, (y1 - y0) / 2], FM.met2, NG));
+  for (const x of xs) for (const y of ys) P.push(fmRail(x, y, z0, z1, t));
+  return P;
+};
 SHIPS.reaver = {
   ...DB.ships.reaver,
-  prims: (P => [
-    tap([0, 0.2, 1.0], 7, [2.0, 1.4], [2.8, 1.8], P.b, { sh: 'h', ...ND }),                            // armoured hull
-    tap([0, -0.1, -7.0], 1.6, [1.4, 1.0], [2.0, 1.3], P.b2, { sh: 'h', ...ND }),                       // head
-    tap([0, 2.3, 0.4], 4.6, [0.25, 0.35], [0.3, 1.3], P.b2, ND),                                        // dorsal crest
-    seg([0, 2.05, -3.6], [0, 2.4, 4.0], 0.07, 0.07, P.acc, { glow: true }),
-    tap([2.75, 0.3, 0.4], 4.2, [0.32, 1.25], [0.32, 1.05], P.pl, { sh: 'h' }),                        // red flank plates
-    ...chain([[2.1, -0.4, -4.8], [2.65, -0.45, -6.4], [2.35, -0.5, -8.2], [1.7, -0.55, -9.4]], [0.42, 0.38, 0.28, 0.05], P.b2),  // hooked mandible
-    ell([2.0, -0.5, -7.4], [0.2, 0.2, 0.08], P.acc, { glow: true }), ell([2.4, -0.4, -6.2], [0.2, 0.2, 0.08], P.acc, { glow: true }),  // fang and spit pores
-    ...fgGun(1.2, -0.55, -8.0, -8.8, 0.15, P),                                                          // chin laser emitter
-    tap([0, -0.3, 8.6], 1.2, [3.4, 1.3], [3.8, 1.15], P.b2, { sh: 'h', ...ND }),                       // drive block
-    ell([3.2, -0.3, 9.85], [0.72, 0.72, 0.08], P.acc, { glow: true }), ell([1.3, -0.5, 9.95], [0.45, 0.45, 0.08], P.acc, { glow: true }),
-    seg([2.4, 1.2, 6.0], [4.6, 2.6, 9.6], 0.35, 0.05, P.b2),                                            // tail spikes
-    ell([2.5, -0.8, -4.4], [0.35, 0.35, 0.9], P.b2), ell([2.5, -0.7, -5.2], [0.18, 0.18, 0.05], P.acc, { glow: true }),       // launch pore
-  ])(FG.reaver),
+  prims: [
+    tap([0, 0.2, 0.5], 5.6, [2.6, 1.6], [2.9, 1.8], FM.rust, { sh: 'h' }),                             // armoured hull
+    tap([0, 1.95, -0.5], 3.8, [1.6, 0.35], [1.8, 0.4], FM.rust2, { sh: 'h', ...NG }),                  // dorsal armour
+    ...[-3.0, -1.0, 1.0, 3.0].map(z => tap([0, 2.42, z], 0.5, [1.1, 0.12], [1.1, 0.12], FM.met2, { sh: 'h', ...NG })),
+    // stepped gun blocks: flaser (x 1.2, z -8.8), fang (x 2.0, z -7.4), spit (x 2.4, z -6.2)
+    tap([1.0, -0.5, -6.5], 1.5, [0.6, 0.8], [0.62, 0.85], FM.rust2, { sh: 'h', ...NG }),
+    tap([1.95, -0.5, -5.8], 0.8, [0.36, 0.7], [0.38, 0.75], FM.rust, { sh: 'h', ...NG }),
+    tap([2.65, -0.45, -5.0], 0.4, [0.35, 0.6], [0.36, 0.62], FM.rust2, { sh: 'h', ...NG }),
+    ...fmBarrel(1.2, -0.55, -7.6, -8.8, 0.15), ...fmBarrel(2.0, -0.5, -6.4, -7.4, 0.13), ...fmBarrel(2.4, -0.4, -5.2, -6.2, 0.13),
+    tap([2.5, -0.95, -5.0], 0.25, [0.22, 0.22], [0.22, 0.22], FM.dk, { sh: 'e', ...NG }),               // missile tube (launch -5.2)
+    // side tanks with bands
+    tap([3.65, 0.1, 0.8], 3.0, [0.9, 0.9], [0.95, 0.95], FM.met, { sh: 'e', ...NG }),
+    ...[-1.4, 0.8, 3.0].map(z => tap([3.65, 0.1, z], 0.18, [1.02, 1.02], [1.02, 1.02], FM.met2, { sh: 'e', ...NG })),
+    // open rear truss frame around the four thrusters
+    ...rvTruss(-4.0, 4.0, -1.7, 1.6, 6.1, 9.6, 0.14),
+    ...fmThr(3.2, -0.3, 9.8, 0.8, 3.0), ...fmThr(1.3, -0.5, 9.9, 0.5, 3.2),
+    ...fmPipe([[1.6, 1.8, 4.0], [2.6, 1.4, 5.6], [3.2, 0.5, 6.8]], 0.12),
+  ],
 };
 
 // ---- GULPER: escort corvette (66 m) -----------------------------------------

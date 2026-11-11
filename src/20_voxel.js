@@ -138,7 +138,7 @@ const cmix = (a, b, t) => {
 };
 const DSTYLE = {
   human: { dark: 0x1d2227, light: 0xdfe3e7, accent: [0xd9772b, 0x2f4a7a], glass: 0x2b4a63, lamp: 0xffc060, vent: 0x15181c, raise: 0.3, greeb: 1, scratch: 0xc0c6cc, pan: [11, 15, 22], human: true },
-  frogg: { dark: 0x0f1415, light: 0x5d6b66, accent: [0x3a4a52, 0x1d5a66], glass: 0x35e8ff, lamp: 0x35e8ff, lamp2: 0x9dff3a, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
+  frogg: { noGlow: true, dark: 0x0f1415, light: 0x5d6b66, accent: [0x3a4a52, 0x4c3a2c], glass: 0x2a3438, lamp: 0x1a2124, lamp2: 0x3a2a22, vent: 0x0a0d0e, raise: 0.45, greeb: 1, scratch: 0x7d8a84, pan: [9, 13, 19], human: false },
 };
 const FONT = {
   '0': '111101101101111', '1': '010110010010111', '2': '111001111100111', '3': '111001111001111', '4': '101101111001001', '5': '111100111001111',
@@ -208,7 +208,7 @@ function surfaceDetail(def, tier, G) {
   };
   const put = (c, col, t, gl) => {
     if (c < 0 || grid[c] >= 0) return false;
-    grid[c] = col; pgrid[c] = DP; tn[c] = t; xg[c] = gl || 0; return true;
+    grid[c] = col; pgrid[c] = DP; tn[c] = t; xg[c] = st.noGlow ? 0 : (gl || 0); return true;
   };
   const flat = (a0, b0, w, d, h) => {                          // footprint solid at h=0, free above
     for (let a = a0; a < a0 + w; a++) for (let b = b0; b < b0 + d; b++) {
@@ -476,7 +476,7 @@ function surfaceDetail(def, tier, G) {
               for (let aa = a0; aa < a0 + w; aa++) for (let bb = b0; bb < b0 + d; bb++) {
                 const c0 = q(aa, bb, 0), c1 = q(aa, bb, -1);
                 if (c1 < 0 || grid[c1] < 0) continue;
-                if ((bb - b0) % 2 === 0) { grid[c0] = -1; pgrid[c0] = -1; grid[c1] = gc; xg[c1] = 70; } else { grid[c0] = st.dark; tn[c0] = 90; }
+                if ((bb - b0) % 2 === 0) { grid[c0] = -1; pgrid[c0] = -1; grid[c1] = gc; xg[c1] = st.noGlow ? 0 : 70; } else { grid[c0] = st.dark; tn[c0] = 90; }
               }
             }
           } else if (r < 0.7) {                                              // knob cluster
@@ -524,7 +524,7 @@ function surfaceDetail(def, tier, G) {
               const d1 = cc - (Nx * si + Ny * sj + Nz), d2 = cc - 2 * (Nx * si + Ny * sj + Nz);
               if (d1 < 0 || d2 < 0 || grid[d1] < 0 || grid[d2] < 0) continue;
               grid[cc] = -1; pgrid[cc] = -1;
-              if (kind === 3 && (s % 6) < 4) { grid[d1] = veinCol; xg[d1] = 75; } else { tn[d1] = 58; }
+              if (kind === 3 && (s % 6) < 4) { grid[d1] = veinCol; xg[d1] = st.noGlow ? 0 : 75; } else { tn[d1] = 58; }
             }
           } else {
             const up = c + (Nx * si + Ny * sj + Nz);
