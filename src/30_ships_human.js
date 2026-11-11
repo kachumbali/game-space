@@ -10,6 +10,15 @@ const H = { // palette
   hull: 0x9aa3ad, hull2: 0x838d99, dark: 0x3a4049, panel: 0x5b6572, red: 0xc8402f, canopy: 0x3aa8dc,
   nozzle: 0x2a2d33, white: 0xc9ccd0, navy: 0x2f4a7a, orange: 0xd9772b, glow: 0x7fd0ff, amber: 0xffc060,
 };
+// Approved human-fleet finish, applied only to a hull when its model is revised.
+const CDF_FIGHTER_COLOURS = new Map([
+  [K.hull, 0xb9beb9], [K.hull2, 0x909b9a], [K.hull3, 0xcbd0c9],
+  [K.white, 0xd9dcd5], [K.amber, 0xd9772b], [K.dark, 0x303a3e],
+]);
+function cdfFighterFinish(prims) {
+  return prims.map(p => ({...p, col: CDF_FIGHTER_COLOURS.get(p.col) ?? p.col,
+    ...(p.col2 !== undefined ? {col2: CDF_FIGHTER_COLOURS.get(p.col2) ?? p.col2} : {})}));
+}
 
 // ---- Kestrel surface-detail prims: lod 2 = built from detail index 6, lod 3 = index 7; paint/text from index 5 -------------
 const kNoz = (x, y, z, r) => [                                  // nozzle petals + heat bands around a pod
@@ -671,7 +680,7 @@ const falSeat = (z, y, dy) => {
 };
 SHIPS.falchion = {
   ...DB.ships.falchion,
-  prims: [
+  prims: cdfFighterFinish([
     // chined fuselage: drooping nose, broad mid-body, long tail
     tap([0, -0.15, -6.8], 3.0, [0.25, 0.2], [1.1, 0.62], K.hull, { sh: 'd' }),
     tap([0, 0, -1.0], 2.8, [1.1, 0.62], [2.1, 1.1], K.hull, { sh: 'h' }),
@@ -683,6 +692,11 @@ SHIPS.falchion = {
     ell([0, 0.7, -5.2], [0.8, 0.6, 1.8], K.canopy, { glow: false }),
     ell([0, 0.85, -1.9], [0.78, 0.55, 1.35], K.canopy, { glow: false }),
     tap([0, 0.62, -3.55], 0.14, [0.85, 0.4], [0.85, 0.4], K.white, { sh: 'h' }),
+    // Blocky cockpit shoulders and central spine carry the tandem canopy into
+    // the weapon/turret structure without covering the two crew positions.
+    tap([1.06, 0.25, -3.1], 3.0, [0.25, 0.38], [0.42, 0.5], K.hull3, { sh: 'h' }),
+    tap([0, 0.13, -8.45], 1.0, [0.34, 0.25], [0.55, 0.35], K.hull3, { sh: 'h' }),
+    seg([0.76, 0.92, -6.4], [0.76, 1.05, -0.8], 0.055, 0.055, K.dark),
     // swept main wings with white leading edge and ochre tips
     tap([5.2, -0.05, 2.8], 3.3, [3.6, 0.22], [1.5, 0.1], K.hull2, { ax: 'x', sweep: 0.3, seam: [2, 3] }),
     tap([5.6, -0.03, -0.2], 2.9, [0.35, 0.24], [0.3, 0.14], K.white, { ax: 'x', sweep: 0.3 }),
@@ -697,28 +711,35 @@ SHIPS.falchion = {
     tap([5.7, -0.7, 10.3], 0.3, [0.64, 0.46], [0.58, 0.42], H.nozzle, { sh: 'e' }),
     ell([5.7, -0.7, 10.75], [0.46, 0.34, 0.1], H.glow, { glow: true }),
     tap([2.9, 0.1, 5.6], 0.7, [0.6, 0.3], [0.6, 0.3], K.dark, { sh: 'h', ax: 'x' }),         // nacelle strut
+    // Armoured cross-spars root the paired engine pods in the pressure hull.
+    tap([3.0, 0.05, 5.6], 0.95, [1.05, 0.34], [0.9, 0.28], K.hull3, { sh: 'h', ax: 'x' }),
+    tap([4.75, -0.05, 6.8], 1.0, [0.8, 0.34], [0.75, 0.3], K.hull2, { sh: 'h', ax: 'x' }),
+    tap([4.0, 0.6, 5.0], 0.19, [0.91, 0.66], [0.91, 0.66], K.amber, { sh: 'h' }),
+    tap([5.7, -0.7, 6.1], 0.16, [0.81, 0.56], [0.81, 0.56], K.amber, { sh: 'h' }),
     // canted twin fins
     tap([1.9, 1.8, 7.4], 1.5, [1.5, 0.09], [0.7, 0.06], K.hull, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.28] }),
     tap([2.2, 3.2, 7.8], 0.12, [0.6, 0.08], [0.5, 0.06], K.amber, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.28] }),
     // nose: two MK-20 barrels with breeches, shrouds and muzzle brakes (mounts end at z -10.4)
     ...[-0.75, 0.75].flatMap(x => [
       ell([x, -0.5, -5.4], [0.3, 0.26, 0.95], K.hull3, { noMirror: true }),
-      seg([x, -0.55, -5.2], [x, -0.55, -10.3], 0.1, 0.08, K.dark, { noMirror: true }),
+      seg([x, -0.55, -5.2], [x, -0.55, -10.22], 0.1, 0.08, K.dark, { noMirror: true }),
       ...[-6.4, -7.6, -8.8].map(z => tap([x, -0.55, z], 0.07, [0.2, 0.2], [0.2, 0.2], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
-      tap([x, -0.55, -10.3], 0.14, [0.15, 0.15], [0.15, 0.15], H.nozzle, { sh: 'e', noMirror: true }),
+      tap([x, -0.55, -10.2], 0.1, [0.15, 0.15], [0.15, 0.15], H.nozzle, { sh: 'e', noMirror: true }),
     ]),
     // wing-root booms with the MD-9 mag drivers: coil collars and muzzles (mounts end at z -7.7)
     ell([2.9, -0.45, -1.8], [0.42, 0.36, 1.5], K.hull2),
-    seg([2.9, -0.45, -1.8], [2.9, -0.45, -7.6], 0.15, 0.12, K.dark),
-    ...[-2.6, -3.8, -5.0, -6.2].map(z => tap([2.9, -0.45, z], 0.14, [0.3, 0.27], [0.3, 0.27], K.panel, { sh: 'e' })),
-    tap([2.9, -0.45, -7.6], 0.16, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e' }),
-    // wing pylons: SW-9 / LN-3 rail at x 4.6 (the launch point is its nose), HM-1 cradle at x 6.4
+    seg([2.9, -0.45, -1.8], [2.9, -0.45, -7.5], 0.15, 0.12, K.dark),
+    ...[-2.6, -3.8, -5.0, -6.2].map(z => tap([2.9, -0.45, z], 0.14, [0.3, 0.27], [0.3, 0.27], K.hull2, { sh: 'e' })),
+    tap([2.9, -0.45, -7.48], 0.1, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e' }),
+    // Existing S stations are mirrored; M1 and legacy L1 occupy separate sides.
     tap([4.6, -0.2, 1.4], 0.9, [0.1, 0.5], [0.1, 0.4], K.dark, { ax: 'y' }),
     seg([4.6, -0.62, 0.7], [4.6, -0.62, 3.0], 0.12, 0.12, K.white),
     seg([4.6, -0.62, 0.35], [4.6, -0.62, 0.7], 0.02, 0.12, 0xc33a2a),
-    tap([6.4, -0.2, 1.8], 0.9, [0.1, 0.5], [0.1, 0.4], K.dark, { ax: 'y' }),
-    seg([6.4, -0.66, 0.6], [6.4, -0.66, 3.4], 0.19, 0.19, 0xc8c8c0),
-    seg([6.4, -0.66, 0.2], [6.4, -0.66, 0.6], 0.03, 0.19, 0xd04a3a),
+    tap([3.5, -0.2, 1.4], 0.55, [0.09, 0.4], [0.09, 0.32], K.dark, { ax: 'y', noMirror: true }),
+    seg([3.5, -0.62, 0.35], [3.5, -0.62, 2.5], 0.1, 0.1, K.white, { noMirror: true }),
+    tap([-3.5, -0.2, 1.6], 0.55, [0.11, 0.43], [0.11, 0.35], K.dark, { ax: 'y', noMirror: true }),
+    seg([-3.5, -0.62, 0.35], [-3.5, -0.62, 3.1], 0.19, 0.19, 0xc8c8c0, { noMirror: true }),
+    seg([-3.5, -0.62, 0.35], [-3.5, -0.62, 0.7], 0.03, 0.19, 0xd04a3a, { noMirror: true }),
     // PD seats: two dorsal, one ventral
     ...falSeat(1.2, 1.3, 1), ...falSeat(6.8, 1.4, 1), ...falSeat(3.0, -1.35, -1),
     // subsystem housings: radar nose, shield emitter, reactor grille, antennae, nav lights
@@ -734,7 +755,7 @@ SHIPS.falchion = {
     { t: 'text', c: [2.12, 0.1, 2.6], face: '+x', text: 'CDF', px: 0.1, col: K.white },
     { t: 'text', c: [5.5, 0.2, 3.6], face: '+y', text: '11', px: 0.18, col: K.dark, mir: false },
     { t: 'text', c: [-5.5, 0.2, 3.6], face: '+y', text: '11', px: 0.18, col: K.dark, mir: false },
-  ],
+  ]),
 };
 
 // ---- PETREL SAR CUTTER (32 m, unarmed, crew 3: pilot, rescue specialist, trauma medic; docs/LORE_FACTIONS.md section 5) --------------------------

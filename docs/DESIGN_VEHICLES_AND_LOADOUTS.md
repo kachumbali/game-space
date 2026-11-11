@@ -86,3 +86,9 @@ Before building this hull, review a Falchion concept in top, side and three-quar
 5. Use what the pilot teaches us to refine the family rules before extending them to the other human fighters, corvette and larger ships. FROGG keeps its own established visual language and receives a separate consistency review.
 
 **Next decisions:** whether this is the right amount of industrial detail, which reference has the closest overall proportions for the first hull, and which hull to use as the pilot. The torpedo policy remains undecided.
+
+### Falchion voxel pass — first implementation
+
+The first geometry pass applies the approved light grey/off-white and restrained orange finish to the Falchion, adds blockier cockpit shoulders and engine cross-spars, and preserves its separate tandem canopy and three existing PD seats. The visible M1 and legacy L1 ordnance fittings now align with their authored station coordinates; their torpedo policy remains undecided. The four fixed barrels were shortened slightly so their unchanged muzzle points sit beyond the visible barrel ends. The database, loadout counts, engine positions and turret definitions were not edited. As with any voxel-geometry change, the solid collision shape can change even when gameplay numbers do not.
+
+At the current high-detail marker audit, all four fixed muzzle points were outside the hull and had an unobstructed eight-metre forward probe; the prior model reported each inside. The three existing turret seats and their visible tips were inspected in the live renderer. These are geometry checks, not an in-flight weapons-effectiveness or physical-iPad test.
