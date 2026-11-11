@@ -69,6 +69,14 @@ A preliminary four-panel concept board (interceptor, multirole fighter, bomber, 
 | Halberd, escort corvette | A compact boxy warship with an elongated central structure, recessed/armoured bridge, connected engine raft and readable turret seats. Small hatches, windows and turrets establish a larger scale than the fighters. | Respect the existing nominal dimensions, collision extents, weapons, hangar and subsystem positions; inspect live and in the yard before deciding what needs to move. |
 | Frigate and larger ships | Extend the same modular engineering into longer major sections, hangar/service zones and multiple weapon stations. Use smaller windows and doors to show scale, with a distinct silhouette for each role. | Use actual class dimensions, capabilities and the project's size exceptions; reference-image naval towers, numbers and markings are inspiration, not required shapes or lore. |
 
+### Owner direction: corvette template and Falchion (2026-11-11)
+
+The owner selected the **bottom-right corvette in the first four-ship concept board** as the visual template for the human fleet. Carry its modular, blocky construction, off-white/grey armour, restrained orange accents and dark mechanical joints across the family; develop different silhouettes and scale cues for fighters, bombers, escorts and larger ships. This selects the shared visual direction, not the illustrated corvette's exact proportions, hull details, turret counts or loadout as game data.
+
+The **Falchion is a heavy two-seat fighter with a turret on top**. The concept should make both crew positions and a dorsal turret easy to read, while keeping the craft recognizably fighter-sized and structurally related to the corvette template. The current database already has three PD-15 turrets: two dorsal and one ventral. The owner's request confirms that a dorsal turret must be visible; it does not decide whether the existing other turrets should be removed or how their firing arcs should work. The current fixed guns and stores are recorded above and remain the engineering baseline; torpedo eligibility remains open.
+
+Before building this hull, review a Falchion concept in top, side and three-quarter views, with the crew positions, drive attachment, both gun pairs, all existing turret stations and ordnance stations annotated against the data. Check the turret's seat, clearance and arcs, plus cockpit access and scale. Decide separately whether any existing weapon or station should move or change; do not infer that from the concept art.
+
 ### Before implementation
 
 1. Agree on this common language and select a first hull for a bounded pilot pass. Keep the existing ship sizes, roles, weapon values and gameplay as the baseline until the owner decides otherwise.
