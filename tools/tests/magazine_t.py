@@ -109,10 +109,10 @@ with Runner() as R:
       k.ammo.cannon=0;k.ammo.he=0;k.stores.ir=0;k.stores.torp=0;
       const s0=Math.round(k.structure);k.structure=s0*0.5;
       stepN(8,()=>{k.vel.set(0,0,0);k.group.position.set(0,0,-300);tn.vel.set(0,0,0);tn.group.position.set(0,0,0);});
-      return {cannon:Math.round(k.ammo.cannon),he:Math.round(k.ammo.he),ir:k.stores.ir,torp:k.stores.torp,
+      return {cannon:Math.round(k.ammo.cannon),he:Math.round(k.ammo.he),ir:k.stores.ir,torp:k.stores.torp||0,
               str0:s0,str1:Math.round(k.structure),strPct:Math.round(100*k.structure/s0)};'''))
     print(json.dumps(r))
     check('tender restores gun ammo pools', r['cannon'] > 0 and r['he'] > 0, str(r))
-    check('tender restores missile stores', r['ir'] >= 1 and r['torp'] >= 1, str(r))
+    check('tender restores missile stores', r['ir'] >= 1, str(r))   # the Kestrel carries no torpedo since 2026-11-12
     check('tender repairs nothing (structure unchanged)', r['strPct'] == 50, str(r))
     print('FAILED: ' + (str(fails) if fails else 'none'))

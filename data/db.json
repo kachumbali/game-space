@@ -107,7 +107,6 @@
       "stores": {
         "ir": 4,
         "rf": 2,
-        "torp": 1,
         "flare": 24
       },
       "launch": [
@@ -263,16 +262,6 @@
             "rf",
             "ir"
           ]
-        },
-        {
-          "id": "L1",
-          "size": "L",
-          "cap": 1,
-          "pos": [-2.25, -0.4, 0.55],
-          "allow": [
-            "torp"
-          ],
-          "legacy": true
         }
       ]
     },

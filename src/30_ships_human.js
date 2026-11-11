@@ -10,254 +10,155 @@ const H = { // palette
   hull: 0x9aa3ad, hull2: 0x838d99, dark: 0x3a4049, panel: 0x5b6572, red: 0xc8402f, canopy: 0x3aa8dc,
   nozzle: 0x2a2d33, white: 0xc9ccd0, navy: 0x2f4a7a, orange: 0xd9772b, glow: 0x7fd0ff, amber: 0xffc060,
 };
-// Approved human-fleet finish, applied only to a hull when its model is revised.
-const CDF_FIGHTER_COLOURS = new Map([
-  [K.hull, 0xb9beb9], [K.hull2, 0x909b9a], [K.hull3, 0xcbd0c9],
-  [K.white, 0xd9dcd5], [K.amber, 0xd9772b], [K.dark, 0x303a3e],
-]);
-function cdfFighterFinish(prims) {
-  return prims.map(p => ({...p, col: CDF_FIGHTER_COLOURS.get(p.col) ?? p.col,
-    ...(p.col2 !== undefined ? {col2: CDF_FIGHTER_COLOURS.get(p.col2) ?? p.col2} : {})}));
-}
-
-// ---- Kestrel surface-detail prims: lod 2 = built from detail index 6, lod 3 = index 7; paint/text from index 5 -------------
-const kNoz = (x, y, z, r) => [                                  // nozzle petals + heat bands around a pod
-  ...ringSegs(x, y, z - 0.05, z + 0.42, r * 0.98, 12, 0.04, H.nozzle, { lod: 2 }),
-  ...ringSegs(x, y, z + 0.05, z + 0.36, r * 0.72, 8, 0.03, 0x5a6068, { lod: 3 }),
-];
-const kestrelDetail = [
-  // canopy frame ribs and spine
-  tap([0, 0.34, -3.35], 0.035, [0.4, 0.3], [0.4, 0.3], K.dark, { sh: 'e', lod: 2 }),
-  tap([0, 0.34, -2.55], 0.035, [0.45, 0.33], [0.45, 0.33], K.dark, { sh: 'e', lod: 2 }),
-  tap([0, 0.34, -1.85], 0.035, [0.4, 0.3], [0.4, 0.3], K.dark, { sh: 'e', lod: 2 }),
-  seg([0, 0.655, -3.3], [0, 0.63, -1.75], 0.028, 0.028, K.dark, { lod: 2 }),
-  tap([0, 0.2, -3.3], 1.25, [0.22, 0.04], [0.5, 0.05], K.white, { sh: 'r', lod: 2 }),                 // chin spine panel
-  // dorsal avionics: heat-sink fins, dish and blade antennae
-  ...rungs(0, 0.82, -0.1, 1.2, 6, 0.2, 0.09, 0.03, K.hull3, { lod: 2 }),
-  ell([0, 0.72, 1.85], [0.28, 0.12, 0.34], K.white, { lod: 2 }),
-  seg([0, 0.78, 1.85], [0, 0.98, 1.85], 0.02, 0.02, K.dark, { lod: 2 }),
-  tap([0.9, 0.6, 2.4], 0.5, [0.04, 0.22], [0.04, 0.12], K.dark, { ax: 'y', sweep: 0.5, lod: 3 }),
-  // engine pods: intake lips, heat bands, nozzle petals
-  tap([3.35, 0.5, 1.82], 0.06, [0.84, 0.58], [0.84, 0.58], K.dark, { sh: 'h', lod: 2 }),
-  tap([3.9, -0.6, 2.67], 0.06, [0.72, 0.5], [0.72, 0.5], K.dark, { sh: 'h', lod: 2 }),
-  tap([3.35, 0.5, 4.3], 0.07, [0.82, 0.56], [0.82, 0.56], K.hull2, { sh: 'h', lod: 2 }),
-  tap([3.35, 0.5, 5.1], 0.07, [0.8, 0.55], [0.8, 0.55], K.hull2, { sh: 'h', lod: 2 }),
-  tap([3.9, -0.6, 4.9], 0.07, [0.72, 0.49], [0.72, 0.49], K.hull3, { sh: 'h', lod: 2 }),
-  tap([3.9, -0.6, 5.7], 0.07, [0.7, 0.48], [0.7, 0.48], K.hull3, { sh: 'h', lod: 2 }),
-  ...kNoz(3.35, 0.5, 5.95, 0.5), ...kNoz(3.9, -0.6, 6.3, 0.46),
-  // wing hardpoints with slim IR missiles on pylons, leading-edge sensor blisters
-  tap([2.25, -0.17, 1.9], 0.55, [0.04, 0.18], [0.04, 0.16], K.dark, { ax: 'y', lod: 2 }),
-  seg([2.25, -0.4, 0.9], [2.25, -0.4, 2.8], 0.09, 0.09, K.white, { lod: 2 }), seg([2.25, -0.4, 0.55], [2.25, -0.4, 0.9], 0.09, 0.02, 0xc33a2a, { lod: 2 }),
-  tap([1.75, -0.17, 2.2], 0.45, [0.04, 0.16], [0.04, 0.14], K.dark, { ax: 'y', lod: 3 }),
-  seg([1.75, -0.36, 1.35], [1.75, -0.36, 2.9], 0.07, 0.07, K.white, { lod: 3 }),
-  ell([4.1, 0.05, 1.25], [0.1, 0.07, 0.17], K.canopy, { lod: 2 }),
-  ell([3.1, 0.04, 1.3], [0.1, 0.07, 0.17], K.canopy, { lod: 3 }),
-  // wing flap hinge lines (thin dark strips) and tip lights
-  tap([3.6, 0.07, 3.25], 0.025, [1.3, 0.04], [0.8, 0.04], K.dark, { ax: 'x', sweep: 0.3, lod: 2 }),
-  // gun boom: shroud rings, muzzle brake, feed lines; missile pylon rail
-  ...[-1.6, -2.8, -3.8, -4.8].map(z => tap([-0.62, -0.46, z], 0.07, [0.17, 0.16], [0.17, 0.16], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
-  tap([-0.62, -0.48, -6.3], 0.16, [0.13, 0.13], [0.13, 0.13], H.nozzle, { sh: 'e', noMirror: true, lod: 2 }),
-  seg([-0.45, -0.3, -1.4], [-0.45, -0.38, -2.6], 0.03, 0.03, K.amber, { noMirror: true, lod: 3 }),
-  ...[-1.8, -2.6, -3.4].map(z => tap([0.6, -0.43, z], 0.05, [0.12, 0.11], [0.12, 0.11], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
-  // wing-tip pod details
-  tap([4.95, -0.04, 1.2], 0.06, [0.15, 0.13], [0.15, 0.13], K.hull3, { sh: 'e', lod: 2 }),
-  // nose: pitot probe and sensor ring
-  seg([0, -0.18, -4.7], [0, -0.17, -5.9], 0.03, 0.01, K.dark, { lod: 2 }),
-  // markings (tier 1+): ochre wing stripes, white nose flash, hull numbers on the fins and wings
-  { t: 'paint', box: [2.0, -0.2, 3.1, 4.6, 0.2, 3.45], col: K.amber, side: 'top', mix: 0.85 },
-  { t: 'paint', box: [-0.25, 0.1, -4.2, 0.25, 0.5, -3.5], col: K.white, side: 'top', mix: 0.9 },
-  { t: 'paint', box: [0.8, 0.0, 1.8, 1.7, 0.7, 2.6], col: K.white, side: 'side', mix: 0.7 },
-  { t: 'text', c: [1.16, 1.1, 3.25], face: '+x', text: 'CDF', px: 0.075, col: K.white },
-  { t: 'text', c: [3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: K.dark, mir: false },
-  { t: 'text', c: [-3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: K.dark, mir: false },
+// ---- Human fighters, 2026-11-12 rebuild in the approved fleet language (docs/DESIGN_VEHICLES_AND_LOADOUTS.md): modular blocky hulls in off-white
+// and grey, graphite mechanisms, restrained orange bands; round drive pods on real spars; every gun, rack and turret seat sits on structure.
+// Data (mounts, engines, comps, stations, launch points, eye) is unchanged in data/db.json; these prims are built around those positions.
+const CF = { w: 0xd9dcd5, g1: 0xbfc3bd, g2: 0x9aa3a2, g3: 0x737d7e, dk: 0x2c3337, gr: 0x1d2124, or: 0xd9772b, can: 0x22394a, noz: 0x15181c, red: 0xc33a2a };
+// A round drive pod: intake ring, body, orange band, graphite exhaust collar and the nozzle glow(s) at the engine positions from the database.
+const cfPod = (x, y, z0, z1, r0, r1, glows, band = 0.32) => {
+  const zc = (z0 + z1) / 2, hz = (z1 - z0) / 2, bz = z0 + (z1 - z0) * band, rb = r0 + (r1 - r0) * band + 0.06;
+  return [
+    tap([x, y, zc], hz, [r0, r0], [r1, r1], CF.w, { sh: 'e' }),
+    tap([x, y, z0 + 0.06], 0.1, [r0 * 0.9, r0 * 0.9], [r0 * 0.94, r0 * 0.94], CF.gr, { sh: 'e' }),
+    tap([x, y, bz], Math.max(0.14, hz * 0.09), [rb, rb], [rb, rb], CF.or, { sh: 'e' }),
+    tap([x, y, z1 + 0.12], 0.14, [r1 * 1.02, r1 * 1.02], [r1 * 0.94, r1 * 0.94], CF.gr, { sh: 'e' }),
+    ...glows.map(([gx, gy, gr]) => ell([gx, gy, z1 + 0.24], [gr * 0.9, gr * 0.9, 0.08], H.glow, { glow: true })),
+  ];
+};
+const cfMissile = (x, y, z0, z1, r) => [                      // a missile on its rail: white body, red seeker, graphite pylon above
+  seg([x, y, z0 + r * 2], [x, y, z1], r, r, CF.w),
+  seg([x, y, z0], [x, y, z0 + r * 2], 0.02, r, CF.red),
+  tap([x, y + r + 0.08, (z0 + z1) / 2], (z1 - z0) / 2 * 0.7, [0.04, 0.08], [0.04, 0.08], CF.gr, { ax: 'y' }),
 ];
 
 SHIPS.kestrel = {
   ...DB.ships.kestrel,
   prims: [
-    // long chined fuselage: drooping chin nose into a wide flat wing-body
-    tap([0, -0.2, -3.3], 2.0, [0.22, 0.14], [0.66, 0.38], K.hull, { sh: 'd', sweepY: 0.11 }),
-    tap([0, 0, -0.5], 1.0, [0.62, 0.38], [1.25, 0.42], K.hull, { sh: 'h' }),
-    tap([0, 0, 1.9], 1.45, [1.25, 0.42], [1.7, 0.38], K.hull2, { sh: 'h' }),
-    tap([0, -0.34, 0.6], 3.4, [0.5, 0.18], [1.0, 0.16], K.dark, { sh: 'h' }),                // darker belly
-    tap([0, -0.18, -4.35], 0.5, [0.04, 0.05], [0.2, 0.13], 0x20252b, { sh: 'd' }),           // dark sensor nose tip
-    tap([0, 0.05, -3.5], 0.35, [0.3, 0.2], [0.3, 0.2], K.white, { sh: 'h' }),                 // white chin panels
-    tap([0, 0.12, -2.0], 0.22, [0.5, 0.3], [0.5, 0.3], K.white, { sh: 'h' }),
-    // canopy and dorsal avionics block
-    ell([0, 0.34, -2.55], [0.42, 0.3, 1.05], K.canopy, { glow: false }),
-    tap([0, 0.32, -2.55], 0.1, [0.5, 0.06], [0.5, 0.06], K.white, { sh: 'h' }),
-    tap([0, 0.5, 0.6], 1.4, [0.62, 0.26], [0.95, 0.3], K.hull3, { sh: 'e' }),
-    tap([0, 0.62, 0.6], 0.8, [0.28, 0.08], [0.4, 0.1], K.dark, { sh: 'h', dots: { col: K.amber, p: 0.06 } }),
-    // swept wing plates
-    tap([3.0, -0.02, 2.2], 2.0, [1.9, 0.15], [0.85, 0.07], K.hull2, { ax: 'x', sweep: 0.3, seam: [2, 3] }),
-    tap([3.5, -0.02, 1.35], 0.25, [0.9, 0.17], [0.7, 0.1], K.white, { ax: 'x', sweep: 0.3 }),   // leading-edge strip
-    tap([4.6, 0.0, 3.0], 0.3, [0.7, 0.1], [0.65, 0.08], K.amber, { ax: 'x', sweep: 0.3 }),
-    // tall canted dorsal fins
-    tap([1.05, 1.0, 3.15], 1.15, [1.25, 0.08], [0.55, 0.05], K.hull, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.3] }),
-    tap([1.18, 1.95, 3.55], 0.12, [0.5, 0.08], [0.45, 0.06], K.amber, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.3] }),
-    // engine pods: two boxy nacelles per side, louvred intakes
-    tap([3.35, 0.5, 3.85], 1.9, [0.78, 0.52], [0.72, 0.5], K.hull3, { sh: 'h' }),
-    tap([3.35, 0.5, 1.9], 0.12, [0.74, 0.48], [0.74, 0.48], 0x15181c, { dots: { col: K.amber, p: 0.12 } }),
-    tap([3.35, 0.5, 5.9], 0.3, [0.6, 0.42], [0.52, 0.38], H.nozzle, { sh: 'e' }),
-    ell([3.35, 0.5, 6.25], [0.46, 0.34, 0.1], H.glow, { glow: true }),
-    tap([3.9, -0.6, 4.45], 1.7, [0.7, 0.46], [0.66, 0.44], K.hull2, { sh: 'h' }),
-    tap([3.9, -0.6, 2.75], 0.12, [0.66, 0.42], [0.66, 0.42], 0x15181c, { dots: { col: K.amber, p: 0.12 } }),
-    tap([3.9, -0.6, 6.25], 0.3, [0.54, 0.38], [0.48, 0.34], H.nozzle, { sh: 'e' }),
-    ell([3.9, -0.6, 6.6], [0.42, 0.3, 0.1], H.glow, { glow: true }),
-    tap([2.4, -0.1, 3.9], 0.9, [0.5, 0.3], [0.5, 0.3], K.dark, { sh: 'h', ax: 'x' }),            // pod struts
-    // long under-slung gun boom (left) and missile pylon (right)
-    seg([-0.62, -0.42, -1.2], [-0.62, -0.48, -6.4], 0.12, 0.1, K.dark, { noMirror: true }),
-    ell([-0.62, -0.45, -2.2], [0.24, 0.2, 0.9], K.hull2, { noMirror: true }),
-    seg([-0.62, -0.48, -5.7], [-0.62, -0.48, -5.9], 0.2, 0.2, 0x20252b, { noMirror: true }),
-    seg([-0.62, -0.48, -6.1], [-0.62, -0.48, -6.3], 0.18, 0.18, 0x20252b, { noMirror: true }),
-    seg([0.6, -0.42, -1.0], [0.6, -0.45, -4.5], 0.14, 0.11, K.dark, { noMirror: true }),   // MD-9 mag barrel on the right boom
-    tap([0.6, -0.44, -2.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),
-    tap([0.6, -0.44, -3.0], 0.3, [0.3, 0.26], [0.3, 0.26], K.panel, { sh: 'e', noMirror: true }),   // coil collars
-    tap([0.6, -0.45, -4.45], 0.15, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e', noMirror: true }),   // muzzle
-    // wing-tip MK-30 HE cannons: barrel + muzzle brake (realism pass 2026-10-22; was a plasma-bolter glow)
-    seg([4.95, -0.04, 1.9], [4.95, -0.04, 0.7], 0.12, 0.09, K.dark),
-    seg([4.95, -0.04, 0.78], [4.95, -0.04, 0.58], 0.17, 0.17, K.dark),
-    // antennae, nav lights, ventral sensor legs
-    seg([2.2, 0.4, 3.6], [4.2, 0.9, 5.2], 0.04, 0.02, K.dark),
-    seg([0, 0.6, 1.2], [0, 1.1, 2.0], 0.04, 0.02, K.dark),
-    seg([0, -0.4, 1.4], [0, -0.9, 1.5], 0.05, 0.04, K.dark), seg([0.2, -0.4, 1.6], [0.25, -0.85, 1.7], 0.04, 0.03, K.dark),
-    ell([-5.1, 0, 3.0], [0.09, 0.06, 0.09], 0xff3030, { glow: true, noMirror: true }),
-    ell([5.1, 0, 3.0], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
-    ...kestrelDetail,
+    // modular fuselage: angled nose wedge, cockpit section, long central body, tapering aft section, graphite belly keel
+    tap([0, -0.15, -3.6], 1.1, [0.24, 0.16], [0.72, 0.46], CF.w, { sh: 'h' }),
+    tap([0, 0, -1.3], 1.2, [0.72, 0.46], [1.15, 0.58], CF.g1, { sh: 'h' }),
+    tap([0, 0, 1.6], 1.7, [1.15, 0.58], [1.3, 0.6], CF.w, { sh: 'r' }),
+    tap([0, 0, 4.35], 1.3, [1.3, 0.6], [0.8, 0.44], CF.g2, { sh: 'h' }),
+    tap([0, -0.58, 0.6], 3.6, [0.55, 0.12], [0.8, 0.12], CF.g3, { sh: 'r' }),
+    tap([0, -0.12, -4.75], 0.12, [0.1, 0.08], [0.24, 0.16], CF.gr, { sh: 'h' }),              // radar tip
+    tap([0, 0, -2.62], 0.12, [0.74, 0.48], [0.74, 0.48], CF.or, { sh: 'h' }),                 // orange nose band
+    // single-seat canopy with a graphite frame, dorsal spine module with access panels
+    ell([0, 0.55, -2.2], [0.44, 0.32, 1.0], CF.can, { glow: false }),
+    tap([0, 0.56, -2.2], 0.05, [0.48, 0.34], [0.48, 0.34], CF.dk, { sh: 'e' }),
+    tap([0, 0.66, 0.9], 1.6, [0.48, 0.17], [0.6, 0.2], CF.g1, { sh: 'r' }),
+    ...rungs(0, 0.86, 0.0, 1.8, 4, 0.3, 0.04, 0.05, CF.g3, { lod: 2 }),
+    // stub wings carry the wing-tip HE cannons; a box spar carries each drive pod
+    tap([2.6, -0.05, 2.3], 2.4, [1.45, 0.16], [0.95, 0.11], CF.g2, { ax: 'x', sweep: 0.22 }),
+    tap([2.2, 0.0, 4.2], 1.1, [0.85, 0.3], [0.85, 0.3], CF.g3, { ax: 'x' }),
+    // wing-tip MK-30 HE cannon pods (muzzle at the mount, z 0.6)
+    tap([4.95, -0.04, 2.15], 1.15, [0.22, 0.22], [0.28, 0.26], CF.g1, { sh: 'h' }),
+    seg([4.95, -0.04, 1.05], [4.95, -0.04, 0.72], 0.11, 0.09, CF.gr),
+    seg([4.95, -0.04, 0.72], [4.95, -0.04, 0.62], 0.16, 0.16, CF.gr),
+    // drive pods: one round pod per side around both nozzles
+    ...cfPod(3.65, -0.05, 1.9, 6.2, 0.95, 1.15, [[3.35, 0.5, 0.46], [3.9, -0.6, 0.42]]),
+    tap([3.65, 1.45, 4.7], 0.9, [0.85, 0.08], [0.42, 0.06], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
+    tap([3.65, 2.25, 5.15], 0.12, [0.42, 0.07], [0.38, 0.06], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
+    // under-nose guns: MK-20 cannon left, MD-9 mag driver right, each in its own housing
+    tap([-0.62, -0.5, -2.8], 1.6, [0.2, 0.18], [0.3, 0.26], CF.g2, { sh: 'h', noMirror: true }),
+    seg([-0.62, -0.48, -4.35], [-0.62, -0.48, -6.25], 0.08, 0.07, CF.gr, { noMirror: true }),
+    seg([-0.62, -0.48, -6.25], [-0.62, -0.48, -6.42], 0.13, 0.13, CF.gr, { noMirror: true }),
+    tap([0.6, -0.5, -2.6], 1.3, [0.22, 0.2], [0.3, 0.26], CF.g2, { sh: 'h', noMirror: true }),
+    seg([0.6, -0.45, -3.85], [0.6, -0.45, -4.5], 0.12, 0.11, CF.gr, { noMirror: true }),
+    ...[-4.0, -4.3].map(z => tap([0.6, -0.45, z], 0.05, [0.18, 0.18], [0.18, 0.18], CF.g3, { sh: 'e', noMirror: true })),
+    // missiles: S1 (4 x SW-9) and M1 (2 x LN-3) racks under the right wing, mirrored rails on the left
+    ...cfMissile(2.25, -0.4, 0.55, 2.4, 0.09), ...cfMissile(1.75, -0.36, 1.35, 3.0, 0.08),
+    // nav lights, antenna, markings
+    ell([-5.2, 0, 2.6], [0.09, 0.06, 0.09], 0xff3030, { glow: true, noMirror: true }),
+    ell([5.2, 0, 2.6], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
+    seg([0, 0.86, 2.2], [0, 1.35, 2.9], 0.03, 0.02, CF.dk, { lod: 2 }),
+    { t: 'paint', box: [2.0, -0.3, 2.9, 4.4, 0.3, 3.25], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'paint', box: [0.75, -0.2, 3.0, 1.15, 0.6, 3.5], col: CF.or, side: 'side', mix: 0.85 },
+    { t: 'text', c: [1.12, 0.1, 1.4], face: '+x', text: 'CDF', px: 0.075, col: CF.dk },
+    { t: 'text', c: [3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: CF.dk, mir: false },
+    { t: 'text', c: [-3.0, 0.1, 2.0], face: '+y', text: '07', px: 0.1, col: CF.dk, mir: false },
   ],
 };
 
 SHIPS.merlin = {
   ...DB.ships.merlin,
   prims: [
-    // Narrow chined fuselage, with a drooping nose ahead of the single canopy.
-    tap([0, -0.08, -2.35], 4.3, [0.16, 0.12], [0.58, 0.3], K.hull, { sh: 'd' }),
-    tap([0, 0, -0.25], 3.1, [0.58, 0.32], [0.92, 0.36], K.hull2, { sh: 'h' }),
-    tap([0, 0.02, 1.7], 3.2, [0.92, 0.36], [0.56, 0.3], K.hull3, { sh: 'h' }),
-    tap([0, -0.38, 0.7], 3.5, [0.48, 0.12], [0.72, 0.13], K.dark, { sh: 'h' }),
-    tap([0, -0.12, -4.28], 0.32, [0.05, 0.05], [0.16, 0.1], K.dark, { sh: 'd' }),
-    // One-seat bubble canopy centered on the documented eye position.
-    ell([0, 0.43, -1.8], [0.34, 0.3, 0.82], K.canopy, { glow: false }),
-    tap([0, 0.53, -1.8], 1.45, [0.37, 0.035], [0.37, 0.035], K.white, { sh: 'e' }),
-    // Swept delta wings keep the tips within the 7.8 m span.
-    tap([2.15, -0.03, 1.65], 0.22, [1.72, 0.12], [0.16, 0.055], K.hull2, { ax: 'x', sweep: 0.34, sh: 'r' }),
-    tap([2.55, 0.01, 0.9], 0.12, [1.35, 0.08], [0.16, 0.045], K.white, { ax: 'x', sweep: 0.34 }),
-    tap([3.35, -0.02, 2.75], 0.16, [0.52, 0.07], [0.12, 0.04], K.amber, { ax: 'x', sweep: 0.2 }),
-    // Canted tail fins with the specified orange identification bands.
-    tap([0.92, 0.75, 3.25], 1.4, [0.54, 0.08], [0.28, 0.05], K.hull, { ax: 'y', sweep: 0.38, rot: [0, 0, -0.28] }),
-    tap([0.98, 1.34, 3.53], 0.12, [0.36, 0.07], [0.28, 0.05], H.orange, { ax: 'y', sweep: 0.38, rot: [0, 0, -0.28] }),
-    // Twin close-in nacelles end at the database engine/nozzle positions.
-    ...[-1.5, 1.5].flatMap(x => [
-      tap([x, 0, 3.78], 1.8, [0.42, 0.34], [0.38, 0.3], K.hull3, { sh: 'h' }),
-      tap([x, 0.15, 4.4], 0.2, [0.4, 0.32], [0.4, 0.32], K.dark, { sh: 'e' }),
-      ...ringSegs(x, 0.15, 4.52, 4.9, 0.5, 10, 0.045, H.nozzle, { lod: 2 }),
-      ell([x, 0.15, 4.88], [0.28, 0.28, 0.08], H.glow, { glow: true }),
-    ]),
-    // MK-20 breech fairings and the paired 1.5 m barrels, ending at each mount.
-    ...[-1, 1].flatMap(side => {
-      const x = side * 0.55;
-      return [
-        ell([x, -0.3, -3.18], [0.22, 0.18, 0.48], K.hull3, { noMirror: true }),
-        seg([x, -0.3, -3.25], [x, -0.3, -4.75], 0.075, 0.06, K.dark, { noMirror: true }),
-        tap([x, -0.3, -4.75], 0.1, [0.09, 0.09], [0.09, 0.09], 0x20252b, { sh: 'e', noMirror: true }),
-      ];
-    }),
-    // Twin underwing IR rails and missiles; the nose of each missile is the mirrored launch point.
-    ...[-1, 1].flatMap(side => {
-      const x = side * 1.7;
-      return [
-        seg([x, -0.48, 0.3], [x, -0.48, 1.45], 0.055, 0.045, K.dark, { noMirror: true }),
-        seg([x - side * 0.12, -0.48, 0.65], [x - side * 0.12, -0.48, 1.4], 0.025, 0.025, K.white, { noMirror: true }),
-        seg([x, -0.32, 0.3], [x, -0.32, 1.2], 0.12, 0.07, K.hull3, { noMirror: true }),
-        tap([x, -0.32, 0.36], 0.12, [0.1, 0.08], [0.1, 0.08], H.amber, { sh: 'e', glow: true, noMirror: true }),
-      ];
-    }),
-    // Subsystem housings: radar nose, shield emitter and reactor cooling grille.
-    ell([0, -0.1, -3.8], [0.24, 0.16, 0.28], K.dark, { glow: false }),
-    ell([0, 0.2, 0.9], [0.34, 0.12, 0.32], K.white, { glow: false }),
-    seg([0, 0.28, 0.78], [0, 0.72, 0.9], 0.025, 0.018, K.dark),
-    ...rungs(0, 0.38, 1.7, 2.25, 4, 0.24, 0.08, 0.025, K.dark, { lod: 2 }),
-    // Tail flare slots and simple fleet markings.
-    ...[-0.5, 0.5].map(x => tap([x, 0.5, 4.22], 0.28, [0.1, 0.08], [0.1, 0.08], K.dark, { sh: 'e', noMirror: true, lod: 2 })),
-    { t: 'paint', box: [-2.8, 0.08, 0.2, 2.8, 0.28, 1.0], col: K.white, side: 'top', mix: 0.78 },
-    { t: 'paint', box: [-0.38, 0.1, -4.12, 0.38, 0.38, -3.55], col: K.white, side: 'top', mix: 0.9 },
-    { t: 'text', c: [1.22, 0.16, 1.05], face: '+x', text: 'CDF', px: 0.085, col: K.dark },
+    // slim arrow fuselage: long nose, compact cockpit, short tail between the pods
+    tap([0, -0.08, -2.8], 1.4, [0.14, 0.11], [0.55, 0.36], CF.w, { sh: 'h' }),
+    tap([0, 0, 0.0], 1.4, [0.55, 0.36], [0.68, 0.4], CF.g1, { sh: 'h' }),
+    tap([0, 0, 2.7], 1.3, [0.68, 0.4], [0.5, 0.32], CF.w, { sh: 'h' }),
+    tap([0, -0.38, 0.4], 2.6, [0.3, 0.08], [0.4, 0.08], CF.g3, { sh: 'r' }),
+    tap([0, -0.08, -4.25], 0.08, [0.06, 0.05], [0.14, 0.11], CF.gr, { sh: 'h' }),
+    ell([0, 0.38, -1.3], [0.3, 0.24, 0.8], CF.can, { glow: false }),
+    tap([0, 0.4, -1.3], 0.04, [0.33, 0.25], [0.33, 0.25], CF.dk, { sh: 'e' }),
+    tap([0, 0.44, 1.0], 0.9, [0.3, 0.1], [0.36, 0.12], CF.g1, { sh: 'r' }),
+    // twin MK-20 barrels in nose housings (muzzles at z -4.75)
+    tap([0.55, -0.28, -2.3], 1.1, [0.14, 0.13], [0.2, 0.18], CF.g2, { sh: 'h' }),
+    seg([0.55, -0.3, -3.4], [0.55, -0.3, -4.6], 0.07, 0.06, CF.gr),
+    seg([0.55, -0.3, -4.6], [0.55, -0.3, -4.72], 0.1, 0.1, CF.gr),
+    // short swept wings with orange tips; spar to the pods
+    tap([1.9, -0.1, 1.5], 1.6, [0.95, 0.1], [0.42, 0.06], CF.g2, { ax: 'x', sweep: 0.42 }),
+    tap([0.95, 0.05, 2.9], 0.4, [0.7, 0.18], [0.7, 0.18], CF.g3, { ax: 'x' }),
+    // round drive pods
+    ...cfPod(1.5, 0.15, 1.3, 4.5, 0.45, 0.58, [[1.5, 0.15, 0.5]]),
+    tap([1.5, 0.85, 3.5], 0.5, [0.6, 0.06], [0.3, 0.05], CF.g1, { ax: 'y', sweep: 0.6 }),
+    tap([1.5, 1.3, 3.8], 0.08, [0.3, 0.05], [0.28, 0.05], CF.or, { ax: 'y', sweep: 0.6 }),
+    // S1 station: two SW-9 on the right wing rail, mirrored rail left
+    ...cfMissile(1.7, -0.32, 0.3, 1.6, 0.07),
+    ell([-3.4, -0.1, 2.2], [0.07, 0.05, 0.07], 0xff3030, { glow: true, noMirror: true }),
+    ell([3.4, -0.1, 2.2], [0.07, 0.05, 0.07], 0x30ff60, { glow: true, noMirror: true }),
+    { t: 'paint', box: [-0.35, 0.0, -3.0, 0.35, 0.5, -2.7], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'paint', box: [2.6, -0.4, 1.6, 3.5, 0.3, 2.2], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'text', c: [0.7, 0.05, 1.4], face: '+x', text: 'CDF', px: 0.06, col: CF.dk },
   ],
 };
 
 SHIPS.bittern = {
   ...DB.ships.bittern,
   prims: [
-    // Blunt stepped nose and deep, straight fuselage
-    tap([0, -0.05, -6.3], 8.8, [0.45, 0.55], [1.7, 1.7], K.hull, { sh: 'h' }),
-    tap([0, 0.05, -2.0], 8.0, [1.7, 1.7], [1.7, 1.8], K.hull3, { sh: 'h' }),
-    tap([0, -0.75, -0.3], 7.5, [1.5, 1.0], [1.65, 1.25], K.hull2, { sh: 'h' }),
-    tap([0, -1.45, 0.0], 7.0, [1.1, 0.35], [1.25, 0.4], K.dark, { sh: 'h' }),
-    tap([0, 0.12, -9.6], 1.7, [0.5, 0.55], [1.0, 0.9], K.dark, { sh: 'd' }),
-    tap([0, 0.1, -8.9], 0.35, [1.28, 1.1], [1.28, 1.1], K.white, { sh: 'h' }),
-    // Tandem canopy for pilot and weapons officer
-    ell([0, 1.62, -6.0], [0.9, 0.72, 2.35], K.canopy),
-    ...[-7.5, -6.0, -4.5].map(z => tap([0, 2.22, z], 0.045, [0.9, 0.05], [0.85, 0.05], K.dark, { sh: 'e', lod: 2 })),
-    seg([0, 2.34, -8.2], [0, 2.34, -3.8], 0.035, 0.035, K.dark, { lod: 2 }),
-    // Armoured cockpit cage: protection is visibly tied into the forward hull,
-    // rather than a glass bubble floating over the bomber's pressure spine.
-    seg([1.15, 0.82, -8.05], [1.15, 1.9, -4.0], 0.11, 0.08, K.panel),
-    seg([1.15, 0.82, -8.05], [0.35, 2.26, -6.0], 0.1, 0.06, K.panel),
-    seg([1.15, 1.9, -4.0], [0.35, 2.26, -6.0], 0.1, 0.06, K.panel),
-    // Broad constant-chord wings with white leading edges and amber tips
-    tap([5.35, 0.02, 2.5], 7.3, [0.28, 6.0], [0.24, 2.5], K.hull2, { ax: 'x', sweep: 0.08, seam: [2.2, 1.6] }),
-    tap([5.15, 0.2, -3.05], 7.1, [0.09, 0.24], [0.08, 0.2], K.white, { ax: 'x', sweep: 0.08 }),
-    tap([5.35, 0.18, 8.15], 7.3, [0.25, 0.22], [0.22, 0.2], K.amber, { ax: 'x', sweep: 0.08 }),
-    // Twin box nacelles, intake louvers and four individually placed nozzles
-    ...[-5.2, -3.6, 3.6, 5.2].map(x => tap([x, 0.3, 7.0], 7.7, [0.92, 1.0], [0.84, 0.95], K.hull3, { sh: 'h', noMirror: true })),
-    ...[-5.2, -3.6, 3.6, 5.2].map(x => tap([x, 0.3, 3.25], 0.12, [0.82, 0.86], [0.82, 0.86], K.dark, { sh: 'h', dots: { col: K.amber, p: 0.14 }, noMirror: true })),
-    ...[-5.2, -3.6, 3.6, 5.2].flatMap(x => [
-      tap([x, 0.3, 10.28], 0.38, [0.78, 0.72], [0.78, 0.72], H.nozzle, { sh: 'e', noMirror: true }),
-      ...ringSegs(x, 0.3, 10.48, 10.92, 0.62, 10, 0.045, 0x5a6068, { lod: 2, noMirror: true }),
-      ell([x, 0.3, 10.96], [0.54, 0.5, 0.04], H.glow, { glow: true, noMirror: true }),
+    // broad load-bearing fuselage: armoured nose with the two HE cannons, cockpit block, centre body, tail section
+    tap([0, 0, -9.0], 1.8, [0.95, 0.75], [2.0, 1.45], CF.w, { sh: 'h' }),
+    tap([0, 0, -3.0], 4.2, [2.0, 1.45], [2.4, 1.6], CF.g1, { sh: 'h' }),
+    tap([0, 0, 4.4], 3.2, [2.4, 1.6], [1.6, 1.2], CF.w, { sh: 'h' }),
+    tap([0, 0.2, 8.8], 1.2, [1.6, 1.2], [1.0, 0.8], CF.g2, { sh: 'r' }),
+    tap([0, -1.45, -1.0], 6.5, [1.4, 0.2], [1.6, 0.22], CF.g3, { sh: 'r' }),
+    tap([0, 0.05, -10.8], 0.15, [0.5, 0.4], [0.95, 0.75], CF.gr, { sh: 'h' }),
+    tap([0, 0, -7.05], 0.2, [2.02, 1.47], [2.02, 1.47], CF.or, { sh: 'h' }),
+    // tandem canopy for pilot and weapons officer on a raised cockpit block
+    tap([0, 1.1, -6.2], 1.7, [1.1, 0.55], [1.35, 0.6], CF.g1, { sh: 'h' }),
+    ell([0, 1.62, -6.3], [0.95, 0.6, 1.7], CF.can, { glow: false }),
+    ...[-7.2, -5.5].map(z => tap([0, 1.62, z], 0.05, [0.98, 0.62], [0.98, 0.62], CF.dk, { sh: 'e' })),
+    // HE cannon housings either side of the nose (muzzles at z -10.9)
+    tap([1.6, -0.8, -8.9], 1.6, [0.3, 0.28], [0.45, 0.4], CF.g2, { sh: 'h' }),
+    seg([1.6, -0.8, -10.45], [1.6, -0.8, -10.8], 0.13, 0.12, CF.gr),
+    seg([1.6, -0.8, -10.8], [1.6, -0.8, -10.88], 0.18, 0.18, CF.gr),
+    // torpedo cassettes: a graphite magazine frame either side of the belly, three rounds visible on the outer face,
+    // the launch mouths at the front (launch points z -5.2)
+    tap([3.0, -1.7, -1.6], 3.4, [1.0, 0.85], [1.0, 0.85], CF.gr, { sh: 'r' }),
+    tap([3.0, -1.7, -4.95], 0.12, [1.05, 0.9], [1.05, 0.9], CF.g3, { sh: 'r' }),
+    ...[-1.15, -1.7, -2.25].flatMap(y => [
+      seg([3.98, y, -4.6], [3.98, y, 1.4], 0.22, 0.22, CF.w),
+      tap([3.98, y, -1.6], 0.14, [0.24, 0.24], [0.24, 0.24], CF.or, { sh: 'e' }),
     ]),
-    // Twin outward-canted tail fins with amber tips
-    tap([2.8, 2.45, 8.0], 1.75, [0.16, 1.65], [0.1, 0.9], K.hull, { ax: 'y', sweep: 0.18, rot: [0, 0, -0.26] }),
-    tap([2.8, 3.32, 8.0], 0.12, [0.12, 0.62], [0.08, 0.35], K.amber, { ax: 'y', rot: [0, 0, -0.26] }),
-    // Nose HE barrels with visible shrouds and muzzle brakes
-    ...[-1.6, 1.6].flatMap(x => [
-      seg([x, -0.8, -8.95], [x, -0.8, -10.58], 0.16, 0.12, K.dark, { noMirror: true }),
-      ...[-9.35, -9.85, -10.35].map(z => tap([x, -0.8, z], 0.06, [0.2, 0.2], [0.2, 0.2], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
-      tap([x, -0.8, -10.68], 0.13, [0.19, 0.19], [0.19, 0.19], H.nozzle, { sh: 'e', noMirror: true }),
-    ]),
-    // Recessed 3-by-4 HM-1 cassette bays: visible front rounds, armoured rails,
-    // and maintenance doors make the 12-round bomber load credible.
-    ...[-3.4, -2.6, 2.6, 3.4].flatMap(x => [
-      seg([x, -2.45, -5.18], [x, -2.45, 0.48], 0.3, 0.3, 0xc8c8c0, { noMirror: true }),
-      seg([x, -2.45, -5.2], [x, -2.45, -4.45], 0.04, 0.28, 0xd04a3a, { noMirror: true }),
-      tap([x, -2.45, 0.2], 0.32, [0.3, 0.3], [0.3, 0.3], H.dark, { sh: 'e', noMirror: true }),
-      ...[-4.3, -1.4].map(z => tap([x, -2.45, z], 0.11, [0.34, 0.34], [0.34, 0.34], K.amber, { sh: 'e', noMirror: true })),
-      seg([x, -1.85, -5.2], [x, -2.12, -5.2], 0.14, 0.12, K.dark, { noMirror: true }),
-      seg([x, -1.85, 1.95], [x, -2.12, 1.95], 0.14, 0.12, K.dark, { noMirror: true }),
-      seg([x, -1.9, -5.2], [x, -1.9, 1.95], 0.12, 0.1, K.hull3, { noMirror: true }),
-    ]),
-    ...[-3.4, -2.6, 2.6, 3.4].flatMap(x => [-3.0, -1.25, 0.5].flatMap(z => [
-      tap([x, -1.86, z], 0.42, [0.34, 0.2], [0.34, 0.2], K.panel, { sh: 'e', noMirror: true, lod: 2 }),
-      seg([x, -2.08, z - 0.25], [x, -2.08, z - 0.82], 0.16, 0.12, 0xc8c8c0, { noMirror: true, lod: 2 }),
-    ])),
-    // Dorsal and ventral seats sized to the S turret base.
-    ell([0, 1.63, 5.6], [1.344, 0.36, 1.344], K.dark, {noMirror:true}),
-    ell([0, -1.63, 5.0], [1.344, 0.36, 1.344], K.dark, {noMirror:true}),
-    // Avionics/shield block and reactor housing mark the other major components
-    tap([0, 1.02, 0.4], 2.0, [1.1, 0.32], [1.35, 0.38], K.dark, { sh: 'h' }),
-    tap([0, 1.26, 0.4], 1.1, [0.72, 0.16], [0.92, 0.18], K.hull3, { sh: 'h', dots: { col: K.amber, p: 0.22 } }),
-    tap([0, 0.15, 4.0], 2.2, [1.15, 0.9], [1.3, 0.9], K.panel, { sh: 'h' }),
-    ...rungs(0, 0.72, 3.15, 4.85, 5, 1.1, 0.12, 0.08, K.amber, { lod: 2 }),
-    // Radar legs, antennae, and red/green wingtip navigation lights
-    ell([0, 0.1, -10.05], [0.18, 0.16, 0.08], 0x30e0ff, { glow: true }),
-    seg([-0.55, 0.4, -8.0], [-0.8, 0.85, -8.65], 0.035, 0.02, K.dark, { lod: 2 }),
-    seg([0.55, 0.4, -8.0], [0.8, 0.85, -8.65], 0.035, 0.02, K.dark, { lod: 2 }),
-    ell([-8.85, 0.08, 6.5], [0.12, 0.1, 0.12], 0xff3030, { glow: true, noMirror: true }),
-    ell([8.85, 0.08, 6.5], [0.12, 0.1, 0.12], 0x30ff60, { glow: true, noMirror: true }),
-    // Aft registration and warning marks
-    { t: 'paint', box: [-7.7, -0.15, 7.4, 7.7, 0.25, 7.8], col: K.white, side: 'top', mix: 0.85 },
-    { t: 'paint', box: [-3.8, -2.15, -4.8, 3.8, -1.9, 1.7], col: K.amber, side: 'bottom', mix: 0.8 },
-    { t: 'text', c: [1.6, 0.1, 2.0], face: '+x', text: 'CDF', px: 0.3, col: K.white },
+    tap([2.1, -0.9, -1.6], 3.0, [0.2, 0.3], [0.2, 0.3], CF.g3, { sh: 'r' }),             // cassette shoulder to the hull
+    // stub wings and the spars that carry the drive pods
+    tap([4.2, -0.4, 1.8], 2.2, [2.0, 0.25], [1.0, 0.15], CF.g2, { ax: 'x', sweep: 0.35 }),
+    tap([3.1, 0.3, 7.2], 1.3, [1.5, 0.4], [1.5, 0.4], CF.g3, { ax: 'x' }),
+    // drive pods: one large round pod per side around both nozzles
+    ...cfPod(4.4, 0.3, 4.4, 10.7, 1.5, 1.8, [[3.6, 0.3, 0.9], [5.2, 0.3, 0.9]], 0.25),
+    tap([4.4, 2.5, 8.8], 1.4, [1.2, 0.12], [0.6, 0.08], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    tap([4.4, 3.75, 9.5], 0.14, [0.6, 0.1], [0.55, 0.08], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    // PD turret seats: dorsal behind the canopy line, ventral under the tail (turret heads come from makeTurret)
+    tap([0, 1.45, 5.6], 0.7, [0.62, 0.28], [0.62, 0.28], CF.g3, { sh: 'h' }),
+    tap([0, -1.45, 5.0], 0.7, [0.62, 0.28], [0.62, 0.28], CF.g3, { sh: 'h' }),
+    // S1 rail outside the right cassette
+    ...cfMissile(3.0, -2.45, -5.2, -3.6, 0.1).slice(0, 2),
+    ell([-6.4, -0.4, 2.6], [0.12, 0.08, 0.12], 0xff3030, { glow: true, noMirror: true }),
+    ell([6.4, -0.4, 2.6], [0.12, 0.08, 0.12], 0x30ff60, { glow: true, noMirror: true }),
+    seg([0, 1.6, 1.0], [0, 2.4, 2.0], 0.05, 0.03, CF.dk, { lod: 2 }),
+    { t: 'paint', box: [-0.6, 1.0, 2.0, 0.6, 1.8, 3.2], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'paint', box: [4.8, -0.6, 2.0, 6.4, 0.2, 2.8], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'text', c: [2.42, 0.4, -2.0], face: '+x', text: 'CDF', px: 0.14, col: CF.dk },
+    { t: 'text', c: [1.7, 0.4, 3.0], face: '+x', text: '21', px: 0.16, col: CF.dk },
   ],
 };
 
@@ -673,89 +574,58 @@ SHIPS.tender = {
 //  v0.3 M4 roster: FALCHION heavy fighter, PETREL SAR CUTTER, MERIDIAN evacuation liner, GLAIVE destroyer.
 //  Numbers live in data/db.json; this is geometry only. Every mount / launch / turret position below sits on a visible barrel, rack or seat.
 // ======================================================================
-// ---- FALCHION: two-seat heavy fighter (19.5 m): tandem canopy, two nose cannons, two MD-9 mag drivers on wing-root booms, wing pylons, 3 PD seats ----
+// ---- FALCHION: two-seat heavy fighter (19.5 m), 2026-11-12 rebuild after the owner's concept (heavy two-seater with a dorsal turret):
+// long armoured centre body with a tandem canopy, four forward guns (two MK-20 in the nose, two MD-9 on the wing-root booms), one round drive pod per
+// side on a box spar, swept wings carrying the missile rails, three PD-15 seats (two dorsal, one ventral). Data unchanged in data/db.json.
 const falSeat = (z, y, dy) => {
   const D = turretDia({def:{length:19.5}}, {cls:'S'});
-  return [ell([0, y - dy * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], K.dark, {noMirror:true})];
+  return [tap([0, y - dy * D * 0.25, z], D * 0.62, [D * 0.62, D * 0.22], [D * 0.62, D * 0.22], CF.g3, { sh: 'h' })];
 };
 SHIPS.falchion = {
   ...DB.ships.falchion,
-  prims: cdfFighterFinish([
-    // chined fuselage: drooping nose, broad mid-body, long tail
-    tap([0, -0.15, -6.8], 3.0, [0.25, 0.2], [1.1, 0.62], K.hull, { sh: 'd' }),
-    tap([0, 0, -1.0], 2.8, [1.1, 0.62], [2.1, 1.1], K.hull, { sh: 'h' }),
-    tap([0, 0, 5.0], 3.2, [2.1, 1.1], [2.4, 1.2], K.hull2, { sh: 'h' }),
-    tap([0, -0.85, 1.0], 7.5, [0.9, 0.3], [1.8, 0.35], K.dark, { sh: 'h' }),
-    tap([0, -0.15, -9.5], 0.5, [0.05, 0.06], [0.24, 0.16], 0x20252b, { sh: 'd' }),
-    tap([0, 0.05, -7.0], 0.4, [0.5, 0.35], [0.5, 0.35], K.white, { sh: 'h' }),
-    // tandem canopy: pilot ahead, weapons specialist behind
-    ell([0, 0.7, -5.2], [0.8, 0.6, 1.8], K.canopy, { glow: false }),
-    ell([0, 0.85, -1.9], [0.78, 0.55, 1.35], K.canopy, { glow: false }),
-    tap([0, 0.62, -3.55], 0.14, [0.85, 0.4], [0.85, 0.4], K.white, { sh: 'h' }),
-    // Blocky cockpit shoulders and central spine carry the tandem canopy into
-    // the weapon/turret structure without covering the two crew positions.
-    tap([1.06, 0.25, -3.1], 3.0, [0.25, 0.38], [0.42, 0.5], K.hull3, { sh: 'h' }),
-    tap([0, 0.13, -8.45], 1.0, [0.34, 0.25], [0.55, 0.35], K.hull3, { sh: 'h' }),
-    seg([0.76, 0.92, -6.4], [0.76, 1.05, -0.8], 0.055, 0.055, K.dark),
-    // swept main wings with white leading edge and ochre tips
-    tap([5.2, -0.05, 2.8], 3.3, [3.6, 0.22], [1.5, 0.1], K.hull2, { ax: 'x', sweep: 0.3, seam: [2, 3] }),
-    tap([5.6, -0.03, -0.2], 2.9, [0.35, 0.24], [0.3, 0.14], K.white, { ax: 'x', sweep: 0.3 }),
-    tap([8.0, 0.0, 5.0], 0.35, [1.2, 0.14], [1.0, 0.1], K.amber, { ax: 'x', sweep: 0.3 }),
-    // twin nacelles per side with four nozzles at the database engine positions
-    tap([4.0, 0.6, 6.8], 3.4, [0.9, 0.65], [0.85, 0.6], K.hull3, { sh: 'h' }),
-    tap([4.0, 0.6, 3.4], 0.1, [0.84, 0.6], [0.84, 0.6], 0x15181c, { dots: { col: K.amber, p: 0.12 } }),
-    tap([4.0, 0.6, 10.3], 0.3, [0.7, 0.5], [0.62, 0.45], H.nozzle, { sh: 'e' }),
-    ell([4.0, 0.6, 10.75], [0.5, 0.4, 0.1], H.glow, { glow: true }),
-    tap([5.7, -0.7, 7.2], 3.0, [0.8, 0.55], [0.76, 0.52], K.hull2, { sh: 'h' }),
-    tap([5.7, -0.7, 4.2], 0.1, [0.76, 0.5], [0.76, 0.5], 0x15181c, { dots: { col: K.amber, p: 0.12 } }),
-    tap([5.7, -0.7, 10.3], 0.3, [0.64, 0.46], [0.58, 0.42], H.nozzle, { sh: 'e' }),
-    ell([5.7, -0.7, 10.75], [0.46, 0.34, 0.1], H.glow, { glow: true }),
-    tap([2.9, 0.1, 5.6], 0.7, [0.6, 0.3], [0.6, 0.3], K.dark, { sh: 'h', ax: 'x' }),         // nacelle strut
-    // Armoured cross-spars root the paired engine pods in the pressure hull.
-    tap([3.0, 0.05, 5.6], 0.95, [1.05, 0.34], [0.9, 0.28], K.hull3, { sh: 'h', ax: 'x' }),
-    tap([4.75, -0.05, 6.8], 1.0, [0.8, 0.34], [0.75, 0.3], K.hull2, { sh: 'h', ax: 'x' }),
-    tap([4.0, 0.6, 5.0], 0.19, [0.91, 0.66], [0.91, 0.66], K.amber, { sh: 'h' }),
-    tap([5.7, -0.7, 6.1], 0.16, [0.81, 0.56], [0.81, 0.56], K.amber, { sh: 'h' }),
-    // canted twin fins
-    tap([1.9, 1.8, 7.4], 1.5, [1.5, 0.09], [0.7, 0.06], K.hull, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.28] }),
-    tap([2.2, 3.2, 7.8], 0.12, [0.6, 0.08], [0.5, 0.06], K.amber, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.28] }),
-    // nose: two MK-20 barrels with breeches, shrouds and muzzle brakes (mounts end at z -10.4)
-    ...[-0.75, 0.75].flatMap(x => [
-      ell([x, -0.5, -5.4], [0.3, 0.26, 0.95], K.hull3, { noMirror: true }),
-      seg([x, -0.55, -5.2], [x, -0.55, -10.22], 0.1, 0.08, K.dark, { noMirror: true }),
-      ...[-6.4, -7.6, -8.8].map(z => tap([x, -0.55, z], 0.07, [0.2, 0.2], [0.2, 0.2], K.hull3, { sh: 'e', noMirror: true, lod: 2 })),
-      tap([x, -0.55, -10.2], 0.1, [0.15, 0.15], [0.15, 0.15], H.nozzle, { sh: 'e', noMirror: true }),
-    ]),
-    // wing-root booms with the MD-9 mag drivers: coil collars and muzzles (mounts end at z -7.7)
-    ell([2.9, -0.45, -1.8], [0.42, 0.36, 1.5], K.hull2),
-    seg([2.9, -0.45, -1.8], [2.9, -0.45, -7.5], 0.15, 0.12, K.dark),
-    ...[-2.6, -3.8, -5.0, -6.2].map(z => tap([2.9, -0.45, z], 0.14, [0.3, 0.27], [0.3, 0.27], K.hull2, { sh: 'e' })),
-    tap([2.9, -0.45, -7.48], 0.1, [0.2, 0.2], [0.18, 0.18], K.dark, { sh: 'e' }),
-    // Existing S stations are mirrored; M1 and legacy L1 occupy separate sides.
-    tap([4.6, -0.2, 1.4], 0.9, [0.1, 0.5], [0.1, 0.4], K.dark, { ax: 'y' }),
-    seg([4.6, -0.62, 0.7], [4.6, -0.62, 3.0], 0.12, 0.12, K.white),
-    seg([4.6, -0.62, 0.35], [4.6, -0.62, 0.7], 0.02, 0.12, 0xc33a2a),
-    tap([3.5, -0.2, 1.4], 0.55, [0.09, 0.4], [0.09, 0.32], K.dark, { ax: 'y', noMirror: true }),
-    seg([3.5, -0.62, 0.35], [3.5, -0.62, 2.5], 0.1, 0.1, K.white, { noMirror: true }),
-    tap([-3.5, -0.2, 1.6], 0.55, [0.11, 0.43], [0.11, 0.35], K.dark, { ax: 'y', noMirror: true }),
-    seg([-3.5, -0.62, 0.35], [-3.5, -0.62, 3.1], 0.19, 0.19, 0xc8c8c0, { noMirror: true }),
-    seg([-3.5, -0.62, 0.35], [-3.5, -0.62, 0.7], 0.03, 0.19, 0xd04a3a, { noMirror: true }),
-    // PD seats: two dorsal, one ventral
-    ...falSeat(1.2, 1.3, 1), ...falSeat(6.8, 1.4, 1), ...falSeat(3.0, -1.35, -1),
-    // subsystem housings: radar nose, shield emitter, reactor grille, antennae, nav lights
-    ell([0, -0.2, -8.7], [0.28, 0.2, 0.34], K.dark, { glow: false }),
-    ell([0, 0.3, 3.9], [0.5, 0.18, 0.5], K.white, { glow: false }),
-    ...rungs(0, 0.55, 5.2, 8.6, 4, 0.5, 0.08, 0.03, K.hull3, { lod: 2 }),
-    seg([0, 1.0, 3.0], [0, 1.6, 3.9], 0.03, 0.02, K.dark, { lod: 2 }),
-    ell([-8.3, 0, 5.0], [0.1, 0.07, 0.1], 0xff3030, { glow: true, noMirror: true }),
-    ell([8.3, 0, 5.0], [0.1, 0.07, 0.1], 0x30ff60, { glow: true, noMirror: true }),
-    // markings
-    { t: 'paint', box: [3.0, -0.2, 6.1, 7.6, 0.2, 6.5], col: K.amber, side: 'top', mix: 0.85 },
-    { t: 'paint', box: [-0.3, 0.0, -8.4, 0.3, 0.4, -7.4], col: K.white, side: 'top', mix: 0.9 },
-    { t: 'text', c: [2.12, 0.1, 2.6], face: '+x', text: 'CDF', px: 0.1, col: K.white },
-    { t: 'text', c: [5.5, 0.2, 3.6], face: '+y', text: '11', px: 0.18, col: K.dark, mir: false },
-    { t: 'text', c: [-5.5, 0.2, 3.6], face: '+y', text: '11', px: 0.18, col: K.dark, mir: false },
-  ]),
+  prims: [
+    // centre body: nose with the radar and both MK-20s, cockpit section, armoured mid-body, tail
+    tap([0, -0.2, -8.3], 1.6, [0.45, 0.35], [1.2, 0.8], CF.w, { sh: 'h' }),
+    tap([0, 0, -4.6], 2.1, [1.2, 0.8], [1.6, 1.0], CF.g1, { sh: 'h' }),
+    tap([0, 0, 1.0], 3.5, [1.6, 1.0], [1.7, 1.05], CF.w, { sh: 'r' }),
+    tap([0, 0, 6.9], 2.4, [1.7, 1.05], [1.1, 0.8], CF.g2, { sh: 'h' }),
+    tap([0, -1.0, 0.0], 7.0, [0.9, 0.12], [1.1, 0.12], CF.g3, { sh: 'r' }),
+    tap([0, -0.2, -9.95], 0.12, [0.25, 0.2], [0.45, 0.35], CF.gr, { sh: 'h' }),
+    tap([0, 0, -2.45], 0.16, [1.62, 1.02], [1.62, 1.02], CF.or, { sh: 'h' }),
+    // tandem canopy (pilot ahead, weapons officer behind) on a raised cockpit block
+    tap([0, 0.7, -4.4], 1.9, [0.85, 0.35], [1.0, 0.4], CF.g1, { sh: 'h' }),
+    ell([0, 1.05, -5.4], [0.7, 0.45, 1.25], CF.can, { glow: false }),
+    ell([0, 1.1, -3.4], [0.72, 0.45, 1.05], CF.can, { glow: false }),
+    tap([0, 1.06, -4.4], 0.1, [0.76, 0.48], [0.76, 0.48], CF.dk, { sh: 'e' }),
+    tap([0, 0.95, 0.6], 2.6, [0.8, 0.25], [0.9, 0.28], CF.g1, { sh: 'r' }),          // dorsal spine between the turret seats
+    // nose MK-20 pair (muzzles z -10.4)
+    tap([0.75, -0.55, -7.6], 1.6, [0.2, 0.18], [0.28, 0.24], CF.g2, { sh: 'h' }),
+    seg([0.75, -0.55, -9.2], [0.75, -0.55, -10.22], 0.09, 0.08, CF.gr),
+    seg([0.75, -0.55, -10.22], [0.75, -0.55, -10.38], 0.14, 0.14, CF.gr),
+    // wing-root booms with the MD-9 mag drivers (muzzles z -7.7), coil collars
+    tap([2.9, -0.45, -3.4], 3.0, [0.32, 0.3], [0.45, 0.4], CF.g1, { sh: 'h' }),
+    tap([2.2, -0.35, -2.0], 0.7, [0.5, 0.25], [0.5, 0.25], CF.g3, { ax: 'x' }),
+    seg([2.9, -0.45, -6.4], [2.9, -0.45, -7.55], 0.13, 0.12, CF.gr),
+    ...[-6.6, -7.0].map(z => tap([2.9, -0.45, z], 0.06, [0.22, 0.22], [0.22, 0.22], CF.g3, { sh: 'e' })),
+    // swept wings with orange tips carry the missile rails
+    tap([4.2, -0.45, 1.6], 2.6, [2.2, 0.2], [1.0, 0.12], CF.g2, { ax: 'x', sweep: 0.35 }),
+    { t: 'paint', box: [5.6, -0.8, 2.0, 7.0, 0.0, 3.4], col: CF.or, side: 'top', mix: 0.85 },
+    ...cfMissile(4.6, -0.62, 0.35, 2.2, 0.09), ...cfMissile(3.5, -0.62, 0.35, 2.4, 0.09),
+    // spars and round drive pods (one pod around both nozzles each side)
+    tap([2.9, 0.0, 7.6], 1.4, [1.2, 0.35], [1.2, 0.35], CF.g3, { ax: 'x' }),
+    ...cfPod(4.85, -0.05, 4.4, 10.2, 1.4, 1.65, [[4.0, 0.6, 0.55], [5.7, -0.7, 0.5]], 0.3),
+    tap([4.85, 2.25, 8.2], 1.2, [1.1, 0.1], [0.55, 0.07], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    tap([4.85, 3.35, 8.85], 0.12, [0.55, 0.08], [0.5, 0.07], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    // PD-15 seats: dorsal forward and aft, ventral mid
+    ...falSeat(1.2, 1.55, 1), ...falSeat(6.8, 1.65, 1), ...falSeat(3.0, -1.55, -1),
+    // lights, antenna, markings
+    ell([-7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0xff3030, { glow: true, noMirror: true }),
+    ell([7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0x30ff60, { glow: true, noMirror: true }),
+    seg([0, 1.2, 3.6], [0, 2.0, 4.6], 0.04, 0.03, CF.dk, { lod: 2 }),
+    { t: 'paint', box: [-0.5, 0.5, -1.2, 0.5, 1.4, -0.4], col: CF.or, side: 'top', mix: 0.85 },
+    { t: 'text', c: [1.72, 0.2, 1.2], face: '+x', text: 'CDF', px: 0.11, col: CF.dk },
+    { t: 'text', c: [1.72, 0.2, 3.6], face: '+x', text: '11', px: 0.13, col: CF.dk },
+  ],
 };
 
 // ---- PETREL SAR CUTTER (32 m, unarmed, crew 3: pilot, rescue specialist, trauma medic; docs/LORE_FACTIONS.md section 5) --------------------------
