@@ -27,13 +27,13 @@ SETUP='''(id)=>{const g=__game,T=g.THREE;__paused=true;
 CAM='''([L,az,el,k,mk])=>{const g=__game,T=g.THREE,c=g.camera;c.fov=30;c.updateProjectionMatrix();const d=L*k;const a=az*Math.PI/180,b=el*Math.PI/180;
  c.position.set(Math.sin(a)*Math.cos(b)*d,Math.sin(b)*d,-Math.cos(a)*Math.cos(b)*d);c.up.set(0,1,0);if(el>80)c.up.set(0,0,-1);c.lookAt(0,0,0);c.updateMatrixWorld(true);window.__mk.visible=!!mk;}'''
 with Runner() as R:
-    pg=R.page(900,540,'?free&n=0&wing=0&q='+Q); pg.wait_for_timeout(1500)
+    pg=R.page(int(os.environ.get('RS_W','900')),int(os.environ.get('RS_H','540')),'?free&n=0&wing=0&q='+Q); pg.wait_for_timeout(1500)
     pg.add_style_tag(content=HIDE)
     ids=pg.evaluate('Object.keys(__game.SHIPS)')
     for id in ids:
         if ONLY and id not in ONLY: continue
         L=pg.evaluate(SETUP,id); pg.wait_for_timeout(400)
-        k=2.5
+        k=float(os.environ.get('RS_K','2.5'))
         pg.evaluate(CAM,[L,35,20,k,0]); pg.wait_for_timeout(300); pg.screenshot(path=f'{OUT}{id}_clean.png')
         for nm,az,el in VIEWS:
             pg.evaluate(CAM,[L,az,el,k,1]); pg.wait_for_timeout(300); pg.screenshot(path=f'{OUT}{id}_{nm}.png')

@@ -162,104 +162,76 @@ SHIPS.bittern = {
   ],
 };
 
-// ---- CSS HALBERD: Aegis-class escort corvette (60 m) -------------------------
-// ---- Halberd surface-detail prims (authored at 64 m, scaled with the ship) ---------------------------------------------
-// These seats are authored at 64 m and doubled with the 128 m hull.
-const hTur = (x, y, z, dy = 1, cls = 'S') => {
-  const D = turretDia({def:{length:128}}, {cls}) / 2;
-  return [ell([x, y - 0.08 * dy, z], [D * 0.56, D * 0.15, D * 0.56], H.panel, {noMirror:true})];
-};
-const halberdDetail = [
-  ...hTur(2.6, 1.85, -12, 1, 'M'), ...hTur(-2.6, 1.85, -12, 1, 'M'), ...hTur(2.2, 3.1, 19), ...hTur(-2.2, 3.1, 19), ...hTur(0, -2.8, -6, -1), ...hTur(0, -3.3, 14, -1),
-  // Railgun detail sits inside the low dorsal spine; nothing is an unsupported tower.
-  ...[-10, -12.5, -15, -17.5, -20, -22.5, -25, -27.5].map(z => tap([0, 2.75, z], 0.12, [1.32, 0.38], [1.32, 0.38], H.panel, { sh: 'e', lod: 2 })),
-  ...[-10, -13, -16, -19, -22, -25].map(z => tap([0, 2.75, z - 0.3], 0.05, [1.37, 0.43], [1.37, 0.43], H.glow, { sh: 'e', glow: true, glowF: 0.9, lod: 3 })),
-  tap([0, 2.75, -30.2], 0.7, [1.42, 0.42], [1.42, 0.42], H.dark, { sh: 'h', lod: 2 }),
-  tap([0, 2.6, -4], 2.0, [1.32, 0.32], [1.52, 0.4], 0x6e7782, { sh: 'h', lod: 2 }),
-  // VLS lattice (tier 1 paint), dorsal armour seams and a ventral sensor strake
-  ...paintGrid(-1.2, 3.0, 12.6, 5, 9, 0.5, 0.55, 0.36, 0.38, 0x16191d, { mix: 0.9 }),
-  // hangar door frame with amber guide lights, boarding hatch rows
-  tap([4.05, -0.2, -2], 0.15, [0.5, 1.5], [0.5, 1.5], H.dark, { lod: 2 }),
-  ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, 1.25, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
-  ...[-6.3, -4.9, -3.5, -2.1, -0.7].map(z => ell([4.3, -1.65, z], [0.12, 0.08, 0.12], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
-  // Radiator ribs are embedded in the compact boom below, not floating
-  // remnants of the earlier full-wing radiator.
-  ...Array.from({ length: 5 }, (_, i) => seg([4.0, 0.62, 9.1 + i * 1.2], [10.45, 0.62, 9.3 + i * 1.2], 0.07, 0.07, i % 2 ? 0x7a838d : H.orange, { lod: 2 })),
-  // engine block: cooling cowl ribs, nozzle petals and bell rings
-  ...ringSegs(0, 0, 21, 29.5, 4.95, 18, 0.2, 0x3e454e, { lod: 2 }),
-  ...[22, 24, 26, 28].map(z => tap([0, 0, z], 0.15, [5.2, 3.7], [5.2, 3.7], 0x5b636d, { sh: 'h', lod: 2 })),
-  ...ringSegs(0, 0, 30.1, 31.5, 2.5, 12, 0.12, H.nozzle, { lod: 2 }), ...ringSegs(3.9, 0, 30.2, 31.3, 1.7, 10, 0.1, H.nozzle, { lod: 2 }),
-  tap([0, 0, 30.9], 0.12, [2.7, 2.35], [2.7, 2.35], 0x6a7078, { sh: 'e', lod: 2 }),
-  // hull belts, hull number and name (tier 1 paint/text)
-  { t: 'paint', box: [-5.5, -3.5, -26.5, 5.5, 4.5, -25.6], col: H.orange, mix: 0.9 },
-  { t: 'paint', box: [-5.5, -3.5, -22.4, 5.5, 4.5, -22.0], col: H.white, mix: 0.9 },
-  { t: 'paint', box: [-1.5, 3.1, -27, 1.5, 4.6, -24.5], col: H.orange, side: 'top', mix: 0.85 },
-  { t: 'text', c: [3.5, 0.2, -13], face: '+x', text: 'CSS HALBERD', px: 0.34, col: H.dark },
-  { t: 'text', c: [3.5, -1.4, 6], face: '+x', text: 'F-71', px: 0.5, col: H.white },
-  { t: 'text', c: [0, 3.2, 0], face: '+y', text: 'CDF', px: 0.7, col: H.navy, mir: false },
+// ---- CSS HALBERD: Aegis-class escort corvette, 2026-11-12 rebuild in the fleet language (authored at 64 m, scaled to 128 m by tuning.scaleTo):
+// a long boxy hull with a stepped superstructure, armoured weapon sponsons, a dorsal rail spine and three round nozzles in an aft engine raft.
+// A capital turret seat: an armoured box plinth with a graphite ring. D is the turret diameter at the authored scale; dy is +1 dorsal, -1 ventral.
+const cfSeat = (x, y, z, dy, D, col = CF.g2) => [
+  tap([x, y - dy * D * 0.1, z], D * 0.52, [D * 0.58, D * 0.13], [D * 0.58, D * 0.13], col, { sh: 'h', noMirror: true }),
+  tap([x, y - dy * D * 0.0, z], D * 0.46, [D * 0.5, D * 0.04], [D * 0.5, D * 0.04], CF.gr, { sh: 'e', noMirror: true }),
 ];
-
+const hSeat = (x, y, z, dy = 1, cls = 'S') => cfSeat(x, y, z, dy, turretDia({ def: { length: 128 } }, { cls }) / 2);
 SHIPS.halberd = {
   ...DB.ships.halberd,
   prims: [
-    // Spearhead escort: a single narrow keel carries the weapons and bridge;
-    // broad radiator planes and three clearly connected engine nacelles give it
-    // a recognisable silhouette at low detail instead of a pile of hull blocks.
-    tap([0, -0.05, 1.5], 21.5, [2.55, 1.85], [3.65, 2.7], H.hull, { sh: 'h', seam: [2.2, 3.0] }), // armoured keel
-    tap([0, -0.15, -25.2], 7.2, [0.32, 0.38], [2.65, 1.85], 0x9aa1aa, { sh: 'd', sweepY: 0.08 }), // lance bow
-    tap([0, 1.35, -8], 13.5, [1.55, 0.38], [2.25, 0.52], H.hull2, { sh: 'h' }),                  // low, integrated weapon spine
-    tap([0, -1.9, 2.5], 18.5, [1.85, 0.38], [2.85, 0.52], H.dark, { sh: 'h' }),                    // continuous ventral keel
-    tap([0, 0, -9], 0.72, [3.0, 2.25], [3.0, 2.25], H.navy, { sh: 'h' }),                         // fleet recognition band
-    tap([0, 0, 8], 0.62, [3.4, 2.5], [3.4, 2.5], H.navy, { sh: 'h' }),
-    tap([0, 0.15, -21], 0.38, [2.25, 1.65], [2.25, 1.65], H.orange, { sh: 'h' }),
-    // Spinal railgun: recessed into the dorsal spine, a continuous naval assembly.
-    tap([0, 2.35, -3], 7.8, [1.22, 0.38], [1.5, 0.5], 0x6e7782, { sh: 'h' }),
-    seg([0.7, 2.95, -8], [0.7, 2.95, -30.5], 0.34, 0.29, H.dark, { noMirror: true }),
-    seg([-0.7, 2.95, -8], [-0.7, 2.95, -30.5], 0.34, 0.29, H.dark, { noMirror: true }),
-    tap([0, 2.95, -16], 0.3, [1.16, 0.38], [1.16, 0.38], H.panel, { sh: 'e' }),
-    tap([0, 2.95, -24], 0.3, [1.08, 0.35], [1.08, 0.35], H.panel, { sh: 'e' }),
-    // GA-9 rotary cannon (ventral nose, owner 2026-10-22): cradle + barrel cluster + muzzle disc
-    tap([0, -2.3, -27], 2.6, [1.2, 1.2], [1.0, 1.0], 0x6e7782, { sh: 'h' }),
-    seg([0, -2.3, -29], [0, -2.3, -30.4], 0.55, 0.45, H.dark),
-    tap([0, -2.3, -30.2], 0.4, [0.7, 0.7], [0.65, 0.65], H.dark, { sh: 'e' }),
-    // compact bridge: low and aft, protected by the rail spine rather than a tall isolated tower.
-    tap([0, 4.35, 8.8], 3.1, [1.35, 1.45], [2.05, 1.75], 0xa9afb7, { sh: 'h', win: { col: H.amber, p: 0.75, f: 1.6, o: 2, pu: 4, wu: 2, pv: 4 } }),
-    ell([0, 5.18, 6.6], [1.5, 0.32, 0.52], H.canopy, { glow: false }),
-    tap([0, 5.5, 11.8], 0.75, [1.25, 0.28], [1.25, 0.28], H.panel, { sh: 'h' }),
-    seg([0, 6.1, 11.5], [0, 9.5, 11.5], 0.2, 0.1, 0x7a838d),
-    ell([0, 9.65, 11.5], [1.45, 0.18, 1.45], 0x9aa1aa),
-    seg([1.55, 5.9, 12], [3.4, 8.4, 13.3], 0.1, 0.05, 0x7a838d),
-    // VLS rack, side bay and compact, supported radiator booms.
-    tap([0, 2.45, 15.5], 2.45, [1.55, 0.32], [1.55, 0.32], H.panel, { sh: 'h', dots: { col: H.amber, p: 0.04 } }),
-    tap([3.15, -0.15, -1.5], 4.3, [0.28, 1.12], [0.28, 1.12], 0x16191d, { dots: { col: H.amber, p: 0.14 } }), // service bay
-    tap([3.0, 1.12, 7.0], 2.75, [0.14, 0.14], [0.14, 0.14], H.orange),
-    seg([3.0, 0.55, 11.5], [8.2, 0.62, 11.5], 0.42, 0.34, H.panel),
-    tap([8.0, 0.62, 11.5], 2.55, [1.85, 0.12], [1.35, 0.1], H.white, { ax: 'x', sweep: -0.12, seam: [0.6, 0.9] }), // compact radiator boom
-    tap([8.1, 0.73, 11.55], 2.45, [1.72, 0.06], [1.26, 0.05], H.orange, { ax: 'x', sweep: -0.12 }),
-    seg([3.0, 0.55, 9.2], [7.0, 0.62, 10.6], 0.34, 0.26, H.panel),
-    seg([3.0, 0.45, 15.0], [7.0, 0.62, 13.7], 0.28, 0.22, H.panel),
-    ell([10.65, 0.65, 10.9], [0.3, 0.24, 0.48], H.amber, { glow: true, glowF: 1.2 }), // boom-tip PD sensor
-    // three engine nacelles are enclosed in a single aft frame, matching the database engine positions.
-    tap([0, 0, 25.5], 4.4, [3.45, 2.65], [4.25, 3.05], 0x4d5560, { sh: 'h' }),
-    tap([3.9, 0, 26.2], 3.35, [1.35, 1.25], [1.55, 1.45], H.hull2, { sh: 'h' }),
-    seg([2.5, 0, 23.5], [4.0, 0, 24.5], 0.48, 0.38, H.panel),
-    tap([0, 0, 30.2], 1.2, [2.3, 2.0], [2.7, 2.35], H.nozzle, { sh: 'e' }),
-    ell([0, 0, 31.5], [2.0, 1.7, 0.25], H.glow, { glow: true }),
-    tap([3.9, 0, 30.2], 1.0, [1.5, 1.3], [1.8, 1.55], H.nozzle, { sh: 'e' }),
-    ell([3.9, 0, 31.3], [1.3, 1.1, 0.22], H.glow, { glow: true }),
-    // sensor pods / comms
-    ell([3.3, 2.4, -14], [0.5, 0.35, 0.8], 0x7a838d),
-    tap([0, -2.9, 4], 5, [1.4, 0.4], [1.6, 0.4], H.panel, { sh: 'h' }),
-    ell([-3.6, 2.6, 0], [0.25, 0.2, 0.25], 0xff3030, { glow: true, noMirror: true }),
-    ell([3.6, 2.6, 0], [0.25, 0.2, 0.25], 0x30ff60, { glow: true, noMirror: true }),
-    ...halberdDetail,
+    // pressure hull: one long chamfered box, a stepped bow and a graphite ventral keel
+    tap([0, 0, -1], 23, [2.7, 2.0], [3.4, 2.6], CF.w, { sh: 'h', seam: [2.4, 3.2] }),
+    tap([0, -0.1, -28], 4, [0.9, 0.9], [2.7, 2.0], CF.g1, { sh: 'h' }),
+    tap([0, -0.2, -31.6], 0.5, [0.55, 0.5], [0.9, 0.9], CF.g3, { sh: 'h' }),
+    tap([0, -2.3, 4], 16, [1.6, 0.5], [1.9, 1.0], CF.dk, { sh: 'h' }),                                   // ventral keel (PD seats at z -6 and 14)
+    tap([0, -2.3, -27], 2.8, [1.1, 1.1], [1.25, 1.2], CF.g3, { sh: 'h' }),                               // GA-9 rotary housing under the bow
+    seg([0, -2.3, -29.4], [0, -2.3, -30.5], 0.55, 0.45, CF.gr), tap([0, -2.3, -30.4], 0.3, [0.7, 0.7], [0.66, 0.66], CF.noz, { sh: 'e' }),
+    // dorsal rail spine: an armoured trough from the superstructure to the bow, twin rails ending at the database mounts (z -31)
+    tap([0, 2.0, -15], 14, [0.9, 0.8], [1.6, 0.6], CF.g2, { sh: 'h' }),
+    seg([0.7, 2.95, -4], [0.7, 2.95, -30.6], 0.3, 0.26, CF.gr, { noMirror: true }),
+    seg([-0.7, 2.95, -4], [-0.7, 2.95, -30.6], 0.3, 0.26, CF.gr, { noMirror: true }),
+    ...[-27, -21, -15, -9].map(z => tap([0, 2.7, z], 0.35, [1.3, 0.45], [1.3, 0.45], CF.g3, { sh: 'h' })),   // rail clamps
+    tap([0, 2.95, -30.6], 0.45, [1.25, 0.45], [1.25, 0.45], CF.noz, { sh: 'h' }),
+    // forward weapon sponsons carry the M pulse turrets (x 2.6, y 1.85)
+    tap([0, 1.35, -12], 3.4, [3.05, 0.45], [3.05, 0.45], CF.g1, { sh: 'h' }),
+    tap([3.05, 0, -12], 3.6, [0.5, 1.8], [0.5, 1.8], CF.g2, { sh: 'h' }),
+    // stepped superstructure: two decks, the bridge block with windows, and a mast
+    tap([0, 2.85, 5], 8, [2.3, 0.85], [2.6, 0.85], CF.w, { sh: 'h' }),
+    tap([0, 3.9, 9.5], 4, [1.9, 0.6], [2.2, 0.6], CF.g1, { sh: 'h' }),
+    tap([0, 5.0, 9.5], 2.4, [1.5, 0.7], [1.9, 0.75], CF.w, { sh: 'h', win: { col: H.amber, p: 0.75, f: 1.6, o: 2, pu: 4, wu: 2, pv: 4 } }),
+    tap([0, 5.05, 7.0], 0.25, [1.55, 0.35], [1.55, 0.35], CF.can, { sh: 'h' }),
+    seg([0, 5.7, 11.3], [0, 9.6, 11.3], 0.22, 0.1, CF.g3), ell([0, 9.7, 11.3], [1.3, 0.16, 1.3], CF.g1),
+    seg([0, 7.6, 11.3], [1.6, 7.9, 11.3], 0.08, 0.05, CF.g3),
+    // after deck carries the dorsal PD pair (x 2.2, y 3.1, z 19) and the VLS rack
+    tap([0, 2.75, 18.5], 4.6, [2.75, 0.33], [2.85, 0.33], CF.g1, { sh: 'h' }),
+    // side sponsons with hatches and an orange band
+    tap([3.35, -0.2, 2.5], 7.5, [0.45, 1.5], [0.5, 1.6], CF.g1, { sh: 'h' }),
+    tap([3.85, -0.2, 0], 2.6, [0.06, 0.9], [0.06, 0.9], CF.gr),                                          // service hatch
+    tap([3.85, -0.2, 7], 1.2, [0.06, 0.8], [0.06, 0.8], CF.gr),
+    tap([0, 0, -21], 0.45, [2.5, 1.85], [2.55, 1.88], CF.or, { sh: 'h' }),
+    tap([0, 0, 14.5], 0.5, [3.32, 2.55], [3.34, 2.56], CF.or, { sh: 'h' }),
+    // engine raft: a graphite frame with three round nozzles at the database engine positions
+    tap([0, 0, 27], 4, [3.6, 2.5], [5.4, 2.4], CF.g2, { sh: 'h' }),
+    tap([0, 0, 30.4], 1.4, [2.3, 2.3], [2.3, 2.3], CF.gr, { sh: 'e' }), tap([0, 0, 30.8], 0.9, [2.45, 2.45], [2.2, 2.2], CF.or, { sh: 'e' }),
+    ell([0, 0, 31.85], [1.75, 1.75, 0.25], H.glow, { glow: true }),
+    tap([3.9, 0, 30.3], 1.3, [1.5, 1.5], [1.5, 1.5], CF.gr, { sh: 'e' }),
+    ell([3.9, 0, 31.65], [1.15, 1.15, 0.22], H.glow, { glow: true }),
+    // compact radiator fins on the raft flanks
+    tap([6.6, 0, 26], 1.4, [1.8, 0.1], [1.4, 0.08], CF.w, { ax: 'x', seam: [0.5, 0.7] }),
+    tap([6.7, 0.12, 26], 1.3, [1.7, 0.05], [1.3, 0.04], CF.or, { ax: 'x' }),
+    // turret seats: M pulse, dorsal and ventral PD
+    ...hSeat(2.6, 1.85, -12, 1, 'M'), ...hSeat(-2.6, 1.85, -12, 1, 'M'), ...hSeat(2.2, 3.1, 19), ...hSeat(-2.2, 3.1, 19),
+    ...hSeat(0, -2.8, -6, -1), ...hSeat(0, -3.3, 14, -1),
+    // detail: VLS cells, hatch lights, nav lights, markings
+    ...paintGrid(-1.0, 3.08, 14.5, 4, 5, 0.5, 0.55, 0.36, 0.38, CF.gr, { mix: 0.9 }),
+    ...[-1.5, 0, 1.5].map(z => ell([3.88, 1.1, z], [0.1, 0.08, 0.1], H.amber, { glow: true, glowF: 1.5, lod: 2 })),
+    ...ringSegs(0, 0, 23.5, 30.5, 4.0, 16, 0.18, CF.g3, { lod: 2 }),
+    ell([-3.9, 1.6, 2], [0.22, 0.2, 0.22], 0xff3030, { glow: true, noMirror: true }),
+    ell([3.9, 1.6, 2], [0.22, 0.2, 0.22], 0x30ff60, { glow: true, noMirror: true }),
+    { t: 'text', c: [3.42, 0.55, -17], face: '+x', text: 'CSS HALBERD', px: 0.34, col: CF.dk },
+    { t: 'text', c: [3.84, -0.9, 3.8], face: '+x', text: 'F-71', px: 0.45, col: CF.dk },
+    { t: 'text', c: [0, 3.72, 3], face: '+y', text: 'CDF', px: 0.6, col: CF.dk, mir: false },
   ],
 };
 
 // ---- EXETER class frigate (450 m): jump-capable, docks 2 corvettes + 12 fighters/drones (no repair) -------------
 // Inspiration: angular grey/white wedge hull, dorsal slab, outboard engine pods on pylons, folded radiator panels,
 // PD turret clusters. Owner brief 2026-10-21. Catalogue model: not used in missions yet.
-const E = { white: 0xd8dce0, grey: 0x9aa2ab, grey2: 0x7d858f, dark: 0x262b31, panel: 0x4a525c, amber: 0xc79a3a, noz: 0x2a2d33, glow: 0x7fd0ff, orange: 0xd9772b };
+const E = { white: CF.w, grey: CF.g1, grey2: CF.g2, dark: CF.dk, panel: CF.g3, amber: 0xc79a3a, noz: CF.noz, glow: 0x7fd0ff, orange: CF.or };   // fleet palette (2026-11-12)
 SHIPS.tern = {
   ...DB.ships.tern,
   prims: [
@@ -308,10 +280,16 @@ SHIPS.tern = {
     ell([8.45, 0.3, 7.65], [0.15, 0.15, 0.15], 0xff3030, { glow: true, noMirror: true }),
   ],
 };
-const eTur = (x, y, z, dy = 1, cls = 'S') => {
-  const D = turretDia({def:{length:450}}, {cls});
-  return [ell([x, y - dy * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], E.grey2, {noMirror:true})];
+// A capital turret seat on a pedestal: a column from y0 (a point inside the hull or sponson) up (dy +1) or down (dy -1) to the seat at y,
+// so every turret visibly stands on structure (owner report 2026-11-12: Glaive turrets floating). Listed per side (noMirror).
+const capSeat = (x, y, z, dy, D, y0) => {
+  const top = y - dy * D * 0.2, h = Math.abs(top - y0) / 2;
+  return [
+    tap([x, (top + y0) / 2, z], D * 0.42, [D * 0.42, h], [D * 0.42, h], CF.g2, { sh: 'h', noMirror: true }),
+    ...cfSeat(x, y, z, dy, D),
+  ];
 };
+const eTur = (x, y, z, dy, cls, y0) => capSeat(x, y, z, dy, turretDia({ def: { length: 450 } }, { cls }), y0);
 // ---- Exeter surface-detail prims (metres; voxel size at high detail is about 1 m) --------------------------------------
 const exeterDetail = [
   // dorsal slab: VLS lattices, long trench with ribs, comm farm
@@ -329,8 +307,8 @@ const exeterDetail = [
   tap([0, -7, -199], 3, [17, 8.5], [17, 8.5], E.dark, { sh: 'h', lod: 2 }),
   ...[-12, -4, 4, 12].map(x => tap([x, -7, -192], 12, [0.8, 6.5], [0.8, 6.5], E.panel, { lod: 2 })),
   // corvette cradles: clamp arms, guide lights
-  ...[-14, 0, 14, 28].map(z => seg([36, -12, 40 + z], [30, -7, 40 + z], 1.4, 1.0, E.panel, { lod: 2 })),
-  ...[-14, 0, 14, 28].map(z => ell([28, -9, 40 + z], [0.9, 0.9, 0.9], E.amber, { glow: true, glowF: 1.6, lod: 2 })),
+  ...[-14, 0, 14, 28].map(z => seg([52, -14, 26 + z], [55, -10, 26 + z], 1.0, 0.8, E.panel, { lod: 2 })),
+  ...[-14, 0, 14, 28].map(z => ell([53.4, -1, 26 + z], [0.9, 0.9, 0.9], E.amber, { glow: true, glowF: 1.6, lod: 2 })),
   // radiator manifolds and ribs
   ...Array.from({ length: 8 }, (_, i) => seg([44, 12.4, 108 + i * 6], [96, 12.4, 112 + i * 6], 0.7, 0.7, i % 2 ? E.dark : E.orange, { lod: 2 })),
   ...Array.from({ length: 8 }, (_, i) => seg([44, -12.4, 108 + i * 6], [96, -12.4, 112 + i * 6], 0.7, 0.7, i % 2 ? E.dark : E.orange, { lod: 2 })),
@@ -345,49 +323,56 @@ const exeterDetail = [
   { t: 'paint', box: [-46, -10, -112, 46, 24, -109], col: 0x2f4a7a, mix: 0.9 },
   { t: 'paint', box: [-26, 12, -190, 26, 30, -160], col: E.panel, side: 'top', mix: 0.7 },
   { t: 'text', c: [30, 3, -62], face: '+x', text: 'EXETER', px: 3.2, col: E.dark },
-  { t: 'text', c: [36, 5, 40], face: '+x', text: 'F-03', px: 4, col: E.white },
+  { t: 'text', c: [52.2, 6, 0], face: '+x', text: 'F-03', px: 4, col: E.dark },
   { t: 'text', c: [0, 18.4, -100], face: '+y', text: 'CDF', px: 3.5, col: 0x2f4a7a, mir: false },
 ];
 
 SHIPS.exeter = {
   ...DB.ships.exeter,
   prims: [
-    tap([0, 0, 10], 185, [22, 12], [46, 22], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.012 } }),            // wedge hull
-    tap([0, 13.5, 0], 150, [20, 4], [34, 5], E.white, { sh: 'h' }),                                          // dorsal slab
-    tap([0, 17.8, -20], 110, [12, 0.8], [20, 0.8], E.panel, { sh: 'r' }),                                    // dorsal panel inlay
-    tap([0, -2, -200], 28, [9, 6], [22, 12], E.grey2, { sh: 'd' }),                                          // bow wedge
-    tap([0, -7, -186], 14, [13, 4.5], [14, 5], E.dark, { dots: { col: E.amber, p: 0.05 } }),                 // hangar maw
-    seg([14, 4, -195], [16, 5, -226], 1.3, 0.8, E.dark), seg([20, 10, -170], [22, 11, -207], 1.1, 0.7, E.dark), // bow prongs
-    tap([0, 26, 70], 28, [16, 10], [22, 12], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),                                          // bridge tower
-    tap([0, 38, 76], 10, [10, 6], [12, 6], E.grey2, { sh: 'h' }),
-    seg([0, 44, 80], [0, 68, 80], 1.5, 0.5, E.grey2), ell([0, 68, 80], [8, 1.2, 8], E.grey),
-    seg([8, 40, 84], [20, 62, 92], 0.7, 0.3, E.grey2),
-    tap([0, -19, -20], 40, [10, 4], [14, 6], E.grey2, { sh: 'h' }),                                          // ventral sensor keel
-    // wings / sponsons
-    tap([54, -4, 40], 44, [56, 3], [30, 2.5], E.grey, { ax: 'x', sweep: 0.3, sh: 'r', seam: [8, 6] }),
-    tap([54, -3.2, 40], 44, [3, 3.6], [3, 3.0], E.orange, { ax: 'x', sweep: 0.3 }),
-    // dock cradles (corvette bays, flanks)
-    tap([34, -7, 40], 32, [3, 9], [3, 9], E.dark, { dots: { col: E.amber, p: 0.05 } }),
+    // 2026-11-12 fleet-language rebuild: a white wedge hull, a dorsal launcher slab, armoured flank sponsons that carry the outboard
+    // batteries, a stepped bridge tower and round engine pods on pylons. Every turret stands on a pedestal rooted in hull or sponson.
+    tap([0, 0, 10], 185, [22, 12], [46, 22], E.white, { sh: 'h', seam: [9, 7] }),                          // wedge hull
+    tap([0, 13.5, 0], 150, [20, 4], [34, 5], E.grey, { sh: 'h' }),                                          // dorsal launcher slab
+    tap([0, 17.8, -20], 110, [12, 0.8], [20, 0.8], E.panel, { sh: 'r' }),                                   // slab inlay
+    tap([38, -1, -10], 100, [13, 15], [14, 17], E.grey, { sh: 'h', seam: [8, 6] }),                         // flank sponson
+    tap([51.6, -1, -10], 96, [0.6, 3], [0.6, 3], E.orange, { sh: 'r' }),                                    // sponson band
+    tap([0, -2, -200], 28, [9, 6], [22, 12], E.grey2, { sh: 'd' }),                                         // bow wedge
+    tap([0, -7, -186], 14, [13, 4.5], [14, 5], CF.gr, { dots: { col: E.amber, p: 0.05 } }),                 // hangar maw
+    seg([14, 4, -195], [16, 5, -226], 1.3, 0.8, E.dark), seg([20, 10, -170], [22, 11, -207], 1.1, 0.7, E.dark), // bow prongs and rails
+    tap([0, -19, -20], 40, [10, 4], [14, 6], E.grey2, { sh: 'h' }),                                         // ventral sensor keel
+    // stepped bridge tower and mast
+    tap([0, 24, 72], 26, [15, 8], [19, 9], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),
+    tap([0, 35, 78], 12, [11, 4], [13, 4], E.grey, { sh: 'h' }),
+    tap([0, 35.5, 66.5], 0.8, [10.5, 2], [10.5, 2], CF.can, { sh: 'h' }),
+    seg([0, 39, 82], [0, 68, 82], 1.5, 0.5, E.panel), ell([0, 68, 82], [8, 1.2, 8], E.grey),
+    seg([8, 38, 84], [20, 62, 92], 0.7, 0.3, E.panel),
+    // corvette cradles on the sponson flanks (comps cradleL/R)
+    tap([52, -7, 40], 30, [1.2, 8], [1.2, 8], CF.gr, { dots: { col: E.amber, p: 0.05 } }),
     // radiator panels (folded white, orange edge)
     tap([70, 12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([70, -12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([70, 12.2, 130], 26, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
-    // nacelle pylons, pods, nozzles
-    seg([40, -6, 150], [78, -4, 165], 7, 6, E.grey2), seg([40, 4, 140], [78, 2, 160], 5, 5, E.grey2),
-    tap([80, -3, 160], 56, [17, 15], [20, 17], E.white, { sh: 'h', seam: [8, 6] }),
-    tap([80, -3, 106], 4, [14, 12], [14, 12], E.dark, { sh: 'h', dots: { col: E.amber, p: 0.05 } }),
-    tap([80, -3, 221], 6, [13, 12], [15, 14], E.noz, { sh: 'e' }),
-    ell([80, -3, 227.5], [11, 10, 2.5], E.glow, { glow: true }),
-    seg([88, 3, 190], [106, 3, 228], 0.8, 0.3, E.grey2),
+    // nacelle pylons and round engine pods (engines at x 80, z 229)
+    tap([60, -4, 158], 22, [6, 5], [6, 5], E.grey2, { sh: 'h' }), tap([60, 4, 150], 18, [5, 3], [5, 3], E.grey2, { sh: 'h' }),
+    tap([80, -3, 160], 56, [16, 16], [18, 18], E.white, { sh: 'e', seam: [8, 6] }),
+    tap([80, -3, 106], 4, [14, 14], [15, 15], CF.gr, { sh: 'e', dots: { col: E.amber, p: 0.05 } }),
+    tap([80, -3, 130], 4, [17.4, 17.4], [17.6, 17.6], E.orange, { sh: 'e' }),
+    tap([80, -3, 220], 6, [17, 17], [14, 14], CF.gr, { sh: 'e' }),
+    ell([80, -3, 227.5], [11, 11, 2.5], E.glow, { glow: true }),
+    seg([88, 3, 190], [106, 3, 228], 0.8, 0.3, E.panel),
     // central engine block
-    tap([0, 0, 204], 10, [26, 15], [28, 17], E.noz, { sh: 'h' }),
-    ell([0, 0, 214.5], [20, 12, 2.5], E.glow, { glow: true }),
-    ...eTur(0, 22, -110), ...eTur(24, 21, -40), ...eTur(-24, 21, -40), ...eTur(20, 26, 110), ...eTur(-20, 26, 110),
-    ...eTur(0, -20, -80, -1), ...eTur(0, -21, 60, -1),
-    ...eTur(40, 21, -90, 1, 'L'), ...eTur(-40, 21, -90, 1, 'L'), ...eTur(36, -23, 30, -1, 'L'), ...eTur(-36, -23, 30, -1, 'L'),      // L mass driver seats
-    ...eTur(48, 19, 0, 1, 'M'), ...eTur(-48, 19, 0, 1, 'M'), ...eTur(14, 24, 130, 1, 'M'), ...eTur(-14, 24, 130, 1, 'M'),                  // M laser seats (dorsal)
-    ...eTur(44, -19.2, 60, -1, 'M'), ...eTur(-44, -19.2, 60, -1, 'M'), ...eTur(14, -24.5, 120, -1, 'M'), ...eTur(-14, -24.5, 120, -1, 'M'),  // M laser seats (ventral)
-    seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle: collar and glow on the bow face, between the prongs
+    tap([0, 0, 200], 14, [30, 17], [28, 16], E.grey2, { sh: 'h' }),
+    tap([0, 0, 214], 1.5, [26, 15], [26, 15], CF.gr, { sh: 'h' }),
+    ell([0, 0, 216], [20, 12, 2.5], E.glow, { glow: true }),
+    // turret seats on pedestals: S pulse and PD, L mass drivers, M lasers (heads come from makeTurret)
+    ...eTur(0, 24, -110, 1, 'S', 14), ...eTur(24, 22.4, -40, 1, 'S', 12), ...eTur(-24, 22.4, -40, 1, 'S', 12),
+    ...eTur(20, 28.7, 110, 1, 'S', 14), ...eTur(-20, 28.7, 110, 1, 'S', 14),
+    ...eTur(0, -22.4, -80, -1, 'S', -12), ...eTur(0, -22.4, 60, -1, 'S', -14),
+    ...eTur(40, 23, -90, 1, 'L', 10), ...eTur(-40, 23, -90, 1, 'L', 10), ...eTur(36, -25, 30, -1, 'L', -12), ...eTur(-36, -25, 30, -1, 'L', -12),
+    ...eTur(48, 21, 0, 1, 'M', 10), ...eTur(-48, 21, 0, 1, 'M', 10), ...eTur(14, 26, 130, 1, 'M', 14), ...eTur(-14, 26, 130, 1, 'M', 14),
+    ...eTur(44, -21.2, 60, -1, 'M', -10), ...eTur(-44, -21.2, 60, -1, 'M', -10), ...eTur(14, -26.5, 120, -1, 'M', -14), ...eTur(-14, -26.5, 120, -1, 'M', -14),
+    seg([0, -2, -196], [0, -2, -206], 7, 5.5, E.dark), ell([0, -2, -207], [5, 5, 2], E.glow, { glow: true }),   // XL mass driver muzzle on the bow face
     ...exeterDetail,
   ],
 };
@@ -698,7 +683,7 @@ SHIPS.liner = {
     tap([0, 28, -170], 12, [8, 5], [10, 6], E.white, { sh: 'h', win: { col: 0xffd890, p: 0.7, f: 1.5, o: 1, pu: 5, wu: 3, pv: 4 } }),
     seg([0, 33, -170], [0, 47, -170], 0.9, 0.3, E.grey2), ell([0, 47.5, -170], [5, 0.8, 5], E.white),
     // PD seats (six S turrets; the barrels are the real turret meshes)
-    ...linTurPos.map(([z, sd]) => ell([0, sd * (24 + 2 * z / 200 + 0.8), z], [1.4, 0.4, 1.4], E.dark, {noMirror:true})),
+    ...DB.ships.liner.turrets.flatMap(({ pos: [x, y, z] }) => capSeat(x, y, z, Math.sign(y), turretDia({ def: { length: 450 } }, { cls: "S" }), Math.sign(y) * 16)),   // PD seats on pedestals at the database positions
     // aft engine block with four nozzles
     tap([0, 0, 212], 12, [26, 26], [30, 30], E.grey2, { sh: 'e' }),
     ...[[15, 0], [0, 15], [0, -15]].flatMap(([x, y]) => [
@@ -713,10 +698,7 @@ SHIPS.liner = {
 };
 
 // ---- GLAIVE: 600 m destroyer (between the 450 m Exeter and the 1 km Hecla): 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
-const dstSeat = (x, y, z, cls) => {
-  const D = turretDia({def:{length:600}}, {cls});
-  return ell([x, y - Math.sign(y) * D * 0.08, z], [D * 0.56, D * 0.15, D * 0.56], E.grey2);
-};
+const dstSeat = (x, y, z, cls, y0) => capSeat(x, y, z, Math.sign(y), turretDia({ def: { length: 600 } }, { cls }), y0);
 const dstDetail = [
   // dorsal deck: VLS lattices and the long trench
   ...paintGrid(-14, 22, -60, 5, 8, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
@@ -745,9 +727,9 @@ SHIPS.destroyer = {
   ...DB.ships.destroyer,
   prims: [
     tap([0, 0, -235], 65, [4, 3], [34, 16], E.grey2, { sh: 'h' }),                                                   // bow wedge
-    tap([0, 0, -10], 160, [34, 16], [46, 19], E.grey, { sh: 'h', dots: { col: E.amber, p: 0.01 } }),                 // main hull
+    tap([0, 0, -10], 160, [34, 16], [46, 19], E.white, { sh: 'h', seam: [9, 7] }),                                  // main hull
     tap([0, 0, 220], 70, [46, 19], [40, 17], E.grey, { sh: 'h' }),                                                   // stern
-    tap([0, 19.5, -20], 190, [20, 2.5], [30, 2.5], E.white, { sh: 'h' }),                                            // dorsal deck
+    tap([0, 19.5, -20], 190, [20, 2.5], [30, 2.5], E.grey, { sh: 'h' }),                                             // dorsal deck
     tap([0, -18, 0], 200, [10, 2.6], [14, 2.6], E.grey2, { sh: 'h' }),                                               // ventral keel
     tap([0, 0, -298], 4, [4, 3], [5, 3.5], E.dark, { sh: 'd' }),                                                     // sensor prow
     // bridge tower and mast
@@ -762,14 +744,18 @@ SHIPS.destroyer = {
     seg([22, -3, -258], [22, -3, -254], 2.2, 3.0, 0xd04a3a),
     seg([14, -2, -250], [22, -3, -250], 1.2, 1.2, E.grey2), seg([17, -2, -232], [22, -3, -232], 1.2, 1.2, E.grey2),
     // turret seats: L mass drivers, M lasers, S point defence (the barrels are the real turret meshes)
-    dstSeat(0, 22, -140, 'L'), dstSeat(0, 22, 20, 'L'), dstSeat(0, -20.6, -60, 'L'), dstSeat(0, -20.6, 90, 'L'),
-    ...[[30, 16.95, -90], [38, 18.4, 60]].map(([x, y, z]) => dstSeat(x, y, z, 'M')),
-    ...[[30, -16.95, -60], [36, -18.9, 120]].map(([x, y, z]) => dstSeat(x, y, z, 'M')),
-    ...[[12, 22, -190], [14, 22, 110]].map(([x, y, z]) => dstSeat(x, y, z, 'S')),
-    ...[[8, -20.6, -150], [8, -20.6, 150]].map(([x, y, z]) => dstSeat(x, y, z, 'S')),
+    // (pedestals root every seat in hull or deck: owner report 2026-11-12, two M laser turrets floated beside the deck)
+    ...dstSeat(0, 22, -140, 'L', 16), ...dstSeat(0, 22, 20, 'L', 16), ...dstSeat(0, -20.6, -60, 'L', -14), ...dstSeat(0, -20.6, 90, 'L', -14),
+    ...[[30, 16.9, -90], [38, 18.4, 60]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'M', 8), ...dstSeat(-x, y, z, 'M', 8)]),
+    ...[[30, -17.2, -60], [36, -18.9, 120]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'M', -8), ...dstSeat(-x, y, z, 'M', -8)]),
+    ...[[12, 22, -190], [14, 22, 110]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', 16), ...dstSeat(-x, y, z, 'S', 16)]),
+    ...[[8, -20.6, -150], [8, -20.6, 150]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', -14), ...dstSeat(-x, y, z, 'S', -14)]),
+    // fleet bands: orange belts fore and aft, graphite deck edge
+    tap([0, 0, -150], 3, [36.5, 17.2], [37, 17.3], E.orange, { sh: 'h' }), tap([0, 0, 140], 3, [46.4, 19.2], [46.4, 19.2], E.orange, { sh: 'h' }),
     // radiator panels
-    tap([64, 12, 205], 24, [30, 0.5], [20, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
-    tap([64, 12.2, 205], 24, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
+    tap([64, 12, 205], 24, [30, 1.3], [20, 1.1], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),             // thick enough for the 600 m voxel size
+    tap([64, 13.2, 205], 24, [2.4, 0.9], [2.0, 0.8], E.orange, { ax: 'x', sweep: 0.2 }),
+    tap([46, 12, 205], 8, [14, 3], [10, 2.5], E.grey2, { ax: 'x', sh: 'h' }),                                  // radiator root
     // engine block: central and flank nozzles at the database engine positions (z 296)
     tap([0, 0, 291], 5, [24, 15], [22, 14], E.noz, { sh: 'h' }),
     ell([0, 0, 297.5], [15, 10, 2.5], E.glow, { glow: true }),

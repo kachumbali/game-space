@@ -432,9 +432,9 @@ function surfaceDetail(def, tier, G) {
             if (flat(-rr, -rr, 2 * rr + 1, 2 * rr + 1, h)) {
               for (let aa = -rr; aa <= rr; aa++) for (let bb = -rr; bb <= rr; bb++) if (aa * aa + bb * bb <= rr * rr + 1) for (let t = 1; t <= h; t++) put(q(aa, bb, t), t === h ? cmul(bc, 0.6) : cmul(bc, 0.95), t === h ? 100 : 128);
             }
-          } else if (r < 0.87) {                                             // antenna mast
+          } else if (r < 0.87) {                                             // antenna mast: only on upward faces (no sideways or hanging sticks)
             const L = sz(5, 14, r2);
-            if (flat(0, 0, 1, 1, L)) {
+            if (code === 2 && flat(0, 0, 1, 1, L)) {
               for (let t = 1; t <= L; t++) put(q(0, 0, t), st.dark, 120);
               put(q(0, 0, L + 1), r3 < 0.5 ? 0xff3030 : 0xfff0d0, 100, 110);
             }
