@@ -143,6 +143,7 @@ Object.assign(globalThis.__game, { PERF, perfReset, perfRecord, perfStats, perfS
 Object.assign(globalThis.__game, { launcherHudText, updateLauncherHud });
 Object.assign(globalThis.__game, { initLaunchers, launcherTick, launcherReconcile, fireLauncher });
 Object.assign(globalThis.__game, { SCENE_IDS, sceneState, sceneAvailable, startScene, stopScene, prologueNextIndex, prologueComplete, prologueReset });
+Object.assign(globalThis.__game, { prologueSceneContext, preparePrologueScene });
 
 // Preview a cutscene from the title screen: ?cutscene=ejection|recovered|captured|missing (plays regardless of the 'seen' marker)
 if (params.has('cutscene')) setTimeout(() => { try { for (const k of ['ejection','recovered','captured','missing']) localStorage.removeItem('gs_ejection_scene_'+k); } catch (_) {} playEjectionSequence(params.get('cutscene')); }, 1500);

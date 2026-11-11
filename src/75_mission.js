@@ -476,7 +476,7 @@ function prewarmPrologueVoxels(M) {
   }
 }
 function startMission(M, seg, sceneDone = false, autoLaunch = false) {
-  if (!seg && !sceneDone && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch)); return; }
+  if (!seg && !sceneDone && !autoLaunch && sceneAvailable(M.beforeMission)) { startScene(M.beforeMission, () => startMission(M, seg, true, autoLaunch), prologueSceneContext(M, null, 'before')); return; }
   if (!seg) game.crewSnap = JSON.stringify(CREW);     // restarts restore the roster as it was at mission start
   if (cine) cancelTransit();
   plogReset(M.title);
@@ -612,7 +612,7 @@ function missionUpdate(dt) {
   if (!M || !S || S.ended) hideJumpPrompt();
   if (!M || !S) return;
   if (state === 'cine') { cineUpdate(dt); return; }
-  if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; const id = M.afterMission?.[S.result] || (S.result === 'partial' ? M.afterMission?.lose : null); if (sceneAvailable(id)) startScene(id, showDebrief); else showDebrief(); } return; }
+  if (S.ended) { S.endT += dt; if (S.endT > 3.5 && !S.debriefShown) { S.debriefShown = true; const id = M.afterMission?.[S.result] || (S.result === 'partial' ? M.afterMission?.lose : null); if (sceneAvailable(id)) startScene(id, showDebrief, S.sceneContext); else showDebrief(); } return; }
   if (tutorialTick(M, S, dt)) return;
   S.t += dt; S.stageT += dt;
   sarScenarioTick(M, S);
@@ -675,6 +675,7 @@ function endMission(result, why) {
     }
     saveCrew();
   }
+  if (PROLOGUE_MISSIONS.includes(game.mission)) S.sceneContext=prologueSceneContext(game.mission,S,'after');
 }
 function rescuePlayerResolved(p, outcome) {
   const S = game.mstate;

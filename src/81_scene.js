@@ -183,7 +183,7 @@ function advanceSceneDialogue() {
   }
 }
 
-async function startScene(sceneId = 'intro_test', onDone = null) {
+async function startScene(sceneId = 'intro_test', onDone = null, context = null) {
   initSceneDOM();
   const wrap = document.getElementById('sceneWrap');
   if (wrap) wrap.style.display = 'flex';
@@ -201,6 +201,7 @@ async function startScene(sceneId = 'intro_test', onDone = null) {
     if (onDone) { stopScene(); return; }
     console.warn('Using embedded scene data:', e);
   }
+  if (/^p0[1-4]_/.test(sceneId)) sceneData=preparePrologueScene(sceneData, context);
   try { await preloadSceneAssets(sceneData); }
   catch (e) { if (token === sceneState.loadToken) stopScene(); return; }
   if (token !== sceneState.loadToken) return;
