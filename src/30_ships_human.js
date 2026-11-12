@@ -780,18 +780,16 @@ SHIPS.carrier = {
     tap([0, 0, -30], 470, [55, 16], [165, 30], CF.w, { sh: 'h' }),                                    // tapered pressure hull
     tap([0, -1, -496], 4, [46, 13], [50, 14], CF.g1, { sh: 'h' }),                                     // flat nose plate
     tap([0, -3, -470], 26, [cbW(-496) - 2, 3], [cbW(-444) - 2, 3], CF.g3, { sh: 'r' }),               // nose band
-    // deck edges: armoured rails along the taper, graphite chine below
-    tap([cbW(-30) - 5, cbH(-30) - 2, -30], 470, [5, 3], [5, 3], CF.g2, { sweep: cbS }),
-    tap([cbW(-30) - 1, -3, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
+    // graphite chine along the hull's widest line (the chamfered section's flat top spans only the inner 45 % of the width)
+    tap([cbW(-30) - 1, 0, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
     // flight-deck markings and a raised central service spine (trench machinery, as on the reference)
-    tap([cbW(-30) * 0.55, cbH(-30) + 0.6, -30], 400, [3, 1.2], [3, 1.2], CF.or, { sweep: cbS * 0.55, sweepY: cbSY }),
+    tap([cbW(-30) * 0.32, cbH(-30) + 0.4, -30], 400, [3, 1.2], [3, 1.2], CF.or, { sweep: cbS * 0.32, sweepY: cbSY }),
     tap([0, cbH(-80) + 3, -80], 300, [9, 4], [15, 5], CF.g2, { sh: 'h', sweepY: cbSY }),
     ...[-330, -230, -130, -30, 70, 170].map(z => tap([0, cbH(z) + 6, z], 8, [12 + (z + 330) * 0.012, 3], [12 + (z + 330) * 0.012, 3], CF.g3, { sh: 'h' })),
     ...[-280, -120, 40].map(z => tap([cbW(z) * 0.3, cbH(z) + 1.5, z], 18, [8, 2], [8, 2], CF.g1, { sh: 'h' })),  // deck lifts
     // stepped dorsal superstructure aft, then the bridge tower: armoured neck and a wide T-shaped command deck
     tap([0, cbH(250) + 6, 250], 190, [40, 8], [110, 10], CF.g1, { sh: 'h' }),
     tap([0, cbH(330) + 18, 330], 110, [30, 6], [70, 7], CF.w, { sh: 'h' }),
-    ...[150, 230, 310].map(z => tap([0, cbH(z) + 12 + (z - 150) * 0.02, z], 4, [40 + (z - 60) * 0.35, 2], [40 + (z - 60) * 0.35, 2], CF.g3, { sh: 'h' })),   // step bands
     tap([0, 62, 380], 30, [20, 10], [26, 10], CF.g1, { sh: 'h' }),
     tap([0, 78, 385], 14, [70, 6], [70, 6], CF.g2, { sh: 'h' }),
     tap([0, 79, 370.6], 0.8, [64, 1.6], [64, 1.6], CF.can, { sh: 'r' }),                                // command deck windows
