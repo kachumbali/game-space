@@ -202,7 +202,8 @@ def t_hangar(R):
     check('emergency launch ignores cap (mode spool)', r['emergency']['mode']=='spool' and r['emergency']['launches']>=2, json.dumps(r['emergency']))
 
 def t_inst(R):
-    pg=R.page(320,180,'?free&n=0&q=low')
+    # model voxel budget per detail step: measured on the cube renderer (smooth hulls build one step lower, see src/50_state.js)
+    pg=R.page(320,180,'?free&n=0&q=low&vox=cube')
     r=pg.evaluate(js('''
       const bf=g.spawnShip('bullfrog',1,V(0,0,-1000),V(0,0,-3000),{});bf.ai.role='capital';freeze(bf);
       const o={};
