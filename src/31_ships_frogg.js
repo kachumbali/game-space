@@ -329,19 +329,20 @@ const gSeat = (x, y, z, dy, cls, y0) => { const L = TUNE.scaleTo.gulper || 66; r
 SHIPS.gulper = {
   ...DB.ships.gulper,
   prims: [
-    ell([0, 0, 0], [8.5, 6.2, 30], FM.hide),                                                            // long scaled hull
-    tap([0, 5.4, -2], 22, [1.4, 1.4], [2.4, 1.3], FM.hide2, { sh: 'h' }),                              // dorsal ridge
-    tap([0, 8.2, 10], 9, [0.35, 0.3], [0.45, 2.4], FM.hide2, NG),                                        // swept dorsal crest
+    ell([0, 0, -5], [8.5, 6.2, 24], FM.hide),                                                          // compact pressure hull
+    tap([0, 0, 20], 10, [6.3, 4.6], [8.8, 4.2], FM.hide2, { sh: 'h' }),                               // armoured stern joins engine frame
+    ell([0, 1, -14], [9.5, 5.4, 12], FM.hide2),                                                         // broad claw roots
+    tap([0, 5.5, -4], 11, [3.3, 0.7], [2.5, 0.7], FM.met, { sh: 'h', ...NG }),                         // short dorsal equipment deck
     ell([0, 1.0, -28], [4.6, 3.4, 5.5], FM.hide2),                                                      // upper head
     ell([0, 4.4, -17], [1.7, 0.9, 2.2], FM.met2, NG),                                                   // sensor dome (comp 'eyes')
     // claw prongs: rod guns at their tips (z -35.3)
-    ...chain([[4.2, -1.6, -22], [5.6, -2.5, -30], [5.5, -2.4, -34.0]], [1.9, 1.5, 1.1], FM.hide2),
+    ...chain([[5.0, -1.6, -19], [8.2, -2.5, -27], [5.5, -2.4, -34.0]], [2.8, 2.2, 1.1], FM.hide2),
     seg([5.5, -2.4, -36.5], [5.5, -2.4, -37.4], 0.5, 0.2, FM.bone, NG),                                  // claw tip
     ...fmBarrel(5.5, -2.4, -31.5, -35.3, 0.55),
     ...fmBarrel(3.0, 1.2, -30.8, -33.0, 0.45),                                                          // maser lance emitters
     // cage bands and rails along the back, copper feed pipes on the flanks
-    ...[-14, -2, 10, 20].flatMap(z => { const f = Math.sqrt(1 - (z / 30) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
-    fmRail(2.6, 6.15, -16, 20, 0.32), fmRail(7.4, 2.4, -14, 18, 0.32),
+    ...[-12, 0, 12].flatMap(z => { const f = Math.sqrt(1 - ((z + 5) / 24) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
+    fmRail(2.6, 6.15, -12, 12, 0.32),
     ...fmPipe([[6.0, 3.6, -20], [7.6, 2.8, -6], [7.8, 1.6, 8], [7.4, 0.8, 22]], 0.38),
     ...fmPipe([[4.6, 5.2, -12], [5.4, 4.8, 4], [5.0, 4.4, 18]], 0.3, FM.met2),
     // ventral torpedo frames: mouths at z -15 and -3, struts to the hull
@@ -351,8 +352,8 @@ SHIPS.gulper = {
       seg([4.6, -3.2, (z0 + z1) / 2], [6.6, -4.9, (z0 + z1) / 2], 0.6, 0.6, FM.met2, NG),
     ]),
     // swept ventral fins
-    tap([10.5, -3.2, 21], 5.2, [6.2, 0.45], [2.8, 0.25], FM.hide2, { ax: 'x', sweep: 0.6, ...NG }),
-    tap([10.6, -3.0, 18.4], 5.0, [0.4, 0.5], [0.3, 0.3], FM.met2, { ax: 'x', sweep: 0.6, ...NG }),
+    tap([11, -2.7, 4], 5.5, [10, 0.8], [3, 0.25], FM.hide2, { ax: 'x', sweep: 0.8, ...NG }),
+    tap([11, -2.0, -3], 5.5, [0.5, 0.45], [0.3, 0.3], FM.met2, { ax: 'x', sweep: 0.8, ...NG }),
     // thruster cluster on a frame
     tap([0, -1, 30], 4, [9.0, 4.2], [11.5, 4.4], FM.met2, { sh: 'h', ...NG }),
     ...fmThr(9.5, -1, 35.4, 2.7, 6.5), ...fmThr(3.8, -2.2, 36, 1.5, 5.5),
