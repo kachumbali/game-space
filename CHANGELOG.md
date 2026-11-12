@@ -3,6 +3,8 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Every weapon follows the energy law (owner 2026-11-12), applied with `tools/power_table.py --law --apply`. Lasers cost about half, FROGG lances about double. Kestrel fmag 30 → 4.7 MJ per shot, so fighter gun fire lasts much longer. PD beam 7 → 2.7. Bullfrog spine 1024 MJ / 1151 damage, so an Exeter now falls to 3 spine hits (was 4).
+- Fix: the FROGG reference kit (maw, rib arches, spike row) was attached to hulls by list position. After the fighter rebuild it landed on the fighters, and the Bullfrog's dorsal sting turrets floated. It is now attached by ship id, and all Bullfrog and Gulper seats rest on hull.
 - iPad freezes (owner report 2026-11-12, iPad Pro M2: slow loading with freezes in between).
   - three.js no longer reads every new shader's info log (`renderer.debug.checkShaderErrors`, back on with `?shaderdebug`). Those reads block until the GPU driver finishes compiling, and they were the largest item in a CPU profile of a Prologue run (about 0.8 s); after the change the compile-related time is about 0.16 s.
   - Every mission now pre-builds the voxel models of all its ships before flight: hostiles, anchor, home ship, fleet, wingmen and the player's ship. On tablet detail it also builds the distance-LOD levels, so a LOD switch never voxelizes mid-fight.

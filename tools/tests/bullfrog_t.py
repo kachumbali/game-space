@@ -62,8 +62,9 @@ def t_exeter(R):
         print('regen' if regen else 'noregen', json.dumps(r)); res[regen]=r
     check('every spine shot hits the pinned Exeter', all(x['hit']=='exeter' for r in res.values() for x in r), str([[x['hit'] for x in r] for r in res.values()]))
     n0=next((x['i'] for x in res[False] if x['dead']),None); n1=next((x['i'] for x in res[True] if x['dead']),None)
-    check('Exeter survives 3 hits without shield regen, dies on hit 4', n0==4, f'died on hit {n0}')
-    check('Exeter with regen (384/cycle) survives 4, dies on hit 4..5 (spec: 5th)', n1 in (4,5), f'died on hit {n1}')
+    # energy law (owner 2026-11-12): the Bullfrog spine is 0.32 x 3200 MJ = 1024 MJ -> 1151 damage (was 800), so the Exeter falls a hit earlier
+    check('Exeter survives 2 hits without shield regen, dies on hit 3', n0==3, f'died on hit {n0}')
+    check('Exeter with regen (384/cycle) dies on hit 3..4', n1 in (3,4), f'died on hit {n1}')
 
 def t_xl_filter(R):
     """M2 rule: an XL spine passes through a fighter and hits the capital behind it."""
