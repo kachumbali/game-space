@@ -43,6 +43,7 @@ function makeShip(defId, team, pos, quat, opts = {}) {
 function disposeShip(s) {
   scene.remove(s.group);
   disposeVox(s);
+  for (const mesh of s.turretVisualBatches || []) { mesh.dispose(); mesh.geometry.dispose(); mesh.material.dispose(); }
   if (s.shieldFx) { s.shieldFx.geometry !== shieldGeo && s.shieldFx.geometry.dispose(); s.shieldFx.material.dispose(); }
 }
 
