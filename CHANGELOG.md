@@ -10,6 +10,7 @@ Versions are named from the state of `main`. Commit trailers and tool history: d
   - **Spine guns** re-derived from the new stores: Exeter 756, Glaive 1,385, Bullfrog 1,096 damage.
   - **FROGG missiles start at Mark V** (best gain per lane of the human Marks II–IV); their marks read VI–VIII.
   - **Fighter magazines** sized to the hull: Kestrel cannon 400, HE 150 per gun, mag driver 60; other fighters by length.
+- Bullfrog hangar follows its data (owner report: far too many FROGG fighters): 18 fighters per Bullfrog over two bays, at most 6 airborne. The hangar code had ignored `dock.fighters` and launched a fixed 36 with 12 airborne per Bullfrog, so two Bullfrogs brought 72.
 - Capital AI (owner): a ship with an XL spine steers for the nearest enemy capital as soon as one exists, instead of chasing fighters (turrets handle those); the Bullfrog drops a fighter target once a big hostile is within 1.25× spine range. New test `spine_focus_t`: the Glaive charges at an Exeter on its beam after about 19 s and the Bullfrog at a Glaive after 22 s; on the previous build neither fired within 30 s.
 - Columbus rework (owner): the hull tapers in plan from the stern to a third of its width at a flattish nose, with a low dorsal fairing and a submarine-style bridge sail aft (owner: no T-deck, no planes). Turrets, their plinths, bays and launch points moved inboard and onto the new hull surface (`db.json`); collision half-height 60 → 100 for the sail.
 - Bullfrog pass 3 (Codex Job J, owner approved): broader shoulders within the collision box.
