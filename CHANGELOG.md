@@ -3,7 +3,7 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
-- Columbus rework (owner): the hull tapers in plan from the stern to a third of its width at a flattish nose, with a stepped dorsal superstructure and a bridge tower with a wide T-shaped command deck and sensor globes aft. Turrets, their plinths, bays and launch points moved inboard and onto the new hull surface (`db.json`); collision half-height 60 → 100 for the tower.
+- Columbus rework (owner): the hull tapers in plan from the stern to a third of its width at a flattish nose, with a low dorsal fairing and a submarine-style bridge sail aft (owner: no T-deck, no planes). Turrets, their plinths, bays and launch points moved inboard and onto the new hull surface (`db.json`); collision half-height 60 → 100 for the sail.
 - Bullfrog pass 3 (Codex Job J, owner approved): broader shoulders within the collision box.
 - Turret batching (Codex Job H): matching turret parts are drawn as one instanced mesh per ship. Draw calls for one ship alone in view at `?q=low`: Bullfrog 298 → 34, Glaive 230 → 28, Exeter 214 → 27, Gulper 97 → 25, Hecla 192 → 36. Aiming, muzzles and line of fire still use the original turret pivots; turrets look the same. New test: `drawcall_t`.
 - Columbus-class fleet carrier (Codex Job I, owner name): 1,200 m, six bays, 72 fighters (Kestrel, Falchion, Bittern, Merlin), airborne cap 18, fighters recovered into the bays; point defence and medium lasers only. In skirmish and the yard, not in missions. The model is a placeholder: a proper design comes with the real-geometry renderer (`docs/DESIGN_REAL_GEOMETRY.md`). New test: `carrier_t`.

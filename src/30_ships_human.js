@@ -769,8 +769,8 @@ SHIPS.destroyer = {
 };
 
 // Columbus fleet carrier, authored at 1 km and scaled to 1.2 km (owner 2026-11-12: Columbus class).
-// The hull tapers in plan from the stern to a third of its width at a flattish nose; a stepped bridge tower
-// with a T-shaped command deck stands on the centreline aft. Six framed ventral launch wells sit under the deck.
+// The hull tapers in plan from the stern to a third of its width at a flattish nose; a submarine-style
+// bridge sail stands on a low dorsal fairing aft. Six framed ventral launch wells sit under the deck.
 // Hull half-width at z: 55 + 110 (z + 500) / 940; half-thickness 16 at the nose to 30 at the stern.
 const cbW = z => 55 + 110 * (z + 500) / 940, cbH = z => 16 + 14 * (z + 500) / 940, cbS = 110 / 940, cbSY = 14 / 940;
 SHIPS.carrier = {
@@ -789,13 +789,13 @@ SHIPS.carrier = {
     ...[-280, -120, 40].map(z => tap([cbW(z) * 0.3, cbH(z) + 1.5, z], 18, [8, 2], [8, 2], CF.g1, { sh: 'h' })),  // deck lifts
     // stepped dorsal superstructure aft, then the bridge tower: armoured neck and a wide T-shaped command deck
     tap([0, cbH(250) + 6, 250], 190, [40, 8], [110, 10], CF.g1, { sh: 'h' }),
-    tap([0, cbH(330) + 18, 330], 110, [30, 6], [70, 7], CF.w, { sh: 'h' }),
-    tap([0, 62, 380], 30, [20, 10], [26, 10], CF.g1, { sh: 'h' }),
-    tap([0, 78, 385], 14, [70, 6], [70, 6], CF.g2, { sh: 'h' }),
-    tap([0, 79, 370.6], 0.8, [64, 1.6], [64, 1.6], CF.can, { sh: 'r' }),                                // command deck windows
-    tap([0, 85.5, 386], 10, [30, 1.5], [30, 1.5], CF.g1, { sh: 'h' }),
-    ell([64, 88, 386], [6, 4.5, 6], CF.g1),                                                              // sensor globes
-    seg([0, 86, 392], [0, 97, 392], 2, 1.2, CF.g3),
+    // bridge sail (owner: like a modern submarine, no planes): a tall narrow fin, elliptical in plan, slightly raked,
+    // with a slit of command-deck windows near the top and masts
+    tap([0, 62, 360], 32, [48, 11], [40, 9], CF.w, { ax: 'y', sh: 'e', sweep: 0.15 }),
+    tap([0, 93.5, 364], 1.5, [36, 7.5], [34, 7], CF.g1, { ax: 'y', sh: 'e' }),                        // sail cap
+    tap([0, 87, 326], 2, [6.5, 1.4], [6.5, 1.4], CF.can, { sh: 'r' }),                                  // command-deck windows
+    seg([0, 94, 358], [0, 99.5, 358], 1.6, 1.1, CF.g3), seg([0, 94, 370], [0, 98, 370], 1.2, 0.9, CF.g3),
+    seg([0, 94, 380], [0, 97, 380], 1, 0.8, CF.g2),
     // stern: engine block, four round nozzles at the database engine positions
     tap([0, 0, 465], 25, [158, 30], [148, 28], CF.g1, { sh: 'h' }),
     ...[30, 95].map(x => tap([x, 0, 478], 12, [15, 15], [14, 14], CF.noz, { sh: 'e' })),
