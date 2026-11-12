@@ -337,9 +337,9 @@ SHIPS.gulper = {
     ell([0, 4.4, -17], [1.7, 0.9, 2.2], FM.met2, NG),                                                   // sensor dome (comp 'eyes')
     // claw prongs: rod guns at their tips (z -35.3)
     ...chain([[5.0, -1.6, -19], [8.2, -2.5, -27], [5.5, -2.4, -34.0]], [2.8, 2.2, 1.1], FM.hide2),
-    seg([5.5, -2.4, -36.5], [5.5, -2.4, -37.4], 0.5, 0.2, FM.bone, NG),                                  // claw tip
-    ...fmBarrel(5.5, -2.4, -31.5, -35.3, 0.55),
-    ...fmBarrel(3.0, 1.2, -30.8, -33.0, 0.45),                                                          // maser lance emitters
+    seg([6.2, -2.4, -33.6], [6.4, -2.4, -36.4], 0.6, 0.2, FM.bone, NG),                                  // claw tip
+    ...fmBarrel(5.5, -2.4, -31.5, -34.6, 0.55),
+    ...fmBarrel(3.0, 1.2, -30.8, -32.4, 0.45),                                                          // maser lance emitters
     // cage bands and rails along the back, copper feed pipes on the flanks
     ...[-12, 0, 12].flatMap(z => { const f = Math.sqrt(1 - ((z + 5) / 24) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
     fmRail(2.6, 6.15, -12, 12, 0.32),
@@ -347,8 +347,8 @@ SHIPS.gulper = {
     ...fmPipe([[4.6, 5.2, -12], [5.4, 4.8, 4], [5.0, 4.4, 18]], 0.3, FM.met2),
     // ventral torpedo frames: mouths at z -15 and -3, struts to the hull
     ...[[-15.2, -9.6], [-3.2, 2.4]].flatMap(([z0, z1]) => [
-      tap([7.2, -5.8, (z0 + z1) / 2], (z1 - z0) / 2, [1.35, 1.15], [1.35, 1.15], FM.met, { sh: 'h', ...NG }),
-      tap([7.2, -5.8, z0 + 0.1], 0.15, [0.75, 0.75], [0.75, 0.75], FM.dk, { sh: 'e', ...NG }),
+      ...[6.2, 8.2].map(x => fmRail(x, -5.8, z0, z1, 0.25)),
+      ...[-6.7, -4.9].map(y => tap([7.2, y, (z0 + z1) / 2], (z1 - z0) / 2, [1.1, 0.2], [1.1, 0.2], FM.met, NG)),
       seg([4.6, -3.2, (z0 + z1) / 2], [6.6, -4.9, (z0 + z1) / 2], 0.6, 0.6, FM.met2, NG),
     ]),
     // swept ventral fins
@@ -431,17 +431,18 @@ SHIPS.bullfrog = {
     ...chain([[24, -14, -215], [32, -18, -255], [22, -12, -292]], [10, 7, 3], FM.hide2),
     ...chain([[20, 18, -225], [24, 22, -262], [14, 14, -285]], [7, 5, 2], FM.hide2),
     // spine gun: barrel along the axis, collars, muzzle at z -299
-    seg([0, -4, -205], [0, -4, -296], 8.5, 6, FM.met, NG), tap([0, -4, -297], 1.5, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
+    seg([0, -4, -205], [0, -4, -292], 8.5, 6, FM.met, NG), tap([0, -4, -297], 1.5, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
     ...[-235, -255, -275].map(z => tap([0, -4, z], 2.5, [10, 10], [10, 10], FM.met2, { sh: 'e', ...NG })),
     // cage rings and rails, copper pipes
     ...[-150, -70, 10, 90, 170].flatMap(z => { const f = Math.sqrt(1 - ((z - 30) / 250) ** 2); return fmRing(0, 0, z, 64 * f + 1.5, 34 * f + 1.5, 2.2); }),
     fmRail(22, 33, -150, 180, 2), fmRail(55, 16, -120, 170, 2),
     ...fmPipe([[40, 26, -170], [52, 22, -60], [56, 18, 60], [52, 14, 180]], 2.4),
     ...fmPipe([[30, 30, -120], [36, 30, 0], [34, 28, 140]], 1.8, FM.met2),
-    // ventral launch drum with the two hangar maws, the torpedo tube cluster
-    seg([0, -30, -125], [0, -30, 135], 19, 17, FM.met, NG), tap([0, -30, 138], 4, [15, 14], [13, 12], FM.met2, { sh: 'e', ...NG }),
-    tap([0, -47, -95], 26, [14, 3], [14, 3], FM.dk, NG), tap([0, -47, 90], 26, [14, 3], [14, 3], FM.dk, NG),
+    // Paired ventral rails support the torpedo cluster, leaving its centreline open.
+    seg([17, -30, -125], [17, -30, 135], 7, 7, FM.met, NG),
+    tap([0, -28, 138], 4, [23, 7], [23, 7], FM.met2, { sh: 'h', ...NG }),
     ...[[-8, -48], [8, -48], [-8, -38], [8, -38]].map(([x, y]) => seg([x, y, -10], [x, y, -42], 3, 2.6, FM.dk, { noMirror: true, ...NG })),
+    seg([17, -30, -10], [8, -48, -10], 3, 3, FM.met2, NG),
     // heart dome over the reactor
     ell([0, 32, 150], [30, 12, 30], FM.met2, NG),
     // Long swept shoulder fins, within the collision envelope; the broad roots overlap the hull.
