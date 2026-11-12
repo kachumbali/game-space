@@ -17,7 +17,9 @@ turrets), so they can exceed the nominal length.
 | Bullfrog | FROGG | capital | 600 | 190 (box; hull ~140-150 without blades) | 110 | 48x | 22 |
 | HECLA | human | capital | 1,000 | 290 | 100 | 80.6x | 10 |
 
-Bullfrog (authored at 600 m, no `scaleShip`): `half [95, 55, 300]`, radius 305, structure 3000, shield 2000/1600 (regen 6), hard armour 0.30, turn 0.06, `jump: true`, `dock {fighters: 36}`, `ai.role: 'lancer'`, `resMul 0.85` with `resCap 400` (about 46k / 113k / 122k voxel instances at detail 2 / 4 / 6). New schema fields: turret `cls: 'S'|'M'|'L'`, weapon `bw` (beam width, m), def `resCap`, mount `store: 'spine'` (spine mount, not fired by `fireGuns`).
+Bullfrog pass 3 broadens and deepens the outboard shoulders inside the existing collision box, retains the jaw, fins and side bays, and leaves component and weapon positions unchanged.
+
+Bullfrog (authored at 600 m, no `scaleShip`): `half [95, 55, 300]`, radius 305, structure 3000, shield 2000/1600 (regen 6), hard armour 0.30, turn 0.06, `jump: true`, `dock {fighters: 36}`, `ai.role: 'lancer'`, `resMul 0.85` with `resCap 400` (about 51k / 125k / 131k surface voxels at detail 2 / 4 / 6). New schema fields: turret `cls: 'S'|'M'|'L'`, weapon `bw` (beam width, m), def `resCap`, mount `store: 'spine'` (spine mount, not fired by `fireGuns`).
 
 HECLA (owner-approved 1,000 m strategic tender): `half [145, 50, 500]`, radius 520, `jump: true`, one 6,000 hp main reactor, `resMul 0.6`, `resCap 240`, `noDetail: true`. Measured Shipyard voxel counts are about 17k / 23k / 23k at detail 2 / 4 / 6. Only its model and database entry are implemented; no menu, mission or campaign-service behavior was added.
 
