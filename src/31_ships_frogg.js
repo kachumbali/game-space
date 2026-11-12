@@ -364,34 +364,40 @@ SHIPS.gulper = {
   ],
 };
 
-// ---- HIVE CARRIER: migratory brood-ark, jump-capable super carrier (900 m) ---------------------------
-// Catalogue ship (not yet used in missions). Low resolution multiplier keeps the voxel count sane.
+// ---- HIVE CARRIER: long-jawed brood ark, authored at 900 m and scaled by the database.
+// The pressure spine carries the skull and engine saddle; machinery is clamped to the hide.
+const hiveSeats = () => (DB.ships.hivecarrier.turrets || []).flatMap(t => {
+  const [x, y, z] = t.pos, dy = Math.sign(y) || 1;
+  const L = TUNE.scaleTo.hivecarrier || 900;
+  const D = turretDia({ def: { length: L } }, t) * 900 / L;
+  return fgSeat(x, y, z, dy, D, dy * 20);
+});
 SHIPS.hivecarrier = {
   ...DB.ships.hivecarrier,
   prims: [
-    // carapace: stacked overlapping shell plates
-    ell([0, 0, 40], [150, 70, 330], N.dk, nSt(14, 0.1)),
-    ell([0, 55, 0], [190, 24, 330], N.dk2, nSt(12, 0.1)),
-    ell([0, -10, 60], [250, 18, 300], N.dk, nSt(12, 0.1)),
-    ell([0, 78, -40], [110, 22, 230], N.dk2, nSt(10, 0.1)),
-    ell([0, 95, -90], [60, 14, 140], N.dk, nSt(8, 0.1)),
-    ell([0, -6, -300], [110, 62, 120], N.dk, nSt(12, 0.1)),                                 // blunt prow
-    // crescent mandibles
-    ...nMand(90, 10, -330, 260, 20), ...nMand(55, -40, -340, 160, 15),
-    ...nEye(60, 20, -418, 24), ...nEye(100, -10, -392, 14),
-    // ventral keel, hangar maws with pearl lights
-    nKeel(-60, -200, 330, 180, 22),
-    ell([0, -62, -40], [60, 20, 150], N.bl, { dots: { col: N.pr, p: 0.02, f: 1.0 } }),
-    ell([90, -48, 120], [34, 14, 90], N.bl, { dots: { col: N.pr, p: 0.02, f: 1.0 } }),
-    ...nComb(30, -60, 120, 7, 200, 0.5),
-    // dorsal spike rows
-    ...[-240, -170, -100, -30, 40, 110, 180, 250].map((z, i) => nSpike([0, 100 - i * 4, z], [0, 170 - i * 8, z + 70], 12 - i * 0.8)),
-    ...[-200, -120, -40, 40, 120, 200].map((z, i) => nSpike([70, 70, z], [110, 130 - i * 5, z + 60], 8)),
-    // trailing blades
-    nBlade([120, 20, 150], [265, 10, 440], 16), nBlade([100, -30, 200], [230, -40, 445], 12), nBlade([90, 60, 100], [200, 80, 420], 10),
-    // engine vents (ribbed, red-orange)
-    ...nNoz(60, 0, 330, 440, 40), ...nNoz(150, -10, 320, 430, 32), ...nNoz(200, 10, 300, 410, 24),
-    ...fDetail({ disc: [0, -10, 60, 250, 18, 300], rim: 22, E: [0, 0, 40, 150, 70, 330], plates: 12, gills: 8, collars: 9, ribs: 8, spikes: 8, noz: [[60, 0, 330, 440, 40], [150, -10, 320, 430, 32], [200, 10, 300, 410, 24]], blades: [[[120, 20, 150], [265, 10, 440], 16]] }),
+    ell([0, 0, 70], [112, 57, 285], FM.hide),                                                         // long pressure spine
+    ell([0, 4, -172], [105, 52, 102], FM.hide2),                                                      // skull root
+    tap([0, 3, 317], 64, [80, 42], [104, 45], FM.met2, { sh: 'h', ...NG }),                          // drive saddle
+    // Upper skull and paired lower jaws project forward, both rooted in the head.
+    tap([0, 27, -290], 118, [48, 15], [90, 28], FM.hide2, { sh: 'h' }),
+    ...chain([[72, -20, -205], [77, -34, -290], [52, -28, -405], [38, -20, -438]],
+      [27, 22, 14, 7], FM.hide2),
+    // Teeth are short metal braces along the inner jaw, not luminous organs.
+    ...[-270, -315, -360, -400].map((z, i) => seg([54 - i * 4, -23, z], [48 - i * 3, -7, z - 6], 5, 2, FM.met2, NG)),
+    ell([0, 27, -399], [30, 12, 30], FM.met2, NG),                                                    // radar housing
+    // Close fitting transverse clamps and longitudinal cable bundles.
+    ...[-100, 0, 100, 200, 300].flatMap(z => {
+      const f = Math.sqrt(Math.max(0.05, 1 - ((z - 70) / 285) ** 2));
+      return fmRing(0, 0, z, 112 * f, 57 * f, 3.5);
+    }),
+    ...fmPipe([[55, 43, -150], [82, 36, -50], [95, 25, 80], [85, 24, 220], [68, 20, 320]], 4),
+    ...fmPipe([[38, 48, -120], [55, 48, 0], [60, 43, 150], [55, 35, 280]], 3, FM.met2),
+    // Ribbed hangar bays sit against the flanks and connect to the spine by heavy saddles.
+    tap([99, -18, 75], 120, [28, 22], [33, 20], FM.met2, { sh: 'h', ...NG }),
+    tap([128, -18, 65], 80, [3, 12], [3, 12], FM.dk, NG),
+    ...[-5, 65, 135].map(z => seg([83, -10, z], [128, -10, z], 7, 7, FM.met2, NG)),
+    ...fmThr(60, 0, 440, 40, 90),
+    ...hiveSeats(),
   ],
 };
 
@@ -453,7 +459,6 @@ SHIPS.bullfrog = {
   ],
 };
 
-// attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
-// (2026-11-12: the bio-mech fighters no longer call fDetail, so the list holds the three capitals only; a positional list had moved their kit onto the fighters)
-['hivecarrier'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
+// No hull attaches the legacy glowing reference kit; runtime engines supply the drive flames.
+[].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
 for (const id in SHIPS) if (SHIPS[id].fac === 'frogg') SHIPS[id].flameColor = 0x30dcff;      // cyan drive plumes
