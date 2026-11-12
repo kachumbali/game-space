@@ -768,6 +768,33 @@ SHIPS.destroyer = {
   ],
 };
 
+// Columbus fleet carrier, authored at 1 km and scaled to 1.2 km. Six open
+// ventral launch wells sit between structural cross-members and the flight deck.
+SHIPS.carrier = {
+  ...DB.ships.carrier,
+  ordnancePlan: { ...DB.ships.carrier.ordnancePlan, droneLimit: TUNE.droneLimit.capital },
+  prims: [
+    tap([0, 0, -399], 99, [70, 18], [150, 22], CF.g1, {sh:'h'}),
+    tap([0, 0, 0], 300, [150, 22], [150, 22], CF.w, {sh:'r'}),
+    tap([0, 0, 399], 99, [150, 22], [120, 18], CF.g1, {sh:'h'}),
+    // Long deck edge and keel. The empty space between these members is the bay opening.
+    ...[-1,1].flatMap(side => [
+      tap([side*160, -20, 0], 360, [16, 22], [16, 22], CF.g2, {sh:'r',noMirror:true}),
+      tap([side*45, -20, 0], 360, [12, 22], [12, 22], CF.g2, {sh:'r',noMirror:true}),
+      ...[-360,-180,180,360].map(z => tap([side*100,-20,z], 12, [65,22], [65,22], CF.g2, {sh:'r',noMirror:true})),
+    ]),
+    // Framed, dark hangar ceilings meet the underside of the pressure deck.
+    ...[-85,85].flatMap(x => [-280,0,280].map(z => tap([x,-24.5,z],75,[31,2.5],[31,2.5],CF.dk,{sh:'r',noMirror:true}))),
+    // Raised deck markings and bridge sit on the deck surface.
+    ...[-100,100].map(x => tap([x,26,0],270,[5,4],[5,4],CF.or,{sh:'r',noMirror:true})),
+    // Bridge and four engine blocks.
+    tap([0,29,300], 36, [23,8], [30,8], CF.g2, {sh:'h'}),
+    ...[-95,-30,30,95].map(x => tap([x,0,470], 20, [14,14], [14,14], CF.noz, {sh:'e',noMirror:true})),
+    ...DB.ships.carrier.turrets.filter(t => t.side > 0).map(t => tap([t.pos[0],21,t.pos[2]],8,[8,4],[8,4],CF.w,{sh:'r',noMirror:true})),
+    ...DB.ships.carrier.turrets.flatMap(t => capSeat(t.pos[0],t.pos[1],t.pos[2],t.side, turretDia({def:{length:1200}},t)/1.2,t.side*18)),
+  ],
+};
+
 // Recessed cell covers are paint on existing hull voxels: they cannot float
 // independently of the pressure hull. Positions are the same as the runtime
 // damageable launchers, authored in the database and scaled with the ship.

@@ -53,6 +53,24 @@ function capitalHangarAI(s, C, dt) {
   const h = s.def.ordnancePlan?.hangar, H = C.hangar, cfg = TUNE.ordnance.ai;
   if (!H || !C.contact) return;
   H.out = H.out.filter(f => f.alive && !f.dying);
+  // Columbus recalls survivors when contact ends; a lost fighter is never returned to stock.
+  if (h.recovery) {
+    const threat = ships.some(t => t.alive && !t.dying && t.team !== s.team && s.group.position.distanceTo(t.group.position) <= cfg.contactRange);
+    for (const f of H.out) {
+      f.hangarRecall = !threat;
+      if (!f.hangarRecall) continue;
+      const bay = s.comps.find(c => c.id === f.hangarBay && c.hp > 0) || s.comps.find(c => h.bayComponents.includes(c.id) && c.hp > 0 && c.launch);
+      if (!bay || !bay.launch) continue;
+      f.hangarBay = bay.id;
+      const mouth = s.group.localToWorld(new THREE.Vector3(...bay.launch));
+      if (f.group.position.distanceTo(mouth) <= cfg.hangarRecoveryRadius) {
+        H.remaining[f.def.id] = (H.remaining[f.def.id] || 0) + 1;
+        f.alive = false;
+      }
+    }
+    H.out = H.out.filter(f => f.alive && !f.dying);
+    if (!threat) return;
+  }
   for (let i = 0; i < H.timers.length; i++) {
     H.timers[i] -= dt;
     const bay = s.comps.find(c => c.id === h.bayComponents[i]);
@@ -60,9 +78,9 @@ function capitalHangarAI(s, C, dt) {
     const type = Object.keys(H.remaining).find(k => H.remaining[k] > 0 && SHIPS[k]);
     if (!type) continue;
     s.group.updateMatrixWorld(true);
-    const pos = s.group.localToWorld(new THREE.Vector3(bay.pos[0], -s.def.half[1] - cfg.hangarClearance, bay.pos[2]));
+    const pos = s.group.localToWorld(bay.launch ? new THREE.Vector3(...bay.launch) : new THREE.Vector3(bay.pos[0], -s.def.half[1] - cfg.hangarClearance, bay.pos[2]));
     const f = makeShip(type, s.team, pos, s.group.quaternion.clone(), {grp:s.grp, skill:s.skill, callsign:`${s.callsign || s.def.name} ${type}`});
-    f.vel.copy(s.vel); f.hitCool = cfg.hangarHitCool; H.remaining[type]--; H.out.push(f); H.timers[i] = h.interval;
+    f.vel.copy(s.vel); f.hitCool = cfg.hangarHitCool; f.hangarHome = s; f.hangarBay = bay.id; H.remaining[type]--; H.out.push(f); H.timers[i] = h.interval;
     plogN('capital.hangar.launch');
   }
 }
