@@ -3,6 +3,7 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- FROGG capital redesign (Codex Job G, round 2): the Gulper has swept horn antennae and a broad chest; the Hive carrier is a long-jaw skull carrier with rib-mounted flank pods and no glow kit; the Bullfrog has tapered shoulders, raised swept fins, spine-gun armour and open side bays. Darter detail pass. Gameplay positions in `db.json` unchanged. The Bullfrog tablet instance band (40–60k) passes again (41k).
 - Ship hulls render as merged meshes (iPad performance): one mesh per z slab holding only the cube faces that border empty space, instead of one instanced box per surface voxel. About 3.3× fewer triangles on capitals (Bullfrog 462k → 137k at tablet detail); the look is unchanged, minus the hairline cracks between cubes. Damage rebuilds only the touched slabs before the next frame. `?vox=inst` restores the old renderer for comparison; `?fps` reports triangles. Not yet measured on an iPad.
 - Range law (owner 2026-11-12), the same for FROGG and human ships: `tuning.rangeLaw` bands with `tools/range_law.py --apply`.
   - Point defence 0.75–0.9 km, fighter guns 1.5–2.0 km, capital secondaries 2.5–3.0 km, main guns 4–5 km. Missiles keep their own ranges.
