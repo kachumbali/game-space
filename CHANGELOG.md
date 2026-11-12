@@ -3,6 +3,14 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Range law (owner 2026-11-12), the same for FROGG and human ships: `tuning.rangeLaw` bands with `tools/range_law.py --apply`.
+  - Point defence 0.75–0.9 km, fighter guns 1.5–2.0 km, capital secondaries 2.5–3.0 km, main guns 4–5 km. Missiles keep their own ranges.
+  - Kestrel MD-9 2.7 → 2.0 km; Exeter and Glaive lasers 2.2 → 2.5 km; FROGG lances 1.5/1.8 → 2.5 km; spine guns 3.2 → 4 km; Gulper rod gun 5.3 → 5 km.
+  - Projectile range is speed × lifetime, so the bolts really fly that far.
+- FROGG weapons (owner: no acid, kinetics and energy): maser bolts cost energy under the energy law. Sting and thorn autocannons do kinetic damage. Bolts are cyan (masers) or pale slugs (kinetic) where they were venom green. The Bullfrog's "ACID M" turret components are now "MASER M", and the Spitter's sac is a dark maser capacitor bank.
+- The Bullfrog reserves its spine shot in the capacitor, like the Exeter and Glaive, so turret fire cannot starve it.
+- `?nuke=N&nukeKt=Y` now also arms the player in skirmish (new test: `nuke_param_t`).
+- Gulper and Bullfrog first bio-mech pass: claw prows, cage rings, copper pipes, round thrusters, every seat on a pedestal. The design rework goes to Codex (`docs/CODEX_BRIEF_4.md`).
 - Every weapon follows the energy law (owner 2026-11-12), applied with `tools/power_table.py --law --apply`. Lasers cost about half, FROGG lances about double. Kestrel fmag 30 → 4.7 MJ per shot, so fighter gun fire lasts much longer. PD beam 7 → 2.7. Bullfrog spine 1024 MJ / 1151 damage, so an Exeter now falls to 3 spine hits (was 4).
 - Fix: the FROGG reference kit (maw, rib arches, spike row) was attached to hulls by list position. After the fighter rebuild it landed on the fighters, and the Bullfrog's dorsal sting turrets floated. It is now attached by ship id, and all Bullfrog and Gulper seats rest on hull.
 - iPad freezes (owner report 2026-11-12, iPad Pro M2: slow loading with freezes in between).

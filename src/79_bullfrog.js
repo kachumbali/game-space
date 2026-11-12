@@ -269,6 +269,7 @@ function lancerAI(s, dt) {
     thr = ai.mode === 'close' ? 0.7 : ai.mode === 'station' ? 0.15 : 0;
   } else ai.mode = 'hold';
   // ---- spine: start a charge (needs a slug in the magazine)
+  s.spineHold = sp.st === 'ready' && big && dist < spineW(s).range && sp.mag > 0 ? spineW(s).energy : 0;   // turrets leave the spine shot in the capacitor (energy law 2026-11-12)
   if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy && sp.mag > 0) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
