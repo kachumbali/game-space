@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Power budget table from data/db.json (no browser). python3 tools/power_table.py [--md] [--law]
+"""Power budget table from data/db.json (no browser). python3 tools/power_table.py [--md] [--law [--apply]]
 --law: every energy-costed weapon against tuning.energyLaw (MJ per damage point by delivery type; spine guns sized from their ship's capacitor).
 Units: 1 energy unit = 1 MJ, per second = MW (sim seconds; real seconds = sim / SIM_SPEED 0.375).
 Weapon draw = energy per shot / cooldown, summed over every energy-costed mount and turret firing at once (spine/charged weapons excluded).
@@ -29,6 +29,29 @@ if '--law' in sys.argv:
             if w.get('kind') != 'spine' or s.get('base'): continue
             e = L['spineCapacitorShare'] * s['power']['capacitorMJ']
             print(f"{sid:12s} {m['w']:6s} energy {w['energy']} (law {e:.0f})  dmg {w['dmg']} (law {e / K['spine']:.0f})")
+    if '--apply' in sys.argv:                 # rewrite base weapons in data/db.json to the law (owner 2026-11-12: follow the law)
+        raw = dbmarks.load(); txt = open(dbmarks.DB_PATH).read()
+        def setnum(wid, key, val):
+            global txt
+            sec = txt.index('\n  "weapons": {'); i = txt.index('\n    "%s": {' % wid, sec); j = i + len('\n    "%s": ' % wid)
+            _, end = json.JSONDecoder().raw_decode(txt, j); seg = txt[j:end]
+            k = seg.index('"%s":' % key); v0 = k + len('"%s":' % key)
+            while seg[v0] == ' ': v0 += 1
+            _, v1 = json.JSONDecoder().raw_decode(seg, v0); seg = seg[:v0] + json.dumps(val) + seg[v1:]; txt = txt[:j] + seg + txt[end:]
+        spineOf = {}
+        for sid, s in raw['ships'].items():
+            for m in s.get('mounts', []):
+                if raw['weapons'][m['w']].get('kind') == 'spine' and 'power' in s: spineOf.setdefault(m['w'], s['power']['capacitorMJ'])
+        for wid, w in raw['weapons'].items():
+            if w.get('base') or not w.get('energy') or not w.get('dmg'): continue
+            k = kind(w)
+            if k == 'spine' and wid in spineOf:
+                e = round(L['spineCapacitorShare'] * spineOf[wid]); d = round(e / K['spine'])
+                if (e, d) != (w['energy'], w['dmg']): setnum(wid, 'energy', e); setnum(wid, 'dmg', d); print('set', wid, 'energy', e, 'dmg', d)
+            elif k != 'spine':
+                e = round(w['dmg'] * K[k], 2)
+                if abs(e - w['energy']) > 0.1 * w['energy']: setnum(wid, 'energy', e); print('set', wid, 'energy', w['energy'], '->', e)
+        open(dbmarks.DB_PATH, 'w').write(txt)
     sys.exit(0)
 rows = []
 for sid, s in db['ships'].items():

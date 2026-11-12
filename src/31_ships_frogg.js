@@ -433,5 +433,6 @@ SHIPS.bullfrog = {
 };
 
 // attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
-['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'hivecarrier', 'bullfrog'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
+// (2026-11-12: the bio-mech fighters no longer call fDetail, so the list holds the three capitals only; a positional list had moved their kit onto the fighters)
+['gulper', 'hivecarrier', 'bullfrog'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
 for (const id in SHIPS) if (SHIPS[id].fac === 'frogg') SHIPS[id].flameColor = 0x30dcff;      // cyan drive plumes
