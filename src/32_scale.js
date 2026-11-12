@@ -19,7 +19,7 @@ function scaleShip(def, newLength) {
   for (const e of def.engines || []) { e.pos = v(e.pos); e.r *= k; }
   for (const m of def.mounts || []) m.pos = v(m.pos);
   for (const t of def.turrets || []) t.pos = v(t.pos);
-  for (const c of def.comps || []) { c.pos = v(c.pos); c.r *= k; }
+  for (const c of def.comps || []) { c.pos = v(c.pos); if (c.launch) c.launch = v(c.launch); c.r *= k; }
 }
 // ---- marks (docs/MARKS_SCHEMA.md): DB.ships.<id> variants were already resolved into complete defs in 16_db.js; here they get the base ship's geometry
 // (prims deep-copied, because scaleShip below rewrites prims in place) so they are ordinary SHIPS entries from here on.

@@ -9,8 +9,8 @@ function launcherMounts(def) {
   })));
 }
 function initLaunchers(s) {
-  if (!TUNE.ordnance?.enabled || s.def.fac !== 'human' || !s.def.launchers?.length) return;
-  const banks = s.def.launchers, plan = s.def.ordnancePlan;
+  if (!TUNE.ordnance?.enabled || s.def.fac !== 'human' || (!s.def.launchers?.length && !s.def.ordnancePlan)) return;
+  const banks = s.def.launchers || [], plan = s.def.ordnancePlan;
   // Drone manifests apply to player-controlled carriers as well as AI carriers.
   if (plan?.stores?.drone !== undefined) s.stores.drone = plan.stores.drone;
   if (plan?.droneLimit !== undefined) s.dlimit = plan.droneLimit;
