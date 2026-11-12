@@ -57,7 +57,7 @@ Owner decision: dedicated carriers carry the fighters; corvettes have no bays, f
 **Ship.** A new human fleet carrier.
 - id `carrier`, class `capital`, faction `human`.
 - About **1,200 m** long: author it at a convenient size and set `tuning.scaleTo.carrier`, as the Glaive does.
-- Name: propose three names; the owner picks one.
+- Name (owner 2026-11-12): **Columbus class**. Use `name: 'COLUMBUS'` in the data, in capitals like the other ships, and "Columbus-class fleet carrier" in the descriptions.
 
 **Hangar.** About **72 fighters**:
 - `dock.fighters: 72`, `dock.corvettes: 2`;
