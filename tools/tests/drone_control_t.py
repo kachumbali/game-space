@@ -14,5 +14,5 @@ with Runner() as r:
       return {launched,limit,fighters,recalled,wing:g.dronesOf(f).length};
     }''')
     print(result)
-    assert result=={'launched':12,'limit':12,'fighters':True,'recalled':True,'wing':2}
+    assert result=={'launched':3,'limit':3,'fighters':True,'recalled':True,'wing':2}   # frigate drone limit 3 (owner 2026-11-12)
     assert_no_console_errors(r)

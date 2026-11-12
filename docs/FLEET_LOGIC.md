@@ -122,6 +122,8 @@ type `rescue`; wounded states with recovery turns; a roster UI showing who is ad
 - **LLM memory** must remain advisory; the state engine decides survival, capture and rank.
 
 ## 8. Jump capability and docking (owner rule, 2026-10-21)
+**Superseded 2026-11-12 (owner): fighter bays scale with hull size.** Corvettes (200 m) carry no fighters or drones. The Exeter frigate (450 m) carries 3 fighters and 3 drones, with no corvette cradles: a 200 m corvette cannot dock on a 450 m frigate. The Glaive destroyer (720 m) carries 5 and 5, the Hecla tender (1 km) 36, the FROGG Bullfrog 18 (its manifest), and the Hive carrier stays the FROGG carrier. A dedicated human carrier (~1.2 km, ~72 fighters) is planned. Squadrons in missions are based on a `setup.home` ship. The text below is the older rule.
+
 **Update (later 2026-10-21): ships stay under 500 m for now.** The largest ship in scope is the **frigate** (up to
 ~500 m). The frigate is the jump-capable class and can **dock, but not repair,** 2 corvettes and 12 fighters / large
 fighter drones. Where this section says "capital", read "frigate (and anything larger, later)". Carriers, dreadnoughts,

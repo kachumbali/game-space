@@ -3,6 +3,14 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Fleet rules (owner 2026-11-12):
+  - Corvettes +50% hull and shields: Halberd 690 hull, 330/330 shields; Gulper 720 hull, 300/240 shields.
+  - Energy law in `tuning.energyLaw`: MJ per damage point by delivery type (coil 0.18, PD 0.1, beam 2.0, spine 0.89), so sustained weapon draw in MW = DPS × MJ per damage. A spine (XL) gun dumps 0.32 of its ship's capacitor per shot, so bigger power budgets give bigger spines. `tools/power_table.py --law` reports every weapon against the law. Beams and the FROGG lance are off the law and have not been rebalanced yet.
+  - Glaive: scaled to 720 m, with a heavy XL mass driver (`mdxh`: 1120 MJ, 1260 damage).
+  - XL guns (Exeter, Glaive) pick their own big target when the ship's target is a fighter. Turrets leave a ready XL shot in the capacitor; before this, the Glaive's spine never fired once the Exeter launched fighters.
+  - Fighter bays by size: corvettes none and no drones; Exeter 3 fighters and 3 drones; Glaive 5 and 5; Hecla 36; Bullfrog 18; tender 4 rearm cradles. No corvette cradles on frigates (`tuning.droneLimit` corvette 0, frigate 3, capital 5).
+  - Missions anchored on the Halberd get `setup.home` = Exeter: the squadron is based on the frigate, and the Halberd stays the ship to protect. The roster follows the home ship, and a pool saved under the old Halberd key moves over once. Briefing and debrief lines updated.
+  - Drone, roster and comms tests updated to the new numbers.
 - FROGG fighters rebuilt as bio-mech (owner 2026-11-12, after the first rebuild "looked stupid"): this follows the Gemini design seed, hybrid language, gameplay matched to the art, no glow. Each hull is scaled creature hide with machinery strapped on: gunmetal cages and frames, copper pipes, clamp-on boxes and round thrusters.
   - Darter: needle hull with forward gun and sensor rods, a ribbed heat-sink plate and twin high thrusters.
   - Leaper: blunt frog head, bone horns, pipes over the back, side gun pods.

@@ -11,8 +11,8 @@ PRE='''const g=__game,T=g.THREE;__paused=true;g.game.mode='test';
 SC={}
 SC['kite_carriers']=('?free&n=0','''()=>{'''+PRE+'''
  const result=[];
- for(const [id, x, stock] of [['halberd',3000,2], ['falchion',6000,2]]){
-   const c=g.spawnShip(id,0,V(x,0,0),V(x,0,-1000),{}); if(id==='halberd') g.capitalOrdnanceAI(c,0); c.stores.drone=stock;
+ for(const [id, x, stock] of [['exeter',3000,2], ['falchion',6000,2]]){   // owner 2026-11-12: corvettes carry no drones; the frigate is the smallest capital carrier
+   const c=g.spawnShip(id,0,V(x,0,0),V(x,0,-1000),{}); if(id==='exeter') g.capitalOrdnanceAI(c,0); c.stores.drone=stock;
    const launched=g.launchDrones(c,1), d=launched[0];
    step(20);
    result.push({id, count:launched.length, type:d?.def.id, ctrl:d?.ctrl===c,
@@ -94,8 +94,8 @@ SC['pd_ram']=('?free&drones=6&dlimit=6','''()=>{'''+PRE+'''
  return r}''')
 SC['ctrl_death']=('?free','''()=>{'''+PRE+'''
  const r={};
- const H=g.spawnShip('halberd',0,V(0,0,-500),V(0,0,0),{callsign:'HAL'}); H.stores.drone=6; r.l=g.launchDrones(H,6).length;
- const Fr=g.spawnShip('exeter',0,V(1500,0,-500),V(0,0,0),{});
+ const H=g.spawnShip('exeter',0,V(0,0,-500),V(0,0,0),{callsign:'EXE'}); H.stores.drone=6; r.l=g.launchDrones(H,6).length;   // frigate drone limit 3 (owner 2026-11-12)
+ const Fr=g.spawnShip('destroyer',0,V(1800,0,-500),V(0,0,0),{});
  step(20); r.before=live(H);
  g.killShip(H); step(200);
  const ds=g.ships.filter(s=>s.def.drone&&s.alive); r.drones=ds.length; r.modes=[...new Set(ds.map(d=>d.dOrder))]; r.ctrls=ds.filter(d=>d.ctrl).length;
@@ -104,14 +104,14 @@ SC['ctrl_death']=('?free','''()=>{'''+PRE+'''
  return r}''')
 CHK={
  'kite_carriers':lambda r:len(r)==2 and all(x['count']==1 and x['type']=='kite6' and x['ctrl'] and x['order']=='protect' and x['alive'] and x['stock']==1 and x['length']==6 and x['rails']==2 and x['missiles']==2 for x in r),
- 'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==6 and r['corvLaunch']==6 and r['exStock']==48 and r['exLimit']==12,
+ 'launch':lambda r:r['live0']==3 and r['stock0']==2 and r['more']==0 and r['live1']==2 and r['stock1']==2 and r['lostCount']==1 and r['relaunch']==1 and r['stock2']==1 and r['limitFighter']==3 and r['noPilot'] and r['limitCorv']==0 and r['corvLaunch']==0 and r['exStock']==6 and r['exLimit']==3,
  'engage':lambda r:r['n']==3 and r['targetDead'] and r['droneKills']>=1 and r['personal']==0 and r['nAll']>0 and r['allTgt']>=1 and r['allKills']>=2,
  'protect_return':lambda r:r['recovered']>0 and r['retDist']<400 and r['protDist']<400 and r['attackerDead'],
  'scout':lambda r:r['detected'] and r['contacts']>=1 and max(r['fwd'])>1400,
  'ram_corvette':lambda r:r['rams']>=1 and r['structureLoss']>20 and len(r['compLoss'])>=1,
  'pd':lambda r:r['hitsOnDrones']>=3 and r['hpAfter']<r['hpBefore'],
  'pd_ram':lambda r:r['lost']==6,
- 'ctrl_death':lambda r:r['drones']==6 and r['modes']==['orphan'] and r['ctrls']==0 and r['reorder']==0,
+ 'ctrl_death':lambda r:r['l']==3 and r['drones']==3 and r['modes']==['orphan'] and r['ctrls']==0 and r['reorder']==0,
 }
 def run(name):
     q,js=SC[name]

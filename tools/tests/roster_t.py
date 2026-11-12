@@ -21,7 +21,7 @@ CASES = {
     'falchion': dict(q='?sk=leaper:2&sk_ship=falchion&sk_wing=1&sk_wship=falchion&sk_respawn=1&go&q=low', who='player', mounts=4, turrets=2, comps=11, engines=4, stores={'ir': 6, 'rf': 2, 'torp': 2, 'flare': 32}),
     'sar': dict(q='?sk=leaper:1&sk_ship=sar&go&q=low', who='player', mounts=0, turrets=0, comps=7, engines=2, stores={'flare': 24}),
     'liner': dict(q='?sk=darter:2&sk_ally=liner&go&q=low', who='ally', mounts=0, turrets=6, comps=16, engines=4, stores={'flare': 24}),
-    'destroyer': dict(q='?sk=darter:2&sk_ally=destroyer&go&q=low', who='ally', mounts=4, turrets=20, comps=None, engines=3, stores={'torp': 8}),
+    'destroyer': dict(q='?sk=darter:2&sk_ally=destroyer&go&q=low', who='ally', mounts=5, turrets=20, comps=None, engines=3, stores={'torp': 8}),
 }
 
 with Runner() as R:
