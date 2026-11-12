@@ -3,6 +3,7 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Ship hulls render as merged meshes (iPad performance): one mesh per z slab holding only the cube faces that border empty space, instead of one instanced box per surface voxel. About 3.3× fewer triangles on capitals (Bullfrog 462k → 137k at tablet detail); the look is unchanged, minus the hairline cracks between cubes. Damage rebuilds only the touched slabs before the next frame. `?vox=inst` restores the old renderer for comparison; `?fps` reports triangles. Not yet measured on an iPad.
 - Range law (owner 2026-11-12), the same for FROGG and human ships: `tuning.rangeLaw` bands with `tools/range_law.py --apply`.
   - Point defence 0.75–0.9 km, fighter guns 1.5–2.0 km, capital secondaries 2.5–3.0 km, main guns 4–5 km. Missiles keep their own ranges.
   - Kestrel MD-9 2.7 → 2.0 km; Exeter and Glaive lasers 2.2 → 2.5 km; FROGG lances 1.5/1.8 → 2.5 km; spine guns 3.2 → 4 km; Gulper rod gun 5.3 → 5 km.

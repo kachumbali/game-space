@@ -18,7 +18,7 @@ if (!params.has('yard')) {
 let last = performance.now();
 const FPS_ON = params.has('fps');
 let fpsEl = null, fpsDisplay = 0, fpsWasActive = false;
-const perfCosts = {hudSum: 0, renderSum: 0, frames: 0, callsSum: 0, callsMax: 0};
+const perfCosts = {hudSum: 0, renderSum: 0, frames: 0, callsSum: 0, callsMax: 0, trisSum: 0, trisMax: 0};
 if (FPS_ON) renderer.info.autoReset = false;
 function fpsTick(ms) {
   if (!FPS_ON) return;
@@ -99,10 +99,11 @@ function frame(t) {
     updateHud();
     if (FPS_ON) perfCosts.hudSum += performance.now() - hudStart;
   }
+  flushAllVox();                                   // rebuild ship slabs that damage touched this frame
   if (FPS_ON) renderer.info.reset();
   const renderStart = FPS_ON ? performance.now() : 0;
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
-  if (FPS_ON) { perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); }
+  if (FPS_ON) { perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); perfCosts.trisSum += renderer.info.render.triangles; perfCosts.trisMax = Math.max(perfCosts.trisMax, renderer.info.render.triangles); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -128,7 +129,7 @@ Object.assign(globalThis.__game, { spineInit, spineFire });   // M1 balance harn
 Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => missileGeos.size });
 Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(SFX), musicFiles: MUSIC_FILES });
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
-Object.assign(globalThis.__game, { blastAt, chip });   // vanishing-hull regression test
+Object.assign(globalThis.__game, { blastAt, chip, flushVox, voxFaces, voxelize, resFor });   // vanishing-hull regression test
 Object.assign(globalThis.__game, { componentSurface, compEvent }); // damage-visual regression tests
 Object.assign(globalThis.__game, { traceWeapon, sizeShield, renderer }); // shield geometry regression tests; renderer for the shader-compile measurement
 Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, rescueReachable, rescueResolveBeat, rosterScriptCallsign, rosterDialogueText, rosterSlotShip, comms, getEjectionScene:()=>EJSCENE, playEjectionSequence, ejectionSceneSkip });
@@ -136,7 +137,7 @@ Object.assign(globalThis.__game, { rosterEnabled, rosterLoad, rosterForCarrier, 
 
 
 Object.assign(globalThis.__game, { PERF, perfReset, perfRecord, perfStats, perfSummary, perfReportLine, Particles, perfCosts, perfDiagnostics() {
-  const shipRows = ships.filter(s => s.alive).map(s => { let instances = 0, meshes = 0; s.group.traverse(o => { if (o.isInstancedMesh) { instances += o.count; meshes++; } }); return {id: s.def.id, callsign: s.callsign, meshes, instances}; });
+  const shipRows = ships.filter(s => s.alive).map(s => { let instances = 0, meshes = 0; s.group.traverse(o => { if (o.isInstancedMesh) { instances += o.count; meshes++; } else if (o.isMesh) meshes++; }); return {id: s.def.id, callsign: s.callsign, meshes, instances, faces: voxFaces(s)}; });
   const particles = [sparks, fire, smoke, frag].map(p => ({capacity:p.max, active:p.life.reduce((n,x) => n + (x > 0 ? 1 : 0), 0)}));
   return {voxelBuilds:PERF.voxelBuilds || [], costs:{...perfCosts}, ships:shipRows, particles, overlay:{width:ov.width,height:ov.height}, quality:qualityName, pixel:PIXEL_STEPS[pixelIdx], detail:DETAIL_STEPS[detailIdx], bloom:!!(composer && bloomOn), heap:performance.memory?.usedJSHeapSize || null};
 }, capitalOrdnanceAI, capitalPdStats, capitalSalvoAllowed });

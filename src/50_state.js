@@ -119,11 +119,101 @@ const shieldGeo = new THREE.SphereGeometry(1, 20, 14);
 function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color, t: time }); if (logs.length > 6) logs.shift(); }
 
 // ---- voxel mesh build ------------------------------------------------
+// Merged surface mesh (2026-11-12): the body is one mesh per z slab holding only the cube faces that
+// border empty space. Instanced boxes drew all 6 faces (12 triangles) of every surface voxel; a hull
+// voxel shows 1-2. Damage marks the touched slabs dirty and flushVox() rebuilds them before the next
+// frame. Glow voxels stay instanced (few, own material). ?vox=inst keeps the old instanced body.
+const VOX_INST = params.get('vox') === 'inst';
+const voxMeshMat = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22, vertexColors: true });
+const VFACE = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(n => {
+  const ax = n.findIndex(v => v !== 0), u = (ax + 1) % 3, w = (ax + 2) % 3;
+  let q = [[0,0],[1,0],[1,1],[0,1]].map(([a, b]) => { const c = [0,0,0]; c[ax] = n[ax] > 0 ? 1 : 0; c[u] = a; c[w] = b; return c; });
+  const e1 = q[1].map((v, i) => v - q[0][i]), e2 = q[2].map((v, i) => v - q[0][i]);
+  const cr = [e1[1]*e2[2]-e1[2]*e2[1], e1[2]*e2[0]-e1[0]*e2[2], e1[0]*e2[1]-e1[1]*e2[0]];
+  if (cr[0]*n[0] + cr[1]*n[1] + cr[2]*n[2] < 0) q = [q[0], q[3], q[2], q[1]];
+  return { n, q };
+});
+const voxDirtySet = new Set();               // ships with slabs waiting for flushVox
 function disposeVox(s) {
   const V = s.vox; if (!V) return;
-  for (const m of [V.body, V.glow, V.patch]) { s.group.remove(m); m.dispose(); }
+  for (const m of [V.body, V.glow, V.patch]) { if (!m) continue; s.group.remove(m); if (m.dispose) m.dispose(); }
+  if (V.slabMesh) for (const m of V.slabMesh) if (m) m.geometry.dispose();
+  voxDirtySet.delete(s);
   s.vox = null;
 }
+function voxCellRGB(V, cell, out) {
+  const D = V.data, vi = D.cellToVox[cell];
+  if (vi >= 0) { const v = D.voxels[vi], f = V.scorch[vi]; out[0] = v.cr * f; out[1] = v.cg * f; out[2] = v.cb * f; }
+  else { const p = V.patchCol.get(cell); out[0] = p ? p[0] : 0.05; out[1] = p ? p[1] : 0.04; out[2] = p ? p[2] : 0.03; }
+  return out;
+}
+const _rgb = [0, 0, 0];
+function buildSlab(V, si) {
+  const D = V.data, { nx, ny, nz, grid } = D, solid = V.solid, hasInst = V.hasInst;
+  const cells = V.slabCells[si] = V.slabCells[si].filter(c => hasInst[c]);
+  const mask = new Uint8Array(cells.length);
+  let F = 0;
+  for (let q = 0; q < cells.length; q++) {
+    const c = cells[q], i = (c / (ny * nz)) | 0, j = ((c / nz) | 0) % ny, k = c % nz;
+    let m = 0;
+    for (let d = 0; d < 6; d++) {
+      const o = VFACE[d].n, a = i + o[0], b = j + o[1], e = k + o[2];
+      if (a < 0 || b < 0 || e < 0 || a >= nx || b >= ny || e >= nz || !solid[(a * ny + b) * nz + e]) { m |= 1 << d; F++; }
+    }
+    mask[q] = m;
+  }
+  const mesh = V.slabMesh[si];
+  mesh.geometry.dispose();
+  const geo = new THREE.BufferGeometry();
+  mesh.geometry = geo; mesh.visible = F > 0;
+  const vtx = V.slabVtx[si] = new Map();
+  if (!F) return;
+  const pos = new Uint16Array(F * 12), nor = new Int8Array(F * 12), col = new Float32Array(F * 12);
+  const idx = F * 4 > 65535 ? new Uint32Array(F * 6) : new Uint16Array(F * 6);
+  let f = 0;
+  for (let q = 0; q < cells.length; q++) {
+    const m = mask[q]; if (!m) continue;
+    const c = cells[q], i = (c / (ny * nz)) | 0, j = ((c / nz) | 0) % ny, k = c % nz;
+    voxCellRGB(V, c, _rgb);
+    const v0 = f * 4;
+    for (let d = 0; d < 6; d++) {
+      if (!(m & (1 << d))) continue;
+      const { n, q: Q } = VFACE[d];
+      for (let t = 0; t < 4; t++) {
+        const o = (f * 4 + t) * 3;
+        pos[o] = i + Q[t][0]; pos[o + 1] = j + Q[t][1]; pos[o + 2] = k + Q[t][2];
+        nor[o] = n[0] * 127; nor[o + 1] = n[1] * 127; nor[o + 2] = n[2] * 127;
+        col[o] = _rgb[0]; col[o + 1] = _rgb[1]; col[o + 2] = _rgb[2];
+      }
+      const b = f * 4, x = f * 6;
+      idx[x] = b; idx[x + 1] = b + 1; idx[x + 2] = b + 2; idx[x + 3] = b; idx[x + 4] = b + 2; idx[x + 5] = b + 3;
+      f++;
+    }
+    vtx.set(c, v0 * 65536 + (f * 4 - v0));                       // first vertex and vertex count of this cell
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3, true));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  geo.setIndex(new THREE.BufferAttribute(idx, 1));
+  geo.computeBoundingSphere();
+  V.faces[si] = F;
+}
+const voxSlabOf = (V, cell) => Math.floor((cell % V.data.nz) / V.slabT);
+function voxMarkDirty(s, cell) {
+  const V = s.vox, k = cell % V.data.nz, n = V.slabMesh.length;
+  for (const kk of [k - 1, k, k + 1]) { const si = Math.floor(kk / V.slabT); if (si >= 0 && si < n) V.dirty.add(si); }
+  voxDirtySet.add(s);
+}
+function flushVox(s) {
+  const V = s.vox; if (!V || !V.dirty) return;
+  for (const si of V.dirty) buildSlab(V, si);
+  V.dirty.clear();
+  for (const si of V.colDirty) { const a = V.slabMesh[si].geometry.getAttribute('color'); if (a) a.needsUpdate = true; }
+  V.colDirty.clear();
+  voxDirtySet.delete(s);
+}
+function flushAllVox() { for (const s of [...voxDirtySet]) flushVox(s); }
+const voxFaces = s => s.vox && s.vox.faces ? s.vox.faces.reduce((a, b) => a + b, 0) : 0;
 function buildVox(s) {
   disposeVox(s);
   const di = Math.max(0, detailIdx - (s.lodDrop | 0));       // distance LOD lowers the detail step of far ships
@@ -131,9 +221,7 @@ function buildVox(s) {
   const cap = s.def.cls === 'fighter' ? (di >= 6 ? 20000 : 5000) : (di >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
   D.voxels.forEach((v, i) => (v.g ? glowV : bodyV).push(i));
-  const body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));
   const glow = new THREE.InstancedMesh(boxGeo(D.vs * 1.03), glowMat, Math.max(1, glowV.length));
-  const patch = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, cap);
   const instOf = new Int32Array(D.voxels.length);
   const fill = (mesh, list) => {
     list.forEach((vi, n) => {
@@ -145,20 +233,39 @@ function buildVox(s) {
     });
     mesh.count = list.length;
   };
-  fill(body, bodyV); fill(glow, glowV);
-  patch.setColorAt(0, _col.setRGB(0, 0, 0)); patch.count = 0;
-  for (const m of [body, glow, patch]) { m.frustumCulled = false; s.group.add(m); }
+  fill(glow, glowV);
   // TypedArray.from invokes a JS callback for every grid cell, millions of times
   // per high-detail ship. Fill the same masks with tight loops on the spawn path.
   const solid = new Uint8Array(D.grid.length), hasInst = new Uint8Array(D.cellToVox.length);
   for (let i = 0; i < solid.length; i++) solid[i] = D.grid[i] >= 0 ? 1 : 0;
   for (let i = 0; i < hasInst.length; i++) hasInst[i] = D.cellToVox[i] >= 0 ? 1 : 0;
   s.vox = {
-    data: D, cap, body, glow, patch, patchN: 0, instOf, patchOf: new Map(),
+    data: D, cap, glow, patchN: 0, instOf, patchOf: new Map(),
     solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1),
   };
+  const V = s.vox;
+  if (VOX_INST) {
+    V.body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));
+    V.patch = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, cap);
+    fill(V.body, bodyV); fill(glow, glowV);
+    V.patch.setColorAt(0, _col.setRGB(0, 0, 0)); V.patch.count = 0;
+  } else {
+    // Slab thickness: one slab for a small fighter, about ten along a capital.
+    V.slabT = Math.max(24, Math.ceil(D.nz / 10));
+    const n = Math.ceil(D.nz / V.slabT);
+    V.slabCells = Array.from({ length: n }, () => []);
+    V.slabVtx = []; V.faces = new Array(n).fill(0); V.dirty = new Set(); V.colDirty = new Set(); V.patchCol = new Map();
+    for (const vi of bodyV) V.slabCells[voxSlabOf(V, D.voxels[vi].cell)].push(D.voxels[vi].cell);
+    V.body = new THREE.Group();
+    V.body.count = bodyV.length;               // surface voxel count (tests and diagnostics read body.count + glow.count)
+    V.body.position.set(-D.hx, -D.hy, -D.hz); V.body.scale.setScalar(D.vs);
+    V.slabMesh = V.slabCells.map(() => { const m = new THREE.Mesh(new THREE.BufferGeometry(), voxMeshMat); V.body.add(m); return m; });
+    for (let si = 0; si < n; si++) buildSlab(V, si);
+  }
+  for (const m of [V.body, glow, V.patch]) { if (!m) continue; m.frustumCulled = false; s.group.add(m); }
   if (s.shieldFx) sizeShield(s);
   for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true, ev.shallow);
+  flushVox(s);
 }
 
 // Fit an ellipsoid around the corners of every rendered voxel, then add the
@@ -217,9 +324,12 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
           if (V.hasInst[cell]) {
             V.hasInst[cell] = 0;
             const vi = D.cellToVox[cell];
-            if (vi >= 0) (D.voxels[vi].g ? V.glow : V.body).setMatrixAt(V.instOf[vi], ZERO);
+            if (vi >= 0 && D.voxels[vi].g) V.glow.setMatrixAt(V.instOf[vi], ZERO);
+            else if (!VOX_INST) voxMarkDirty(s, cell);
+            else if (vi >= 0) V.body.setMatrixAt(V.instOf[vi], ZERO);
             else { const pi = V.patchOf.get(cell); if (pi !== undefined) V.patch.setMatrixAt(pi, ZERO); }
           }
+          if (!VOX_INST) voxMarkDirty(s, cell);               // neighbours across the hole now show faces
           removed.push(cell); dirty = true;
         } else if (sr > 0 && d2 <= sr * sr && V.hasInst[cell]) {
           const vi = D.cellToVox[cell];
@@ -228,7 +338,15 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
             const f = (v.g ? 0.15 : 0.28) + 0.72 * Math.sqrt(d2 / (sr * sr));
             if (f < V.scorch[vi]) {
               V.scorch[vi] = f;
-              (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
+              if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
+              else {
+                const si = voxSlabOf(V, cell), e = V.slabVtx[si] && V.slabVtx[si].get(cell);
+                if (e !== undefined) {
+                  const a = V.slabMesh[si].geometry.getAttribute('color').array, v0 = Math.floor(e / 65536), nv = e % 65536;
+                  for (let t = v0; t < v0 + nv; t++) { a[t * 3] = v.cr * f; a[t * 3 + 1] = v.cg * f; a[t * 3 + 2] = v.cb * f; }
+                  V.colDirty.add(si); voxDirtySet.add(s);
+                }
+              }
               dirty = true;
             }
           }
@@ -245,18 +363,20 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
       const nc = (ni * ny + nj) * nz + nk;
       if (!V.solid[nc] || V.hasInst[nc] || V.patchN >= V.cap) continue;
       const idx = V.patchN++;
-      _m.makeTranslation(-D.hx + (ni + 0.5) * vs, -D.hy + (nj + 0.5) * vs, -D.hz + (nk + 0.5) * vs);
-      V.patch.setMatrixAt(idx, _m);
       const q = Math.random();
-      if (q < 0.1) V.patch.setColorAt(idx, _col.setRGB(2.4, 0.75, 0.15));        // glowing ember
-      else { const g = 0.03 + q * 0.06; V.patch.setColorAt(idx, _col.setRGB(g * 1.25, g, g * 0.8)); }
+      const rgb = q < 0.1 ? [2.4, 0.75, 0.15] : [(0.03 + q * 0.06) * 1.25, 0.03 + q * 0.06, (0.03 + q * 0.06) * 0.8];   // glowing ember or charred interior
+      if (VOX_INST) {
+        _m.makeTranslation(-D.hx + (ni + 0.5) * vs, -D.hy + (nj + 0.5) * vs, -D.hz + (nk + 0.5) * vs);
+        V.patch.setMatrixAt(idx, _m); V.patch.setColorAt(idx, _col.setRGB(rgb[0], rgb[1], rgb[2]));
+      } else { V.patchCol.set(nc, rgb); V.slabCells[voxSlabOf(V, nc)].push(nc); voxMarkDirty(s, nc); }
       V.hasInst[nc] = 1; V.patchOf.set(nc, idx);
       dirty = true;
     }
   }
-  V.patch.count = V.patchN;
+  if (VOX_INST) V.patch.count = V.patchN;
   if (dirty) {
     for (const m of [V.body, V.glow, V.patch]) {
+      if (!m || !m.isInstancedMesh) continue;
       m.instanceMatrix.needsUpdate = true;
       if (m.instanceColor) m.instanceColor.needsUpdate = true;
     }
