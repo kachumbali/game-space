@@ -463,17 +463,26 @@ function campaignNext(M) { const c = campaignOf(M), i = c.missions.indexOf(M); r
 function bearingVec(b) { return new THREE.Vector3(b[0], b[1], b[2]).normalize(); }
 
 function restoreCrew() { if (game.crewSnap) { CREW = JSON.parse(game.crewSnap); saveCrew(); } if (rosterEnabled() && game.rosterSnap) { rosterState=JSON.parse(game.rosterSnap); rosterSave(); } }
-// Prepare the existing deterministic voxel cache before flight, so the first
-// hostile wave does not build its geometry inside a simulation frame.
-function prewarmPrologueVoxels(M) {
-  if (!/^p0[1-4]$/.test(M.id)) return;   // all four Prologue missions (owner 2026-11-10, D18)
-  const kinds = new Set();
+// Prepare the voxel cache before flight so no ship builds its geometry inside a simulation frame (iPad freezes, owner 2026-11-12).
+// Every mission: hostiles from every stage, the anchor and home ships, fleet, wingmen and the player's ship. On tablet-class detail
+// (index <= 4) the lower levels used by distance LOD are built too, so a ship crossing a LOD threshold finds its model in the cache.
+function prewarmMissionVoxels(M) {
+  const kinds = new Set([M.setup.anchor.ship, M.setup.player?.ship || 'kestrel']);
+  if (M.setup.home) kinds.add(M.setup.home.ship);
+  for (const f of M.setup.fleet || []) kinds.add(f.ship);
+  for (const w of M.setup.wingmen || []) kinds.add(w.ship);
   for (const stage of M.stages) for (const action of stage.do)
     for (const [kind] of action.spawn?.ships || []) kinds.add(kind);
+  const lod = LOD_LEVELS[lodLevel] && detailIdx <= 4 ? 3 : 0;
   for (const kind of kinds) {
     const def = SHIPS[kind];
-    if (def) voxelize(def, resFor(def, detailIdx), detailIdx);
+    if (!def) continue;
+    for (let d = 0; d <= lod && detailIdx - d >= 0; d++) voxelize(def, resFor(def, detailIdx - d), detailIdx - d);
   }
+}
+// Compile every shader the scene uses now, at launch, instead of when a ship first comes into view (parallel where the browser supports it).
+function warmShaders() {
+  try { renderer.compile(scene, camera); } catch (e) { /* a compile failure shows up again at first render */ }
 }
 function startMission(M, seg, sceneDone = false, autoLaunch = false) {
   if (!seg && !sceneDone && !autoLaunch && M.id==='p01' && !params.has('m') && !params.has('scene') && !prologueOpeningSeen() && prologueNextIndex()===0 && sceneAvailable('prologue_opening')) {
@@ -509,7 +518,8 @@ function startMission(M, seg, sceneDone = false, autoLaunch = false) {
     s.vel.set(0, 0, -su.player.speed); s.ai.aggr = 0.9;
   }
   sarScenarioInit(M, game.mstate);
-  prewarmPrologueVoxels(M);
+  prewarmMissionVoxels(M);
+  warmShaders();
   game.seg = null;
   if (seg) {                       // resume at a checkpoint: the start of the current segment (after the last transit)
     const S = game.mstate;

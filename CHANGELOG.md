@@ -3,6 +3,11 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- iPad freezes (owner report 2026-11-12, iPad Pro M2: slow loading with freezes in between).
+  - three.js no longer reads every new shader's info log (`renderer.debug.checkShaderErrors`, back on with `?shaderdebug`). Those reads block until the GPU driver finishes compiling, and they were the largest item in a CPU profile of a Prologue run (about 0.8 s); after the change the compile-related time is about 0.16 s.
+  - Every mission now pre-builds the voxel models of all its ships before flight: hostiles, anchor, home ship, fleet, wingmen and the player's ship. On tablet detail it also builds the distance-LOD levels, so a LOD switch never voxelizes mid-fight.
+  - All scene shaders compile at launch.
+  - Not verified on a real iPad: headless Chrome does not reproduce the freezes.
 - Fleet rules (owner 2026-11-12):
   - Corvettes +50% hull and shields: Halberd 690 hull, 330/330 shields; Gulper 720 hull, 300/240 shields.
   - Energy law in `tuning.energyLaw`: MJ per damage point by delivery type (coil 0.18, PD 0.1, beam 2.0, spine 0.89), so sustained weapon draw in MW = DPS × MJ per damage. A spine (XL) gun dumps 0.32 of its ship's capacitor per shot, so bigger power budgets give bigger spines. `tools/power_table.py --law` reports every weapon against the law. Beams and the FROGG lance are off the law and have not been rebalanced yet.

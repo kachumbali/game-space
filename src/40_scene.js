@@ -3,6 +3,9 @@
 // ======================================================================
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: AA_SAMPLES > 0 });
+// iPad freezes (owner 2026-11-12): three.js reads every new shader's info log by default, which blocks until the driver has compiled it.
+// Without the check the browser can compile in parallel; ?shaderdebug turns it back on for shader work.
+renderer.debug.checkShaderErrors = params.has('shaderdebug');
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.5;
 const scene = new THREE.Scene();
