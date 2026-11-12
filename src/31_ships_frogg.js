@@ -318,11 +318,11 @@ SHIPS.reaver = {
 // language, the outline from the battleship concept sheet (claw prow, long organic hull, swept ventral fins), the materials of the fighters
 // (scaled hide, gunmetal cages and rails, copper pipes, round thrusters), no glow. Rod guns sit in the two lower claw prongs, maser lances
 // in the upper head, torpedo frames under the belly. Every turret stands on a pedestal rooted in the hull.
-const fgSeat = (x, y, z, dy, D, y0) => {
-  const top = y - dy * D * 0.2, h = Math.abs(top - y0) / 2;
+const fgSeat = (x, y, z, dy, D, y0, wMin = 0) => {             // wMin: pedestal half-width floor so it survives the ship's voxel size
+  const top = y - dy * D * 0.2, h = Math.abs(top - y0) / 2, w = Math.max(D * 0.4, wMin);
   return [
-    tap([x, (top + y0) / 2, z], D * 0.4, [D * 0.4, h], [D * 0.4, h], FM.met2, { sh: 'h', noMirror: true, ...NG }),
-    tap([x, y - dy * D * 0.1, z], D * 0.5, [D * 0.56, D * 0.12], [D * 0.56, D * 0.12], FM.met, { sh: 'h', noMirror: true, ...NG }),
+    tap([x, (top + y0) / 2, z], w, [w, h], [w, h], FM.met2, { sh: 'h', noMirror: true, ...NG }),
+    tap([x, y - dy * Math.max(D * 0.1, wMin * 0.5), z], Math.max(D * 0.5, wMin), [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], FM.met, { sh: 'h', noMirror: true, ...NG }),
   ];
 };
 const gSeat = (x, y, z, dy, cls, y0) => { const L = TUNE.scaleTo.gulper || 66; return fgSeat(x, y, z, dy, turretDia({ def: { length: L } }, { cls }) * 66 / L, y0); };
@@ -416,7 +416,7 @@ const bfMir = (f) => [f(1), f(-1)];
 const bfHullY = (x, z) => { const q = 1 - ((z - 30) / 250) ** 2 - (x / 64) ** 2; return q > 0 ? 34 * Math.sqrt(q) : 0; };
 const bfSeats = () => (DB.ships.bullfrog.turrets || []).flatMap(t => {
   const [x, y, z] = t.pos, dy = Math.sign(y) || 1, D = turretDia({ def: { length: 600 } }, t);
-  return fgSeat(x, y, z, dy, Math.max(D, 7), dy * Math.max(2, bfHullY(x, z) * 0.7));
+  return fgSeat(x, y, z, dy, D, dy * Math.max(2, bfHullY(x, z) * 0.7), 2.0);   // Bullfrog voxels are ~1.5 m
 });
 SHIPS.bullfrog = {
   ...DB.ships.bullfrog,
