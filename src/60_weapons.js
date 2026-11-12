@@ -710,10 +710,11 @@ function batchTurretVisuals(s) {
     const material = b.sample.mats[b.slot].clone(); material.color.setRGB(1, 1, 1);
     const mesh = new THREE.InstancedMesh(geometryFor(b.sample, b.slot), material, b.entries.length);
     mesh.frustumCulled = false; s.group.add(mesh); s.turretVisualBatches.push(mesh);
+    const matrix = new THREE.Matrix4(), size = new THREE.Vector3();
     sync.push(() => {
       b.entries.forEach((T, i) => {
         T.group.updateMatrix(); T.head.updateMatrix();
-        const matrix = T.group.matrix.clone().multiply(T.head.matrix).scale(new THREE.Vector3(T.dia,T.dia,T.dia));
+        matrix.copy(T.group.matrix).multiply(T.head.matrix).scale(size.set(T.dia,T.dia,T.dia));
         mesh.setMatrixAt(i, matrix); mesh.setColorAt(i, T.mats[b.slot].color);
       });
       mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
@@ -724,12 +725,13 @@ function batchTurretVisuals(s) {
   const baseMat = s.turrets[0].mats[0].clone(); baseMat.color.setRGB(1,1,1);
   const bases = new THREE.InstancedMesh(baseGeo, baseMat, s.turrets.length);
   bases.frustumCulled = false; s.group.add(bases); s.turretVisualBatches.push(bases);
+  const baseMatrix = new THREE.Matrix4(), baseSize = new THREE.Vector3();
   sync.push(() => {
     s.turrets.forEach((T, i) => {
       const base = T.group.children.find(o => o.isMesh && o.material === T.mats[0]);
       T.group.updateMatrix(); base.updateMatrix();
       const h = base.geometry.parameters.height;
-      bases.setMatrixAt(i, T.group.matrix.clone().multiply(base.matrix).scale(new THREE.Vector3(T.dia,h,T.dia)));
+      bases.setMatrixAt(i, baseMatrix.copy(T.group.matrix).multiply(base.matrix).scale(baseSize.set(T.dia,h,T.dia)));
       bases.setColorAt(i, T.mats[0].color);
     });
     bases.instanceMatrix.needsUpdate = true; if (bases.instanceColor) bases.instanceColor.needsUpdate = true;
@@ -902,7 +904,6 @@ function updateTurrets(s, dt) {
       if (Math.random() < 0.25) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
     }
   }
-  s.syncTurretVisuals?.();
 }
 
 // ---- projectiles: flight + hits -----------------------------------------------------------------------
