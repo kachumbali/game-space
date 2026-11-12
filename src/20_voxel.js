@@ -187,6 +187,7 @@ function surfaceDetail(def, tier, G) {
   const exz = [];
   for (const e of def.engines || []) { const c = toV(...e.pos); exz.push([c[0], c[1], c[2], Math.pow(Math.max(3, e.r * 1.6 / vs), 2)]); }
   for (const m of def.mounts || []) { const c = toV(...m.pos); exz.push([c[0], c[1], c[2], 25]); }
+  for (const t of def.turrets || []) { const c = toV(...t.pos), r = 0.75 * turretDia({ def }, t) / vs + 2; exz.push([c[0], c[1], c[2], r * r]); }   // seats: no vents or seams carved under a turret
   for (const z of def.noDetailZones || []) { const c = toV(...z.c); exz.push([c[0], c[1], c[2], Math.pow(z.r / vs, 2)]); }
   const inEx = (i, j, k) => { for (const z of exz) { const dx = i - z[0], dy = j - z[1], dz = k - z[2]; if (dx * dx + dy * dy + dz * dz < z[3]) return true; } return false; };
   const eng = (def.engines || []).map(e => { const c = toV(e.pos[0], e.pos[1], e.pos[2] - e.r * 1.2); return [c[0], c[1], c[2], Math.max(4, e.r * 4.5 / vs)]; });

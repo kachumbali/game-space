@@ -123,7 +123,9 @@ function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color
 // border empty space. Instanced boxes drew all 6 faces (12 triangles) of every surface voxel; a hull
 // voxel shows 1-2. Damage marks the touched slabs dirty and flushVox() rebuilds them before the next
 // frame. Glow voxels stay instanced (few, own material). ?vox=inst keeps the old instanced body.
-const VOX_INST = params.get('vox') === 'inst';
+const VOX_MODE = ['inst', 'cube'].includes(params.get('vox')) ? params.get('vox') : 'smooth';
+const VOX_INST = VOX_MODE === 'inst';
+const VOX_SMOOTH_DROP = VOX_MODE === 'smooth' && params.has('vdrop') ? +params.get('vdrop') : 0;   // ?vdrop=1 builds non-fighter hulls one detail step lower (half the triangles; the owner found it too low in detail)
 const voxMeshMat = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22, vertexColors: true });
 const VFACE = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(n => {
   const ax = n.findIndex(v => v !== 0), u = (ax + 1) % 3, w = (ax + 2) % 3;
@@ -148,7 +150,8 @@ function voxCellRGB(V, cell, out) {
   return out;
 }
 const _rgb = [0, 0, 0];
-function buildSlab(V, si) {
+function buildSlab(V, si) { if (VOX_MODE === 'smooth') buildSlabSmooth(V, si); else buildSlabCube(V, si); }
+function buildSlabCube(V, si) {
   const D = V.data, { nx, ny, nz, grid } = D, solid = V.solid, hasInst = V.hasInst;
   const cells = V.slabCells[si] = V.slabCells[si].filter(c => hasInst[c]);
   const mask = new Uint8Array(cells.length);
@@ -198,25 +201,190 @@ function buildSlab(V, si) {
   geo.computeBoundingSphere();
   V.faces[si] = F;
 }
+// Smooth hull (owner 2026-11-12, "all smoother"): naive surface nets over a lightly blurred occupancy field,
+// one vertex per straddling dual cube, one quad per inside/outside sample edge. Every vertex is a pure function
+// of the field around it (no iterative smoothing across the mesh), so slabs rebuilt on their own meet without
+// cracks. Normals come from the field gradient for soft shading; colours average the solid corner voxels.
+// Same triangle count as the merged cubes at the same detail.
+const VS_ISO = 0.39;
+const VS_SMOOTH = params.has('vsm') ? +params.get('vsm') : 0;   // 0 (owner 2026-11-12, option E): binary field, chamfered voxels; 1: blurred field; 2: blurred field + relaxation (rounder, loses detail)
+function buildSlabSmooth(V, si) {
+  const D = V.data, { nx, ny, nz } = D, solid = V.solid, hasInst = V.hasInst, c2v = D.cellToVox;
+  const k0 = si * V.slabT, k1 = Math.min(nz, k0 + V.slabT);
+  const ka = Math.max(-1, k0 - 4), kb = Math.min(nz, k1 + 3);       // field range (samples)
+  // padded solid block: i -2..nx+1, j -2..ny+1, k ka-1..kb+1
+  const PX = nx + 4, PY = ny + 4, PZ = kb - ka + 3, pyz = PY * PZ;
+  const sol = new Uint8Array(PX * PY * PZ);
+  for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+    const src = (i * ny + j) * nz, dst = ((i + 2) * PY + (j + 2)) * PZ;
+    for (let k = Math.max(0, ka - 1); k <= Math.min(nz - 1, kb + 1); k++) sol[dst + k - ka + 1] = solid[src + k];
+  }
+  // field on the same padded index space (pad cells stay 0)
+  const fld = VS_SMOOTH === 0 ? sol : new Float32Array(PX * PY * PZ);   // chamfered mode: the field is the occupancy itself
+  if (VS_SMOOTH !== 0) for (let i = 1; i < PX - 1; i++) for (let j = 1; j < PY - 1; j++) {
+    const row = (i * PY + j) * PZ;
+    for (let k = 1; k < PZ - 1; k++) {
+      const c = row + k, n6 = sol[c + pyz] + sol[c - pyz] + sol[c + PZ] + sol[c - PZ] + sol[c + 1] + sol[c - 1];
+      if (sol[c] || n6) fld[c] = (4 * sol[c] + n6) * 0.1;
+    }
+  }
+  const at = (i, j, k) => ((i + 2) * PY + (j + 2)) * PZ + (k - ka + 1);   // sample -> padded index
+  const OFF8 = [0, pyz, PZ, pyz + PZ, 1, pyz + 1, PZ + 1, pyz + PZ + 1];  // corner a: x=a&1, y=a>>1&1, z=a>>2&1
+  const EA = [0,2,4,6,0,1,4,5,0,1,2,3], EB = [1,3,5,7,2,3,6,7,4,5,6,7];
+  // raw dual vertices for cubes i -1..nx-1, j -1..ny-1, k ca..cb, stored at the padded index of their lower corner
+  const ca = Math.max(-1, k0 - 2), cb = Math.min(nz - 1, k1);
+  const raw = new Float32Array(PX * PY * PZ * 3), act = new Uint8Array(PX * PY * PZ);
+  const cf = new Float32Array(8);
+  for (let i = -1; i < nx; i++) for (let j = -1; j < ny; j++) {
+    const base = at(i, j, 0);
+    for (let k = ca; k <= cb; k++) {
+      const c = base + k;
+      let mask = 0;
+      for (let a = 0; a < 8; a++) { const f = fld[c + OFF8[a]]; cf[a] = f; if (f >= VS_ISO) mask |= 1 << a; }
+      if (mask === 0 || mask === 255) continue;
+      let x = 0, y = 0, z = 0, n = 0;
+      for (let e = 0; e < 12; e++) {
+        const A = EA[e], B = EB[e];
+        if (((mask >> A) & 1) === ((mask >> B) & 1)) continue;
+        const t = (VS_ISO - cf[A]) / (cf[B] - cf[A]);
+        const ax = A & 1, ay = (A >> 1) & 1, az = A >> 2;
+        x += ax + ((B & 1) - ax) * t; y += ay + (((B >> 1) & 1) - ay) * t; z += az + ((B >> 2) - az) * t; n++;
+      }
+      act[c] = 1; raw[c * 3] = i + x / n; raw[c * 3 + 1] = j + y / n; raw[c * 3 + 2] = k + z / n;
+    }
+  }
+  const va = Math.max(-1, k0 - 1), vb = Math.min(nz - 1, k1 - 1);
+  const vid = new Int32Array(PX * PY * PZ).fill(-1);
+  const P = [], N = [], C = [], rgb = [0, 0, 0];
+  const NB = [pyz, -pyz, PZ, -PZ, 1, -1];
+  const vert = (i, j, k) => {
+    const c = at(i, j, k);
+    if (vid[c] >= 0) return vid[c];
+    let x = raw[c * 3], y = raw[c * 3 + 1], z = raw[c * 3 + 2], sx = 0, sy = 0, sz = 0, m = 0;
+    for (let q = 0; q < 6; q++) {
+      if ((q === 4 && k + 1 > cb) || (q === 5 && k - 1 < ca)) continue;
+      const r = c + NB[q]; if (!act[r]) continue;
+      sx += raw[r * 3]; sy += raw[r * 3 + 1]; sz += raw[r * 3 + 2]; m++;
+    }
+    if (m && VS_SMOOTH >= 2) { x = 0.5 * x + 0.5 * sx / m; y = 0.5 * y + 0.5 * sy / m; z = 0.5 * z + 0.5 * sz / m; }
+    let gx = 0, gy = 0, gz = 0;
+    for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) {
+      const cx = c + a * PZ + b, cy = c + a * pyz + b, cz = c + a * pyz + b * PZ;
+      gx += fld[cx + 2 * pyz] + fld[cx + pyz] - fld[cx] - fld[cx - pyz];
+      gy += fld[cy + 2 * PZ] + fld[cy + PZ] - fld[cy] - fld[cy - PZ];
+      gz += fld[cz + 2] + fld[cz + 1] - fld[cz] - fld[cz - 1];
+    }
+    let gl = Math.hypot(gx, gy, gz);
+    if (gl < 1e-6) { gx = 0; gy = -1; gz = 0; gl = 1; }   // flat field (thin symmetric part): a zero normal turns into NaN in the shader and bloom smears it over the frame
+    let r = 0, g = 0, bl = 0, w = 0;
+    for (let pass = 0; pass < 2 && !w; pass++) {
+      const lo = pass ? -1 : 0, hi = pass ? 2 : 1;
+      for (let a = lo; a <= hi; a++) for (let b = lo; b <= hi; b++) for (let d = lo; d <= hi; d++) {
+        const ii = i + a, jj = j + b, kk = k + d;
+        if (ii < 0 || jj < 0 || kk < 0 || ii >= nx || jj >= ny || kk >= nz) continue;
+        const cell = (ii * ny + jj) * nz + kk;
+        if (!solid[cell] || (!hasInst[cell] && c2v[cell] < 0)) continue;
+        voxCellRGB(V, cell, rgb); r += rgb[0]; g += rgb[1]; bl += rgb[2]; w++;
+      }
+    }
+    if (!w) { r = 0.05; g = 0.04; bl = 0.03; w = 1; }
+    const v = P.length / 3;
+    P.push(x + 0.5, y + 0.5, z + 0.5); N.push(-gx / gl, -gy / gl, -gz / gl); C.push(r / w, g / w, bl / w);
+    vid[c] = v;
+    return v;
+  };
+  const I = [];
+  const quad = (a, b, c, d, nx_, ny_, nz_) => {
+    const pa = a * 3, pb = b * 3, pc = c * 3;
+    const ux = P[pb] - P[pa], uy = P[pb + 1] - P[pa + 1], uz = P[pb + 2] - P[pa + 2];
+    const wx = P[pc] - P[pa], wy = P[pc + 1] - P[pa + 1], wz = P[pc + 2] - P[pa + 2];
+    if ((uy * wz - uz * wy) * nx_ + (uz * wx - ux * wz) * ny_ + (ux * wy - uy * wx) * nz_ >= 0) I.push(a, b, c, a, c, d); else I.push(a, c, b, a, d, c);
+  };
+  const kStart = si ? k0 : -1;
+  for (let i = -1; i < nx; i++) for (let j = -1; j < ny; j++) {
+    const base = at(i, j, 0);
+    for (let k = kStart; k < k1; k++) {
+      const c = base + k, s0 = fld[c] >= VS_ISO;
+      if (j >= 0 && k >= k0 && s0 !== (fld[c + pyz] >= VS_ISO))
+        quad(vert(i, j - 1, k - 1), vert(i, j, k - 1), vert(i, j, k), vert(i, j - 1, k), s0 ? 1 : -1, 0, 0);
+      if (i >= 0 && k >= k0 && s0 !== (fld[c + PZ] >= VS_ISO))
+        quad(vert(i - 1, j, k - 1), vert(i - 1, j, k), vert(i, j, k), vert(i, j, k - 1), 0, s0 ? 1 : -1, 0);
+      if (i >= 0 && j >= 0 && k <= vb && s0 !== (fld[c + 1] >= VS_ISO))
+        quad(vert(i - 1, j - 1, k), vert(i, j - 1, k), vert(i, j, k), vert(i - 1, j, k), 0, 0, s0 ? 1 : -1);
+    }
+  }
+  const mesh = V.slabMesh[si];
+  mesh.geometry.dispose();
+  const geo = new THREE.BufferGeometry();
+  mesh.geometry = geo; mesh.visible = I.length > 0;
+  V.slabVtx[si] = null;
+  V.faces[si] = I.length / 6;
+  if (!I.length) return;
+  geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3));
+  geo.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(N), 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(C), 3));
+  geo.setIndex(new THREE.BufferAttribute(P.length / 3 > 65535 ? new Uint32Array(I) : new Uint16Array(I), 1));
+  geo.computeBoundingSphere();
+}
 const voxSlabOf = (V, cell) => Math.floor((cell % V.data.nz) / V.slabT);
 function voxMarkDirty(s, cell) {
   const V = s.vox, k = cell % V.data.nz, n = V.slabMesh.length;
-  for (const kk of [k - 1, k, k + 1]) { const si = Math.floor(kk / V.slabT); if (si >= 0 && si < n) V.dirty.add(si); }
+  const reach = VOX_MODE === 'smooth' ? 4 : 1;                    // the smooth surface reads the field up to 4 samples away
+  for (let kk = k - reach; kk <= k + reach; kk++) { const si = Math.floor(kk / V.slabT); if (si >= 0 && si < n) V.dirty.add(si); }
   voxDirtySet.add(s);
 }
-function flushVox(s) {
+// deadline (performance.now() ms): stop after the slab that crosses it; the rest stay dirty for the next frame.
+function flushVox(s, deadline = Infinity) {
   const V = s.vox; if (!V || !V.dirty) return;
-  for (const si of V.dirty) buildSlab(V, si);
-  V.dirty.clear();
-  for (const si of V.colDirty) { const a = V.slabMesh[si].geometry.getAttribute('color'); if (a) a.needsUpdate = true; }
-  V.colDirty.clear();
+  for (const si of V.dirty) {
+    buildSlab(V, si); V.built[si] = performance.now(); V.colDirty.delete(si); V.dirty.delete(si);
+    if (performance.now() > deadline) return;
+  }
+  if (VOX_MODE === 'smooth') {
+    // scorch-only changes rebuild a slab at most every 150 ms (beams scorch every frame)
+    for (const si of V.colDirty) {
+      const now = performance.now();
+      if (now - V.built[si] < 150) continue;
+      buildSlab(V, si); V.built[si] = now; V.colDirty.delete(si);
+      if (performance.now() > deadline) return;
+    }
+    if (V.colDirty.size) return;                                     // stay in voxDirtySet until the rest are due
+  } else {
+    for (const si of V.colDirty) { const a = V.slabMesh[si].geometry.getAttribute('color'); if (a) a.needsUpdate = true; }
+    V.colDirty.clear();
+  }
   voxDirtySet.delete(s);
 }
-function flushAllVox() { for (const s of [...voxDirtySet]) flushVox(s); }
+// Per frame: at most about 4 ms of slab rebuilds (at least one slab); holes may show a frame or two late.
+function flushAllVox() { const deadline = performance.now() + 4; for (const s of [...voxDirtySet]) { flushVox(s, deadline); if (performance.now() > deadline) break; } }
 const voxFaces = s => s.vox && s.vox.faces ? s.vox.faces.reduce((a, b) => a + b, 0) : 0;
+// Slab set for a hull: thickness gives one slab for a small fighter, about ten (cubes) or sixteen (smooth) along a capital.
+function voxInitSlabs(V, bodyV) {
+  const D = V.data;
+  V.slabT = VOX_MODE === 'smooth' ? Math.max(16, Math.ceil(D.nz / 16)) : Math.max(24, Math.ceil(D.nz / 10));
+  const n = Math.ceil(D.nz / V.slabT);
+  V.slabCells = Array.from({ length: n }, () => []);
+  V.slabVtx = []; V.built = new Array(n).fill(0); V.faces = new Array(n).fill(0); V.dirty = new Set(); V.colDirty = new Set(); V.patchCol = new Map();
+  for (const vi of bodyV) V.slabCells[voxSlabOf(V, D.voxels[vi].cell)].push(D.voxels[vi].cell);
+  V.body = new THREE.Group();
+  V.body.count = bodyV.length;               // surface voxel count (tests and diagnostics read body.count + glow.count)
+  V.body.position.set(-D.hx, -D.hy, -D.hz); V.body.scale.setScalar(D.vs);
+  V.slabMesh = V.slabCells.map(() => { const m = new THREE.Mesh(new THREE.BufferGeometry(), voxMeshMat); V.body.add(m); return m; });
+  for (let si = 0; si < n; si++) buildSlab(V, si);
+}
+// Undamaged hull body for viewers (the yard): the same slab meshes as in game, as a group placed in model space.
+function voxStaticBody(D) {
+  const solid = new Uint8Array(D.grid.length), hasInst = new Uint8Array(D.cellToVox.length);
+  for (let i = 0; i < solid.length; i++) solid[i] = D.grid[i] >= 0 ? 1 : 0;
+  for (let i = 0; i < hasInst.length; i++) hasInst[i] = D.cellToVox[i] >= 0 ? 1 : 0;
+  const V = { data: D, solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1) };
+  const bodyV = []; D.voxels.forEach((v, i) => { if (!v.g) bodyV.push(i); });
+  voxInitSlabs(V, bodyV);
+  return V.body;
+}
 function buildVox(s) {
   disposeVox(s);
-  const di = Math.max(0, detailIdx - (s.lodDrop | 0));       // distance LOD lowers the detail step of far ships
+  const di = Math.max(0, detailIdx - (s.lodDrop | 0) - (s.def.cls === 'fighter' ? 0 : VOX_SMOOTH_DROP));   // distance LOD lowers the detail step of far ships; smooth non-fighter hulls build one step lower (fighters keep thin parts)
   const D = voxelize(s.def, resFor(s.def, di), di);
   const cap = s.def.cls === 'fighter' ? (di >= 6 ? 20000 : 5000) : (di >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
@@ -250,17 +418,7 @@ function buildVox(s) {
     fill(V.body, bodyV); fill(glow, glowV);
     V.patch.setColorAt(0, _col.setRGB(0, 0, 0)); V.patch.count = 0;
   } else {
-    // Slab thickness: one slab for a small fighter, about ten along a capital.
-    V.slabT = Math.max(24, Math.ceil(D.nz / 10));
-    const n = Math.ceil(D.nz / V.slabT);
-    V.slabCells = Array.from({ length: n }, () => []);
-    V.slabVtx = []; V.faces = new Array(n).fill(0); V.dirty = new Set(); V.colDirty = new Set(); V.patchCol = new Map();
-    for (const vi of bodyV) V.slabCells[voxSlabOf(V, D.voxels[vi].cell)].push(D.voxels[vi].cell);
-    V.body = new THREE.Group();
-    V.body.count = bodyV.length;               // surface voxel count (tests and diagnostics read body.count + glow.count)
-    V.body.position.set(-D.hx, -D.hy, -D.hz); V.body.scale.setScalar(D.vs);
-    V.slabMesh = V.slabCells.map(() => { const m = new THREE.Mesh(new THREE.BufferGeometry(), voxMeshMat); V.body.add(m); return m; });
-    for (let si = 0; si < n; si++) buildSlab(V, si);
+    voxInitSlabs(V, bodyV);
   }
   for (const m of [V.body, glow, V.patch]) { if (!m) continue; m.frustumCulled = false; s.group.add(m); }
   if (s.shieldFx) sizeShield(s);
@@ -341,7 +499,8 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
               if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
               else {
                 const si = voxSlabOf(V, cell), e = V.slabVtx[si] && V.slabVtx[si].get(cell);
-                if (e !== undefined) {
+                if (VOX_MODE === 'smooth') { V.colDirty.add(si); voxDirtySet.add(s); }
+                else if (e !== undefined) {
                   const a = V.slabMesh[si].geometry.getAttribute('color').array, v0 = Math.floor(e / 65536), nv = e % 65536;
                   for (let t = v0; t < v0 + nv; t++) { a[t * 3] = v.cr * f; a[t * 3 + 1] = v.cg * f; a[t * 3 + 2] = v.cb * f; }
                   V.colDirty.add(si); voxDirtySet.add(s);
