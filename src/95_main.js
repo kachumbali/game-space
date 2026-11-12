@@ -100,6 +100,7 @@ function frame(t) {
     if (FPS_ON) perfCosts.hudSum += performance.now() - hudStart;
   }
   flushAllVox();                                   // rebuild ship slabs that damage touched this frame
+  for (const s of ships) if (s.group.visible) s.syncTurretVisuals?.();
   if (FPS_ON) renderer.info.reset();
   const renderStart = FPS_ON ? performance.now() : 0;
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);

@@ -74,6 +74,7 @@ function initArmament(s) {
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
   s.cm = 0;
   s.turrets = (def.turrets || []).map(t => makeTurret(s, t));
+  batchTurretVisuals(s);
 }
 function missileIds(s) { return MSL_ORDER.filter(id => id in s.stores); }
 function selectedMissile(s) {
@@ -669,6 +670,78 @@ function makeTurret(s, t) {
   if (t.side < 0) g.rotation.z = Math.PI;
   s.group.add(g);
   return { def: t, w, wid: t.w, comp: t.comp, cls, dia: D, aimY: 0.3 * referenceD * t.side, group: g, head, mats: [mBase, mHead, mBar, mTrim, mLight, ...(beam ? [mEmitter] : [])], ammo: t.ammo ?? w.ammo ?? Infinity, ammoMax: t.ammo ?? w.ammo ?? Infinity, cool: Math.random() * 0.3, tgt: null, thinkT: Math.random() * 0.3, muzzles, mi: 0, muzzle: bl / 1.4 + 0.3 * D / 1.4, q: new THREE.Quaternion(), fired: 0, lastErr: 0, dead: false, dry: false };
+}
+// Batch matching turret parts per ship. The original pivots remain authoritative for
+// aiming and muzzle positions; only their visible geometry is instanced.
+function batchTurretVisuals(s) {
+  if (!s.turrets.length) return;
+  const batches = new Map(), sync = [];
+  s.turretVisualBatches = [];
+  const partsFor = (T, slot) => T.head.children.filter(o => o.material === T.mats[slot]);
+  function geometryFor(T, slot) {
+    const arrays = { position: [], normal: [], uv: [] };
+    const scale = new THREE.Matrix4().makeScale(1 / T.dia, 1 / T.dia, 1 / T.dia);
+    for (const o of partsFor(T, slot)) {
+      o.updateMatrix();
+      const n = o.isInstancedMesh ? o.count : 1;
+      for (let i = 0; i < n; i++) {
+        const im = new THREE.Matrix4(); if (o.isInstancedMesh) o.getMatrixAt(i, im);
+        let geo = o.geometry.index ? o.geometry.toNonIndexed() : o.geometry.clone();
+        geo.applyMatrix4(scale.clone().multiply(o.matrix).multiply(im));
+        for (const k of Object.keys(arrays)) arrays[k].push(...geo.getAttribute(k).array);
+        geo.dispose();
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    for (const [k, a] of Object.entries(arrays)) geo.setAttribute(k, new THREE.Float32BufferAttribute(a, k === 'uv' ? 2 : 3));
+    return geo;
+  }
+  // Different pod shapes and emissive materials use separate instanced meshes.
+  for (const T of s.turrets) {
+    const kind = T.w.kind === 'beam' ? 'beam' : 'kinetic';
+    for (let slot = 1; slot < T.mats.length; slot++) {
+      if (!partsFor(T, slot).length) continue;
+      const key = kind + ':' + slot + ':' + TUNE.turret.visual[T.cls].barrel;
+      if (!batches.has(key)) batches.set(key, { sample: T, slot, entries: [] });
+      batches.get(key).entries.push(T);
+    }
+  }
+  for (const b of batches.values()) {
+    const material = b.sample.mats[b.slot].clone(); material.color.setRGB(1, 1, 1);
+    const mesh = new THREE.InstancedMesh(geometryFor(b.sample, b.slot), material, b.entries.length);
+    mesh.frustumCulled = false; s.group.add(mesh); s.turretVisualBatches.push(mesh);
+    const matrix = new THREE.Matrix4(), size = new THREE.Vector3();
+    sync.push(() => {
+      b.entries.forEach((T, i) => {
+        T.group.updateMatrix(); T.head.updateMatrix();
+        matrix.copy(T.group.matrix).multiply(T.head.matrix).scale(size.set(T.dia,T.dia,T.dia));
+        mesh.setMatrixAt(i, matrix); mesh.setColorAt(i, T.mats[b.slot].color);
+      });
+      mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    });
+  }
+  // Bases have variable clearance lift, so their vertical scale is independent.
+  const baseGeo = new THREE.CylinderGeometry(.5, .56, 1, 8);
+  const baseMat = s.turrets[0].mats[0].clone(); baseMat.color.setRGB(1,1,1);
+  const bases = new THREE.InstancedMesh(baseGeo, baseMat, s.turrets.length);
+  bases.frustumCulled = false; s.group.add(bases); s.turretVisualBatches.push(bases);
+  const baseMatrix = new THREE.Matrix4(), baseSize = new THREE.Vector3();
+  sync.push(() => {
+    s.turrets.forEach((T, i) => {
+      const base = T.group.children.find(o => o.isMesh && o.material === T.mats[0]);
+      T.group.updateMatrix(); base.updateMatrix();
+      const h = base.geometry.parameters.height;
+      bases.setMatrixAt(i, baseMatrix.copy(T.group.matrix).multiply(base.matrix).scale(baseSize.set(T.dia,h,T.dia)));
+      bases.setColorAt(i, T.mats[0].color);
+    });
+    bases.instanceMatrix.needsUpdate = true; if (bases.instanceColor) bases.instanceColor.needsUpdate = true;
+  });
+  s.syncTurretVisuals = () => { for (const f of sync) f(); };
+  s.syncTurretVisuals();
+  for (const T of s.turrets) {
+    for (const o of T.head.children) if (o.isMesh) o.visible = false;
+    for (const o of T.group.children) if (o.isMesh) o.visible = false;
+  }
 }
 function turretMuzzle(T, out) {                 // world position of the next barrel tip (alternates between twin barrels)
   const m = T.muzzles[T.mi++ % T.muzzles.length];

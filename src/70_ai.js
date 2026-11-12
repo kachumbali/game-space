@@ -235,6 +235,13 @@ function powerAI(s, dt) {
 
 function aiUpdate(s, dt) {
   if (rescueShipAI(s, dt)) return;
+  if (s.hangarRecall && s.hangarHome?.alive) {
+    const home = s.hangarHome, bay = home.comps.find(c => c.id === s.hangarBay && c.hp > 0);
+    if (bay?.launch) {
+      const mouth = home.group.localToWorld(new THREE.Vector3(...bay.launch));
+      turnToward(s, mouth, dt); aiFly(s, {throttle:TUNE.ordnance.ai.hangarReturnThrottle}, dt); return;
+    }
+  }
   powerAI(s, dt);
   if (s.def.drone) return droneAI(s, dt);        // unmanned: orders and controller logic in 56_drones.js
   const ai = s.ai;

@@ -16,10 +16,15 @@ turrets), so they can exceed the nominal length.
 | Gulper | FROGG | corvette | 146 | 75.2 | 57.5 | 11.8x | 34 |
 | Bullfrog | FROGG | capital | 600 | 190 (box; hull ~140-150 without blades) | 110 | 48x | 22 |
 | HECLA | human | capital | 1,000 | 290 | 100 | 80.6x | 10 |
+| Columbus | human | capital | 1,200 | 432 | 144 | 96.8x | 10 |
 
-Bullfrog (authored at 600 m, no `scaleShip`): `half [95, 55, 300]`, radius 305, structure 3000, shield 2000/1600 (regen 6), hard armour 0.30, turn 0.06, `jump: true`, `dock {fighters: 36}`, `ai.role: 'lancer'`, `resMul 0.85` with `resCap 400` (about 46k / 113k / 122k voxel instances at detail 2 / 4 / 6). New schema fields: turret `cls: 'S'|'M'|'L'`, weapon `bw` (beam width, m), def `resCap`, mount `store: 'spine'` (spine mount, not fired by `fireGuns`).
+Bullfrog pass 3 broadens and deepens the outboard shoulders inside the existing collision box, retains the jaw, fins and side bays, and leaves component and weapon positions unchanged.
+
+Bullfrog (authored at 600 m, no `scaleShip`): `half [95, 55, 300]`, radius 305, structure 3000, shield 2000/1600 (regen 6), hard armour 0.30, turn 0.06, `jump: true`, `dock {fighters: 36}`, `ai.role: 'lancer'`, `resMul 0.85` with `resCap 400` (about 51k / 125k / 131k surface voxels at detail 2 / 4 / 6). New schema fields: turret `cls: 'S'|'M'|'L'`, weapon `bw` (beam width, m), def `resCap`, mount `store: 'spine'` (spine mount, not fired by `fireGuns`).
 
 HECLA (owner-approved 1,000 m strategic tender): `half [145, 50, 500]`, radius 520, `jump: true`, one 6,000 hp main reactor, `resMul 0.6`, `resCap 240`, `noDetail: true`. Measured Shipyard voxel counts are about 17k / 23k / 23k at detail 2 / 4 / 6. Only its model and database entry are implemented; no menu, mission or campaign-service behavior was added.
+
+Columbus-class fleet carrier: six ventral launch bays carry 72 fighters (24 Kestrel, 18 Falchion, 18 Bittern, 12 Merlin), with an 18-fighter airborne cap and a four-second timer per bay. Hecla has four bays, the same timer and a cap of 12: Columbus has 1.5 times the concurrent launch capacity, with twice the stock. Once nearby threats are gone, surviving fighters return to a working bay and replenish their manifest; losses do not. Its point defence and laser secondaries use the shared range and energy laws. Its strength is scaled from Hecla by length ratio 1.2: structure 12,000 × 1.2³ = 20,736; shields 8,000/6,500 × 1.2² = 11,520/9,360; armour rating 0.30 × 1.2 = 0.36. The carrier is available in skirmish and the yard, with no mission placement.
 
 ## Class comparison (build of 2026-10-21)
 ![ships](img/ship_classes_grid.png)

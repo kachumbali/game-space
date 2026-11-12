@@ -5,7 +5,7 @@
 //  __game.startSkirmish(cfg)); game.mode = 'skirmish'. Win = enemy force dead (or endless respawn), lose = player down.
 //  Part 76 only calls other parts at run time, so there are no load-time dependencies on later parts.
 // ======================================================================
-const SK_ENEMY = ['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'halberd', 'exeter', 'bullfrog', 'hivecarrier'];
+const SK_ENEMY = ['darter', 'leaper', 'spitter', 'toad', 'reaver', 'gulper', 'halberd', 'exeter', 'carrier', 'bullfrog', 'hivecarrier'];
 const SK_PRESETS = [
   { id: 'w1', name: 'WAVES 1', rows: [['leaper', 1]] },
   { id: 'w2', name: 'WAVES 2', rows: [['darter', 1], ['leaper', 1]] },

@@ -768,6 +768,52 @@ SHIPS.destroyer = {
   ],
 };
 
+// Columbus fleet carrier, authored at 1 km and scaled to 1.2 km (owner 2026-11-12: Columbus class).
+// The hull tapers in plan from the stern to a third of its width at a flattish nose; a stepped bridge tower
+// with a T-shaped command deck stands on the centreline aft. Six framed ventral launch wells sit under the deck.
+// Hull half-width at z: 55 + 110 (z + 500) / 940; half-thickness 16 at the nose to 30 at the stern.
+const cbW = z => 55 + 110 * (z + 500) / 940, cbH = z => 16 + 14 * (z + 500) / 940, cbS = 110 / 940, cbSY = 14 / 940;
+SHIPS.carrier = {
+  ...DB.ships.carrier,
+  ordnancePlan: { ...DB.ships.carrier.ordnancePlan, droneLimit: TUNE.droneLimit.capital },
+  prims: [
+    tap([0, 0, -30], 470, [55, 16], [165, 30], CF.w, { sh: 'h' }),                                    // tapered pressure hull
+    tap([0, -1, -496], 4, [46, 13], [50, 14], CF.g1, { sh: 'h' }),                                     // flat nose plate
+    tap([0, -3, -470], 26, [cbW(-496) - 2, 3], [cbW(-444) - 2, 3], CF.g3, { sh: 'r' }),               // nose band
+    // deck edges: armoured rails along the taper, graphite chine below
+    tap([cbW(-30) - 5, cbH(-30) - 2, -30], 470, [5, 3], [5, 3], CF.g2, { sweep: cbS }),
+    tap([cbW(-30) - 1, -3, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
+    // flight-deck markings and a raised central service spine (trench machinery, as on the reference)
+    tap([cbW(-30) * 0.55, cbH(-30) + 0.6, -30], 400, [3, 1.2], [3, 1.2], CF.or, { sweep: cbS * 0.55, sweepY: cbSY }),
+    tap([0, cbH(-80) + 3, -80], 300, [9, 4], [15, 5], CF.g2, { sh: 'h', sweepY: cbSY }),
+    ...[-330, -230, -130, -30, 70, 170].map(z => tap([0, cbH(z) + 6, z], 8, [12 + (z + 330) * 0.012, 3], [12 + (z + 330) * 0.012, 3], CF.g3, { sh: 'h' })),
+    ...[-280, -120, 40].map(z => tap([cbW(z) * 0.3, cbH(z) + 1.5, z], 18, [8, 2], [8, 2], CF.g1, { sh: 'h' })),  // deck lifts
+    // stepped dorsal superstructure aft, then the bridge tower: armoured neck and a wide T-shaped command deck
+    tap([0, cbH(250) + 6, 250], 190, [40, 8], [110, 10], CF.g1, { sh: 'h' }),
+    tap([0, cbH(330) + 18, 330], 110, [30, 6], [70, 7], CF.w, { sh: 'h' }),
+    ...[150, 230, 310].map(z => tap([0, cbH(z) + 12 + (z - 150) * 0.02, z], 4, [40 + (z - 60) * 0.35, 2], [40 + (z - 60) * 0.35, 2], CF.g3, { sh: 'h' })),   // step bands
+    tap([0, 62, 380], 30, [20, 10], [26, 10], CF.g1, { sh: 'h' }),
+    tap([0, 78, 385], 14, [70, 6], [70, 6], CF.g2, { sh: 'h' }),
+    tap([0, 79, 370.6], 0.8, [64, 1.6], [64, 1.6], CF.can, { sh: 'r' }),                                // command deck windows
+    tap([0, 85.5, 386], 10, [30, 1.5], [30, 1.5], CF.g1, { sh: 'h' }),
+    ell([64, 88, 386], [6, 4.5, 6], CF.g1),                                                              // sensor globes
+    seg([0, 86, 392], [0, 97, 392], 2, 1.2, CF.g3),
+    // stern: engine block, four round nozzles at the database engine positions
+    tap([0, 0, 465], 25, [158, 30], [148, 28], CF.g1, { sh: 'h' }),
+    ...[30, 95].map(x => tap([x, 0, 478], 12, [15, 15], [14, 14], CF.noz, { sh: 'e' })),
+    ...[30, 95].map(x => tap([x, 0, 466], 2.5, [17, 17], [17, 17], CF.or, { sh: 'e' })),
+    // ventral launch wells: dark mouth in a graphite frame at each bay (launch points at the mouths)
+    ...DB.ships.carrier.comps.filter(c => c.role === 'bay' && c.pos[0] > 0).flatMap(c => {
+      const [x, , z] = c.pos, y = -cbH(z);
+      return [tap([x, y - 1.6, z], 34, [19, 1.8], [19, 1.8], CF.g3, { sh: 'r' }), tap([x, y - 2.2, z], 30, [15, 1.6], [15, 1.6], CF.gr, { sh: 'r' })];
+    }),
+    // weapon plinths: armoured blocks from the hull surface up (or down) to just under each turret seat
+    ...DB.ships.carrier.turrets.map(t => { const [x, y, z] = t.pos, s0 = cbH(z) - 3, s1 = Math.abs(y) - 1.5, c = t.side * (s0 + s1) / 2, h = (s1 - s0) / 2;
+      return tap([x, c, z], 9, [8, h], [8, h], CF.g1, { sh: 'h', noMirror: true }); }),
+    ...DB.ships.carrier.turrets.flatMap(t => capSeat(t.pos[0], t.pos[1], t.pos[2], t.side, turretDia({ def: { length: 1200 } }, t) / 1.2, t.side * (cbH(t.pos[2]) - 4))),
+  ],
+};
+
 // Recessed cell covers are paint on existing hull voxels: they cannot float
 // independently of the pressure hull. Positions are the same as the runtime
 // damageable launchers, authored in the database and scaled with the ship.

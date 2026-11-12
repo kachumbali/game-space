@@ -422,9 +422,12 @@ SHIPS.bullfrog = {
   prims: [
     // Broad forward shoulder tapers decisively towards the stern.  The narrower
     // middle core leaves actual empty volume behind each side hangar mouth.
-    tap([0, 0, -135], 85, [48, 23], [78, 32], FM.hide, { sh: 'h' }),
-    tap([0, 0, -30], 20, [78, 32], [48, 29], FM.hide, { sh: 'h' }),
-    tap([0, 0, 55], 65, [48, 29], [47, 25], FM.hide, { sh: 'h' }),
+    tap([0, 0, -135], 85, [58, 18], [91, 25], FM.hide, { sh: 'h' }),
+    tap([0, 0, -30], 20, [91, 25], [75, 26], FM.hide, { sh: 'h' }),
+    // Outboard shoulder masses thicken the side profile without covering turret positions.
+    tap([79, 0, -112], 65, [14, 45], [14, 45], FM.hide, { sh: 'h' }),
+    tap([0, 0, 45], 55, [75, 26], [47, 25], FM.hide, { sh: 'h' }),
+    tap([0, 0, 110], 10, [47, 25], [47, 25], FM.hide, { sh: 'h' }),
     tap([0, 0, 175], 55, [47, 25], [32, 18], FM.hide2, { sh: 'h' }),
     tap([0, 0, 242], 18, [32, 18], [54, 20], FM.hide2, { sh: 'h' }),
     tap([0, 30, -10], 175, [9, 7], [16, 7], FM.hide2, { sh: 'h' }),                                     // dorsal ridge
@@ -441,11 +444,8 @@ SHIPS.bullfrog = {
     ...chain([[24, -14, -215], [32, -18, -255], [22, -12, -292]], [10, 7, 3], FM.hide2),
     ...chain([[20, 18, -225], [24, 22, -262], [14, 14, -285]], [7, 5, 2], FM.hide2),
     // spine gun: barrel along the axis, collars, muzzle at z -299
-    seg([0, -4, -205], [0, -4, -292], 8.5, 6, FM.met, NG), tap([0, -4, -297], 1.5, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
+    seg([0, -4, -205], [0, -4, -290], 8.5, 6, FM.met, NG), tap([0, -4, -296], 1, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
     ...[-235, -255, -275].map(z => tap([0, -4, z], 2.5, [10, 10], [10, 10], FM.met2, { sh: 'e', ...NG })),
-    // Clamp-on equipment and short copper feeds follow the tapered hull.
-    ...fmPipe([[45, 25, -165], [60, 20, -90], [45, 20, -20], [42, 17, 110]], 2.4),
-    ...fmPipe([[26, 30, -150], [30, 28, -60], [24, 26, 100]], 1.8, FM.met2),
     // Root the outboard midship turret pedestals in the pressure core.
     seg([42, 12, 80], [54, 12, 80], 5, 5, FM.met2, NG),
     // Paired ventral rails support the torpedo cluster, leaving its centreline open.
@@ -456,7 +456,7 @@ SHIPS.bullfrog = {
     // heart dome over the reactor
     ell([0, 32, 150], [30, 12, 30], FM.met2, NG),
     // Fins rise outwards from a 130 m root chord: swept in both plan and elevation.
-    tap([70, 12, 30], 20, [65, 5], [25, 3], FM.hide2,
+    tap([70, 12, 30], 20, [65, 6], [25, 5], FM.hide2,
       { ax: 'x', sweep: 1.15, sweepY: 1.55, ...NG }),
     seg([50, -19, -30], [89, 42, 10], 3, 2, FM.met2, NG),
     // 40 x 15 m open side bays, constructed as frames around an empty volume.

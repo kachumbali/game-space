@@ -20,6 +20,8 @@ Ship hulls are no longer rendered as instanced cubes (`src/50_state.js`):
 - `s.vox.body` is now a `THREE.Group` of slab meshes. `body.count` still reports the surface voxel count, so existing tests keep working.
 - **Design consequence:** a one-voxel spike or rail turns thin and pinched. Give parts that must read at least 2 voxels of thickness at tablet detail. To see the voxel size, run `__game.voxelize(def, __game.resFor(def, 2), 2).vs`. Check every design in the default mode, not only with `?vox=cube`.
 
+- **Coming after this round** (owner 2026-11-12): hulls move to real geometry built from the same prims (`docs/DESIGN_REAL_GEOMETRY.md`). For Jobs I and J, do not rely on a later prim hiding an earlier prim's colour inside an overlap: shapes should meet rather than be buried in each other with a different colour.
+
 ## Job H: turret draw calls (branch `codex/turret-batching`)
 
 **Problem.** The hull is now cheap, but turrets are not. Every turret model in `src/60_weapons.js` (around lines 575–672) is built from about 10–15 separate meshes, and each mesh is one draw call. Measured with `renderer.info.render.calls` at `?q=low`, one ship alone in view:
@@ -55,7 +57,7 @@ Owner decision: dedicated carriers carry the fighters; corvettes have no bays, f
 **Ship.** A new human fleet carrier.
 - id `carrier`, class `capital`, faction `human`.
 - About **1,200 m** long: author it at a convenient size and set `tuning.scaleTo.carrier`, as the Glaive does.
-- Name: propose three names; the owner picks one.
+- Name (owner 2026-11-12): **Columbus class**. Use `name: 'COLUMBUS'` in the data, in capitals like the other ships, and "Columbus-class fleet carrier" in the descriptions.
 
 **Hangar.** About **72 fighters**:
 - `dock.fighters: 72`, `dock.corvettes: 2`;

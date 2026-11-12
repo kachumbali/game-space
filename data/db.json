@@ -2084,6 +2084,697 @@
         "role": "capital"
       }
     },
+    "carrier": {
+      "id": "carrier",
+      "rosterCapacity": 72,
+      "launchers": [],
+      "ordnancePlan": {
+        "enabled": true,
+        "stores": {
+          "drone": 72
+        },
+        "droneLimit": 5,
+        "hangar": {
+          "total": 72,
+          "recovery": true,
+          "airborneCap": 18,
+          "interval": 4,
+          "bays": 6,
+          "bayComponents": [
+            "bay1",
+            "bay2",
+            "bay3",
+            "bay4",
+            "bay5",
+            "bay6"
+          ],
+          "manifest": {
+            "kestrel": 24,
+            "falchion": 18,
+            "bittern": 18,
+            "merlin": 12
+          }
+        }
+      },
+      "name": "COLUMBUS",
+      "cls": "capital",
+      "fac": "human",
+      "role": "FLEET CARRIER",
+      "length": 1000,
+      "half": [
+        180,
+        100,
+        500
+      ],
+      "mirror": true,
+      "radius": 530,
+      "seam": [
+        20.0,
+        15.0
+      ],
+      "resMul": 0.6,
+      "resCap": 240,
+      "noDetail": true,
+      "jump": true,
+      "dock": {
+        "fighters": 72,
+        "corvettes": 2
+      },
+      "repair": false,
+      "engines": [
+        {
+          "pos": [
+            -95,
+            0,
+            485
+          ],
+          "comp": "E1",
+          "r": 12
+        },
+        {
+          "pos": [
+            -30,
+            0,
+            485
+          ],
+          "comp": "E2",
+          "r": 12
+        },
+        {
+          "pos": [
+            30,
+            0,
+            485
+          ],
+          "comp": "E3",
+          "r": 12
+        },
+        {
+          "pos": [
+            95,
+            0,
+            485
+          ],
+          "comp": "E4",
+          "r": 12
+        }
+      ],
+      "mounts": [],
+      "turrets": [
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            -51,
+            26,
+            -320
+          ],
+          "comp": "T1",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            -51,
+            -26,
+            -320
+          ],
+          "comp": "T2",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            -77,
+            29,
+            -100
+          ],
+          "comp": "T3",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            -77,
+            -29,
+            -100
+          ],
+          "comp": "T4",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            -103,
+            32,
+            120
+          ],
+          "comp": "T5",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            -103,
+            -32,
+            120
+          ],
+          "comp": "T6",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            -126,
+            35,
+            320
+          ],
+          "comp": "T7",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            -126,
+            -35,
+            320
+          ],
+          "comp": "T8",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            51,
+            26,
+            -320
+          ],
+          "comp": "T9",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            51,
+            -26,
+            -320
+          ],
+          "comp": "T10",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            77,
+            29,
+            -100
+          ],
+          "comp": "T11",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            77,
+            -29,
+            -100
+          ],
+          "comp": "T12",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            103,
+            32,
+            120
+          ],
+          "comp": "T13",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            103,
+            -32,
+            120
+          ],
+          "comp": "T14",
+          "side": -1
+        },
+        {
+          "w": "pd",
+          "cls": "S",
+          "pos": [
+            126,
+            35,
+            320
+          ],
+          "comp": "T15",
+          "side": 1
+        },
+        {
+          "w": "laserM",
+          "cls": "M",
+          "pos": [
+            126,
+            -35,
+            320
+          ],
+          "comp": "T16",
+          "side": -1
+        }
+      ],
+      "stores": {},
+      "comps": [
+        {
+          "id": "E1",
+          "name": "ENGINE 1",
+          "role": "engine",
+          "pos": [
+            -95,
+            0,
+            465
+          ],
+          "r": 14,
+          "hp": 600
+        },
+        {
+          "id": "E2",
+          "name": "ENGINE 2",
+          "role": "engine",
+          "pos": [
+            -30,
+            0,
+            465
+          ],
+          "r": 14,
+          "hp": 600
+        },
+        {
+          "id": "E3",
+          "name": "ENGINE 3",
+          "role": "engine",
+          "pos": [
+            30,
+            0,
+            465
+          ],
+          "r": 14,
+          "hp": 600
+        },
+        {
+          "id": "E4",
+          "name": "ENGINE 4",
+          "role": "engine",
+          "pos": [
+            95,
+            0,
+            465
+          ],
+          "r": 14,
+          "hp": 600
+        },
+        {
+          "id": "bay1",
+          "name": "FIGHTER BAY 1",
+          "role": "bay",
+          "pos": [
+            -48,
+            -20,
+            -280
+          ],
+          "launch": [
+            -48,
+            -55,
+            -280
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "bay2",
+          "name": "FIGHTER BAY 2",
+          "role": "bay",
+          "pos": [
+            -68,
+            -20,
+            0
+          ],
+          "launch": [
+            -68,
+            -55,
+            0
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "bay3",
+          "name": "FIGHTER BAY 3",
+          "role": "bay",
+          "pos": [
+            -85,
+            -20,
+            280
+          ],
+          "launch": [
+            -85,
+            -55,
+            280
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "bay4",
+          "name": "FIGHTER BAY 4",
+          "role": "bay",
+          "pos": [
+            48,
+            -20,
+            -280
+          ],
+          "launch": [
+            48,
+            -55,
+            -280
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "bay5",
+          "name": "FIGHTER BAY 5",
+          "role": "bay",
+          "pos": [
+            68,
+            -20,
+            0
+          ],
+          "launch": [
+            68,
+            -55,
+            0
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "bay6",
+          "name": "FIGHTER BAY 6",
+          "role": "bay",
+          "pos": [
+            85,
+            -20,
+            280
+          ],
+          "launch": [
+            85,
+            -55,
+            280
+          ],
+          "r": 18,
+          "hp": 700
+        },
+        {
+          "id": "T1",
+          "name": "TURRET 1",
+          "role": "turret",
+          "pos": [
+            -51,
+            26,
+            -320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T2",
+          "name": "TURRET 2",
+          "role": "turret",
+          "pos": [
+            -51,
+            -26,
+            -320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T3",
+          "name": "TURRET 3",
+          "role": "turret",
+          "pos": [
+            -77,
+            29,
+            -100
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T4",
+          "name": "TURRET 4",
+          "role": "turret",
+          "pos": [
+            -77,
+            -29,
+            -100
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T5",
+          "name": "TURRET 5",
+          "role": "turret",
+          "pos": [
+            -103,
+            32,
+            120
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T6",
+          "name": "TURRET 6",
+          "role": "turret",
+          "pos": [
+            -103,
+            -32,
+            120
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T7",
+          "name": "TURRET 7",
+          "role": "turret",
+          "pos": [
+            -126,
+            35,
+            320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T8",
+          "name": "TURRET 8",
+          "role": "turret",
+          "pos": [
+            -126,
+            -35,
+            320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T9",
+          "name": "TURRET 9",
+          "role": "turret",
+          "pos": [
+            51,
+            26,
+            -320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T10",
+          "name": "TURRET 10",
+          "role": "turret",
+          "pos": [
+            51,
+            -26,
+            -320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T11",
+          "name": "TURRET 11",
+          "role": "turret",
+          "pos": [
+            77,
+            29,
+            -100
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T12",
+          "name": "TURRET 12",
+          "role": "turret",
+          "pos": [
+            77,
+            -29,
+            -100
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T13",
+          "name": "TURRET 13",
+          "role": "turret",
+          "pos": [
+            103,
+            32,
+            120
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T14",
+          "name": "TURRET 14",
+          "role": "turret",
+          "pos": [
+            103,
+            -32,
+            120
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T15",
+          "name": "TURRET 15",
+          "role": "turret",
+          "pos": [
+            126,
+            35,
+            320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "T16",
+          "name": "TURRET 16",
+          "role": "turret",
+          "pos": [
+            126,
+            -35,
+            320
+          ],
+          "r": 6,
+          "hp": 220
+        },
+        {
+          "id": "power",
+          "name": "MAIN REACTOR",
+          "role": "power",
+          "pos": [
+            0,
+            0,
+            100
+          ],
+          "r": 30,
+          "hp": 8000
+        },
+        {
+          "id": "bridge",
+          "name": "BRIDGE",
+          "role": "radar",
+          "pos": [
+            0,
+            80,
+            385
+          ],
+          "r": 14,
+          "hp": 1000
+        },
+        {
+          "id": "shieldF",
+          "name": "SHIELD FWD",
+          "role": "shield",
+          "pos": [
+            0,
+            0,
+            -260
+          ],
+          "r": 18,
+          "hp": 900
+        },
+        {
+          "id": "shieldA",
+          "name": "SHIELD AFT",
+          "role": "shield",
+          "pos": [
+            0,
+            0,
+            260
+          ],
+          "r": 18,
+          "hp": 900
+        }
+      ],
+      "shield": {
+        "fore": 11520,
+        "aft": 9360
+      },
+      "armor": {
+        "type": "composite",
+        "rating": 0.36
+      },
+      "structure": 20736,
+      "maxSpeed": 10,
+      "aiSpeed": 6,
+      "accel": 0.15,
+      "turn": 0.012,
+      "shieldRegen": 43.2,
+      "power": {
+        "plantMW": 6912,
+        "capacitorMJ": 17280
+      },
+      "sig": 24,
+      "flameColor": "#66c8ff",
+      "ai": {
+        "role": "capital"
+      }
+    },
     "hecla": {
       "id": "hecla",
       "rosterCapacity": 24,
@@ -8578,7 +9269,7 @@
     "bullfrog": {"spineDelay": 15, "charge": 6, "freeze": 1.5, "cd": 30, "fizzleCd": 8, "lockHold": 3, "range": 3200, "bandIn": 2300, "bandOut": 2400, "bandMin": 1200, "bandFar": 1500, "hangarInterval": 4.5, "hangarCap": 12, "emergencyInterval": 1.5, "spoolT": 20, "corridorHalf": 0.12, "manifest": {"D": 6, "L": 5, "S": 2, "T": 2, "R": 3}, "kind": {"D": "darter", "L": "leaper", "S": "spitter", "T": "toad", "R": "reaver"}, "seq": ["D", "L", "D", "R", "L", "D", "T", "L", "S", "R"]},
     "rangeLaw": {"bands": {"pd": [750, 900], "fighterGun": [1500, 2000], "capitalSecondary": [2500, 3000], "main": [4000, 5000]}, "roles": {"pd": ["pd", "pdS", "pulseS", "sting", "thorn"], "fighterGun": ["cannon", "he", "fmag", "fang", "flaser", "spit", "spitcannon", "dgun", "rotary"], "capitalSecondary": ["laser", "laserM", "mdl", "acidT", "lance", "lanceL"], "main": ["rail", "rodg", "mdxl", "mdxh", "spine"]}, "_doc": "Range bands in metres by role (owner 2026-11-12), the same for FROGG and human weapons. Capital secondaries always outrange fighter guns; main guns outrange secondaries. Missiles keep their own ranges. tools/range_law.py reports and applies."},
     "energyLaw": {"mjPerDamage": {"coil": 0.18, "pd": 0.1, "beam": 2.0, "spine": 0.89}, "spineCapacitorShare": 0.32, "_doc": "Energy per damage point by delivery type (1 energy unit = 1 MJ). Sustained weapon draw in MW = DPS x mjPerDamage. A spine (XL) gun dumps spineCapacitorShare of its ship's capacitor per shot: energy = share x capacitorMJ, damage = energy / mjPerDamage.spine, so bigger power budgets give bigger spines. tools/power_table.py --law reports every weapon against this."},
-    "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500, "destroyer": 720},
+    "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500, "destroyer": 720, "carrier": 1200},
     "score": {"darter": 100, "leaper": 100, "spitter": 150, "toad": 200, "reaver": 200, "gulper": 800, "bullfrog": 2500, "hivecarrier": 5000},
     "feel": {"chainWindow": 6, "chainMax": 4, "hitStopKill": 0.05, "hitStopBig": 0.16, "pointBlank": 150},
     "loot": {"life": 34, "collectR": 30, "magnetR": 130, "dropFighter": 0.22, "pity": 5, "overdriveT": 12, "maxPods": 14},
@@ -8658,7 +9349,7 @@
       "shieldDelay": 4,
       "energyDefault": 17
     },
-    "ordnance": {"enabled": true, "liveCap": {"desktop": 48, "tablet": 32, "phone": 20}, "quickNukeRounds": 1, "restock": {"points": {"ir": 1, "rf": 1.5, "torp": 4, "drone": 3}, "proximityRate": 2, "dockedRate": 4, "serviceRange": 600}, "ai": {"contactRange": 4000, "rangeFraction": 0.7, "minRange": 350, "lockScale": 1, "missileRipple": 0.3, "torpedoRipple": 0.4, "torpedoArc": 1.22, "pdSalvoMultiplier": 2, "pdDamagedFraction": 0.5, "pdCapacity": {"pd": 1, "pdS": 0.5, "thorn": 0.67, "sting": 0.67}, "droneInitial": 6, "droneInterval": 2, "selfClearanceEpsilon": 3, "hangarClearance": 20, "hangarHitCool": 2}},
+    "ordnance": {"enabled": true, "liveCap": {"desktop": 48, "tablet": 32, "phone": 20}, "quickNukeRounds": 1, "restock": {"points": {"ir": 1, "rf": 1.5, "torp": 4, "drone": 3}, "proximityRate": 2, "dockedRate": 4, "serviceRange": 600}, "ai": {"contactRange": 4000, "rangeFraction": 0.7, "minRange": 350, "lockScale": 1, "missileRipple": 0.3, "torpedoRipple": 0.4, "torpedoArc": 1.22, "pdSalvoMultiplier": 2, "pdDamagedFraction": 0.5, "pdCapacity": {"pd": 1, "pdS": 0.5, "thorn": 0.67, "sting": 0.67}, "droneInitial": 6, "droneInterval": 2, "selfClearanceEpsilon": 3, "hangarClearance": 20, "hangarHitCool": 2, "hangarRecoveryRadius": 35, "hangarReturnThrottle": 0.55}},
     "missile": {
       "steerMinSpeed": 80,
       "leadMax": 3,
