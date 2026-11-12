@@ -13,11 +13,12 @@ The lead (Claude) reviews and merges. Branch every job from current `main`; merg
 ## What changed since brief 4 (read before you start)
 
 Ship hulls are no longer rendered as instanced cubes (`src/50_state.js`):
-- **Smooth hulls are the default** (owner decision 2026-11-12: "all smoother if it simplifies compute"). The voxel grid is turned into a smooth surface (surface nets) per z slab. Non-fighter hulls build **one detail step lower** than the quality setting, because smoothing hides the coarser grid. Fighters keep their full step.
+- **Chamfered hulls are the default** (owner decision 2026-11-12, option E). The voxel grid becomes one surface per z slab (surface nets), so shapes keep their voxel detail with softened edges and soft shading.
+- The hull builds at the same detail as before, with about the same triangle count as merged cubes.
 - `?vox=cube` shows merged cubes; `?vox=inst` shows the old instanced renderer. Use them only for comparison.
 - Damage rebuilds the touched slabs, at most about 4 ms of rebuild work per frame.
 - `s.vox.body` is now a `THREE.Group` of slab meshes. `body.count` still reports the surface voxel count, so existing tests keep working.
-- **Design consequence:** a part thinner than about 2 voxels at the built detail can pinch or vanish on a smooth capital. To see the voxel size, run `__game.voxelize(def, __game.resFor(def, detail - 1), detail - 1).vs` in the browser. Check every design in the default smooth mode, not only with `?vox=cube`.
+- **Design consequence:** a one-voxel spike or rail turns thin and pinched. Give parts that must read at least 2 voxels of thickness at tablet detail. To see the voxel size, run `__game.voxelize(def, __game.resFor(def, 2), 2).vs`. Check every design in the default mode, not only with `?vox=cube`.
 
 ## Job H: turret draw calls (branch `codex/turret-batching`)
 
@@ -95,7 +96,7 @@ The owner accepted brief 4's round 2. The Gulper and Hive carrier now read well.
 - **Make it the broad brute of the brief.** It should be visibly wider and heavier than it is tall, with the mass at the shoulders. Use the whole collision box (half 95 × 55 × 300).
 - **Keep the round-2 elements:** jaw armour around the spine gun, swept fins, side bays.
 - **Same hard constraints as brief 4:** no `db.json` position changes, every weapon structured, no floating parts, no glow.
-- **Review in smooth mode (the default).** Fins and armour plates must be at least 2 voxels thick at the built detail (see "What changed").
+- **Review in the default (chamfered) mode.** Fins and armour plates must be at least 2 voxels thick at the built detail (see "What changed").
 - **Deliverable:** black-silhouette sheet of all FROGG ships (top, side, 3/4) plus a smooth-mode contact sheet. Run `bullfrog_t` (its tablet band now counts voxels at the built detail; report it) and the gate.
 
 ## Report (each job)

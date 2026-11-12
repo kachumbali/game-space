@@ -125,7 +125,7 @@ function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color
 // frame. Glow voxels stay instanced (few, own material). ?vox=inst keeps the old instanced body.
 const VOX_MODE = ['inst', 'cube'].includes(params.get('vox')) ? params.get('vox') : 'smooth';
 const VOX_INST = VOX_MODE === 'inst';
-const VOX_SMOOTH_DROP = VOX_MODE === 'smooth' ? (params.has('vdrop') ? +params.get('vdrop') : 1) : 0;   // smoothing hides the coarser grid, so smooth hulls use one detail step less
+const VOX_SMOOTH_DROP = VOX_MODE === 'smooth' && params.has('vdrop') ? +params.get('vdrop') : 0;   // ?vdrop=1 builds non-fighter hulls one detail step lower (half the triangles; the owner found it too low in detail)
 const voxMeshMat = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22, vertexColors: true });
 const VFACE = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(n => {
   const ax = n.findIndex(v => v !== 0), u = (ax + 1) % 3, w = (ax + 2) % 3;
@@ -207,6 +207,7 @@ function buildSlabCube(V, si) {
 // cracks. Normals come from the field gradient for soft shading; colours average the solid corner voxels.
 // Same triangle count as the merged cubes at the same detail.
 const VS_ISO = 0.39;
+const VS_SMOOTH = params.has('vsm') ? +params.get('vsm') : 0;   // 0 (owner 2026-11-12, option E): binary field, chamfered voxels; 1: blurred field; 2: blurred field + relaxation (rounder, loses detail)
 function buildSlabSmooth(V, si) {
   const D = V.data, { nx, ny, nz } = D, solid = V.solid, hasInst = V.hasInst, c2v = D.cellToVox;
   const k0 = si * V.slabT, k1 = Math.min(nz, k0 + V.slabT);
@@ -219,8 +220,8 @@ function buildSlabSmooth(V, si) {
     for (let k = Math.max(0, ka - 1); k <= Math.min(nz - 1, kb + 1); k++) sol[dst + k - ka + 1] = solid[src + k];
   }
   // field on the same padded index space (pad cells stay 0)
-  const fld = new Float32Array(PX * PY * PZ);
-  for (let i = 1; i < PX - 1; i++) for (let j = 1; j < PY - 1; j++) {
+  const fld = VS_SMOOTH === 0 ? sol : new Float32Array(PX * PY * PZ);   // chamfered mode: the field is the occupancy itself
+  if (VS_SMOOTH !== 0) for (let i = 1; i < PX - 1; i++) for (let j = 1; j < PY - 1; j++) {
     const row = (i * PY + j) * PZ;
     for (let k = 1; k < PZ - 1; k++) {
       const c = row + k, n6 = sol[c + pyz] + sol[c - pyz] + sol[c + PZ] + sol[c - PZ] + sol[c + 1] + sol[c - 1];
@@ -265,7 +266,7 @@ function buildSlabSmooth(V, si) {
       const r = c + NB[q]; if (!act[r]) continue;
       sx += raw[r * 3]; sy += raw[r * 3 + 1]; sz += raw[r * 3 + 2]; m++;
     }
-    if (m) { x = 0.5 * x + 0.5 * sx / m; y = 0.5 * y + 0.5 * sy / m; z = 0.5 * z + 0.5 * sz / m; }
+    if (m && VS_SMOOTH >= 2) { x = 0.5 * x + 0.5 * sx / m; y = 0.5 * y + 0.5 * sy / m; z = 0.5 * z + 0.5 * sz / m; }
     let gx = 0, gy = 0, gz = 0;
     for (let a = 0; a < 2; a++) for (let b = 0; b < 2; b++) {
       const cx = c + a * PZ + b, cy = c + a * pyz + b, cz = c + a * pyz + b * PZ;

@@ -12,8 +12,10 @@ JS = """([mode])=>{const g=__game,T=g.THREE;__paused=true;
   const blockedFrom=(t,p)=>{const a=tw(t),d=p.clone().sub(a),L=d.length();d.normalize();const st=Math.max(t.muzzle||0,t.dia||0)+h.vox.data.vs*1.6;
     return L>st && !!g.traceShip(h,a.clone().addScaledVector(d,st),a.clone().addScaledVector(d,Math.min(L,h.def.radius*2.2)));};
   // candidate places: free cells inside the hull's bounding box, scored by how many turrets in range cannot see them (hide) or can (open)
+  // own fixed sequence: Math.random's position depends on how many frames ran before this call (frame timing), so the candidate set would vary
+  let sd=12345;const rnd=()=>((sd=sd*16807%2147483647)/2147483647);
   const D=h.vox.data;let best=null,bestN=-1;
-  for(let i=0;i<4000;i++){const p=new T.Vector3((Math.random()-.5)*2*D.hx*0.8,(Math.random()-.5)*2*D.hy*0.8,(Math.random()-.5)*2*D.hz*0.8);
+  for(let i=0;i<4000;i++){const p=new T.Vector3((rnd()-.5)*2*D.hx*0.8,(rnd()-.5)*2*D.hy*0.8,(rnd()-.5)*2*D.hz*0.8);
     const w=h.group.localToWorld(p.clone()); if(g.solidAtWorld(h,w)) continue;
     const near=h.turrets.filter(t=>tw(t).distanceTo(w)<t.w.range*0.9); if(near.length<4) continue;
     const n=near.filter(t=>blockedFrom(t,w)).length; const sc=mode==='hide'?n/near.length:1-n/near.length;
