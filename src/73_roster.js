@@ -64,7 +64,17 @@ function rosterImportLegacy(p, old, baseSkill) {
   p.status=states[old.status] || 'ACTIVE';p.recoveryLeft=p.status==='RECOVERING'?TUNE.roster.recoveryMissions:0;
   p.skill=rosterSkill(p);
 }
-function rosterCarrierKey(M) { return `${campaignOf(M).id}:${M.setup.anchor.id || M.setup.anchor.ship}`; }
+// The squadron's home ship (owner 2026-11-12: corvettes carry no fighters; the Prologue squadron is based on the frigate EXETER while the
+// HALBERD stays the ship to protect). setup.home falls back to the anchor. A pool saved under the old anchor key moves to the home key once.
+function rosterHome(M) { return M.setup.home || M.setup.anchor; }
+function rosterCarrierKey(M) {
+  const h = rosterHome(M), key = `${campaignOf(M).id}:${h.id || h.ship}`;
+  if (M.setup.home) {
+    const old = `${campaignOf(M).id}:${M.setup.anchor.id || M.setup.anchor.ship}`, st = rosterLoad();
+    if (old !== key && st.pools && st.pools[old] && !st.pools[key]) { st.pools[key] = st.pools[old]; delete st.pools[old]; rosterSave(); }
+  }
+  return key;
+}
 function rosterForCarrier(key, shipId) {
   const state = rosterLoad();
   if (!state.pools[key]) {
@@ -149,7 +159,7 @@ function rosterUpdateAwards(p, facts, cfg = TUNE.roster) {
 }
 function rosterBegin(M) {
   if (!rosterEnabled()) return;
-  const S=game.mstate, key=rosterCarrierKey(M), pool=rosterForCarrier(key,M.setup.anchor.ship);
+  const S=game.mstate, key=rosterCarrierKey(M), pool=rosterForCarrier(key,rosterHome(M).ship);
   const primary=rosterLoad().player;
   S.rosterKey=key; S.rosterPlayer=primary.status==='ACTIVE' ? primary.id : (rosterAvailable(pool)[0]?.id || null);
   S.rosterSelected=rosterAuto(pool.filter(p=>p.id!==S.rosterPlayer),M.setup.wingmen.length);
@@ -159,7 +169,7 @@ function rosterBegin(M) {
   game.rosterSnap=JSON.stringify(rosterLoad());
 }
 function rosterSpawnWing(M) {
-  const S=game.mstate, pool=rosterForCarrier(S.rosterKey,M.setup.anchor.ship);
+  const S=game.mstate, pool=rosterForCarrier(S.rosterKey,rosterHome(M).ship);
   for (const s of ships.filter(x=>x.rosterWing)) { s.alive=false; disposeShip(s); }
   ships=ships.filter(x=>!x.rosterWing);
   S.rosterSelected=rosterSelect(pool.filter(p=>p.id!==S.rosterPlayer),S.rosterSelected,M.setup.wingmen.length);
@@ -206,17 +216,17 @@ function rosterFinish(M,S) {
   rosterSave();
 }
 function rosterBriefHtml(M) {
-  const S=game.mstate,pool=rosterForCarrier(S.rosterKey,M.setup.anchor.ship), active=rosterAvailable(pool.filter(p=>p.id!==S.rosterPlayer));
+  const S=game.mstate,pool=rosterForCarrier(S.rosterKey,rosterHome(M).ship), active=rosterAvailable(pool.filter(p=>p.id!==S.rosterPlayer));
   const missing=Math.max(0,M.setup.wingmen.length-active.length);
   const player=S.rosterPlayer && rosterFind(S.rosterPlayer);
   return `<div>${player ? `PLAYER ${rosterEscape(rosterRank(player).insignia)} ${rosterEscape(rosterRank(player).name)} · ${rosterEscape(player.callsign)}` : 'NO ACTIVE PILOT AVAILABLE — SORTIE CANNOT LAUNCH'}</div><div>${missing ? `SHORT ${missing} WINGMAN SLOT(S) — SORTIE MAY LAUNCH` : 'Select active pilots or auto-fill.'}</div>` + (()=>{ const row=p=>`<div><button type="button" data-roster="${rosterEscape(p.id)}" ${p.status!=='ACTIVE'||p.id===S.rosterPlayer?'disabled':''}>${S.rosterSelected.includes(p.id)?'✓ ':''}${rosterEscape(p.callsign)}</button> ${rosterEscape(rosterRank(p).insignia)} ${rosterEscape(rosterRank(p).name)} · ${rosterEscape(p.name)} · SK ${p.skill} · ${p.status} · ${p.kills} kills / ${p.missions} missions</div>`, sel=pool.filter(p=>S.rosterSelected.includes(p.id)), rest=pool.filter(p=>!S.rosterSelected.includes(p.id)); return sel.map(row).join('') + `<details id="rosterMore" ${S.rosterMoreOpen||!sel.length?'open':''}><summary>CHANGE PILOTS (${rest.filter(p=>p.status==='ACTIVE'&&p.id!==S.rosterPlayer).length} available)</summary>${rest.map(row).join('')}</details>`; })() + '<button id="rosterAuto" type="button">AUTO-FILL</button> <button id="rosterRecord" type="button">SERVICE RECORD</button>';
 }
 function rosterServiceHtml(M) {
-  const pool=rosterForCarrier(game.mstate.rosterKey,M.setup.anchor.ship), all=[rosterLoad().player,...pool];
+  const pool=rosterForCarrier(game.mstate.rosterKey,rosterHome(M).ship), all=[rosterLoad().player,...pool];
   return `<div class="sub">SERVICE RECORD</div>`+all.map(p=>`<div><b>${rosterEscape(p.callsign)}</b> ${rosterEscape(p.name)} · ${rosterEscape(rosterRank(p).insignia)} ${rosterEscape(rosterRank(p).name)} · ${p.status} · ${p.kills} kills / ${p.missions} sorties<br>${p.medals.map(a=>{const m=TUNE.roster.medals.find(x=>x.id===a.id);return rosterEscape((m?.name || a.id)+': '+a.citation);}).join('<br>') || 'No medals yet.'}</div>`).join('');
 }
 function rosterBindBriefing(el,M) {
-  const S=game.mstate,pool=rosterForCarrier(S.rosterKey,M.setup.anchor.ship);
+  const S=game.mstate,pool=rosterForCarrier(S.rosterKey,rosterHome(M).ship);
   el.querySelectorAll('[data-roster]').forEach(b=>b.onclick=()=>{const id=b.dataset.roster,i=S.rosterSelected.indexOf(id);if(i>=0)S.rosterSelected.splice(i,1);else if(S.rosterSelected.length<M.setup.wingmen.length)S.rosterSelected.push(id);rosterSpawnWing(M);showBriefing(M);});
   const more=document.getElementById('rosterMore'); if (more) more.ontoggle=()=>{ S.rosterMoreOpen=more.open; };   // the full pool stays folded away (owner screenshot 2026-11-11: 24 pilots pushed the loadout off an iPad)
   document.getElementById('rosterAuto').onclick=()=>{S.rosterSelected=rosterAuto(pool.filter(p=>p.id!==S.rosterPlayer),M.setup.wingmen.length);rosterSpawnWing(M);showBriefing(M);};

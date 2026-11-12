@@ -50,7 +50,7 @@ const MISSIONS = [{
 
 Intelligence expects a FROGG raiding party: fast fighters first to strip our screen, then torpedo bombers for the Halberd, then, if they find us soft, an escort corvette of their own.
 
-Eagle flight (MEOW, HAWK, SPARROW) flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
+Eagle flight (MEOW, HAWK, SPARROW) launches from the frigate CSS EXETER, holding beyond the relay, and flies cover. The Halberd's point-defence will help inside 900 m, but bombers must not reach torpedo range. Kill them on the approach.
 
 ROE: weapons free. Missiles are scarce, fly the guns first.`,
   areas: {
@@ -59,7 +59,7 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
   },
   objectivesAtStart: [],
   setup: {
-    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' },
     player: { pos: [95, 18, 120], speed: 60 },
     wingmen: [
       { pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [130, 22, 150] },
@@ -109,7 +109,7 @@ ROE: weapons free. Missiles are scarce, fly the guns first.`,
     ] },
     { when: { dead: 'C', delay: 3 }, do: [
       { obj: ['o3', null, 'done'] },
-      { comm: ['CONTROL', 'All contacts destroyed. Outstanding flying, Eagle flight. Return to the Halberd.'] },
+      { comm: ['CONTROL', 'All contacts destroyed. Outstanding flying, Eagle flight. Return to the Exeter.'] },
       { end: 'win' },
     ] },
   ],
@@ -119,7 +119,7 @@ MISSIONS.push({
   id: 'm02', look: 'reed', title: 'OPERATION REEDBED', subtitle: 'Fleet sweep: Bog Relay and the FROGG outpost',
   grades: [3300, 2900, 2500, 2000],
   briefing:
-`Task Group Eagle (CSS HALBERD and CSS TALON, with your flight) sorties through two areas of operation. The autopilot flies the fleet between them; you take the stick again on arrival.
+`Task Group Eagle (the corvettes CSS HALBERD and CSS TALON, with your flight from the frigate CSS EXETER) sorties through two areas of operation. The autopilot flies the fleet between them; you take the stick again on arrival.
 
 NAV 2, BOG RELAY: FROGG pickets are screening a relay we need. Expect fighters first, then torpedo bombers going for the escorts.
 
@@ -131,7 +131,7 @@ ROE: weapons free. Keep both corvettes alive; lose the Halberd and the sortie is
     ao3: { name: 'FROGG OUTPOST', look: 'ao3', arrive: 'Drives down at the outpost. Gas giant on the starboard side. Expect heavy resistance.' },
   },
   setup: {
-    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' },
     fleet: [{ ship: 'halberd', id: 'talon', callsign: 'CSS TALON', pos: [-420, -30, 180] }],
     player: { pos: [140, 20, 260], speed: 60 },
     wingmen: [
@@ -200,7 +200,7 @@ MISSIONS.push({
     ao3: { name: 'OUTPOST APPROACH', look: 'ao3', arrive: 'Drives down at the outpost jump point. Gas giant on the starboard side. The Gulper is out there.' },
   },
   setup: {
-    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' },
+    anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0, 0, 0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' },
     fleet: [{ ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [-520, -40, 160] }],
     player: { pos: [140, 20, 260], speed: 60 },
     wingmen: [
@@ -269,7 +269,7 @@ MISSIONS.push({
   grades: [4200, 3400, 2600, 1800],
   briefing:
 `The Exeter has two jump cycles left before Fold stress forces a refit, and the second leaves in six minutes. Until then she sits at the outpost with her drive hot and her screen thin. The Merlin has no armour to speak of and no magazine to waste; use speed and stay inside her point-defence envelope. FROGG strike groups are inbound in three waves. Fighters that stray beyond 1.5 km are on their own. If the Exeter dies, so does the way home.`,
-  debriefWin: 'Exeter cleared the Fold with two squadrons docked: yours and the Halberd\'s. The Gulper came late, which tells us the Hive reads our jump windows. Merlin flights are staying in the rotation.',
+  debriefWin: 'Exeter cleared the Fold with your squadron docked. The Gulper came late, which tells us the Hive reads our jump windows. Merlin flights are staying in the rotation.',
   debriefLose: 'The Exeter is gone. Everything outside her bay is marooned. Eagle flight\'s logs end here.',
   setup: {
     anchor: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER', pos: [0, 0, 0], vital: true, ai: 'capital' },
@@ -401,10 +401,10 @@ MISSIONS.push({
 const PROLOGUE_MISSIONS = [
   {
     id: 'p01', beforeMission: 'p01_before', afterMission: {win: 'p01_after_win', lose: 'p01_after_lose'}, look: 'reed', title: 'CONTRABAND SUN', subtitle: 'Stop an unregistered shuttle at Hollow 14', grades: [1500, 1250, 1000, 750],
-    briefing: `A resupply shuttle with false registry seals has bypassed the customs checkpoint at Hollow 14. It has hired private escorts and is refusing inspection. Protect the HALBERD, break the escort, and stop the transport before it jumps.`,
+    briefing: `Eagle Flight flies from the frigate EXETER; the corvette HALBERD has the patrol. A resupply shuttle with false registry seals has bypassed the customs checkpoint at Hollow 14. It has hired private escorts and is refusing inspection. Protect the HALBERD, break the escort, and stop the transport before it jumps.`,
     debriefWin: 'Smuggler flight neutralized. Salvage crews recovered sealed biological containment canisters marked Project Nursery / Oasis-9. Vanderbilt-Astra legal has already sealed the report.',
     debriefLose: 'The rogue transport escaped into deep space. Its cargo and the trail behind it are lost.',
-    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [80,15,100], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [110,20,130] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [50,10,130] }] },
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' }, player: { ship: 'kestrel', pos: [80,15,100], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [110,20,130] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [50,10,130] }] },
     stages: [
       { when: { t: 8 }, do: [{ comm: ['CONTROL', 'Eagle flight, the transport has armed its escorts. Weapons free.'] }, { obj: ['p1a', 'Destroy the mercenary escort', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',1]], bearing: [0.3,0.05,-1], dist: 2600, spread: 180 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p1a', null, 'done'] }, { comm: ['CONTROL', 'Escorts down. The Tern is making an emergency jump run. Stop it.'] }, { obj: ['p1b', 'Destroy the rogue transport TERN', 'open'] }, { spawn: { grp: 'B', ships: [['tern',1]], bearing: [0.1,0,-1], dist: 1800, spread: 50 } }] },
@@ -416,7 +416,7 @@ const PROLOGUE_MISSIONS = [
     briefing: `Privateers have blockaded Relay Beta, cutting supply traffic to the spun habitats. The HALBERD will draw their attention while Eagle Flight breaks their pickets, drone screen, and strike detachment.`,
     debriefWin: 'Relay Beta is open again. Captured traffic records show the privateers were paid in Vanderbilt-Astra bearer bonds to keep CDF patrols away from the rim.',
     debriefLose: 'The blockade holds. The outer habitats remain isolated.',
-    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [90,20,110], speed: 65 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,25,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' }, player: { ship: 'kestrel', pos: [90,20,110], speed: 65 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,25,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
     stages: [
       { when: { t: 4 }, do: [{ obj: ['p2a', 'Destroy the blockade picket wave', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',2],['kestrel',1]], bearing: [0.2,0.05,-1], dist: 2800, spread: 240, skill: 2 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p2a', null, 'done'] }, { comm: ['CONTROL', 'Pickets down. Regroup on the HALBERD and let your shields come back. Drones are spooling at the depot.'] }] },
@@ -431,7 +431,7 @@ const PROLOGUE_MISSIONS = [
     briefing: `A distress beacon inside the abandoned Alpha-9 belt matches a lost survey craft. The HALBERD has stopped to investigate. Keep close, preserve countermeasures, and expect a trap.`,
     debriefWin: 'Eagle Flight survived a military-grade kill box. The attackers used demilitarized human hulls with corporate avionics and knew the patrol frequency.',
     debriefLose: 'The task group was overwhelmed in Alpha-9. The route toward Lily is open to whoever set the trap.',
-    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [85,10,105], speed: 50 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [115,15,135] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [55,5,135] }] },
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' }, player: { ship: 'kestrel', pos: [85,10,105], speed: 50 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [115,15,135] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [55,5,135] }] },
     stages: [
       { when: { t: 4 }, do: [{ comm: ['HAWK', 'Ambush. Stay tight on the HALBERD.'] }, { obj: ['p3a', 'Defend the HALBERD against the ambushers', 'open'] }, { spawn: { grp: 'A', ships: [['merlin',3],['kestrel',1]], bearing: [0.3,0.2,-1], dist: 2200, spread: 260, skill: 2 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p3a', null, 'done'] }, { comm: ['HAWK', 'Ambushers down. Regroup on the HALBERD, shields up. That was too easy.'] }] },
@@ -444,7 +444,7 @@ const PROLOGUE_MISSIONS = [
     briefing: `Listening posts around Lily went silent thirty minutes ago. Passive arrays show hulls with no seams, no human IFF, and thermal signatures unlike anything in the registry. Protect the HALBERD, collect what telemetry you can, and survive.`,
     debriefWin: 'First contact confirmed: the invaders are designated FROGG. Long-range arrays show an entire vanguard entering the Lily corridor. The HALBERD is falling back to mount the relay defence.',
     debriefLose: 'First contact was catastrophic. The colonies will face the invasion blind.',
-    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, player: { ship: 'kestrel', pos: [90,15,110], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,20,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
+    setup: { anchor: { ship: 'halberd', id: 'halberd', callsign: 'CSS HALBERD', pos: [0,0,0], vital: true, ai: 'capital' }, home: { ship: 'exeter', id: 'exeter', callsign: 'CSS EXETER' }, player: { ship: 'kestrel', pos: [90,15,110], speed: 60 }, wingmen: [{ pilot: 'hawk', ship: 'kestrel', callsign: 'HAWK', pos: [120,20,140] }, { pilot: 'sparrow', ship: 'kestrel', callsign: 'SPARROW', pos: [60,10,140] }] },
     stages: [
       { when: { t: 4 }, do: [{ comm: ['SPARROW', 'Contacts. They are not on any fleet IFF.'] }, { obj: ['p4a', 'Engage the unknown interceptors', 'open'] }, { spawn: { grp: 'A', ships: [['darter',4],['leaper',2]], bearing: [0.1,0.05,-1], dist: 2400, spread: 220 } }] },
       { when: { dead: 'A', delay: 3 }, do: [{ obj: ['p4a', null, 'done'] }, { comm: ['CONTROL', 'Heavy bio-signatures closing: bombers and a gunship.'] }, { obj: ['p4b', 'Stop the alien bombers before they reach the HALBERD', 'open'] }, { spawn: { grp: 'B', ships: [['toad',2],['spitter',1],['darter',2]], bearing: [-0.3,0.1,-1], dist: 2700, spread: 240 } }] },

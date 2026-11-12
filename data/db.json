@@ -1015,12 +1015,11 @@
     },
     "halberd": {
       "id": "halberd",
-      "rosterCapacity": 12,
       "launchers": [
         {"id":"FT-M", "kind":"fixed", "role":"missile", "count":4, "reload":20, "cap":4, "stores":["ir","rf"], "mountHp":70, "mountRadius":0.7, "positions":[[-0.8,3,12.6],[0.8,3,12.6],[-0.8,3,14.8],[0.8,3,14.8]]},
         {"id":"FT-T", "kind":"fixed", "role":"torpedo", "count":2, "reload":14, "cap":4, "stores":["torp"], "mountHp":90, "mountRadius":0.7, "positions":[[-0.8,3,17.0],[0.8,3,17.0]]}
       ],
-      "ordnancePlan": {"enabled":true, "stores":{"ir":12,"rf":4,"torp":8,"drone":12}, "droneLimit":6, "hangar":{"total":0}},
+      "ordnancePlan": {"enabled": true, "stores": {"ir": 12, "rf": 4, "torp": 8, "drone": 0}, "droneLimit": 0, "hangar": {"total": 0}},
       "name": "HALBERD",
       "cls": "corvette",
       "fac": "human",
@@ -1372,7 +1371,7 @@
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":6, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":100, "mountRadius":3, "positions":[[-11,18,-45],[11,18,-45],[-11,18,-30],[11,18,-30],[-11,18,-15],[11,18,-15]]},
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":4, "reload":10, "cap":1, "stores":["torp"], "mountHp":120, "mountRadius":3, "positions":[[-11,18,100],[11,18,100],[-11,18,115],[11,18,115]]}
       ],
-      "ordnancePlan": {"enabled":true, "stores":{"ir":40,"rf":24,"torp":24,"drone":48}, "droneLimit":12, "hangar":{"total":12,"airborneCap":6,"interval":6,"bays":2,"bayComponents":["bay","cradleL"],"manifest":{"kestrel":6,"falchion":2,"bittern":2,"merlin":2}}},
+      "ordnancePlan": {"enabled": true, "stores": {"ir": 40, "rf": 24, "torp": 24, "drone": 6}, "droneLimit": 3, "hangar": {"total": 3, "airborneCap": 3, "interval": 6, "bays": 2, "bayComponents": ["bay", "cradleL"], "manifest": {"kestrel": 2, "falchion": 1}}},
       "name": "EXETER",
       "cls": "frigate",
       "fac": "human",
@@ -1391,10 +1390,7 @@
       ],
       "resMul": 0.6,
       "jump": true,
-      "dock": {
-        "fighters": 12,
-        "corvettes": 2
-      },
+      "dock": {"fighters": 3, "corvettes": 0},
       "repair": false,
       "engines": [
         {
@@ -1654,9 +1650,7 @@
           "side": -1
         }
       ],
-      "stores": {
-        "drone": 48
-      },
+      "stores": {"drone": 6},
       "comps": [
         {
           "id": "engC",
@@ -2118,12 +2112,7 @@
       "resCap": 240,
       "noDetail": true,
       "jump": true,
-      "dock": {
-        "fighters": 96,
-        "corvettes": 12,
-        "heavy": 2,
-        "medium": 4
-      },
+      "dock": {"fighters": 36, "corvettes": 2, "heavy": 2, "medium": 4},
       "repair": true,
       "shuttleR": 650,
       "engines": [
@@ -3311,10 +3300,7 @@
       ],
       "resMul": 0.5,
       "jump": true,
-      "dock": {
-        "fighters": 24,
-        "corvettes": 4
-      },
+      "dock": {"fighters": 4, "corvettes": 0},
       "repair": false,
       "tender": true,
       "serviceR": 600,
@@ -4531,10 +4517,7 @@
       "resMul": 0.85,
       "resCap": 400,
       "jump": true,
-      "dock": {
-        "fighters": 36,
-        "corvettes": 0
-      },
+      "dock": {"fighters": 18, "corvettes": 0},
       "launch": [
         0,
         -44,
@@ -6270,9 +6253,10 @@
         {"id":"RM", "kind":"reloadable", "role":"missile", "count":8, "reload":5, "cap":1, "stores":["ir","rf"], "mountHp":120, "mountRadius":3, "positions":[[-11,22,-60],[11,22,-60],[-11,22,-48],[11,22,-48],[-11,22,-36],[11,22,-36],[-11,22,-24],[11,22,-24]]},
         {"id":"RT", "kind":"reloadable", "role":"torpedo", "count":8, "reload":10, "cap":1, "stores":["torp"], "mountHp":140, "mountRadius":3, "positions":[[-11,22,30],[11,22,30],[-11,22,42],[11,22,42],[-11,22,54],[11,22,54],[-11,22,66],[11,22,66]]}
       ],
-      "ordnancePlan": {"enabled":true, "stores":{"ir":48,"rf":36,"torp":48,"drone":24}, "droneLimit":12, "hangar":{"total":8,"airborneCap":4,"interval":6,"bays":1,"bayComponents":["hangar"],"extraComponents":[{"id":"hangar","name":"HANGAR","role":"bay","pos":[0,-18,0],"r":10,"hp":300}],"manifest":{"kestrel":4,"bittern":4}}},
+      "ordnancePlan": {"enabled": true, "stores": {"ir": 48, "rf": 36, "torp": 48, "drone": 24}, "droneLimit": 5, "hangar": {"total": 5, "airborneCap": 3, "interval": 6, "bays": 1, "bayComponents": ["hangar"], "extraComponents": [{"id": "hangar", "name": "HANGAR", "role": "bay", "pos": [0, -18, 0], "r": 10, "hp": 300}], "manifest": {"kestrel": 3, "bittern": 2}}},
       "name": "GLAIVE",
       "cls": "capital",
+      "dock": {"fighters": 5, "corvettes": 0},
       "fac": "human",
       "role": "DESTROYER",
       "length": 600,
@@ -8587,7 +8571,7 @@
     "subsys": {"radar": {"lockRange": [1, 0.65, 0.35], "lockTime": [1, 1.5, 2.6], "sensor": [1, 0.6, 0]}, "engine": {"abPool": [1, 0.7, 0.35], "abBoost": [1, 0.75, 0.4], "abRegen": [1, 0.7, 0.4]}, "power": {"energyCap": [1, 0.8, 0.6]}, "radiator": {"energyRegen": [1, 0.85, 0.65]}, "gun": {"cd": [1, 1.35, 1.35]}, "turret": {"cd": [1, 1.4, 1.4], "track": [1, 0.6, 0.6]}, "bay": {"service": [1, 0.5, 0]}},
     "simFlight": {"slew": 2.2, "capital": 0.35, "decel": 1.5},
     "pilotSkill": {"noise": [0.05, 0.032, 0.018, 0.009, 0.003], "turn": [0.8, 0.9, 1, 1.08, 1.16], "react": [0.35, 0.45, 0.55, 0.7, 0.9], "evade": [300, 420, 560, 650, 720]},
-    "droneLimit": {"fighter": 1, "corvette": 6, "frigate": 6, "capital": 6},
+    "droneLimit": {"fighter": 1, "corvette": 0, "frigate": 3, "capital": 5},
     "bullfrog": {"spineDelay": 15, "charge": 6, "freeze": 1.5, "cd": 30, "fizzleCd": 8, "lockHold": 3, "range": 3200, "bandIn": 2300, "bandOut": 2400, "bandMin": 1200, "bandFar": 1500, "hangarInterval": 4.5, "hangarCap": 12, "emergencyInterval": 1.5, "spoolT": 20, "corridorHalf": 0.12, "manifest": {"D": 6, "L": 5, "S": 2, "T": 2, "R": 3}, "kind": {"D": "darter", "L": "leaper", "S": "spitter", "T": "toad", "R": "reaver"}, "seq": ["D", "L", "D", "R", "L", "D", "T", "L", "S", "R"]},
     "energyLaw": {"mjPerDamage": {"coil": 0.18, "pd": 0.1, "beam": 2.0, "spine": 0.89}, "spineCapacitorShare": 0.32, "_doc": "Energy per damage point by delivery type (1 energy unit = 1 MJ). Sustained weapon draw in MW = DPS x mjPerDamage. A spine (XL) gun dumps spineCapacitorShare of its ship's capacitor per shot: energy = share x capacitorMJ, damage = energy / mjPerDamage.spine, so bigger power budgets give bigger spines. tools/power_table.py --law reports every weapon against this."},
     "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500, "destroyer": 720},
