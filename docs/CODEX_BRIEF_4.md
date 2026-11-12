@@ -74,9 +74,7 @@ Rework the visual design of the FROGG ships so that each one reads as a distinct
 2. `RS_K=1.4 RS_W=1400 RS_H=800 python3 tools/render_ships.py high <id>`: inspect clean, 3/4, top, side and front. Also check the in-game yard (`?yard=<id>`) with the extents box on.
 3. `tools/tests/seat_attach_t.py <id>`: all turret seats rest on hull.
 4. `tools/tests/muzzle_t.py`, `damage_vis_t.py` (shield bubbles enclose the hull) and `roster_t.py`.
-5. `tools/tests/bullfrog_t.py`.
-   - Two "Exeter survives N hits" checks are being reworked by the lead after the range law; do not change them.
-   - Report any other failure.
+5. `tools/tests/bullfrog_t.py`: report any failure. The tablet instance-band check already failed before this job (see Hard constraints).
 6. `python3 tools/gate.py`.
 
 ## Report

@@ -45,6 +45,7 @@ def t_exeter(R):
           const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2300),{});bf.ai.role='capital';bf.stores.tad=0;
           const ex=g.spawnShip('exeter',0,V(0,0,-2300),V(0,0,0),{ai:'capital'});freeze(ex);
           for(const c of ex.comps)if(c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // 2026-10-22 refit: disarm the dummy's XL and L/M turrets
+          for(const c of bf.comps)if(/^[LMSP]\d/.test(c.id))c.hp=0;   // range law 2026-11-12: Bullfrog turrets now reach 2.5 km; this scenario measures spine damage only
           g.update(0.05);const sp=bf.spine||__bf.spineInit(bf);sp.tgt=ex;sp.st='off';   // 'off' keeps capitalAI's own spine cycle out; this test measures the direct spineFire calls
           // 2026-11-09: with the spine cycle off the capital AI now manoeuvres for its launchers and the dummy drifts, so shots 2+ missed (hit: null).
           // The rig pins both hulls: this scenario measures damage per spine hit, not aiming.
