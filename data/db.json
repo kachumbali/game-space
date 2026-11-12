@@ -1347,15 +1347,12 @@
           "hp": 200
         }
       ],
-      "shield": {
-        "fore": 220,
-        "aft": 220
-      },
+      "shield": {"fore": 330, "aft": 330},
       "armor": {
         "type": "hard",
         "rating": 0.28
       },
-      "structure": 460,
+      "structure": 690,
       "maxSpeed": 28,
       "accel": 6,
       "turn": 0.22,
@@ -4365,15 +4362,12 @@
           "hp": 230
         }
       ],
-      "shield": {
-        "fore": 200,
-        "aft": 160
-      },
+      "shield": {"fore": 300, "aft": 240},
       "armor": {
         "type": "composite",
         "rating": 0.31
       },
-      "structure": 480,
+      "structure": 720,
       "maxSpeed": 34,
       "aiSpeed": 26,
       "accel": 6,
@@ -6327,50 +6321,7 @@
           "r": 11
         }
       ],
-      "mounts": [
-        {
-          "w": "rail",
-          "pos": [
-            5,
-            3.0,
-            -306
-          ],
-          "comp": "railR",
-          "grp": 1
-        },
-        {
-          "w": "rail",
-          "pos": [
-            -5,
-            3.0,
-            -306
-          ],
-          "comp": "railL",
-          "grp": 1
-        },
-        {
-          "w": "torp",
-          "pos": [
-            22,
-            -3,
-            -258
-          ],
-          "comp": "rackR",
-          "grp": 3,
-          "store": "torp"
-        },
-        {
-          "w": "torp",
-          "pos": [
-            -22,
-            -3,
-            -258
-          ],
-          "comp": "rackL",
-          "grp": 3,
-          "store": "torp"
-        }
-      ],
+      "mounts": [{"w": "rail", "pos": [5, 3.0, -306], "comp": "railR", "grp": 1}, {"w": "rail", "pos": [-5, 3.0, -306], "comp": "railL", "grp": 1}, {"w": "torp", "pos": [22, -3, -258], "comp": "rackR", "grp": 3, "store": "torp"}, {"w": "torp", "pos": [-22, -3, -258], "comp": "rackL", "grp": 3, "store": "torp"}, {"w": "mdxh", "pos": [0, -6, -301], "comp": "mdxl", "grp": 9, "store": "spine"}],
       "turrets": [
         {
           "w": "mdl",
@@ -6601,404 +6552,7 @@
         -3,
         -258
       ],
-      "comps": [
-        {
-          "id": "engC",
-          "name": "ENGINE C",
-          "role": "engine",
-          "pos": [
-            0,
-            0,
-            262
-          ],
-          "r": 18,
-          "hp": 520
-        },
-        {
-          "id": "engL",
-          "name": "ENGINE L",
-          "role": "engine",
-          "pos": [
-            -26,
-            0,
-            262
-          ],
-          "r": 13,
-          "hp": 380
-        },
-        {
-          "id": "engR",
-          "name": "ENGINE R",
-          "role": "engine",
-          "pos": [
-            26,
-            0,
-            262
-          ],
-          "r": 13,
-          "hp": 380
-        },
-        {
-          "id": "railL",
-          "name": "RAIL L",
-          "role": "gun",
-          "pos": [
-            -5,
-            3,
-            -285
-          ],
-          "r": 5,
-          "hp": 240
-        },
-        {
-          "id": "railR",
-          "name": "RAIL R",
-          "role": "gun",
-          "pos": [
-            5,
-            3,
-            -285
-          ],
-          "r": 5,
-          "hp": 240
-        },
-        {
-          "id": "rackL",
-          "name": "TORP RACK L",
-          "role": "gun",
-          "pos": [
-            -22,
-            -3,
-            -240
-          ],
-          "r": 4.5,
-          "hp": 140
-        },
-        {
-          "id": "rackR",
-          "name": "TORP RACK R",
-          "role": "gun",
-          "pos": [
-            22,
-            -3,
-            -240
-          ],
-          "r": 4.5,
-          "hp": 140
-        },
-        {
-          "id": "tur1",
-          "name": "MASS DRIVER 1",
-          "role": "turret",
-          "pos": [
-            0,
-            22.0,
-            -140
-          ],
-          "r": 12,
-          "hp": 160
-        },
-        {
-          "id": "tur2",
-          "name": "MASS DRIVER 2",
-          "role": "turret",
-          "pos": [
-            0,
-            22.0,
-            20
-          ],
-          "r": 12,
-          "hp": 160
-        },
-        {
-          "id": "tur3",
-          "name": "MASS DRIVER 3",
-          "role": "turret",
-          "pos": [
-            0,
-            -20.6,
-            -60
-          ],
-          "r": 12,
-          "hp": 160
-        },
-        {
-          "id": "tur4",
-          "name": "MASS DRIVER 4",
-          "role": "turret",
-          "pos": [
-            0,
-            -20.6,
-            90
-          ],
-          "r": 12,
-          "hp": 160
-        },
-        {
-          "id": "tur5",
-          "name": "LS-8 LASER 5",
-          "role": "turret",
-          "pos": [
-            30,
-            16.9,
-            -90
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur6",
-          "name": "LS-8 LASER 6",
-          "role": "turret",
-          "pos": [
-            -30,
-            16.9,
-            -90
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur7",
-          "name": "LS-8 LASER 7",
-          "role": "turret",
-          "pos": [
-            38,
-            18.4,
-            60
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur8",
-          "name": "LS-8 LASER 8",
-          "role": "turret",
-          "pos": [
-            -38,
-            18.4,
-            60
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur9",
-          "name": "LS-8 LASER 9",
-          "role": "turret",
-          "pos": [
-            30,
-            -17.2,
-            -60
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur10",
-          "name": "LS-8 LASER 10",
-          "role": "turret",
-          "pos": [
-            -30,
-            -17.2,
-            -60
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur11",
-          "name": "LS-8 LASER 11",
-          "role": "turret",
-          "pos": [
-            36,
-            -18.9,
-            120
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur12",
-          "name": "LS-8 LASER 12",
-          "role": "turret",
-          "pos": [
-            -36,
-            -18.9,
-            120
-          ],
-          "r": 5.5,
-          "hp": 100
-        },
-        {
-          "id": "tur13",
-          "name": "PD 13",
-          "role": "turret",
-          "pos": [
-            12,
-            22.0,
-            -190
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur14",
-          "name": "PD 14",
-          "role": "turret",
-          "pos": [
-            -12,
-            22.0,
-            -190
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur15",
-          "name": "PD 15",
-          "role": "turret",
-          "pos": [
-            14,
-            22.0,
-            110
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur16",
-          "name": "PD 16",
-          "role": "turret",
-          "pos": [
-            -14,
-            22.0,
-            110
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur17",
-          "name": "PD 17",
-          "role": "turret",
-          "pos": [
-            8,
-            -20.6,
-            -150
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur18",
-          "name": "PD 18",
-          "role": "turret",
-          "pos": [
-            -8,
-            -20.6,
-            -150
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur19",
-          "name": "PD 19",
-          "role": "turret",
-          "pos": [
-            8,
-            -20.6,
-            150
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "tur20",
-          "name": "PD 20",
-          "role": "turret",
-          "pos": [
-            -8,
-            -20.6,
-            150
-          ],
-          "r": 2.5,
-          "hp": 90
-        },
-        {
-          "id": "shieldF",
-          "name": "SHIELD FWD",
-          "role": "shield",
-          "pos": [
-            0,
-            0,
-            -110
-          ],
-          "r": 16,
-          "hp": 450
-        },
-        {
-          "id": "shieldA",
-          "name": "SHIELD AFT",
-          "role": "shield",
-          "pos": [
-            0,
-            0,
-            110
-          ],
-          "r": 16,
-          "hp": 450
-        },
-        {
-          "id": "bridge",
-          "name": "BRIDGE",
-          "role": "radar",
-          "pos": [
-            0,
-            32,
-            150
-          ],
-          "r": 14,
-          "hp": 380
-        },
-        {
-          "id": "power",
-          "name": "REACTOR",
-          "role": "power",
-          "pos": [
-            0,
-            0,
-            190
-          ],
-          "r": 24,
-          "hp": 1000
-        },
-        {
-          "id": "radL",
-          "name": "RADIATOR L",
-          "role": "radiator",
-          "pos": [
-            -64,
-            11,
-            205
-          ],
-          "r": 20,
-          "hp": 280
-        },
-        {
-          "id": "radR",
-          "name": "RADIATOR R",
-          "role": "radiator",
-          "pos": [
-            64,
-            11,
-            205
-          ],
-          "r": 20,
-          "hp": 280
-        }
-      ],
+      "comps": [{"id": "engC", "name": "ENGINE C", "role": "engine", "pos": [0, 0, 262], "r": 18, "hp": 520}, {"id": "engL", "name": "ENGINE L", "role": "engine", "pos": [-26, 0, 262], "r": 13, "hp": 380}, {"id": "engR", "name": "ENGINE R", "role": "engine", "pos": [26, 0, 262], "r": 13, "hp": 380}, {"id": "railL", "name": "RAIL L", "role": "gun", "pos": [-5, 3, -285], "r": 5, "hp": 240}, {"id": "railR", "name": "RAIL R", "role": "gun", "pos": [5, 3, -285], "r": 5, "hp": 240}, {"id": "rackL", "name": "TORP RACK L", "role": "gun", "pos": [-22, -3, -240], "r": 4.5, "hp": 140}, {"id": "rackR", "name": "TORP RACK R", "role": "gun", "pos": [22, -3, -240], "r": 4.5, "hp": 140}, {"id": "tur1", "name": "MASS DRIVER 1", "role": "turret", "pos": [0, 22.0, -140], "r": 12, "hp": 160}, {"id": "tur2", "name": "MASS DRIVER 2", "role": "turret", "pos": [0, 22.0, 20], "r": 12, "hp": 160}, {"id": "tur3", "name": "MASS DRIVER 3", "role": "turret", "pos": [0, -20.6, -60], "r": 12, "hp": 160}, {"id": "tur4", "name": "MASS DRIVER 4", "role": "turret", "pos": [0, -20.6, 90], "r": 12, "hp": 160}, {"id": "tur5", "name": "LS-8 LASER 5", "role": "turret", "pos": [30, 16.9, -90], "r": 5.5, "hp": 100}, {"id": "tur6", "name": "LS-8 LASER 6", "role": "turret", "pos": [-30, 16.9, -90], "r": 5.5, "hp": 100}, {"id": "tur7", "name": "LS-8 LASER 7", "role": "turret", "pos": [38, 18.4, 60], "r": 5.5, "hp": 100}, {"id": "tur8", "name": "LS-8 LASER 8", "role": "turret", "pos": [-38, 18.4, 60], "r": 5.5, "hp": 100}, {"id": "tur9", "name": "LS-8 LASER 9", "role": "turret", "pos": [30, -17.2, -60], "r": 5.5, "hp": 100}, {"id": "tur10", "name": "LS-8 LASER 10", "role": "turret", "pos": [-30, -17.2, -60], "r": 5.5, "hp": 100}, {"id": "tur11", "name": "LS-8 LASER 11", "role": "turret", "pos": [36, -18.9, 120], "r": 5.5, "hp": 100}, {"id": "tur12", "name": "LS-8 LASER 12", "role": "turret", "pos": [-36, -18.9, 120], "r": 5.5, "hp": 100}, {"id": "tur13", "name": "PD 13", "role": "turret", "pos": [12, 22.0, -190], "r": 2.5, "hp": 90}, {"id": "tur14", "name": "PD 14", "role": "turret", "pos": [-12, 22.0, -190], "r": 2.5, "hp": 90}, {"id": "tur15", "name": "PD 15", "role": "turret", "pos": [14, 22.0, 110], "r": 2.5, "hp": 90}, {"id": "tur16", "name": "PD 16", "role": "turret", "pos": [-14, 22.0, 110], "r": 2.5, "hp": 90}, {"id": "tur17", "name": "PD 17", "role": "turret", "pos": [8, -20.6, -150], "r": 2.5, "hp": 90}, {"id": "tur18", "name": "PD 18", "role": "turret", "pos": [-8, -20.6, -150], "r": 2.5, "hp": 90}, {"id": "tur19", "name": "PD 19", "role": "turret", "pos": [8, -20.6, 150], "r": 2.5, "hp": 90}, {"id": "tur20", "name": "PD 20", "role": "turret", "pos": [-8, -20.6, 150], "r": 2.5, "hp": 90}, {"id": "shieldF", "name": "SHIELD FWD", "role": "shield", "pos": [0, 0, -110], "r": 16, "hp": 450}, {"id": "shieldA", "name": "SHIELD AFT", "role": "shield", "pos": [0, 0, 110], "r": 16, "hp": 450}, {"id": "bridge", "name": "BRIDGE", "role": "radar", "pos": [0, 32, 150], "r": 14, "hp": 380}, {"id": "power", "name": "REACTOR", "role": "power", "pos": [0, 0, 190], "r": 24, "hp": 1000}, {"id": "radL", "name": "RADIATOR L", "role": "radiator", "pos": [-64, 11, 205], "r": 20, "hp": 280}, {"id": "radR", "name": "RADIATOR R", "role": "radiator", "pos": [64, 11, 205], "r": 20, "hp": 280}, {"id": "mdxl", "name": "HEAVY MASS DRIVER", "role": "gun", "pos": [0, -5, -200], "r": 16, "hp": 800}],
       "shield": {
         "fore": 1400,
         "aft": 1200
@@ -7390,6 +6944,7 @@
       "mag": 100,
       "hitFighters": false
     },
+    "mdxh": {"kind": "spine", "name": "MK-90 MASS DRIVER", "dmg": 1260, "dt": "kin", "pierce": 0.6, "range": 3200, "energy": 1120, "charge": 5, "lockT": 1.5, "cd": 30, "delay": 15, "fizzleCd": 8, "lockHold": 3, "corridorHalf": 0.12, "bw": 14, "color": "#cfe8ff", "sfx": "rail", "warnName": "HEAVY MASS DRIVER", "mag": 100, "hitFighters": false, "notes": "Glaive heavy XL mass driver (owner 2026-11-12). Sized by tuning.energyLaw: energy = spineCapacitorShare x Glaive capacitor (0.32 x 3500 MJ), damage = energy / mjPerDamage.spine."},
     "laser": {
       "kind": "beam",
       "name": "LS-2 LEGACY TURRET LASER",
@@ -9028,13 +8583,14 @@
     }
   },
   "tuning": {
-    "_doc": {"subsys": "subsystem damage effects per role: [ok, damaged, destroyed] multipliers (docs/SUBSYSTEM_EFFECTS.md)", "simFlight": "SIM flight model: velocity-vector slew (rad per sim-second), capital factor, braking factor", "pilotSkill": "AI pilot skill 1..5: aim noise, turn factor, reaction, evasion distance", "droneLimit": "slaved drones per ship class", "bullfrog": "Bullfrog spine cycle, engagement bands and hangar launch plan", "scaleTo": "ships rescaled at load to this length in metres", "score": "mission score per kill", "feel": "kill-chain window and cap, hit-stop, point-blank distance", "loot": "salvage pods (free flight and Gauntlet)", "difficulty": "campaign and Gauntlet difficulty levels", "mutators": "Gauntlet mutators", "survivalWaves": "Gauntlet wave budget", "survivalPool": "Gauntlet enemy pool: [ship, cost, first wave]"},
+    "_doc": {"subsys": "subsystem damage effects per role: [ok, damaged, destroyed] multipliers (docs/SUBSYSTEM_EFFECTS.md)", "simFlight": "SIM flight model: velocity-vector slew (rad per sim-second), capital factor, braking factor", "pilotSkill": "AI pilot skill 1..5: aim noise, turn factor, reaction, evasion distance", "droneLimit": "slaved drones per ship class", "bullfrog": "Bullfrog spine cycle, engagement bands and hangar launch plan", "scaleTo": "ships rescaled at load to this length in metres", "score": "mission score per kill", "feel": "kill-chain window and cap, hit-stop, point-blank distance", "loot": "salvage pods (free flight and Gauntlet)", "difficulty": "campaign and Gauntlet difficulty levels", "mutators": "Gauntlet mutators", "survivalWaves": "Gauntlet wave budget", "survivalPool": "Gauntlet enemy pool: [ship, cost, first wave]", "energyLaw": "energy per damage point by delivery type; spine guns sized from capacitor (see energyLaw._doc)"},
     "subsys": {"radar": {"lockRange": [1, 0.65, 0.35], "lockTime": [1, 1.5, 2.6], "sensor": [1, 0.6, 0]}, "engine": {"abPool": [1, 0.7, 0.35], "abBoost": [1, 0.75, 0.4], "abRegen": [1, 0.7, 0.4]}, "power": {"energyCap": [1, 0.8, 0.6]}, "radiator": {"energyRegen": [1, 0.85, 0.65]}, "gun": {"cd": [1, 1.35, 1.35]}, "turret": {"cd": [1, 1.4, 1.4], "track": [1, 0.6, 0.6]}, "bay": {"service": [1, 0.5, 0]}},
     "simFlight": {"slew": 2.2, "capital": 0.35, "decel": 1.5},
     "pilotSkill": {"noise": [0.05, 0.032, 0.018, 0.009, 0.003], "turn": [0.8, 0.9, 1, 1.08, 1.16], "react": [0.35, 0.45, 0.55, 0.7, 0.9], "evade": [300, 420, 560, 650, 720]},
     "droneLimit": {"fighter": 1, "corvette": 6, "frigate": 6, "capital": 6},
     "bullfrog": {"spineDelay": 15, "charge": 6, "freeze": 1.5, "cd": 30, "fizzleCd": 8, "lockHold": 3, "range": 3200, "bandIn": 2300, "bandOut": 2400, "bandMin": 1200, "bandFar": 1500, "hangarInterval": 4.5, "hangarCap": 12, "emergencyInterval": 1.5, "spoolT": 20, "corridorHalf": 0.12, "manifest": {"D": 6, "L": 5, "S": 2, "T": 2, "R": 3}, "kind": {"D": "darter", "L": "leaper", "S": "spitter", "T": "toad", "R": "reaver"}, "seq": ["D", "L", "D", "R", "L", "D", "T", "L", "S", "R"]},
-    "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500},
+    "energyLaw": {"mjPerDamage": {"coil": 0.18, "pd": 0.1, "beam": 2.0, "spine": 0.89}, "spineCapacitorShare": 0.32, "_doc": "Energy per damage point by delivery type (1 energy unit = 1 MJ). Sustained weapon draw in MW = DPS x mjPerDamage. A spine (XL) gun dumps spineCapacitorShare of its ship's capacitor per shot: energy = share x capacitorMJ, damage = energy / mjPerDamage.spine, so bigger power budgets give bigger spines. tools/power_table.py --law reports every weapon against this."},
+    "scaleTo": {"halberd": 200, "gulper": 200, "hivecarrier": 2500, "destroyer": 720},
     "score": {"darter": 100, "leaper": 100, "spitter": 150, "toad": 200, "reaver": 200, "gulper": 800, "bullfrog": 2500, "hivecarrier": 5000},
     "feel": {"chainWindow": 6, "chainMax": 4, "hitStopKill": 0.05, "hitStopBig": 0.16, "pointBlank": 150},
     "loot": {"life": 34, "collectR": 30, "magnetR": 130, "dropFighter": 0.22, "pity": 5, "overdriveT": 12, "maxPods": 14},

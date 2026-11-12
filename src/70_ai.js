@@ -407,8 +407,14 @@ function capitalAI(s, dt) {
   let sAim = null;
   if (sp) {
     const W = WEAPONS[sm.w];
-    sp.tgt = t;
-    if (sp.st === 'ready' && t && t.alive && !t.dying && t.def.cls !== 'fighter' && sp.mag > 0) {
+    // the XL gun picks its own big target: the ship's current target if it is not a fighter, else the nearest hostile non-fighter in range
+    // (owner test 2026-11-12: the Glaive's spine never fired once the Exeter's fighters became its target)
+    let st = t && t.alive && !t.dying && t.def.cls !== 'fighter' ? t : null;
+    if (!st) { let bd = W.range * 0.95; for (const h of hostilesOf(s)) { if (h.def.cls === 'fighter' || !h.alive || h.dying) continue; const dd = ep.distanceTo(h.group.position); if (dd < bd) { bd = dd; st = h; } } }
+    sp.tgt = st;
+    s.spineHold = sp.st === 'ready' && st && sp.mag > 0 && ep.distanceTo(st.group.position) < W.range ? W.energy : 0;
+    if (sp.st === 'ready' && st && sp.mag > 0) {
+      const t = st;
       const d0 = ep.distanceTo(t.group.position), tm = s.def.turn * turnMul(s), e0 = aimError(s, leadPoint(s, t, 1e6));
       if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= 4.5 && spineCorridorClear(s)) {
         s.energy -= W.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;

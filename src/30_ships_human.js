@@ -697,8 +697,8 @@ SHIPS.liner = {
   ],
 };
 
-// ---- GLAIVE: 600 m destroyer (between the 450 m Exeter and the 1 km Hecla): 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
-const dstSeat = (x, y, z, cls, y0) => capSeat(x, y, z, Math.sign(y), turretDia({ def: { length: 600 } }, { cls }), y0);
+// ---- GLAIVE: destroyer, authored at 600 m and scaled to 720 m (owner 2026-11-12): heavy XL mass driver, 4 L mass drivers, 8 M lasers, 8 S PD, bow rails, 2 torpedo pods --------------
+const dstSeat = (x, y, z, cls, y0) => { const L = TUNE.scaleTo.destroyer || 600; return capSeat(x, y, z, Math.sign(y), turretDia({ def: { length: L } }, { cls }) * 600 / L, y0); };   // authored at 600 m, scaled by tuning.scaleTo
 const dstDetail = [
   // dorsal deck: VLS lattices and the long trench
   ...paintGrid(-14, 22, -60, 5, 8, 5.5, 5.5, 3.6, 3.6, 0x16191d, { mix: 0.9 }),
@@ -739,6 +739,9 @@ SHIPS.destroyer = {
     seg([5, 3, -250], [5, 3, -305], 1.6, 1.1, E.dark),
     ell([5, 3, -262], [2.6, 2.4, 6], E.panel),
     tap([5, 3, -304.5], 1.2, [1.7, 1.7], [1.7, 1.7], H.nozzle, { sh: 'e' }),
+    // heavy XL mass driver (mdxh, owner 2026-11-12): a long barrel under the keel of the bow, muzzle at z -301
+    seg([0, -6, -235], [0, -6, -299], 5.2, 3.8, E.dark), tap([0, -6, -300], 1.2, [4.6, 4.6], [4.4, 4.4], H.nozzle, { sh: 'e' }),
+    ...[-250, -270, -290].map(z => tap([0, -6, z], 1.0, [6.0, 6.0], [6.0, 6.0], E.grey2, { sh: 'e' })),
     // torpedo pods on pylons off the bow flanks (mouths at z -258)
     seg([22, -3, -225], [22, -3, -258], 3.1, 3.0, E.white),
     seg([22, -3, -258], [22, -3, -254], 2.2, 3.0, 0xd04a3a),

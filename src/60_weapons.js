@@ -806,7 +806,7 @@ function updateTurrets(s, dt) {
       const skill = clamp(Math.round(s.skill ?? 3), 1, 5);
       const trackingError = angularSpeed * TUNE.turret.beamAngularError * (6 - skill);
       const hitChance = clamp(1 - trackingError / Math.max(tol, 0.001), TUNE.turret.beamMinHit, 1);
-      if (err < tol && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && s.energy >= T.w.energy && Math.random() < hitChance) {
+      if (err < tol && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && s.energy >= T.w.energy + (s.spineHold || 0) && Math.random() < hitChance) {   // spineHold: a ready XL gun keeps its shot in the capacitor
         const mp = turretMuzzle(T, new THREE.Vector3()), mLocal = T.muzzles[(T.mi - 1) % T.muzzles.length];
         let blocked = false;
         for (const f of ships) { if (f === s || !f.alive || f.dying || f.team !== s.team) continue; if (segSphere(mp, _w4.copy(mp).addScaledVector(fwd, T.w.range), f.group.position, f.def.radius * 0.9)) { blocked = true; break; } }
@@ -818,7 +818,7 @@ function updateTurrets(s, dt) {
           if (Math.random() < 0.3) sfx(weaponAudioId(T.w), mp.distanceTo(camera.position), 0.5, s.def.cls);
         }
       }
-    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + s.energyMax * (tg.group ? TUNE.turret.reserveShip : TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
+    } else if (err < 0.07 && T.cool <= 0 && dist < T.w.range && turretLineClear(s, T, tp, fwd, dist) && T.ammo > 0 && !(T.w.energy && s.energy < T.w.energy + (tg.group ? s.energyMax * TUNE.turret.reserveShip + (s.spineHold || 0) : s.energyMax * TUNE.turret.reserveMsl))) {      // M2: kinetic PD leaves a capacitor reserve for the guns / lasers (small for missiles: they come first)
       T.cool = burstCooldown(T, T.w, T.w.cd * tcd);
       T.ammo--;
       if (T.w.energy) s.energy -= T.w.energy * (s.mod?.eff ?? 1);       // kinetic PD charges its coil from the ship's capacitor: sustained fire competes with the guns
