@@ -204,9 +204,14 @@ SHIPS.darter = {
     ...fmRing(0, 0.05, -1.6, 0.62, 0.5, 0.05), ...fmRing(0, 0.1, 1.8, 0.8, 0.62, 0.05),
     ...fmBarrel(0.4, -0.3, -3.0, -4.9, 0.08),                                                           // fang rods
     seg([0.22, 0.28, -3.0], [0.24, 0.3, -5.1], 0.035, 0.03, FM.met, NG), seg([0.55, 0.05, -2.6], [0.62, 0.05, -4.4], 0.035, 0.03, FM.met, NG),
-    seg([0.25, 0.55, 1.0], [0.3, 1.4, 1.2], 0.03, 0.02, FM.met, NG), seg([-0.25, 0.55, 0.2], [-0.3, 1.2, 0.3], 0.03, 0.02, FM.met, { ...NG, noMirror: true }),
+    seg([0.25, 0.4, 1.0], [0.3, 1.4, 1.2], 0.075, 0.05, FM.met, NG), seg([-0.25, 0.35, 0.2], [-0.3, 1.2, 0.3], 0.075, 0.05, FM.met, { ...NG, noMirror: true }),
     ...fmPipe([[0.35, 0.45, -2.2], [0.5, 0.55, 0], [0.45, 0.6, 2.6]], 0.06),
     ell([0.62, -0.38, -1.2], [0.13, 0.13, 0.6], FM.met2, NG),                                          // missile tube (launch -1.75)
+    seg([0.18, -0.1, -3.2], [0.41, -0.3, -3.2], 0.1, 0.1, FM.met2, NG),                               // fang pylon
+    seg([0.21, 0.05, -2.9], [0.57, 0.05, -2.9], 0.095, 0.075, FM.met2, NG),                            // outboard sensor bracket
+    seg([0.22, -0.1, -1.3], [0.6, -0.34, -1.3], 0.14, 0.13, FM.met2, NG),                             // tube mount and forward collar
+    seg([0.38, 0, 1.8], [0.78, 0.05, 1.8], 0.14, 0.13, FM.met2, NG),                                  // aft collar bracket
+    seg([0.22, 0.28, 0], [0.5, 0.55, 0], 0.12, 0.11, FM.met2, NG),                                     // copper feed bracket
   ],
 };
 
@@ -273,6 +278,7 @@ SHIPS.toad = {
       tap([3.2, -2.0, z0 + 0.05], 0.08, [0.5, 0.5], [0.5, 0.5], FM.dk, { sh: 'e', ...NG }),
     ]),
     fmRail(2.4, -1.35, -4.8, 4.0, 0.14), fmRail(3.95, -1.35, -4.8, 4.0, 0.14),
+    ...[-3.2, 2.2].map(z => tap([3.65, -1.51, z], 0.35, [0.42, 0.24], [0.42, 0.24], FM.met2, NG)),  // outer rail clamps
     ...fmRing(0, 0, -3.0, 3.2, 2.0, 0.14), ...fmRing(0, 0, 3.0, 3.2, 2.0, 0.14),
     // four round thrusters (two high, two low) on a frame
     tap([0, 0.2, 7.4], 1.0, [3.0, 1.9], [3.6, 2.2], FM.met2, { sh: 'h', ...NG }),
@@ -307,6 +313,7 @@ SHIPS.reaver = {
     // open rear truss frame around the four thrusters
     ...rvTruss(-4.0, 4.0, -1.7, 1.6, 6.1, 9.6, 0.14),
     ...fmThr(3.2, -0.3, 9.8, 0.8, 3.0), ...fmThr(1.3, -0.5, 9.9, 0.5, 3.2),
+    tap([1.3, -0.5, 6.3], 1.35, [0.47, 0.48], [0.43, 0.43], FM.met2, { sh: 'h', ...NG }),            // inner drive support
     ...fmPipe([[1.6, 1.8, 4.0], [2.6, 1.4, 5.6], [3.2, 0.5, 6.8]], 0.12),
   ],
 };
@@ -347,6 +354,7 @@ SHIPS.gulper = {
       ...[6.2, 8.2].map(x => fmRail(x, -5.8, z0, z1, 0.25)),
       ...[-6.7, -4.9].map(y => tap([7.2, y, (z0 + z1) / 2], (z1 - z0) / 2, [1.1, 0.2], [1.1, 0.2], FM.met, NG)),
       seg([4.6, -3.2, (z0 + z1) / 2], [6.6, -4.9, (z0 + z1) / 2], 0.6, 0.6, FM.met2, NG),
+      seg([7.2, -5.25, (z0 + z1) / 2], [8.2, -5.8, (z0 + z1) / 2], 0.55, 0.55, FM.met2, NG),
     ]),
     // Heavy swept antenna spines rooted in the broad chest; tips stay inside x=17.
     ...chain([[7.0, 3.5, -15], [12.0, 7.5, -12], [16.2, 12.1, -7]], [1.8, 1.4, 0.55], FM.met2, NG),
@@ -415,7 +423,7 @@ const bfMir = (f) => [f(1), f(-1)];
 const bfHullY = (x, z) => { const q = 1 - ((z - 30) / 250) ** 2 - (x / 64) ** 2; return q > 0 ? 34 * Math.sqrt(q) : 0; };
 const bfSeats = () => (DB.ships.bullfrog.turrets || []).flatMap(t => {
   const [x, y, z] = t.pos, dy = Math.sign(y) || 1, D = turretDia({ def: { length: 600 } }, t);
-  return fgSeat(x, y, z, dy, D, dy * Math.max(2, bfHullY(x, z) * 0.7), 2.0);   // Bullfrog voxels are ~1.5 m
+  return fgSeat(x, y, z, dy, D, dy * Math.max(2, bfHullY(x, z) * 0.7 - 8), 2.0);   // Bullfrog voxels are ~1.5 m
 });
 SHIPS.bullfrog = {
   ...DB.ships.bullfrog,

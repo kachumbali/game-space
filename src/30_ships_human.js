@@ -56,8 +56,8 @@ SHIPS.kestrel = {
     seg([4.95, -0.04, 0.72], [4.95, -0.04, 0.62], 0.16, 0.16, CF.gr),
     // drive pods: one round pod per side around both nozzles
     ...cfPod(3.65, -0.05, 1.9, 6.2, 0.95, 1.15, [[3.35, 0.5, 0.46], [3.9, -0.6, 0.42]]),
-    tap([3.65, 1.45, 4.7], 0.9, [0.85, 0.08], [0.42, 0.06], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
-    tap([3.65, 2.25, 5.15], 0.12, [0.42, 0.07], [0.38, 0.06], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
+    tap([3.65, 1.43, 4.7], 0.95, [0.85, 0.2], [0.42, 0.14], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
+    tap([3.65, 2.25, 5.15], 0.12, [0.42, 0.15], [0.38, 0.14], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.18] }),
     // under-nose guns: MK-20 cannon left, MD-9 mag driver right, each in its own housing
     tap([-0.62, -0.5, -2.8], 1.6, [0.2, 0.18], [0.3, 0.26], CF.g2, { sh: 'h', noMirror: true }),
     seg([-0.62, -0.48, -4.35], [-0.62, -0.48, -6.25], 0.08, 0.07, CF.gr, { noMirror: true }),
@@ -67,6 +67,7 @@ SHIPS.kestrel = {
     ...[-4.0, -4.3].map(z => tap([0.6, -0.45, z], 0.05, [0.18, 0.18], [0.18, 0.18], CF.g3, { sh: 'e', noMirror: true })),
     // missiles: S1 (4 x SW-9) and M1 (2 x LN-3) racks under the right wing, mirrored rails on the left
     ...cfMissile(2.25, -0.4, 0.55, 2.4, 0.09), ...cfMissile(1.75, -0.36, 1.35, 3.0, 0.08),
+    tap([2.25, -0.24, 1.73], 0.45, [0.15, 0.18], [0.15, 0.18], CF.gr),
     // nav lights, antenna, markings
     ell([-5.2, 0, 2.6], [0.09, 0.06, 0.09], 0xff3030, { glow: true, noMirror: true }),
     ell([5.2, 0, 2.6], [0.09, 0.06, 0.09], 0x30ff60, { glow: true, noMirror: true }),
@@ -145,8 +146,8 @@ SHIPS.bittern = {
     tap([3.1, 0.3, 7.2], 1.3, [1.5, 0.4], [1.5, 0.4], CF.g3, { ax: 'x' }),
     // drive pods: one large round pod per side around both nozzles
     ...cfPod(4.4, 0.3, 4.4, 10.7, 1.5, 1.8, [[3.6, 0.3, 0.9], [5.2, 0.3, 0.9]], 0.25),
-    tap([4.4, 2.5, 8.8], 1.4, [1.2, 0.12], [0.6, 0.08], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
-    tap([4.4, 3.75, 9.5], 0.14, [0.6, 0.1], [0.55, 0.08], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    tap([4.4, 2.5, 8.8], 1.4, [1.2, 0.23], [0.6, 0.18], CF.g1, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
+    tap([4.4, 3.75, 9.5], 0.14, [0.6, 0.19], [0.55, 0.17], CF.or, { ax: 'y', sweep: 0.5, rot: [0, 0, -0.12] }),
     // PD turret seats: dorsal behind the canopy line, ventral under the tail (turret heads come from makeTurret)
     tap([0, 1.45, 5.6], 0.7, [0.62, 0.28], [0.62, 0.28], CF.g3, { sh: 'h' }),
     tap([0, -1.45, 5.0], 0.7, [0.62, 0.28], [0.62, 0.28], CF.g3, { sh: 'h' }),
@@ -154,7 +155,7 @@ SHIPS.bittern = {
     ...cfMissile(3.0, -2.45, -5.2, -3.6, 0.1).slice(0, 2),
     ell([-6.4, -0.4, 2.6], [0.12, 0.08, 0.12], 0xff3030, { glow: true, noMirror: true }),
     ell([6.4, -0.4, 2.6], [0.12, 0.08, 0.12], 0x30ff60, { glow: true, noMirror: true }),
-    seg([0, 1.6, 1.0], [0, 2.4, 2.0], 0.05, 0.03, CF.dk, { lod: 2 }),
+    seg([0, 1.43, 1.0], [0, 2.4, 2.0], 0.11, 0.075, CF.dk, { lod: 2 }),
     { t: 'paint', box: [-0.6, 1.0, 2.0, 0.6, 1.8, 3.2], col: CF.or, side: 'top', mix: 0.85 },
     { t: 'paint', box: [4.8, -0.6, 2.0, 6.4, 0.2, 2.8], col: CF.or, side: 'top', mix: 0.85 },
     { t: 'text', c: [2.42, 0.4, -2.0], face: '+x', text: 'CDF', px: 0.14, col: CF.dk },
@@ -509,8 +510,8 @@ SHIPS.drone = {
     tap([0, 0, -1.0], 1.7, [0.16, 0.12], [0.5, 0.36], D6.hull, { sh: 'h' }),
     tap([0, 0, 1.5], 1.5, [0.5, 0.36], [0.46, 0.34], D6.hull2, { sh: 'h' }),
     ell([0, 0.22, -1.3], [0.26, 0.18, 0.6], D6.canopy, { glow: false }),
-    tap([1.5, -0.02, 1.2], 1.3, [1.2, 0.07], [0.5, 0.04], D6.hull2, { ax: 'x', sweep: 0.3 }),
-    tap([2.7, 0, 1.6], 0.15, [0.5, 0.06], [0.45, 0.05], D6.amber, { ax: 'x', sweep: 0.3 }),
+    tap([1.5, -0.02, 1.2], 1.3, [1.2, 0.15], [0.5, 0.11], D6.hull2, { ax: 'x', sweep: 0.3 }),
+    tap([2.62, -0.02, 1.6], 0.23, [0.57, 0.10], [0.45, 0.08], D6.amber, { ax: 'x', sweep: 0.3 }),
     tap([0, 0, 3.0], 0.25, [0.34, 0.27], [0.3, 0.24], 0x2a2d33, { sh: 'e' }),
     ell([0, 0, 3.3], [0.24, 0.19, 0.08], 0x7fd0ff, { glow: true }),
     seg([0, -0.3, -0.6], [0, -0.32, -3.0], 0.07, 0.05, D6.dark, { noMirror: true }),
@@ -523,9 +524,9 @@ SHIPS.drone = {
 SHIPS.kite6 = {
   ...DB.ships.kite6,
   prims: [...SHIPS.drone.prims,
-    seg([0, 0.32, 1], [0, 0.7, 1], 0.035, 0.025, D6.dark, { noMirror: true }),
+    seg([0, 0.26, 1], [0, 0.72, 1], 0.075, 0.055, D6.dark, { noMirror: true }),
     ell([0, 0.72, 1], [0.12, 0.06, 0.12], D6.canopy),
-    seg([1.5, -0.1, 0.5], [1.5, -0.25, 0.5], 0.08, 0.08, D6.dark),
+    tap([1.5, -0.16, 0.83], 0.6, [0.19, 0.19], [0.19, 0.19], D6.dark),
     seg([1.5, -0.25, 0.2], [1.5, -0.25, 1.5], 0.08, 0.08, D6.hull),
   ],
 };
@@ -551,6 +552,7 @@ SHIPS.tender = {
     tap([0, 0, 88], 14, [16, 13], [14, 11], E.noz, { sh: 'h' }),
     ell([12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([-12, 0, 95.5], [5.5, 5, 2], E.glow, { glow: true }), ell([0, 0, 95.5], [6.5, 6, 2], E.glow, { glow: true }),
     // nav lights
+    seg([28, 0, 60], [38, 0, 60], 1.2, 0.8, E.grey2, { noMirror: true }),
     ell([38, 0, 60], [0.8, 0.6, 0.8], 0xff3030, { glow: true, noMirror: true }),
   ],
 };
@@ -605,9 +607,10 @@ SHIPS.falchion = {
     ...falSeat(1.2, 1.55, 1), ...falSeat(3.0, -1.55, -1),
     tap([0, 0.95, 6.6], 1.3, [0.75, 0.22], [0.55, 0.18], CF.g1, { sh: 'h' }),
     // lights, antenna, markings
+    seg([6.25, -0.45, 2.45], [7.6, -0.5, 3.0], 0.14, 0.1, CF.g3),
     ell([-7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0xff3030, { glow: true, noMirror: true }),
     ell([7.6, -0.5, 3.0], [0.1, 0.07, 0.1], 0x30ff60, { glow: true, noMirror: true }),
-    seg([0, 1.2, 3.6], [0, 2.0, 4.6], 0.04, 0.03, CF.dk, { lod: 2 }),
+    seg([0, 0.95, 3.6], [0, 2.0, 4.6], 0.095, 0.065, CF.dk, { lod: 2 }),
     { t: 'paint', box: [-0.5, 0.5, -1.2, 0.5, 1.4, -0.4], col: CF.or, side: 'top', mix: 0.85 },
     { t: 'text', c: [1.72, 0.2, 1.2], face: '+x', text: 'CDF', px: 0.11, col: CF.dk },
     { t: 'text', c: [1.72, 0.2, 3.6], face: '+x', text: '11', px: 0.13, col: CF.dk },
@@ -640,14 +643,16 @@ SHIPS.sar = {
     tap([5.5, 0.4, 16.0], 0.45, [1.0, 0.9], [0.9, 0.85], E.noz, { sh: 'e' }),
     ell([5.5, 0.4, 16.65], [0.75, 0.7, 0.14], E.glow, { glow: true }),
     // twin fins with orange tips, rescue beacon and spotlights
-    tap([3.0, 2.8, 13], 1.8, [1.8, 0.1], [0.8, 0.07], E.white, { ax: 'y', sweep: 0.4, rot: [0, 0, -0.25] }),
-    tap([3.3, 4.4, 13.6], 0.12, [0.8, 0.08], [0.6, 0.06], SR.orange, { ax: 'y', sweep: 0.4, rot: [0, 0, -0.25] }),
-    seg([0, 3.0, 2], [0, 4.2, 2], 0.22, 0.16, E.dark),
+    tap([3.0, 2.8, 13], 1.8, [1.8, 0.25], [0.8, 0.22], E.white, { ax: 'y', sweep: 0.4, rot: [0, 0, -0.25] }),
+    tap([3.3, 4.4, 13.6], 0.12, [0.8, 0.22], [0.6, 0.18], SR.orange, { ax: 'y', sweep: 0.4, rot: [0, 0, -0.25] }),
+    seg([0, 2.6, 2], [0, 4.4, 2], 0.27, 0.22, E.dark),
     ell([0, 4.4, 2], [0.5, 0.3, 0.5], E.amber, { glow: true, glowF: 1.6 }),
+    seg([1.65, 1.7, -6.5], [2.2, 2.8, -6.5], 0.31, 0.26, E.grey2),
     ell([2.2, 2.8, -6.5], [0.4, 0.25, 0.4], 0xfff0d0, { glow: true }),
     // subsystem housings
     ell([0, 3.0, -2], [1.0, 0.3, 1.0], E.panel),
     ...rungs(0, 3.0, 6.0, 10.0, 4, 1.2, 0.1, 0.05, E.dark, { lod: 2 }),
+    seg([6.1, 0.4, 14.0], [7.0, 0.4, 14.0], 0.17, 0.12, E.grey2),
     ell([-7.0, 0.4, 14.0], [0.1, 0.1, 0.1], 0xff3030, { glow: true, noMirror: true }),
     ell([7.0, 0.4, 14.0], [0.1, 0.1, 0.1], 0x30ff60, { glow: true, noMirror: true }),
     // markings: orange nose and tail bands, hull SAR lettering

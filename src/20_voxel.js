@@ -543,10 +543,10 @@ function surfaceDetail(def, tier, G) {
   return { xg, tn };
 }
 
-function voxelize(def, res, idx = detailIdx) {
+function voxelize(def, res, idx = detailIdx, includeOwners = false) {
   const tier = detailTier(res, def, idx);
   const key = def.id + ':' + res + (tier ? ':t' + tier : '');
-  if (voxCache.has(key)) return voxCache.get(key);
+  if (!includeOwners && voxCache.has(key)) return voxCache.get(key);
   const vs = def.length / res;
   const [hx, hy, hz] = def.half;
   const nx = Math.ceil(2 * hx / vs), ny = Math.ceil(2 * hy / vs), nz = Math.ceil(2 * hz / vs);
@@ -664,6 +664,7 @@ function voxelize(def, res, idx = detailIdx) {
     voxels.push({ x, y, z, g: glow, cr: _col.r * f, cg: _col.g * f, cb: _col.b * f, cell });
   }
   const out = { vs, voxels, nx, ny, nz, hx, hy, hz, grid, cellToVox, tier };
+  if (includeOwners) return { ...out, pgrid };
   voxCache.set(key, out);
   return out;
 }
