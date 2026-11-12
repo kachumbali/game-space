@@ -62,7 +62,9 @@ function markResolve(table, kind) {
     const d = JSON.parse(JSON.stringify(b));
     for (const p in e.mods || {}) markApply(d, p, e.mods[p]);
     d.id = id; d.base = e.base; d.mark = e.mark;
-    d.name = e.name || (b.name + ' ' + e.mark);
+    const ML = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'];   // a base with markBase N (FROGG missiles: 5) labels II-IV as N+1..N+3
+    d.markLabel = ML[['I', 'II', 'III', 'IV'].indexOf(e.mark) + (b.markBase || 1) - 1];
+    d.name = e.name || (b.name + ' ' + d.markLabel);
     table[id] = d;
   }
 }

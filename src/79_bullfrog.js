@@ -215,7 +215,9 @@ function lancerPick(s) {
   const valid = cur && cur.alive && !cur.dying && cur.team !== s.team;
   const nose = _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   let forced = false;
-  if (valid && cur.def.cls === 'fighter') for (const e of ships) if (bfHostile(s, e) && bfBig(e)) { _bv.copy(e.group.position).sub(s.group.position); const d = _bv.length(); if (d < 2500 && _bv.angleTo(nose) < 0.35) forced = true; }
+  // owner 2026-11-12: the spine goes onto capitals as quickly as possible; a fighter target is dropped as soon as any big hostile is within spine reach (turrets handle fighters)
+  const reach = (WEAPONS[spineMountOf(s)?.w]?.range || 4000) * 1.25;
+  if (valid && cur.def.cls === 'fighter') for (const e of ships) if (bfHostile(s, e) && bfBig(e)) { _bv.copy(e.group.position).sub(s.group.position); if (_bv.length() < reach) forced = true; }
   if (valid && time - (ai.tgtSince ?? -99) < 20 && !forced) return cur;
   let best = null, bs = 1e12;
   for (const e of ships) {

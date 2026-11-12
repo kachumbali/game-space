@@ -1,6 +1,6 @@
 # Armament, power and toughness laws (owner decisions 2026-11-12)
 
-Status: design contract. Numbers are first-pass law outputs. They are balance only after seeded runs (`AGENTS.md`). This document extends the energy law and range law (`tuning.energyLaw`, `tuning.rangeLaw`) and the technology contract (`docs/TECHNOLOGY_PROGRESSION.md`: Marks I–IV for every system, the S/M/L/XL size taxonomy, Armour Levels).
+Status: implemented 2026-11-12 (`tools/armament_law.py`, `tuning.armamentLaw`, test `armament_law_t`). Numbers are law outputs; they are balance only after seeded runs (`AGENTS.md`). This document extends the energy law and range law (`tuning.energyLaw`, `tuning.rangeLaw`) and the technology contract (`docs/TECHNOLOGY_PROGRESSION.md`: Marks I–IV for every system, the S/M/L/XL size taxonomy, Armour Levels).
 
 ## Owner decisions
 
@@ -15,13 +15,18 @@ Status: design contract. Numbers are first-pass law outputs. They are balance on
 
 ## 1. Size measure
 
-`V` is the ship's solid hull volume in millions of m³, measured from the model at in-game scale. Use the voxel count at tablet detail times the voxel volume, not the bounding box: a sail or a fin must not count as hull. The law tool measures it in the browser. Fighters are outside these laws; they keep their own tables.
+The size measure is the ship's **in-game length in km** (`tuning.scaleTo`, or the def length).
+
+A measured solid volume (voxels at tablet detail) was tried first and dropped. The chunky corvettes, scaled from 64 to 200 m, out-measured the slender 450 m Exeter, which would have made corvettes tougher than frigates. The role factor covers the difference between beamy carriers and slim warships.
+
+Fighters are outside these laws, except for the FROGG burst banks and the magazines (section 5).
 
 ## 2. Power law and sustain rule
 
-- **Plant:** `plantMW = 487 × V^0.63`. Fitted on the Halberd, Exeter and Glaive, which match their current values within 5%.
+- **Plant:** `plantMW = 2522 × L_km^1.288`. Fitted on the Halberd, Exeter and Glaive (`tools/armament_law.py --calibrate`).
 - **Weapon supply:** `bus = plant / 3`, as today.
-- **Store:** `capacitorMJ = 2.3 × plantMW` (today's human median), plus the spine shot's share under the energy law.
+- **Store:** `capacitorMJ = 2.333 × plantMW` (the calibration median). FROGG add a burst bank (`power.burstMJ`) on top.
+- **Spine guns:** the energy law sizes them from the base store, which excludes the burst bank (`tools/power_table.py --law`).
 - **Sustain rule, humans:** point defence plus secondaries at full fire must fit within the weapon supply. Main guns and spine guns fire from the store.
 - **Sustain rule, FROGG (burst doctrine):** the supply sustains point defence only. Secondaries, mains and the spine fire from the store.
   - The store holds **at least 8 s** of full secondary and main fire, plus one spine shot, and refills from the supply.
@@ -40,17 +45,17 @@ Check today:
 
 ## 3. Toughness law
 
-- **Hull:** `structure = 1016 × V^0.52 × roleFactor`. Fitted on the Halberd, Exeter and Glaive.
+- **Hull:** `structure = 4001 × L_km^1.078 × roleFactor`. Fitted on the Halberd, Exeter and Glaive.
 - **Shields:** today's per-ship ratio of shields to hull (about 0.8–1.2) is kept, so this law moves shields with hull.
 - **Role factor** (how much of the volume is armoured):
 
 | Role | Factor |
 |---|---:|
 | warship (corvette, frigate, destroyer, Bullfrog) | 1.0 |
-| carrier or tender (Hecla, Columbus) | 0.7 |
+| carrier or tender (Hecla, Columbus, Hive carrier) | 0.85 |
 | civil (liner, SAR tender) | 0.6 |
 
-- **Target:** Columbus about 4,000–5,400 hull against the Glaive's 2,700, and Hecla about 2,400–3,000. Today they are 20,736 and 12,000.
+- **Result:** Columbus 4,140 hull (1.47× the Glaive's 2,808); Hecla 3,401 (was 12,000; the Columbus was 20,736).
 
 ## 4. Hardpoint slot table
 
@@ -81,7 +86,7 @@ Today the Bullfrog has 18 small turrets (10 sting, 8 thorn), which is over the t
 | 30 mm HE, each gun | 500 | 150 |
 | mag driver | 120 | 60 |
 
-  The other fighters are scaled by length.
+  The other fighters are scaled by length through a per-mount `ammoScale` (fighter length / 12.4 m), so weapon marks still scale ammunition on top. Drones keep their own guns.
 
 **FROGG: energy and burst.**
 - Masers and lances for secondaries, the spine as the main weapon, kinetic autocannons for point defence.
@@ -89,8 +94,8 @@ Today the Bullfrog has 18 small turrets (10 sting, 8 thorn), which is over the t
 
 **Missiles.**
 - Human missiles are Mark I–IV, as today.
-- FROGG missiles (`tick`, `tad`) start at Mark V. Their base entry carries the human Mark IV mods plus one more step of about 10% in the same lanes, and is labelled Mark V. Their `_2` to `_4` entries are Marks VI–VIII.
-- `tools/validate_db.py` and the marks schema need a faction mark offset (FROGG labels V–VIII).
+- FROGG missiles (`tick`, `tad`) start at Mark V. Their base entry takes the best gain of each lane of the human Marks II–IV, without the costs: one generation ahead, not all three gains stacked. Their `_2` to `_4` entries are labelled Marks VI–VIII.
+- The labels come from `markBase: 5` on the base entry, read by both resolvers (`tools/dbmarks.py`, `src/16_db.js`) and the validator.
 - FROGG missiles have no extra cost lane: their better seeker and warhead are the doctrine.
 
 ## Implementation

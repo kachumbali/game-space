@@ -27,7 +27,7 @@ if '--law' in sys.argv:
         for m in s.get('mounts', []):
             w = W[m['w']]
             if w.get('kind') != 'spine' or s.get('base'): continue
-            e = L['spineCapacitorShare'] * s['power']['capacitorMJ']
+            e = L['spineCapacitorShare'] * (s['power']['capacitorMJ'] - s['power'].get('burstMJ', 0))   # FROGG burst bank excluded (docs/DESIGN_ARMAMENT_LAWS.md)
             print(f"{sid:12s} {m['w']:6s} energy {w['energy']} (law {e:.0f})  dmg {w['dmg']} (law {e / K['spine']:.0f})")
     if '--apply' in sys.argv:                 # rewrite base weapons in data/db.json to the law (owner 2026-11-12: follow the law)
         raw = dbmarks.load(); txt = open(dbmarks.DB_PATH).read()
@@ -44,7 +44,7 @@ if '--law' in sys.argv:
         spineOf = {}
         for sid, s in raw['ships'].items():
             for m in s.get('mounts', []):
-                if raw['weapons'][m['w']].get('kind') == 'spine' and 'power' in s: spineOf.setdefault(m['w'], s['power']['capacitorMJ'])
+                if raw['weapons'][m['w']].get('kind') == 'spine' and 'power' in s: spineOf.setdefault(m['w'], s['power']['capacitorMJ'] - s['power'].get('burstMJ', 0))
         for wid, w in raw['weapons'].items():
             if w.get('base') or not w.get('dmg') or w.get('kind') not in ('proj', 'beam', 'spine'): continue
             k = kind(w)
