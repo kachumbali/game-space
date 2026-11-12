@@ -355,7 +355,7 @@ SHIPS.exeter = {
     tap([70, -12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([70, 12.2, 130], 26, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
     // nacelle pylons and round engine pods (engines at x 80, z 229)
-    tap([60, -4, 158], 22, [6, 5], [6, 5], E.grey2, { sh: 'h' }), tap([60, 4, 150], 18, [5, 3], [5, 3], E.grey2, { sh: 'h' }),
+    tap([53, -4, 158], 22, [15, 5], [15, 5], E.grey2, { sh: 'h' }), tap([60, 4, 150], 18, [5, 3], [5, 3], E.grey2, { sh: 'h' }),
     tap([80, -3, 160], 56, [16, 16], [18, 18], E.white, { sh: 'e', seam: [8, 6] }),
     tap([80, -3, 106], 4, [14, 14], [15, 15], CF.gr, { sh: 'e', dots: { col: E.amber, p: 0.05 } }),
     tap([80, -3, 130], 4, [17.4, 17.4], [17.6, 17.6], E.orange, { sh: 'e' }),
@@ -453,7 +453,7 @@ SHIPS.hecla = {
       .filter(z => Math.abs(z + 800) > 140 && Math.abs(z - 800) > 140 &&
         Math.abs(z + 1300) > 80 && Math.abs(z - 1150) > 80)
       .map((z, i) =>
-        hTap([45, 88, z], 30, [15, 12.5], [15, 12.5], i % 2 ? E.orange : E.grey2, { sh: 'h' })),
+        hTap([45, 82, z], 30, [15, 18.5], [15, 18.5], i % 2 ? E.orange : E.grey2, { sh: 'h' })),
 
     // Raised pads and arrays are positioned from the database so all mounts remain represented.
     ...DB.ships.hecla.turrets.flatMap(t => {
