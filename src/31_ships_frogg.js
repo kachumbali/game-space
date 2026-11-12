@@ -328,7 +328,7 @@ SHIPS.gulper = {
   prims: [
     ell([0, 0, -5], [8.5, 6.2, 24], FM.hide),                                                          // compact pressure hull
     tap([0, 0, 20], 10, [6.3, 4.6], [8.8, 4.2], FM.hide2, { sh: 'h' }),                               // armoured stern joins engine frame
-    ell([0, 1, -14], [9.5, 5.4, 12], FM.hide2),                                                         // broad claw roots
+    ell([0, 1, -14], [11.5, 5.4, 13], FM.hide2),                                                         // broad claw roots
     tap([0, 5.5, -4], 11, [3.3, 0.7], [2.5, 0.7], FM.met, { sh: 'h', ...NG }),                         // short dorsal equipment deck
     ell([0, 1.0, -28], [4.6, 3.4, 5.5], FM.hide2),                                                      // upper head
     ell([0, 4.4, -17], [1.7, 0.9, 2.2], FM.met2, NG),                                                   // sensor dome (comp 'eyes')
@@ -348,6 +348,9 @@ SHIPS.gulper = {
       ...[-6.7, -4.9].map(y => tap([7.2, y, (z0 + z1) / 2], (z1 - z0) / 2, [1.1, 0.2], [1.1, 0.2], FM.met, NG)),
       seg([4.6, -3.2, (z0 + z1) / 2], [6.6, -4.9, (z0 + z1) / 2], 0.6, 0.6, FM.met2, NG),
     ]),
+    // Heavy swept antenna spines rooted in the broad chest; tips stay inside x=17.
+    ...chain([[7.0, 3.5, -15], [12.0, 7.5, -12], [16.2, 12.1, -7]], [1.8, 1.4, 0.55], FM.met2, NG),
+    ...chain([[7.5, 2.5, -8], [12.5, 6.5, -3], [16.2, 11.4, 3]], [1.6, 1.2, 0.5], FM.met2, NG),
     // swept ventral fins
     tap([11, -2.7, 4], 5.5, [10, 0.8], [3, 0.25], FM.hide2, { ax: 'x', sweep: 0.8, ...NG }),
     tap([11, -2.0, -3], 5.5, [0.5, 0.45], [0.3, 0.3], FM.met2, { ax: 'x', sweep: 0.8, ...NG }),
@@ -372,27 +375,26 @@ const hiveSeats = () => (DB.ships.hivecarrier.turrets || []).flatMap(t => {
 SHIPS.hivecarrier = {
   ...DB.ships.hivecarrier,
   prims: [
-    ell([0, 0, 70], [112, 57, 285], FM.hide),                                                         // long pressure spine
-    ell([0, 4, -172], [105, 52, 102], FM.hide2),                                                      // skull root
-    tap([0, 3, 317], 64, [80, 42], [104, 45], FM.met2, { sh: 'h', ...NG }),                          // drive saddle
-    // Upper skull and paired lower jaws project forward, both rooted in the head.
-    tap([0, 27, -290], 118, [48, 15], [90, 28], FM.hide2, { sh: 'h' }),
-    ...chain([[72, -20, -205], [77, -34, -290], [52, -28, -405], [38, -20, -438]],
-      [27, 22, 14, 7], FM.hide2),
-    // Teeth are short metal braces along the inner jaw, not luminous organs.
-    ...[-270, -315, -360, -400].map((z, i) => seg([54 - i * 4, -23, z], [48 - i * 3, -7, z - 6], 5, 2, FM.met2, NG)),
-    ell([0, 27, -399], [30, 12, 30], FM.met2, NG),                                                    // radar housing
-    // Close fitting transverse clamps and longitudinal cable bundles.
-    ...[-100, 0, 100, 200, 300].flatMap(z => {
-      const f = Math.sqrt(Math.max(0.05, 1 - ((z - 70) / 285) ** 2));
-      return fmRing(0, 0, z, 112 * f, 57 * f, 3.5);
-    }),
-    ...fmPipe([[55, 43, -150], [82, 36, -50], [95, 25, 80], [85, 24, 220], [68, 20, 320]], 4),
-    ...fmPipe([[38, 48, -120], [55, 48, 0], [60, 43, 150], [55, 35, 280]], 3, FM.met2),
-    // Ribbed hangar bays sit against the flanks and connect to the spine by heavy saddles.
-    tap([99, -18, 75], 120, [28, 22], [33, 20], FM.met2, { sh: 'h', ...NG }),
-    tap([128, -18, 65], 80, [3, 12], [3, 12], FM.dk, NG),
-    ...[-5, 65, 135].map(z => seg([83, -10, z], [128, -10, z], 7, 7, FM.met2, NG)),
+    // Narrow spine opens out into a wide skull and two flanking flight decks.
+    tap([0, 0, 90], 250, [100, 52], [58, 35], FM.hide, { sh: 'h' }),
+    tap([0, 0, -180], 75, [185, 58], [100, 52], FM.hide2, { sh: 'h' }),
+    tap([0, 3, 350], 40, [65, 34], [105, 45], FM.met2, { sh: 'h', ...NG }),
+    // The two long, separated jaws root in the skull and leave an open side gap.
+    tap([0, 38, -270], 80, [82, 18], [185, 25], FM.hide2, { sh: 'h' }),
+    ...chain([[155, -25, -200], [195, -48, -285], [135, -53, -390], [94, -43, -435]],
+      [30, 25, 16, 8], FM.hide2),
+    ...[[-275, 178], [-320, 160], [-365, 142], [-400, 118]].map(([z, x]) => seg([x, -39, z], [x - 3, -21, z - 5], 5, 2, FM.met2, NG)),
+    ell([0, 42, -330], [30, 12, 24], FM.met2, NG),
+    // Widely spaced hangar pods, supported by swept cross-ribs. Their silhouettes
+    // stay separate from the spine except at the load-bearing ribs.
+    tap([180, -20, 85], 135, [42, 28], [34, 25], FM.hide2, { sh: 'h' }),
+    ...[-35, 65, 165].flatMap(z => [
+      seg([60, 4, z - 24], [180, -6, z], 13, 10, FM.met2, NG),
+      seg([67, -27, z + 20], [180, -31, z], 11, 9, FM.met2, NG),
+    ]),
+    // Dark side recesses framed by the pod and ribs.
+    tap([220, -20, 50], 45, [3, 12], [3, 12], FM.dk, NG),
+    ...fmPipe([[55, 39, -145], [72, 36, -50], [68, 31, 100], [55, 25, 280]], 4),
     ...fmThr(60, 0, 440, 40, 90),
     ...hiveSeats(),
   ],
@@ -418,23 +420,34 @@ const bfSeats = () => (DB.ships.bullfrog.turrets || []).flatMap(t => {
 SHIPS.bullfrog = {
   ...DB.ships.bullfrog,
   prims: [
-    ell([0, 0, 30], [64, 34, 250], FM.hide),                                                            // pressure hull
-    ell([0, 0, -105], [73, 32, 105], FM.hide2),                                                        // broad forward shoulders
+    // Broad forward shoulder tapers decisively towards the stern.  The narrower
+    // middle core leaves actual empty volume behind each side hangar mouth.
+    tap([0, 0, -135], 85, [48, 23], [78, 32], FM.hide, { sh: 'h' }),
+    tap([0, 0, -30], 20, [78, 32], [48, 29], FM.hide, { sh: 'h' }),
+    tap([0, 0, 55], 65, [48, 29], [47, 25], FM.hide, { sh: 'h' }),
+    tap([0, 0, 175], 55, [47, 25], [32, 18], FM.hide2, { sh: 'h' }),
+    tap([0, 0, 242], 18, [32, 18], [54, 20], FM.hide2, { sh: 'h' }),
     tap([0, 30, -10], 175, [9, 7], [16, 7], FM.hide2, { sh: 'h' }),                                     // dorsal ridge
     tap([0, 40, 120], 60, [2, 2], [3, 14], FM.hide2, NG),                                                // swept dorsal crest
     ell([0, 6, -200], [38, 24, 48], FM.hide2),                                                          // heavy head
     ell([0, 20, -215], [14, 6, 16], FM.met2, NG),                                                       // sensor cluster (comp 'eyes')
+    // Paired ventral armour keels deepen the forward silhouette while leaving the
+    // centreline clear for torpedoes launched from the fixed database point.
+    tap([22, -37, -155], 55, [6, 12], [7, 12], FM.hide2, { sh: 'h' }),
+    // Armoured upper and lower structure around the gun; neither closes its muzzle.
+    tap([0, 18, -244], 43, [24, 4], [38, 8], FM.hide2, { sh: 'h' }),
+    tap([0, -24, -244], 43, [24, 4], [38, 7], FM.hide2, { sh: 'h' }),
     // split claw prow around the spine gun: two lower prongs and two upper horns
     ...chain([[24, -14, -215], [32, -18, -255], [22, -12, -292]], [10, 7, 3], FM.hide2),
     ...chain([[20, 18, -225], [24, 22, -262], [14, 14, -285]], [7, 5, 2], FM.hide2),
     // spine gun: barrel along the axis, collars, muzzle at z -299
     seg([0, -4, -205], [0, -4, -292], 8.5, 6, FM.met, NG), tap([0, -4, -297], 1.5, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
     ...[-235, -255, -275].map(z => tap([0, -4, z], 2.5, [10, 10], [10, 10], FM.met2, { sh: 'e', ...NG })),
-    // cage rings and rails, copper pipes
-    ...[-150, -70, 10, 90, 170].flatMap(z => { const f = Math.sqrt(1 - ((z - 30) / 250) ** 2); return fmRing(0, 0, z, 64 * f + 1.5, 34 * f + 1.5, 2.2); }),
-    fmRail(22, 33, -150, 180, 2), fmRail(55, 16, -120, 170, 2),
-    ...fmPipe([[40, 26, -170], [52, 22, -60], [56, 18, 60], [52, 14, 180]], 2.4),
-    ...fmPipe([[30, 30, -120], [36, 30, 0], [34, 28, 140]], 1.8, FM.met2),
+    // Clamp-on equipment and short copper feeds follow the tapered hull.
+    ...fmPipe([[45, 25, -165], [60, 20, -90], [45, 20, -20], [42, 17, 110]], 2.4),
+    ...fmPipe([[26, 30, -150], [30, 28, -60], [24, 26, 100]], 1.8, FM.met2),
+    // Root the outboard midship turret pedestals in the pressure core.
+    seg([42, 12, 80], [54, 12, 80], 5, 5, FM.met2, NG),
     // Paired ventral rails support the torpedo cluster, leaving its centreline open.
     seg([17, -30, -125], [17, -30, 135], 7, 7, FM.met, NG),
     tap([0, -28, 138], 4, [23, 7], [23, 7], FM.met2, { sh: 'h', ...NG }),
@@ -442,14 +455,16 @@ SHIPS.bullfrog = {
     seg([17, -30, -10], [8, -48, -10], 3, 3, FM.met2, NG),
     // heart dome over the reactor
     ell([0, 32, 150], [30, 12, 30], FM.met2, NG),
-    // Long swept shoulder fins, within the collision envelope; the broad roots overlap the hull.
-    tap([71, -8, 22], 23, [126, 5], [36, 2], FM.hide2, { ax: 'x', sweep: 1.25, ...NG }),
-    tap([71, -6, -59], 23, [5, 3], [4, 2], FM.met2, { ax: 'x', sweep: 1.25, ...NG }),
-    // Recess-like dark side hangar mouths, framed by load-bearing upper and lower sills.
-    tap([63, -3, 60], 3, [45, 9], [45, 9], FM.dk, { ax: 'x', ...NG }),
-    tap([65, 8, 60], 3, [47, 2], [47, 2], FM.met2, { ax: 'x', ...NG }),
-    tap([65, -14, 60], 3, [47, 2], [47, 2], FM.met2, { ax: 'x', ...NG }),
-    ...[18, 102].map(z => seg([58, -14, z], [67, 8, z], 2.5, 2.5, FM.met2, NG)),
+    // Fins rise outwards from a 130 m root chord: swept in both plan and elevation.
+    tap([70, 12, 30], 20, [65, 5], [25, 3], FM.hide2,
+      { ax: 'x', sweep: 1.15, sweepY: 1.55, ...NG }),
+    seg([50, -19, -30], [89, 42, 10], 3, 2, FM.met2, NG),
+    // 40 x 15 m open side bays, constructed as frames around an empty volume.
+    // Core ends near x=47; rear wall, sills and end bulkheads enclose the recess.
+    tap([46, 0, 130], 20, [2, 9], [2, 9], FM.dk, NG),
+    tap([56, 10, 130], 22, [11, 2.5], [11, 2.5], FM.met2, NG),
+    tap([56, -10, 130], 22, [11, 2.5], [11, 2.5], FM.met2, NG),
+    ...[108, 152].map(z => tap([56, 0, z], 2, [11, 10], [11, 10], FM.met2, NG)),
     // thruster frame and six round thrusters (engines at z 290-296)
     tap([0, 4, 268], 18, [62, 22], [86, 22], FM.met2, { sh: 'h', ...NG }),
     ...fmThr(24, 12, 296, 12, 26), ...fmThr(50, -4, 294, 14, 26), ...fmThr(76, 8, 290, 11, 24),
