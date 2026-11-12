@@ -192,7 +192,7 @@ const fmRail = (x, y, z0, z1, t, col = FM.met2) => tap([x, y, (z0 + z1) / 2], (z
 const fmBarrel = (x, y, z0, z1, r) => [seg([x, y, z0], [x, y, z1], r, r, FM.dk, NG), tap([x, y, z1 + r * 0.6], r * 0.6, [r * 1.4, r * 1.4], [r * 1.3, r * 1.3], FM.met2, { sh: 'e', ...NG })];
 const fmPipe = (pts, r, col = FM.cu) => chain(pts, pts.map(() => r), col, NG);
 
-// ---- DARTER: interceptor (9.5 m) — a needle hull, forward gun and sensor rods, a ribbed heat-sink plate, twin round thrusters
+// ---- DARTER: interceptor (9.5 m) — a needle hull, forward gun and sensor rods, twin round thrusters
 SHIPS.darter = {
   ...DB.ships.darter,
   prims: [
@@ -201,9 +201,6 @@ SHIPS.darter = {
     ...fmThr(0.5, 0.35, 5.0, 0.38, 1.6),
     tap([0, 0.95, 4.2], 0.8, [0.06, 0.05], [0.06, 0.9], FM.met2, NG),                                   // tail fin
     tap([0.7, 0.5, 4.5], 0.5, [0.3, 0.04], [0.2, 0.04], FM.met2, { ax: 'x', ...NG }),
-    tap([1.0, 0, 0.4], 0.12, [1.3, 0.55], [1.3, 0.55], FM.met, NG),                                    // heat-sink plate
-    ...rungs(1.13, 0, -0.8, 1.6, 7, 0.05, 0.5, 0.04, FM.dk, NG),
-    seg([0.6, 0, -0.4], [0.9, 0, -0.4], 0.08, 0.08, FM.met2, NG), seg([0.6, 0, 1.2], [0.9, 0, 1.2], 0.08, 0.08, FM.met2, NG),
     ...fmRing(0, 0.05, -1.6, 0.62, 0.5, 0.05), ...fmRing(0, 0.1, 1.8, 0.8, 0.62, 0.05),
     ...fmBarrel(0.4, -0.3, -3.0, -4.9, 0.08),                                                           // fang rods
     seg([0.22, 0.28, -3.0], [0.24, 0.3, -5.1], 0.035, 0.03, FM.met, NG), seg([0.55, 0.05, -2.6], [0.62, 0.05, -4.4], 0.035, 0.03, FM.met, NG),
