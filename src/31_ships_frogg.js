@@ -409,12 +409,13 @@ const bfMir = (f) => [f(1), f(-1)];
 const bfHullY = (x, z) => { const q = 1 - ((z - 30) / 250) ** 2 - (x / 64) ** 2; return q > 0 ? 34 * Math.sqrt(q) : 0; };
 const bfSeats = () => (DB.ships.bullfrog.turrets || []).flatMap(t => {
   const [x, y, z] = t.pos, dy = Math.sign(y) || 1, D = turretDia({ def: { length: 600 } }, t);
-  return fgSeat(x, y, z, dy, D, dy * Math.max(2, bfHullY(x, z) * 0.7));
+  return fgSeat(x, y, z, dy, Math.max(D, 7), dy * Math.max(2, bfHullY(x, z) * 0.7));
 });
 SHIPS.bullfrog = {
   ...DB.ships.bullfrog,
   prims: [
-    ell([0, 0, 30], [64, 34, 250], FM.hide),                                                            // segmented hull
+    ell([0, 0, 30], [64, 34, 250], FM.hide),                                                            // pressure hull
+    ell([0, 0, -105], [73, 32, 105], FM.hide2),                                                        // broad forward shoulders
     tap([0, 30, -10], 175, [9, 7], [16, 7], FM.hide2, { sh: 'h' }),                                     // dorsal ridge
     tap([0, 40, 120], 60, [2, 2], [3, 14], FM.hide2, NG),                                                // swept dorsal crest
     ell([0, 6, -200], [38, 24, 48], FM.hide2),                                                          // heavy head
@@ -436,8 +437,14 @@ SHIPS.bullfrog = {
     ...[[-8, -48], [8, -48], [-8, -38], [8, -38]].map(([x, y]) => seg([x, y, -10], [x, y, -42], 3, 2.6, FM.dk, { noMirror: true, ...NG })),
     // heart dome over the reactor
     ell([0, 32, 150], [30, 12, 30], FM.met2, NG),
-    // sweeping ventral fins
-    tap([66, -12, 205], 26, [58, 3], [24, 2], FM.hide2, { ax: 'x', sweep: 0.55, ...NG }),
+    // Long swept shoulder fins, within the collision envelope; the broad roots overlap the hull.
+    tap([71, -8, 22], 23, [126, 5], [36, 2], FM.hide2, { ax: 'x', sweep: 1.25, ...NG }),
+    tap([71, -6, -59], 23, [5, 3], [4, 2], FM.met2, { ax: 'x', sweep: 1.25, ...NG }),
+    // Recess-like dark side hangar mouths, framed by load-bearing upper and lower sills.
+    tap([63, -3, 60], 3, [45, 9], [45, 9], FM.dk, { ax: 'x', ...NG }),
+    tap([65, 8, 60], 3, [47, 2], [47, 2], FM.met2, { ax: 'x', ...NG }),
+    tap([65, -14, 60], 3, [47, 2], [47, 2], FM.met2, { ax: 'x', ...NG }),
+    ...[18, 102].map(z => seg([58, -14, z], [67, 8, z], 2.5, 2.5, FM.met2, NG)),
     // thruster frame and six round thrusters (engines at z 290-296)
     tap([0, 4, 268], 18, [62, 22], [86, 22], FM.met2, { sh: 'h', ...NG }),
     ...fmThr(24, 12, 296, 12, 26), ...fmThr(50, -4, 294, 14, 26), ...fmThr(76, 8, 290, 11, 24),
