@@ -15,13 +15,13 @@ if '--law' in sys.argv:
     L = db['tuning']['energyLaw']; K = L['mjPerDamage']
     def kind(w):
         if w.get('kind') == 'spine': return 'spine'
-        if w.get('kind') == 'beam': return 'beam'
+        if w.get('kind') == 'beam' or (w.get('kind') == 'proj' and w.get('dt') == 'en'): return 'beam'   # maser bolts are energy weapons too
         return 'pd' if w.get('dmgMsl') and w.get('dmg', 0) < 10 else 'coil'
     print('weapon        type   dmg     MJ/shot  MJ/dmg  law   off')
     for wid, w in sorted(W.items()):
-        if not w.get('energy') or not w.get('dmg') or w.get('base'): continue
-        k = kind(w); r = w['energy'] / w['dmg']
-        print(f"{wid:13s} {k:6s} {w['dmg']:<7g} {w['energy']:<8g} {r:<7.2f} {K[k]:<5g} {100 * (r / K[k] - 1):+.0f}%")
+        if w.get('base') or not w.get('dmg') or not (w.get('energy') or kind(w) == 'beam') or w.get('kind') == 'msl': continue
+        k = kind(w); r = (w.get('energy') or 0) / w['dmg']
+        print(f"{wid:13s} {k:6s} {w['dmg']:<7g} {w.get('energy') or 0:<8g} {r:<7.2f} {K[k]:<5g} {100 * (r / K[k] - 1):+.0f}%")
     print('\nspine guns vs ship capacitor (law: energy = %.2f x capacitor)' % L['spineCapacitorShare'])
     for sid, s in db['ships'].items():
         for m in s.get('mounts', []):
@@ -35,22 +35,26 @@ if '--law' in sys.argv:
             global txt
             sec = txt.index('\n  "weapons": {'); i = txt.index('\n    "%s": {' % wid, sec); j = i + len('\n    "%s": ' % wid)
             _, end = json.JSONDecoder().raw_decode(txt, j); seg = txt[j:end]
-            k = seg.index('"%s":' % key); v0 = k + len('"%s":' % key)
-            while seg[v0] == ' ': v0 += 1
-            _, v1 = json.JSONDecoder().raw_decode(seg, v0); seg = seg[:v0] + json.dumps(val) + seg[v1:]; txt = txt[:j] + seg + txt[end:]
+            if '"%s":' % key not in seg: seg = seg[:1] + '\n      "%s": %s,' % (key, json.dumps(val)) + seg[1:]
+            else:
+                k = seg.index('"%s":' % key); v0 = k + len('"%s":' % key)
+                while seg[v0] == ' ': v0 += 1
+                _, v1 = json.JSONDecoder().raw_decode(seg, v0); seg = seg[:v0] + json.dumps(val) + seg[v1:]
+            txt = txt[:j] + seg + txt[end:]
         spineOf = {}
         for sid, s in raw['ships'].items():
             for m in s.get('mounts', []):
                 if raw['weapons'][m['w']].get('kind') == 'spine' and 'power' in s: spineOf.setdefault(m['w'], s['power']['capacitorMJ'])
         for wid, w in raw['weapons'].items():
-            if w.get('base') or not w.get('energy') or not w.get('dmg'): continue
+            if w.get('base') or not w.get('dmg') or w.get('kind') not in ('proj', 'beam', 'spine'): continue
             k = kind(w)
+            if not w.get('energy') and k != 'beam': continue        # ammo-fed kinetic guns draw nothing from the capacitor
             if k == 'spine' and wid in spineOf:
                 e = round(L['spineCapacitorShare'] * spineOf[wid]); d = round(e / K['spine'])
                 if (e, d) != (w['energy'], w['dmg']): setnum(wid, 'energy', e); setnum(wid, 'dmg', d); print('set', wid, 'energy', e, 'dmg', d)
             elif k != 'spine':
                 e = round(w['dmg'] * K[k], 2)
-                if abs(e - w['energy']) > 0.1 * w['energy']: setnum(wid, 'energy', e); print('set', wid, 'energy', w['energy'], '->', e)
+                if not w.get('energy') or abs(e - w['energy']) > 0.1 * w['energy']: setnum(wid, 'energy', e); print('set', wid, 'energy', w.get('energy'), '->', e)
         open(dbmarks.DB_PATH, 'w').write(txt)
     sys.exit(0)
 rows = []

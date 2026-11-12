@@ -135,8 +135,12 @@ function benchSetup() {
     if (params.has('dlimit')) player.dlimit = Math.max(0, +params.get('dlimit') || 0);
     if (!params.has('nolaunch')) launchDrones(player, 99);
   }
-  if (params.has('nuke')) player.stores.nuke = Math.max(1, +params.get('nuke') || 1);
-  if (params.has('nukeKt')) player.nukeKt = Math.min(10, Math.max(0.1, +params.get('nukeKt') || 0.5));   // tactical yield dial, kT (owner 2026-10-22): 0.1 minimum, 10 max in-game
+  nukeTestParams(player);
+}
+// ?nuke=N gives the player N nuclear missiles, ?nukeKt=Y sets the yield (free flight and skirmish; owner 2026-11-12: the skirmish URL did nothing)
+function nukeTestParams(p) {
+  if (params.has('nuke')) p.stores.nuke = Math.max(1, +params.get('nuke') || 1);
+  if (params.has('nukeKt')) p.nukeKt = Math.min(10, Math.max(0.1, +params.get('nukeKt') || 0.5));   // tactical yield dial, kT (owner 2026-10-22): 0.1 minimum, 10 max in-game
 }
 
 // ---- distance LOD: ships whose apparent radius (rad) falls below the level's thresholds are rebuilt 1-3 detail steps lower (hysteresis 25%).

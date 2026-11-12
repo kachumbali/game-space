@@ -172,9 +172,9 @@ const fRef = o => {
 
 // ---- FROGG fighters, 2026-11-12 bio-mech rebuild (owner direction: Gemini design seed, hybrid language, no glow): a scaled creature
 // hide (the voxeliser's FROGG scale greebles grow on it) with machinery strapped on: gunmetal cages and frames, pipe bundles, clamp-on
-// boxes and chunky round thrusters. Rust-red armour only on the Reaver; the Spitter's acid sac is plain green. Drive flames come from
+// boxes and chunky round thrusters. Rust-red armour only on the Reaver. Drive flames come from
 // the runtime, so nozzles are dark. Mounts, engines, comps and launch points in data/db.json were moved to match this art.
-const FM = { hide: 0x3b403d, hide2: 0x2e3331, met: 0x5f6467, met2: 0x45494c, dk: 0x1c1e20, cu: 0x7a4e34, bone: 0xa49c8a, rust: 0x6a2c24, rust2: 0x4c2420, sac: 0x5aa62c };
+const FM = { hide: 0x3b403d, hide2: 0x2e3331, met: 0x5f6467, met2: 0x45494c, dk: 0x1c1e20, cu: 0x7a4e34, bone: 0xa49c8a, rust: 0x6a2c24, rust2: 0x4c2420, cap: 0x2f3a34 };
 const NG = { noDetail: true };
 // round thruster: steel housing, band, dark nozzle ending at the database engine position (x, y, z1)
 const fmThr = (x, y, z1, r, len) => [
@@ -235,15 +235,15 @@ SHIPS.leaper = {
   ],
 };
 
-// ---- SPITTER: gunship (16 m) — a bulbous body in a heavy cage, a green acid sac, a caged acid maw, side gatlings, dorsal masts
+// ---- SPITTER: gunship (16 m) — a bulbous body in a heavy cage, a maser capacitor bank, a caged heavy-maser muzzle, side gatlings, dorsal masts
 SHIPS.spitter = {
   ...DB.ships.spitter,
   prims: [
     ell([0, 0.4, 0.6], [2.9, 2.3, 7.6], FM.hide),                                                       // body
-    ell([0, -0.8, -2.2], [2.7, 1.9, 3.4], FM.sac, NG),                                                  // acid sac
+    ell([0, -0.8, -2.2], [2.7, 1.9, 3.4], FM.cap, NG),                                                  // maser capacitor bank (owner 2026-11-12: no acid, kinetics and energy only)
     ...[-6.0, -3.6, -1.2, 1.4, 4.0].flatMap(z => { const f = Math.sqrt(1 - ((z - 0.6) / 7.6) ** 2); return fmRing(0, 0.4, z, 2.95 * f + 0.15, 2.35 * f + 0.15, 0.13); }),
     fmRail(1.0, 2.75, -6.0, 4.0, 0.13), fmRail(2.6, 1.3, -5.0, 3.6, 0.13), fmRail(2.6, -0.9, -5.0, 3.6, 0.13),
-    // caged acid maw at the bow (spitcannon at z -8.6)
+    // caged heavy-maser muzzle at the bow (spitcannon at z -8.6)
     tap([0, 0.1, -7.6], 0.5, [1.3, 1.1], [1.5, 1.25], FM.met, { sh: 'h', ...NG }),
     tap([0, 0.1, -8.1], 0.08, [1.0, 0.85], [1.0, 0.85], FM.dk, NG),
     ...[-0.5, 0, 0.5].map(x => tap([x, 0.1, -8.25], 0.1, [0.07, 0.85], [0.07, 0.85], FM.met2, { ...NG, noMirror: true })),
@@ -314,46 +314,52 @@ SHIPS.reaver = {
   ],
 };
 
-// ---- GULPER: escort corvette (66 m) -----------------------------------------
+// ---- GULPER: escort corvette, 2026-11-12 bio-mech rebuild (authored at 66 m, scaled to 200 m by tuning.scaleTo). Owner direction: hybrid
+// language, the outline from the battleship concept sheet (claw prow, long organic hull, swept ventral fins), the materials of the fighters
+// (scaled hide, gunmetal cages and rails, copper pipes, round thrusters), no glow. Rod guns sit in the two lower claw prongs, maser lances
+// in the upper head, torpedo frames under the belly. Every turret stands on a pedestal rooted in the hull.
+const fgSeat = (x, y, z, dy, D, y0) => {
+  const top = y - dy * D * 0.2, h = Math.abs(top - y0) / 2;
+  return [
+    tap([x, (top + y0) / 2, z], D * 0.4, [D * 0.4, h], [D * 0.4, h], FM.met2, { sh: 'h', noMirror: true, ...NG }),
+    tap([x, y - dy * D * 0.1, z], D * 0.5, [D * 0.56, D * 0.12], [D * 0.56, D * 0.12], FM.met, { sh: 'h', noMirror: true, ...NG }),
+  ];
+};
+const gSeat = (x, y, z, dy, cls, y0) => { const L = TUNE.scaleTo.gulper || 66; return fgSeat(x, y, z, dy, turretDia({ def: { length: L } }, { cls }) * 66 / L, y0); };
 SHIPS.gulper = {
   ...DB.ships.gulper,
   prims: [
-    ell([0, -0.5, 4], [15, 1.3, 20], N.dk, nSt(0.8, 0.1)), ell([0, 2.8, 2], [11, 1.0, 22], N.dk2, nSt(0.7, 0.1)),
-    ...nMand(5.5, 0.5, -33, 13, 1.0), ...nMand(3.4, -2.8, -33, 8, 0.7), nKeel(-9.6, -6, 16, 7, 1.2), ...nComb(4, -6.5, 20, 5, 9, 0.4),
-    // lamellar barrel hull
-    ell([0, 0, 2], [9.6, 6.4, 29], N.dk, nSt(0.85, 0.12)),
-    ell([0, 4.0, 0], [7.8, 2.8, 22], N.dk2, nSt(0.75, 0.12)),
-    ell([0, 6.0, -2], [5.4, 1.9, 15], N.dk, nSt(0.7, 0.12)),
-    ell([0, 7.5, -4], [3.2, 1.2, 9], N.dk2, nSt(0.6, 0.12)),
-    ell([0, -0.4, -28], [7.4, 5.2, 7.4], N.dk, nSt(0.8, 0.1)),                              // blunt prow
-    ell([0, 3.4, -26], [4.8, 2.4, 6], N.dk2, nSt(0.7, 0.1)),
-    ...nEye(3.0, 0.8, -34.0, 2.6), ...nEye(6.2, -0.6, -31.8, 1.4),
-    // M-7 maser lances: emitter barrels on the upper prow (mirrored); the lance mounts sit at the glowing tips
-    seg([3.0, 1.2, -28.5], [3.0, 1.2, -33.0], 0.9, 0.7, N.bl, { rust: N.ru, lod: 2 }),
-    ell([3.0, 1.2, -33.2], [0.75, 0.75, 0.4], N.cy, { glow: true, glowF: 1.4, lod: 2 }),
-    nPod([5.2, 1.0, -22], [2.2, 1.6, 3.6], N.dk2, 0.22), nPod([7.4, -1.6, -14], [2.0, 1.4, 3.0], N.dk2, 0.22),
-    // Ventral magazine trunk and four paired nine-round torpedo cassettes.
-    seg([0, -6.4, -8], [0, -6.4, 20], 4.4, 3.8, N.dk, { rust: N.ru, edge: N.ed, streak: 1, dots: { col: N.pr, p: 0.02, f: 1.0 }, strata: [0.9, 0] }),
-    ell([0, -6.4, 21], [3.6, 3.4, 2.0], N.dk2, nSt(0.7, 0)),
-    nPod([7.2, -5.8, -15], [2.1, 1.5, 4.4], N.dk2, 0.3),
-    nPod([7.2, -5.8, -3], [2.1, 1.5, 4.4], N.dk2, 0.3),
-    seg([7.2, -5.8, -18.2], [7.2, -5.8, -19.0], 0.62, 0.5, N.bl),
-    seg([7.2, -5.8, -6.2], [7.2, -5.8, -7.0], 0.62, 0.5, N.bl),
-    seg([4.4, -5.6, -15], [6.1, -5.7, -15], 0.48, 0.48, N.dk2),
-    seg([4.4, -5.6, -3], [6.1, -5.7, -3], 0.48, 0.48, N.dk2),
-    // dorsal crest of spikes
-    ...[-8, -2, 4, 10, 16, 22].map((z, i) => nSpike([0, 7.6 - i * 0.5, z], [0, 11.5 - i * 0.9, z + 6 + i * 0.4], 0.9 - i * 0.07)),
-    // sting turret bases
-    ell([3.6, 7.0, -2], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, streak: 1 }), ell([3.4, 5.5, 14], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, streak: 1 }),
-    ell([0, 7.2, -19], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
-    ell([0, -5.9, -20], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
-    ell([0, -7, 16], [0.608, 0.25, 0.608], N.mt, { rust: N.ru, noMirror: true }),
-    // trailing blades
-    nBlade([8, 0.5, 6], [16.5, 0.2, 34], 0.9), nBlade([7, -3, 12], [14, -3.8, 36], 0.7), nBlade([6, 3.5, 4], [12, 5.6, 30], 0.6),
-    // engine nacelles
-    ...nNoz(9.5, -1.0, 24, 35.4, 2.7), ...nNoz(3.8, -2.2, 31, 36.0, 1.5),
-    seg([5.5, -2.4, -30], [5.5, -2.4, -35.3], 1.3, 0.8, N.bl),
-    ...fDetail({ disc: [0, -0.5, 4, 15, 1.3, 20], E: [0, 0, 2, 9.6, 6.4, 29], plates: 9, gills: 6, collars: 7, ribs: 7, spikes: 6, noz: [[9.5, -1.0, 24, 35.4, 2.7], [3.8, -2.2, 31, 36.0, 1.5]], blades: [[[8, 0.5, 6], [16.5, 0.2, 34], 0.9], [[7, -3, 12], [14, -3.8, 36], 0.7]], guns: [[5.5, -2.4, -30, -35.3, 1.0]] }),
+    ell([0, 0, 0], [8.5, 6.2, 30], FM.hide),                                                            // long scaled hull
+    tap([0, 5.4, -2], 22, [1.4, 1.4], [2.4, 1.3], FM.hide2, { sh: 'h' }),                              // dorsal ridge
+    tap([0, 8.2, 10], 9, [0.35, 0.3], [0.45, 2.4], FM.hide2, NG),                                        // swept dorsal crest
+    ell([0, 1.0, -28], [4.6, 3.4, 5.5], FM.hide2),                                                      // upper head
+    ell([0, 4.4, -17], [1.7, 0.9, 2.2], FM.met2, NG),                                                   // sensor dome (comp 'eyes')
+    // claw prongs: rod guns at their tips (z -35.3)
+    ...chain([[4.2, -1.6, -22], [5.6, -2.5, -30], [5.5, -2.4, -34.0]], [1.9, 1.5, 1.1], FM.hide2),
+    seg([5.5, -2.4, -36.5], [5.5, -2.4, -37.4], 0.5, 0.2, FM.bone, NG),                                  // claw tip
+    ...fmBarrel(5.5, -2.4, -31.5, -35.3, 0.55),
+    ...fmBarrel(3.0, 1.2, -30.8, -33.0, 0.45),                                                          // maser lance emitters
+    // cage bands and rails along the back, copper feed pipes on the flanks
+    ...[-14, -2, 10, 20].flatMap(z => { const f = Math.sqrt(1 - (z / 30) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
+    fmRail(2.6, 6.15, -16, 20, 0.32), fmRail(7.4, 2.4, -14, 18, 0.32),
+    ...fmPipe([[6.0, 3.6, -20], [7.6, 2.8, -6], [7.8, 1.6, 8], [7.4, 0.8, 22]], 0.38),
+    ...fmPipe([[4.6, 5.2, -12], [5.4, 4.8, 4], [5.0, 4.4, 18]], 0.3, FM.met2),
+    // ventral torpedo frames: mouths at z -15 and -3, struts to the hull
+    ...[[-15.2, -9.6], [-3.2, 2.4]].flatMap(([z0, z1]) => [
+      tap([7.2, -5.8, (z0 + z1) / 2], (z1 - z0) / 2, [1.35, 1.15], [1.35, 1.15], FM.met, { sh: 'h', ...NG }),
+      tap([7.2, -5.8, z0 + 0.1], 0.15, [0.75, 0.75], [0.75, 0.75], FM.dk, { sh: 'e', ...NG }),
+      seg([4.6, -3.2, (z0 + z1) / 2], [6.6, -4.9, (z0 + z1) / 2], 0.6, 0.6, FM.met2, NG),
+    ]),
+    // swept ventral fins
+    tap([10.5, -3.2, 21], 5.2, [6.2, 0.45], [2.8, 0.25], FM.hide2, { ax: 'x', sweep: 0.6, ...NG }),
+    tap([10.6, -3.0, 18.4], 5.0, [0.4, 0.5], [0.3, 0.3], FM.met2, { ax: 'x', sweep: 0.6, ...NG }),
+    // thruster cluster on a frame
+    tap([0, -1, 30], 4, [9.0, 4.2], [11.5, 4.4], FM.met2, { sh: 'h', ...NG }),
+    ...fmThr(9.5, -1, 35.4, 2.7, 6.5), ...fmThr(3.8, -2.2, 36, 1.5, 5.5),
+    // turret seats: sting (S) and thorn (S PD)
+    ...gSeat(3.6, 7.35, -2, 1, 'S', 4.5), ...gSeat(-3.6, 7.35, -2, 1, 'S', 4.5),
+    ...gSeat(3.4, 5.85, 14, 1, 'S', 3.5), ...gSeat(-3.4, 5.6, 14, 1, 'S', 3.5),
+    ...gSeat(0, 7.6, -19, 1, 'S', 4.0), ...gSeat(0, -6.2, -20, -1, 'S', -3.0), ...gSeat(0, -7.3, 16, -1, 'S', -3.5),
   ],
 };
 
@@ -397,42 +403,49 @@ const bfArch = z => {                                   // hand-placed rib arch 
   return chain(pts, [th * 2, th * 2.3, th * 2.3, th * 2, th * 1.6], N.mt, { rust: N.ru, edge: N.ed, streak: 1 });
 };
 const bfMir = (f) => [f(1), f(-1)];
+// ---- BULLFROG: 600 m spine carrier, 2026-11-12 bio-mech rebuild (owner: hybrid language, outline from the battleship concept sheet: a
+// long segmented hull, a heavy head with a split claw prow around the spine gun, sweeping ventral fins; fighter materials; no glow).
+// Every turret seat is generated from the database positions and stands on a pedestal rooted inside the hull.
+const bfHullY = (x, z) => { const q = 1 - ((z - 30) / 250) ** 2 - (x / 64) ** 2; return q > 0 ? 34 * Math.sqrt(q) : 0; };
+const bfSeats = () => (DB.ships.bullfrog.turrets || []).flatMap(t => {
+  const [x, y, z] = t.pos, dy = Math.sign(y) || 1, D = turretDia({ def: { length: 600 } }, t);
+  return fgSeat(x, y, z, dy, D, dy * Math.max(2, bfHullY(x, z) * 0.7));
+});
 SHIPS.bullfrog = {
   ...DB.ships.bullfrog,
   prims: [
-    ell([0, 0, 30], [68, 36, 255], N.dk, nSt(6, 0.1)),                                   // core barrel
-    ell([0, 24, 10], [52, 15, 225], N.dk2, nSt(6, 0.1)), ell([0, 32, -30], [34, 8, 165], N.dk, nSt(5, 0.1)),   // dorsal shells
-    ell([0, -4, 60], [88, 9, 200], N.dk, nSt(6, 0.1)), ell([0, -10, 90], [74, 7, 170], N.dk2, nSt(6, 0.1)),    // flare discs
-    ell([30, -2, -226], [24, 28, 62], N.dk, nSt(5, 0.1)), ell([28, 8, -210], [20, 14, 40], N.dk2, nSt(5, 0.1)), // split-jaw prow lobes
-    ell([0, 0, -176], [24, 26, 34], N.dk, nSt(5, 0.1)),                                  // skull block behind the spine slot
-    ...nMand(34, 16, -236, 92, 5.5), ...nMand(30, -18, -236, 80, 5), ...nMand(54, 0, -218, 64, 4.5),
-    seg([0, -4, -200], [0, -4, -252], 9, 7, N.dk), seg([0, -4, -250], [0, -4, -296], 6.5, 4.5, N.bl),   // spine emitter barrel
-    ell([0, -4, -297], [8, 8, 3], N.cy, { glow: true, glowF: 1.5 }),
-    ...[-258, -272, -286].map(z => ell([0, -4, z], [9, 9, 2.2], N.mt, nSt(2, 0))),       // collar plates
-    // ventral launch drum, hangar maws, torpedo tube cluster
-    seg([0, -30, -120], [0, -30, 130], 20, 17, N.dk, { dots: { col: N.pr, p: 0.02, f: 1 } }), ell([0, -30, 132], [15, 14, 6], N.dk2),
-    ell([0, -46, -95], [24, 7, 32], N.bl, { dots: { col: N.pr, p: 0.05, f: 1 } }), ell([0, -46, 90], [24, 7, 32], N.bl, { dots: { col: N.pr, p: 0.05, f: 1 } }),
-    ...[[-8, -48], [8, -48], [-8, -38], [8, -38]].map(([x, y]) => seg([x, y, -30], [x, y, -44], 3, 2.4, N.bl)),
-    nKeel(-46, -20, 20, 10, 5),
-    // heart dome (dorsal) over the reactor
-    ell([0, 30, 150], [36, 14, 34], N.dk2, nSt(5, 0.1)),
-    // turret housings: L barbette (dorsal; owner decision 2026-10-22 removed the ventral L blister - carrier keeps one lance), M mounts ~12 m, S/PD ~5 m
-    ell([0, 31, -150], [7.47, 2, 7.47], N.mt, nSt(3, 0.1)),
-    ...[[44, 33, -70], [54, 28, 80], [46, -30, -20]].map(([x, y, z]) => ell([x, y, z], [3.74, 1.5, 3.74], N.mt, nSt(2, 0))),
-    // shield gland blisters
-    ell([0, 33, -40], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }), ell([0, 31, 170], [14, 6, 14], N.dk2, { dots: { col: N.pr, p: 0.08, f: 1 } }),
-    // rib arches to the bow, flank spikes
-    ...[-180, -160, -140, -120, -100].flatMap(bfArch),
-    ...[-150, -100, -50, 0, 50, 100, 150].map((z, i) => nSpike([34, 30, z], [40, 55 - i * 2, z + 36], 3.5 - i * 0.2)),
-    // trailing blades, pylons, engine nacelles
-    nBlade([40, 2, 150], [78, 6, 262], 3.2), nBlade([60, 2, 60], [92, 0, 290], 4), nBlade([48, -6, 90], [84, -8, 288], 3),
-    ...nNoz(24, 12, 244, 296, 12), ...nNoz(50, -4, 240, 294, 14), ...nNoz(76, 8, 236, 290, 11),
-    ...fDetail({ disc: [0, -4, 60, 88, 9, 200], rim: 18, E: [0, 0, 30, 70, 38, 255], refN: 11, plates: 14, gills: 8, collars: 9, ribs: 9, spikes: 8,
-      noz: [[24, 12, 244, 296, 12], [50, -4, 240, 294, 14], [76, 8, 236, 290, 11]], blades: [[[40, 2, 150], [78, 6, 262], 3.2], [[60, 2, 60], [92, 0, 290], 4]], guns: [[0, -4, -250, -296, 4.5]] }),
+    ell([0, 0, 30], [64, 34, 250], FM.hide),                                                            // segmented hull
+    tap([0, 30, -10], 175, [9, 7], [16, 7], FM.hide2, { sh: 'h' }),                                     // dorsal ridge
+    tap([0, 40, 120], 60, [2, 2], [3, 14], FM.hide2, NG),                                                // swept dorsal crest
+    ell([0, 6, -200], [38, 24, 48], FM.hide2),                                                          // heavy head
+    ell([0, 20, -215], [14, 6, 16], FM.met2, NG),                                                       // sensor cluster (comp 'eyes')
+    // split claw prow around the spine gun: two lower prongs and two upper horns
+    ...chain([[24, -14, -215], [32, -18, -255], [22, -12, -292]], [10, 7, 3], FM.hide2),
+    ...chain([[20, 18, -225], [24, 22, -262], [14, 14, -285]], [7, 5, 2], FM.hide2),
+    // spine gun: barrel along the axis, collars, muzzle at z -299
+    seg([0, -4, -205], [0, -4, -296], 8.5, 6, FM.met, NG), tap([0, -4, -297], 1.5, [7.5, 7.5], [7, 7], FM.dk, { sh: 'e', ...NG }),
+    ...[-235, -255, -275].map(z => tap([0, -4, z], 2.5, [10, 10], [10, 10], FM.met2, { sh: 'e', ...NG })),
+    // cage rings and rails, copper pipes
+    ...[-150, -70, 10, 90, 170].flatMap(z => { const f = Math.sqrt(1 - ((z - 30) / 250) ** 2); return fmRing(0, 0, z, 64 * f + 1.5, 34 * f + 1.5, 2.2); }),
+    fmRail(22, 33, -150, 180, 2), fmRail(55, 16, -120, 170, 2),
+    ...fmPipe([[40, 26, -170], [52, 22, -60], [56, 18, 60], [52, 14, 180]], 2.4),
+    ...fmPipe([[30, 30, -120], [36, 30, 0], [34, 28, 140]], 1.8, FM.met2),
+    // ventral launch drum with the two hangar maws, the torpedo tube cluster
+    seg([0, -30, -125], [0, -30, 135], 19, 17, FM.met, NG), tap([0, -30, 138], 4, [15, 14], [13, 12], FM.met2, { sh: 'e', ...NG }),
+    tap([0, -47, -95], 26, [14, 3], [14, 3], FM.dk, NG), tap([0, -47, 90], 26, [14, 3], [14, 3], FM.dk, NG),
+    ...[[-8, -48], [8, -48], [-8, -38], [8, -38]].map(([x, y]) => seg([x, y, -10], [x, y, -42], 3, 2.6, FM.dk, { noMirror: true, ...NG })),
+    // heart dome over the reactor
+    ell([0, 32, 150], [30, 12, 30], FM.met2, NG),
+    // sweeping ventral fins
+    tap([66, -12, 205], 26, [58, 3], [24, 2], FM.hide2, { ax: 'x', sweep: 0.55, ...NG }),
+    // thruster frame and six round thrusters (engines at z 290-296)
+    tap([0, 4, 268], 18, [62, 22], [86, 22], FM.met2, { sh: 'h', ...NG }),
+    ...fmThr(24, 12, 296, 12, 26), ...fmThr(50, -4, 294, 14, 26), ...fmThr(76, 8, 290, 11, 24),
+    ...bfSeats(),
   ],
 };
 
 // attach the reference kit to every FROGG hull (FD_LIST holds each hull's body descriptor in definition order)
 // (2026-11-12: the bio-mech fighters no longer call fDetail, so the list holds the three capitals only; a positional list had moved their kit onto the fighters)
-['gulper', 'hivecarrier', 'bullfrog'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
+['hivecarrier'].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
 for (const id in SHIPS) if (SHIPS[id].fac === 'frogg') SHIPS[id].flameColor = 0x30dcff;      // cyan drive plumes
