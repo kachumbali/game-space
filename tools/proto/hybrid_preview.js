@@ -12,6 +12,7 @@
     return Math.min(Math.max(p.h0[0], p.h1[0]), Math.max(p.h0[1], p.h1[1]), p.hz);
   };
   const small = p => mode === 'hybrid' && thin(p) < thinK * fvs;
+  const segsFor = r => Math.max(6, Math.min(20, Math.round(6 + 14 * Math.sqrt(r / (def.length * 0.06)))));   // round shapes: ~6 segments for small parts, up to 20 for big ones
   // ---------- triangle soup builders (world coords, then mirrored copies) ----------
   const flatP = [], flatC = [], smP = [], smC = [], glP = [], glC = [];
   const col = new T.Color();
@@ -31,12 +32,13 @@
   }
   // cross-section outline in (w1, w2) units for a tap shape
   const outline = sh => {
-    if (sh === 'e') return Array.from({ length: 20 }, (_, i) => { const a = i / 20 * Math.PI * 2; return [Math.cos(a), Math.sin(a)]; });
+    if (sh === 'e') { const n = outline.n || 20; return Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2; return [Math.cos(a), Math.sin(a)]; }); }
     if (sh === 'd') return [[1, 0], [0, 1], [-1, 0], [0, -1]];
     if (sh === 'h') return [[1, 0.45], [0.45, 1], [-0.45, 1], [-1, 0.45], [-1, -0.45], [-0.45, -1], [0.45, -1], [1, -0.45]];
     return [[1, 1], [-1, 1], [-1, -1], [1, -1]];
   };
   function tapTris(p) {
+    outline.n = segsFor(Math.max(p.h0[0], p.h1[0], p.h0[1], p.h1[1]));
     const ring = outline(p.sh), R = rotOf(p), out = [];
     const pt = (al, u, v) => {        // al along axis, u/v unit outline coords
       const t = (al + p.hz) / (2 * p.hz);
@@ -53,8 +55,8 @@
     for (let i = 0; i < n; i++) { const j = (i + 1) % n; out.push([cf, F[j], F[i]], [cb, B[i], B[j]]); }
     return out;
   }
-  function sphereTris(cx, cy, cz, rx, ry, rz, R, seg = 14) {
-    const out = [], rows = seg, cols = seg * 2;
+  function sphereTris(cx, cy, cz, rx, ry, rz, R) {
+    const seg = Math.max(4, Math.round(segsFor(Math.max(rx, ry, rz)) / 2)), out = [], rows = seg, cols = seg * 2;
     const P = (i, j) => { const th = i / rows * Math.PI, ph = j / cols * Math.PI * 2; v3.set(Math.sin(th) * Math.cos(ph) * rx, Math.cos(th) * ry, Math.sin(th) * Math.sin(ph) * rz); if (R) v3.applyMatrix4(R); return [v3.x + cx, v3.y + cy, v3.z + cz]; };
     for (let i = 0; i < rows; i++) for (let j = 0; j < cols; j++) { const a = P(i, j), b = P(i + 1, j), c = P(i + 1, j + 1), d = P(i, j + 1); out.push([a, c, b], [a, d, c]); }
     return out;
@@ -63,7 +65,7 @@
     const a = new T.Vector3(...p.a), b = new T.Vector3(...p.b), ax = b.clone().sub(a), L = ax.length(); ax.normalize();
     const up = Math.abs(ax.y) < 0.9 ? new T.Vector3(0, 1, 0) : new T.Vector3(1, 0, 0);
     const u = new T.Vector3().crossVectors(ax, up).normalize(), w = new T.Vector3().crossVectors(ax, u).normalize();
-    const fy = p.fy ?? 1, out = [], cols = 14, rows = 10;
+    const fy = p.fy ?? 1, out = [], cols = segsFor(Math.max(p.ra, p.rb)), rows = Math.max(2, Math.round(cols / 4));
     // profile: hemisphere at a (radius ra), cone, hemisphere at b (radius rb)
     const prof = [];
     for (let i = 0; i <= rows; i++) { const th = Math.PI - i / rows * Math.PI / 2; prof.push([Math.cos(th) * p.ra, Math.sin(th) * p.ra]); }
