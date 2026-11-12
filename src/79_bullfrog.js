@@ -160,8 +160,17 @@ function spineWarn(s, sp, dt) {
 // ---------------------------------------------------------------- hangar
 function hangarInit(s) {
   const cfg = s.hangarCfg || {};
-  const mk = (id, comp, off) => { const man = {}; for (const k in BF.manifest) man[k] = Math.round(BF.manifest[k] * (cfg.count ?? 36) / 36); return { id, comp, man, t: off, cur: 0, lost: false, launched: 0 }; };
-  return (s.hangar = { bays: [mk('A', 'bayA', 0), mk('B', 'bayB', (cfg.interval ?? BF.hangarInterval) / 2)], out: [], open: false, launched: 0, lostManifest: 0, cap: cfg.cap ?? BF.hangarCap, interval: cfg.interval ?? BF.hangarInterval, emergency: false, log: [] });
+  // complement from the ship's data (dock.fighters, owner 2026-11-12 "fewer everywhere": 18), split over the two bays; the manifest
+  // (tuning.bullfrog.manifest) gives the mix per 36 and is scaled to it. Airborne cap: a third of the complement (was a fixed 36 / 12).
+  const count = cfg.count ?? s.def.dock?.fighters ?? 36, per = count / 2;
+  const tot = Object.values(BF.manifest).reduce((a, b) => a + b, 0);
+  const mk = (id, comp, off) => {                                 // largest-remainder rounding: the bay holds exactly its share
+    const man = {}, fr = []; let n = 0;
+    for (const k in BF.manifest) { const x = BF.manifest[k] * per / tot; man[k] = Math.floor(x); n += man[k]; fr.push([x - man[k], k]); }
+    fr.sort((a, b) => b[0] - a[0]); for (let i = 0; i < Math.round(per) - n; i++) man[fr[i][1]]++;
+    return { id, comp, man, t: off, cur: 0, lost: false, launched: 0 };
+  };
+  return (s.hangar = { bays: [mk('A', 'bayA', 0), mk('B', 'bayB', (cfg.interval ?? BF.hangarInterval) / 2)], out: [], open: false, launched: 0, lostManifest: 0, cap: cfg.cap ?? Math.max(2, Math.round(count / 3)), interval: cfg.interval ?? BF.hangarInterval, emergency: false, log: [] });
 }
 function bayLeft(b) { let n = 0; for (const k in b.man) n += b.man[k]; return n; }
 function hangarPick(s, b) {
@@ -215,7 +224,9 @@ function lancerPick(s) {
   const valid = cur && cur.alive && !cur.dying && cur.team !== s.team;
   const nose = _bf.set(0, 0, -1).applyQuaternion(s.group.quaternion);
   let forced = false;
-  if (valid && cur.def.cls === 'fighter') for (const e of ships) if (bfHostile(s, e) && bfBig(e)) { _bv.copy(e.group.position).sub(s.group.position); const d = _bv.length(); if (d < 2500 && _bv.angleTo(nose) < 0.35) forced = true; }
+  // owner 2026-11-12: the spine goes onto capitals as quickly as possible; a fighter target is dropped as soon as any big hostile is within spine reach (turrets handle fighters)
+  const reach = (WEAPONS[spineMountOf(s)?.w]?.range || 4000) * 1.25;
+  if (valid && cur.def.cls === 'fighter') for (const e of ships) if (bfHostile(s, e) && bfBig(e)) { _bv.copy(e.group.position).sub(s.group.position); if (_bv.length() < reach) forced = true; }
   if (valid && time - (ai.tgtSince ?? -99) < 20 && !forced) return cur;
   let best = null, bs = 1e12;
   for (const e of ships) {

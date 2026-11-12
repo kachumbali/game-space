@@ -15,7 +15,7 @@ JS=r'''()=>{const g=__game,T=g.THREE;__paused=true;
  return out}'''
 with Runner() as R:
     p=R.page(320,180,'?free&n=0&q=low'); r=p.evaluate(JS); print(r,flush=True)
-    for wid,base in [('ir',210),('rf',240),('tick',228)]:
+    for wid,base in [('ir',210),('rf',240),('tick',251)]:   # tick: FROGG Mark V base (2026-11-12)
         for cls,factor in [('fighter',1),('corvette',.45),('frigate',.25),('capital',.15)]:
             assert abs(r[wid+':'+cls]-base*factor*1.1)<.1,(wid,cls,r)
     for wid in ('torp','tad'):

@@ -68,7 +68,7 @@ function initArmament(s) {
   s.stores = { ...(def.stores || {}) };
   s.ammo = {};
   s.ammoMax = {};
-  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) { s.ammo[m.w] = (s.ammo[m.w] || 0) + w.ammo; s.ammoMax[m.w] = (s.ammoMax[m.w] || 0) + w.ammo; } }
+  for (const m of s.mounts) { const w = WEAPONS[m.w]; if (w.ammo) { const n = Math.round(w.ammo * (m.ammoScale ?? 1)); s.ammo[m.w] = (s.ammo[m.w] || 0) + n; s.ammoMax[m.w] = (s.ammoMax[m.w] || 0) + n; } }   // ammoScale: magazine sized to the hull (fighter length / 12.4 m, docs/DESIGN_ARMAMENT_LAWS.md)
   s.energy = s.energyMax || 100; s.fireMask = 3; s.sel = def.ai?.role === 'bomber' && 'torp' in (def.stores || {}) ? Math.max(0, MSL_ORDER.filter(id => id in (def.stores || {})).indexOf('torp')) : 0;   // a bomber starts with its torpedo selected
   s.bfocus = { tgt: null, t: 0, last: -9 };
   s.lock = { tgt: null, wid: null, p: 0, state: 'none', d: 0, ang: 9 };
@@ -559,7 +559,7 @@ function updateFlashes(dt) {
 
 // ---- turrets (point defence / anti-fighter) -------------------------------------------------------------
 // Visual dimensions are fractions of the final in-game hull length, bounded per class.
-function turretCls(t) { return t.cls || ((t.w === 'pd' || t.w === 'pdS' || t.w === 'sting' || t.w === 'thorn') ? 'S' : 'M'); }
+function turretCls(t) { return t.cls || WEAPONS[t.w]?.turretCls || 'M'; }   // explicit per weapon (db turretCls, owner 2026-11-12); a mount may sit in a larger turret via t.cls
 function turretDia(s, t) {
   const cfg = TUNE.turret.visual[turretCls(t)];
   const scale = Number.isFinite(t.visualScale) ? clamp(t.visualScale, 0.35, 1) : 1;

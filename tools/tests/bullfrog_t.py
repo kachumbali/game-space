@@ -45,7 +45,7 @@ def t_exeter(R):
           const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2300),{});bf.ai.role='capital';bf.stores.tad=0;
           const ex=g.spawnShip('exeter',0,V(0,0,-2300),V(0,0,0),{ai:'capital'});freeze(ex);
           for(const c of ex.comps)if(c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // 2026-10-22 refit: disarm the dummy's XL and L/M turrets
-          for(const c of bf.comps)if(/^[LMSP]\d/.test(c.id))c.hp=0;   // range law 2026-11-12: Bullfrog turrets now reach 2.5 km; this scenario measures spine damage only
+          for(const c of bf.comps)if(/^[LMSP]\\d/.test(c.id))c.hp=0;   // range law 2026-11-12: Bullfrog turrets now reach 2.5 km; this scenario measures spine damage only
           g.update(0.05);const sp=bf.spine||__bf.spineInit(bf);sp.tgt=ex;sp.st='off';   // 'off' keeps capitalAI's own spine cycle out; this test measures the direct spineFire calls
           // 2026-11-09: with the spine cycle off the capital AI now manoeuvres for its launchers and the dummy drifts, so shots 2+ missed (hit: null).
           // The rig pins both hulls: this scenario measures damage per spine hit, not aiming.
@@ -132,7 +132,7 @@ def t_arcs(R):
     print(json.dumps(r))
     check('every direction covered by >=1 M, S and PD turret (static hemisphere test)', all(v>=1 for v in r['minC'].values()), json.dumps(r['minC']))
     check('dorsal hemisphere covered by the single remaining L lance', r['minLd']>=1, str(r['minLd']))
-    check('counts: L 1d (ventral lance removed 2026-10-22), M 4d+2v, S 6d+4v, PD 4d+4v', r['n']=={'Ld':1,'Md':4,'Mv':2,'Sd':6,'Sv':4,'PDd':4,'PDv':4}, json.dumps(r['n']))
+    check('counts: L 1d (ventral lance removed 2026-10-22), M 4d+2v, S 4d+2v, PD 2d+4v (slot table 2026-11-12: 12 small)', r['n']=={'Ld':1,'Md':4,'Mv':2,'Sd':4,'Sv':2,'PDd':2,'PDv':4}, json.dumps(r['n']))
     bad=[x for x in r['dyn'] if x['turretsOnIt']<1 or x['firstFire']<0]
     check('dynamic: a hostile at 800 m in each of 10 directions is engaged within 8 s', not bad, json.dumps(bad))
 
@@ -171,7 +171,7 @@ def t_pd(R):
 def t_hangar(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
-      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-3600),{});bf.ai.noJump=true;
+      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-3600),{});bf.ai.noJump=true;bf.hangarCfg={count:36};   // mechanics at a 36 complement (cap 36/3 = 12); the data complement is 18 (checked below)
       const hv=g.spawnShip('hivecarrier',0,V(0,0,-3700),V(0,0,0),{ai:'capital'});freeze(hv);hv.shield.fore=hv.shield.aft=1e9;hv.structure=1e9;
       const o={};g.update(0.05);const H=bf.hangar;
       const air=()=>H.out.filter(f=>f.alive&&!f.dying).length;
@@ -193,9 +193,11 @@ def t_hangar(R):
       bf.structure=bf.def.structure*0.2;bf.ai.noJump=true;const l1=H.launched;const a1=air();
       stepN(12,()=>{hv.vel.set(0,0,0);bf.group.position.set(0,0,0);});o.emergency={mode:bf.ai.mode,launches:H.launched-l1,airDelta:air()-a1};
       o.perBay=H.bays.map(b=>({id:b.id,launched:b.launched,left:Object.values(b.man).reduce((a,c)=>a+c,0)}));
+      const bf2=g.spawnShip('bullfrog',1,V(0,0,9000),V(0,0,0),{});const H2=__bf.hangarInit(bf2);o.dataHangar={total:H2.bays.reduce((a,b)=>a+Object.values(b.man).reduce((x,y)=>x+y,0),0),cap:H2.cap};bf2.alive=false;
       return o;'''))
     print(json.dumps(r))
     check('airborne cap 12 respected', r['maxAir']<=12, str(r['maxAir']))
+    check('data complement: 18 fighters over two bays, cap 6', r['dataHangar']=={'total':18,'cap':6}, json.dumps(r['dataHangar']))
     check('first 12 out in ~27 sim-s (2 bays x 4.5 s alternating)', 20<=r['first12']<=40, str(r['first12']))
     check('refill resumes after losses', r['refill']>=4, str(r['refill']))
     check('bay loss: manifest lost, no further launches from bay A', r['bayA']['lost']>=1 and r['bayA']['launchedAfterLoss']==0, json.dumps(r['bayA']))
@@ -271,15 +273,14 @@ def t_warn(R):
     """HUD warning: the spine charges at an Exeter on the player's side (kind 'ally'); read warnState and the #warn element during the lock."""
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
-      g.player.team=0;g.player.group.position.set(0,0,-1500);g.player.vel.set(0,0,0);
+      g.player.team=0;g.player.group.position.set(0,0,90000);g.player.vel.set(0,0,0);   // the warning needs a live player; parked out of reach (since the burst store, 2026-11-12, the Bullfrog's turrets killed a Kestrel at 1.5 km before the lock)
       const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-2500),{});bf.hangarCfg={count:0};const ex=g.spawnShip('exeter',0,V(0,0,-2500),V(0,0,0),{ai:'capital'});
       freeze(ex);ex.shield.fore=ex.shield.aft=1e6;ex.structure=1e6;for(const c of ex.comps)if(c.role==='turret'||c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // dummy's guns off: after the M2 retune its turrets destroy the Bullfrog emitter (state 'off') or the friendly dummy before the test question is asked
       g.update(0.05);const sp=bf.spine;const o={kinds:[]};
-      stepN(40,()=>{ex.vel.set(0,0,0);g.player.vel.set(0,0,0);g.player.group.position.set(0,0,-1500);bf.vel.set(0,0,0);bf.group.position.set(0,0,0);
+      stepN(40,()=>{ex.vel.set(0,0,0);g.player.vel.set(0,0,0);g.player.group.position.set(0,0,90000);bf.vel.set(0,0,0);bf.group.position.set(0,0,0);
         const w=g.warnState.spine;if(w&&!o.kinds.includes(w.kind+':'+w.lock))o.kinds.push(w.kind+':'+w.lock);if(sp.st==='lock')return false;});
-      o.st=sp.st;return o;'''))
-    pg.wait_for_timeout(2000)
-    txt=pg.evaluate("(()=>{__game.updateHud();return document.getElementById('warn').textContent})()")
+      o.st=sp.st;g.updateHud();o.txt=document.getElementById('warn').textContent;return o;'''))   # read the HUD at the lock, not 2 s later when the shot may be over
+    txt=r['txt']
     print(json.dumps(r),repr(txt))
     check('warnState.spine set while charging at a friendly', len(r['kinds'])>0, str(r['kinds']))
     check('HUD text during the lock', 'LANCE' in txt or 'SPINE' in txt, repr(txt))   # the Bullfrog's weapon is named LANCE (warnName in the db)
