@@ -43,15 +43,16 @@ AUDIT = """([id, detail]) => {
                         };
                         const inward = inside(-1), outward = inside(1);
                         if (!inward && !outward) continue;
-                        const counts = pairs.get(b.index) || [0, 0];
-                        counts[inward && outward ? 0 : 1]++;
+                        const counts = pairs.get(b.index) || [0, 0, 0];
+                        // An opposing boundary is a butt joint. Equal-facing boundaries can z-fight.
+                        counts[inward ? (outward ? 0 : 1) : 2]++;
                         pairs.set(b.index, counts);
                     }
                 }
             }
         }
-        for (const [other, [inside, coincident]] of pairs) {
-            result.push({ prim: a.index, other, inside, coincident });
+        for (const [other, [inside, coincident, joint]] of pairs) {
+            result.push({ prim: a.index, other, inside, coincident, joint });
         }
     }
     return result;
@@ -63,7 +64,7 @@ def main():
     parser.add_argument('ships', nargs='*', help='ship IDs (default is the whole fleet)')
     parser.add_argument('--detail', type=int, choices=(2, 6), default=6)
     args = parser.parse_args()
-    writer = csv.DictWriter(sys.stdout, fieldnames=['ship', 'detail', 'prim', 'other', 'inside', 'coincident'])
+    writer = csv.DictWriter(sys.stdout, fieldnames=['ship', 'detail', 'prim', 'other', 'inside', 'coincident', 'joint'])
     writer.writeheader()
     with Runner() as runner:
         page = runner.page(640, 360, '?q=low&vox=mesh')
