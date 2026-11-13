@@ -430,10 +430,16 @@ function capitalAI(s, dt) {
     }
     sAim = spineStep(s, dt);
   }
-  if (!t) { aiFly(s, { throttle: 0.1 }, dt); return; }
+  // owner 2026-11-12: a capital with an XL spine steers for the nearest enemy capital (or frigate/corvette) as quickly as possible, so the
+  // keel gun comes to bear instead of the hull chasing fighters; turrets keep engaging fighters on their own
+  let big = sp ? sp.tgt : null;
+  if (sp && !big) { let bd = Infinity; for (const h of hostilesOf(s)) { if (h.def.cls === 'fighter' || !h.alive || h.dying) continue; const dd = ep.distanceTo(h.group.position); if (dd < bd) { bd = dd; big = h; } } }
+  const steer = big || t;
+  if (!steer) { aiFly(s, { throttle: 0.1 }, dt); return; }
+  { const t = steer;
   const dist = ep.distanceTo(t.group.position);
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
-  const want = isCapital(t) ? 1100 : 900;
+  const want = big ? Math.min(WEAPONS[sm.w].range * 0.6, 2300) : isCapital(t) ? 1100 : 900;   // spine ships stand off inside their secondaries' reach
   const rng = primaryRange(s);
   const lp = s.def.ai?.interceptLead ? projectileInterceptPoint(s, t, primarySpeed(s)) : leadPoint(s, t, primarySpeed(s));
   if (!(sp && sp.st === 'lock')) turnToward(s, sAim ?? lp, dt, 1);   // charging: steer onto the XL aim point; heading frozen from the lock on
@@ -446,5 +452,6 @@ function capitalAI(s, dt) {
   if (!s.launcherRuntime && (s.stores.tad > 0 || s.stores.torp > 0)) {
     const wid = s.stores.tad > 0 ? 'tad' : 'torp';
     if (isCapital(t)) { s.sel = missileIds(s).indexOf(wid); lockUpdate(s, dt); if (s.lock.state === 'locked' && ai.mslT <= 0 && torpsStillNeeded(s, t) > 0) { launchMissile(s, wid); ai.mslT = 5; } }
+  }
   }
 }
