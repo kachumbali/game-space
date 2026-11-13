@@ -19,3 +19,11 @@ Owner decision 2026-11-12: after Codex brief 5, ship hulls move from voxels to r
 
 ## For designers now
 Do not rely on a later prim to hide an earlier prim's colour. Shapes should meet, not be buried in each other with a different colour.
+
+## Mesh shading preview
+
+The mesh hull's opaque material multiplies vertex colour by a baked contact shadow sampled from the ship's collision grid. It samples only the initial grid and keeps the existing damage behavior. The authored `col2`, `rust`, `streak` and `strata` options tint the vertices. Panel `seam` and `rib` patterns are evaluated at the surface so long triangles can carry narrow grooves.
+
+FROGG hide prims use the shared 64 × 64 repeating height tile. A prim can set `hide: true` to use this bump detail in the shipyard. It uses the opaque material and keeps the same triangle and draw counts.
+
+Run `python3 tools/tests/mesh_hulls_bench.py --compare-shading --shots /tmp/mesh-shading` for the per-ship comparison at detail 2 and 6 and the contact sheets. The benchmark times uncached grid and mesh builds. It does not measure GPU shader cost.
