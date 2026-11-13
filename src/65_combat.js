@@ -215,7 +215,9 @@ function destroy(s) {
 function explode(s) {
   const D = s.vox.data, vs = D.vs;
   const big = s.def.cls !== 'fighter';
-  if (!big) fighterChunks(s);
+  if (!big) {
+    if (VOX_MESH) fighterMeshChunks(s); else fighterChunks(s);
+  }
   const count = Math.min(D.voxels.length, big ? 900 : 180);
   const mesh = new THREE.InstancedMesh(boxGeo(vs * (big ? 2.0 : 2.4)), voxMat, count);
   mesh.frustumCulled = false;

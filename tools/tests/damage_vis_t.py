@@ -1,7 +1,8 @@
 """Damage presentation regressions. Run after build.py with the standard test harness."""
 from lib import *
+MESH = "&vox=mesh" if "--mesh" in sys.argv else ""
 with Runner() as r:
-    pg = r.page(1280, 720, '?free&n=0&q=mid&seed=8')
+    pg = r.page(1280, 720, '?free&n=0&q=mid&seed=8' + MESH)
     out = pg.evaluate('''() => {
       const g=__game, T=g.THREE; g.__paused=true;
       const out={};
@@ -44,7 +45,7 @@ with Runner() as r:
         print('PASS',name,v,flush=True)
     assert_no_console_errors(r)
 with Runner() as r:
-    pg = r.page(1280, 720, '?free&n=0&q=low&rescap=40&seed=8')
+    pg = r.page(1280, 720, '?free&n=0&q=low&rescap=40&seed=8' + MESH)
     out = pg.evaluate('''() => {
       const g=__game,T=g.THREE;g.__paused=true;let failures=[],checked=0;
       for(const id of Object.keys(g.SHIPS)) {
