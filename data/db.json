@@ -317,7 +317,8 @@
             -4.75
           ],
           "comp": "gunL",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 0.73
         },
         {
           "w": "cannon",
@@ -327,7 +328,8 @@
             -4.75
           ],
           "comp": "gunR",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 0.73
         }
       ],
       "stores": {
@@ -756,7 +758,8 @@
             -10.9
           ],
           "comp": "gunR",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.77
         },
         {
           "w": "he",
@@ -766,7 +769,8 @@
             -10.9
           ],
           "comp": "gunL",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.77
         },
         {
           "w": "torp",
@@ -1107,7 +1111,8 @@
           ],
           "comp": "tur1",
           "side": 1,
-          "aimScale": 0.55
+          "aimScale": 0.55,
+          "cls": "M"
         },
         {
           "w": "pulseS",
@@ -1118,7 +1123,8 @@
           ],
           "comp": "tur2",
           "side": 1,
-          "aimScale": 0.55
+          "aimScale": 0.55,
+          "cls": "M"
         },
         {
           "w": "pd",
@@ -1346,19 +1352,22 @@
           "hp": 200
         }
       ],
-      "shield": {"fore": 330, "aft": 330},
+      "shield": {
+        "fore": 338,
+        "aft": 338
+      },
       "armor": {
         "type": "hard",
         "rating": 0.28
       },
-      "structure": 690,
+      "structure": 706,
       "maxSpeed": 28,
       "accel": 6,
       "turn": 0.22,
       "shieldRegen": 6,
       "power": {
-        "plantMW": 300,
-        "capacitorMJ": 600
+        "plantMW": 317,
+        "capacitorMJ": 740
       },
       "sig": 4,
       "flameColor": "#66c8ff"
@@ -1513,16 +1522,6 @@
             -80
           ],
           "comp": "tur6",
-          "side": -1
-        },
-        {
-          "w": "pd",
-          "pos": [
-            0,
-            -22.4,
-            60
-          ],
-          "comp": "tur7",
           "side": -1
         },
         {
@@ -1782,18 +1781,6 @@
             -80
           ],
           "r": 7,
-          "hp": 90
-        },
-        {
-          "id": "tur7",
-          "name": "PD 7",
-          "role": "turret",
-          "pos": [
-            0,
-            -22.4,
-            60
-          ],
-          "r": 3.2,
           "hp": 90
         },
         {
@@ -2062,21 +2049,21 @@
         }
       ],
       "shield": {
-        "fore": 900,
-        "aft": 800
+        "fore": 846,
+        "aft": 752
       },
       "armor": {
         "type": "composite",
         "rating": 0.27
       },
-      "structure": 1800,
+      "structure": 1692,
       "maxSpeed": 30,
       "accel": 3,
       "turn": 0.08,
       "shieldRegen": 12,
       "power": {
-        "plantMW": 1050,
-        "capacitorMJ": 2500
+        "plantMW": 902,
+        "capacitorMJ": 2104
       },
       "sig": 8,
       "flameColor": "#66c8ff",
@@ -2752,22 +2739,22 @@
         }
       ],
       "shield": {
-        "fore": 11520,
-        "aft": 9360
+        "fore": 2300,
+        "aft": 1869
       },
       "armor": {
         "type": "composite",
         "rating": 0.36
       },
-      "structure": 20736,
+      "structure": 4140,
       "maxSpeed": 10,
       "aiSpeed": 6,
       "accel": 0.15,
       "turn": 0.012,
       "shieldRegen": 43.2,
       "power": {
-        "plantMW": 6912,
-        "capacitorMJ": 17280
+        "plantMW": 3190,
+        "capacitorMJ": 7441
       },
       "sig": 24,
       "flameColor": "#66c8ff",
@@ -3810,22 +3797,22 @@
         }
       ],
       "shield": {
-        "fore": 8000,
-        "aft": 6500
+        "fore": 2267,
+        "aft": 1842
       },
       "armor": {
         "type": "composite",
         "rating": 0.3
       },
-      "structure": 12000,
+      "structure": 3401,
       "maxSpeed": 10,
       "aiSpeed": 6,
       "accel": 0.15,
       "turn": 0.012,
       "shieldRegen": 30,
       "power": {
-        "plantMW": 4800,
-        "capacitorMJ": 12000
+        "plantMW": 2522,
+        "capacitorMJ": 5884
       },
       "sig": 24,
       "flameColor": "#66c8ff",
@@ -4141,21 +4128,21 @@
         }
       ],
       "shield": {
-        "fore": 600,
-        "aft": 500
+        "fore": 181,
+        "aft": 151
       },
       "armor": {
         "type": "composite",
         "rating": 0.25
       },
-      "structure": 1400,
+      "structure": 423,
       "maxSpeed": 24,
       "accel": 2.5,
       "turn": 0.07,
       "shieldRegen": 8,
       "power": {
-        "plantMW": 900,
-        "capacitorMJ": 2000
+        "plantMW": 317,
+        "capacitorMJ": 740
       },
       "sig": 10,
       "flameColor": "#66c8ff",
@@ -4188,7 +4175,8 @@
             -4.9
           ],
           "comp": "gunR",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 0.77
         },
         {
           "w": "fang",
@@ -4198,7 +4186,8 @@
             -4.9
           ],
           "comp": "gunL",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 0.77
         }
       ],
       "stores": {
@@ -4297,7 +4286,8 @@
       "sig": 1,
       "power": {
         "plantMW": 51,
-        "capacitorMJ": 100
+        "capacitorMJ": 882,
+        "burstMJ": 782
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -4321,7 +4311,40 @@
       "rustK": 0.4,
       "radius": 9.5,
       "engines": [{"pos": [1.4, 0.6, 8.6], "comp": "engR", "r": 0.8}, {"pos": [-1.4, 0.6, 8.6], "comp": "engL", "r": 0.8}],
-      "mounts": [{"w": "spitcannon", "pos": [0, 0.1, -8.6], "comp": "cannon", "grp": 1}, {"w": "fang", "pos": [3.1, -0.9, -3.6], "comp": "gunR", "grp": 2}, {"w": "fang", "pos": [-3.1, -0.9, -3.6], "comp": "gunL", "grp": 2}],
+      "mounts": [
+        {
+          "w": "spitcannon",
+          "pos": [
+            0,
+            0.1,
+            -8.6
+          ],
+          "comp": "cannon",
+          "grp": 1
+        },
+        {
+          "w": "fang",
+          "pos": [
+            3.1,
+            -0.9,
+            -3.6
+          ],
+          "comp": "gunR",
+          "grp": 2,
+          "ammoScale": 1.29
+        },
+        {
+          "w": "fang",
+          "pos": [
+            -3.1,
+            -0.9,
+            -3.6
+          ],
+          "comp": "gunL",
+          "grp": 2,
+          "ammoScale": 1.29
+        }
+      ],
       "stores": {
         "tick": 4,
         "flare": 10
@@ -4344,7 +4367,8 @@
       "sig": 1.3,
       "power": {
         "plantMW": 51,
-        "capacitorMJ": 100
+        "capacitorMJ": 166,
+        "burstMJ": 66
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -4368,7 +4392,74 @@
       "rustK": 0.4,
       "radius": 14,
       "engines": [{"pos": [1.6, 1.2, 9.6], "comp": "engR", "r": 1.1}, {"pos": [-1.6, 1.2, 9.6], "comp": "engL", "r": 1.1}, {"pos": [3.4, -0.8, 9.4], "comp": "engR", "r": 0.9}, {"pos": [-3.4, -0.8, 9.4], "comp": "engL", "r": 0.9}],
-      "mounts": [{"w": "fang", "pos": [1.2, -0.8, -8.9], "comp": "gunR", "grp": 1}, {"w": "fang", "pos": [-1.2, -0.8, -8.9], "comp": "gunL", "grp": 1}, {"w": "tad", "pos": [3.2, -2.0, -4.7], "comp": "rackRF", "grp": 3, "store": "tad"}, {"w": "tad", "pos": [-3.2, -2.0, -4.7], "comp": "rackLF", "grp": 3, "store": "tad"}, {"w": "tad", "pos": [3.2, -2.0, 0.6], "comp": "rackRA", "grp": 4, "store": "tad"}, {"w": "tad", "pos": [-3.2, -2.0, 0.6], "comp": "rackLA", "grp": 4, "store": "tad"}],
+      "mounts": [
+        {
+          "w": "fang",
+          "pos": [
+            1.2,
+            -0.8,
+            -8.9
+          ],
+          "comp": "gunR",
+          "grp": 1,
+          "ammoScale": 1.77
+        },
+        {
+          "w": "fang",
+          "pos": [
+            -1.2,
+            -0.8,
+            -8.9
+          ],
+          "comp": "gunL",
+          "grp": 1,
+          "ammoScale": 1.77
+        },
+        {
+          "w": "tad",
+          "pos": [
+            3.2,
+            -2.0,
+            -4.7
+          ],
+          "comp": "rackRF",
+          "grp": 3,
+          "store": "tad"
+        },
+        {
+          "w": "tad",
+          "pos": [
+            -3.2,
+            -2.0,
+            -4.7
+          ],
+          "comp": "rackLF",
+          "grp": 3,
+          "store": "tad"
+        },
+        {
+          "w": "tad",
+          "pos": [
+            3.2,
+            -2.0,
+            0.6
+          ],
+          "comp": "rackRA",
+          "grp": 4,
+          "store": "tad"
+        },
+        {
+          "w": "tad",
+          "pos": [
+            -3.2,
+            -2.0,
+            0.6
+          ],
+          "comp": "rackLA",
+          "grp": 4,
+          "store": "tad"
+        }
+      ],
       "stores": {
         "tad": 12,
         "flare": 16
@@ -4502,7 +4593,8 @@
             -7.4
           ],
           "comp": "gunR",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.53
         },
         {
           "w": "fang",
@@ -4512,7 +4604,8 @@
             -7.4
           ],
           "comp": "gunL",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.53
         },
         {
           "w": "spit",
@@ -4634,7 +4727,8 @@
       "sig": 1.3,
       "power": {
         "plantMW": 51,
-        "capacitorMJ": 100
+        "capacitorMJ": 882,
+        "burstMJ": 782
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -4804,28 +4898,26 @@
           "side": 1
         },
         {
-          "w": "sting",
+          "w": "thorn",
+          "cls": "S",
           "pos": [
-            3.4,
-            5.85,
-            14
+            0,
+            -6.2,
+            -20
           ],
-          "comp": "tur3",
-          "side": 1
+          "comp": "pd2",
+          "side": -1
         },
         {
-          "w": "sting",
+          "w": "thorn",
+          "cls": "S",
           "pos": [
-            -3.4,
-            5.6,
-            14
+            0,
+            -7.3,
+            16
           ],
-          "comp": "tur4",
-          "side": 1
-        },
-        {"w": "thorn", "cls": "S", "pos": [0, 7.6, -19], "comp": "pd1", "side": 1},
-        {"w": "thorn", "cls": "S", "pos": [0, -6.2, -20], "comp": "pd2", "side": -1},
-        {"w": "thorn", "cls": "S", "pos": [0, -7.3, 16], "comp": "pd3", "side": -1
+          "comp": "pd3",
+          "side": -1
         }
       ],
       "stores": {
@@ -4976,32 +5068,29 @@
           "hp": 26
         },
         {
-          "id": "tur3",
-          "name": "STING 3",
+          "id": "pd2",
+          "name": "POINT DEFENCE VENTRAL FORWARD",
           "role": "turret",
           "pos": [
-            3.4,
-            5.85,
-            14
+            0,
+            -6.2,
+            -20
           ],
           "r": 1.5,
           "hp": 26
         },
         {
-          "id": "tur4",
-          "name": "STING 4",
+          "id": "pd3",
+          "name": "POINT DEFENCE VENTRAL AFT",
           "role": "turret",
           "pos": [
-            -3.4,
-            5.6,
-            14
+            0,
+            -7.3,
+            16
           ],
           "r": 1.5,
           "hp": 26
         },
-        {"id": "pd1", "name": "POINT DEFENCE DORSAL", "role": "turret", "pos": [0, 7.6, -19], "r": 1.5, "hp": 26},
-        {"id": "pd2", "name": "POINT DEFENCE VENTRAL FORWARD", "role": "turret", "pos": [0, -6.2, -20], "r": 1.5, "hp": 26},
-        {"id": "pd3", "name": "POINT DEFENCE VENTRAL AFT", "role": "turret", "pos": [0, -7.3, 16], "r": 1.5, "hp": 26},
         {
           "id": "shield",
           "name": "SHIELD GLAND",
@@ -5039,20 +5128,24 @@
           "hp": 230
         }
       ],
-      "shield": {"fore": 300, "aft": 240},
+      "shield": {
+        "fore": 294,
+        "aft": 235
+      },
       "armor": {
         "type": "composite",
         "rating": 0.31
       },
-      "structure": 720,
+      "structure": 706,
       "maxSpeed": 34,
       "aiSpeed": 26,
       "accel": 6,
       "turn": 0.2,
       "sig": 4,
       "power": {
-        "plantMW": 210,
-        "capacitorMJ": 400
+        "plantMW": 317,
+        "capacitorMJ": 2442,
+        "burstMJ": 1701
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -5168,22 +5261,22 @@
         }
       ],
       "shield": {
-        "fore": 4000,
-        "aft": 3200
+        "fore": 6088,
+        "aft": 4870
       },
       "armor": {
         "type": "composite",
         "rating": 0.21
       },
-      "structure": 6000,
+      "structure": 9132,
       "maxSpeed": 12,
       "aiSpeed": 8,
       "accel": 0.5,
       "turn": 0.03,
       "sig": 20,
       "power": {
-        "plantMW": 51,
-        "capacitorMJ": 100
+        "plantMW": 8209,
+        "capacitorMJ": 19151
       },
       "flameColor": "#30dcff",
       "ai": {
@@ -5398,28 +5491,6 @@
           "w": "sting",
           "cls": "S",
           "pos": [
-            40,
-            35,
-            -10
-          ],
-          "comp": "S3",
-          "side": 1
-        },
-        {
-          "w": "sting",
-          "cls": "S",
-          "pos": [
-            -40,
-            35,
-            -10
-          ],
-          "comp": "S4",
-          "side": 1
-        },
-        {
-          "w": "sting",
-          "cls": "S",
-          "pos": [
             36,
             35,
             110
@@ -5461,28 +5532,6 @@
           "side": -1
         },
         {
-          "w": "sting",
-          "cls": "S",
-          "pos": [
-            40,
-            -27,
-            90
-          ],
-          "comp": "S9",
-          "side": -1
-        },
-        {
-          "w": "sting",
-          "cls": "S",
-          "pos": [
-            -40,
-            -27,
-            90
-          ],
-          "comp": "S10",
-          "side": -1
-        },
-        {
           "w": "thorn",
           "cls": "S",
           "pos": [
@@ -5502,28 +5551,6 @@
             -110
           ],
           "comp": "P2",
-          "side": 1
-        },
-        {
-          "w": "thorn",
-          "cls": "S",
-          "pos": [
-            24,
-            40,
-            150
-          ],
-          "comp": "P3",
-          "side": 1
-        },
-        {
-          "w": "thorn",
-          "cls": "S",
-          "pos": [
-            -24,
-            40,
-            150
-          ],
-          "comp": "P4",
           "side": 1
         },
         {
@@ -5697,30 +5724,6 @@
           "hp": 45
         },
         {
-          "id": "S3",
-          "name": "STING S3",
-          "role": "turret",
-          "pos": [
-            40,
-            35,
-            -10
-          ],
-          "r": 2.5,
-          "hp": 45
-        },
-        {
-          "id": "S4",
-          "name": "STING S4",
-          "role": "turret",
-          "pos": [
-            -40,
-            35,
-            -10
-          ],
-          "r": 2.5,
-          "hp": 45
-        },
-        {
           "id": "S5",
           "name": "STING S5",
           "role": "turret",
@@ -5769,30 +5772,6 @@
           "hp": 45
         },
         {
-          "id": "S9",
-          "name": "STING S9",
-          "role": "turret",
-          "pos": [
-            40,
-            -27,
-            90
-          ],
-          "r": 2.5,
-          "hp": 45
-        },
-        {
-          "id": "S10",
-          "name": "STING S10",
-          "role": "turret",
-          "pos": [
-            -40,
-            -27,
-            90
-          ],
-          "r": 2.5,
-          "hp": 45
-        },
-        {
           "id": "P1",
           "name": "THORN PD P1",
           "role": "turret",
@@ -5812,30 +5791,6 @@
             -16,
             37,
             -110
-          ],
-          "r": 2.5,
-          "hp": 40
-        },
-        {
-          "id": "P3",
-          "name": "THORN PD P3",
-          "role": "turret",
-          "pos": [
-            24,
-            40,
-            150
-          ],
-          "r": 2.5,
-          "hp": 40
-        },
-        {
-          "id": "P4",
-          "name": "THORN PD P4",
-          "role": "turret",
-          "pos": [
-            -24,
-            40,
-            150
           ],
           "r": 2.5,
           "hp": 40
@@ -6046,18 +6001,19 @@
         }
       ],
       "shield": {
-        "fore": 2000,
-        "aft": 1600
+        "fore": 1442,
+        "aft": 1154
       },
       "armor": {
         "type": "hard",
         "rating": 0.3
       },
-      "structure": 3200,
+      "structure": 2307,
       "shieldRegen": 6,
       "power": {
-        "plantMW": 960,
-        "capacitorMJ": 3200
+        "plantMW": 1306,
+        "capacitorMJ": 8887,
+        "burstMJ": 5840
       },
       "maxSpeed": 22,
       "aiSpeed": 14,
@@ -6141,7 +6097,8 @@
             -10.4
           ],
           "comp": "gunL",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.57
         },
         {
           "w": "cannon",
@@ -6151,7 +6108,8 @@
             -10.4
           ],
           "comp": "gunR",
-          "grp": 1
+          "grp": 1,
+          "ammoScale": 1.57
         },
         {
           "w": "fmag",
@@ -6161,7 +6119,8 @@
             -7.7
           ],
           "comp": "wingR",
-          "grp": 2
+          "grp": 2,
+          "ammoScale": 1.57
         },
         {
           "w": "fmag",
@@ -6171,7 +6130,8 @@
             -7.7
           ],
           "comp": "wingL",
-          "grp": 2
+          "grp": 2,
+          "ammoScale": 1.57
         }
       ],
       "turrets": [
@@ -6913,21 +6873,21 @@
         }
       ],
       "shield": {
-        "fore": 1100,
-        "aft": 1000
+        "fore": 558,
+        "aft": 507
       },
       "armor": {
         "type": "composite",
         "rating": 0.22
       },
-      "structure": 2000,
+      "structure": 1015,
       "maxSpeed": 16,
       "accel": 1.6,
       "turn": 0.045,
       "shieldRegen": 10,
       "power": {
-        "plantMW": 700,
-        "capacitorMJ": 1800
+        "plantMW": 902,
+        "capacitorMJ": 2104
       },
       "sig": 12,
       "flameColor": "#66c8ff",
@@ -7229,21 +7189,21 @@
       ],
       "comps": [{"id": "engC", "name": "ENGINE C", "role": "engine", "pos": [0, 0, 262], "r": 18, "hp": 520}, {"id": "engL", "name": "ENGINE L", "role": "engine", "pos": [-26, 0, 262], "r": 13, "hp": 380}, {"id": "engR", "name": "ENGINE R", "role": "engine", "pos": [26, 0, 262], "r": 13, "hp": 380}, {"id": "railL", "name": "RAIL L", "role": "gun", "pos": [-5, 3, -285], "r": 5, "hp": 240}, {"id": "railR", "name": "RAIL R", "role": "gun", "pos": [5, 3, -285], "r": 5, "hp": 240}, {"id": "rackL", "name": "TORP RACK L", "role": "gun", "pos": [-22, -3, -240], "r": 4.5, "hp": 140}, {"id": "rackR", "name": "TORP RACK R", "role": "gun", "pos": [22, -3, -240], "r": 4.5, "hp": 140}, {"id": "tur1", "name": "MASS DRIVER 1", "role": "turret", "pos": [0, 22.0, -140], "r": 12, "hp": 160}, {"id": "tur2", "name": "MASS DRIVER 2", "role": "turret", "pos": [0, 22.0, 20], "r": 12, "hp": 160}, {"id": "tur3", "name": "MASS DRIVER 3", "role": "turret", "pos": [0, -20.6, -60], "r": 12, "hp": 160}, {"id": "tur4", "name": "MASS DRIVER 4", "role": "turret", "pos": [0, -20.6, 90], "r": 12, "hp": 160}, {"id": "tur5", "name": "LS-8 LASER 5", "role": "turret", "pos": [30, 16.9, -90], "r": 5.5, "hp": 100}, {"id": "tur6", "name": "LS-8 LASER 6", "role": "turret", "pos": [-30, 16.9, -90], "r": 5.5, "hp": 100}, {"id": "tur7", "name": "LS-8 LASER 7", "role": "turret", "pos": [38, 18.4, 60], "r": 5.5, "hp": 100}, {"id": "tur8", "name": "LS-8 LASER 8", "role": "turret", "pos": [-38, 18.4, 60], "r": 5.5, "hp": 100}, {"id": "tur9", "name": "LS-8 LASER 9", "role": "turret", "pos": [30, -17.2, -60], "r": 5.5, "hp": 100}, {"id": "tur10", "name": "LS-8 LASER 10", "role": "turret", "pos": [-30, -17.2, -60], "r": 5.5, "hp": 100}, {"id": "tur11", "name": "LS-8 LASER 11", "role": "turret", "pos": [36, -18.9, 120], "r": 5.5, "hp": 100}, {"id": "tur12", "name": "LS-8 LASER 12", "role": "turret", "pos": [-36, -18.9, 120], "r": 5.5, "hp": 100}, {"id": "tur13", "name": "PD 13", "role": "turret", "pos": [12, 22.0, -190], "r": 2.5, "hp": 90}, {"id": "tur14", "name": "PD 14", "role": "turret", "pos": [-12, 22.0, -190], "r": 2.5, "hp": 90}, {"id": "tur15", "name": "PD 15", "role": "turret", "pos": [14, 22.0, 110], "r": 2.5, "hp": 90}, {"id": "tur16", "name": "PD 16", "role": "turret", "pos": [-14, 22.0, 110], "r": 2.5, "hp": 90}, {"id": "tur17", "name": "PD 17", "role": "turret", "pos": [8, -20.6, -150], "r": 2.5, "hp": 90}, {"id": "tur18", "name": "PD 18", "role": "turret", "pos": [-8, -20.6, -150], "r": 2.5, "hp": 90}, {"id": "tur19", "name": "PD 19", "role": "turret", "pos": [8, -20.6, 150], "r": 2.5, "hp": 90}, {"id": "tur20", "name": "PD 20", "role": "turret", "pos": [-8, -20.6, 150], "r": 2.5, "hp": 90}, {"id": "shieldF", "name": "SHIELD FWD", "role": "shield", "pos": [0, 0, -110], "r": 16, "hp": 450}, {"id": "shieldA", "name": "SHIELD AFT", "role": "shield", "pos": [0, 0, 110], "r": 16, "hp": 450}, {"id": "bridge", "name": "BRIDGE", "role": "radar", "pos": [0, 32, 150], "r": 14, "hp": 380}, {"id": "power", "name": "REACTOR", "role": "power", "pos": [0, 0, 190], "r": 24, "hp": 1000}, {"id": "radL", "name": "RADIATOR L", "role": "radiator", "pos": [-64, 11, 205], "r": 20, "hp": 280}, {"id": "radR", "name": "RADIATOR R", "role": "radiator", "pos": [64, 11, 205], "r": 20, "hp": 280}, {"id": "mdxl", "name": "HEAVY MASS DRIVER", "role": "gun", "pos": [0, -5, -200], "r": 16, "hp": 800}],
       "shield": {
-        "fore": 1400,
-        "aft": 1200
+        "fore": 1456,
+        "aft": 1248
       },
       "armor": {
         "type": "composite",
         "rating": 0.32
       },
-      "structure": 2700,
+      "structure": 2808,
       "maxSpeed": 28,
       "accel": 2.6,
       "turn": 0.07,
       "shieldRegen": 12,
       "power": {
-        "plantMW": 1500,
-        "capacitorMJ": 3500
+        "plantMW": 1652,
+        "capacitorMJ": 3854
       },
       "sig": 11,
       "flameColor": "#66c8ff",
@@ -7484,7 +7444,7 @@
       "dt": "kin",
       "life": 1.8,
       "spread": 0.004,
-      "ammo": 600,
+      "ammo": 400,
       "color": "#ffd9a0",
       "len": 3.4,
       "sz": 0.14,
@@ -7499,7 +7459,7 @@
       "dt": "kin",
       "life": 2,
       "spread": 0.0015,
-      "ammo": 500,
+      "ammo": 150,
       "color": "#ffa860",
       "len": 7,
       "sz": 0.22,
@@ -7566,7 +7526,7 @@
       "life": 1.25,
       "spread": 0.002,
       "energy": 4.68,
-      "ammo": 120,
+      "ammo": 60,
       "color": "#cfe8ff",
       "len": 14,
       "sz": 0.4,
@@ -7574,6 +7534,7 @@
       "big": true
     },
     "mdl": {
+      "turretCls": "L",
       "kind": "proj",
       "name": "MD-55 MASS DRIVER (L)",
       "cd": 1.0,
@@ -7600,11 +7561,11 @@
     "mdxl": {
       "kind": "spine",
       "name": "MK-90 MASS DRIVER",
-      "dmg": 899,
+      "dmg": 756,
       "dt": "kin",
       "pierce": 0.6,
       "range": 4000,
-      "energy": 800,
+      "energy": 673,
       "charge": 5,
       "lockT": 1.5,
       "cd": 30,
@@ -7619,8 +7580,9 @@
       "mag": 100,
       "hitFighters": false
     },
-    "mdxh": {"kind": "spine", "name": "MK-90 MASS DRIVER", "dmg": 1258, "dt": "kin", "pierce": 0.6, "range": 4000, "energy": 1120, "charge": 5, "lockT": 1.5, "cd": 30, "delay": 15, "fizzleCd": 8, "lockHold": 3, "corridorHalf": 0.12, "bw": 14, "color": "#cfe8ff", "sfx": "rail", "warnName": "HEAVY MASS DRIVER", "mag": 100, "hitFighters": false, "notes": "Glaive heavy XL mass driver (owner 2026-11-12). Sized by tuning.energyLaw: energy = spineCapacitorShare x Glaive capacitor (0.32 x 3500 MJ), damage = energy / mjPerDamage.spine."},
+    "mdxh": {"kind": "spine", "name": "MK-90 MASS DRIVER", "dmg": 1385, "dt": "kin", "pierce": 0.6, "range": 4000, "energy": 1233, "charge": 5, "lockT": 1.5, "cd": 30, "delay": 15, "fizzleCd": 8, "lockHold": 3, "corridorHalf": 0.12, "bw": 14, "color": "#cfe8ff", "sfx": "rail", "warnName": "HEAVY MASS DRIVER", "mag": 100, "hitFighters": false, "notes": "Glaive heavy XL mass driver (owner 2026-11-12). Sized by tuning.energyLaw: energy = spineCapacitorShare x Glaive capacitor (0.32 x 3500 MJ), damage = energy / mjPerDamage.spine."},
     "laser": {
+      "turretCls": "M",
       "kind": "beam",
       "name": "LS-2 LEGACY TURRET LASER",
       "cd": 0.25,
@@ -7640,6 +7602,7 @@
       "charge": 0.5
     },
     "pulseS": {
+      "turretCls": "S",
       "kind": "beam",
       "name": "P-4 DEFENCE PULSE (S)",
       "pd": true,
@@ -7661,6 +7624,7 @@
       "charge": 0.12
     },
     "laserM": {
+      "turretCls": "M",
       "kind": "beam",
       "name": "LS-8 ANTI-CAPITAL LASER (M)",
       "cd": 0.4,
@@ -7686,6 +7650,7 @@
       ]
     },
     "pd": {
+      "turretCls": "S",
       "kind": "proj",
       "name": "PD-30 POINT DEFENCE",
       "cd": 0.075,
@@ -7712,6 +7677,7 @@
       "dmgMsl": 1.3
     },
     "pdS": {
+      "turretCls": "S",
       "kind": "proj", "name": "PD-15 BURST POINT DEFENCE (S)",
       "cd": 0.075, "v": 1100, "dmg": 2.15, "dt": "kin", "life": 0.85,
       "spread": 0.012, "color": "#ffe0b0", "len": 3.2, "sz": 0.13,
@@ -7736,6 +7702,7 @@
       "bw": 0.3
     },
     "lance": {
+      "turretCls": "M",
       "kind": "beam",
       "name": "M-7 MASER LANCE",
       "cd": 0.06,
@@ -7820,6 +7787,7 @@
       "energy": 13.7
     },
     "sting": {
+      "turretCls": "S",
       "kind": "proj",
       "name": "R-4 AUTOCANNON TURRET (S)",
       "cd": 0.09,
@@ -7930,23 +7898,24 @@
       }
     },
     "tick": {
+      "markBase": 5,
       "kind": "msl",
       "name": "SK-1 IR MISSILE",
       "seeker": "ir",
       "v0": 60,
-      "vmax": 700,
+      "vmax": 756,
       "acc": 480,
-      "turn": 4.2,
+      "turn": 4.62,
       "burn": 7,
-      "life": 9,
-      "dmg": 228,
+      "life": 9.9,
+      "dmg": 251,
       "pierce": 0.75,
-      "blast": 9,
+      "blast": 9.9,
       "fuze": 6,
       "lockCone": 0.28,
       "seekCone": 0.9,
       "lockTime": 1.1,
-      "range": 2200,
+      "range": 2420,
       "hp": 1,
       "flareS": 0.3,
       "chaffS": 0,
@@ -7984,24 +7953,25 @@
       "yield": 0.5
     },
     "tad": {
+      "markBase": 5,
       "kind": "msl",
       "classScale": false,
       "name": "ST-2 TORPEDO",
       "seeker": "ir",
       "v0": 35,
-      "vmax": 280,
+      "vmax": 302.4,
       "acc": 85,
       "turn": 1.1,
       "burn": 18,
-      "life": 26,
-      "dmg": 310,
+      "life": 29.1,
+      "dmg": 326,
       "blast": 28,
       "fuze": 12,
       "lockCone": 0.5,
       "seekCone": 0.9,
-      "lockTime": 1.6,
-      "range": 2600,
-      "hp": 13,
+      "lockTime": 1.52,
+      "range": 2912.0,
+      "hp": 14.3,
       "flareS": 0.05,
       "chaffS": 0.05,
       "color": "#9a4a22",
@@ -8027,11 +7997,11 @@
     "spine": {
       "kind": "spine",
       "name": "GX-1 CHARGED LANCE",
-      "dmg": 1151,
+      "dmg": 1096,
       "dt": "en",
       "pierce": 0.2,
       "range": 4000,
-      "energy": 1024,
+      "energy": 975,
       "charge": 6,
       "lockT": 1.5,
       "cd": 30,
@@ -8047,6 +8017,7 @@
       "hitFighters": false
     },
     "lanceL": {
+      "turretCls": "L",
       "kind": "beam",
       "name": "M-8 HEAVY MASER (L)",
       "cd": 0.1,
@@ -8068,6 +8039,7 @@
       "charge": 0.8
     },
     "acidT": {
+      "turretCls": "M",
       "energy": 80.0,
       "kind": "proj",
       "name": "M-6T MASER TURRET (M)",
@@ -8089,6 +8061,7 @@
       "slew": 40
     },
     "thorn": {
+      "turretCls": "S",
       "kind": "proj",
       "name": "R-5 PD TURRET (S)",
       "cd": 0.07,
@@ -9261,6 +9234,83 @@
     }
   },
   "tuning": {
+    "armamentLaw": {
+      "_doc": "docs/DESIGN_ARMAMENT_LAWS.md. V = in-game length in km. plantMW = plantA V^plantB; structure = hullA V^hullB x roleFactor; capacitorMJ = capPerMW x plantMW (+ burstMJ for FROGG); shields keep their ratio to structure. Humans: PD + secondaries sustained from the weapons bus (plant/3); FROGG: bus sustains PD only, the burst bank holds burstSec of the other energy weapons. Fitted by tools/armament_law.py --calibrate.",
+      "calibrate": [
+        "halberd",
+        "exeter",
+        "destroyer"
+      ],
+      "coef": {
+        "plantA": 2521.966,
+        "plantB": 1.288,
+        "hullA": 4001.197,
+        "hullB": 1.078,
+        "capPerMW": 2.333
+      },
+      "roleFactor": {
+        "warship": 1.0,
+        "carrier": 0.85,
+        "civil": 0.6
+      },
+      "roles": {
+        "hecla": "carrier",
+        "carrier": "carrier",
+        "hivecarrier": "carrier",
+        "liner": "civil",
+        "tender": "civil"
+      },
+      "burstSec": {
+        "capital": 8,
+        "frigate": 8,
+        "corvette": 8,
+        "fighter": 4.5
+      },
+      "slots": {
+        "corvette": {
+          "XL": 0,
+          "L": 0,
+          "M": 2,
+          "S": 4
+        },
+        "frigate": {
+          "XL": 1,
+          "L": 4,
+          "M": 8,
+          "S": 6
+        },
+        "destroyer": {
+          "XL": 1,
+          "L": 4,
+          "M": 8,
+          "S": 8
+        },
+        "carrier": {
+          "XL": 0,
+          "L": 0,
+          "M": 8,
+          "S": 12
+        },
+        "froggCapital": {
+          "XL": 1,
+          "L": 2,
+          "M": 6,
+          "S": 12
+        }
+      },
+      "slotClass": {
+        "halberd": "corvette",
+        "gulper": "corvette",
+        "exeter": "frigate",
+        "liner": "frigate",
+        "tender": "frigate",
+        "destroyer": "destroyer",
+        "hecla": "carrier",
+        "carrier": "carrier",
+        "bullfrog": "froggCapital",
+        "hivecarrier": "carrier"
+      }
+    },
     "_doc": {"subsys": "subsystem damage effects per role: [ok, damaged, destroyed] multipliers (docs/SUBSYSTEM_EFFECTS.md)", "simFlight": "SIM flight model: velocity-vector slew (rad per sim-second), capital factor, braking factor", "pilotSkill": "AI pilot skill 1..5: aim noise, turn factor, reaction, evasion distance", "droneLimit": "slaved drones per ship class", "bullfrog": "Bullfrog spine cycle, engagement bands and hangar launch plan", "scaleTo": "ships rescaled at load to this length in metres", "score": "mission score per kill", "feel": "kill-chain window and cap, hit-stop, point-blank distance", "loot": "salvage pods (free flight and Gauntlet)", "difficulty": "campaign and Gauntlet difficulty levels", "mutators": "Gauntlet mutators", "survivalWaves": "Gauntlet wave budget", "survivalPool": "Gauntlet enemy pool: [ship, cost, first wave]", "energyLaw": "energy per damage point by delivery type; spine guns sized from capacitor (see energyLaw._doc)"},
     "subsys": {"radar": {"lockRange": [1, 0.65, 0.35], "lockTime": [1, 1.5, 2.6], "sensor": [1, 0.6, 0]}, "engine": {"abPool": [1, 0.7, 0.35], "abBoost": [1, 0.75, 0.4], "abRegen": [1, 0.7, 0.4]}, "power": {"energyCap": [1, 0.8, 0.6]}, "radiator": {"energyRegen": [1, 0.85, 0.65]}, "gun": {"cd": [1, 1.35, 1.35]}, "turret": {"cd": [1, 1.4, 1.4], "track": [1, 0.6, 0.6]}, "bay": {"service": [1, 0.5, 0]}},
     "simFlight": {"slew": 2.2, "capital": 0.35, "decel": 1.5},

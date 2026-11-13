@@ -221,7 +221,7 @@ function showSkirmishSetup(focus) {
       <div class="skrow pre">${SK_PRESETS.map(p => `<button data-f="pre-${p.id}" data-pre="${p.id}">${p.name}</button>`).join('')}</div>
       ${fleetRows(c.rows, SK_ENEMY, '')}<div class="skrow"><button data-f="add" data-add="1">+ ADD ROW</button><button data-f="clr" data-clr="1">CLEAR</button></div>
       ${heavy ? '<div class="skwarn">WARNING: HIVE CARRIER is 2.5 km long and by far the heaviest model (coarse voxels, long build, low frame rate on weak GPUs). Not verified on real hardware.</div>' : ''}
-      ${bfw ? '<div class="skwarn">WARNING: BULLFROG is 600 m with a 3.2 km spine lance, 26 turrets and 36 fighters (about 40-60k voxels plus up to 12 airborne fighters at once). Not verified on real hardware.</div>' : ''}
+      ${bfw ? '<div class="skwarn">WARNING: BULLFROG is 600 m with a 4 km spine lance, 19 turrets and 18 fighters (up to 6 airborne at once). Not verified on real hardware.</div>' : ''}
       ${cap && !heavy ? '<div class="skwarn lo">Corvette and frigate models are heavy to voxelise (Halberd ~35k, Gulper ~78k instances); loading takes a moment.</div>' : ''}
     </div><div>
       <div class="sub">ENEMY SKILL (1 ROOKIE - 5 ACE)</div><div class="skrow">${skSeg('skill', [1, 2, 3, 4, 5].map(v => [v, v]), c.skill)}</div>
