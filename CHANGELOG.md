@@ -3,6 +3,11 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Codex brief 7:
+  - **R, hitches:** a seeded skirmish replay with two 1 kT impacts and timing spans (`?fps`). Blast damage now scans only cells inside its sphere, and identical undamaged chamfered hulls share their slab buffers (copy on first damage). The cause of the owner's 4.6 s hardware freeze is not found yet; `hitch_t` still fails its low-detail target (worst frame 8.5× the median against 3×).
+  - **P, flicker in mesh mode:** the audit separates coincident, exposed and buried surfaces; coincident pairs 368 → 208 (tablet) and 410 → 250 (desktop). Not zero yet.
+  - **Q, mesh damage:** scorch, shallow dents, breach decals with embers and fighter break-up in mesh mode, about 0.2 ms per hit, no added triangles (`mesh_damage_t`).
+  - **S, seeded duels** (20 seeds per cell; no balance values changed): Glaive beats Exeter 20–0; Columbus vs Bullfrog 10–10, with two Halberds 13–7; Hecla vs Bullfrog 6–14; Halberd beats Gulper 20–0; Kestrel beats Leaper 18–0 (2 timeouts) and Reaver 19–1; Falchion beats Reaver 20–0; 4 Kestrels beat a Gulper 20–0. The spine decided 2 of 180 runs.
 - Codex brief 6, Jobs N–O (mesh mode only):
   - **Colour-overlap audit** (`tools/overlap_audit.py`): decorative bands that hid inside hulls are now paint, and selected joins are adjusted. Partial cleanup: 3,577 → 3,419 flagged pairs. About 93 % of the remaining pairs are buried surfaces an opaque mesh never shows; the visible kind, coincident same-facing surfaces, went 424 → 405 and still needs work before mesh mode can become the default.
   - **Mesh shading**: baked vertex ambient occlusion, the authored wear, streak, strata, seam and rib options, and a non-glowing FROGG hide bump. No added triangles or draws; about +1.4 ms per ship build at tablet detail.
