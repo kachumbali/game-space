@@ -180,7 +180,7 @@ const NG = { noDetail: true };
 const fmThr = (x, y, z1, r, len) => [
   tap([x, y, z1 - len / 2], len / 2, [r * 0.85, r * 0.85], [r, r], FM.met, { sh: 'e', ...NG }),
   tap([x, y, z1 - len * 0.62], Math.max(0.1, len * 0.07), [r * 1.08, r * 1.08], [r * 1.08, r * 1.08], FM.met2, { sh: 'e', ...NG }),
-  tap([x, y, z1 - 0.05], 0.1, [r * 0.82, r * 0.82], [r * 0.8, r * 0.8], FM.dk, { sh: 'e', ...NG }),
+  { t: 'paint', box: [x - r, y - r, z1 - r * 0.12, x + r, y + r, z1 + r * 0.03], side: '+z', col: FM.dk, mix: 1 },
 ];
 // a cage ring around an elliptic section (top, bottom and side bars) at z, and longitudinal rails between z0 and z1
 const fmRing = (cx, cy, z, rx, ry, t, col = FM.met2) => [
@@ -225,7 +225,9 @@ SHIPS.leaper = {
     tap([2.6, -0.8, -4.0], 2.0, [0.6, 0.6], [0.66, 0.66], FM.met, { sh: 'e', ...NG }),
     ...[-5.2, -3.6, -2.4].map(z => tap([2.6, -0.8, z], 0.14, [0.72, 0.72], [0.72, 0.72], FM.met2, { sh: 'e', ...NG })),
     seg([1.6, -0.6, -3.4], [2.3, -0.75, -3.6], 0.3, 0.3, FM.met2, NG),
-    ...fmBarrel(2.6, -0.6, -5.8, -6.6, 0.16), ...fmBarrel(2.6, -1.1, -5.6, -6.0, 0.14),
+    ...fmBarrel(2.6, -0.6, -5.8, -6.6, 0.16),
+    // The lower emitter is flush with the pod face.
+    { t: 'paint', box: [2.43, -1.27, -6.05, 2.77, -0.93, -5.92], side: '-z', col: FM.dk, mix: 1 },
     ...fmPipe([[2.7, -0.3, -2.2], [2.2, 0.2, -1.0], [1.6, 0.6, 0.2]], 0.09),
     ...fmThr(2.2, -0.2, 6.8, 0.5, 1.8), seg([1.2, -0.2, 4.6], [2.0, -0.2, 5.4], 0.3, 0.3, FM.met2, NG),
     ell([0.9, -0.75, -2.2], [0.2, 0.2, 0.6], FM.met2, NG),                                              // missile tube (launch -2.8)
@@ -265,7 +267,7 @@ SHIPS.toad = {
     tap([0, -0.3, -8.4], 0.22, [1.8, 0.9], [2.2, 1.2], FM.met2, { sh: 'h', ...NG }),
     tap([0, 2.25, -0.5], 3.6, [1.6, 0.45], [1.85, 0.55], FM.met, { sh: 'h', ...NG }),                  // dorsal deck module
     ...rungs(0, 2.75, -2.8, 0.4, 6, 1.1, 0.06, 0.05, FM.dk, NG),
-    tap([1.1, 2.75, 2.2], 0.9, [0.5, 0.25], [0.5, 0.25], FM.met2, { sh: 'h', ...NG }),
+    tap([1.1, 2.765, 2.2], 0.9, [0.5, 0.235], [0.5, 0.235], FM.met2, { sh: 'h', ...NG }),
     ...fmBarrel(1.2, -0.8, -8.4, -8.9, 0.16),                                                           // fangs below the jaw
     // torpedo frames: two clamp-on boxes per side with the tube mouths at z -4.7 and 0.6
     ...[[-4.8, -0.6], [0.5, 4.0]].flatMap(([z0, z1]) => [
@@ -335,7 +337,8 @@ SHIPS.gulper = {
     // claw prongs: rod guns at their tips (z -35.3)
     ...chain([[5.0, -1.6, -19], [8.2, -2.5, -27], [5.5, -2.4, -34.0]], [2.8, 2.2, 1.1], FM.hide2),
     seg([6.2, -2.4, -33.6], [6.4, -2.4, -36.4], 0.6, 0.2, FM.bone, NG),                                  // claw tip
-    ...fmBarrel(5.5, -2.4, -31.5, -34.6, 0.55),
+    // The claw is the gun housing; only the exposed muzzle collar is separate.
+    ...fmBarrel(5.5, -2.4, -34.35, -34.6, 0.55),
     ...fmBarrel(3.0, 1.2, -30.8, -32.4, 0.45),                                                          // maser lance emitters
     // cage bands and rails along the back, copper feed pipes on the flanks
     ...[-12, 0, 12].flatMap(z => { const f = Math.sqrt(1 - ((z + 5) / 24) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
@@ -426,7 +429,7 @@ SHIPS.bullfrog = {
     // Outboard shoulder masses thicken the side profile without covering turret positions.
     tap([79, 0, -112], 65, [14, 45], [14, 45], FM.hide, { sh: 'h' }),
     tap([0, 0, 45], 55, [75, 26], [47, 25], FM.hide, { sh: 'h' }),
-    tap([0, 0, 110], 10, [47, 25], [47, 25], FM.hide, { sh: 'h' }),
+    tap([0, 0, 110], 10, [47, 25], [47, 25], FM.hide2, { sh: 'h' }),
     tap([0, 0, 175], 55, [47, 25], [32, 18], FM.hide2, { sh: 'h' }),
     tap([0, 0, 242], 18, [32, 18], [54, 20], FM.hide2, { sh: 'h' }),
     tap([0, 30, -10], 175, [9, 7], [16, 7], FM.hide2, { sh: 'h' }),                                     // dorsal ridge
@@ -460,7 +463,8 @@ SHIPS.bullfrog = {
     seg([50, -19, -30], [89, 42, 10], 3, 2, FM.met2, NG),
     // 40 x 15 m open side bays, constructed as frames around an empty volume.
     // Core ends near x=47; rear wall, sills and end bulkheads enclose the recess.
-    tap([46, 0, 130], 20, [2, 9], [2, 9], FM.dk, NG),
+    tap([46, 0, 130], 20, [2, 9], [2, 9], FM.met2, NG),
+    { t: 'paint', box: [47, -9, 111, 48.25, 9, 149], side: 'side', col: FM.dk, mix: 1 },
     tap([56, 10, 130], 22, [11, 2.5], [11, 2.5], FM.met2, NG),
     tap([56, -10, 130], 22, [11, 2.5], [11, 2.5], FM.met2, NG),
     ...[108, 152].map(z => tap([56, 0, z], 2, [11, 10], [11, 10], FM.met2, NG)),
