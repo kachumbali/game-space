@@ -576,7 +576,7 @@ SHIPS.falchion = {
     tap([0, 0, 6.9], 2.4, [1.7, 1.05], [1.1, 0.8], CF.g2, { sh: 'h' }),
     tap([0, -1.0, 0.0], 7.0, [0.9, 0.12], [1.1, 0.12], CF.g3, { sh: 'r' }),
     tap([0, -0.2, -9.95], 0.12, [0.25, 0.2], [0.45, 0.35], CF.gr, { sh: 'h' }),
-    tap([0, 0, -2.45], 0.16, [1.62, 1.02], [1.62, 1.02], CF.or, { sh: 'h' }),
+    { t: 'paint', box: [-1.65, -1.05, -2.61, 1.65, 1.05, -2.29], col: CF.or, mix: 1 },
     // tandem canopy (pilot ahead, weapons officer behind) on a raised cockpit block
     tap([0, 0.7, -4.4], 1.9, [0.85, 0.35], [1.0, 0.4], CF.g1, { sh: 'h' }),
     ell([0, 1.05, -5.4], [0.7, 0.45, 1.25], CF.can, { glow: false }),
