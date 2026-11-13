@@ -202,7 +202,6 @@ function buildHullMesh(def, idx, res = resFor(def, idx)) {
   const marks = hullMarkings(def, tier, vs);
   const batches = [{ p: [], n: [], c: [] }, { p: [], n: [], c: [] }];
   const group = new THREE.Group();
-  group.count = 0;
   for (const p of def.prims) {
     if (!['tap', 'ell', 'seg'].includes(p.t) || p.lod > tier) continue;
     const batch = batches[p.glow ? 1 : 0], color = new THREE.Color(p.col);
@@ -228,7 +227,6 @@ function buildHullMesh(def, idx, res = resFor(def, idx)) {
             batch.n.push(nx / len, ny / len, nz / len);
             batch.c.push(rgb.r, rgb.g, rgb.b);
           }
-          group.count++;
         }
       }
     }

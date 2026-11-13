@@ -489,11 +489,12 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
           if (V.hasInst[cell]) {
             V.hasInst[cell] = 0;
             const vi = D.cellToVox[cell];
-            if (VOX_MESH) { /* The mesh has no per-voxel instances. */ }
-            else if (vi >= 0 && D.voxels[vi].g) V.glow.setMatrixAt(V.instOf[vi], ZERO);
-            else if (!VOX_INST) voxMarkDirty(s, cell);
-            else if (vi >= 0) V.body.setMatrixAt(V.instOf[vi], ZERO);
-            else { const pi = V.patchOf.get(cell); if (pi !== undefined) V.patch.setMatrixAt(pi, ZERO); }
+            if (!VOX_MESH) {
+              if (vi >= 0 && D.voxels[vi].g) V.glow.setMatrixAt(V.instOf[vi], ZERO);
+              else if (!VOX_INST) voxMarkDirty(s, cell);
+              else if (vi >= 0) V.body.setMatrixAt(V.instOf[vi], ZERO);
+              else { const pi = V.patchOf.get(cell); if (pi !== undefined) V.patch.setMatrixAt(pi, ZERO); }
+            }
           }
           if (!VOX_MESH && !VOX_INST) voxMarkDirty(s, cell);  // neighbours across the hole now show faces
           removed.push(cell); dirty = true;
@@ -504,8 +505,8 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
             const f = (v.g ? 0.15 : 0.28) + 0.72 * Math.sqrt(d2 / (sr * sr));
             if (f < V.scorch[vi]) {
               V.scorch[vi] = f;
-              if (VOX_MESH) { /* Scorch remains in the damage grid. */ }
-              else if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
+              if (VOX_MESH) continue;
+              if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
               else {
                 const si = voxSlabOf(V, cell), e = V.slabVtx[si] && V.slabVtx[si].get(cell);
                 if (VOX_MODE === 'smooth') { V.colDirty.add(si); voxDirtySet.add(s); }
