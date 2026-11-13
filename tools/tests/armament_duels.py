@@ -15,6 +15,9 @@ CELLS = [
     ('kestrel-reaver', ['kestrel'], ['reaver']),
     ('falchion-reaver', ['falchion'], ['reaver']),
     ('kestrel-flight-gulper', ['kestrel'] * 4, ['gulper']),
+    ('kestrel-two-leapers', ['kestrel'], ['leaper'] * 2),
+    ('falchion-two-reavers', ['falchion'], ['reaver'] * 2),
+    ('halberd-two-gulpers', ['halberd'], ['gulper'] * 2),
 ]
 DUEL = """([left, right, limit]) => {
     const g = __game, T = g.THREE;
@@ -51,11 +54,14 @@ def main():
     parser.add_argument('--runs', type=int, default=20)
     parser.add_argument('--limit', type=int, default=180)
     parser.add_argument('--out', required=True)
+    parser.add_argument('--cells', help='comma-separated cell names (default: all)')
     args = parser.parse_args()
     with open(args.out, 'w', newline='') as file, Runner() as runner:
         writer = csv.writer(file)
         writer.writerow(['cell', 'seed', 'winner', 'elapsed', 'deaths'])
         for name, left, right in CELLS:
+            if args.cells and name not in args.cells.split(','):
+                continue
             outcomes, times, causes = Counter(), [], Counter()
             for seed in range(1, args.runs + 1):
                 page = runner.page(480, 270, f'?free&n=0&q=low&skyres=128&mute&duelbench&seed={seed}',

@@ -74,8 +74,10 @@ for k in BIG:
     print(f"{k:11s} {v:7.3f} | {s['power']['plantMW']:6.0f} {plant:6.0f} | {s['power']['capacitorMJ']:6.0f} {capb + burst:6.0f} {burst:5.0f} | {s['structure']:6.0f} {hull:6.0f} | {need:9.0f} {bus:5.0f} {'ok' if need <= bus else 'NO':7s} | {c['XL']}/{c['L']}/{c['M']}/{c['S']} {'' if tab is None else ('OVER ' if bad else 'ok ') + '/'.join(str(tab[x]) for x in ('XL','L','M','S'))}")
 frows = {}
 for k in FROGG_F:
-    s = S[k]; d = draw(s, 'all'); cap = max(s['power']['capacitorMJ'], LAW['burstSec']['fighter'] * d)
-    frows[k] = dict(cap=round(cap), burst=round(cap - s['power']['capacitorMJ']) if cap > s['power']['capacitorMJ'] else 0)
+    s = S[k]; d = draw(s, 'all')
+    base = s['power']['capacitorMJ'] - s['power'].get('burstMJ', 0)
+    cap = max(base, LAW['burstSec']['fighter'] * d)
+    frows[k] = dict(cap=round(cap), burst=round(cap - base))
     print(f"{k:11s} fighter  draw {d:5.0f} MW  store {s['power']['capacitorMJ']:5.0f} -> {cap:5.0f} MJ ({cap / d if d else 0:.1f} s of full fire)")
 if '--apply' in sys.argv:
     ed = DB()
@@ -90,6 +92,8 @@ if '--apply' in sys.argv:
         f = r['hull'] / s['structure']; ed.set_key('ships', k, 'structure', r['hull'])
         ed.set_key('ships', k, 'shield', {kk: round(vv * f) for kk, vv in s['shield'].items()})
     for k, r in frows.items():
-        if not r['burst']: continue
-        s = raw['ships'][k]; p = dict(s['power']); p['capacitorMJ'] = r['cap']; p['burstMJ'] = r['burst']; ed.set_key('ships', k, 'power', p)
+        s = raw['ships'][k]; p = dict(s['power']); p['capacitorMJ'] = r['cap']
+        if r['burst']: p['burstMJ'] = r['burst']
+        else: p.pop('burstMJ', None)
+        ed.set_key('ships', k, 'power', p)
     ed.save(); print('applied')
