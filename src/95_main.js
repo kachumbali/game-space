@@ -131,6 +131,7 @@ Object.assign(globalThis.__game, { missileLiveCap, missileResourceCount: () => m
 Object.assign(globalThis.__game, { sfx, audioInit, audioIds: () => Object.keys(SFX), musicFiles: MUSIC_FILES });
 Object.assign(globalThis.__game, { rescueEnabled, rescueSpawnCapsule, rescueTick, rescueShipAI, rescueCritical, rescueRequestEject, rescueCapsules, rescueResolve, sarScenarioOutcome, SAR_MISSIONS });
 Object.assign(globalThis.__game, { blastAt, chip, flushVox, voxFaces, voxelize, resFor });   // vanishing-hull regression test
+Object.assign(globalThis.__game, { buildHullMesh, hullPrimTriangles, prepPrim, primInside, voxStaticBody, clearVoxelCache: () => voxCache.clear() });
 Object.assign(globalThis.__game, { componentSurface, compEvent }); // damage-visual regression tests
 Object.assign(globalThis.__game, { traceWeapon, sizeShield, renderer }); // shield geometry regression tests; renderer for the shader-compile measurement
 Object.assign(globalThis.__game, { rescueOutcomeRoll, rescueOutcomeContext, rescueReachable, rescueResolveBeat, rosterScriptCallsign, rosterDialogueText, rosterSlotShip, comms, getEjectionScene:()=>EJSCENE, playEjectionSequence, ejectionSceneSkip });

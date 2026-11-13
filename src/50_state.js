@@ -123,8 +123,10 @@ function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color
 // border empty space. Instanced boxes drew all 6 faces (12 triangles) of every surface voxel; a hull
 // voxel shows 1-2. Damage marks the touched slabs dirty and flushVox() rebuilds them before the next
 // frame. Glow voxels stay instanced (few, own material). ?vox=inst keeps the old instanced body.
-const VOX_MODE = ['inst', 'cube'].includes(params.get('vox')) ? params.get('vox') : 'smooth';
+const VOX_MODE = ['inst', 'cube', 'mesh'].includes(params.get('vox')) ? params.get('vox') : 'smooth';
 const VOX_INST = VOX_MODE === 'inst';
+const VOX_MESH = VOX_MODE === 'mesh';
+const VOX_GRID_DROP = VOX_MESH ? Math.max(0, Math.min(2, Number(params.get('gridDrop')) | 0)) : 0;
 const VOX_SMOOTH_DROP = VOX_MODE === 'smooth' && params.has('vdrop') ? +params.get('vdrop') : 0;   // ?vdrop=1 builds non-fighter hulls one detail step lower (half the triangles; the owner found it too low in detail)
 const voxMeshMat = new THREE.MeshStandardMaterial({ roughness: 0.62, metalness: 0.22, vertexColors: true });
 const VFACE = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(n => {
@@ -139,6 +141,7 @@ const voxDirtySet = new Set();               // ships with slabs waiting for flu
 function disposeVox(s) {
   const V = s.vox; if (!V) return;
   for (const m of [V.body, V.glow, V.patch]) { if (!m) continue; s.group.remove(m); if (m.dispose) m.dispose(); }
+  if (VOX_MESH) for (const m of V.body.children) m.geometry.dispose();
   if (V.slabMesh) for (const m of V.slabMesh) if (m) m.geometry.dispose();
   voxDirtySet.delete(s);
   s.vox = null;
@@ -385,11 +388,12 @@ function voxStaticBody(D) {
 function buildVox(s) {
   disposeVox(s);
   const di = Math.max(0, detailIdx - (s.lodDrop | 0) - (s.def.cls === 'fighter' ? 0 : VOX_SMOOTH_DROP));   // distance LOD lowers the detail step of far ships; smooth non-fighter hulls build one step lower (fighters keep thin parts)
-  const D = voxelize(s.def, resFor(s.def, di), di);
+  const gridDetail = Math.max(0, di - VOX_GRID_DROP);
+  const D = voxelize(s.def, resFor(s.def, gridDetail), gridDetail);
   const cap = s.def.cls === 'fighter' ? (di >= 6 ? 20000 : 5000) : (di >= 6 ? 60000 : 30000);
   const bodyV = [], glowV = [];
   D.voxels.forEach((v, i) => (v.g ? glowV : bodyV).push(i));
-  const glow = new THREE.InstancedMesh(boxGeo(D.vs * 1.03), glowMat, Math.max(1, glowV.length));
+  const glow = VOX_MESH ? null : new THREE.InstancedMesh(boxGeo(D.vs * 1.03), glowMat, Math.max(1, glowV.length));
   const instOf = new Int32Array(D.voxels.length);
   const fill = (mesh, list) => {
     list.forEach((vi, n) => {
@@ -401,7 +405,7 @@ function buildVox(s) {
     });
     mesh.count = list.length;
   };
-  fill(glow, glowV);
+  if (glow) fill(glow, glowV);
   // TypedArray.from invokes a JS callback for every grid cell, millions of times
   // per high-detail ship. Fill the same masks with tight loops on the spawn path.
   const solid = new Uint8Array(D.grid.length), hasInst = new Uint8Array(D.cellToVox.length);
@@ -412,7 +416,10 @@ function buildVox(s) {
     solid, hasInst, scorch: new Float32Array(D.voxels.length).fill(1),
   };
   const V = s.vox;
-  if (VOX_INST) {
+  if (VOX_MESH) {
+    V.body = buildHullMesh(s.def, di);
+    V.body.count = D.voxels.length;
+  } else if (VOX_INST) {
     V.body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));
     V.patch = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, cap);
     fill(V.body, bodyV); fill(glow, glowV);
@@ -482,12 +489,13 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
           if (V.hasInst[cell]) {
             V.hasInst[cell] = 0;
             const vi = D.cellToVox[cell];
-            if (vi >= 0 && D.voxels[vi].g) V.glow.setMatrixAt(V.instOf[vi], ZERO);
+            if (VOX_MESH) { /* The mesh has no per-voxel instances. */ }
+            else if (vi >= 0 && D.voxels[vi].g) V.glow.setMatrixAt(V.instOf[vi], ZERO);
             else if (!VOX_INST) voxMarkDirty(s, cell);
             else if (vi >= 0) V.body.setMatrixAt(V.instOf[vi], ZERO);
             else { const pi = V.patchOf.get(cell); if (pi !== undefined) V.patch.setMatrixAt(pi, ZERO); }
           }
-          if (!VOX_INST) voxMarkDirty(s, cell);               // neighbours across the hole now show faces
+          if (!VOX_MESH && !VOX_INST) voxMarkDirty(s, cell);  // neighbours across the hole now show faces
           removed.push(cell); dirty = true;
         } else if (sr > 0 && d2 <= sr * sr && V.hasInst[cell]) {
           const vi = D.cellToVox[cell];
@@ -496,7 +504,8 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
             const f = (v.g ? 0.15 : 0.28) + 0.72 * Math.sqrt(d2 / (sr * sr));
             if (f < V.scorch[vi]) {
               V.scorch[vi] = f;
-              if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
+              if (VOX_MESH) { /* Scorch remains in the damage grid. */ }
+              else if (v.g || VOX_INST) (v.g ? V.glow : V.body).setColorAt(V.instOf[vi], _col.setRGB(v.cr * f, v.cg * f, v.cb * f));
               else {
                 const si = voxSlabOf(V, cell), e = V.slabVtx[si] && V.slabVtx[si].get(cell);
                 if (VOX_MODE === 'smooth') { V.colDirty.add(si); voxDirtySet.add(s); }
@@ -527,7 +536,7 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
       if (VOX_INST) {
         _m.makeTranslation(-D.hx + (ni + 0.5) * vs, -D.hy + (nj + 0.5) * vs, -D.hz + (nk + 0.5) * vs);
         V.patch.setMatrixAt(idx, _m); V.patch.setColorAt(idx, _col.setRGB(rgb[0], rgb[1], rgb[2]));
-      } else { V.patchCol.set(nc, rgb); V.slabCells[voxSlabOf(V, nc)].push(nc); voxMarkDirty(s, nc); }
+      } else if (!VOX_MESH) { V.patchCol.set(nc, rgb); V.slabCells[voxSlabOf(V, nc)].push(nc); voxMarkDirty(s, nc); }
       V.hasInst[nc] = 1; V.patchOf.set(nc, idx);
       dirty = true;
     }
