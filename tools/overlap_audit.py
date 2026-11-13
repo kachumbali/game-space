@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / 'tests'))
 from lib import Runner
 
 AUDIT = """([id, detail]) => {
-    const { SHIPS, resFor, hullPrimTriangles, primInside, prepPrim } = __game;
+    const { THREE: T, SHIPS, resFor, hullPrimTriangles, primInside, prepPrim } = __game;
     const ship = SHIPS[id], res = resFor(ship, detail);
     const tier = res < 120 || ship.noDetail ? 0 : detail >= 6 ? 2 : 0;
     const entries = ship.prims.flatMap((p, index) => {
@@ -18,6 +18,18 @@ AUDIT = """([id, detail]) => {
     const weights = [[1/3, 1/3, 1/3], [0.6, 0.2, 0.2], [0.2, 0.6, 0.2], [0.2, 0.2, 0.6]];
     const eps = Math.max(1e-6, ship.length * 0.00002);
     const result = [];
+    const ray = new T.Ray(), hit = new T.Vector3();
+    for (const e of entries) {
+        e.triangles = hullPrimTriangles(e.p, ship.length, detail)
+            .map(tri => tri.map(v => new T.Vector3(...v)));
+    }
+    const covered = (b, x, y, z, step) => {
+        const mirror = b.mirrored && x < 0 ? -1 : 1;
+        ray.origin.set(mirror * x, y, z);
+        ray.direction.set(mirror * step[0], step[1], step[2]).normalize();
+        return b.triangles.some(([a, c, d]) =>
+            ray.intersectTriangle(a, c, d, false, hit) && hit.distanceToSquared(ray.origin) > eps * eps);
+    };
     for (const a of entries) {
         const others = entries.filter(b => a !== b && (a.p.col !== b.p.col || !!a.p.glow !== !!b.p.glow));
         const pairs = new Map();
@@ -44,15 +56,16 @@ AUDIT = """([id, detail]) => {
                         const inward = inside(-1), outward = inside(1);
                         if (!inward && !outward) continue;
                         const counts = pairs.get(b.index) || [0, 0, 0];
-                        // An opposing boundary is a butt joint. Equal-facing boundaries can z-fight.
-                        counts[inward ? (outward ? 0 : 1) : 2]++;
+                        if (inward && !outward) counts[0]++;
+                        else if (!inward || covered(b, sign*x, y, z, [sign*step[0], step[1], step[2]])) counts[2]++;
+                        else counts[1]++;
                         pairs.set(b.index, counts);
                     }
                 }
             }
         }
-        for (const [other, [inside, coincident, joint]] of pairs) {
-            result.push({ prim: a.index, other, inside, coincident, joint });
+        for (const [other, [coincident, exposed, buried]] of pairs) {
+            result.push({ prim: a.index, other, coincident, exposed, buried });
         }
     }
     return result;
@@ -64,7 +77,7 @@ def main():
     parser.add_argument('ships', nargs='*', help='ship IDs (default is the whole fleet)')
     parser.add_argument('--detail', type=int, choices=(2, 6), default=6)
     args = parser.parse_args()
-    writer = csv.DictWriter(sys.stdout, fieldnames=['ship', 'detail', 'prim', 'other', 'inside', 'coincident', 'joint'])
+    writer = csv.DictWriter(sys.stdout, fieldnames=['ship', 'detail', 'prim', 'other', 'coincident', 'exposed', 'buried'])
     writer.writeheader()
     with Runner() as runner:
         page = runner.page(640, 360, '?q=low&vox=mesh')

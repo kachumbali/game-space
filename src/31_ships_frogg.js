@@ -328,7 +328,7 @@ const fgSeat = (x, y, z, dy, D, y0, wMin = 0) => {             // wMin: pedestal
   const top = y - dy * D * 0.2, h = Math.abs(top - y0) / 2, w = Math.max(D * 0.4, wMin);
   return [
     tap([x, (top + y0) / 2, z], w, [w, h], [w, h], FM.met2, { sh: 'h', noMirror: true, ...NG }),
-    tap([x, y - dy * Math.max(D * 0.1, wMin * 0.5), z], Math.max(D * 0.5, wMin), [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], FM.met, { sh: 'h', noMirror: true, ...NG }),
+    tap([x, y - dy * Math.max(D * 0.1, wMin * 0.5), z], Math.max(D * 0.5, wMin), [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], [Math.max(D * 0.56, wMin * 1.2), Math.max(D * 0.12, wMin * 0.5)], FM.met2, { sh: 'h', noMirror: true, ...NG }),
   ];
 };
 const gSeat = (x, y, z, dy, cls, y0) => { const L = TUNE.scaleTo.gulper || 66; return fgSeat(x, y, z, dy, turretDia({ def: { length: L } }, { cls }) * 66 / L, y0); };
