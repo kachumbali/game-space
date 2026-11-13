@@ -417,7 +417,7 @@ function buildVox(s) {
   };
   const V = s.vox;
   if (VOX_MESH) {
-    V.body = buildHullMesh(s.def, di);
+    V.body = buildHullMesh(s.def, di, undefined, D);
     V.body.count = D.voxels.length;
   } else if (VOX_INST) {
     V.body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));

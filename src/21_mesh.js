@@ -197,15 +197,31 @@ function hullPaint(poly, rgb, marks, side) {
   return pieces;
 }
 
-function buildHullMesh(def, idx, res = resFor(def, idx)) {
+function buildHullMesh(def, idx, res = resFor(def, idx), grid, shade = true) {
   const tier = detailTier(res, def, idx), vs = def.length / res;
   const marks = hullMarkings(def, tier, vs);
-  const batches = [{ p: [], n: [], c: [] }, { p: [], n: [], c: [] }];
+  const batches = [{ p: [], n: [], c: [], surface: [], rib: [] }, { p: [], n: [], c: [] }];
+  const frequency = 1.6 / Math.max(0.5, def.length / 12 * 0.18 + 0.82);
+  const shadeColor = new THREE.Color();
+  if (shade && !grid) grid = voxelize(def, res, idx);
+  const sample = shade ? hullGridSampler(grid) : null;
+  const near = grid ? grid.vs * 1.7 : 0, spread = grid ? grid.vs * 2 : 0;
   const group = new THREE.Group();
   for (const p of def.prims) {
     if (!['tap', 'ell', 'seg'].includes(p.t) || p.lod > tier) continue;
     const batch = batches[p.glow ? 1 : 0], color = new THREE.Color(p.col);
     if (p.glow) color.multiplyScalar(p.glowF || 1.8);
+    const shadePrim = shade && !p.glow;
+    const style = shadePrim ? {
+      frequency, mot: p.mot || 1, rustK: def.rustK ?? 1,
+      mottling: p.col2 === undefined ? null : new THREE.Color(p.col2),
+      rust: p.rust === undefined ? null : new THREE.Color(p.rust),
+      streak: p.streak, strata: p.strata, edge: new THREE.Color(p.edge ?? p.rust ?? p.col),
+    } : null;
+    const seam = p.seam ?? def.seam;
+    const scaleFrequency = p.hide ? 1.8 / Math.max(0.3, def.length / 20) : 0;
+    const seamX = shade ? seam?.[0] ?? 0 : 0, seamZ = shade ? seam?.[1] ?? 0 : 0;
+    const ribPeriod = shade ? p.rib?.[0] ?? 0 : 0, ribDepth = shade ? p.rib?.[1] ?? 0 : 0;
     const mirror = def.mirror && !p.noMirror;
     for (const tri of hullPrimTriangles(p, def.length, idx)) {
       const poly = mirror ? hullSplit(tri, 0, 0, 1)[0] : tri;
@@ -218,14 +234,29 @@ function buildHullMesh(def, idx, res = resFor(def, idx)) {
         const nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
         const len = Math.hypot(nx, ny, nz);
         if (len < 1e-12) continue;
+        const xn = nx / len, yn = ny / len, zn = nz / len;
+        const up = Math.abs(yn) < 0.8;
+        const tangentLength = up ? Math.hypot(xn, zn) : Math.hypot(yn, zn);
+        const tx = up ? zn / tangentLength : 0, ty = up ? 0 : -zn / tangentLength;
+        const tz = up ? -xn / tangentLength : yn / tangentLength;
+        const bx = yn * tz - zn * ty, by = zn * tx - xn * tz, bz = xn * ty - yn * tx;
         const ax = Math.abs(nx), ay = Math.abs(ny), az = Math.abs(nz);
         const side = ax >= ay && ax >= az ? (nx >= 0 ? 0 : 1) : ay >= az ? (ny >= 0 ? 2 : 3) : (nz >= 0 ? 4 : 5);
         const pieces = p.glow || !marks.length ? [{ poly: face, rgb: color }] : hullPaint(face, color, marks, side);
         for (const { poly: piece, rgb } of pieces) for (let i = 1; i + 1 < piece.length; i++) {
           batch.p.push(...piece[0], ...piece[i], ...piece[i + 1]);
-          for (let j = 0; j < 3; j++) {
-            batch.n.push(nx / len, ny / len, nz / len);
-            batch.c.push(rgb.r, rgb.g, rgb.b);
+          for (const vertex of [piece[0], piece[i], piece[i + 1]]) {
+            batch.n.push(xn, yn, zn);
+            if (shadePrim) {
+              const [x, y, z] = vertex;
+              hullSurfaceColor(style, mirror ? Math.abs(x) : x, y, z, rgb, shadeColor);
+              shadeColor.multiplyScalar(hullAmbientOcclusion(sample, near, spread, x, y, z, xn, yn, zn, tx, ty, tz, bx, by, bz));
+              batch.c.push(shadeColor.r, shadeColor.g, shadeColor.b);
+            } else batch.c.push(rgb.r, rgb.g, rgb.b);
+            if (!p.glow) {
+              batch.surface.push(seamX, seamZ, shade ? scaleFrequency : 0);
+              batch.rib.push(ribPeriod, ribDepth);
+            }
           }
         }
       }
@@ -237,6 +268,10 @@ function buildHullMesh(def, idx, res = resFor(def, idx)) {
     geo.setAttribute('position', new THREE.Float32BufferAttribute(batch.p, 3));
     geo.setAttribute('normal', new THREE.Float32BufferAttribute(batch.n, 3));
     geo.setAttribute('color', new THREE.Float32BufferAttribute(batch.c, 3));
+    if (mat === hullMeshMat) {
+      geo.setAttribute('hullSurface', new THREE.Float32BufferAttribute(batch.surface, 3));
+      geo.setAttribute('hullRib', new THREE.Float32BufferAttribute(batch.rib, 2));
+    }
     group.add(new THREE.Mesh(geo, mat));
   }
   return group;

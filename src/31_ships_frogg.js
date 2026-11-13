@@ -485,4 +485,12 @@ SHIPS.bullfrog = {
 
 // No hull attaches the legacy glowing reference kit; runtime engines supply the drive flames.
 [].forEach((id, i) => { if (FD_LIST[i]) SHIPS[id].prims.push(...fRef(FD_LIST[i])); });
+// Mark the bio-mechanical hide palette for the mesh relief. Weapon housings,
+// engine hardware, and luminous parts keep the ordinary hull finish.
+for (const def of Object.values(SHIPS)) {
+  if (def.fac !== 'frogg') continue;
+  for (const p of def.prims) {
+    if (p.col === FM.hide || p.col === FM.hide2) p.hide = true;
+  }
+}
 for (const id in SHIPS) if (SHIPS[id].fac === 'frogg') SHIPS[id].flameColor = 0x30dcff;      // cyan drive plumes
