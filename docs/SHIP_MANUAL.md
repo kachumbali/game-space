@@ -123,7 +123,7 @@ Cost (headless CPU, ms; instances): Kestrel 12.3k at mid, 61k / 107k at detail 6
 
 ## 10. Shipyard workbench
 
-Open `index.html?yard` for a new blank model, or `index.html?yard=kestrel` to load a ship. The Shipyard reuses the runtime voxeliser; it is a separate visual/design mode, and normal gameplay URLs are unchanged.
+Open `index.html?yard` for a new blank model, or `index.html?yard=kestrel` to load a ship. The Shipyard reuses the runtime hull renderer. Add `&vox=mesh` to a shipyard URL to preview the authored primitive meshes.
 
 - Choose a ship or **NEW** from the picker. Drag to orbit, use the wheel to zoom, or pinch on touch. The grid has one-metre ticks; the cyan top-view outline is a 12.4 m Kestrel scale reference.
 - Use **Frame ship**, **Front**, **Side**, **Top**, and **3/4** to set the camera. Initial framing fits the authored hull; the 600 m Bullfrog is supported. Collapse the left panel to expose more of the model.
@@ -134,3 +134,9 @@ Open `index.html?yard` for a new blank model, or `index.html?yard=kestrel` to lo
 - Toggle component, mount, turret, and engine markers; the half-extents box; mirroring; voxel detail (`DETAIL_STEPS`); and LOD step reduction. Suggested `half` and `radius` values come from primitive bounds. **Apply suggested bounds** updates the JSON editor only; copy and paste the entry into `data/db.json` yourself if wanted.
 - **New ship from template** copies the Kestrel, Halberd, or Exeter prims into a new workbench model and starts an empty technical entry. Its ID must be a unique lowercase slug before the entry validates.
 - Choose helper-call or plain-JSON format before **Copy prims JS**. **Copy db entry (JSON)** copies the current entry, and **Save PNG sheet** downloads a labelled 900 × 540 3/4, top, side, and front contact sheet. The workbench does not write to source files or save images into the repository.
+
+### Mesh hull preview
+
+Add `?vox=mesh` to a gameplay URL, or `&vox=mesh` if the URL already has options. The preview uses the authored solids and detail tiers, with paint and text applied to the same hull triangles. Chamfered voxels are the default. In gameplay the collision grid remains responsible for shields, line of fire and damage, including breaches. The mesh surface stays intact during damage while the preview is in phase 1.
+
+`gridDrop=1` and `gridDrop=2` are experimental mesh-mode options for lowering collision resolution by one or two detail steps. Leaving this option unset preserves the normal collision resolution.

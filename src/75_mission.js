@@ -477,7 +477,10 @@ function prewarmMissionVoxels(M) {
   for (const kind of kinds) {
     const def = SHIPS[kind];
     if (!def) continue;
-    for (let d = 0; d <= lod && detailIdx - d >= 0; d++) voxelize(def, resFor(def, detailIdx - d), detailIdx - d);
+    for (let d = 0; d <= lod && detailIdx - d >= 0; d++) {
+      const idx = Math.max(0, detailIdx - d - VOX_GRID_DROP);
+      voxelize(def, resFor(def, idx), idx);
+    }
   }
 }
 // Compile every shader the scene uses now, at launch, instead of when a ship first comes into view (parallel where the browser supports it).

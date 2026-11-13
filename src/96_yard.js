@@ -191,11 +191,12 @@ if (params.has('yard')) {
   function YARD_setDefinition(def, refit = false) {
     const t0 = performance.now();
     const idx = Math.max(0, YARD_detailIdx - YARD_lodDrop - (def.cls === 'fighter' ? 0 : VOX_SMOOTH_DROP)), res = YARD_resolution(def, idx);   // same detail as in game
-    const data = voxelize(def, res, idx);
+    const data = VOX_MESH ? null : voxelize(def, res, idx);
     const body = [], glow = [];
     const nextMeshes = [];
-    for (const voxel of data.voxels) (voxel.g ? glow : body).push(voxel);
+    for (const voxel of data?.voxels ?? []) (voxel.g ? glow : body).push(voxel);
     try {
+      if (VOX_MESH) nextMeshes.push(...buildHullMesh(def, idx, res).children);
       if (!VOX_INST && body.length) { const g = voxStaticBody(data); for (const m of [...g.children]) { m.position.copy(g.position); m.scale.copy(g.scale); m.frustumCulled = false; nextMeshes.push(m); } }   // smooth or merged hull, as in game
       for (const [voxels, material, scale] of [[body, YARD_material, 1], [glow, YARD_glowMaterial, 1.03]]) {
         if (!voxels.length || (material === YARD_material && !VOX_INST)) continue;
@@ -219,11 +220,13 @@ if (params.has('yard')) {
     YARD_meshes = nextMeshes;
     const displayScale = YARD_displayScale();
     YARD_model.scale.setScalar(displayScale);
-    voxCache.delete(def.id + ':' + res + (data.tier ? ':t' + data.tier : ''));
+    if (data) voxCache.delete(def.id + ':' + res + (data.tier ? ':t' + data.tier : ''));
     const gameLength = def.length * YARD_gameScale;
     const preview = document.getElementById('yard-in-game-scale').checked ? 'in-game' : 'authored';
     document.getElementById('yard-size').textContent = `Authored: ${def.length} m · in game: ${gameLength} m · preview: ${preview} (${displayScale}×)`;
-    YARD_stat.textContent = `${def.name || def.id} · ${data.voxels.length.toLocaleString()} voxels · ${(performance.now() - t0).toFixed(0)} ms · ${def.length} m authored / ${gameLength} m in game`;
+    const geometry = data ? `${data.voxels.length.toLocaleString()} voxels`
+      : `${nextMeshes.reduce((n, m) => n + m.geometry.attributes.position.count / 3, 0).toLocaleString()} triangles`;
+    YARD_stat.textContent = `${def.name || def.id} · ${geometry} · ${(performance.now() - t0).toFixed(0)} ms · ${def.length} m authored / ${gameLength} m in game`;
     YARD_buildGrid(def, displayScale);
     YARD_buildReference(def, displayScale);
     YARD_buildExtents(def);
