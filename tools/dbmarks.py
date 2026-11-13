@@ -4,6 +4,10 @@ db in which every variant is replaced by a complete ordinary def (base copy + mo
 import copy, json, os
 
 ROMAN = ['I', 'II', 'III', 'IV']
+LABEL = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
+def mark_label(base, mark):
+    """Display label of a mark: a base with markBase N (FROGG missiles start at Mark V, owner 2026-11-12) shifts II-IV to N+1..N+3."""
+    return LABEL[ROMAN.index(mark) + base.get('markBase', 1) - 1]
 ENTRY_KEYS = {'base', 'mark', 'mods', 'name', 'scaffolding'}
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'db.json')
 
@@ -49,6 +53,6 @@ def resolve(db):
             d = copy.deepcopy(b)
             for p, op in e.get('mods', {}).items(): apply(d, p, op)
             d['id'] = id_; d['base'] = e['base']; d['mark'] = e['mark']
-            d['name'] = e.get('name') or (b['name'] + ' ' + e['mark'])
+            d['name'] = e.get('name') or (b['name'] + ' ' + mark_label(b, e['mark'])); d['markLabel'] = mark_label(b, e['mark'])
             table[id_] = d
     return db

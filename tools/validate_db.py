@@ -227,7 +227,7 @@ else:
 
 # ---- ships and weapons (resolved) ----
 for sid, s in S.items():
-    if 'mark' in s and s['name'] != S[s['base']]['name'] + ' ' + s['mark']: err(f'{sid}: resolved name {s["name"]!r} lacks the roman suffix')
+    if 'mark' in s and s['name'] != S[s['base']]['name'] + ' ' + dbmarks.mark_label(S[s['base']], s['mark']): err(f'{sid}: resolved name {s["name"]!r} lacks the roman suffix')
     comps = {c['id'] for c in s.get('comps', [])}
     for kind in ('mounts', 'turrets'):
         for m in s.get(kind, []):
