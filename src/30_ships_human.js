@@ -41,7 +41,7 @@ SHIPS.kestrel = {
     tap([0, 0, 4.35], 1.3, [1.3, 0.6], [0.8, 0.44], CF.g2, { sh: 'h' }),
     tap([0, -0.58, 0.6], 3.6, [0.55, 0.12], [0.8, 0.12], CF.g3, { sh: 'r' }),
     tap([0, -0.12, -4.75], 0.12, [0.1, 0.08], [0.24, 0.16], CF.gr, { sh: 'h' }),              // radar tip
-    tap([0, 0, -2.62], 0.12, [0.74, 0.48], [0.74, 0.48], CF.or, { sh: 'h' }),                 // orange nose band
+    { t: 'paint', box: [-0.78, -0.65, -2.74, 0.78, 0.53, -2.50], col: CF.or, mix: 1 },                 // orange nose band
     // single-seat canopy with a graphite frame, dorsal spine module with access panels
     ell([0, 0.55, -2.2], [0.44, 0.32, 1.0], CF.can, { glow: false }),
     tap([0, 0.56, -2.2], 0.05, [0.48, 0.34], [0.48, 0.34], CF.dk, { sh: 'e' }),
@@ -122,7 +122,7 @@ SHIPS.bittern = {
     tap([0, 0.2, 8.8], 1.2, [1.6, 1.2], [1.0, 0.8], CF.g2, { sh: 'r' }),
     tap([0, -1.45, -1.0], 6.5, [1.4, 0.2], [1.6, 0.22], CF.g3, { sh: 'r' }),
     tap([0, 0.05, -10.8], 0.15, [0.5, 0.4], [0.95, 0.75], CF.gr, { sh: 'h' }),
-    tap([0, 0, -7.05], 0.2, [2.02, 1.47], [2.02, 1.47], CF.or, { sh: 'h' }),
+    { t: 'paint', box: [-2.1, -1.6, -7.25, 2.1, 1.6, -6.85], col: CF.or, mix: 1 },
     // tandem canopy for pilot and weapons officer on a raised cockpit block
     tap([0, 1.1, -6.2], 1.7, [1.1, 0.55], [1.35, 0.6], CF.g1, { sh: 'h' }),
     ell([0, 1.62, -6.3], [0.95, 0.6, 1.7], CF.can, { glow: false }),
@@ -202,8 +202,8 @@ SHIPS.halberd = {
     tap([3.35, -0.2, 2.5], 7.5, [0.45, 1.5], [0.5, 1.6], CF.g1, { sh: 'h' }),
     tap([3.85, -0.2, 0], 2.6, [0.06, 0.9], [0.06, 0.9], CF.gr),                                          // service hatch
     tap([3.85, -0.2, 7], 1.2, [0.06, 0.8], [0.06, 0.8], CF.gr),
-    tap([0, 0, -21], 0.45, [2.5, 1.85], [2.55, 1.88], CF.or, { sh: 'h' }),
-    tap([0, 0, 14.5], 0.5, [3.32, 2.55], [3.34, 2.56], CF.or, { sh: 'h' }),
+    { t: 'paint', box: [-2.95, -2.2, -21.45, 2.95, 2.2, -20.55], col: CF.or, mix: 1 },
+    { t: 'paint', box: [-3.4, -2.7, 14.0, 3.4, 2.7, 15.0], col: CF.or, mix: 1 },
     // engine raft: a graphite frame with three round nozzles at the database engine positions
     tap([0, 0, 27], 4, [3.6, 2.5], [5.4, 2.4], CF.g2, { sh: 'h' }),
     tap([0, 0, 30.4], 1.4, [2.3, 2.3], [2.3, 2.3], CF.gr, { sh: 'e' }), tap([0, 0, 30.8], 0.9, [2.45, 2.45], [2.2, 2.2], CF.or, { sh: 'e' }),
@@ -336,7 +336,7 @@ SHIPS.exeter = {
     tap([0, 13.5, 0], 150, [20, 4], [34, 5], E.grey, { sh: 'h' }),                                          // dorsal launcher slab
     tap([0, 17.8, -20], 110, [12, 0.8], [20, 0.8], E.panel, { sh: 'r' }),                                   // slab inlay
     tap([38, -1, -10], 100, [13, 15], [14, 17], E.grey, { sh: 'h', seam: [8, 6] }),                         // flank sponson
-    tap([51.6, -1, -10], 96, [0.6, 3], [0.6, 3], E.orange, { sh: 'r' }),                                    // sponson band
+    { t: 'paint', box: [47, -4, -106, 53, 2, 86], col: E.orange, side: '+x', mix: 1 },                                    // sponson band
     tap([0, -2, -200], 28, [9, 6], [22, 12], E.grey2, { sh: 'd' }),                                         // bow wedge
     tap([0, -7, -186], 14, [13, 4.5], [14, 5], CF.gr, { dots: { col: E.amber, p: 0.05 } }),                 // hangar maw
     seg([14, 4, -195], [16, 5, -226], 1.3, 0.8, E.dark), seg([20, 10, -170], [22, 11, -207], 1.1, 0.7, E.dark), // bow prongs and rails
@@ -576,7 +576,7 @@ SHIPS.falchion = {
     tap([0, 0, 6.9], 2.4, [1.7, 1.05], [1.1, 0.8], CF.g2, { sh: 'h' }),
     tap([0, -1.0, 0.0], 7.0, [0.9, 0.12], [1.1, 0.12], CF.g3, { sh: 'r' }),
     tap([0, -0.2, -9.95], 0.12, [0.25, 0.2], [0.45, 0.35], CF.gr, { sh: 'h' }),
-    tap([0, 0, -2.45], 0.16, [1.62, 1.02], [1.62, 1.02], CF.or, { sh: 'h' }),
+    { t: 'paint', box: [-1.65, -1.05, -2.61, 1.65, 1.05, -2.29], col: CF.or, mix: 1 },
     // tandem canopy (pilot ahead, weapons officer behind) on a raised cockpit block
     tap([0, 0.7, -4.4], 1.9, [0.85, 0.35], [1.0, 0.4], CF.g1, { sh: 'h' }),
     ell([0, 1.05, -5.4], [0.7, 0.45, 1.25], CF.can, { glow: false }),
@@ -754,7 +754,8 @@ SHIPS.destroyer = {
     ...[[12, 22, -190], [14, 22, 110]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', 16), ...dstSeat(-x, y, z, 'S', 16)]),
     ...[[8, -20.6, -150], [8, -20.6, 150]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', -14), ...dstSeat(-x, y, z, 'S', -14)]),
     // fleet bands: orange belts fore and aft, graphite deck edge
-    tap([0, 0, -150], 3, [36.5, 17.2], [37, 17.3], E.orange, { sh: 'h' }), tap([0, 0, 140], 3, [46.4, 19.2], [46.4, 19.2], E.orange, { sh: 'h' }),
+    { t: 'paint', box: [-39, -20, -153, 39, 20, -147], col: E.orange, mix: 1 },
+    { t: 'paint', box: [-49, -21, 137, 49, 21, 143], col: E.orange, mix: 1 },
     // radiator panels
     tap([64, 12, 205], 24, [30, 1.3], [20, 1.1], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),             // thick enough for the 600 m voxel size
     tap([64, 13.2, 205], 24, [2.4, 0.9], [2.0, 0.8], E.orange, { ax: 'x', sweep: 0.2 }),
@@ -779,7 +780,7 @@ SHIPS.carrier = {
   prims: [
     tap([0, 0, -30], 470, [55, 16], [165, 30], CF.w, { sh: 'h' }),                                    // tapered pressure hull
     tap([0, -1, -496], 4, [46, 13], [50, 14], CF.g1, { sh: 'h' }),                                     // flat nose plate
-    tap([0, -3, -470], 26, [cbW(-496) - 2, 3], [cbW(-444) - 2, 3], CF.g3, { sh: 'r' }),               // nose band
+    { t: 'paint', box: [0, -6, -496, cbW(-444), 0, -444], col: CF.g3, side: '+x', mix: 1 },               // nose band
     // graphite chine along the hull's widest line (the chamfered section's flat top spans only the inner 45 % of the width)
     tap([cbW(-30) - 1, 0, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
     // flight-deck markings and a raised central service spine (trench machinery, as on the reference)
