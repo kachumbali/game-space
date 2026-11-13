@@ -1,6 +1,6 @@
 // Opt-in frame recorder. Intervals use actual RAF deltas, not the simulation's clamped dt.
 const PERF = {sum: 0, count: 0, worst: 0, bins: new Uint32Array(2001), window: [], windowMs: 0, windows: [], overflow: []};
-function perfReset() { PERF.sum = PERF.count = PERF.worst = PERF.windowMs = 0; PERF.bins.fill(0); PERF.overflow = []; PERF.window = []; PERF.windows = []; PERF.voxelBuilds = []; }
+function perfReset() { PERF.sum = PERF.count = PERF.worst = PERF.windowMs = 0; PERF.bins.fill(0); PERF.overflow = []; PERF.window = []; PERF.windows = []; PERF.voxelBuilds = []; PERF.spans = []; }
 function perfStats(samples) {
   if (!samples.length) return null;
   const sorted = samples.slice().sort((a, b) => a - b), sum = samples.reduce((a, b) => a + b, 0);
@@ -48,3 +48,12 @@ voxelize = (...args) => {
   try { return perfVoxelizeBase(...args); }
   finally { const ms = performance.now() - start; if (ms >= 1) (PERF.voxelBuilds ||= []).push({id: args[0].id, res: args[1], ms}); }
 };
+
+// Keep only slow spans and cap retention during long skirmishes.
+function perfSpan(name, start) {
+  const ms = performance.now() - start;
+  if (ms < 2) return;
+  const spans = PERF.spans ||= [];
+  spans.push({ name, ms, end: performance.now() });
+  if (spans.length > 512) spans.shift();
+}

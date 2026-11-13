@@ -213,6 +213,8 @@ function destroy(s) {
 }
 
 function explode(s) {
+  const profileStart = params.has('fps') ? performance.now() : null;
+  try {
   const D = s.vox.data, vs = D.vs;
   const big = s.def.cls !== 'fighter';
   if (!big) fighterChunks(s);
@@ -237,6 +239,7 @@ function explode(s) {
   debris.push({ mesh, flash, pos, vel, life: 0, size: s.def.radius * (big ? 0.8 : 1), dur: big ? 3.4 : 2.4 });
   const k = big ? 4 : 1;
   sparksAt(center, 120 * Math.min(k, 3), 50); fireAt(center, 50 * Math.min(k, 3), big ? 30 : 22); smokeAt(center, 30 * Math.min(k, 3), 10);
+  } finally { if (profileStart !== null) perfSpan('explode', profileStart); }
 }
 
 // Split the still-visible original voxel instances into three rigid pieces.
