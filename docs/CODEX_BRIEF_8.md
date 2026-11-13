@@ -12,27 +12,33 @@ Do the jobs in order. Every balance change goes through `data/db.json` (`tuning`
 ## Owner decisions (2026-11-13)
 
 1. **FROGG small craft follow a swarm doctrine.** They stay individually weaker than their human counterparts but come in larger numbers and carry better missiles (they already start at Mark V).
-   - **Targets** over 20 seeded runs: a human fighter wins about **65–70%** of one-on-ones against its counterpart, and **two FROGG against one human is roughly even** (40–60%).
-   - The same holds for corvettes: Halberd vs Gulper about 65–70%; Halberd vs 2 Gulpers about even.
+   - **Revised 2026-11-13.** The first targets conflicted: by the square law of combat, a human that wins only 65–70% one-on-one loses clearly against two. The owner chose the 2-vs-1 target.
+   - **Targets** over 20 seeded runs: **two FROGG against one human is roughly even (40–60%)**, and a human wins about **80–90%** of one-on-ones.
+   - The same holds for corvettes: Halberd vs 2 Gulpers about even, Halberd vs 1 Gulper about 80–90%.
 2. **The XL spine gun becomes decisive against capitals.** A spine ship should seriously threaten an enemy capital within 1–2 shots, while staying useless against fighters, as today.
 
-## Job T: swarm doctrine tuning (branch `codex/swarm-tuning`)
+## Job T: swarm doctrine tuning (branch `codex/swarm-tuning-2`)
 
-Today: Kestrel vs Leaper 18–0 (2 timeouts), Kestrel vs Reaver 19–1, Falchion vs Reaver 20–0, Halberd vs Gulper 20–0, 4 Kestrels vs Gulper 20–0.
+Baseline (PR #13, merged), human / FROGG / timeout:
 
-**Measure first.** Add the 2-vs-1 cells to the harness and run them before changing anything: 2 Leapers vs Kestrel, 2 Reavers vs Falchion, 2 Gulpers vs Halberd.
+| Cell | Result |
+|---|---|
+| Kestrel vs Leaper | 18 / 0 / 2 |
+| Kestrel vs 2 Leapers | 8 / 11 / 1 (already on target) |
+| Kestrel vs Reaver | 20 / 0 / 0 |
+| Falchion vs Reaver | 20 / 0 / 0 |
+| Falchion vs 2 Reavers | 20 / 0 / 0 |
+| Halberd vs Gulper | 20 / 0 / 0 |
+| Halberd vs 2 Gulpers | 0 / 20 / 0 |
 
-**Find the cause before tuning.** Why do FROGG craft lose? For example, AI behaviour (the burst-dive pattern), the energy burst running dry, turn rate, hull, or weapon range under the range law. Report it per matchup.
+Fix these, in this order:
 
-**Tune to the targets** with the fewest, most physical levers:
-- FROGG fighter turn rate and acceleration;
-- burst seconds and recharge (`tuning.armamentLaw.burstSec`);
-- missile counts per FROGG fighter;
-- hull and shields only as a last resort.
+1. **Harness variation.** Randomise each seed's opening: bearing, offset and range within ±20%. The fixed head-on 2-Gulper cell showed almost no variation across seeds, so 20 seeds measured one fight 20 times. Re-run the baseline with variation before tuning.
+2. **Gulper AI (a bug, not balance).** In its 1v1 losses the Gulper kept over 98% of its energy. Find out why its energy weapons (lances, rod guns) do not fire, and fix that in the AI or fire-control code. Then re-measure both Gulper cells; the 2-vs-1 cell may swing further.
+3. **Reaver.** In traces it lost its guns and reactor while a Falchion drone drew its attention. Check its target choice: drones should not pull a Reaver off a fighter that is shooting it. Check its subsystem exposure too.
+4. **Only then tune** the remaining gaps to the revised targets, with the levers listed before (turn rate, acceleration, burst seconds and recharge, missile counts; hull and shields last). Human ships stay unchanged.
 
-Do not change human ships to hit the target. Keep `armament_law_t`, `bullfrog_t` and `spine_focus_t` green.
-
-**Report:** a before and after table for every cell, 20 seeds each, plus every value changed and why.
+**Report:** before and after, 20 seeds per cell with varied openings, plus the cause per matchup and every value changed.
 
 ## Job U: a decisive spine gun (branch `codex/spine-decisive`)
 
