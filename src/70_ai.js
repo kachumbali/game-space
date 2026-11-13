@@ -96,6 +96,8 @@ function pickTarget(s) {
   }
   if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
     const la = s.lastAttacker, hp = s.structure / s.def.structure;
+    const recentPilotedAttacker = time - (s.lastHit ?? -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && la.def.cls === 'fighter' && !la.def.drone;
+    if (recentPilotedAttacker && s.target?.def.drone) return la;          // defend against the fighter shooting us, not its drone
     const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);
     if (pounded) return la;                                              // break off the squad target and defend
     const f = squadFocus(s);
@@ -446,7 +448,8 @@ function capitalAI(s, dt) {
   const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  const secondaryRange = Math.max(1300, ...s.mounts.filter(m => !m.store && m.grp === 2 && WEAPONS[m.w].kind === 'beam').map(m => WEAPONS[m.w].range));
+  if (err < 0.03 && dist < Math.min(rng * 1.4, secondaryRange)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // secondaries may engage at their beam range
   else if (err < 0.03 && dist < rng * 1.4) { if (gunBurstOK(s, dt)) fireGuns(s, 0b1); }                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (!s.launcherRuntime && (s.stores.tad > 0 || s.stores.torp > 0)) {
