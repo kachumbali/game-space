@@ -3,6 +3,10 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Codex brief 6, Jobs K–M:
+  - **Detached-part test** (`detached_t`): every ship at tablet and high detail is one connected hull. Detached components over 2 voxels fell from 394 to 0; parts were rooted with struts and plinths, and surface relief no longer cuts supports.
+  - **Hidden-fighter damage leak**: the 20 damage came from the test itself (its ships spawned with cruise speed and collided). `turret_los_t` now builds stationary ships and passes: 0 damage hidden, 116 in the open.
+  - **Real-geometry hulls, phase 1** (opt-in, `?vox=mesh`, also in the yard): authored prims drawn as meshes, with paint and text on the same triangles, one opaque and at most one glow draw per ship. Fleet totals: 986k → 216k triangles at tablet detail and 8.3M → 405k at desktop detail; 277 → 61 hull draws; build time roughly halved. Curved shapes match the voxel inside test in 99.1% of samples. Damage does not show on the mesh yet; the voxel grid still handles collision, line of fire, shields and damage. Chamfered voxels stay the default.
 - Armament laws (owner 2026-11-12, `docs/DESIGN_ARMAMENT_LAWS.md`, `tools/armament_law.py`, test `armament_law_t`):
   - **Power:** plant and store follow the ship's in-game length. Humans sustain point defence and secondaries from the weapons bus; FROGG ships carry a burst bank (superconducting magnetic storage) with 8 s of non-PD fire, and FROGG fighters 4.5 s (Leaper and Reaver were 0.6 s).
   - **Toughness:** hull and shields follow length times a role factor. Columbus 20,736 → 4,140 and Hecla 12,000 → 3,401 hull; the Glaive 2,808 is the warship reference.
