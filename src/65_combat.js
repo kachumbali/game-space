@@ -24,7 +24,10 @@ function hitMark(s, c) { if (s === target) subHit = { id: c.id, t: time }; }
 function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, shPen = 0, shieldPoint = null) {
   if (s.tutorialTarget) { hitSrc = null; hitKind = null; return; }
   const playerHit = s === player, source = hitSrc, kind = hitKind;
+  const active = s.alive && !s.dying;
   const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen, shieldPoint);
+  if (params.has('duelbench') && active && (!s.alive || s.dying)) s.duelCause = (kind === 'collision' ? kind : s.duelWeapon) || kind || dtype;
+  if (params.has('duelbench')) s.duelWeapon = null;
   if (playerHit && out) { const cls = source?.def?.cls || kind || 'unknown'; REPORT.damage[cls] = (REPORT.damage[cls] || 0) + dmg * (s.mod?.take ?? 1); reportSample(); }
   if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
     let cause = 'Hull destroyed; cause unclear.';
