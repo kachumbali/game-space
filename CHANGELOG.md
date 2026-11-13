@@ -3,6 +3,9 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Codex brief 6, Jobs N–O (mesh mode only):
+  - **Colour-overlap audit** (`tools/overlap_audit.py`): decorative bands that hid inside hulls are now paint, and selected joins are adjusted. Partial cleanup: 3,577 → 3,419 flagged pairs. About 93 % of the remaining pairs are buried surfaces an opaque mesh never shows; the visible kind, coincident same-facing surfaces, went 424 → 405 and still needs work before mesh mode can become the default.
+  - **Mesh shading**: baked vertex ambient occlusion, the authored wear, streak, strata, seam and rib options, and a non-glowing FROGG hide bump. No added triangles or draws; about +1.4 ms per ship build at tablet detail.
 - Codex brief 6, Jobs K–M:
   - **Detached-part test** (`detached_t`): every ship at tablet and high detail is one connected hull. Detached components over 2 voxels fell from 394 to 0; parts were rooted with struts and plinths, and surface relief no longer cuts supports.
   - **Hidden-fighter damage leak**: the 20 damage came from the test itself (its ships spawned with cruise speed and collided). `turret_los_t` now builds stationary ships and passes: 0 damage hidden, 116 in the open.
