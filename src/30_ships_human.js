@@ -754,7 +754,8 @@ SHIPS.destroyer = {
     ...[[12, 22, -190], [14, 22, 110]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', 16), ...dstSeat(-x, y, z, 'S', 16)]),
     ...[[8, -20.6, -150], [8, -20.6, 150]].flatMap(([x, y, z]) => [...dstSeat(x, y, z, 'S', -14), ...dstSeat(-x, y, z, 'S', -14)]),
     // fleet bands: orange belts fore and aft, graphite deck edge
-    tap([0, 0, -150], 3, [36.5, 17.2], [37, 17.3], E.orange, { sh: 'h' }), tap([0, 0, 140], 3, [46.4, 19.2], [46.4, 19.2], E.orange, { sh: 'h' }),
+    { t: 'paint', box: [-39, -20, -153, 39, 20, -147], col: E.orange, mix: 1 },
+    { t: 'paint', box: [-49, -21, 137, 49, 21, 143], col: E.orange, mix: 1 },
     // radiator panels
     tap([64, 12, 205], 24, [30, 1.3], [20, 1.1], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),             // thick enough for the 600 m voxel size
     tap([64, 13.2, 205], 24, [2.4, 0.9], [2.0, 0.8], E.orange, { ax: 'x', sweep: 0.2 }),
