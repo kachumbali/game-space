@@ -137,12 +137,21 @@ const VFACE = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]].map(n => {
   if (cr[0]*n[0] + cr[1]*n[1] + cr[2]*n[2] < 0) q = [q[0], q[3], q[2], q[1]];
   return { n, q };
 });
+const pristineSlabs = new WeakMap();
+const slabUsers = new WeakMap();
+function releaseSlab(geometry) {
+  const shared = slabUsers.get(geometry);
+  if (!shared || --shared.users === 0) {
+    if (shared) shared.slabs.delete(shared.index);
+    geometry.dispose();
+  }
+}
 const voxDirtySet = new Set();               // ships with slabs waiting for flushVox
 function disposeVox(s) {
   const V = s.vox; if (!V) return;
   for (const m of [V.body, V.glow, V.patch]) { if (!m) continue; s.group.remove(m); if (m.dispose) m.dispose(); }
   if (VOX_MESH) for (const m of V.body.children) m.geometry.dispose();
-  if (V.slabMesh) for (const m of V.slabMesh) if (m) m.geometry.dispose();
+  if (V.slabMesh) for (const m of V.slabMesh) if (m) releaseSlab(m.geometry);
   voxDirtySet.delete(s);
   s.vox = null;
 }
@@ -169,7 +178,7 @@ function buildSlabCube(V, si) {
     mask[q] = m;
   }
   const mesh = V.slabMesh[si];
-  mesh.geometry.dispose();
+  releaseSlab(mesh.geometry);
   const geo = new THREE.BufferGeometry();
   mesh.geometry = geo; mesh.visible = F > 0;
   const vtx = V.slabVtx[si] = new Map();
@@ -317,7 +326,7 @@ function buildSlabSmooth(V, si) {
     }
   }
   const mesh = V.slabMesh[si];
-  mesh.geometry.dispose();
+  releaseSlab(mesh.geometry);
   const geo = new THREE.BufferGeometry();
   mesh.geometry = geo; mesh.visible = I.length > 0;
   V.slabVtx[si] = null;
@@ -362,7 +371,7 @@ function flushVox(s, deadline = Infinity) {
 function flushAllVox() { const deadline = performance.now() + 4; for (const s of [...voxDirtySet]) { flushVox(s, deadline); if (performance.now() > deadline) break; } }
 const voxFaces = s => s.vox && s.vox.faces ? s.vox.faces.reduce((a, b) => a + b, 0) : 0;
 // Slab set for a hull: thickness gives one slab for a small fighter, about ten (cubes) or sixteen (smooth) along a capital.
-function voxInitSlabs(V, bodyV) {
+function voxInitSlabs(V, bodyV, share = false) {
   const D = V.data;
   V.slabT = VOX_MODE === 'smooth' ? Math.max(16, Math.ceil(D.nz / 16)) : Math.max(24, Math.ceil(D.nz / 10));
   const n = Math.ceil(D.nz / V.slabT);
@@ -373,7 +382,30 @@ function voxInitSlabs(V, bodyV) {
   V.body.count = bodyV.length;               // surface voxel count (tests and diagnostics read body.count + glow.count)
   V.body.position.set(-D.hx, -D.hy, -D.hz); V.body.scale.setScalar(D.vs);
   V.slabMesh = V.slabCells.map(() => { const m = new THREE.Mesh(new THREE.BufferGeometry(), voxMeshMat); V.body.add(m); return m; });
-  for (let si = 0; si < n; si++) buildSlab(V, si);
+  // Smooth slabs are immutable until damage replaces a ship's own geometry.
+  // Identical hulls can use the same buffers and submit one upload per slab.
+  if (!share || VOX_MODE !== 'smooth') {
+    for (let si = 0; si < n; si++) buildSlab(V, si);
+    return;
+  }
+  let slabs = pristineSlabs.get(D);
+  if (!slabs) { slabs = new Map(); pristineSlabs.set(D, slabs); }
+  for (let si = 0; si < n; si++) {
+    const mesh = V.slabMesh[si];
+    let shared = slabs.get(si);
+    if (shared) {
+      releaseSlab(mesh.geometry);
+      mesh.geometry = shared.geometry;
+      mesh.visible = shared.visible;
+      V.faces[si] = shared.faces;
+    } else {
+      buildSlab(V, si);
+      shared = { geometry: mesh.geometry, visible: mesh.visible, faces: V.faces[si], users: 0, slabs, index: si };
+      slabs.set(si, shared);
+      slabUsers.set(mesh.geometry, shared);
+    }
+    shared.users++;
+  }
 }
 // Undamaged hull body for viewers (the yard): the same slab meshes as in game, as a group placed in model space.
 function voxStaticBody(D) {
@@ -386,6 +418,8 @@ function voxStaticBody(D) {
   return V.body;
 }
 function buildVox(s) {
+  const profileStart = params.has('fps') ? performance.now() : null;
+  try {
   disposeVox(s);
   const di = Math.max(0, detailIdx - (s.lodDrop | 0) - (s.def.cls === 'fighter' ? 0 : VOX_SMOOTH_DROP));   // distance LOD lowers the detail step of far ships; smooth non-fighter hulls build one step lower (fighters keep thin parts)
   const gridDetail = Math.max(0, di - VOX_GRID_DROP);
@@ -425,12 +459,13 @@ function buildVox(s) {
     fill(V.body, bodyV); fill(glow, glowV);
     V.patch.setColorAt(0, _col.setRGB(0, 0, 0)); V.patch.count = 0;
   } else {
-    voxInitSlabs(V, bodyV);
+    voxInitSlabs(V, bodyV, true);
   }
   for (const m of [V.body, glow, V.patch]) { if (!m) continue; m.frustumCulled = false; s.group.add(m); }
   if (s.shieldFx) sizeShield(s);
   for (const ev of s.dmgEvents) chip(s, ev.p, ev.r, ev.sr, true, ev.shallow);
   flushVox(s);
+  } finally { if (profileStart !== null) perfSpan('buildVox', profileStart); }
 }
 
 // Fit an ellipsoid around the corners of every rendered voxel, then add the
@@ -465,22 +500,31 @@ function dentCell(D, i, j, k) {
   return false;
 }
 function chip(s, lp, r, sr, replay, shallowOverride) {
+  const profileStart = params.has('fps') ? performance.now() : null;
+  try {
   const V = s.vox, D = V.data, vs = D.vs, { nx, ny, nz } = D;
   // A carve radius that scales with raw damage (hit: 0.35+0.08*d) reached 14 m for a 210-damage missile, wider than a whole fighter, so one hit deleted every voxel of the hull (only exhaust and hit boxes stayed). Cap it relative to the ship.
   if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
   const shallow = shallowOverride ?? (s.structure >= s.def.structure * TUNE.damageVisuals.holeHullFraction);
   if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr, shallow }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
   const R = Math.max(r, sr);
-  const ci = Math.floor((lp.x + D.hx) / vs), cj = Math.floor((lp.y + D.hy) / vs), ck = Math.floor((lp.z + D.hz) / vs);
-  const rr = Math.ceil(R / vs) + 1;
+  // Bound each row by the sphere. Keep a small rounding margin for tangent cells.
+  const rr2 = R * R * (1 + 1e-12);
+  const plane = ny * nz;
+  const first = (point, radius, half) => Math.max(0, Math.ceil((point - radius + half) / vs - 0.5));
+  const last = (point, radius, half, n) => Math.min(n - 1, Math.floor((point + radius + half) / vs - 0.5));
   const removed = [];
   let dirty = false;
-  for (let i = Math.max(0, ci - rr); i <= Math.min(nx - 1, ci + rr); i++) {
+  const radius = Math.sqrt(rr2);
+  for (let i = first(lp.x, radius, D.hx), end = last(lp.x, radius, D.hx, nx); i <= end; i++) {
     const dx = -D.hx + (i + 0.5) * vs - lp.x;
-    for (let j = Math.max(0, cj - rr); j <= Math.min(ny - 1, cj + rr); j++) {
+    const dyMax = Math.sqrt(Math.max(0, rr2 - dx * dx));
+    for (let j = first(lp.y, dyMax, D.hy), end = last(lp.y, dyMax, D.hy, ny); j <= end; j++) {
       const dy = -D.hy + (j + 0.5) * vs - lp.y;
-      for (let k = Math.max(0, ck - rr); k <= Math.min(nz - 1, ck + rr); k++) {
-        const cell = (i * ny + j) * nz + k;
+      const dzMax = Math.sqrt(Math.max(0, rr2 - dx * dx - dy * dy));
+      const row = i * plane + j * nz;
+      for (let k = first(lp.z, dzMax, D.hz), end = last(lp.z, dzMax, D.hz, nz); k <= end; k++) {
+        const cell = row + k;
         if (!V.solid[cell]) continue;
         const dz = -D.hz + (k + 0.5) * vs - lp.z;
         const d2 = dx * dx + dy * dy + dz * dz;
@@ -562,4 +606,5 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
         [c.r * 1.4, c.g * 1.4, c.b * 1.4, 1], [c.r * 0.5, c.g * 0.5, c.b * 0.5, 0]);
     }
   }
+  } finally { if (profileStart !== null) perfSpan('chip', profileStart); }
 }

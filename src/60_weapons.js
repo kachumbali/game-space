@@ -441,6 +441,8 @@ function tandemHole(s, facet, holeT, wp) {
 // crew dose from neutrons/gamma (80 Gy at 900 m for 1 kT, 1/r^2), reduced by shields up to NUKE.shieldCut; flash blinds radar and PD optics for a while.
 const NUKE = TUNE.nuke;
 function nukeAt(pos, kt, owner) {
+  const profileStart = params.has('fps') ? performance.now() : null;
+  try {
   flashAt(pos, 90, 1.6); sparksAt(pos, 120, 80); fireAt(pos, 30, 30); sfx('boom', pos.distanceTo(camera.position), 3);
   const rep = [];
   for (const s of ships) {
@@ -467,6 +469,7 @@ function nukeAt(pos, kt, owner) {
     rep.push({ id: s.def.id, team: s.team, r: Math.round(r), F: +F.toFixed(1), dose: Math.round(dose), dead: !s.alive || !!s.dying, str: Math.round(100 * Math.max(0, s.structure) / s.def.structure) });
   }
   nukeLog.push({ t: time, kt, rep });
+  } finally { if (profileStart !== null) perfSpan('nukeAt', profileStart); }
 }
 const nukeLog = [];
 function killMissile(m, blast, direct = null) {

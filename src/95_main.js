@@ -99,12 +99,14 @@ function frame(t) {
     updateHud();
     if (FPS_ON) perfCosts.hudSum += performance.now() - hudStart;
   }
+  const flushStart = FPS_ON ? performance.now() : 0;
   flushAllVox();                                   // rebuild ship slabs that damage touched this frame
+  if (FPS_ON) perfSpan('flushAllVox', flushStart);
   for (const s of ships) if (s.group.visible) s.syncTurretVisuals?.();
   if (FPS_ON) renderer.info.reset();
   const renderStart = FPS_ON ? performance.now() : 0;
   if (composer && bloomOn) composer.render(); else renderer.render(scene, camera);
-  if (FPS_ON) { perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); perfCosts.trisSum += renderer.info.render.triangles; perfCosts.trisMax = Math.max(perfCosts.trisMax, renderer.info.render.triangles); }
+  if (FPS_ON) { perfSpan('render submission', renderStart); perfCosts.renderSum += performance.now() - renderStart; perfCosts.frames++; perfCosts.callsSum += renderer.info.render.calls; perfCosts.callsMax = Math.max(perfCosts.callsMax, renderer.info.render.calls); perfCosts.trisSum += renderer.info.render.triangles; perfCosts.trisMax = Math.max(perfCosts.trisMax, renderer.info.render.triangles); }
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
