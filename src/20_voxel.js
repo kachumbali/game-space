@@ -403,7 +403,7 @@ function surfaceDetail(def, tier, G) {
             }
           } else if (r < 0.5) {                                              // vent (recessed slats)
             const w = sz(4, 7, r2), d = sz(3, 5, r3), a0 = -(w >> 1), b0 = -(d >> 1);
-            if (flat(a0, b0, w, d, 0)) {
+            if (flat(a0, b0, w, d, 1)) {
               for (let aa = a0; aa < a0 + w; aa++) for (let bb = b0; bb < b0 + d; bb++) {
                 const c0 = q(aa, bb, 0), c1 = q(aa, bb, -1), c2 = q(aa, bb, -2);
                 if (c1 < 0 || c2 < 0 || grid[c1] < 0 || grid[c2] < 0) continue;
@@ -472,7 +472,7 @@ function surfaceDetail(def, tier, G) {
             }
           } else if (r < 0.6) {                                              // gill vent with glowing slits
             const w = sz(5, 8, r2), d = sz(4, 6, r3), a0 = -(w >> 1), b0 = -(d >> 1);
-            if (flat(a0, b0, w, d, 0)) {
+            if (flat(a0, b0, w, d, 1)) {
               const gc = r3 > 0.45 ? st.lamp : st.lamp2;
               for (let aa = a0; aa < a0 + w; aa++) for (let bb = b0; bb < b0 + d; bb++) {
                 const c0 = q(aa, bb, 0), c1 = q(aa, bb, -1);
@@ -516,14 +516,17 @@ function surfaceDetail(def, tier, G) {
         walk(i, j, k, code, dirU, len, (c, s) => {
           const ci2 = (c / (ny * nz)) | 0, cj2 = ((c / nz) | 0) % ny, ck2 = c % nz;
           if (inEx(ci2, cj2, ck2) || xg[c]) return false;
+          if (!greebOK(prims[pgrid[c]] || { noDetail: true })) return false;
           if (kind === 0 || kind === 3) {
             for (let w = -wide; w <= wide; w++) {
               // lateral offset w applied in the frame's other axis
               const o = (dirU ? Vx * w : Ux * w) * si + (dirU ? Vy * w : Uy * w) * sj + (dirU ? Vz * w : Uz * w);
               const cc = c + o;
               if (cc < 0 || cc >= N || grid[cc] < 0) continue;
-              const d1 = cc - (Nx * si + Ny * sj + Nz), d2 = cc - 2 * (Nx * si + Ny * sj + Nz);
+              const normal = Nx * si + Ny * sj + Nz;
+              const d1 = cc - normal, d2 = cc - 2 * normal;
               if (d1 < 0 || d2 < 0 || grid[d1] < 0 || grid[d2] < 0) continue;
+              if (!greebOK(prims[pgrid[cc]] || { noDetail: true }) || grid[cc + normal] >= 0) continue;
               grid[cc] = -1; pgrid[cc] = -1;
               if (kind === 3 && (s % 6) < 4) { grid[d1] = veinCol; xg[d1] = st.noGlow ? 0 : 75; } else { tn[d1] = 58; }
             }
@@ -543,10 +546,10 @@ function surfaceDetail(def, tier, G) {
   return { xg, tn };
 }
 
-function voxelize(def, res, idx = detailIdx) {
+function voxelize(def, res, idx = detailIdx, includeOwners = false) {
   const tier = detailTier(res, def, idx);
   const key = def.id + ':' + res + (tier ? ':t' + tier : '');
-  if (voxCache.has(key)) return voxCache.get(key);
+  if (!includeOwners && voxCache.has(key)) return voxCache.get(key);
   const vs = def.length / res;
   const [hx, hy, hz] = def.half;
   const nx = Math.ceil(2 * hx / vs), ny = Math.ceil(2 * hy / vs), nz = Math.ceil(2 * hz / vs);
@@ -664,6 +667,7 @@ function voxelize(def, res, idx = detailIdx) {
     voxels.push({ x, y, z, g: glow, cr: _col.r * f, cg: _col.g * f, cb: _col.b * f, cell });
   }
   const out = { vs, voxels, nx, ny, nz, hx, hy, hz, grid, cellToVox, tier };
+  if (includeOwners) return { ...out, pgrid };
   voxCache.set(key, out);
   return out;
 }
