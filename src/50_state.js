@@ -151,6 +151,7 @@ function disposeVox(s) {
   const V = s.vox; if (!V) return;
   for (const m of [V.body, V.glow, V.patch]) { if (!m) continue; s.group.remove(m); if (m.dispose) m.dispose(); }
   if (VOX_MESH) for (const m of V.body.children) m.geometry.dispose();
+  V.embers?.material.dispose();
   if (V.slabMesh) for (const m of V.slabMesh) if (m) releaseSlab(m.geometry);
   voxDirtySet.delete(s);
   s.vox = null;
@@ -453,6 +454,7 @@ function buildVox(s) {
   if (VOX_MESH) {
     V.body = buildHullMesh(s.def, di, undefined, D);
     V.body.count = D.voxels.length;
+    meshDamageIndex(s);
   } else if (VOX_INST) {
     V.body = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, Math.max(1, bodyV.length));
     V.patch = new THREE.InstancedMesh(boxGeo(D.vs), voxMat, cap);
@@ -507,6 +509,7 @@ function chip(s, lp, r, sr, replay, shallowOverride) {
   if (!replay) { const rad = s.def.radius; r = Math.min(r, 0.2 * rad + 0.5); sr = Math.min(sr, 0.35 * rad + 1); }
   const shallow = shallowOverride ?? (s.structure >= s.def.structure * TUNE.damageVisuals.holeHullFraction);
   if (!replay) { s.dmgEvents.push({ p: lp.clone(), r, sr, shallow }); if (s.dmgEvents.length > 250) s.dmgEvents.shift(); }
+  if (VOX_MESH) damageHullMesh(s, lp, r, sr, shallow);
   const R = Math.max(r, sr);
   // Bound each row by the sphere. Keep a small rounding margin for tangent cells.
   const rr2 = R * R * (1 + 1e-12);

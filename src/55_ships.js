@@ -84,6 +84,12 @@ function spawnWave() {
   log(`WAVE ${wave}: ${kinds.length} FROGG CONTACTS`, '#ffd080');
 }
 
+function disposeDebris(d) {
+  scene.remove(d.mesh);
+  if (d.meshChunk) for (const m of d.mesh.children) { m.geometry.dispose(); m.material.dispose(); }
+  else { d.mesh.dispose(); if (d.chunk) d.mesh.material.dispose(); }
+  if (d.flash) { scene.remove(d.flash); d.flash.geometry.dispose(); d.flash.material.dispose(); }
+}
 function clearWorld() {
   if (tutorialEl) tutorialEl.style.display = 'none';
   ejectionSceneSkip();
@@ -93,7 +99,7 @@ function clearWorld() {
   for (const s of ships) disposeShip(s);
   for (const m of missiles) { scene.remove(m.mesh); }
   for (const f of flashes) scene.remove(f.m);
-  for (const d of debris) { scene.remove(d.mesh); d.mesh.dispose(); if (d.chunk) d.mesh.material.dispose(); if (d.flash) scene.remove(d.flash); }
+  for (const d of debris) disposeDebris(d);
   ships = []; bolts = []; debris = []; missiles = []; decoys = []; flashes = []; target = null; manualTarget = false; player = null;
   for (const k in killLog) delete killLog[k];
   shake = 0; hitFlash = 0; logs.length = 0; kills = 0; time = 0;
