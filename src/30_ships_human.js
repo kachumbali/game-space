@@ -419,9 +419,9 @@ SHIPS.hecla = {
       hTap([x, y, 0], 1400, [14, 14], [14, 14], E.grey, { sh: 'h' }))),
     ...Array.from({ length: 15 }, (_, i) => -1400 + i * 200).flatMap(z => [
       ...[150, -150].map(y =>
-        hTap([339, y, z], 229, [14, 14], [14, 14], E.grey2, { ax: 'x', sh: 'h' })),
+        hTap([339, y, z], 229, [14, 14], [14, 14], E.grey, { ax: 'x', sh: 'h' })),
       ...[124, 554].map(x =>
-        hTap([x, 0, z], 164, [14, 14], [14, 14], E.grey2, { ax: 'y', sh: 'h' })),
+        hTap([x, 0, z], 164, [14, 14], [14, 14], E.grey, { ax: 'y', sh: 'h' })),
     ]),
 
     // Amber docking clamps, one pair at each station on both slips.
@@ -550,9 +550,10 @@ SHIPS.tender = {
     tap([0, 8, 0], 120, [22, 5], [26, 6], E.white, { sh: 'h' }),                                          // dorsal deck
     // ordnance and supply containers (the cargo it delivers, visible per the model rules)
     ...[-60, -40, -20, 0, 20, 40, 60].flatMap(z => [
-      tap([14, 13.5, z], 14, [6.5, 4], [6.5, 4], z % 40 ? E.grey2 : E.orange, { sh: 'h', dots: { col: E.amber, p: 0.03 } }),
-      tap([8, 12.5, z], 14, [5, 3.5], [5, 3.5], E.panel, { sh: 'h' }),
+      tap([14, 13.5, z], 14, [6.5, 4], [6.5, 4], E.grey2, { sh: 'h', dots: { col: E.amber, p: 0.03 } }),
+      tap([8, 12.5, z], 14, [5, 3.5], [5, 3.5], E.grey2, { sh: 'h' }),
     ]),
+    ...[-40, 0, 40].map(z => ({ t: 'paint', box: [8, 15.5, z - 10, 21, 18, z + 10], side: 'top', col: E.orange, mix: 1 })),
     tap([0, -13, 10], 140, [16, 6], [20, 7], E.grey2, { sh: 'h' }),                                       // ventral cargo keel
     // bow service section: booms and cradles for alongside rearm
     tap([0, 0, -70], 24, [14, 12], [8, 7], E.grey, { sh: 'd' }),
