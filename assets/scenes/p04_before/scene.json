@@ -1,0 +1,55 @@
+{
+  "id": "p04_before",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 0.4,
+      "do": "head",
+      "id": "hawk",
+      "char": "hawk",
+      "pos": "right"
+    },
+    {
+      "t": 1,
+      "do": "say",
+      "who": "vance",
+      "text": "The Lily listening posts have gone quiet.",
+      "cps": 28
+    },
+    {
+      "t": 9,
+      "do": "say",
+      "who": "hawk",
+      "text": "Those contacts do not match our registry.",
+      "cps": 28
+    },
+    {
+      "t": 17,
+      "do": "say",
+      "who": "vance",
+      "text": "Protect HALBERD and collect telemetry.",
+      "cps": 28
+    },
+    {
+      "t": 29,
+      "do": "end"
+    }
+  ]
+}

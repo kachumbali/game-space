@@ -1,0 +1,68 @@
+{
+  "id": "prologue_opening",
+  "size": [
+    320,
+    200
+  ],
+  "music": null,
+  "events": [
+    {
+      "t": 0,
+      "do": "bg",
+      "img": "../intro_test/painted/bg_space.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 0.5,
+      "do": "title",
+      "text": "CLAUDE SPACE COMMANDER",
+      "sub": "PROLOGUE · AN AI-DESIGNED GAME",
+      "dur": 3.5
+    },
+    {
+      "t": 4,
+      "do": "bg",
+      "img": "../shared/bg_ready_room.webp",
+      "fade": 0.6
+    },
+    {
+      "t": 4.2,
+      "do": "head",
+      "id": "vance",
+      "char": "vance",
+      "pos": "left"
+    },
+    {
+      "t": 4.4,
+      "do": "head",
+      "id": "hawk",
+      "char": "hawk",
+      "pos": "right"
+    },
+    {
+      "t": 5,
+      "do": "say",
+      "who": "vance",
+      "text": "HALBERD is on patrol beyond Hollow 14.",
+      "cps": 28
+    },
+    {
+      "t": 13,
+      "do": "say",
+      "who": "hawk",
+      "text": "Four patrols. One corvette. Keep it flying.",
+      "cps": 28
+    },
+    {
+      "t": 21,
+      "do": "say",
+      "who": "vance",
+      "text": "Keep your wing close. Bring them home.",
+      "cps": 28
+    },
+    {
+      "t": 30,
+      "do": "end"
+    }
+  ]
+}
