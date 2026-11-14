@@ -3,6 +3,8 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- Wingmen attack big capitals (owner report: "told all wingmen to attack the carrier, they didn't"). Fighters measured a capital by its centre and radius, so against the 2.5 km Hive carrier they hovered about 800 m off the hull, avoiding an invisible sphere and never firing. Fighters now use the hull distance (a cached voxel ray) for range, break-off and avoidance. New test `wing_capital_t`: two wingmen take about 1,000 points off the Hive in 30 s. Swarm duels re-measured in mesh mode (20 seeds): Halberd vs 2 Gulpers 9–11, Falchion vs 2 Reavers 8–12, Kestrel vs 2 Leapers 7–13.
+- Codex brief 9 (`docs/CODEX_BRIEF_9.md`, owner decisions): an armed Hive mothership with launch bays and a detailed model, a FROGG frigate escort, and a FROGG missile-picket corvette.
 - **Real-geometry hulls are the default** (owner 2026-11-14). The options panel (O) has a **Hull renderer** choice, mesh or the chamfered voxel look, applied at the next reload (`?vox=` still overrides it). Remaining flicker is fixed as we go (Codex brief 8 Job V). Tests that measure voxel budgets are pinned to `vox=smooth`; tests that read the glow-voxel count tolerate the mesh's batched glow.
 - FROGG swarm doctrine, brief 8 Job T (owner targets: two FROGG against one human about even, one-on-one human 80–90%; `docs/measurements/brief8/swarm-after.md`):
   - AI fixes for both factions: corvettes and capitals keep their target (focus fire), and corvettes close at full throttle while out of their own guns' reach.
