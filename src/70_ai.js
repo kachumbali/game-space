@@ -171,6 +171,15 @@ function primaryRange(s) {
   for (const m of s.mounts) { const w = WEAPONS[m.w]; if (!m.store) r = Math.max(r, w.kind === 'beam' ? w.range * 0.8 : w.v * w.life * AI_TUNE.rngMul); }
   return r || 400;
 }
+// Distance from s to the hull of t along the line to t's centre (voxel ray, cached for 0.25 s); falls back to centre distance minus radius.
+function hullDistance(s, t, dist) {
+  const c = (s.ai.hdc ||= new Map()), e = c.get(t);
+  if (e && time < e.t) return e.d;
+  let d = Math.max(0, dist - t.def.radius);
+  if (t.vox) { const p = traceShip(t, s.group.position, t.group.position); if (p) d = s.group.position.distanceTo(t.group.localToWorld(p.clone())); }
+  c.set(t, { d, t: time + 0.25 });
+  return d;
+}
 function primaryRangeOf(w) { return w.kind === 'beam' ? w.range * 0.8 : (w.v || 0) * (w.life || 0) * AI_TUNE.rngMul || 400; }
 function primarySpeed(s) {
   for (const m of s.mounts) if (!m.store) return WEAPONS[m.w].kind === 'beam' ? 1e6 : WEAPONS[m.w].v;
@@ -195,7 +204,8 @@ function avoidance(s, aim) {
   for (const b of ships) {
     if (b === s || !b.alive || !isCapital(b)) continue;
     const d = ep.distanceTo(b.group.position);
-    if (d < b.def.radius * 1.2 + 30 && !(s.ai.role === 'bomber' && s.target === b && s.ai.mode === 'run' && d > b.def.radius * 0.9)) {
+    // the radius sphere only gates the check; long hulls (Hive carrier, Columbus) are avoided by their real hull distance (2026-11-14)
+    if (d < b.def.radius * 1.2 + 30 && !(s.ai.role === 'bomber' && s.target === b && s.ai.mode === 'run' && d > b.def.radius * 0.9) && (s.def.cls !== 'fighter' || hullDistance(s, b, d) < 120)) {
       aim.copy(ep).sub(b.group.position).normalize().multiplyScalar(400).add(ep);
       return true;
     }
@@ -323,6 +333,9 @@ function fighterAI(s, dt) {
     turnToward(s, aim, dt, 0.7); aiFly(s, { throttle: 0.5 }, dt); return;
   }
   const dist = ep.distanceTo(t.group.position);
+  // Against a capital, range and break-off use the distance to its hull, not its centre (owner report 2026-11-14: wingmen ordered onto the
+  // 2.5 km Hive carrier hovered ~800 m off its hull, broke off at centre-distance 1.6 km and never fired).
+  const hullD = isCapital(t) ? hullDistance(s, t, dist) : dist;
   const lead = leadPoint(s, t, primarySpeed(s)).clone().add(aimNoise(s, dist));
   // last-minute swerve: if a collision is imminent, break sideways instead of ramming
   if (ai.mode === 'attack' && dist < 450) {
@@ -340,7 +353,7 @@ function fighterAI(s, dt) {
   }
   if (ai.mode === 'attack') {
     aim.copy(lead);
-    if (dist < minD + t.def.radius * 0.4 || (ai.t <= 0 && dist < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
+    if ((isCapital(t) ? hullD < minD + 60 : dist < minD + t.def.radius * 0.4) || (ai.t <= 0 && hullD < 160 && Math.random() < dt * 0.6)) { ai.mode = 'break'; ai.t = 1.1 + Math.random() * 1.0; ai.aimB = ep.clone().sub(t.group.position).normalize().multiplyScalar(300).add(new THREE.Vector3().randomDirection().multiplyScalar(160)).add(ep); }
   }
   if (ai.mode === 'break') { aim.copy(ai.aimB); thr = 1; if (ai.t <= 0) { ai.mode = 'attack'; ai.t = 4 + Math.random() * 3; } }
   // FROGG pilots burn hard: break-away runs and re-engagement from long range, while the pool lasts
@@ -360,8 +373,8 @@ function fighterAI(s, dt) {
     const err = aimError(s, lead);
     const rng = primaryRange(s);
     const tol = AI_TUNE.tolMul * (ai.role === 'gunship' ? 0.045 : 0.07) / Math.max(0.6, ai.aggr + 0.3);
-    if (err < tol && dist < rng) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }
-    else if (err < tol * 1.6 && dist < rng * 0.8) { if (gunBurstOK(s, dt)) fireGuns(s, 0b10); }
+    if (err < tol && hullD < rng) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }
+    else if (err < tol * 1.6 && hullD < rng * 0.8) { if (gunBurstOK(s, dt)) fireGuns(s, 0b10); }
   }
   missileLogic(s, dt, ['ir', 'rf', 'tick']);
 }
