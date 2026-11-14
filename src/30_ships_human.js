@@ -436,7 +436,7 @@ SHIPS.hecla = {
     ].flatMap(([x, y, z]) => [
       hTap([x, y, z], 80, [40, 15], [40, 15], E.grey2, { sh: 'h' }),
       hTap([95, y, z], 42, [24, 7], [24, 7], E.dark, { sh: 'h' }),
-      hTap([103, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
+      hTap([104, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
     ]),
 
     // Shuttle gates at the four ends of each outer rail.
@@ -486,7 +486,7 @@ SHIPS.hecla = {
     ...DB.ships.hecla.comps.filter(c => c.role === 'shield' || c.role === 'radar').flatMap(c => {
       const r = (c.role === 'shield' ? 10 : 13) * HECLA_SCALE;
       const side = Math.sign(c.pos[1] || 1);
-      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 41 : 18.75);
+      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 40.75 : 18.5);
       const gap = Math.abs(c.pos[1] - baseY);
       return [
         ...(gap > 0 ? [tap([c.pos[0], (c.pos[1] + baseY) / 2, c.pos[2]], gap / 2,
@@ -512,7 +512,7 @@ SHIPS.hecla = {
       hTap([0, 77, z], 24, [32, 3], [32, 3], E.white, { sh: 'h', noMirror: true, glow: true }),
       hTap([116, 154, z], 18, [4, 4], [4, 4], E.amber, { sh: 'h', glow: true }),
     ]),
-    hTap([0, 184, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
+    hTap([0, 185, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
   ],
 };
 

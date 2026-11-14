@@ -1,13 +1,13 @@
 # Job V progress (incomplete)
 
-Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
+Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. Hecla lights were shifted by 0.25 m and sensor pedestal roots were nested 0.25 m into the hull. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
 
 | Scope | Coincident before → after | Exposed before → after |
 |---|---:|---:|
-| Fleet tablet | 208 → 185 | 340 → 322 |
-| Fleet desktop | 250 → 220 | 327 → 318 |
-| Hecla tablet | 44 → 22 | 35 → 21 |
-| Hecla desktop | 58 → 30 | 15 → 9 |
+| Fleet tablet | 208 → 181 | 340 → 322 |
+| Fleet desktop | 250 → 216 | 327 → 318 |
+| Hecla tablet | 44 → 18 | 35 → 21 |
+| Hecla desktop | 58 → 26 | 15 → 9 |
 
 The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and Hecla and Gulper turret seats passed. Gulper 3/4 mesh before and after was compared. Hecla muzzle marker screenshots were generated; they require visual review. The Hecla mesh was compared at 3/4 view and muzzle markers were inspected at 3/4, top and bottom; the requested five-ship before/after contact sheets and full side inspection remain outstanding.
 
