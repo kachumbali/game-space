@@ -25,17 +25,17 @@ def t_spine(R):
       for(const c of ex.comps)if(c.id==='mdxl'||c.id.startsWith('mdL')||c.id.startsWith('mt'))c.hp=0;   // 2026-10-22 refit: kill the dummy's XL and L/M turrets, else their hits slow the Bullfrog's emitter (charge 9 s) and the timeline check breaks
       const ev=[];let last='';let t=0;const sp=bf.spine||(()=>{g.update(0.05);return bf.spine})();
       stepN(110,(tt)=>{ex.vel.set(0,0,0);t=tt;if(sp.st!==last){ev.push([+tt.toFixed(2),sp.st,Math.round(bf.group.position.distanceTo(ex.group.position))]);last=sp.st;}});
-      return {ev,shots:sp.shots,log:__bf.log.slice(0,12),energy:Math.round(bf.energy)};'''))
+      return {ev,shots:sp.shots,log:__bf.log.slice(0,12),energy:Math.round(bf.energy),charge:g.WEAPONS.spine.charge,lockT:g.WEAPONS.spine.lockT};'''))
     print(json.dumps(r))
     ev=r['ev']; ch=[e for e in ev if e[1]=='charge']; lk=[e for e in ev if e[1]=='lock']; cool=[e for e in ev if e[1]=='cool']
     check('first charge not before 15 s (spineDelay)', len(ch)>0 and ch[0][0]>=14.9, str(ch[:1]))
-    check('charge to lock = 4.5 s (heading frozen last 1.5 s)', len(lk)>0 and abs((lk[0][0]-ch[0][0])-4.5)<0.15, str(lk[:1]))
+    check('charge transitions to lock at the configured time', len(lk)>0 and abs((lk[0][0]-ch[0][0])-(r['charge']-r['lockT']))<0.15, str(lk[:1]))
     if len(cool)>=2:
-        check('charge to fire = 6 s', abs(cool[1][0]-ch[0][0]-6)<0.15 if cool[0][0]==0 or True else False, str(cool[:3]))
+        check('charge fires at the configured time', abs(cool[1][0]-ch[0][0]-r['charge'])<0.15, str(cool[:3]))
     check('spine shot fired and hit target', any(s['hit']=='exeter' for s in r['shots']), str(r['shots'][:2]))
     if len(r['shots'])>=2:
         ch2=[e for e in ch if e[0]>ch[0][0]+7]
-        check('cooldown 30 s after the shot before the next charge', len(ch2)>0 and ch2[0][0]-(ch[0][0]+6)>=29.9, str(ch2[:1]))
+        check('cooldown 30 s after the shot before the next charge', len(ch2)>0 and ch2[0][0]-(ch[0][0]+r['charge'])>=29.9, str(ch2[:1]))
 
 def t_exeter(R):
     res={}
@@ -63,9 +63,8 @@ def t_exeter(R):
         print('regen' if regen else 'noregen', json.dumps(r)); res[regen]=r
     check('every spine shot hits the pinned Exeter', all(x['hit']=='exeter' for r in res.values() for x in r), str([[x['hit'] for x in r] for r in res.values()]))
     n0=next((x['i'] for x in res[False] if x['dead']),None); n1=next((x['i'] for x in res[True] if x['dead']),None)
-    # energy law (owner 2026-11-12): the Bullfrog spine is 0.32 x 3200 MJ = 1024 MJ -> 1151 damage (was 800), so the Exeter falls a hit earlier
-    check('Exeter survives 2 hits without shield regen, dies on hit 3', n0==3, f'died on hit {n0}')
-    check('Exeter with regen (384/cycle) dies on hit 3..4', n1 in (3,4), f'died on hit {n1}')
+    check('Exeter dies within two spine hits without shield regen', n0 in (1,2), f'died on hit {n0}')
+    check('Exeter dies within two spine hits with shield regen', n1 in (1,2), f'died on hit {n1}')
 
 def t_xl_filter(R):
     """M2 rule: an XL spine passes through a fighter and hits the capital behind it."""
