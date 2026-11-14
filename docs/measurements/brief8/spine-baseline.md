@@ -1,4 +1,6 @@
-# Job U: initial spine traces (work in progress)
+# Job U: initial spine traces (superseded)
+
+These traces predate Job T on main. See `spine-after.md` for matched merged-main traces and the completed comparisons.
 
 `python tools/tests/spine_trace.py` runs seed 1 of the fixed-opening brief-7 fights. `spine-baseline.jsonl` records the full `__bf.log`, outcomes and end-of-update shield samples. Shield-after values can include other actions during that update; exact isolated per-hit damage still needs a controlled measurement.
 

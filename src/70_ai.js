@@ -433,7 +433,7 @@ function capitalAI(s, dt) {
     if (sp.st === 'ready' && st && sp.mag > 0) {
       const t = st;
       const d0 = ep.distanceTo(t.group.position), tm = s.def.turn * turnMul(s), e0 = aimError(s, leadPoint(s, t, 1e6));
-      if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= 4.5 && spineCorridorClear(s)) {
+      if (d0 < W.range * 0.95 && s.energy >= W.energy && e0 / tm <= Math.max(0, W.charge - W.lockT) && spineCorridorClear(s)) {
         s.energy -= W.energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
         bfLog.push({ ev: 'charge', t: +time.toFixed(1), tgt: t.def.id, dist: Math.round(d0) });
       }

@@ -189,6 +189,13 @@ S = {k: v for k, v in S.items() if 'cls' in v}       # unresolved variants (only
 # ---- tuning: every section the game reads must exist ----
 for k in ('dmgx', 'ff', 'exposed', 'soft', 'hit', 'beam', 'flak', 'regen', 'missile', 'nuke', 'crash', 'fighter', 'afterburner', 'ai', 'turret', 'subsys', 'simFlight', 'pilotSkill', 'droneLimit', 'bullfrog', 'scaleTo', 'score', 'feel', 'loot', 'difficulty', 'mutators', 'survivalWaves', 'survivalPool', 'damageVisuals'):
     if not isinstance(db.get('tuning', {}).get(k), (dict, list)): err(f'tuning.{k} missing')
+spine_aim = db.get('tuning', {}).get('spineAim', {})
+for key in ('radiusFactor', 'min', 'max'):
+    value = spine_aim.get(key)
+    if not isinstance(value, (int, float)) or isinstance(value, bool) or not math.isfinite(value) or value <= 0: err(f'tuning.spineAim.{key} must be positive and finite')
+if all(isinstance(spine_aim.get(k), (int, float)) and not isinstance(spine_aim[k], bool) for k in ('min', 'max')) and spine_aim['min'] > spine_aim['max']: err('tuning.spineAim min exceeds max')
+rate = db.get('tuning', {}).get('energyLaw', {}).get('mjPerDamage', {}).get('spineKinetic')
+if not isinstance(rate, (int, float)) or isinstance(rate, bool) or not math.isfinite(rate) or rate <= 0: err('tuning.energyLaw.mjPerDamage.spineKinetic must be positive and finite')
 drone = db.get('tuning', {}).get('drone')
 if not isinstance(drone, dict): err('tuning.drone must be an object'); drone = {}
 leash = drone.get('leashFighters')

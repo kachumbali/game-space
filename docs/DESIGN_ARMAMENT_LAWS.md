@@ -26,7 +26,7 @@ Fighters are outside these laws, except for the FROGG burst banks and the magazi
 - **Plant:** `plantMW = 2522 × L_km^1.288`. Fitted on the Halberd, Exeter and Glaive (`tools/armament_law.py --calibrate`).
 - **Weapon supply:** `bus = plant / 3`, as today.
 - **Store:** `capacitorMJ = 2.333 × plantMW` (the calibration median). FROGG add a burst bank (`power.burstMJ`) on top.
-- **Spine guns:** the energy law sizes them from the base store, which excludes the burst bank (`tools/power_table.py --law`).
+- **Spine guns:** the energy law sizes them from the base store, which excludes the burst bank (`tools/power_table.py --law`). The energy lance and kinetic drivers use separate MJ-per-damage rates; the capacitor share remains the shot energy. See `docs/measurements/brief8/spine-after.md` for seeded outcomes and pinned-hit measurements.
 - **Sustain rule, humans:** point defence plus secondaries at full fire must fit within the weapon supply. Main guns and spine guns fire from the store.
 - **Sustain rule, FROGG (burst doctrine):** the supply sustains point defence only. Secondaries, mains and the spine fire from the store.
   - The store holds **at least 8 s** of full secondary and main fire, plus one spine shot, and refills from the supply.
