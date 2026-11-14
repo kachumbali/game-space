@@ -1,15 +1,15 @@
 # Job V progress (incomplete)
 
-Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
+Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
 
 | Scope | Coincident before → after | Exposed before → after |
 |---|---:|---:|
-| Fleet tablet | 208 → 186 | 340 → 326 |
-| Fleet desktop | 250 → 222 | 327 → 321 |
+| Fleet tablet | 208 → 185 | 340 → 322 |
+| Fleet desktop | 250 → 220 | 327 → 318 |
 | Hecla tablet | 44 → 22 | 35 → 21 |
 | Hecla desktop | 58 → 30 | 15 → 9 |
 
-The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and Hecla turret seats passed. Hecla muzzle marker screenshots were generated; they require visual review. The Hecla mesh was compared at 3/4 view and muzzle markers were inspected at 3/4, top and bottom; the requested five-ship before/after contact sheets and full side inspection remain outstanding.
+The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and Hecla and Gulper turret seats passed. Gulper 3/4 mesh before and after was compared. Hecla muzzle marker screenshots were generated; they require visual review. The Hecla mesh was compared at 3/4 view and muzzle markers were inspected at 3/4, top and bottom; the requested five-ship before/after contact sheets and full side inspection remain outstanding.
 
 The harness now uses callback `performance.now()` for frame boundaries, matching the PERF clock. Previously the rAF timestamp sometimes preceded the action start, so the span filter missed work. This changes measurement only. The previous pre-merge baseline in `job-v-baseline.md` is retained for comparison; its numbers are one run and not a controlled performance experiment.
 

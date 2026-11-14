@@ -345,7 +345,7 @@ SHIPS.gulper = {
     ...chain([[5.0, -1.6, -19], [8.2, -2.5, -27], [5.5, -2.4, -34.0]], [2.8, 2.2, 1.1], FM.hide2),
     seg([6.2, -2.4, -33.6], [6.4, -2.4, -36.4], 0.6, 0.2, FM.bone, NG),                                  // claw tip
     // The claw is the gun housing; only the exposed muzzle collar is separate.
-    ...fmBarrel(5.5, -2.4, -34.35, -34.6, 0.55),
+    tap([5.5, -2.4, -34.27], 0.33, [0.77, 0.77], [0.715, 0.715], FM.met2, { sh: 'e', ...NG }), // exposed muzzle collar; the barrel is inside the claw
     ...fmBarrel(3.0, 1.2, -30.8, -32.4, 0.45),                                                          // maser lance emitters
     // cage bands and rails along the back, copper feed pipes on the flanks
     ...[-12, 0, 12].flatMap(z => { const f = Math.sqrt(1 - ((z + 5) / 24) ** 2); return fmRing(0, 0, z, 8.5 * f + 0.25, 6.2 * f + 0.25, 0.35); }),
