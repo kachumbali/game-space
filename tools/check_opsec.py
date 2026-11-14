@@ -36,7 +36,13 @@ if os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('GITHUB_EVENT_N
             pr = json.load(event_file)['pull_request']
         head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
         parents = subprocess.check_output(['git', 'show', '-s', '--format=%P', head], text=True).strip().split()
-        if head == os.environ.get('GITHUB_SHA') and parents == [pr['base']['sha'], pr['head']['sha']]:
+        # The base may advance after the event payload was created. Require
+        # the checked-out merge's base to descend from the event base and its
+        # other parent to be the exact submitted head.
+        base_is_descendant = len(parents) == 2 and subprocess.run(
+            ['git', 'merge-base', '--is-ancestor', pr['base']['sha'], parents[0]],
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+        if head == os.environ.get('GITHUB_SHA') and base_is_descendant and parents[1] == pr['head']['sha']:
             synthetic_merge = head
     except (OSError, KeyError, ValueError, subprocess.CalledProcessError):
         pass
