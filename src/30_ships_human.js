@@ -804,7 +804,7 @@ SHIPS.carrier = {
     { t: 'paint', box: [-50, -15, -501, 50, 14, -491], col: CF.g1, side: '-z', noMirror: true, mix: 1 }, // nose plate on the existing hull face
     { t: 'paint', box: [0, -6, -496, cbW(-444), 0, -444], col: CF.g3, side: '+x', mix: 1 },               // nose band
     // graphite chine along the hull's widest line (the chamfered section's flat top spans only the inner 45 % of the width)
-    tap([cbW(-30) - 1, 0, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
+    tap([cbW(-30) - 1, 0, -30], 469.5, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
     // flight-deck markings and a raised central service spine (trench machinery, as on the reference)
     tap([cbW(-30) * 0.32, cbH(-30) + 0.4, -30], 400, [3, 1.2], [3, 1.2], CF.or, { sweep: cbS * 0.32, sweepY: cbSY }),
     tap([0, cbH(-80) + 3, -80], 300, [9, 4], [15, 5], CF.g2, { sh: 'h', sweepY: cbSY }),

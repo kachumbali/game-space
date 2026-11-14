@@ -1,11 +1,11 @@
 # Job V progress (incomplete)
 
-Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. Hecla lights were shifted by 0.25 m and sensor pedestal roots were nested 0.25 m into the hull. The shared human turret-seat ring was raised by 3% of turret diameter. The Columbus nose plate was converted to a marking on the existing hull face. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
+Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. Hecla lights were shifted by 0.25 m and sensor pedestal roots were nested 0.25 m into the hull. The shared human turret-seat ring was raised by 3% of turret diameter. The Columbus nose plate was converted to a marking on the existing hull face, and its chine was nested 0.5 m at each end. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
 
 | Scope | Coincident before → after | Exposed before → after |
 |---|---:|---:|
-| Fleet tablet | 208 → 145 | 340 → 322 |
-| Fleet desktop | 250 → 214 | 327 → 318 |
+| Fleet tablet | 208 → 144 | 340 → 322 |
+| Fleet desktop | 250 → 213 | 327 → 318 |
 | Hecla tablet | 44 → 18 | 35 → 21 |
 | Hecla desktop | 58 → 26 | 15 → 9 |
 
