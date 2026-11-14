@@ -96,6 +96,8 @@ function pickTarget(s) {
   }
   if (role !== 'bomber' && role !== 'corvette' && role !== 'capital' && !isCapital(s)) {
     const la = s.lastAttacker, hp = s.structure / s.def.structure;
+    const recentPilotedAttacker = time - (s.lastHit ?? -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && la.def.cls === 'fighter' && !la.def.drone;
+    if (recentPilotedAttacker && s.target?.def.drone) return la;          // defend against the fighter shooting us, not its drone
     const pounded = time - (s.lastHit || -99) < 3 && la && la.alive && !la.dying && la.team !== s.team && (hp < 0.6 || s.shield.fore + s.shield.aft < 8);
     if (pounded) return la;                                              // break off the squad target and defend
     const f = squadFocus(s);
@@ -116,6 +118,13 @@ function pickTarget(s) {
     }
     if (e.lock && 0) sc *= 1;
     if (sc < bs) { bs = sc; best = e; }
+  }
+  // Focus fire for corvettes and capitals (2026-11-14): re-picking the nearest hostile every few seconds made a Halberd facing two
+  // Gulpers shift its fire as the ranges crossed and finish neither. Keep the current target unless another is clearly better.
+  const cur = s.target;
+  if ((role === 'corvette' || role === 'capital' || isCapital(s)) && best && cur && cur !== best && cur.alive && !cur.dying && hostilesOf(s).includes(cur)) {
+    const dc = cur.group.position.distanceTo(s.group.position) * ((role === 'corvette' || role === 'capital') && isCapital(cur) ? 0.6 : 1);
+    if (dc < bs * TUNE.ai.focusKeep) best = cur;
   }
   return best;
 }
@@ -162,6 +171,7 @@ function primaryRange(s) {
   for (const m of s.mounts) { const w = WEAPONS[m.w]; if (!m.store) r = Math.max(r, w.kind === 'beam' ? w.range * 0.8 : w.v * w.life * AI_TUNE.rngMul); }
   return r || 400;
 }
+function primaryRangeOf(w) { return w.kind === 'beam' ? w.range * 0.8 : (w.v || 0) * (w.life || 0) * AI_TUNE.rngMul || 400; }
 function primarySpeed(s) {
   for (const m of s.mounts) if (!m.store) return WEAPONS[m.w].kind === 'beam' ? 1e6 : WEAPONS[m.w].v;
   return 500;
@@ -439,14 +449,18 @@ function capitalAI(s, dt) {
   { const t = steer;
   const dist = ep.distanceTo(t.group.position);
   const hold = game.mission && (s.vital || s.hold);           // friendly flagship holds station
-  const want = big ? Math.min(WEAPONS[sm.w].range * 0.6, 2300) : isCapital(t) ? 1100 : 900;   // spine ships stand off inside their secondaries' reach
+  // Corvettes (2026-11-14) close inside the reach of their own shortest fixed gun so their secondaries fight too; a Halberd holding at
+  // 2-3 km used only its railguns while every Gulper weapon reached it. Others keep the old standoff.
+  const gunReach = s.def.cls === 'corvette' ? Math.min(...s.mounts.filter(m => !m.store && WEAPONS[m.w] && WEAPONS[m.w].kind !== 'msl' && WEAPONS[m.w].kind !== 'spine').map(m => primaryRangeOf(WEAPONS[m.w]))) : Infinity;
+  const want = big ? Math.min(WEAPONS[sm.w].range * 0.6, 2300) : Number.isFinite(gunReach) ? gunReach * 0.8 : isCapital(t) ? 1100 : 900;   // spine ships stand off inside their secondaries' reach
   const rng = primaryRange(s);
   const lp = s.def.ai?.interceptLead ? projectileInterceptPoint(s, t, primarySpeed(s)) : leadPoint(s, t, primarySpeed(s));
   if (!(sp && sp.st === 'lock')) turnToward(s, sAim ?? lp, dt, 1);   // charging: steer onto the XL aim point; heading frozen from the lock on
-  const thr = hold ? 0.12 : dist > want ? 0.7 : 0.15;
+  const thr = hold ? 0.12 : dist > want ? (Number.isFinite(gunReach) && dist > gunReach ? 1 : 0.7) : 0.15;   // a corvette outranged by its own secondaries closes at full throttle
   aiFly(s, { throttle: sp && sp.st === 'lock' ? Math.min(thr, 0.15) : thr }, dt);
   const err = aimError(s, lp);
-  if (err < 0.03 && dist < Math.min(rng * 1.4, 1300)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // up close: grp 1 mains + grp 2 secondaries (Halberd rotary at 1320 m reach, Gulper maser lances)
+  const secondaryRange = Math.max(1300, ...s.mounts.filter(m => !m.store && m.grp === 2 && WEAPONS[m.w].kind === 'beam').map(m => WEAPONS[m.w].range));
+  if (err < 0.03 && dist < Math.min(rng * 1.4, secondaryRange)) { if (gunBurstOK(s, dt)) fireGuns(s, 0b11); }   // secondaries may engage at their beam range
   else if (err < 0.03 && dist < rng * 1.4) { if (gunBurstOK(s, dt)) fireGuns(s, 0b1); }                 // at range only the mains (XL store mounts are skipped by fireGuns)
   // torpedoes at capital targets
   if (!s.launcherRuntime && (s.stores.tad > 0 || s.stores.torp > 0)) {
