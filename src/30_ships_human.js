@@ -366,7 +366,11 @@ SHIPS.exeter = {
     // radiator panels (folded white, orange edge)
     tap([70, 12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([70, -12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
-    tap([70, 12.2, 130], 26, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
+    ...Array.from({ length: 8 }, (_, i) => {
+      const x0 = 44 + i * 6.5, x1 = x0 + 6.5;
+      const z0 = 130 + (x0 - 70) * 0.2, z1 = 130 + (x1 - 70) * 0.2;
+      return { t: 'paint', box: [x0, 11.5, z0 - 1.2, x1, 13.2, z1 + 1.2], col: E.orange, side: 'top', mix: 1 };
+    }),
     // nacelle pylons and round engine pods (engines at x 80, z 229)
     tap([53, -4, 158], 22, [15, 5], [15, 5], E.grey2, { sh: 'h' }), tap([60, 4, 150], 18, [5, 3], [5, 3], E.grey2, { sh: 'h' }),
     tap([80, -3, 160], 56, [16, 16], [18, 18], E.white, { sh: 'e', seam: [8, 6] }),
