@@ -450,7 +450,7 @@ SHIPS.hecla = {
     ...[-430, -300, -170, 170, 300, 430].flatMap(z => [
       hTap([60, -95, z], 36, [50, 20], [50, 20], E.panel, { sh: 'h' }),
       hSeg([18, -112, z], [108, -112, z], 10, 10, E.grey2),
-      hSeg([24, -119, z], [94, -119, z], 4, 4, E.amber),
+      { t: 'paint', box: [24, -123, z - 4, 94, -116, z + 4].map(v => v * HECLA_SCALE), col: E.amber, side: 'bottom', mix: 1 },
     ]),
 
     // Dorsal and ventral radiator plates around the aft machinery.
