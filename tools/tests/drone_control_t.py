@@ -9,7 +9,7 @@ with Runner() as r:
       visit(); g.comsPick(1); const launched=g.dronesOf(c).length, limit=g.droneLimitOf(c);
       visit(); g.comsPick(4); const fighters=c.droneCommand==='fighters' && g.dronesOf(c).some(d=>d.dOrder==='protect');
       visit(); g.comsPick(8); const recalled=g.dronesOf(c).every(d=>d.dOrder==='return') && c.droneRecalling;
-      const f=g.makeShip('falchion',0,new T.Vector3(3000,0,0),new T.Quaternion(),{callsign:'TEST-2'});
+      const f=g.makeShip('falchion',0,new T.Vector3(3000,0,0),new T.Quaternion(),{callsign:'TEST-2'}); f.stores.drone=2;   // the Falchion carries no drones since 2026-11-14; the wing-order mechanics are tested with a stocked one
       g.comsToggle(true);g.comsPick(1);g.comsPick(2);g.comsPick(9);g.comsPick(1);
       return {launched,limit,fighters,recalled,wing:g.dronesOf(f).length};
     }''')

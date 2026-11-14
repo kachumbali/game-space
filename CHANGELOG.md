@@ -7,7 +7,7 @@ Versions are named from the state of `main`. Commit trailers and tool history: d
   - AI fixes for both factions: corvettes and capitals keep their target (focus fire), and corvettes close at full throttle while out of their own guns' reach.
   - Armament-law role `swarm` 0.35 for the Gulper (hull 706 → 247). The Reaver is faster and more agile (speed 115, turn 1.45) with 55/55 shields.
   - Halberd vs 2 Gulpers 0–20 → 8–12; Kestrel vs 2 Leapers 6–13–1 and Kestrel vs Reaver 19–1 stay on target.
-  - The Falchion still beats two Reavers 20–0 (its drones and point-defence turret make it a heavier class); left to the owner.
+  - Falchion trimmed (owner): no drones and no ventral point-defence turret. Falchion vs 2 Reavers 20–0 → 11–9; one-on-one stays 20–0. Drone control remains on frigates and carriers.
   - The duel harness records damage taken by weapon (`?duelbench`).
 - Codex brief 7:
   - **R, hitches:** a seeded skirmish replay with two 1 kT impacts and timing spans (`?fps`). Blast damage now scans only cells inside its sphere, and identical undamaged chamfered hulls share their slab buffers (copy on first damage). The cause of the owner's 4.6 s hardware freeze is not found yet; `hitch_t` still fails its low-detail target (worst frame 8.5× the median against 3×).

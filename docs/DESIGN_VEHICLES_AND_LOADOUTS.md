@@ -14,7 +14,7 @@ Lengths and stores below come from `data/db.json`; the naming in the role column
 |---|---|---:|---:|---|---|---|
 | Merlin | Light fighter | 9 m | 262.5 m/s | 2 × MK-20 cannon | None | 2 × SW-9 IR; 12 countermeasures |
 | Kestrel | Multirole fighter | 12.4 m | 150 m/s | 1 × MK-20 cannon, 1 × MD-9 mag driver, 2 × MK-30 HE cannon | None | 4 × SW-9 IR, 2 × LN-3 radar missiles, 1 × HM-1 torpedo; 24 countermeasures |
-| Falchion | Two-seat heavy fighter | 19.5 m | 118 m/s | 2 × MK-20 cannon, 2 × MD-9 mag driver | 3 × PD-15 | 6 × SW-9 IR, 2 × LN-3 radar missiles, 2 × HM-1 torpedoes, 2 × drones; 32 countermeasures |
+| Falchion | Two-seat heavy fighter | 19.5 m | 118 m/s | 2 × MK-20 cannon, 2 × MD-9 mag driver | 1 × PD-15 (dorsal) | 6 × SW-9 IR, 2 × LN-3 radar missiles, 2 × HM-1 torpedoes; 32 countermeasures. No drones and no ventral turret since 2026-11-14 (owner: swarm balance; the Falchion fought like 3–4 craft) |
 | Bittern | Torpedo bomber | 22 m | 90 m/s | 2 × MK-30 HE cannon | 2 × PD-15 | 2 × SW-9 IR, 12 × HM-1 torpedoes; 32 countermeasures |
 
 These are authored fits, not a claim that the visible models convincingly accommodate every store. The shipyard and `tools/tests/muzzle_t.py` can help check actual mount and muzzle placement. `docs/ORDNANCE_MANIFEST.md` identifies Kestrel and Falchion torpedo stations as legacy fits and calls for a model/launch alignment review of some stations. The Merlin's two missiles are a single station with capacity 2, not two separately selectable stations.

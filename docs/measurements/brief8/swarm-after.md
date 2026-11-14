@@ -34,7 +34,7 @@ Harness: `tools/tests/armament_duels.py`, 20 seeds per cell, varied openings (PR
 | Kestrel vs 2 Leapers | 6 / 13 / 1 | 6 / 13 / 1 |
 | Kestrel vs Reaver | 19 / 1 / 0 | 19 / 1 / 0 |
 | Falchion vs Reaver | 20 / 0 / 0 | 20 / 0 / 0 |
-| Falchion vs 2 Reavers | 20 / 0 / 0 | 20 / 0 / 0 |
+| Falchion vs 2 Reavers | 20 / 0 / 0 | **11 / 9 / 0** (after the Falchion trim) |
 | Glaive vs Exeter | 20 / 0 / 0 | 20 / 0 / 0 |
 | Columbus vs Bullfrog | 10 / 10 / 0 | 8 / 12 / 0 |
 | Columbus + 2 Halberds vs Bullfrog | 13 / 7 / 0 | 12 / 8 / 0 |
@@ -47,4 +47,4 @@ The Halberd cells were measured at swarm 0.35. The other cells were measured at 
 - **Gulper:** two-against-one is now on target. One-on-one stays at 100%: by the square law of combat, one-on-one cannot drop toward 80–90% without tipping two-against-one past even.
 - **Leaper:** on target within the ±20-point noise of 20 seeds.
 - **Reaver:** on target against the Kestrel.
-- **Falchion: open, owner decision.** It is effectively a heavier class. Either treat 3 Reavers as its fair opposition, or trim its kit (for example one drone).
+- **Falchion (owner 2026-11-14: trim its kit).** Removed its two drones and its ventral point-defence turret; it keeps one dorsal turret, four guns, missiles and torpedoes. Falchion vs 2 Reavers is now 11 / 9 (FROGG 45%), and 1-vs-1 stays 20 / 0. One drone kept the Falchion at 6–8 of 8 against two Reavers even with lighter shields, so the drones had to go. Drone control remains on frigates and carriers (Exeter, Columbus); the drone tests stock a test Falchion explicitly.

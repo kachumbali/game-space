@@ -6145,25 +6145,13 @@
           "comp": "tur1",
           "side": 1,
           "ammo": 200
-        },
-        {
-          "w": "pdS",
-          "pos": [
-            0,
-            -1.55,
-            3.0
-          ],
-          "comp": "tur3",
-          "side": -1,
-          "ammo": 200
         }
       ],
       "stores": {
         "ir": 6,
         "rf": 2,
         "torp": 2,
-        "flare": 32,
-        "drone": 2
+        "flare": 32
       },
       "launch": [
         4.6,
@@ -6251,18 +6239,6 @@
             0,
             1.7,
             1.2
-          ],
-          "r": 1.2,
-          "hp": 18
-        },
-        {
-          "id": "tur3",
-          "name": "PD VENTRAL",
-          "role": "turret",
-          "pos": [
-            0,
-            -1.65,
-            3.0
           ],
           "r": 1.2,
           "hp": 18
