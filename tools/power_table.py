@@ -13,6 +13,7 @@ db = dbmarks.resolve(dbmarks.load())      # variants (marks) resolved into compl
 W = db['weapons']
 if '--law' in sys.argv:
     L = db['tuning']['energyLaw']; K = L['mjPerDamage']
+    def spine_rate(w): return K['spineKinetic'] if w.get('dt') == 'kin' else K['spine']
     def kind(w):
         if w.get('kind') == 'spine': return 'spine'
         if w.get('kind') == 'beam' or (w.get('kind') == 'proj' and w.get('dt') == 'en'): return 'beam'   # maser bolts are energy weapons too
@@ -20,15 +21,15 @@ if '--law' in sys.argv:
     print('weapon        type   dmg     MJ/shot  MJ/dmg  law   off')
     for wid, w in sorted(W.items()):
         if w.get('base') or not w.get('dmg') or not (w.get('energy') or kind(w) == 'beam') or w.get('kind') == 'msl': continue
-        k = kind(w); r = (w.get('energy') or 0) / w['dmg']
-        print(f"{wid:13s} {k:6s} {w['dmg']:<7g} {w.get('energy') or 0:<8g} {r:<7.2f} {K[k]:<5g} {100 * (r / K[k] - 1):+.0f}%")
+        k = kind(w); r = (w.get('energy') or 0) / w['dmg']; rate = spine_rate(w) if k == 'spine' else K[k]
+        print(f"{wid:13s} {k:6s} {w['dmg']:<7g} {w.get('energy') or 0:<8g} {r:<7.2f} {rate:<5g} {100 * (r / rate - 1):+.0f}%")
     print('\nspine guns vs ship capacitor (law: energy = %.2f x capacitor)' % L['spineCapacitorShare'])
     for sid, s in db['ships'].items():
         for m in s.get('mounts', []):
             w = W[m['w']]
             if w.get('kind') != 'spine' or s.get('base'): continue
             e = L['spineCapacitorShare'] * (s['power']['capacitorMJ'] - s['power'].get('burstMJ', 0))   # FROGG burst bank excluded (docs/DESIGN_ARMAMENT_LAWS.md)
-            print(f"{sid:12s} {m['w']:6s} energy {w['energy']} (law {e:.0f})  dmg {w['dmg']} (law {e / K['spine']:.0f})")
+            print(f"{sid:12s} {m['w']:6s} energy {w['energy']} (law {e:.0f})  dmg {w['dmg']} (law {e / spine_rate(w):.0f})")
     if '--apply' in sys.argv:                 # rewrite base weapons in data/db.json to the law (owner 2026-11-12: follow the law)
         raw = dbmarks.load(); txt = open(dbmarks.DB_PATH).read()
         def setnum(wid, key, val):
@@ -50,7 +51,7 @@ if '--law' in sys.argv:
             k = kind(w)
             if not w.get('energy') and k != 'beam': continue        # ammo-fed kinetic guns draw nothing from the capacitor
             if k == 'spine' and wid in spineOf:
-                e = round(L['spineCapacitorShare'] * spineOf[wid]); d = round(e / K['spine'])
+                e = round(L['spineCapacitorShare'] * spineOf[wid]); d = round(e / spine_rate(w))
                 if (e, d) != (w['energy'], w['dmg']): setnum(wid, 'energy', e); setnum(wid, 'dmg', d); print('set', wid, 'energy', e, 'dmg', d)
             elif k != 'spine':
                 e = round(w['dmg'] * K[k], 2)
