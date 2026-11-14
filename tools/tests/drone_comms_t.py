@@ -17,7 +17,7 @@ with Runner() as r:
       g.update(.05); const enemySilent=JSON.stringify(g.comms)===before;
       enemy.group.position.copy(P.group.position).add(new V(0,0,-1000));
       g.update(.05); const warning=g.comms.at(-1).text;
-      const wing=g.spawnShip('falchion',0,new V(1000,0,0),new V(1000,0,-1000),{callsign:'TEST-2'});
+      const wing=g.spawnShip('falchion',0,new V(1000,0,0),new V(1000,0,-1000),{callsign:'TEST-2'}); wing.stores.drone=2;   // no drones in its loadout since 2026-11-14; the wing chatter is tested with a stocked one
       g.spawnShip('darter',1,new V(1000,0,-600),new V(1000,0,0),{});
       g.update(.05); const wingDrones=g.dronesOf(wing).length;
       const wingChatter=g.comms.some(m=>m.from==='TEST-2' && m.text==='Launching drones');
