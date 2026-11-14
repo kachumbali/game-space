@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fail if a tracked file contains a real person's name or a non-noreply email address (owner rule 2026-11-01; docs/archive/PLAN_V03.md).
 The retired names are assembled from parts so this file does not contain them itself."""
-import re, subprocess, sys
+import json, os, re, subprocess, sys
 BANNED = [re.compile(w, re.I) for w in ('Jon' + 'as', 'Ko' + 'll' + r'\b')]
 EMAIL = re.compile(r'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}')
 OK_EMAIL = re.compile(r'(@users\.noreply\.github\.com|^noreply@[a-z.]+)$')
@@ -25,9 +25,25 @@ try:
     log = subprocess.check_output(['git', 'log', '--format=%h|%an|%ae|%cn|%ce', CUTOFF + '..HEAD'], text=True, stderr=subprocess.DEVNULL)
 except subprocess.CalledProcessError:
     log = ''
+# PR workflows check out GitHub's synthetic merge rather than the submitted
+# branch. Its identity comes from GitHub, not a contributor commit. Exempt only
+# the exact merge whose parents match the event's base and head; still inspect
+# every actual commit reachable from it.
+synthetic_merge = None
+if os.environ.get('GITHUB_ACTIONS') == 'true' and os.environ.get('GITHUB_EVENT_NAME') == 'pull_request':
+    try:
+        with open(os.environ['GITHUB_EVENT_PATH'], encoding='utf-8') as event_file:
+            pr = json.load(event_file)['pull_request']
+        head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+        parents = subprocess.check_output(['git', 'show', '-s', '--format=%P', head], text=True).strip().split()
+        if head == os.environ.get('GITHUB_SHA') and parents == [pr['base']['sha'], pr['head']['sha']]:
+            synthetic_merge = head
+    except (OSError, KeyError, ValueError, subprocess.CalledProcessError):
+        pass
 for line in log.split('\n'):
     if not line: continue
     h, an, ae, cn, ce = line.split('|')
+    if synthetic_merge and synthetic_merge.startswith(h): continue
     for who, name, mail in (('author', an, ae), ('committer', cn, ce)):
         if any(r.search(name) for r in BANNED) or any(r.search(mail) for r in BANNED) or not OK_EMAIL.search(mail):
             bad.append(f'commit {h}: {who} "{name} <{mail}>" is not a handle with a noreply address (git config user.name kachumbali)')
