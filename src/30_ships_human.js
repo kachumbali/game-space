@@ -801,7 +801,7 @@ SHIPS.carrier = {
   ordnancePlan: { ...DB.ships.carrier.ordnancePlan, droneLimit: TUNE.droneLimit.capital },
   prims: [
     tap([0, 0, -30], 470, [55, 16], [165, 30], CF.w, { sh: 'h' }),                                    // tapered pressure hull
-    tap([0, -1, -496], 4, [46, 13], [50, 14], CF.g1, { sh: 'h' }),                                     // flat nose plate
+    { t: 'paint', box: [-50, -15, -501, 50, 14, -491], col: CF.g1, side: '-z', noMirror: true, mix: 1 }, // nose plate on the existing hull face
     { t: 'paint', box: [0, -6, -496, cbW(-444), 0, -444], col: CF.g3, side: '+x', mix: 1 },               // nose band
     // graphite chine along the hull's widest line (the chamfered section's flat top spans only the inner 45 % of the width)
     tap([cbW(-30) - 1, 0, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
