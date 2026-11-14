@@ -5129,14 +5129,14 @@
         }
       ],
       "shield": {
-        "fore": 117,
-        "aft": 94
+        "fore": 102,
+        "aft": 82
       },
       "armor": {
         "type": "composite",
         "rating": 0.31
       },
-      "structure": 282,
+      "structure": 247,
       "maxSpeed": 34,
       "aiSpeed": 26,
       "accel": 6,
@@ -9252,7 +9252,7 @@
         "warship": 1.0,
         "carrier": 0.85,
         "civil": 0.6,
-        "swarm": 0.4
+        "swarm": 0.35
       },
       "roles": {
         "hecla": "carrier",
