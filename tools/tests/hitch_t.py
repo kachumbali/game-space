@@ -6,7 +6,9 @@ from lib import Runner, assert_no_console_errors
 SCENARIO = '?sk=bullfrog:2,gulper:2,hivecarrier:1&nuke=2&nukeKt=1&seed=7&fps&go&mute'
 RUN = """async () => {
     const g = __game, frames = [];
-    const next = () => new Promise(resolve => requestAnimationFrame(resolve));
+    // Use the same clock for frame boundaries and PERF spans. The rAF callback
+    // timestamp denotes the rendering opportunity, which can precede callback execution.
+    const next = () => new Promise(resolve => requestAnimationFrame(() => resolve(performance.now())));
     async function phase(name, action, count, every = false) {
         let previous = await next();
         for (let i = 0; i < count; i++) {

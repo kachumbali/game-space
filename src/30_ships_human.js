@@ -436,21 +436,23 @@ SHIPS.hecla = {
     ].flatMap(([x, y, z]) => [
       hTap([x, y, z], 80, [40, 15], [40, 15], E.grey2, { sh: 'h' }),
       hTap([95, y, z], 42, [24, 7], [24, 7], E.dark, { sh: 'h' }),
-      hTap([103, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
+      hTap([104, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
     ]),
 
     // Shuttle gates at the four ends of each outer rail.
     ...[-1450, 1450].flatMap(z => [-45, 45].map(y => [
-      hTap([527, y, z], 50, [52, 22], [52, 22], E.grey2, { sh: 'h' }),
-      hTap([568, y, z], 24, [12, 16], [12, 16], E.dark, { sh: 'h' }),
-      hTap([572, y, z], 20, [8, 12], [8, 12], E.glow, { sh: 'h', glow: true }),
+      // Keep the outer gate face at its original furthest extent; the dark
+      // rim and blue centre are surface markings rather than coincident caps.
+      hTap([527.5, y, z], 50, [52.5, 22], [52.5, 22], E.grey2, { sh: 'h' }),
+      { t: 'paint', box: [578, y - 16, z - 24, 581, y + 16, z + 24].map(v => v * HECLA_SCALE), col: E.dark, side: '+x', mix: 1 },
+      { t: 'paint', box: [578, y - 12, z - 20, 581, y + 12, z + 20].map(v => v * HECLA_SCALE), col: E.glow, side: '+x', mix: 1 },
     ])).flat(),
 
     // Four ventral corvette racks, each with three visible guide cradles.
     ...[-430, -300, -170, 170, 300, 430].flatMap(z => [
       hTap([60, -95, z], 36, [50, 20], [50, 20], E.panel, { sh: 'h' }),
       hSeg([18, -112, z], [108, -112, z], 10, 10, E.grey2),
-      hSeg([24, -119, z], [94, -119, z], 4, 4, E.amber),
+      { t: 'paint', box: [24, -123, z - 4, 94, -116, z + 4].map(v => v * HECLA_SCALE), col: E.amber, side: 'bottom', mix: 1 },
     ]),
 
     // Dorsal and ventral radiator plates around the aft machinery.
@@ -484,7 +486,7 @@ SHIPS.hecla = {
     ...DB.ships.hecla.comps.filter(c => c.role === 'shield' || c.role === 'radar').flatMap(c => {
       const r = (c.role === 'shield' ? 10 : 13) * HECLA_SCALE;
       const side = Math.sign(c.pos[1] || 1);
-      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 41 : 18.75);
+      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 40.75 : 18.5);
       const gap = Math.abs(c.pos[1] - baseY);
       return [
         ...(gap > 0 ? [tap([c.pos[0], (c.pos[1] + baseY) / 2, c.pos[2]], gap / 2,
@@ -501,7 +503,7 @@ SHIPS.hecla = {
     // Eight exhaust housings and visible blue nozzle faces, aligned to the engine records.
     ...DB.ships.hecla.engines.flatMap(e => [
       tap([e.pos[0], e.pos[1], e.pos[2] - 5.5], 6, [6, 6], [6, 6], E.noz, { sh: 'h', noMirror: true }),
-      tap([e.pos[0], e.pos[1], e.pos[2] - 1], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
+      tap([e.pos[0], e.pos[1], e.pos[2] - 2], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
       ell([e.pos[0], e.pos[1], 499], [4, 4, 1], E.glow, { glow: true, noMirror: true }),
     ]),
 
@@ -510,7 +512,7 @@ SHIPS.hecla = {
       hTap([0, 77, z], 24, [32, 3], [32, 3], E.white, { sh: 'h', noMirror: true, glow: true }),
       hTap([116, 154, z], 18, [4, 4], [4, 4], E.amber, { sh: 'h', glow: true }),
     ]),
-    hTap([0, 184, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
+    hTap([0, 185, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
   ],
 };
 
