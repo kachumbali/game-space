@@ -413,7 +413,7 @@ function blastAt(pos, w, team, owner, direct, skip) {
     if (!fr) s.lastAttacker = owner;
     else if (s === player || owner === player) friendlyNote(owner, s);
     hitSrc = owner; hitKind = w.nuclear ? 'nuke' : 'missile';
-    if (params.has('duelbench')) s.duelWeapon = w.kind === 'msl' ? 'missiles' : null;
+    if (params.has('duelbench')) { s.duelWeapon = w.kind === 'msl' ? 'missiles' : null; s.duelWid = w.id || w.name; }
     const factors = missileClassFactors(w, s.def.cls);
     const pierce = w.kind === 'msl' && w.classScale !== false && !w.torp && !w.nuclear
       ? (w.pierce || 0) * factors.pierce : direct === s ? tandemStrike(s, bubblePoint || lp, w) : 0;
@@ -953,7 +953,7 @@ function updateBolts(dt) {
       const hd = b.dmg * (fr ? FF.bolt : 1) * (b.w.vsCls?.[s.def.cls] ?? 1);      // M2: `vsCls` = per-target-class damage multiplier (light PD shells barely scratch corvettes and capitals)
       plogBoltHit(b, s, hd, fr);
       hitSrc = b.owner; hitKind = 'gun';
-      if (params.has('duelbench')) s.duelWeapon = b.w.kind === 'spine' ? 'spine' : b.org ? 'turrets' : 'guns';
+      if (params.has('duelbench')) { s.duelWeapon = b.w.kind === 'spine' ? 'spine' : b.org ? 'turrets' : 'guns'; s.duelWid = b.w.id || b.w.name; }
       const outcome = applyHit(s, hit.hull, hd, wp, b.dt, b.w.pierce || 0, false, 0, hit.shield ? hit.point : null);
       if (b.w.blast) blastAt(wp, b.w, b.team, b.owner, null, s);      // HE shells: splash to everything else within `blast`; the direct target already took the full hit
       if (b.w.big && outcome !== 'shield') { chip(s, hit.hull, 1.2, 3, false); fireAt(wp, 6, 10); }
