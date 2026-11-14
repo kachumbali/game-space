@@ -3,6 +3,12 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- FROGG swarm doctrine, brief 8 Job T (owner targets: two FROGG against one human about even, one-on-one human 80–90%; `docs/measurements/brief8/swarm-after.md`):
+  - AI fixes for both factions: corvettes and capitals keep their target (focus fire), and corvettes close at full throttle while out of their own guns' reach.
+  - Armament-law role `swarm` 0.35 for the Gulper (hull 706 → 247). The Reaver is faster and more agile (speed 115, turn 1.45) with 55/55 shields.
+  - Halberd vs 2 Gulpers 0–20 → 8–12; Kestrel vs 2 Leapers 6–13–1 and Kestrel vs Reaver 19–1 stay on target.
+  - The Falchion still beats two Reavers 20–0 (its drones and point-defence turret make it a heavier class); left to the owner.
+  - The duel harness records damage taken by weapon (`?duelbench`).
 - Codex brief 7:
   - **R, hitches:** a seeded skirmish replay with two 1 kT impacts and timing spans (`?fps`). Blast damage now scans only cells inside its sphere, and identical undamaged chamfered hulls share their slab buffers (copy on first damage). The cause of the owner's 4.6 s hardware freeze is not found yet; `hitch_t` still fails its low-detail target (worst frame 8.5× the median against 3×).
   - **P, flicker in mesh mode:** the audit separates coincident, exposed and buried surfaces; coincident pairs 368 → 208 (tablet) and 410 → 250 (desktop). Not zero yet.

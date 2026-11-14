@@ -27,7 +27,7 @@ function applyHit(s, lp, dmg, wp, dtype = 'kin', pierce = 0, through = false, sh
   const active = s.alive && !s.dying;
   const out = applyHitCore(s, lp, dmg, wp, dtype, pierce, through, shPen, shieldPoint);
   if (params.has('duelbench') && active && (!s.alive || s.dying)) s.duelCause = (kind === 'collision' ? kind : s.duelWeapon) || kind || dtype;
-  if (params.has('duelbench')) s.duelWeapon = null;
+  if (params.has('duelbench')) { const k = (s.duelWeapon || kind || dtype) + (s.duelWid ? ':' + s.duelWid : ''); s.duelWid = null; (s.duelDmg ||= {})[k] = (s.duelDmg[k] || 0) + dmg; s.duelWeapon = null; }   // duel harness: damage taken by weapon
   if (playerHit && out) { const cls = source?.def?.cls || kind || 'unknown'; REPORT.damage[cls] = (REPORT.damage[cls] || 0) + dmg * (s.mod?.take ?? 1); reportSample(); }
   if (playerHit && !s.alive && game.mstate && game.mission && campaignOf(game.mission).id === 'prologue') {
     let cause = 'Hull destroyed; cause unclear.';
