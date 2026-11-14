@@ -1,15 +1,15 @@
 # Job V progress (incomplete)
 
-Baseline: merged main a34a852. A Hecla cradle's amber overlay was converted from intersecting geometry to surface paint. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
+Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
 
 | Scope | Coincident before → after | Exposed before → after |
 |---|---:|---:|
-| Fleet tablet | 208 → 202 | 340 → 334 |
-| Fleet desktop | 250 → 238 | 327 → 321 |
-| Hecla tablet | 44 → 38 | 35 → 29 |
-| Hecla desktop | 58 → 46 | 15 → 9 |
+| Fleet tablet | 208 → 186 | 340 → 326 |
+| Fleet desktop | 250 → 222 | 327 → 321 |
+| Hecla tablet | 44 → 22 | 35 → 21 |
+| Hecla desktop | 58 → 30 | 15 → 9 |
 
-The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and Hecla turret seats passed. Hecla muzzle marker screenshots were generated; they require visual review. The two small 3/4 screenshots taken for this pass do not substitute for the requested five-ship mesh contact sheets or top/side inspection.
+The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and Hecla turret seats passed. Hecla muzzle marker screenshots were generated; they require visual review. The Hecla mesh was compared at 3/4 view and muzzle markers were inspected at 3/4, top and bottom; the requested five-ship before/after contact sheets and full side inspection remain outstanding.
 
 The harness now uses callback `performance.now()` for frame boundaries, matching the PERF clock. Previously the rAF timestamp sometimes preceded the action start, so the span filter missed work. This changes measurement only. The previous pre-merge baseline in `job-v-baseline.md` is retained for comparison; its numbers are one run and not a controlled performance experiment.
 

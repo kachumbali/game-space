@@ -441,9 +441,11 @@ SHIPS.hecla = {
 
     // Shuttle gates at the four ends of each outer rail.
     ...[-1450, 1450].flatMap(z => [-45, 45].map(y => [
-      hTap([527, y, z], 50, [52, 22], [52, 22], E.grey2, { sh: 'h' }),
-      hTap([568, y, z], 24, [12, 16], [12, 16], E.dark, { sh: 'h' }),
-      hTap([572, y, z], 20, [8, 12], [8, 12], E.glow, { sh: 'h', glow: true }),
+      // Keep the outer gate face at its original furthest extent; the dark
+      // rim and blue centre are surface markings rather than coincident caps.
+      hTap([527.5, y, z], 50, [52.5, 22], [52.5, 22], E.grey2, { sh: 'h' }),
+      { t: 'paint', box: [578, y - 16, z - 24, 581, y + 16, z + 24].map(v => v * HECLA_SCALE), col: E.dark, side: '+x', mix: 1 },
+      { t: 'paint', box: [578, y - 12, z - 20, 581, y + 12, z + 20].map(v => v * HECLA_SCALE), col: E.glow, side: '+x', mix: 1 },
     ])).flat(),
 
     // Four ventral corvette racks, each with three visible guide cradles.
@@ -501,7 +503,7 @@ SHIPS.hecla = {
     // Eight exhaust housings and visible blue nozzle faces, aligned to the engine records.
     ...DB.ships.hecla.engines.flatMap(e => [
       tap([e.pos[0], e.pos[1], e.pos[2] - 5.5], 6, [6, 6], [6, 6], E.noz, { sh: 'h', noMirror: true }),
-      tap([e.pos[0], e.pos[1], e.pos[2] - 1], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
+      tap([e.pos[0], e.pos[1], e.pos[2] - 2], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
       ell([e.pos[0], e.pos[1], 499], [4, 4, 1], E.glow, { glow: true, noMirror: true }),
     ]),
 
