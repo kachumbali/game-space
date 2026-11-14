@@ -170,7 +170,7 @@ def t_pd(R):
 def t_hangar(R):
     pg=R.page(320,180,'?free&n=0&q=low')
     r=pg.evaluate(js('''
-      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-3600),{});bf.ai.noJump=true;bf.hangarCfg={count:36};   // mechanics at a 36 complement (cap 36/3 = 12); the data complement is 18 (checked below)
+      const bf=g.spawnShip('bullfrog',1,V(0,0,0),V(0,0,-3600),{});bf.ai.noJump=true;bf.hangarCfg={count:64,cap:12};   // mechanics at a 64 complement, cap pinned at 12, so both bays still hold fighters for the bay-loss and emergency steps (at 36 both emptied first); the data complement is 18 (checked below)
       const hv=g.spawnShip('hivecarrier',0,V(0,0,-3700),V(0,0,0),{ai:'capital'});freeze(hv);hv.shield.fore=hv.shield.aft=1e9;hv.structure=1e9;
       const o={};g.update(0.05);const H=bf.hangar;
       const air=()=>H.out.filter(f=>f.alive&&!f.dying).length;
