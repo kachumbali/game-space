@@ -3,6 +3,7 @@
 Versions are named from the state of `main`. Commit trailers and tool history: docs/archive/MILESTONE_2.md.
 
 ## 0.4.0 (in progress): the Prologue demo, plan in docs/ROADMAP.md
+- **Real-geometry hulls are the default** (owner 2026-11-14). The options panel (O) has a **Hull renderer** choice, mesh or the chamfered voxel look, applied at the next reload (`?vox=` still overrides it). Remaining flicker is fixed as we go (Codex brief 8 Job V). Tests that measure voxel budgets are pinned to `vox=smooth`; tests that read the glow-voxel count tolerate the mesh's batched glow.
 - FROGG swarm doctrine, brief 8 Job T (owner targets: two FROGG against one human about even, one-on-one human 80–90%; `docs/measurements/brief8/swarm-after.md`):
   - AI fixes for both factions: corvettes and capitals keep their target (focus fire), and corvettes close at full throttle while out of their own guns' reach.
   - Armament-law role `swarm` 0.35 for the Gulper (hull 706 → 247). The Reaver is faster and more agile (speed 115, turn 1.45) with 55/55 shields.
