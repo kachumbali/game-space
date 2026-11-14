@@ -825,7 +825,14 @@ SHIPS.carrier = {
     seg([0, 94, 380], [0, 97, 380], 1, 0.8, CF.g2),
     // stern: engine block, four round nozzles at the database engine positions
     tap([0, 0, 465], 25, [158, 30], [148, 28], CF.g1, { sh: 'h' }),
-    ...[30, 95].map(x => tap([x, 0, 478], 12, [15, 15], [14, 14], CF.noz, { sh: 'e' })),
+    // The nozzle ends lie on the stern face. Paint their circular outline on
+    // that face instead of overlapping it with buried cylinders.
+    ...[30, 95].flatMap(x => Array.from({ length: 8 }, (_, i) => {
+      const y0 = -14 + i * 28 / 8, y1 = y0 + 28 / 8;
+      const y = Math.max(Math.abs(y0), Math.abs(y1));
+      const w = Math.sqrt(Math.max(0, 14 * 14 - y * y));
+      return { t: 'paint', box: [x - w, y0, 489.8, x + w, y1, 490.2], col: CF.noz, side: '+z', mix: 1 };
+    })),
     ...[30, 95].map(x => tap([x, 0, 466], 2.5, [17, 17], [17, 17], CF.or, { sh: 'e' })),
     // ventral launch wells: dark mouth in a graphite frame at each bay (launch points at the mouths)
     ...DB.ships.carrier.comps.filter(c => c.role === 'bay' && c.pos[0] > 0).flatMap(c => {
