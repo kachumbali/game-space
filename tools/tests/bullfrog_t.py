@@ -210,13 +210,13 @@ def t_inst(R):
       const bf=g.spawnShip('bullfrog',1,V(0,0,-1000),V(0,0,-3000),{});bf.ai.role='capital';freeze(bf);
       const o={};
       let cur=2;for(const i of [2,4,6]){g.changeDetail(i-cur);cur=i;
-        const res=__bf.resFor(bf.def,i);const n=bf.vox.body.count+bf.vox.glow.count;o[i]={res,instances:n};}
+        const res=__bf.resFor(bf.def,i);const n=bf.vox.body.count+(bf.vox.glow?.count||0);o[i]={res,instances:n};}
       // LOD: camera 6 km away, 'normal' levels
       g.setLod('normal');g.camera.position.set(0,0,45000);g.camera.updateMatrixWorld(true);
       for(let k=0;k<6;k++){g.lodTick(1);}
-      o.lod={drop:bf.lodDrop|0,instances:bf.vox.body.count+bf.vox.glow.count};
+      o.lod={drop:bf.lodDrop|0,instances:bf.vox.body.count+(bf.vox.glow?.count||0)};
       g.camera.position.set(0,0,-1400);g.camera.updateMatrixWorld(true);for(let k=0;k<6;k++){g.lodTick(1);}
-      o.lodNear={drop:bf.lodDrop|0,instances:bf.vox.body.count+bf.vox.glow.count};
+      o.lodNear={drop:bf.lodDrop|0,instances:bf.vox.body.count+(bf.vox.glow?.count||0)};
       return o;'''))
     print(json.dumps(r))
     check('tablet (detail 2) instances 40-60k', 40000<=r['2']['instances']<=60000, str(r['2']))

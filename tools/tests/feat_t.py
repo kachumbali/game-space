@@ -17,7 +17,7 @@ with Runner() as R:
     # LOD: put a corvette far away and near, count instances
     print('lod', pg.evaluate("""()=>{const g=__game,T=g.THREE;__paused=true;const P=g.player;
       const c=g.spawnShip('gulper',1,new T.Vector3(0,0,-600).add(P.group.position),null,{});
-      const n=s=>s.vox.body.count+s.vox.glow.count;const near=n(c);
+      const n=s=>s.vox.body.count+(s.vox.glow?.count||0);const near=n(c);
       c.group.position.copy(P.group.position).add(new T.Vector3(0,0,-9000));g.camera.position.copy(P.group.position);
       for(let i=0;i<40;i++)g.update(0.05);const far=n(c);
       c.group.position.copy(P.group.position).add(new T.Vector3(0,0,-600));for(let i=0;i<40;i++)g.update(0.05);
