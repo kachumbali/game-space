@@ -169,7 +169,7 @@ SHIPS.bittern = {
 // A capital turret seat: an armoured box plinth with a graphite ring. D is the turret diameter at the authored scale; dy is +1 dorsal, -1 ventral.
 const cfSeat = (x, y, z, dy, D, col = CF.g2) => [
   tap([x, y - dy * D * 0.1, z], D * 0.52, [D * 0.58, D * 0.13], [D * 0.58, D * 0.13], col, { sh: 'h', noMirror: true }),
-  tap([x, y - dy * D * 0.0, z], D * 0.46, [D * 0.5, D * 0.04], [D * 0.5, D * 0.04], CF.gr, { sh: 'e', noMirror: true }),
+  tap([x, y + dy * D * 0.03, z], D * 0.46, [D * 0.5, D * 0.04], [D * 0.5, D * 0.04], CF.gr, { sh: 'e', noMirror: true }),
 ];
 const hSeat = (x, y, z, dy = 1, cls = 'S') => { const L = TUNE.scaleTo.halberd || 64; return cfSeat(x, y, z, dy, turretDia({ def: { length: L } }, { cls }) * 64 / L); };
 SHIPS.halberd = {
@@ -326,7 +326,9 @@ const exeterDetail = [
   // engine pods: intake ring, band plates, nozzle petals
   tap([80, -3, 104], 1.5, [16, 14], [16, 14], E.panel, { sh: 'h', lod: 2 }),
   ...[120, 140, 160, 180, 200].map(z => tap([80, -3, z], 0.8, [20.5, 18], [20.5, 18], E.grey2, { sh: 'h', lod: 2 })),
-  ...ringSegs(80, -3, 221, 228, 14, 18, 0.7, E.noz, { lod: 2 }),
+  // Nest the inboard rib slightly deeper to keep it connected at desktop voxel resolution.
+  ...ringSegs(80, -3, 226.5, 228, 14, 18, 0.7, E.noz, { lod: 2 })
+    .map((p, i) => i === 9 ? { ...p, a: [p.a[0], p.a[1], 226.2] } : p),
   ...ringSegs(0, 0, 204, 214, 26, 22, 1.0, 0x3e454e, { lod: 2 }),
   ...[208, 211].map(z => tap([0, 0, z], 1.7, [26.5, 26.5], [26.5, 26.5], E.grey2, { sh: 'e', lod: 2 })),
   // markings
@@ -366,7 +368,11 @@ SHIPS.exeter = {
     // radiator panels (folded white, orange edge)
     tap([70, 12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
     tap([70, -12, 130], 26, [36, 0.5], [24, 0.4], E.white, { ax: 'x', sweep: 0.2, seam: [6, 8] }),
-    tap([70, 12.2, 130], 26, [1.2, 0.6], [1.2, 0.5], E.orange, { ax: 'x', sweep: 0.2 }),
+    ...Array.from({ length: 8 }, (_, i) => {
+      const x0 = 44 + i * 6.5, x1 = x0 + 6.5;
+      const z0 = 130 + (x0 - 70) * 0.2, z1 = 130 + (x1 - 70) * 0.2;
+      return { t: 'paint', box: [x0, 11.5, z0 - 1.2, x1, 13.2, z1 + 1.2], col: E.orange, side: 'top', mix: 1 };
+    }),
     // nacelle pylons and round engine pods (engines at x 80, z 229)
     tap([53, -4, 158], 22, [15, 5], [15, 5], E.grey2, { sh: 'h' }), tap([60, 4, 150], 18, [5, 3], [5, 3], E.grey2, { sh: 'h' }),
     tap([80, -3, 160], 56, [16, 16], [18, 18], E.white, { sh: 'e', seam: [8, 6] }),
@@ -436,21 +442,23 @@ SHIPS.hecla = {
     ].flatMap(([x, y, z]) => [
       hTap([x, y, z], 80, [40, 15], [40, 15], E.grey2, { sh: 'h' }),
       hTap([95, y, z], 42, [24, 7], [24, 7], E.dark, { sh: 'h' }),
-      hTap([103, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
+      hTap([104, y + Math.sign(y) * 8, z], 30, [22, 4], [22, 4], E.amber, { sh: 'h', glow: true }),
     ]),
 
     // Shuttle gates at the four ends of each outer rail.
     ...[-1450, 1450].flatMap(z => [-45, 45].map(y => [
-      hTap([527, y, z], 50, [52, 22], [52, 22], E.grey2, { sh: 'h' }),
-      hTap([568, y, z], 24, [12, 16], [12, 16], E.dark, { sh: 'h' }),
-      hTap([572, y, z], 20, [8, 12], [8, 12], E.glow, { sh: 'h', glow: true }),
+      // Keep the outer gate face at its original furthest extent; the dark
+      // rim and blue centre are surface markings rather than coincident caps.
+      hTap([527.5, y, z], 50, [52.5, 22], [52.5, 22], E.grey2, { sh: 'h' }),
+      { t: 'paint', box: [578, y - 16, z - 24, 581, y + 16, z + 24].map(v => v * HECLA_SCALE), col: E.dark, side: '+x', mix: 1 },
+      { t: 'paint', box: [578, y - 12, z - 20, 581, y + 12, z + 20].map(v => v * HECLA_SCALE), col: E.glow, side: '+x', mix: 1 },
     ])).flat(),
 
     // Four ventral corvette racks, each with three visible guide cradles.
     ...[-430, -300, -170, 170, 300, 430].flatMap(z => [
       hTap([60, -95, z], 36, [50, 20], [50, 20], E.panel, { sh: 'h' }),
       hSeg([18, -112, z], [108, -112, z], 10, 10, E.grey2),
-      hSeg([24, -119, z], [94, -119, z], 4, 4, E.amber),
+      { t: 'paint', box: [24, -123, z - 4, 94, -116, z + 4].map(v => v * HECLA_SCALE), col: E.amber, side: 'bottom', mix: 1 },
     ]),
 
     // Dorsal and ventral radiator plates around the aft machinery.
@@ -484,7 +492,7 @@ SHIPS.hecla = {
     ...DB.ships.hecla.comps.filter(c => c.role === 'shield' || c.role === 'radar').flatMap(c => {
       const r = (c.role === 'shield' ? 10 : 13) * HECLA_SCALE;
       const side = Math.sign(c.pos[1] || 1);
-      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 41 : 18.75);
+      const baseY = side * (Math.abs(c.pos[1]) > 40 ? 40.75 : 18.5);
       const gap = Math.abs(c.pos[1] - baseY);
       return [
         ...(gap > 0 ? [tap([c.pos[0], (c.pos[1] + baseY) / 2, c.pos[2]], gap / 2,
@@ -501,7 +509,7 @@ SHIPS.hecla = {
     // Eight exhaust housings and visible blue nozzle faces, aligned to the engine records.
     ...DB.ships.hecla.engines.flatMap(e => [
       tap([e.pos[0], e.pos[1], e.pos[2] - 5.5], 6, [6, 6], [6, 6], E.noz, { sh: 'h', noMirror: true }),
-      tap([e.pos[0], e.pos[1], e.pos[2] - 1], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
+      tap([e.pos[0], e.pos[1], e.pos[2] - 2], 2, [4.25, 4.25], [4.25, 4.25], E.dark, { sh: 'h', noMirror: true }),
       ell([e.pos[0], e.pos[1], 499], [4, 4, 1], E.glow, { glow: true, noMirror: true }),
     ]),
 
@@ -510,7 +518,7 @@ SHIPS.hecla = {
       hTap([0, 77, z], 24, [32, 3], [32, 3], E.white, { sh: 'h', noMirror: true, glow: true }),
       hTap([116, 154, z], 18, [4, 4], [4, 4], E.amber, { sh: 'h', glow: true }),
     ]),
-    hTap([0, 184, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
+    hTap([0, 185, -1780], 18, [18, 2], [18, 2], E.amber, { sh: 'h', noMirror: true, glow: true }),
   ],
 };
 
@@ -799,10 +807,10 @@ SHIPS.carrier = {
   ordnancePlan: { ...DB.ships.carrier.ordnancePlan, droneLimit: TUNE.droneLimit.capital },
   prims: [
     tap([0, 0, -30], 470, [55, 16], [165, 30], CF.w, { sh: 'h' }),                                    // tapered pressure hull
-    tap([0, -1, -496], 4, [46, 13], [50, 14], CF.g1, { sh: 'h' }),                                     // flat nose plate
+    { t: 'paint', box: [-50, -15, -501, 50, 14, -491], col: CF.g1, side: '-z', noMirror: true, mix: 1 }, // nose plate on the existing hull face
     { t: 'paint', box: [0, -6, -496, cbW(-444), 0, -444], col: CF.g3, side: '+x', mix: 1 },               // nose band
     // graphite chine along the hull's widest line (the chamfered section's flat top spans only the inner 45 % of the width)
-    tap([cbW(-30) - 1, 0, -30], 470, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
+    tap([cbW(-30) - 1, 0, -30], 469.5, [2, 6], [2, 6], CF.g3, { sweep: cbS }),
     // flight-deck markings and a raised central service spine (trench machinery, as on the reference)
     tap([cbW(-30) * 0.32, cbH(-30) + 0.4, -30], 400, [3, 1.2], [3, 1.2], CF.or, { sweep: cbS * 0.32, sweepY: cbSY }),
     tap([0, cbH(-80) + 3, -80], 300, [9, 4], [15, 5], CF.g2, { sh: 'h', sweepY: cbSY }),
@@ -819,7 +827,14 @@ SHIPS.carrier = {
     seg([0, 94, 380], [0, 97, 380], 1, 0.8, CF.g2),
     // stern: engine block, four round nozzles at the database engine positions
     tap([0, 0, 465], 25, [158, 30], [148, 28], CF.g1, { sh: 'h' }),
-    ...[30, 95].map(x => tap([x, 0, 478], 12, [15, 15], [14, 14], CF.noz, { sh: 'e' })),
+    // The nozzle ends lie on the stern face. Paint their circular outline on
+    // that face instead of overlapping it with buried cylinders.
+    ...[30, 95].flatMap(x => Array.from({ length: 8 }, (_, i) => {
+      const y0 = -14 + i * 28 / 8, y1 = y0 + 28 / 8;
+      const y = Math.max(Math.abs(y0), Math.abs(y1));
+      const w = Math.sqrt(Math.max(0, 14 * 14 - y * y));
+      return { t: 'paint', box: [x - w, y0, 489.8, x + w, y1, 490.2], col: CF.noz, side: '+z', mix: 1 };
+    })),
     ...[30, 95].map(x => tap([x, 0, 466], 2.5, [17, 17], [17, 17], CF.or, { sh: 'e' })),
     // ventral launch wells: dark mouth in a graphite frame at each bay (launch points at the mouths)
     ...DB.ships.carrier.comps.filter(c => c.role === 'bay' && c.pos[0] > 0).flatMap(c => {
