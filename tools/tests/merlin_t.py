@@ -70,7 +70,7 @@ with Runner() as R:
     check('headless combat page has no console errors', not R.errs, str(R.errs[:3]))
 
 with Runner() as R:
-    page = R.page(1280, 720, '?yard=merlin')
+    page = R.page(1280, 720, '?yard=merlin&vox=smooth')   # voxel budget check: pinned to the voxel renderer (mesh is the default)
     page.wait_for_selector('#yard')
     page.wait_for_timeout(600)
     stat = page.locator('#yard-stat').inner_text()

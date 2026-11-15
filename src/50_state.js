@@ -123,7 +123,9 @@ function log(text, color = '#8fffd0') { reportLog(text); logs.push({ text, color
 // border empty space. Instanced boxes drew all 6 faces (12 triangles) of every surface voxel; a hull
 // voxel shows 1-2. Damage marks the touched slabs dirty and flushVox() rebuilds them before the next
 // frame. Glow voxels stay instanced (few, own material). ?vox=inst keeps the old instanced body.
-const VOX_MODE = ['inst', 'cube', 'mesh'].includes(params.get('vox')) ? params.get('vox') : 'smooth';
+// Hull renderer (owner 2026-11-14: real-geometry mesh is the default). The options panel offers mesh or the chamfered voxel look
+// ('smooth'), stored in GFX.hull and applied at the next load; ?vox=mesh|smooth|cube|inst overrides it for comparisons and tests.
+const VOX_MODE = ['inst', 'cube', 'mesh', 'smooth'].includes(params.get('vox')) ? params.get('vox') : (GFX.hull === 'smooth' ? 'smooth' : 'mesh');
 const VOX_INST = VOX_MODE === 'inst';
 const VOX_MESH = VOX_MODE === 'mesh';
 const VOX_GRID_DROP = VOX_MESH ? Math.max(0, Math.min(2, Number(params.get('gridDrop')) | 0)) : 0;

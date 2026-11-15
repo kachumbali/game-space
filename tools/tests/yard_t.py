@@ -28,7 +28,7 @@ with Runner() as R:
     page.locator('#yard-prims').fill('[]')
     page.wait_for_timeout(600)
     empty_stat = page.locator('#yard-stat').inner_text()
-    check('valid prim edit changes voxel count', '0 voxels' in empty_stat and empty_stat != original_stat, empty_stat)
+    check('valid prim edit changes voxel count', ('0 voxels' in empty_stat or '0 triangles' in empty_stat) and empty_stat != original_stat, empty_stat)
 
     page.locator('#yard-prims').fill('[')
     page.wait_for_timeout(500)

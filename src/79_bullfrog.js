@@ -98,7 +98,7 @@ function spineFire(s) {
     if (params.has('duelbench')) best.duelWeapon = 'spine';
     applyHit(best, bestLocal, W.dmg * (fr ? FF.bolt : 1), wp, W.dt, W.pierce, true);
     if (best.alive && best.vox && best.def.cls !== 'fighter') { chip(best, bestLocal, 5, 10, false); flashAt(wp, 40, 0.6); sparksAt(wp, 60, 40); fireAt(wp, 20, 14); }
-    rec.str1 = Math.round(best.structure); rec.dead = !best.alive || best.dying > 0;
+    rec.str1 = Math.round(best.structure); rec.sh1 = Math.round(best.shield.fore + best.shield.aft); rec.dead = !best.alive || best.dying > 0;
     if (best === player) shake = 1;
   }
   sp.shots.push(rec); bfLog.push({ ev: 'spine', by: s.callsign || 'BF', ...rec });
@@ -123,7 +123,7 @@ function spineStep(s, dt) {
       aim = sp.aimPt.copy(t.group.position).addScaledVector(_bv.copy(t.vel).sub(s.vel), Math.min(8, rem));
       if (sp.t >= sp.C - W.lockT) {
         const err = aimError(s, aim), dist = s.group.position.distanceTo(t.group.position);
-        const tol = clamp(0.45 * t.def.radius / Math.max(1, dist), 0.012, 0.04);
+        const tol = clamp(TUNE.spineAim.radiusFactor * t.def.radius / Math.max(1, dist), TUNE.spineAim.min, TUNE.spineAim.max);
         if (err > tol) { sp.st = 'cool'; sp.cd = W.fizzleCd ?? BF.fizzleCd; bfLog.push({ ev: 'fizzle', why: 'aim ' + err.toFixed(3) + '>' + tol.toFixed(3), t: +time.toFixed(1) }); aim = null; }
         else { sp.st = 'lock'; sp.holdT = 0; sp.lineLen = Math.min(W.range, dist + t.def.radius); aim = null; }
       }
@@ -286,7 +286,7 @@ function lancerAI(s, dt) {
   if (sp.st === 'ready' && big && dist < spineW(s).range * 0.95 && s.energy >= spineW(s).energy && sp.mag > 0) {
     sp.want = true;
     const tm = s.def.turn * turnMul(s), err = aimError(s, lp);
-    if (err / tm <= 4.5 && spineCorridorClear(s)) {
+    if (err / tm <= Math.max(0, spineW(s).charge - spineW(s).lockT) && spineCorridorClear(s)) {
       s.energy -= spineW(s).energy; sp.st = 'charge'; sp.t = 0; sp.startedAt = time; sp.warnLogT = undefined;
       bfLog.push({ ev: 'charge', t: +time.toFixed(1), tgt: t.def.id, dist: Math.round(dist) });
     }

@@ -75,7 +75,10 @@ function capitalHangarAI(s, C, dt) {
     H.timers[i] -= dt;
     const bay = s.comps.find(c => c.id === h.bayComponents[i]);
     if (H.timers[i] > 0 || !bay || bay.hp <= 0 || H.out.length >= h.airborneCap) continue;
-    const type = Object.keys(H.remaining).find(k => H.remaining[k] > 0 && SHIPS[k]);
+    // Mixed launches: the type with the largest share of its manifest still aboard goes next. Key order launched all
+    // 24 Kestrels before the first Bittern, so the torpedo bombers never flew in a fight (duel probe 2026-11-14).
+    let type = null, best = 0;
+    for (const k in H.remaining) { const f = H.remaining[k] / (h.manifest[k] || 1); if (H.remaining[k] > 0 && SHIPS[k] && f > best + 1e-9) { best = f; type = k; } }
     if (!type) continue;
     s.group.updateMatrixWorld(true);
     const pos = s.group.localToWorld(bay.launch ? new THREE.Vector3(...bay.launch) : new THREE.Vector3(bay.pos[0], -s.def.half[1] - cfg.hangarClearance, bay.pos[2]));

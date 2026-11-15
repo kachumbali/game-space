@@ -20,11 +20,21 @@ function friendlyInLine(s, maxD = 700) {           // AI holds fire when a frien
   for (const f of ships) {
     if (f === s || !f.alive || f.dying || f.team !== s.team) continue;
     _ff.copy(f.group.position).sub(s.group.position);
-    const along = _ff.dot(_fw);
+    const along = _ff.dot(_fw), R = f.def.radius;
+    // A big friend whose centre is behind or beside the shooter still has hull ahead of it: an escort flying alongside the 1 km
+    // Columbus skipped it (centre behind) and put its railguns into the carrier (duel probe 2026-11-14). Big hulls are tested
+    // by their voxels along the gun line; the sphere is only a first filter, since an escort sits well inside the carrier's.
+    if (R > 150 && f.vox) {
+      if (along < -R || along > maxD + R) continue;
+      const a = Math.max(0, Math.min(maxD, along));
+      if (_ff.addScaledVector(_fw, -a).length() > R + a * (TUNE.ai.ffCone ?? 0.02)) continue;
+      if (traceShip(f, s.group.position, _ff.copy(s.group.position).addScaledVector(_fw, maxD))) return true;
+      continue;
+    }
     if (along < 0 || along > maxD) continue;
     // the gun line is a cone, not a tube: bolts spread and targets move (owner 2026-11-10, D16: HAWK hit the player in Prologue 1). Wider around the player.
     const cone = f === player ? (TUNE.ai.ffConePlayer ?? 0.06) : (TUNE.ai.ffCone ?? 0.02);
-    if (_ff.addScaledVector(_fw, -along).length() < f.def.radius * 0.9 + 3 + along * cone) return true;
+    if (_ff.addScaledVector(_fw, -along).length() < R * 0.9 + 3 + along * cone) return true;
   }
   return false;
 }

@@ -163,6 +163,8 @@ function toggleOpts(force) {
       + row('o_sens', 'Mouse sensitivity', `<input type="range" id="o_sens" min="30" max="250" value="${Math.round(AOPT.sens * 100)}">`)
       + row('o_inv', 'Invert mouse Y', `<input type="checkbox" id="o_inv" ${AOPT.invY ? 'checked' : ''}>`)
       + row('o_dev', 'Device preset', `<select id="o_dev">${DEV_ORDER.map(d => `<option value="${d}" ${(GFX.device || 'auto') === d ? 'selected' : ''}>${d === 'auto' ? 'AUTO (' + DEVICES[autoDevice()].label + ')' : DEVICES[d].label}</option>`).join('')}</select>`)
+      + row('o_hull', 'Hull renderer', `<select id="o_hull"><option value="mesh" ${GFX.hull !== 'smooth' ? 'selected' : ''}>MESH (REAL GEOMETRY)</option><option value="smooth" ${GFX.hull === 'smooth' ? 'selected' : ''}>VOXELS (CHAMFERED)</option></select>`)
+      + `<div class="onote" id="o_hull_note">${(GFX.hull === 'smooth') !== (VOX_MODE === 'smooth') ? 'Applies after a reload.' : 'Mesh: sharp real geometry (default). Voxels: the chamfered voxel look.'}</div>`
       + row('o_lod', 'Distance LOD', `<select id="o_lod">${LOD_ORDER.map(d => `<option value="${d}" ${lodLevel === d ? 'selected' : ''}>${d.toUpperCase()}</option>`).join('')}</select>`)
       + `<div class="onote">Device presets set voxel detail, pixel size, bloom and the LOD level; MSAA and sky size need a reload. LOD rebuilds far ships with fewer voxels.</div>`
       + `<div class="onote" id="o_mstat">Music: ${MUS.status}</div>`
@@ -182,6 +184,7 @@ function toggleOpts(force) {
     $id('o_inv').onchange = e => { AOPT.invY = e.target.checked; aoptSave(); };
     $id('o_dev').onchange = e => setDevice(e.target.value);
     $id('o_lod').onchange = e => setLod(e.target.value);
+    $id('o_hull').onchange = e => { GFX.hull = e.target.value; gfxSave(); $id('o_hull_note').textContent = 'Applies after a reload.'; };
     $id('o_close').onclick = () => toggleOpts(false);
     $id('o_cred').onclick = () => showCredits(true);
   } else { el.style.display = 'none'; if (!isTouch && state === 'play' && !userPause) lockPointer(); }

@@ -27,7 +27,7 @@ def parse_stat(stat):
 
 
 with Runner() as R:
-    page = R.page(1280, 720, '?yard=hecla')
+    page = R.page(1280, 720, '?yard=hecla&vox=smooth')   # voxel budget test: pinned to the voxel renderer (mesh is the default since 2026-11-14)
     page.wait_for_selector('#yard')
     definition = page.evaluate("""() => {
       const d = __game.SHIPS.hecla;
@@ -105,7 +105,7 @@ with Runner() as R:
     check('Shipyard page has no console errors', not R.errs, str(R.errs[:5]))
 
 with Runner() as R:
-    page = R.page(1280, 720, '?free&n=0&q=mid&seed=12')
+    page = R.page(1280, 720, '?free&n=0&q=mid&seed=12&vox=smooth')
     result = page.evaluate("""() => {
       const g = __game, T = g.THREE;
       g.__paused = true;
@@ -148,7 +148,7 @@ with Runner() as R:
         hecla: hecla.def.id,
         radius: hecla.def.radius,
         avoidDistance,
-        instances: hecla.vox.body.count + hecla.vox.glow.count,
+        instances: hecla.vox.body.count + (hecla.vox.glow?.count||0),
         voxelSize: D.vs,
         turretBaseMaxDistance: Math.max(...turretDistances),
         unsupportedTurretBases: turretDistances.filter(d => d > D.vs).length,
