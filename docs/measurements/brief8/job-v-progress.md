@@ -23,3 +23,13 @@ The harness now uses callback `performance.now()` for frame boundaries, matching
 On the current low-detail worst frame, `nukeAt` took 6.9 ms, `flushAllVox` 6.3 ms and render submission 248.9 ms. High worst was a breakup frame; its detailed spans are in `hitch-after-merged.txt`. This supports software render submission as a major component of the observed low-detail spike, but does not rule out game work in other frames. The 3× low-detail target is unmet. A more useful CPU regression metric would report per-phase action/update and render-submission percentiles over repeated runs, retaining end-to-end frame timing as a separate renderer metric. No real iPad measurements were taken.
 
 A five-pass carrier build probe (middle two of four post-warmup timings) measured tablet mesh construction at 18.90 ms / 3,832 triangles before and 19.00 ms / 4,080 triangles after the eight-band nozzle stencil; desktop was 18.45 ms / 4,678 triangles before and 18.85 ms / 4,798 after. These single-run CPU measurements are not real-device performance.
+
+A further three low-detail SwiftShader runs at 320×180 used the same seeded scenario and frame/span clock. The repeatable report is `tools/tests/hitch_repeat_t.py`; the raw frames and spans are in `hitch-low-repeat.json` and the over-threshold frame summaries in `hitch-low-repeat.txt`. The three runs were collected with an equivalent prototype of that report.
+
+| Run | Warm median | Worst frame | Worst / median | Frames over 3× |
+|---|---:|---:|---:|---:|
+| 1 | 22.4 ms | 290.1 ms | 12.95× | 9 |
+| 2 | 21.3 ms | 275.0 ms | 12.91× | 10 |
+| 3 | 22.0 ms | 284.2 ms | 12.92× | 12 |
+
+On the Bullfrog nuke frame, `nukeAt` took 41.3–42.0 ms including `explode` at 34.6–35.1 ms, while render submission took 189.1–211.1 ms. These spans are nested and should not be summed. Other slow frames have no recorded span; PERF only retains spans of at least 2 ms and the current timing cannot attribute all waiting or rendering outside the recorded interval. Rendering is substantial, but these results do not establish that game work is absent or satisfy the exception. The frame ratios are sensitive to warm median and differ from the earlier single run; they are not an iPad measurement.
