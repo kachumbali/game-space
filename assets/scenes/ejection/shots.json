@@ -1,0 +1,26 @@
+{
+  "ejection": [
+    {"panel":[0,0],"caption":"The cockpit warning becomes impossible to ignore.","portrait":"player","seconds":2.5,"sfx":"alarm"},
+    {"panel":[1,0],"caption":"EJECT. EJECT.","portrait":"player","seconds":2,"sfx":"click"},
+    {"panel":[2,0],"caption":"The capsule clears the damaged ship.","seconds":2.5},
+    {"panel":[3,0],"caption":"Locator beacon transmitting.","seconds":2}
+  ],
+  "recovered": [
+    {"panel":[0,1],"caption":"CONTROL: Beacon acquired. Cover the approach.","portrait":"player","seconds":2.5,"sfx":"comms","music":"rescue"},
+    {"panel":[1,1],"caption":"SAR: Rescue craft inbound.","seconds":2.5},
+    {"panel":[2,1],"caption":"Grapple secure. Bringing the pilot aboard.","seconds":2.5,"sfx":"dock"},
+    {"panel":[3,1],"caption":"The pilot reaches the trauma bay.","seconds":2.5}
+  ],
+  "captured": [
+    {"panel":[0,2],"caption":"A contact eclipses the beacon.","seconds":2.5,"music":"hive"},
+    {"panel":[1,2],"caption":"No friendly response.","seconds":2.5},
+    {"panel":[2,2],"caption":"A capture team secures the capsule.","portrait":"soldier","seconds":2.5},
+    {"panel":[3,2],"caption":"The pilot is taken for questioning.","portrait":"commander","seconds":3}
+  ],
+  "missing": [
+    {"panel":[0,3],"caption":"The beacon continues to transmit.","seconds":2.5,"music":"loss"},
+    {"panel":[1,3],"caption":"No friendly contacts on the scope.","seconds":2.5},
+    {"panel":[2,3],"caption":"Life support is limited. The pilot waits.","portrait":"player","seconds":2.5},
+    {"panel":[3,3],"caption":"The pilot's fate remains unknown.","seconds":3}
+  ]
+}
