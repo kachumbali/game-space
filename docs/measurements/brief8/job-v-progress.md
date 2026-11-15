@@ -1,15 +1,17 @@
 # Job V progress (incomplete)
 
-Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. Hecla lights were shifted by 0.25 m and sensor pedestal roots were nested 0.25 m into the hull. The shared human turret-seat ring was raised by 3% of turret diameter. The Columbus nose plate was converted to a marking on the existing hull face, and its chine was nested 0.5 m at each end. The Exeter radiator stripe was converted to surface paint. Columbus's buried stern nozzle cylinders were replaced with circular face markings; its outer extent and visible four-nozzle pattern are retained. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
+Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-gate caps were converted to surface paint; the outer gate extent is retained. The dark nozzle interiors were moved inward by one metre while their outer glowing faces remain in place. A fully buried Gulper claw-barrel insert was removed while its muzzle collar remains. Hecla lights were shifted by 0.25 m and sensor pedestal roots were nested 0.25 m into the hull. The shared human turret-seat ring was raised by 3% of turret diameter. The Columbus nose plate was converted to a marking on the existing hull face, and its chine was nested 0.5 m at each end. The Exeter radiator stripe was converted to surface paint. Columbus's buried stern nozzle cylinders were replaced with circular face markings; its outer extent and visible four-nozzle pattern are retained. Exeter’s outer nozzle ribs were shortened to retain their visible ends while reducing buried overlaps; one inboard root remains slightly deeper to preserve voxel connectivity. The raw audit rows are in the adjacent CSVs. Counts are ordered prim pairs with at least one classified sample.
 
 | Scope | Coincident before → after | Exposed before → after |
 |---|---:|---:|
 | Fleet tablet | 208 → 137 | 340 → 321 |
-| Fleet desktop | 250 → 208 | 327 → 317 |
+| Fleet desktop | 250 → 196 | 327 → 300 |
 | Hecla tablet | 44 → 18 | 35 → 21 |
 | Hecla desktop | 58 → 26 | 15 → 9 |
+| Exeter tablet | 10 → 5 | 6 → 5 |
+| Exeter desktop | 31 → 18 | 47 → 29 |
 
-The remaining pairs are not fixed. The same fleet totals were reproduced after merging main 266ae6b. The full fleet connectivity check passed at both detail levels, and all capital-ship turret seats passed. Five-ship desktop mesh contact sheets were generated locally for 3/4, top and side views; the images are ignored by the repository. Hecla muzzle markers were inspected at 3/4, top and bottom. A Columbus deck-stripe paint experiment reduced its coincident pairs by two on tablet and three on desktop, but added hundreds of triangles, so it was reverted.
+The remaining pairs are not fixed. Before the nozzle-rib change, the preceding fleet totals were reproduced after merging main 266ae6b; the table includes the subsequent rib change. The full fleet connectivity check passed at both detail levels, and all capital-ship turret seats passed. Five-ship desktop mesh contact sheets were generated locally for 3/4, top and side views; the images are ignored by the repository. Hecla muzzle markers were inspected at 3/4, top and bottom. A Columbus deck-stripe paint experiment reduced its coincident pairs by two on tablet and three on desktop, but added hundreds of triangles, so it was reverted.
 
 The harness now uses callback `performance.now()` for frame boundaries, matching the PERF clock. Previously the rAF timestamp sometimes preceded the action start, so the span filter missed work. This changes measurement only. The previous pre-merge baseline in `job-v-baseline.md` is retained for comparison; its numbers are one run and not a controlled performance experiment.
 

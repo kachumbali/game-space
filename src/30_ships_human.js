@@ -326,7 +326,9 @@ const exeterDetail = [
   // engine pods: intake ring, band plates, nozzle petals
   tap([80, -3, 104], 1.5, [16, 14], [16, 14], E.panel, { sh: 'h', lod: 2 }),
   ...[120, 140, 160, 180, 200].map(z => tap([80, -3, z], 0.8, [20.5, 18], [20.5, 18], E.grey2, { sh: 'h', lod: 2 })),
-  ...ringSegs(80, -3, 221, 228, 14, 18, 0.7, E.noz, { lod: 2 }),
+  // Nest the inboard rib slightly deeper to keep it connected at desktop voxel resolution.
+  ...ringSegs(80, -3, 226.5, 228, 14, 18, 0.7, E.noz, { lod: 2 })
+    .map((p, i) => i === 9 ? { ...p, a: [p.a[0], p.a[1], 226.2] } : p),
   ...ringSegs(0, 0, 204, 214, 26, 22, 1.0, 0x3e454e, { lod: 2 }),
   ...[208, 211].map(z => tap([0, 0, z], 1.7, [26.5, 26.5], [26.5, 26.5], E.grey2, { sh: 'e', lod: 2 })),
   // markings
