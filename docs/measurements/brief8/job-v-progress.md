@@ -9,7 +9,7 @@ Baseline: merged main a34a852. Hecla cradle amber overlays and nested shuttle-ga
 | Hecla tablet | 44 → 18 | 35 → 21 |
 | Hecla desktop | 58 → 26 | 15 → 9 |
 
-The remaining pairs are not fixed. The full fleet connectivity check passed at both detail levels, and all capital-ship turret seats passed. Gulper 3/4 mesh before and after was compared. Hecla muzzle marker screenshots were generated; they require visual review. The Hecla mesh was compared at 3/4 view and muzzle markers were inspected at 3/4, top and bottom; the requested five-ship before/after contact sheets and full side inspection remain outstanding.
+The remaining pairs are not fixed. The same fleet totals were reproduced after merging main 266ae6b. The full fleet connectivity check passed at both detail levels, and all capital-ship turret seats passed. Five-ship desktop mesh contact sheets were generated locally for 3/4, top and side views; the images are ignored by the repository. Hecla muzzle markers were inspected at 3/4, top and bottom. A Columbus deck-stripe paint experiment reduced its coincident pairs by two on tablet and three on desktop, but added hundreds of triangles, so it was reverted.
 
 The harness now uses callback `performance.now()` for frame boundaries, matching the PERF clock. Previously the rAF timestamp sometimes preceded the action start, so the span filter missed work. This changes measurement only. The previous pre-merge baseline in `job-v-baseline.md` is retained for comparison; its numbers are one run and not a controlled performance experiment.
 
